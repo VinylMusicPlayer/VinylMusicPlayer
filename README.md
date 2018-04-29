@@ -1,13 +1,31 @@
 # Vinyl Music Player
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/LICENSE.txt)
+
+Vinyl music player is a sleek material design music player. 
 
 <a href="https://f-droid.org/packages/com.poupa.vinylmusicplayer/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
 <a href='https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="90"/></a>
 
-**A material designed local music player for Android.**
+## App Features (version 0.16.5.2)
+
+Some of the features available on Vinyl music player
+
++ it is a material designed local music player for Android.
++ Tag editor
++ Theming (Light, Dark, Black (AMOLED)
++ Sleep timer
++ Folder browser
++ Widgets
++ Now playing themes
++ Black list
++ album art as lockscreen
++ no unnecessary ads and pop-ups
++ fully open source
++ absolutely free
 
 **Forked from Phonograph; makes all Pro features free, as they used to be**
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/LICENSE.txt)
 
 [Original code](https://github.com/kabouzeid/Phonograph)
 
