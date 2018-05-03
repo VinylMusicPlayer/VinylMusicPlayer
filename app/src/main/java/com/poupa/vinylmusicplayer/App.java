@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -14,15 +15,18 @@ public class App extends Application {
 
     private static App app;
 
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
         app = this;
 
+        context = getApplicationContext();
+
         // default theme
         if (!ThemeStore.isConfigured(this, 1)) {
             ThemeStore.editTheme(this)
-                    .activityTheme(R.style.Theme_VinylMusicPlayer_Light)
                     .primaryColorRes(R.color.md_indigo_500)
                     .accentColorRes(R.color.md_pink_A400)
                     .commit();
@@ -36,6 +40,10 @@ public class App extends Application {
 
     public static App getInstance() {
         return app;
+    }
+
+    public static Context getStaticContext() {
+        return context;
     }
 
     @Override

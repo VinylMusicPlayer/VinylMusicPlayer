@@ -276,6 +276,7 @@
     <string name="purchase">Purchase</string>
     <string name="restore">Restore</string>
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>
+    <string name="adrian_summary">For creating the album page design.</string>
     <string name="add_action">Add</string>
     <string name="blacklist">Blacklist</string>
     <string name="remove_from_blacklist">Remove from blacklist</string>
@@ -288,4 +289,12 @@
     <string name="library_categories">Library categories</string>
     <string name="pref_summary_library_categories">Configure visibility and order of library categories.</string>
     <string name="you_have_to_select_at_least_one_category">You have to select at least one category.</string>
+    <string name="action_sort_order">Sort order</string>
+    <string name="sort_order_a_z">Ascending</string>
+    <string name="sort_order_z_a">Descending</string>
+    <string name="sort_order_artist">Artist</string>
+    <string name="sort_order_album">Album</string>
+    <string name="sort_order_year">Year</string>
+    <string name="action_scan_directory">Scan directory</string>
+    <string name="scan_media">Scan media</string>
 </resources>

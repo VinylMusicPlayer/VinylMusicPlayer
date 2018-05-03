@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.Options;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
@@ -38,7 +37,7 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
     @Override
     public LoadData<InputStream> buildLoadData(@NonNull ArtistImage model, int width, int height,
                                                @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(model.artistName), new ArtistImageFetcher(context, lastFMClient, okhttp, model));
+        return new LoadData<>(new ObjectKey(model.artistName), new ArtistImageFetcher(context, lastFMClient, okhttp, model, width, height));
     }
 
     @Override
@@ -48,17 +47,16 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
 
     public static class Factory implements ModelLoaderFactory<ArtistImage, InputStream> {
         private LastFMRestClient lastFMClient;
-        private OkHttpUrlLoader.Factory okHttpFactory;
         private Context context;
         private OkHttpClient okHttp;
 
         public Factory(Context context) {
             this.context = context;
-            okHttpFactory = new OkHttpUrlLoader.Factory(new OkHttpClient.Builder()
+            okHttp = new OkHttpClient.Builder()
                     .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    .build());
+                    .build();
             lastFMClient = new LastFMRestClient(LastFMRestClient.createDefaultOkHttpClientBuilder(context)
                     .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
@@ -74,7 +72,6 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
 
         @Override
         public void teardown() {
-            okHttpFactory.teardown();
         }
     }
 }

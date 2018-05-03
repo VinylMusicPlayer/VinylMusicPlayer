@@ -4,12 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
@@ -86,13 +86,13 @@ public final class PreferenceUtil {
 
     private final SharedPreferences mPreferences;
 
-    private PreferenceUtil(@NonNull final Context context) {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    private PreferenceUtil() {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
     }
 
-    public static PreferenceUtil getInstance(@NonNull final Context context) {
+    public static PreferenceUtil getInstance() {
         if (sInstance == null) {
-            sInstance = new PreferenceUtil(context.getApplicationContext());
+            sInstance = new PreferenceUtil();
         }
         return sInstance;
     }
@@ -105,8 +105,15 @@ public final class PreferenceUtil {
         mPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 
+    @StyleRes
     public int getGeneralTheme() {
-        return getThemeResFromPrefValue(mPreferences.getString(GENERAL_THEME, ""));
+        return getThemeResFromPrefValue(mPreferences.getString(GENERAL_THEME, "light"));
+    }
+
+    public void setGeneralTheme(String theme) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(GENERAL_THEME, theme);
+        editor.apply();
     }
 
     @StyleRes
@@ -215,6 +222,12 @@ public final class PreferenceUtil {
         return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z);
     }
 
+    public void setArtistSortOrder(final String sortOrder) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(ARTIST_SORT_ORDER, sortOrder);
+        editor.commit();
+    }
+
     public final String getArtistSongSortOrder() {
         return mPreferences.getString(ARTIST_SONG_SORT_ORDER, SortOrder.ArtistSongSortOrder.SONG_A_Z);
     }
@@ -227,12 +240,24 @@ public final class PreferenceUtil {
         return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
     }
 
+    public void setAlbumSortOrder(final String sortOrder) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(ALBUM_SORT_ORDER, sortOrder);
+        editor.commit();
+    }
+
     public final String getAlbumSongSortOrder() {
         return mPreferences.getString(ALBUM_SONG_SORT_ORDER, SortOrder.AlbumSongSortOrder.SONG_TRACK_LIST);
     }
 
     public final String getSongSortOrder() {
         return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
+    }
+
+    public void setSongSortOrder(final String sortOrder) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(SONG_SORT_ORDER, sortOrder);
+        editor.commit();
     }
 
     public final String getGenreSortOrder() {

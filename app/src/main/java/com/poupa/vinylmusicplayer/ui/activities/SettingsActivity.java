@@ -157,13 +157,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             super.onViewCreated(view, savedInstanceState);
             getListView().setPadding(0, 0, 0, 0);
             invalidateSettings();
-            PreferenceUtil.getInstance(getActivity()).registerOnSharedPreferenceChangedListener(this);
+            PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
         }
 
         @Override
         public void onDestroyView() {
             super.onDestroyView();
-            PreferenceUtil.getInstance(getActivity()).unregisterOnSharedPreferenceChangedListener(this);
+            PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         }
 
         private void invalidateSettings() {
@@ -171,15 +171,16 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             setSummary(generalTheme);
             generalTheme.setOnPreferenceChangeListener((preference, o) -> {
                 String themeName = (String) o;
-                int theme = PreferenceUtil.getThemeResFromPrefValue(themeName);
+
                 setSummary(generalTheme, o);
-                ThemeStore.editTheme(getActivity())
-                        .activityTheme(theme)
-                        .commit();
+
+                if (getActivity() != null) {
+                    ThemeStore.markChanged(getActivity());
+                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                     // Set the new theme so that updateAppShortcuts can pull it
-                    getActivity().setTheme(PreferenceUtil.getThemeResFromPrefValue((String) o));
+                    getActivity().setTheme(PreferenceUtil.getThemeResFromPrefValue(themeName));
                     new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
                 }
 
@@ -195,17 +196,19 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             });
 
             final ATEColorPreference primaryColorPref = (ATEColorPreference) findPreference("primary_color");
-            final int primaryColor = ThemeStore.primaryColor(getActivity());
-            primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
-            primaryColorPref.setOnPreferenceClickListener(preference -> {
-                new ColorChooserDialog.Builder(getActivity(), R.string.primary_color)
-                        .accentMode(false)
-                        .allowUserColorInput(true)
-                        .allowUserColorInputAlpha(false)
-                        .preselect(primaryColor)
-                        .show(getActivity());
-                return true;
-            });
+            if (getActivity() != null) {
+                final int primaryColor = ThemeStore.primaryColor(getActivity());
+                primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
+                primaryColorPref.setOnPreferenceClickListener(preference -> {
+                    new ColorChooserDialog.Builder(getActivity(), R.string.primary_color)
+                            .accentMode(false)
+                            .allowUserColorInput(true)
+                            .allowUserColorInputAlpha(false)
+                            .preselect(primaryColor)
+                            .show(getActivity());
+                    return true;
+                });
+            }
 
             final ATEColorPreference accentColorPref = (ATEColorPreference) findPreference("accent_color");
             final int accentColor = ThemeStore.accentColor(getActivity());
@@ -238,22 +241,22 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 classicNotification.setVisible(false);
             } else {
-                classicNotification.setChecked(PreferenceUtil.getInstance(getActivity()).classicNotification());
+                classicNotification.setChecked(PreferenceUtil.getInstance().classicNotification());
                 classicNotification.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
-                    PreferenceUtil.getInstance(getActivity()).setClassicNotification((Boolean) newValue);
+                    PreferenceUtil.getInstance().setClassicNotification((Boolean) newValue);
                     return true;
                 });
             }
 
             final TwoStatePreference coloredNotification = (TwoStatePreference) findPreference("colored_notification");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                coloredNotification.setEnabled(PreferenceUtil.getInstance(getActivity()).classicNotification());
+                coloredNotification.setEnabled(PreferenceUtil.getInstance().classicNotification());
             } else {
-                coloredNotification.setChecked(PreferenceUtil.getInstance(getActivity()).coloredNotification());
+                coloredNotification.setChecked(PreferenceUtil.getInstance().coloredNotification());
                 coloredNotification.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
-                    PreferenceUtil.getInstance(getActivity()).setColoredNotification((Boolean) newValue);
+                    PreferenceUtil.getInstance().setColoredNotification((Boolean) newValue);
                     return true;
                 });
             }
@@ -262,10 +265,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
                 colorAppShortcuts.setVisible(false);
             } else {
-                colorAppShortcuts.setChecked(PreferenceUtil.getInstance(getActivity()).coloredAppShortcuts());
+                colorAppShortcuts.setChecked(PreferenceUtil.getInstance().coloredAppShortcuts());
                 colorAppShortcuts.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
-                    PreferenceUtil.getInstance(getActivity()).setColoredAppShortcuts((Boolean) newValue);
+                    PreferenceUtil.getInstance().setColoredAppShortcuts((Boolean) newValue);
 
                     // Update app shortcuts
                     new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
@@ -289,9 +292,12 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
         private boolean hasEqualizer() {
             final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-            PackageManager pm = getActivity().getPackageManager();
-            ResolveInfo ri = pm.resolveActivity(effects, 0);
-            return ri != null;
+            if (getActivity() != null) {
+                PackageManager pm = getActivity().getPackageManager();
+                ResolveInfo ri = pm.resolveActivity(effects, 0);
+                return ri != null;
+            }
+            return false;
         }
 
         @Override
@@ -309,7 +315,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         }
 
         private void updateNowPlayingScreenSummary() {
-            findPreference("now_playing_screen_id").setSummary(PreferenceUtil.getInstance(getActivity()).getNowPlayingScreen().titleRes);
+            findPreference("now_playing_screen_id").setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
         }
     }
 }

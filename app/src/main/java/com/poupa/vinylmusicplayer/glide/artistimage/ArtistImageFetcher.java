@@ -9,16 +9,13 @@ import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.ModelLoader;
 import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmArtist;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -38,11 +35,11 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     private OkHttpClient okhttp;
     private OkHttpStreamFetcher streamFetcher;
 
-    public ArtistImageFetcher(Context context, LastFMRestClient lastFMRestClient, OkHttpClient okhttp, ArtistImage model) {
+    public ArtistImageFetcher(Context context, LastFMRestClient lastFMRestClient, OkHttpClient okhttp, ArtistImage model, int width, int height) {
         this.context = context;
         this.lastFMRestClient = lastFMRestClient;
-        this.model = model;
         this.okhttp = okhttp;
+        this.model = model;
     }
 
     @NonNull
@@ -109,6 +106,9 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     @Override
     public void cancel() {
         isCancelled = true;
+        if (call != null) {
+            call.cancel();
+        }
         if (streamFetcher != null) {
             streamFetcher.cancel();
         }

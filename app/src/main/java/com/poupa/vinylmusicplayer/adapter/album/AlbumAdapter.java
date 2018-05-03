@@ -11,20 +11,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
-import com.poupa.vinylmusicplayer.glide.VinylMusicPlayerColoredTarget;
-import com.poupa.vinylmusicplayer.glide.SongGlideRequest;
+import com.poupa.vinylmusicplayer.glide.GlideApp;
+import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
+import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -129,10 +131,12 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     protected void loadAlbumCover(Album album, final ViewHolder holder) {
         if (holder.image == null) return;
 
-        SongGlideRequest.Builder.from(Glide.with(activity), album.safeGetFirstSong())
-                .checkIgnoreMediaStore(activity)
-                .generatePalette(activity).buildAsBitmapPaletteWrapper()
-                .into(new VinylMusicPlayerColoredTarget(holder.image) {
+        GlideApp.with(activity)
+                .asBitmapPalette()
+                .load(VinylGlideExtension.getSongModel(album.safeGetFirstSong()))
+                .transition(VinylGlideExtension.getDefaultTransition())
+                .songOptions(album.safeGetFirstSong())
+                .into(new VinylColoredTarget(holder.image) {
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
@@ -186,7 +190,20 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @NonNull
     @Override
     public String getSectionName(int position) {
-        return MusicUtil.getSectionName(dataSet.get(position).getTitle());
+        @Nullable String sectionName = null;
+        switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
+            case SortOrder.AlbumSortOrder.ALBUM_A_Z:
+            case SortOrder.AlbumSortOrder.ALBUM_Z_A:
+                sectionName = dataSet.get(position).getTitle();
+                break;
+            case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
+                sectionName = dataSet.get(position).getArtistName();
+                break;
+            case SortOrder.AlbumSortOrder.ALBUM_YEAR:
+                return Integer.toString(dataSet.get(position).getYear());
+        }
+
+        return MusicUtil.getSectionName(sectionName);
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
