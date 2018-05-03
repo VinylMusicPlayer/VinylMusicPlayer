@@ -13,14 +13,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.SongGlideRequest;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -98,13 +98,11 @@ public class AppWidgetCard extends BaseAppWidget {
             @Override
             public void run() {
                 if (target != null) {
-                    GlideApp.with(service).clear(target);
+                    Glide.with(service).clear(target);
                 }
-                target = GlideApp.with(service)
-                        .asBitmapPalette()
-                        .load(VinylGlideExtension.getSongModel(song))
-                        .transition(VinylGlideExtension.getDefaultTransition())
-                        .songOptions(song)
+                target = SongGlideRequest.Builder.from(Glide.with(service), song)
+                        .checkIgnoreMediaStore(service)
+                        .generatePalette(service).buildAsBitmapPaletteWrapper()
                         .into(new SimpleTarget<BitmapPaletteWrapper>(imageSize, imageSize) {
                             @Override
                             public void onResourceReady(@NonNull BitmapPaletteWrapper resource, Transition<? super BitmapPaletteWrapper> glideAnimation) {

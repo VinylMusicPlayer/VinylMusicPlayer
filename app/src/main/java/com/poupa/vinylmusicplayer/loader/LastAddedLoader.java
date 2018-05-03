@@ -18,7 +18,7 @@ public class LastAddedLoader {
     }
 
     public static Cursor makeLastAddedCursor(@NonNull final Context context) {
-        long cutoff = PreferenceUtil.getInstance().getLastAddedCutoff();
+        long cutoff = PreferenceUtil.getInstance(context).getLastAddedCutoff();
 
         return SongLoader.makeSongCursor(
                 context,

@@ -178,7 +178,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
     }
 
     private boolean isLyricsLayoutVisible() {
-        return lyrics != null && lyrics.isSynchronized() && lyrics.isValid() && PreferenceUtil.getInstance().synchronizedLyricsShow();
+        return lyrics != null && lyrics.isSynchronized() && lyrics.isValid() && PreferenceUtil.getInstance(getActivity()).synchronizedLyricsShow();
     }
 
     private boolean isLyricsLayoutBound() {

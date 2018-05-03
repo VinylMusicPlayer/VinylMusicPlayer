@@ -13,14 +13,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.SongGlideRequest;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -33,7 +33,7 @@ public class AppWidgetClassic extends BaseAppWidget {
     private static AppWidgetClassic mInstance;
     private static int imageSize = 0;
     private static float cardRadius = 0f;
-    private Target target; // for cancellation
+    private Target<BitmapPaletteWrapper> target; // for cancellation
 
     public static synchronized AppWidgetClassic getInstance() {
         if (mInstance == null) {
@@ -91,13 +91,11 @@ public class AppWidgetClassic extends BaseAppWidget {
             @Override
             public void run() {
                 if (target != null) {
-                    GlideApp.with(appContext).clear(target);
+                    Glide.with(appContext).clear(target);
                 }
-                target = GlideApp.with(appContext)
-                        .asBitmapPalette()
-                        .load(VinylGlideExtension.getSongModel(song))
-                        .transition(VinylGlideExtension.getDefaultTransition())
-                        .songOptions(song)
+                target = SongGlideRequest.Builder.from(Glide.with(appContext), song)
+                        .checkIgnoreMediaStore(appContext)
+                        .generatePalette(service).buildAsBitmapPaletteWrapper()
                         .into(new SimpleTarget<BitmapPaletteWrapper>(imageSize, imageSize) {
                             @Override
                             public void onResourceReady(@NonNull BitmapPaletteWrapper resource, Transition<? super BitmapPaletteWrapper> glideAnimation) {

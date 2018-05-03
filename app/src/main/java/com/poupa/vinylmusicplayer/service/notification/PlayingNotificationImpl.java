@@ -16,25 +16,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.SongGlideRequest;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 public class PlayingNotificationImpl extends PlayingNotification {
 
-    private Target target;
+    private Target<BitmapPaletteWrapper> target;
 
     @Override
     public synchronized void update() {
@@ -88,13 +88,11 @@ public class PlayingNotificationImpl extends PlayingNotification {
             @Override
             public void run() {
                 if (target != null) {
-                    GlideApp.with(service).clear(target);
+                    Glide.with(service).clear(target);
                 }
-                target = GlideApp.with(service)
-                        .asBitmapPalette()
-                        .load(VinylGlideExtension.getSongModel(song))
-                        .transition(VinylGlideExtension.getDefaultTransition())
-                        .songOptions(song)
+                target = SongGlideRequest.Builder.from(Glide.with(service), song)
+                        .checkIgnoreMediaStore(service)
+                        .generatePalette(service).buildAsBitmapPaletteWrapper()
                         .into(new SimpleTarget<BitmapPaletteWrapper>(bigNotificationImageSize, bigNotificationImageSize) {
                             @Override
                             public void onResourceReady(@NonNull BitmapPaletteWrapper resource, Transition<? super BitmapPaletteWrapper> glideAnimation) {
@@ -116,7 +114,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
                                     notificationLayoutBig.setImageViewResource(R.id.image, R.drawable.default_album_art);
                                 }
 
-                                if (!PreferenceUtil.getInstance().coloredNotification()) {
+                                if (!PreferenceUtil.getInstance(service).coloredNotification()) {
                                     bgColor = Color.WHITE;
                                 }
                                 setBackgroundColor(bgColor);

@@ -88,7 +88,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
         if (!savedInstanceState.containsKey("current_path")) {
             savedInstanceState.putString("current_path", initialPath);
         }
-        parentFolder = new File(savedInstanceState.getString("current_path", "/"));
+        parentFolder = new File(savedInstanceState.getString("current_path", File.pathSeparator));
         checkIfCanGoUp();
         parentContents = listFiles();
         MaterialDialog.Builder builder =
@@ -104,6 +104,9 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
                         .onNegative((materialDialog, dialogAction) -> dismiss())
                         .positiveText(R.string.add_action)
                         .negativeText(android.R.string.cancel);
+        if (File.pathSeparator.equals(initialPath)) {
+            canGoUp = false;
+        }
         return builder.build();
     }
 
@@ -127,7 +130,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
 
     private void checkIfCanGoUp() {
         try {
-            canGoUp = parentFolder.getPath().split("/").length > 1;
+            canGoUp = parentFolder.getPath().split(File.pathSeparator).length > 1;
         } catch (IndexOutOfBoundsException e) {
             canGoUp = false;
         }

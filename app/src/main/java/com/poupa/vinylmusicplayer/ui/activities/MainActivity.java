@@ -21,14 +21,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
-import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.SongGlideRequest;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SearchQueryHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -91,7 +90,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         setUpDrawerLayout();
 
         if (savedInstanceState == null) {
-            setMusicChooser(PreferenceUtil.getInstance().getLastMusicChooser());
+            setMusicChooser(PreferenceUtil.getInstance(this).getLastMusicChooser());
         } else {
             restoreCurrentFragment();
         }
@@ -102,7 +101,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     }
 
     private void setMusicChooser(int key) {
-        PreferenceUtil.getInstance().setLastMusicChooser(key);
+        PreferenceUtil.getInstance(this).setLastMusicChooser(key);
         switch (key) {
             case LIBRARY:
                 navigationView.setCheckedItem(R.id.nav_library);
@@ -163,12 +162,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 case R.id.nav_folders:
                     new Handler().postDelayed(() -> setMusicChooser(FOLDERS), 200);
                     break;
-                case R.id.action_scan:
-                    new Handler().postDelayed(() -> {
-                        ScanMediaFolderChooserDialog dialog = ScanMediaFolderChooserDialog.create();
-                        dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
-                    }, 200);
-                    break;
                 case R.id.nav_settings:
                     new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);
                     break;
@@ -199,11 +192,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             }
             ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.title);
             ((TextView) navigationDrawerHeader.findViewById(R.id.text)).setText(song.artistName);
-            GlideApp.with(this)
-                    .asDrawable()
-                    .load(VinylGlideExtension.getSongModel(song))
-                    .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song)
+            SongGlideRequest.Builder.from(Glide.with(this), song)
+                    .checkIgnoreMediaStore(this).build()
                     .into(((ImageView) navigationDrawerHeader.findViewById(R.id.image)));
         } else {
             if (navigationDrawerHeader != null) {
@@ -328,8 +318,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     }
 
     private boolean checkShowIntro() {
-        if (!PreferenceUtil.getInstance().introShown()) {
-            PreferenceUtil.getInstance().setIntroShown();
+        if (!PreferenceUtil.getInstance(this).introShown()) {
+            PreferenceUtil.getInstance(this).setIntroShown();
             ChangelogDialog.setChangelogRead(this);
             blockRequestPermissions = true;
             new Handler().postDelayed(() -> startActivityForResult(new Intent(MainActivity.this, AppIntroActivity.class), APP_INTRO_REQUEST), 50);
@@ -342,7 +332,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             int currentVersion = pInfo.versionCode;
-            if (currentVersion != PreferenceUtil.getInstance().getLastChangelogVersion()) {
+            if (currentVersion != PreferenceUtil.getInstance(this).getLastChangelogVersion()) {
                 ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGE_LOG_DIALOG");
                 return true;
             }

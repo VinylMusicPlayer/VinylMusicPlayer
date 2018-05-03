@@ -23,7 +23,7 @@ import com.poupa.vinylmusicplayer.util.Util;
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 public final class AppShortcutIconGenerator {
     public static Icon generateThemedIcon(Context context, int iconId) {
-        if (PreferenceUtil.getInstance().coloredAppShortcuts()) {
+        if (PreferenceUtil.getInstance(context).coloredAppShortcuts()) {
             return generateUserThemedIcon(context, iconId).toIcon();
         } else {
             return generateDefaultThemedIcon(context, iconId).toIcon();

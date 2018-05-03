@@ -3,9 +3,9 @@ package com.poupa.vinylmusicplayer.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.bumptech.glide.signature.ObjectKey;
-import com.poupa.vinylmusicplayer.App;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -17,18 +17,18 @@ public class ArtistSignatureUtil {
 
     private final SharedPreferences mPreferences;
 
-    private ArtistSignatureUtil() {
-        mPreferences = App.getStaticContext().getSharedPreferences(ARTIST_SIGNATURE_PREFS, Context.MODE_PRIVATE);
+    private ArtistSignatureUtil(@NonNull final Context context) {
+        mPreferences = context.getSharedPreferences(ARTIST_SIGNATURE_PREFS, Context.MODE_PRIVATE);
     }
 
-    public static ArtistSignatureUtil getInstance() {
+    public static ArtistSignatureUtil getInstance(@NonNull final Context context) {
         if (sInstance == null) {
-            sInstance = new ArtistSignatureUtil();
+            sInstance = new ArtistSignatureUtil(context.getApplicationContext());
         }
         return sInstance;
     }
 
-    @SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
+    @SuppressLint("CommitPrefEdits")
     public void updateArtistSignature(String artistName) {
         mPreferences.edit().putLong(artistName, System.currentTimeMillis()).commit();
     }

@@ -63,48 +63,33 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     }
 
     @Override
-    protected String loadSortOrder() {
-        return PreferenceUtil.getInstance().getArtistSortOrder();
-    }
-
-    @Override
-    protected void saveSortOrder(String sortOrder) {
-        PreferenceUtil.getInstance().setArtistSortOrder(sortOrder);
-    }
-
-    @Override
-    protected void setSortOrder(String sortOrder) {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     protected int loadGridSize() {
-        return PreferenceUtil.getInstance().getArtistGridSize(getActivity());
+        return PreferenceUtil.getInstance(getActivity()).getArtistGridSize(getActivity());
     }
 
     @Override
     protected void saveGridSize(int gridSize) {
-        PreferenceUtil.getInstance().setArtistGridSize(gridSize);
+        PreferenceUtil.getInstance(getActivity()).setArtistGridSize(gridSize);
     }
 
     @Override
     protected int loadGridSizeLand() {
-        return PreferenceUtil.getInstance().getArtistGridSizeLand(getActivity());
+        return PreferenceUtil.getInstance(getActivity()).getArtistGridSizeLand(getActivity());
     }
 
     @Override
     protected void saveGridSizeLand(int gridSize) {
-        PreferenceUtil.getInstance().setArtistGridSizeLand(gridSize);
+        PreferenceUtil.getInstance(getActivity()).setArtistGridSizeLand(gridSize);
     }
 
     @Override
     protected void saveUsePalette(boolean usePalette) {
-        PreferenceUtil.getInstance().setArtistColoredFooters(usePalette);
+        PreferenceUtil.getInstance(getActivity()).setArtistColoredFooters(usePalette);
     }
 
     @Override
     public boolean loadUsePalette() {
-        return PreferenceUtil.getInstance().artistColoredFooters();
+        return PreferenceUtil.getInstance(getActivity()).artistColoredFooters();
     }
 
     @Override

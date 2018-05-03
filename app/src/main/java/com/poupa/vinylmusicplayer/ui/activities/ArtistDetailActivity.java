@@ -2,7 +2,7 @@ package com.poupa.vinylmusicplayer.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.afollestad.materialcab.MaterialCab;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -32,9 +33,8 @@ import com.poupa.vinylmusicplayer.adapter.album.HorizontalAlbumAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.ArtistGlideRequest;
+import com.poupa.vinylmusicplayer.glide.VinylMusicPlayerColoredTarget;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -48,11 +48,10 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -74,36 +73,27 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
-    @BindView(R.id.list)
-    ObservableListView songListView;
     @BindView(R.id.image)
     ImageView artistImage;
+    @BindView(R.id.list_background)
+    View songListBackground;
+    @BindView(R.id.list)
+    ObservableListView songListView;
+    @BindView(R.id.title)
+    TextView artistName;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.header)
-    View headerView;
-    @BindView(R.id.header_overlay)
-    View headerOverlay;
-
-    @BindView(R.id.duration_icon)
-    ImageView durationIconImageView;
-    @BindView(R.id.song_count_icon)
-    ImageView songCountIconImageView;
-    @BindView(R.id.album_count_icon)
-    ImageView albumCountIconImageView;
-    @BindView(R.id.duration_text)
-    TextView durationTextView;
-    @BindView(R.id.song_count_text)
-    TextView songCountTextView;
-    @BindView(R.id.album_count_text)
-    TextView albumCountTextView;
 
     View songListHeader;
     RecyclerView albumRecyclerView;
 
     private MaterialCab cab;
-    private int headerViewHeight;
+    private int headerOffset;
+    private int titleViewHeight;
+    private int artistImageViewHeight;
     private int toolbarColor;
+    private float toolbarAlpha;
+    private boolean usePalette;
 
     private Artist artist;
     @Nullable
@@ -115,21 +105,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     private LastFMRestClient lastFMRestClient;
 
     private boolean forceDownload;
-    private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
-        @Override
-        public void onScrollChanged(int scrollY, boolean b, boolean b2) {
-            scrollY += headerViewHeight;
-
-            // Change alpha of overlay
-            float headerAlpha = Math.max(0, Math.min(1, (float) 2 * scrollY / headerViewHeight));
-            headerOverlay.setBackgroundColor(ColorUtil.withAlpha(toolbarColor, headerAlpha));
-
-            // Translate name text
-            headerView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            headerOverlay.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            artistImage.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,13 +112,15 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         setDrawUnderStatusbar(true);
         ButterKnife.bind(this);
 
+        supportPostponeEnterTransition();
+
         lastFMRestClient = new LastFMRestClient(this);
-        usePalette = PreferenceUtil.getInstance().albumArtistColoredFooters();
+        usePalette = PreferenceUtil.getInstance(this).albumArtistColoredFooters();
 
         initViews();
         setUpObservableListViewParams();
-        setUpToolbar();
         setUpViews();
+        setUpToolbar();
 
         getSupportLoaderManager().initLoader(LOADER_ID, getIntent().getExtras(), this);
     }
@@ -153,10 +130,41 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         return wrapSlidingMusicPanel(R.layout.activity_artist_detail);
     }
 
-    private boolean usePalette;
+    private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
+        @Override
+        public void onScrollChanged(int scrollY, boolean b, boolean b2) {
+            scrollY += artistImageViewHeight + titleViewHeight;
+            float flexibleRange = artistImageViewHeight - headerOffset;
+
+            // Translate album cover
+            artistImage.setTranslationY(Math.max(-artistImageViewHeight, -scrollY / 2));
+
+            // Translate list background
+            songListBackground.setTranslationY(Math.max(0, -scrollY + artistImageViewHeight));
+
+            // Change alpha of overlay
+            toolbarAlpha = Math.max(0, Math.min(1, (float) scrollY / flexibleRange));
+            toolbar.setBackgroundColor(ColorUtil.withAlpha(toolbarColor, toolbarAlpha));
+            setStatusbarColor(ColorUtil.withAlpha(toolbarColor, cab != null && cab.isActive() ? 1 : toolbarAlpha));
+
+            // Translate name text
+            int maxTitleTranslationY = artistImageViewHeight;
+            int titleTranslationY = maxTitleTranslationY - scrollY;
+            titleTranslationY = Math.max(headerOffset, titleTranslationY);
+
+            artistName.setTranslationY(titleTranslationY);
+        }
+    };
 
     private void setUpObservableListViewParams() {
-        headerViewHeight = getResources().getDimensionPixelSize(R.dimen.detail_header_height);
+        artistImageViewHeight = getResources().getDimensionPixelSize(R.dimen.header_image_height);
+        toolbarColor = DialogUtils.resolveColor(this, R.attr.defaultFooterColor);
+        int toolbarHeight = Util.getActionBarSize(this);
+        titleViewHeight = getResources().getDimensionPixelSize(R.dimen.title_view_height);
+        headerOffset = toolbarHeight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            headerOffset += getResources().getDimensionPixelSize(R.dimen.status_bar_padding);
+        }
     }
 
     private void initViews() {
@@ -167,7 +175,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     private void setUpViews() {
         setUpSongListView();
         setUpAlbumRecyclerView();
-        setColors(DialogUtils.resolveColor(this, R.attr.defaultFooterColor));
     }
 
     private void setUpSongListView() {
@@ -179,11 +186,14 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         songListView.setAdapter(songAdapter);
 
         final View contentView = getWindow().getDecorView().findViewById(android.R.id.content);
-        contentView.post(() -> observableScrollViewCallbacks.onScrollChanged(-headerViewHeight, false, false));
+        contentView.post(() -> {
+            songListBackground.getLayoutParams().height = contentView.getHeight();
+            observableScrollViewCallbacks.onScrollChanged(-(artistImageViewHeight + titleViewHeight), false, false);
+        });
     }
 
     private void setUpSongListPadding() {
-        songListView.setPadding(0, headerViewHeight, 0, 0);
+        songListView.setPadding(0, artistImageViewHeight + titleViewHeight, 0, 0);
     }
 
     private void setUpAlbumRecyclerView() {
@@ -201,7 +211,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     protected void setUsePalette(boolean usePalette) {
         albumAdapter.usePalette(usePalette);
-        PreferenceUtil.getInstance().setAlbumArtistColoredFooters(usePalette);
+        PreferenceUtil.getInstance(this).setAlbumArtistColoredFooters(usePalette);
         this.usePalette = usePalette;
     }
 
@@ -254,13 +264,10 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     }
 
     private void loadArtistImage() {
-        GlideApp.with(this)
-                .asBitmapPalette()
-                .load(VinylGlideExtension.getArtistModel(artist, forceDownload))
-                .transition(VinylGlideExtension.getDefaultTransition())
-                .artistOptions(artist)
-                .dontAnimate()
-                .into(new VinylColoredTarget(artistImage) {
+        ArtistGlideRequest.Builder.from(Glide.with(this), artist)
+                .forceDownload(forceDownload)
+                .generatePalette(this).buildDontAnimate()
+                .into(new VinylMusicPlayerColoredTarget(artistImage) {
                     @Override
                     public void onColorReady(int color) {
                         setColors(color);
@@ -293,22 +300,10 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     private void setColors(int color) {
         toolbarColor = color;
-        headerView.setBackgroundColor(color);
-
+        artistName.setBackgroundColor(color);
+        artistName.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
         setNavigationbarColor(color);
         setTaskDescriptionColor(color);
-
-        toolbar.setBackgroundColor(color);
-        setSupportActionBar(toolbar); // needed to auto readjust the toolbar content color
-        setStatusbarColor(color);
-
-        int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
-        durationIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        songCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        albumCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        durationTextView.setTextColor(secondaryTextColor);
-        songCountTextView.setTextColor(secondaryTextColor);
-        albumCountTextView.setTextColor(secondaryTextColor);
     }
 
     private void setUpToolbar() {
@@ -322,7 +317,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_artist_detail, menu);
         menu.findItem(R.id.action_colored_footers).setChecked(usePalette);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -399,6 +394,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                 .start(new MaterialCab.Callback() {
                     @Override
                     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+                        setStatusbarColor(ColorUtil.stripAlpha(toolbarColor));
                         return callback.onCabCreated(materialCab, menu);
                     }
 
@@ -409,6 +405,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
                     @Override
                     public boolean onCabFinished(MaterialCab materialCab) {
+                        setStatusbarColor(ColorUtil.withAlpha(toolbarColor, toolbarAlpha));
                         return callback.onCabFinished(materialCab);
                     }
                 });
@@ -444,11 +441,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
             loadBiography();
         }
 
-        getSupportActionBar().setTitle(artist.getName());
-        songCountTextView.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));
-        albumCountTextView.setText(MusicUtil.getAlbumCountString(this, artist.getAlbumCount()));
-        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(this, artist.getSongs())));
-
+        artistName.setText(artist.getName());
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);
     }
@@ -465,6 +458,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @Override
     public void onLoadFinished(Loader<Artist> loader, Artist data) {
+        supportStartPostponedEnterTransition();
         setArtist(data);
     }
 

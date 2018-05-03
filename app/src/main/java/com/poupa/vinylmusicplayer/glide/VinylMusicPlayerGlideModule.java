@@ -22,7 +22,7 @@ import java.io.InputStream;
  */
 
 @GlideModule
-public class VinylGlideModule extends AppGlideModule {
+public class VinylMusicPlayerGlideModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
