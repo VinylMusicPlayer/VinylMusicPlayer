@@ -55,7 +55,6 @@ public final class VinylGlideExtension {
     public static RequestOptions songOptions(RequestOptions requestOptions, Song song) {
         return requestOptions
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .centerCrop()
                 .error(R.drawable.default_album_art)
                 .placeholder(R.drawable.default_album_art)
                 .signature(createSignature(song));
