@@ -120,6 +120,7 @@
     <string name="pref_header_notification">Notification</string>
     <string name="pref_title_navigation_bar">Colored navigation bar</string>
     <string name="pref_title_app_shortcuts">Colored app shortcuts</string>
+    <string name="pref_title_widget_background_transparent">Transparent widget background</string>
     <string name="pref_title_album_art_on_lockscreen">Show album cover</string>
     <string name="pref_title_auto_download_metadata">Auto download metadata</string>
     <string name="pref_title_blurred_album_art">Blur album cover</string>
@@ -162,6 +163,7 @@
     <string name="pref_summary_ignore_media_store_artwork">Can increase the album cover quality but causes slower image loading times. Only enable this if you have problems with low resolution artworks.</string>
     <string name="pref_summary_colored_navigation_bar">Colors the navigation bar in the primary color.</string>
     <string name="pref_summary_colored_app_shortcuts">Colors the app shortcuts in the primary color.</string>
+    <string name="pref_summary_widget_background_transparent">Makes the background of widgets transparent.</string>
     <string name="pref_summary_audio_ducking">Notifications, navigation etc.</string>
     <string name="pref_summary_synchronized_lyrics_show">Currently only synchronized lyrics in LRC format are supported. Either embedded or as a separate file.</string>
     <string name="pref_summary_remember_last_tab">Go to the last opened tab on launch</string>
@@ -272,8 +274,6 @@
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
     <string name="only_the_first_5_colors_available">Only the first 5 colors are available in the free version.</string>
-    <string name="restoring_purchase">Restoring purchase…</string>
-    <string name="could_not_restore_purchase">Could not restore purchase.</string>
     <string name="purchase">Purchase</string>
     <string name="restore">Restore</string>
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>

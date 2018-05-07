@@ -49,6 +49,9 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
             if (MusicService.META_CHANGED.equals(what) || MusicService.PLAY_STATE_CHANGED.equals(what)) {
                 performUpdate(service, null);
             }
+            if (MusicService.TRANSPARENT_WIDGET_CHANGED.equals(what)) {
+                performUpdateBackground(service, null);
+            }
         }
     }
 
@@ -133,6 +136,8 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     abstract protected void defaultAppWidget(final Context context, final int[] appWidgetIds);
 
     abstract public void performUpdate(final MusicService service, final int[] appWidgetIds);
+
+    public void performUpdateBackground(final MusicService service, final int[] appWidgetIds) { }
 
     protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap) {
         Drawable image;

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.RemoteViews;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
@@ -25,6 +27,7 @@ import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 public class AppWidgetCard extends BaseAppWidget {
@@ -49,6 +52,11 @@ public class AppWidgetCard extends BaseAppWidget {
     protected void defaultAppWidget(final Context context, final int[] appWidgetIds) {
         final RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.app_widget_card);
 
+        if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
+            appWidgetView.setInt(R.id.app_widget_card, "setBackgroundResource", android.R.color.transparent);
+        } else {
+            appWidgetView.setInt(R.id.app_widget_card, "setBackgroundResource", R.color.md_grey_50);
+        }
         appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         appWidgetView.setImageViewResource(R.id.image, R.drawable.default_album_art);
         appWidgetView.setImageViewBitmap(R.id.button_next, createBitmap(Util.getTintedVectorDrawable(context, R.drawable.ic_skip_next_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true)), 1f));
@@ -136,6 +144,18 @@ public class AppWidgetCard extends BaseAppWidget {
                         });
             }
         });
+    }
+
+    public void performUpdateBackground(final MusicService service, final int[] appWidgetIds) {
+        final RemoteViews appWidgetView = new RemoteViews(service.getPackageName(), R.layout.app_widget_card);
+
+        if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
+            appWidgetView.setInt(R.id.app_widget_card, "setBackgroundResource", android.R.color.transparent);
+        } else {
+            appWidgetView.setInt(R.id.app_widget_card, "setBackgroundResource", R.color.md_grey_50);
+        }
+
+        pushUpdate(service, appWidgetIds, appWidgetView);
     }
 
     /**

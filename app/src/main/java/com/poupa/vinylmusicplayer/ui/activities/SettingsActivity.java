@@ -32,6 +32,7 @@ import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -276,6 +277,18 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+
+            final TwoStatePreference transparentWidgets = (TwoStatePreference) findPreference("should_make_widget_background_transparent");
+            transparentWidgets.setChecked(PreferenceUtil.getInstance().transparentBackgroundWidget());
+            transparentWidgets.setOnPreferenceChangeListener((preference, newValue) -> {
+                // Save preference
+                PreferenceUtil.getInstance().setTransparentBackgroundWidget((Boolean) newValue);
+
+                // Update app shortcuts
+                new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
+
+                return true;
+            });
 
             final Preference equalizer = findPreference("equalizer");
             if (!hasEqualizer()) {

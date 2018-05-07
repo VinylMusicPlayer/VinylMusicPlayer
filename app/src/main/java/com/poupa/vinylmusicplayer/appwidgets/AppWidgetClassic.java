@@ -25,6 +25,7 @@ import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 public class AppWidgetClassic extends BaseAppWidget {
@@ -49,6 +50,11 @@ public class AppWidgetClassic extends BaseAppWidget {
     protected void defaultAppWidget(final Context context, final int[] appWidgetIds) {
         final RemoteViews appWidgetView = new RemoteViews(context.getPackageName(), R.layout.app_widget_classic);
 
+        if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
+            appWidgetView.setInt(R.id.app_widget_classic, "setBackgroundResource", android.R.color.transparent);
+        } else {
+            appWidgetView.setInt(R.id.app_widget_classic, "setBackgroundResource", R.color.md_grey_50);
+        }
         appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         appWidgetView.setImageViewResource(R.id.image, R.drawable.default_album_art);
         appWidgetView.setImageViewBitmap(R.id.button_next, createBitmap(Util.getTintedVectorDrawable(context, R.drawable.ic_skip_next_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true)), 1f));
@@ -129,6 +135,18 @@ public class AppWidgetClassic extends BaseAppWidget {
                         });
             }
         });
+    }
+
+    public void performUpdateBackground(final MusicService service, final int[] appWidgetIds) {
+        final RemoteViews appWidgetView = new RemoteViews(service.getPackageName(), R.layout.app_widget_classic);
+
+        if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
+            appWidgetView.setInt(R.id.app_widget_classic, "setBackgroundResource", android.R.color.transparent);
+        } else {
+            appWidgetView.setInt(R.id.app_widget_classic, "setBackgroundResource", R.color.md_grey_50);
+        }
+
+        pushUpdate(service, appWidgetIds, appWidgetView);
     }
 
     /**

@@ -36,6 +36,12 @@
             android:summary="@string/pref_summary_colored_app_shortcuts"
             android:title="@string/pref_title_app_shortcuts" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            android:defaultValue="true"
+            android:key="should_make_widget_background_transparent"
+            android:summary="@string/pref_summary_widget_background_transparent"
+            android:title="@string/pref_title_widget_background_transparent" />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>

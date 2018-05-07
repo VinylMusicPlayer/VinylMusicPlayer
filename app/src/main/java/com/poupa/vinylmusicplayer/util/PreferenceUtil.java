@@ -56,6 +56,8 @@ public final class PreferenceUtil {
 
     public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
 
+    public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
+
     public static final String AUDIO_DUCKING = "audio_ducking";
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
@@ -196,6 +198,16 @@ public final class PreferenceUtil {
 
     public final boolean coloredAppShortcuts() {
         return mPreferences.getBoolean(COLORED_APP_SHORTCUTS, true);
+    }
+
+    public void setTransparentBackgroundWidget(final boolean value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value);
+        editor.apply();
+    }
+
+    public final boolean transparentBackgroundWidget() {
+        return mPreferences.getBoolean(TRANSPARENT_BACKGROUND_WIDGET, false);
     }
 
     public final boolean gaplessPlayback() {
