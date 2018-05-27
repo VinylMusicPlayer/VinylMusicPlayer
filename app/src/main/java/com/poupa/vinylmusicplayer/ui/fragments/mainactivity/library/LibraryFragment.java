@@ -252,6 +252,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                 CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");
                 return true;
             case R.id.action_export_playlists:
+                // TODO
+                return true;
+            case R.id.action_export_playlists:
                 @SuppressLint("ShowToast")
                 final Toast toast = Toast.makeText(getActivity(), R.string.saving_playlists, Toast.LENGTH_LONG);
                 new AsyncTask<Context, Void, String>() {
