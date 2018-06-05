@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.M3UWriter;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -247,25 +246,6 @@ public class PlaylistsUtil {
 
     public static File savePlaylist(Context context, Playlist playlist) throws IOException {
         return M3UWriter.write(context, new File(Environment.getExternalStorageDirectory(), "Playlists"), playlist);
-    }
-
-    public static String saveAllPlaylists(Context context) {
-        int successes = 0, failures = 0;
-        File dir = new File(Environment.getExternalStorageDirectory(), "Playlists");
-
-        List<Playlist> playlists = PlaylistLoader.getAllPlaylists(context);
-        for (Playlist playlist : playlists) {
-            try {
-                savePlaylist(context, playlist);
-                successes++;
-            } catch (IOException ignored) {
-                failures++;
-            }
-        }
-
-        return failures == 0
-                ? String.format(context.getString(R.string.saved_x_playlists_to_x), successes, dir)
-                : String.format(context.getString(R.string.saved_x_playlists_to_x_failed_to_save_x), successes, dir, failures);
     }
 
     private static boolean doesPlaylistExist(@NonNull Context context, @NonNull final String selection, @NonNull final String[] values) {
