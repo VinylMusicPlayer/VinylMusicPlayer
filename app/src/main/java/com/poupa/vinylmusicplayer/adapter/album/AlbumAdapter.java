@@ -200,7 +200,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
                 sectionName = dataSet.get(position).getArtistName();
                 break;
             case SortOrder.AlbumSortOrder.ALBUM_YEAR:
-                return Integer.toString(dataSet.get(position).getYear());
+                return MusicUtil.getYearString(dataSet.get(position).getYear());
         }
 
         return MusicUtil.getSectionName(sectionName);

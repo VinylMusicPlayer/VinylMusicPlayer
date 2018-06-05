@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.HorizontalAdapterHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 
