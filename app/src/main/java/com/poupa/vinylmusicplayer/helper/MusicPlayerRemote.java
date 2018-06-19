@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -176,6 +177,9 @@ public class MusicPlayerRemote {
     public static void openQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
             musicService.openQueue(queue, startPosition, startPlaying);
+            if (!PreferenceUtil.getInstance(musicService).rememberShuffle()){
+                setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
+            }
         }
     }
 
