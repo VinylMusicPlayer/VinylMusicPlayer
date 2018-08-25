@@ -1,13 +1,11 @@
 package com.poupa.vinylmusicplayer.views;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-
-/*
-    This is a temporally fix
-*/
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 
 public class StatusBarView extends View {
 
@@ -25,17 +23,12 @@ public class StatusBarView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(
-                MeasureSpec.getSize(widthMeasureSpec), getStatusBarHeight(getResources()));
-    }
-
-    public static int getStatusBarHeight(Resources r) {
-        int result = 0;
-        int resourceId = r.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = r.getDimensionPixelSize(resourceId);
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewGroup.LayoutParams lp = getLayoutParams();
+            lp.height = insets.getSystemWindowInsetTop();
+            setLayoutParams(lp);
         }
-        return result;
+        return super.onApplyWindowInsets(insets);
     }
 }
