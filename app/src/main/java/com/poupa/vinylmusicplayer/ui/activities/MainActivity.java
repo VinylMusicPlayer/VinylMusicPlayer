@@ -88,7 +88,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         }
 
         if (!checkShowIntro()) {
-            checkShowChangelog();
+            showChangelog();
         }
     }
 
@@ -328,18 +328,16 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         return false;
     }
 
-    private boolean checkShowChangelog() {
+    private void showChangelog() {
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             int currentVersion = pInfo.versionCode;
             if (currentVersion != PreferenceUtil.getInstance().getLastChangelogVersion()) {
                 ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGE_LOG_DIALOG");
-                return true;
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     public interface MainActivityFragmentCallbacks {
