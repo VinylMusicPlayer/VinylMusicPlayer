@@ -1,4 +1,4 @@
-package com.kabouzeid.gramophone.views;
+package com.poupa.vinylmusicplayer.views;
 
 import android.content.Context;
 import android.content.res.Resources;
