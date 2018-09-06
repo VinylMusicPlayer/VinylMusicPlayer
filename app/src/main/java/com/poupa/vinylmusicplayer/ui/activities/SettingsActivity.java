@@ -41,7 +41,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
-    public static final String TAG = SettingsActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;

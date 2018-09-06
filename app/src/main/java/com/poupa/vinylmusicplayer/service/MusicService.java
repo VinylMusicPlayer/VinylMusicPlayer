@@ -71,7 +71,6 @@ import java.util.Random;
  * @author Karim Abou Zeid (kabouzeid), Andrew Neal
  */
 public class MusicService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener, Playback.PlaybackCallbacks {
-    public static final String TAG = MusicService.class.getSimpleName();
 
     public static final String VINYL_MUSIC_PLAYER_PACKAGE_NAME = "com.poupa.vinylmusicplayer";
     public static final String MUSIC_PACKAGE_NAME = "com.android.music";

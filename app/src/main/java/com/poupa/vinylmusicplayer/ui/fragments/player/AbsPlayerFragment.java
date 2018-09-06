@@ -28,7 +28,6 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import butterknife.BindView;
 
 public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implements Toolbar.OnMenuItemClickListener, PaletteColorHolder {
-    public static final String TAG = AbsPlayerFragment.class.getSimpleName();
 
     private Callbacks callbacks;
     private static boolean isToolbarShown = true;
