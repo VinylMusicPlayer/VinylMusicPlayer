@@ -89,6 +89,7 @@
     <string name="clear_playlist_title">Clear playlist</string>
     <string name="save_playlist_title">Save as file</string>
     <string name="add_playlist_title">"Add to playlist"</string>
+    <string name="select_all_title">Select all</string>
     <string name="action_shuffle_all">Shuffle all</string>
     <string name="action_shuffle_album">Shuffle album</string>
     <string name="action_shuffle_artist">Shuffle artist</string>
