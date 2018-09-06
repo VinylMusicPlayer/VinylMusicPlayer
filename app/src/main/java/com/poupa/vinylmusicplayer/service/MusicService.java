@@ -48,6 +48,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.helper.StopWatch;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.loader.replaygain.ReplaygainTagExtractor;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -499,6 +500,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     private boolean openCurrent() {
         synchronized (this) {
             try {
+                applyReplayGain();
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
                 return false;
@@ -884,6 +886,42 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
         }
     }
 
+    private void applyReplayGain() {
+        byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
+        if (mode != 0) {
+            Song song = getCurrentSong();
+
+            if (Float.isNaN(song.replaygainTrack)) {
+                ReplaygainTagExtractor.setReplaygainValues(song);
+            }
+
+            float adjust = 0f;
+
+            if (mode == 2) {
+                adjust = (song.replaygainTrack != 0 ? song.replaygainTrack : adjust);
+                adjust = (song.replaygainAlbum != 0 ? song.replaygainAlbum : adjust);
+            }
+
+            if (mode == 1) {
+                adjust = (song.replaygainAlbum != 0 ? song.replaygainAlbum : adjust);
+                adjust = (song.replaygainTrack != 0 ? song.replaygainTrack : adjust);
+            }
+
+            if (adjust == 0) {
+                adjust = PreferenceUtil.getInstance().getRgPreampWithoutTag();
+            } else {
+                adjust += PreferenceUtil.getInstance().getRgPreampWithTag();
+            }
+
+            float rgResult = ((float) Math.pow(10, (adjust / 20)));
+            rgResult = Math.max(0, Math.min(1, rgResult));
+
+            playback.setReplaygain(rgResult);
+        } else {
+            playback.setReplaygain(Float.NaN);
+        }
+    }
+
     public void playPreviousSong(boolean force) {
         playSongAt(getPreviousPosition(force));
     }
@@ -1128,6 +1166,15 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
             case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
                 sendChangeInternal(MusicService.TRANSPARENT_WIDGET_CHANGED);
                 break;
+            case PreferenceUtil.RG_SOURCE_MODE:
+                applyReplayGain();
+                break;
+            case PreferenceUtil.RG_PREAMP_WITH_TAG:
+                applyReplayGain();
+                break;
+            case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
+                applyReplayGain();
+                break;
         }
     }
 
@@ -1171,7 +1218,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                     } else {
                         currentDuckVolume = 1f;
                     }
-                    service.playback.setVolume(currentDuckVolume);
+                    service.playback.setDuckingFactor(currentDuckVolume);
                     break;
 
                 case UNDUCK:
@@ -1185,7 +1232,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                     } else {
                         currentDuckVolume = 1f;
                     }
-                    service.playback.setVolume(currentDuckVolume);
+                    service.playback.setDuckingFactor(currentDuckVolume);
                     break;
 
                 case TRACK_WENT_TO_NEXT:
