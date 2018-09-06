@@ -1,4 +1,4 @@
-package com.kabouzeid.gramophone.misc;
+package com.poupa.vinylmusicplayer.misc;
 
 import android.content.Context;
 import android.os.AsyncTask;
