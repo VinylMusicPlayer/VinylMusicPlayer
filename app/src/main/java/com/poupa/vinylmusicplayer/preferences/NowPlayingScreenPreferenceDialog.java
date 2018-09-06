@@ -23,8 +23,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
-import butterknife.ButterKnife;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
