@@ -14,6 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jaudiotagger.audio.mp3.MP3File;
+import org.jaudiotagger.tag.images.Artwork;
+
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
@@ -61,6 +64,19 @@ public class AudioFileCoverFetcher implements DataFetcher<InputStream> {
             {"cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.jpg"};
 
     private InputStream fallback(String path) throws FileNotFoundException {
+        try {
+            MP3File mp3File = new MP3File(path);
+            if (mp3File.hasID3v2Tag()) {
+                Artwork art = mp3File.getTag().getFirstArtwork();
+                if (art != null) {
+                    byte[] imageData = art.getBinaryData();
+                    return new ByteArrayInputStream(imageData);
+                }
+            }
+            // If there are any exceptions, we ignore them and continue to the other fallback method
+        } catch (Exception ignored) { }
+
+        // Method 2: look for album art in external files
         File parent = new File(path).getParentFile();
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);
