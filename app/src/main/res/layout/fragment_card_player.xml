@@ -85,7 +85,7 @@
 
         </FrameLayout>
 
-        <com.kabouzeid.gramophone.views.StatusBarMarginFrameLayout
+        <com.poupa.vinylmusicplayer.views.StatusBarMarginFrameLayout
             android:id="@+id/player_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
 
             </android.support.v7.widget.CardView>
 
-        </com.kabouzeid.gramophone.views.StatusBarMarginFrameLayout>
+        </com.poupa.vinylmusicplayer.views.StatusBarMarginFrameLayout>
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
