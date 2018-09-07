@@ -48,7 +48,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.helper.StopWatch;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
-import com.poupa.vinylmusicplayer.loader.replaygain.ReplaygainTagExtractor;
+import com.poupa.vinylmusicplayer.loader.ReplaygainTagExtractor;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
