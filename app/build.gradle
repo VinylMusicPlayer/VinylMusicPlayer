@@ -7,12 +7,10 @@ buildscript {
 
     dependencies {
         //noinspection GradleDynamicVersion
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.hugo'
 
 android {
     compileSdkVersion 27
@@ -89,8 +87,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:1.8.3'
-    implementation 'com.github.bumptech.glide:glide:4.7.1'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:4.7.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.8.0'
     implementation 'com.heinrichreimersoftware:material-intro:1.6.2'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
     implementation 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
@@ -99,8 +97,8 @@ dependencies {
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar') {
         transitive = true
     }
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 }
