@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -205,7 +206,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         intent.putExtra(SearchManager.QUERY, stringBuilder.toString());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        startActivity(intent);
+        // Start search intent if possible: https://stackoverflow.com/questions/36592450/unexpected-intent-with-action-web-search
+        if (Intent.ACTION_WEB_SEARCH.equals(intent.getAction()) && intent.getExtras() != null) {
+            String query = intent.getExtras().getString(SearchManager.QUERY, null);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+query));
+            boolean browserExists = intent.resolveActivityInfo(getPackageManager(), 0) != null;
+            if (browserExists && query != null) {
+                startActivity(browserIntent);
+                return;
+            }
+        }
+
+        Toast.makeText(this, R.string.error_no_app_for_intent, Toast.LENGTH_LONG).show();
     }
 
     @Override
