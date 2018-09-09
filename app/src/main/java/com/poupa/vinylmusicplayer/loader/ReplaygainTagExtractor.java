@@ -1,16 +1,14 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import com.poupa.vinylmusicplayer.model.Song;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
@@ -34,7 +32,7 @@ public class ReplaygainTagExtractor {
       } else {
         tags = parseId3Tags(tag, song.data);
       }
-    } catch (CannotReadException | IOException | ReadOnlyFileException | TagException | InvalidAudioFrameException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
@@ -46,9 +44,10 @@ public class ReplaygainTagExtractor {
         song.replaygainAlbum = tags.get("REPLAYGAIN_ALBUM_GAIN");
       }
     }
+
   }
 
-  private static Map<String, Float> parseId3Tags(Tag tag, String path) throws IOException {
+  private static Map<String, Float> parseId3Tags(Tag tag, String path) throws Exception {
     String id = null;
 
     if (tag.hasField("TXXX")) {
@@ -67,10 +66,11 @@ public class ReplaygainTagExtractor {
       String[] data = field.toString().split(";");
 
       data[0] = data[0].substring(13, data[0].length() - 1).toUpperCase();
+
       if (data[0].equals("TRACK")) data[0] = "REPLAYGAIN_TRACK_GAIN";
       else if (data[0].equals("ALBUM")) data[0] = "REPLAYGAIN_ALBUM_GAIN";
 
-      tags.put(data[0], Float.parseFloat(data[1].replaceAll("[^0-9.-]", "")));
+      tags.put(data[0], parseFloat(data[1]));
     }
 
     return tags;
@@ -79,8 +79,8 @@ public class ReplaygainTagExtractor {
   private static Map<String, Float> parseVorbisTags(VorbisCommentTag tag) {
     Map<String, Float> tags = new HashMap<>();
 
-    if (tag.hasField("REPLAYGAIN_TRACK_GAIN")) tags.put("REPLAYGAIN_TRACK_GAIN", Float.parseFloat(tag.getFirst("REPLAYGAIN_TRACK_GAIN").replaceAll("[^0-9.-]", "")));
-    if (tag.hasField("REPLAYGAIN_ALBUM_GAIN")) tags.put("REPLAYGAIN_ALBUM_GAIN", Float.parseFloat(tag.getFirst("REPLAYGAIN_ALBUM_GAIN").replaceAll("[^0-9.-]", "")));
+    if (tag.hasField("REPLAYGAIN_TRACK_GAIN")) tags.put("REPLAYGAIN_TRACK_GAIN", parseFloat(tag.getFirst("REPLAYGAIN_TRACK_GAIN")));
+    if (tag.hasField("REPLAYGAIN_ALBUM_GAIN")) tags.put("REPLAYGAIN_ALBUM_GAIN", parseFloat(tag.getFirst("REPLAYGAIN_ALBUM_GAIN")));
 
     return tags;
   }
@@ -139,6 +139,18 @@ public class ReplaygainTagExtractor {
 
   private static int b2u(byte x) {
     return (x & 0xFF);
+  }
+
+  private static float parseFloat(String s) {
+    float result = 0.0f;
+    try {
+      s = s.replaceAll("[^0-9.-]","");
+      result = Float.parseFloat(s);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
 }
