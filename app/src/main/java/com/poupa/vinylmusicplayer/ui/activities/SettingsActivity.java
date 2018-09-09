@@ -27,7 +27,15 @@ import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragment
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
-import com.poupa.vinylmusicplayer.preferences.*;
+import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
+import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
+import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
+import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
+import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
