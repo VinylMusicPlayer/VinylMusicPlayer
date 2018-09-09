@@ -3,12 +3,7 @@ package com.poupa.vinylmusicplayer.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -16,14 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.media.session.MediaSession;
-import android.os.Binder;
-import android.os.Build;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.PowerManager;
+import android.os.*;
 import android.os.Process;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -33,7 +21,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.Toast;
-
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
@@ -48,6 +35,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.helper.StopWatch;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.loader.ReplaygainTagExtractor;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -61,7 +49,6 @@ import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -499,6 +486,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     private boolean openCurrent() {
         synchronized (this) {
             try {
+                applyReplayGain();
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
                 return false;
@@ -884,6 +872,42 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
         }
     }
 
+    private void applyReplayGain() {
+        byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
+        if (mode != 0) {
+            Song song = getCurrentSong();
+
+            if (Float.isNaN(song.replaygainTrack)) {
+                ReplaygainTagExtractor.setReplaygainValues(song);
+            }
+
+            float adjust = 0f;
+
+            if (mode == 2) {
+                adjust = (song.replaygainTrack != 0 ? song.replaygainTrack : adjust);
+                adjust = (song.replaygainAlbum != 0 ? song.replaygainAlbum : adjust);
+            }
+
+            if (mode == 1) {
+                adjust = (song.replaygainAlbum != 0 ? song.replaygainAlbum : adjust);
+                adjust = (song.replaygainTrack != 0 ? song.replaygainTrack : adjust);
+            }
+
+            if (adjust == 0) {
+                adjust = PreferenceUtil.getInstance().getRgPreampWithoutTag();
+            } else {
+                adjust += PreferenceUtil.getInstance().getRgPreampWithTag();
+            }
+
+            float rgResult = ((float) Math.pow(10, (adjust / 20)));
+            rgResult = Math.max(0, Math.min(1, rgResult));
+
+            playback.setReplaygain(rgResult);
+        } else {
+            playback.setReplaygain(Float.NaN);
+        }
+    }
+
     public void playPreviousSong(boolean force) {
         playSongAt(getPreviousPosition(force));
     }
@@ -1128,6 +1152,15 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
             case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
                 sendChangeInternal(MusicService.TRANSPARENT_WIDGET_CHANGED);
                 break;
+            case PreferenceUtil.RG_SOURCE_MODE:
+                applyReplayGain();
+                break;
+            case PreferenceUtil.RG_PREAMP_WITH_TAG:
+                applyReplayGain();
+                break;
+            case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
+                applyReplayGain();
+                break;
         }
     }
 
@@ -1171,7 +1204,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                     } else {
                         currentDuckVolume = 1f;
                     }
-                    service.playback.setVolume(currentDuckVolume);
+                    service.playback.setDuckingFactor(currentDuckVolume);
                     break;
 
                 case UNDUCK:
@@ -1185,7 +1218,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                     } else {
                         currentDuckVolume = 1f;
                     }
-                    service.playback.setVolume(currentDuckVolume);
+                    service.playback.setDuckingFactor(currentDuckVolume);
                     break;
 
                 case TRACK_WENT_TO_NEXT:
