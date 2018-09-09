@@ -15,11 +15,11 @@ import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -62,7 +62,7 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
                 .load(VinylGlideExtension.getSongModel(song))
                 .transition(VinylGlideExtension.getDefaultTransition())
                 .songOptions(song)
-                .into(new SimpleTarget<BitmapPaletteWrapper>(bigNotificationImageSize, bigNotificationImageSize) {
+                .into(new VinylSimpleTarget<BitmapPaletteWrapper>(bigNotificationImageSize, bigNotificationImageSize) {
                     @Override
                     public void onResourceReady(@NonNull BitmapPaletteWrapper resource, Transition<? super BitmapPaletteWrapper> glideAnimation) {
                         Palette palette = resource.getPalette();

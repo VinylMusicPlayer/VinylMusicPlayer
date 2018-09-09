@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -21,6 +20,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
@@ -100,7 +100,7 @@ public class AppWidgetBig extends BaseAppWidget {
                         .load(VinylGlideExtension.getSongModel(song))
                         .transition(VinylGlideExtension.getDefaultTransition())
                         .songOptions(song)
-                        .into(new SimpleTarget<Bitmap>(widgetImageSize, widgetImageSize) {
+                        .into(new VinylSimpleTarget<Bitmap>(widgetImageSize, widgetImageSize) {
                             @Override
                             public void onResourceReady(@NonNull Bitmap bitmap, Transition<? super Bitmap> transition) {
                                 update(bitmap);

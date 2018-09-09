@@ -13,10 +13,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
+import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.model.Artist;
 
 import java.io.BufferedOutputStream;
@@ -57,7 +57,7 @@ public class CustomArtistImageUtil {
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true)
                 )
-                .into(new SimpleTarget<Bitmap>() {
+                .into(new VinylSimpleTarget<Bitmap>() {
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
