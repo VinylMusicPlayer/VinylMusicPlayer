@@ -27,7 +27,7 @@ android {
 
         applicationId 'com.poupa.vinylmusicplayer'
         versionCode 157
-        versionName '0.18'
+        versionName '0.18.0'
     }
     buildTypes {
         release {
