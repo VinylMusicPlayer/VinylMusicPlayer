@@ -61,7 +61,7 @@ public class AudioFileCoverFetcher implements DataFetcher<InputStream> {
     }
 
     private static final String[] FALLBACKS =
-            {"cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.jpg"};
+            {"cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.png"};
 
     private InputStream fallback(String path) throws FileNotFoundException {
         try {
