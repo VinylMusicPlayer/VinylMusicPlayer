@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="transition_album_art">Album Cover übergang</string>
+    <string name="transition_artist_image">Künstler-Bild übergang</string>
+    <string name="transition_fab">FAB übergang</string>
+    <string name="transition_mini_player">Mini Player übergang</string>
+</resources>
