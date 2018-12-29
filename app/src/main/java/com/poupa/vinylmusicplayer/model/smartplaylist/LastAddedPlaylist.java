@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,16 @@ public class LastAddedPlaylist extends AbsSmartPlaylist {
 
     public LastAddedPlaylist(@NonNull Context context) {
         super(context.getString(R.string.last_added), R.drawable.ic_library_add_white_24dp);
+    }
+
+    @NonNull
+    @Override
+    public String getInfoString(@NonNull Context context) {
+        String baseInfo = super.getInfoString(context);
+        String cutoff = PreferenceUtil.getInstance(context).getLastAddedCutoffText(context);
+
+        if (baseInfo.isEmpty()) {return cutoff;}
+        return cutoff + INFO_STRING_SEPARATOR + baseInfo;
     }
 
     @NonNull

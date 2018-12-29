@@ -327,6 +327,37 @@ public final class PreferenceUtil {
         return (System.currentTimeMillis() - interval);
     }
 
+    public String getLastAddedCutoffText(Context context) {
+        return getCutoffText(LAST_ADDED_CUTOFF, context);
+    }
+
+    public String getRecentlyPlayedCutoffText(Context context) {
+        return getCutoffText(LAST_PLAYED_CUTOFF, context);
+    }
+
+    private String getCutoffText(final String cutoff, Context context) {
+        switch (mPreferences.getString(cutoff, "")) {
+            case "today":
+                return context.getString(R.string.today);
+
+            case "this_week":
+                return context.getString(R.string.this_week);
+
+             case "past_seven_days":
+                 return context.getString(R.string.past_seven_days);
+
+            case "past_three_months":
+                return context.getString(R.string.past_three_months);
+
+            case "this_year":
+                return context.getString(R.string.this_year);
+
+            case "this_month":
+            default:
+                return context.getString(R.string.this_month);
+        }
+    }
+
     public int getLastSleepTimerValue() {
         return mPreferences.getInt(LAST_SLEEP_TIMER_VALUE, 30);
     }
