@@ -43,7 +43,7 @@ public class TopAndRecentlyPlayedTracksLoader {
 (@NonNull Context context) {
         ArrayList<Song> allSongs = SongLoader.getSongs(
             SongLoader.makeSongCursor(
-                context, 
+                context,
                 null, null,
                 MediaStore.Audio.Media.DATE_ADDED + " ASC"));
 

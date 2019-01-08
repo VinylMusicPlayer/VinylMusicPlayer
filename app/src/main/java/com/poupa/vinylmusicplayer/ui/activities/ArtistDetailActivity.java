@@ -234,7 +234,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                             return;
                         }
 
-                        if (!Util.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) {
+                        if (!PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) {
                             if (biography != null) {
                                 biographyDialog.setContent(biography);
                             } else {
@@ -357,7 +357,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                             .positiveText(android.R.string.ok)
                             .build();
                 }
-                if (Util.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) { // wiki should've been already downloaded
+                if (PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) { // wiki should've been already downloaded
                     if (biography != null) {
                         biographyDialog.setContent(biography);
                         biographyDialog.show();
@@ -439,7 +439,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         this.artist = artist;
         loadArtistImage();
 
-        if (Util.isAllowedToDownloadMetadata(this)) {
+        if (PreferenceUtil.isAllowedToDownloadMetadata(this)) {
             loadBiography();
         }
 
