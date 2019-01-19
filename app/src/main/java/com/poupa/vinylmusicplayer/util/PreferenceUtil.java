@@ -332,7 +332,7 @@ public final class PreferenceUtil {
     }
 
     public String getRecentlyPlayedCutoffText(Context context) {
-        return getCutoffText(LAST_PLAYED_CUTOFF, context);
+        return getCutoffText(RECENTLY_PLAYED_CUTOFF, context);
     }
 
     private String getCutoffText(final String cutoff, Context context) {

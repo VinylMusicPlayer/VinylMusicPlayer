@@ -8,7 +8,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.provider.HistoryStore;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class NotRecentlyPlayedPlaylist extends AbsSmartPlaylist {
     @Override
     public String getInfoString(@NonNull Context context) {
         String baseInfo = super.getInfoString(context);
-        String cutoff = PreferenceUtil.getInstance(context).getRecentlyPlayedCutoffText(context);
+        String cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffText(context);
 
         if (baseInfo.isEmpty()) {return cutoff;}
         return cutoff + INFO_STRING_SEPARATOR + baseInfo;
