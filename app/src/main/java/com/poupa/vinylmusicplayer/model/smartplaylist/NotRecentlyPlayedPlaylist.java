@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.HistoryStore;
 
 import java.util.ArrayList;
 
