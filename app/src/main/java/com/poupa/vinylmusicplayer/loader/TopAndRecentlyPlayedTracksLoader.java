@@ -26,8 +26,7 @@ import android.support.annotation.Nullable;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
-
-import com.kabouzeid.gramophone.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -96,7 +95,7 @@ public class TopAndRecentlyPlayedTracksLoader {
     @Nullable
     private static SortedLongCursor makeRecentTracksCursorImpl(@NonNull final Context context) {
         // first get the top results ids from the internal database
-        final long cutoff = PreferenceUtil.getInstance(context).getRecentlyPlayedCutoffTimeMillis();
+        final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
         Cursor songs = HistoryStore.getInstance(context).queryRecentIds(cutoff);
 
         try {

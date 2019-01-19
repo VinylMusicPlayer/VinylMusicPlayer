@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.kabouzeid.gramophone.R;
+import com.poupa.vinylmusicplayer.R;
 
 import java.util.ArrayList;
 

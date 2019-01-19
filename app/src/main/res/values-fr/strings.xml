@@ -107,6 +107,7 @@
     <string name="this_week">Cette semaine</string>
     <string name="this_month">Ce mois-ci</string>
     <string name="past_three_months">Les 3 derniers mois</string>
+    <string name="past_seven_days">Les 7 derniers jours</string>
     <string name="this_year">Cette année</string>
     <string name="equalizer">Égaliseur</string>
     <string name="pref_header_colors">Couleurs</string>
