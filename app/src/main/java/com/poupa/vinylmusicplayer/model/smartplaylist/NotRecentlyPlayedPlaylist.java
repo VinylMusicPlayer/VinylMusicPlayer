@@ -1,13 +1,13 @@
-package com.kabouzeid.gramophone.model.smartplaylist;
+package com.poupa.vinylmusicplayer.model.smartplaylist;
 
 import android.content.Context;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.kabouzeid.gramophone.R;
-import com.kabouzeid.gramophone.loader.TopAndRecentlyPlayedTracksLoader;
-import com.kabouzeid.gramophone.model.Song;
-import com.kabouzeid.gramophone.provider.HistoryStore;
+import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
+import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.HistoryStore;
 
 import java.util.ArrayList;
 
