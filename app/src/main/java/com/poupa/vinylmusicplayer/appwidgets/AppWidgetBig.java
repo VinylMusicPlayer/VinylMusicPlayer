@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 public class AppWidgetBig extends BaseAppWidget {

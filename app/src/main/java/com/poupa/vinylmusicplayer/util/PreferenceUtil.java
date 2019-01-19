@@ -110,7 +110,7 @@ public final class PreferenceUtil {
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
-        switch (getInstance(context).autoDownloadImagesPolicy()) {
+        switch (getInstance().autoDownloadImagesPolicy()) {
             case "always":
                 return true;
             case "only_wifi":

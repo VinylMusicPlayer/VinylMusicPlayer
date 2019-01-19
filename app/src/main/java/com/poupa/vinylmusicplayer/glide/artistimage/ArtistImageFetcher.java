@@ -13,7 +13,7 @@ import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmArtist;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
-import com.poupa.vinylmusicplayer.util.Util;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.InputStream;
 
@@ -57,7 +57,7 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
         try {
-            if (!MusicUtil.isArtistNameUnknown(model.artistName) && Util.isAllowedToDownloadMetadata(context)) {
+            if (!MusicUtil.isArtistNameUnknown(model.artistName) && PreferenceUtil.isAllowedToDownloadMetadata(context)) {
                 call = lastFMRestClient.getApiService().getArtistInfo(model.artistName, null, model.skipOkHttpCache ? "no-cache" : null);
                 call.enqueue(new Callback<LastFmArtist>() {
                     @Override

@@ -48,6 +48,7 @@ import com.poupa.vinylmusicplayer.model.lyrics.Lyrics;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.PlayerAlbumCoverFragment;
+import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;

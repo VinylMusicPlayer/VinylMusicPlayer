@@ -12,8 +12,8 @@ import android.util.TypedValue;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 /**
  * @author Adrian Campos

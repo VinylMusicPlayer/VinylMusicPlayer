@@ -27,8 +27,8 @@ import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 public class PlayingNotificationImpl extends PlayingNotification {

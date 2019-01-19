@@ -51,7 +51,6 @@ import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;

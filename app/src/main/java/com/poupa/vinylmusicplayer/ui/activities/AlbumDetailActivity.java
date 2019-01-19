@@ -26,6 +26,7 @@ import com.afollestad.materialdialogs.util.DialogUtils;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
@@ -49,6 +50,7 @@ import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AlbumTagEditorActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
