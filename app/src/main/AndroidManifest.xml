@@ -121,7 +121,6 @@
             android:name="com.poupa.vinylmusicplayer.appshortcuts.AppShortcutLauncherActivity"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".ui.activities.PurchaseActivity" />
 
         <service
             android:name="com.poupa.vinylmusicplayer.service.MusicService"
