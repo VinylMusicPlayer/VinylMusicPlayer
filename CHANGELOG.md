@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.19.2] - 2019-01-22
+### Fixed
+- Crash when tapping on "Library Categories" setting
+
 ## [0.19.1] - 2019-01-21
 ### Fixed
 - Introduction crashing on some devices
@@ -65,7 +69,8 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...HEAD
+[0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...0.19.2
 [0.19.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.0...0.19.1
 [0.19.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.18.0...0.19.0
 [0.18.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.17.0...0.18.0
