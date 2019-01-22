@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v7.graphics.Palette;
-import android.text.TextUtils;
 
 import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
@@ -24,6 +23,7 @@ import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_REWIND;
@@ -38,11 +38,8 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
 
         final Song song = service.getCurrentSong();
 
-        final String albumName = song.albumName;
-        final String artistName = song.artistName;
         final boolean isPlaying = service.isPlaying();
-        final String text = TextUtils.isEmpty(albumName)
-                ? artistName : artistName + " - " + albumName;
+        final String text = MusicUtil.getSongInfoString(song);
 
         final int playButtonResId = isPlaying
                 ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp;

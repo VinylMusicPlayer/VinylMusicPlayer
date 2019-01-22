@@ -40,6 +40,7 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivit
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -189,7 +190,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 });
             }
             ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.title);
-            ((TextView) navigationDrawerHeader.findViewById(R.id.text)).setText(song.artistName);
+            ((TextView) navigationDrawerHeader.findViewById(R.id.text)).setText(MusicUtil.getSongInfoString(song));
             GlideApp.with(this)
                     .asDrawable()
                     .load(VinylGlideExtension.getSongModel(song))
