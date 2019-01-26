@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,25 +34,25 @@ import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +97,11 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     };
     private List<String> songPaths;
+
+    private List<String> savedSongPaths;
+    private String currentSongPath;
+    private Map<FieldKey, String> savedTags;
+    private ArtworkInfo savedArtworkInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,6 +263,16 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         fab.setEnabled(true);
     }
 
+    private void hideFab() {
+        fab.animate()
+                .setDuration(500)
+                .setInterpolator(new OvershootInterpolator())
+                .scaleX(0)
+                .scaleY(0)
+                .start();
+        fab.setEnabled(false);
+    }
+
     protected void setImageBitmap(@Nullable final Bitmap bitmap, int bgColor) {
         if (bitmap == null) {
             image.setImageResource(R.drawable.default_album_art);
@@ -277,15 +294,52 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     protected void writeValuesToFiles(@NonNull final Map<FieldKey, String> fieldKeyValueMap, @Nullable final ArtworkInfo artworkInfo) {
         Util.hideSoftKeyboard(this);
 
-        new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(getSongPaths(), fieldKeyValueMap, artworkInfo));
+        hideFab();
+
+        savedSongPaths = getSongPaths();
+        savedTags = fieldKeyValueMap;
+        savedArtworkInfo = artworkInfo;
+
+        if (!SAFUtil.isSAFRequired(savedSongPaths)) {
+            writeTags(savedSongPaths);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (SAFUtil.isSDCardAccessGranted(this)) {
+                    writeTags(savedSongPaths);
+                } else {
+                    startActivityForResult(new Intent(this, SAFGuideActivity.class), SAFGuideActivity.REQUEST_CODE_SAF_GUIDE);
+                }
+            } else {
+                writeTagsKitkat();
+            }
+        }
+    }
+
+    private void writeTags(List<String> paths) {
+        new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(paths, savedTags, savedArtworkInfo));
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void writeTagsKitkat() {
+        if (savedSongPaths.size() < 1) return;
+
+        currentSongPath = savedSongPaths.remove(0);
+
+        if (!SAFUtil.isSAFRequired(currentSongPath)) {
+            writeTags(Collections.singletonList(currentSongPath));
+            writeTagsKitkat();
+        } else {
+            Toast.makeText(this, String.format(getString(R.string.saf_pick_file), currentSongPath), Toast.LENGTH_LONG).show();
+            SAFUtil.openFilePicker(this);
+        }
     }
 
     private static class WriteTagsAsyncTask extends DialogAsyncTask<WriteTagsAsyncTask.LoadingInfo, Integer, String[]> {
-        Context applicationContext;
+        private WeakReference<Activity> activity;
 
-        public WriteTagsAsyncTask(Context context) {
-            super(context);
-            applicationContext = context;
+        public WriteTagsAsyncTask(Activity activity) {
+            super(activity);
+            this.activity = new WeakReference<>(activity);
         }
 
         @Override
@@ -311,6 +365,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 for (String filePath : info.filePaths) {
                     publishProgress(++counter, info.filePaths.size());
                     try {
+                        Uri safUri = null;
+
+                        if (filePath.contains(SAFUtil.SEPARATOR)) {
+                            String[] fragments = filePath.split(SAFUtil.SEPARATOR);
+                            filePath = fragments[0];
+                            safUri = Uri.parse(fragments[1]);
+                        }
+
                         AudioFile audioFile = AudioFileIO.read(new File(filePath));
                         Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
@@ -335,8 +397,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             }
                         }
 
-                        audioFile.commit();
-                    } catch (@NonNull CannotReadException | IOException | CannotWriteException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+                        Activity activity = this.activity.get();
+
+                        SAFUtil.write(activity, audioFile, safUri);
+                    } catch (@NonNull Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -350,7 +414,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 }
 
-                return info.filePaths.toArray(new String[info.filePaths.size()]);
+                Collection<String> paths = info.filePaths;
+
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) { // remove SAF URI from paths
+                    paths = new ArrayList<>(info.filePaths.size());
+                    for (String path : info.filePaths) {
+                        if (path.contains(SAFUtil.SEPARATOR))
+                            path = path.split(SAFUtil.SEPARATOR)[0];
+                        paths.add(path);
+                    }
+                }
+
+                return paths.toArray(new String[paths.size()]);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -370,8 +445,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
 
         private void scan(String[] toBeScanned) {
-            Context context = getContext();
-            MediaScannerConnection.scanFile(applicationContext, toBeScanned, null, context instanceof Activity ? new UpdateToastMediaScannerCompletionListener((Activity) context, toBeScanned) : null);
+            Activity activity = this.activity.get();
+            if (activity != null) {
+                MediaScannerConnection.scanFile(activity, toBeScanned, null, new UpdateToastMediaScannerCompletionListener(activity, toBeScanned));
+            }
         }
 
         @Override
@@ -420,13 +497,30 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case REQUEST_CODE_SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    Uri selectedImage = intent.getData();
                     loadImageFromFile(selectedImage);
+                }
+                break;
+
+            case SAFGuideActivity.REQUEST_CODE_SAF_GUIDE:
+                SAFUtil.openTreePicker(this);
+                break;
+
+            case SAFUtil.REQUEST_SAF_PICK_TREE:
+                if (resultCode == RESULT_OK) {
+                    SAFUtil.saveTreeUri(this, intent);
+                    writeTags(savedSongPaths);
+                }
+                break;
+
+            case SAFUtil.REQUEST_SAF_PICK_FILE:
+                if (resultCode == RESULT_OK) {
+                    writeTags(Collections.singletonList(currentSongPath + SAFUtil.SEPARATOR + intent.getDataString()));
                 }
                 break;
         }

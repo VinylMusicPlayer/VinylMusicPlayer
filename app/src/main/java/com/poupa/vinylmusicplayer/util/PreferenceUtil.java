@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.StyleRes;
 
@@ -97,6 +98,8 @@ public final class PreferenceUtil {
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
+
+    public static final String SAF_SDCARD_URI = "saf_sdcard_uri";
 
     private static PreferenceUtil sInstance;
 
@@ -624,5 +627,13 @@ public final class PreferenceUtil {
         editor.putFloat(RG_PREAMP_WITH_TAG, with);
         editor.putFloat(RG_PREAMP_WITHOUT_TAG, without);
         editor.apply();
+    }
+
+    public final String getSAFSDCardUri() {
+        return mPreferences.getString(SAF_SDCARD_URI, "");
+    }
+
+    public final void setSAFSDCardUri(Uri uri) {
+        mPreferences.edit().putString(SAF_SDCARD_URI, uri.toString()).apply();
     }
 }
