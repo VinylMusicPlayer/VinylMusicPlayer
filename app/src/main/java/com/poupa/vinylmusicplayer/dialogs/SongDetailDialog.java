@@ -102,12 +102,15 @@ public class SongDetailDialog extends DialogFragment {
 
                     float rgTrack = song.getReplayGainTrack();
                     float rgAlbum = song.getReplayGainAlbum();
-                    String replayGainValues = context.getString(R.string.none);
+                    String replayGainValues = "";
                     if (rgTrack != 0.0) {
-                        replayGainValues = String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);
+                        replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);
                     }
                     if (rgAlbum != 0.0) {
                         replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.album), rgAlbum);
+                    }
+                    if (replayGainValues.equals("")) {
+                        context.getString(R.string.none);
                     }
                     replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
                 } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
