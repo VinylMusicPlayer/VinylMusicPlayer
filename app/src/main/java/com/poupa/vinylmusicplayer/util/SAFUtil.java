@@ -233,6 +233,8 @@ public class SAFUtil {
         } else {
             try {
                 deleteFile(path);
+            } catch (NullPointerException e) {
+                Log.e("MusicUtils", "Failed to find file " + path);
             } catch (Exception e) {
                 e.printStackTrace();
             }
