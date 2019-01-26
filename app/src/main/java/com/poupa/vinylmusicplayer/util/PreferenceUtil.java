@@ -608,6 +608,9 @@ public final class PreferenceUtil {
                 break;
         }
 
+        return sourceMode;
+    }
+
     public float getRgPreampWithTag() {
         return mPreferences.getFloat(RG_PREAMP_WITH_TAG, 0.0f);
     }

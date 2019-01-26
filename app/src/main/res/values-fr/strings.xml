@@ -291,4 +291,5 @@
     <string name="label_with_rg_info">Avec les tags ReplayGain :</string>
     <string name="label_without_rg_info">Sans les tags ReplayGain :</string>
     <string name="pref_summary_rg_preamp">Fixer la préamplification quand ReplayGain est activé</string>
+    <string name="pref_rg_disabled">Désactivé</string>
 </resources>
