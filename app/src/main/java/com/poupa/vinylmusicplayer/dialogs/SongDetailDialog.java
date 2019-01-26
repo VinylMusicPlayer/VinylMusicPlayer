@@ -74,6 +74,7 @@ public class SongDetailDialog extends DialogFragment {
         final TextView trackLength = dialogView.findViewById(R.id.track_length);
         final TextView bitRate = dialogView.findViewById(R.id.bitrate);
         final TextView samplingRate = dialogView.findViewById(R.id.sampling_rate);
+        final TextView replayGain = dialogView.findViewById(R.id.replay_gain);
 
         fileName.setText(makeTextWithTitle(context, R.string.label_file_name, "-"));
         filePath.setText(makeTextWithTitle(context, R.string.label_file_path, "-"));
@@ -82,6 +83,7 @@ public class SongDetailDialog extends DialogFragment {
         trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, "-"));
         bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, "-"));
         samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, "-"));
+        replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, "-"));
 
         if (song != null) {
             final File songFile = new File(song.data);
@@ -97,6 +99,17 @@ public class SongDetailDialog extends DialogFragment {
                     trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(audioHeader.getTrackLength() * 1000)));
                     bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, audioHeader.getBitRate() + " kb/s"));
                     samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, audioHeader.getSampleRate() + " Hz"));
+
+                    float rgTrack = song.getReplayGainTrack();
+                    float rgAlbum = song.getReplayGainAlbum();
+                    String replayGainValues = context.getString(R.string.none);
+                    if (rgTrack != 0.0) {
+                        replayGainValues = String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);
+                    }
+                    if (rgAlbum != 0.0) {
+                        replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.album), rgAlbum);
+                    }
+                    replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
                 } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
                     Log.e(TAG, "error while reading the song file", e);
                     // fallback

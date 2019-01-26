@@ -301,7 +301,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return true;
             });
 
-            if (PreferenceUtil.getInstance().getReplayGainSourceMode() == 0) {
+            if (PreferenceUtil.getInstance().getReplayGainSourceMode() == PreferenceUtil.RG_SOURCE_MODE_NONE) {
                 Preference pref = findPreference("replaygain_preamp");
                 pref.setEnabled(false);
                 pref.setSummary("disabled");

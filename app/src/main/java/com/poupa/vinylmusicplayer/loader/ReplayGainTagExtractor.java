@@ -13,11 +13,14 @@ import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 
-public class ReplaygainTagExtractor {
+public class ReplayGainTagExtractor {
+  // Normalize all tags using the Vorbis ones
+  private static final String REPLAYGAIN_TRACK_GAIN = "REPLAYGAIN_TRACK_GAIN";
+  private static final String REPLAYGAIN_ALBUM_GAIN = "REPLAYGAIN_ALBUM_GAIN";
 
-  public static void setReplaygainValues(Song song) {
-    song.replaygainTrack = 0.0f;
-    song.replaygainAlbum = 0.0f;
+  public static void setReplayGainValues(Song song) {
+    float rgTrack = 0.0f;
+    float rgAlbum = 0.0f;
 
     Map<String, Float> tags = null;
 
@@ -37,14 +40,14 @@ public class ReplaygainTagExtractor {
     }
 
     if (tags != null && !tags.isEmpty()) {
-      if (tags.containsKey("REPLAYGAIN_TRACK_GAIN")) {
-        song.replaygainTrack = tags.get("REPLAYGAIN_TRACK_GAIN");
+      if (tags.containsKey(REPLAYGAIN_TRACK_GAIN)) {
+        rgTrack = tags.get(REPLAYGAIN_TRACK_GAIN);
       }
-      if (tags.containsKey("REPLAYGAIN_ALBUM_GAIN")) {
-        song.replaygainAlbum = tags.get("REPLAYGAIN_ALBUM_GAIN");
+      if (tags.containsKey(REPLAYGAIN_ALBUM_GAIN)) {
+        rgAlbum = tags.get(REPLAYGAIN_ALBUM_GAIN);
       }
     }
-
+    song.setReplayGainValues(rgTrack, rgAlbum);
   }
 
   private static Map<String, Float> parseId3Tags(Tag tag, String path) throws Exception {
@@ -67,8 +70,8 @@ public class ReplaygainTagExtractor {
 
       data[0] = data[0].substring(13, data[0].length() - 1).toUpperCase();
 
-      if (data[0].equals("TRACK")) data[0] = "REPLAYGAIN_TRACK_GAIN";
-      else if (data[0].equals("ALBUM")) data[0] = "REPLAYGAIN_ALBUM_GAIN";
+      if (data[0].equals("TRACK")) {data[0] = REPLAYGAIN_TRACK_GAIN;}
+      else if (data[0].equals("ALBUM")) {data[0] = REPLAYGAIN_ALBUM_GAIN;}
 
       tags.put(data[0], parseFloat(data[1]));
     }
@@ -79,13 +82,18 @@ public class ReplaygainTagExtractor {
   private static Map<String, Float> parseVorbisTags(VorbisCommentTag tag) {
     Map<String, Float> tags = new HashMap<>();
 
-    if (tag.hasField("REPLAYGAIN_TRACK_GAIN")) tags.put("REPLAYGAIN_TRACK_GAIN", parseFloat(tag.getFirst("REPLAYGAIN_TRACK_GAIN")));
-    if (tag.hasField("REPLAYGAIN_ALBUM_GAIN")) tags.put("REPLAYGAIN_ALBUM_GAIN", parseFloat(tag.getFirst("REPLAYGAIN_ALBUM_GAIN")));
+    if (tag.hasField("REPLAYGAIN_TRACK_GAIN")) {
+      tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst("REPLAYGAIN_TRACK_GAIN")));
+    }
+    if (tag.hasField("REPLAYGAIN_ALBUM_GAIN")) {
+      tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst("REPLAYGAIN_ALBUM_GAIN")));
+    }
 
     return tags;
   }
 
-  private static Map<String, Float> parseLameHeader(String path) throws IOException { // Method taken from adrian-bl/bastp library
+  private static Map<String, Float> parseLameHeader(String path) throws IOException {
+    // Method taken from adrian-bl/bastp library
     Map<String, Float> tags = new HashMap<>();
     RandomAccessFile s = new RandomAccessFile(path, "r");
     byte[] chunk = new byte[12];
@@ -110,12 +118,11 @@ public class ReplaygainTagExtractor {
       galb_val = ((galb_raw & 0x0200) != 0 ? -1 * galb_val : galb_val);
 
       if ((gtrk_raw & 0xE000) == 0x2000) {
-        tags.put("REPLAYGAIN_TRACK_GAIN", gtrk_val);
+        tags.put(REPLAYGAIN_TRACK_GAIN, gtrk_val);
       }
       if ((gtrk_raw & 0xE000) == 0x4000) {
-        tags.put("REPLAYGAIN_ALBUM_GAIN", galb_val);
+        tags.put(REPLAYGAIN_ALBUM_GAIN, galb_val);
       }
-
     }
 
     return tags;
@@ -152,5 +159,4 @@ public class ReplaygainTagExtractor {
 
     return result;
   }
-
 }
