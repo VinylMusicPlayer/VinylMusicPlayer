@@ -110,7 +110,7 @@ public class SongDetailDialog extends DialogFragment {
                         replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.album), rgAlbum);
                     }
                     if (replayGainValues.equals("")) {
-                        context.getString(R.string.none);
+                        replayGainValues = context.getString(R.string.none);
                     }
                     replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
                 } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
