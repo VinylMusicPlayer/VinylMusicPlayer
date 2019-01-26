@@ -93,7 +93,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     public static final String QUEUE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".queuechanged";
     public static final String PLAY_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".playstatechanged";
 
-    public static final String TRANSPARENT_WIDGET_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".metachanged";
+    public static final String TRANSPARENT_WIDGET_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".transparentwidgetchanged";
 
     public static final String REPEAT_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".repeatmodechanged";
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
