@@ -12,7 +12,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,17 +24,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
-import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
-import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
-import com.poupa.vinylmusicplayer.adapter.song.PlayingQueueAdapter;
 import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -78,13 +72,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     private FlatPlayerPlaybackControlsFragment playbackControlsFragment;
     private PlayerAlbumCoverFragment playerAlbumCoverFragment;
 
-    private LinearLayoutManager layoutManager;
-
-    private PlayingQueueAdapter playingQueueAdapter;
-
-    private RecyclerView.Adapter wrappedAdapter;
-    private RecyclerViewDragDropManager recyclerViewDragDropManager;
-
     private AsyncTask updateIsFavoriteTask;
     private AsyncTask updateLyricsAsyncTask;
 
@@ -114,7 +101,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         setUpPlayerToolbar();
         setUpSubFragments();
 
-        setUpRecyclerView();
+        setUpRecyclerView(recyclerView,slidingUpPanelLayout);
 
         if (slidingUpPanelLayout != null) {
             slidingUpPanelLayout.addPanelSlideListener(this);
@@ -135,10 +122,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         if (slidingUpPanelLayout != null) {
             slidingUpPanelLayout.removePanelSlideListener(this);
         }
-        if (recyclerViewDragDropManager != null) {
-            recyclerViewDragDropManager.release();
-            recyclerViewDragDropManager = null;
-        }
 
         if (recyclerView != null) {
             recyclerView.setItemAnimator(null);
@@ -146,12 +129,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             recyclerView = null;
         }
 
-        if (wrappedAdapter != null) {
-            WrapperAdapterUtils.releaseAll(wrappedAdapter);
-            wrappedAdapter = null;
-        }
-        playingQueueAdapter = null;
-        layoutManager = null;
         super.onDestroyView();
         unbinder.unbind();
     }
@@ -242,30 +219,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                 return true;
         }
         return super.onMenuItemClick(item);
-    }
-
-    private void setUpRecyclerView() {
-        recyclerViewDragDropManager = new RecyclerViewDragDropManager();
-        final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
-
-        playingQueueAdapter = new PlayingQueueAdapter(
-                ((AppCompatActivity) getActivity()),
-                MusicPlayerRemote.getPlayingQueue(),
-                MusicPlayerRemote.getPosition(),
-                R.layout.item_list,
-                false,
-                null);
-        wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(playingQueueAdapter);
-
-        layoutManager = new LinearLayoutManager(getActivity());
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(wrappedAdapter);
-        recyclerView.setItemAnimator(animator);
-
-        recyclerViewDragDropManager.attachRecyclerView(recyclerView);
-
-        layoutManager.scrollToPositionWithOffset(MusicPlayerRemote.getPosition() + 1, 0);
     }
 
     private void updateIsFavorite() {

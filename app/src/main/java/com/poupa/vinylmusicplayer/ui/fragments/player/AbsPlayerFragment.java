@@ -6,11 +6,21 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
+import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
+import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
+import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.song.PlayingQueueAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
@@ -24,6 +34,7 @@ import com.poupa.vinylmusicplayer.ui.activities.tageditor.SongTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 
@@ -34,6 +45,13 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     @BindView(R.id.player_toolbar)
     protected Toolbar toolbar;
+
+    public PlayingQueueAdapter playingQueueAdapter;
+    public RecyclerView.Adapter wrappedAdapter;
+    public RecyclerViewDragDropManager recyclerViewDragDropManager;
+    public RecyclerViewSwipeManager recyclerViewSwipeManager;
+    public RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager;
+    public LinearLayoutManager layoutManager;
 
     @Override
     public void onAttach(Context context) {
@@ -49,6 +67,52 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
     public void onDetach() {
         super.onDetach();
         callbacks = null;
+    }
+
+    public void setUpRecyclerView(RecyclerView recyclerView, final SlidingUpPanelLayout slidingUpPanelLayout) {
+        recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
+        recyclerViewSwipeManager = new RecyclerViewSwipeManager();
+        recyclerViewDragDropManager = new RecyclerViewDragDropManager();
+
+        final GeneralItemAnimator animator = new DraggableItemAnimator();
+
+        // Change animations are enabled by default since support-v7-recyclerview v22.
+        // Disable the change animation in order to make turning back animation of swiped item works properly.
+        animator.setSupportsChangeAnimations(false);
+
+        playingQueueAdapter = new PlayingQueueAdapter(
+                ((AppCompatActivity) getActivity()),
+                MusicPlayerRemote.getPlayingQueue(),
+                MusicPlayerRemote.getPosition(),
+                R.layout.item_list,
+                false,
+                null);
+        wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(playingQueueAdapter);
+        wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(wrappedAdapter);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(wrappedAdapter);
+        recyclerView.setItemAnimator(animator);
+
+        recyclerViewTouchActionGuardManager.attachRecyclerView(recyclerView);
+        recyclerViewSwipeManager.attachRecyclerView(recyclerView);
+        recyclerViewDragDropManager.attachRecyclerView(recyclerView);
+
+        recyclerViewSwipeManager.setOnItemSwipeEventListener(new RecyclerViewSwipeManager.OnItemSwipeEventListener() {
+            @Override
+            public void onItemSwipeStarted(int i) {
+                slidingUpPanelLayout.setTouchEnabled(false);
+            }
+
+            @Override
+            public void onItemSwipeFinished(int i, int i1, int i2) {
+                slidingUpPanelLayout.setTouchEnabled(true);
+            }
+        });
+
+        layoutManager.scrollToPositionWithOffset(MusicPlayerRemote.getPosition() + 1, 0);
     }
 
     @Override
@@ -120,7 +184,12 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
         setToolbarShown(false);
 
-        toolbar.animate().alpha(0f).setDuration(PlayerAlbumCoverFragment.VISIBILITY_ANIM_DURATION).withEndAction(() -> toolbar.setVisibility(View.GONE));
+        toolbar.animate().alpha(0f).setDuration(PlayerAlbumCoverFragment.VISIBILITY_ANIM_DURATION).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                toolbar.setVisibility(View.GONE);
+            }
+        });
     }
 
     protected void toggleToolbar(@Nullable final View toolbar) {
@@ -163,9 +232,34 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
         }
     }
 
-    public abstract void onShow();
+    public void onShow(){
+        recyclerViewDragDropManager.setCheckCanDropEnabled(true);
+    }
 
-    public abstract void onHide();
+    public void onHide(){
+        recyclerViewDragDropManager.setCheckCanDropEnabled(false);
+        recyclerViewSwipeManager.cancelSwipe();
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (recyclerViewDragDropManager != null) {
+            recyclerViewDragDropManager.release();
+            recyclerViewDragDropManager = null;
+        }
+        if (recyclerViewSwipeManager != null) {
+            recyclerViewSwipeManager.release();
+            recyclerViewSwipeManager = null;
+        }
+
+        if (wrappedAdapter != null) {
+            WrapperAdapterUtils.releaseAll(wrappedAdapter);
+            wrappedAdapter = null;
+        }
+        playingQueueAdapter = null;
+        layoutManager = null;
+        super.onDestroyView();
+    }
 
     public abstract boolean onBackPressed();
 
