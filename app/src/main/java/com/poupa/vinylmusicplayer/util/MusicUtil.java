@@ -375,11 +375,11 @@ public class MusicUtil {
             if (dir != null && dir.exists() && dir.isDirectory()) {
                 String format = ".*%s.*\\.(lrc|txt)";
                 String filename = Pattern.quote(FileUtil.stripExtension(file.getName()));
-                String songtitle = Pattern.quote(song.title);
+                String songTitle = Pattern.quote(song.title);
 
                 final ArrayList<Pattern> patterns = new ArrayList<>();
                 patterns.add(Pattern.compile(String.format(format, filename), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-                patterns.add(Pattern.compile(String.format(format, songtitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+                patterns.add(Pattern.compile(String.format(format, songTitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 
                 File[] files = dir.listFiles(f -> {
                     for (Pattern pattern : patterns) {

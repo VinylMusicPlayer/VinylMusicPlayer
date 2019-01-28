@@ -47,6 +47,8 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     Toolbar toolbar;
     @BindView(android.R.id.empty)
     TextView empty;
+    @BindView(R.id.title)
+    TextView titleTextView;
 
     private Genre genre;
 
@@ -99,8 +101,9 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
-        getSupportActionBar().setTitle(genre.name);
+        getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        titleTextView.setText(genre.name);
     }
 
     @Override

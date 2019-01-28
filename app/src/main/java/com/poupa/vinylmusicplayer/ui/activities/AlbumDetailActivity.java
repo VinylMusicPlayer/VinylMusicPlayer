@@ -101,6 +101,8 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     TextView songCountTextView;
     @BindView(R.id.album_year_text)
     TextView albumYearTextView;
+    @BindView(R.id.title)
+    TextView titleTextView;
 
     private AlbumSongAdapter adapter;
 
@@ -415,7 +417,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
             loadWiki();
         }
 
-        getSupportActionBar().setTitle(album.getTitle());
+        titleTextView.setText(album.getTitle());
         artistTextView.setText(album.getArtistName());
         songCountTextView.setText(MusicUtil.getSongCountString(this, album.getSongCount()));
         durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(this, album.songs)));

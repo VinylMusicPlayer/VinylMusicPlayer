@@ -17,7 +17,22 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             style="@style/Toolbar"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/transparent">
+
+            <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                android:id="@+id/title_scrollview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+            </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+
+        </android.support.v7.widget.Toolbar>
 
         <ViewStub
             android:id="@+id/cab_stub"
@@ -88,13 +103,20 @@
                             app:srcCompat="@drawable/ic_person_white_24dp"
                             tools:ignore="ContentDescription,UnusedAttribute" />
 
-                        <TextView
-                            android:ellipsize="end"
-                            android:maxLines="@integer/detail_header_tile_maxLines"
-                            android:id="@+id/artist_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                        <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                            android:id="@+id/artist_scrollview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                                android:ellipsize="end"
+                                android:maxLines="@integer/detail_header_tile_maxLines"
+                                android:id="@+id/artist_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                        </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
 
                     </LinearLayout>
 

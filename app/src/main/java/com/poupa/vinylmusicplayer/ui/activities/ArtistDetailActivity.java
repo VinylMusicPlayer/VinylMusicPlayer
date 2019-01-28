@@ -95,6 +95,8 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     TextView songCountTextView;
     @BindView(R.id.album_count_text)
     TextView albumCountTextView;
+    @BindView(R.id.title)
+    TextView titleTextView;
 
     View songListHeader;
     RecyclerView albumRecyclerView;
@@ -442,7 +444,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
             loadBiography();
         }
 
-        getSupportActionBar().setTitle(artist.getName());
+        titleTextView.setText(artist.getName());
         songCountTextView.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));
         albumCountTextView.setText(MusicUtil.getAlbumCountString(this, artist.getAlbumCount()));
         durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(this, artist.getSongs())));

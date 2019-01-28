@@ -145,21 +145,30 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public int onGetSwipeReactionType(ViewHolder holder, int position, int x, int y) {
+        // Get a Rect containing the coordinates of the titleScrollView that may be scrolled
         Rect scrollViewRect = holder.titleScrollview.getScrollViewRect();
 
+        // Handle the 16dp margin top
         float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
                 holder.titleScrollview.getContext().getResources().getDisplayMetrics());
 
+        // Was the titleScrollView touched?
         boolean touchedScrollView =
                 x > scrollViewRect.left && x < scrollViewRect.right &&
                         y < (scrollViewRect.bottom - scrollViewRect.top + pixels);
 
+        // Check if the left part of the song, that can be dragged to rearrange the songs,
+        // was touched: if yes, do not allow swiping
         boolean onCheckCanStartDrag = onCheckCanStartDrag(holder, position, x, y);
+
+        // Is the current title horizontally scrollable?
         boolean isScrollable = holder.titleScrollview.isScrollable();
 
+        // If the left part was touched, or the titleScrollView was touched: forbid swiping
         if (onCheckCanStartDrag || isScrollable && touchedScrollView) {
             return SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_BOTH_H;
         } else {
+            // Else, allow swiping
             return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H;
         }
     }
@@ -292,16 +301,12 @@ public class PlayingQueueAdapter extends SongAdapter
         songTitle.setEllipsize(TextUtils.TruncateAt.END);
         songTitle.setText(adapter.dataSet.get(position).title + " " + snackBarTitle);
 
-        snackbar.setAction(R.string.snack_bar_action_undo, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Position",Integer.toString(position));
-                MusicPlayerRemote.addSong(position,adapter.getSongToRemove());
-                //If playing and currently playing song is removed, then added back, then play it at
-                //current song progress
-                if(isPlaying && position == 0){
-                    MusicPlayerRemote.playSongAt(position);
-                }
+        snackbar.setAction(R.string.snack_bar_action_undo, v -> {
+            MusicPlayerRemote.addSong(position,adapter.getSongToRemove());
+            //If playing and currently playing song is removed, then added back, then play it at
+            //current song progress
+            if(isPlaying && position == 0){
+                MusicPlayerRemote.playSongAt(position);
             }
         });
         snackbar.setActionTextColor(getBackgroundColor(activity));

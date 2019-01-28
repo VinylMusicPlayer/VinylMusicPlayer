@@ -59,6 +59,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     Toolbar toolbar;
     @BindView(android.R.id.empty)
     TextView empty;
+    @BindView(R.id.title)
+    TextView titleTextView;
 
     private Playlist playlist;
 
@@ -130,7 +132,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setToolbarTitle(playlist.name);
+        setToolbarTitle(null);
+        titleTextView.setText(playlist.name);
     }
 
     private void setToolbarTitle(String title) {

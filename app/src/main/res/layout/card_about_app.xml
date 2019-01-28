@@ -47,7 +47,8 @@
             android:minHeight="@dimen/md_listitem_height"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:focusable="true">
 
             <com.poupa.vinylmusicplayer.views.IconImageView
                 android:id="@+id/icon_info"
