@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +20,10 @@ import butterknife.ButterKnife;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    @Nullable
+    @BindView(R.id.song_view)
+    public LinearLayout songView;
+
     @Nullable
     @BindView(R.id.dummy_view)
     public FrameLayout dummyContainer;
@@ -33,6 +39,10 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     @Nullable
     @BindView(R.id.title)
     public TextView title;
+
+    @Nullable
+    @BindView(R.id.title_scrollview)
+    public TouchInterceptHorizontalScrollView titleScrollview;
 
     @Nullable
     @BindView(R.id.text)
@@ -84,6 +94,5 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
 
     @Override
     public void onClick(View v) {
-
     }
 }

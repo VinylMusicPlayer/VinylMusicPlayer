@@ -8,7 +8,7 @@
     tools:ignore="UnusedAttribute">
 
     <!-- for getSwipeableContainerView() -->
-    <FrameLayout
+    <com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout
         android:id="@+id/dummy_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -29,6 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/song_view"
             android:descendantFocusability="blocksDescendants"
             android:orientation="horizontal">
 
@@ -67,19 +68,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:descendantFocusability="blocksDescendants"
                 android:orientation="vertical"
                 android:paddingEnd="0dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="0dp"
                 android:paddingStart="16dp">
 
-                <TextView
-                    android:id="@+id/title"
+                <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                    android:id="@+id/title_scrollview"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:singleLine="true"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:layout_height="wrap_content">
+
+                    <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
 
                 <TextView
                     android:id="@+id/text"
@@ -116,6 +124,6 @@
             android:layout_marginStart="72dp"
             android:background="?attr/dividerColor" />
 
-    </FrameLayout>
+    </com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout>
 
 </FrameLayout>

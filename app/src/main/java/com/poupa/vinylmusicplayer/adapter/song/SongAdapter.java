@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -124,7 +125,6 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         }
 
         loadAlbumCover(song, holder);
-
     }
 
     private void setColors(int color, ViewHolder holder) {
@@ -228,6 +228,12 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             if (menu == null) {
                 return;
             }
+            menu.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent ev) {
+                    menu.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
             menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
                 @Override
                 public Song getSong() {
