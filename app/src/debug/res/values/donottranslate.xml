@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Vinyl Music Player DEBUG</string>
+    <string name="app_name" translatable="false">Vinyl DEBUG</string>
+    <string name="app_short_name" translatable="false">Vinyl DEBUG</string>
 </resources>
