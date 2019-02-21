@@ -2,6 +2,9 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorJoiner;
+import android.database.DatabaseUtils;
+import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
@@ -13,6 +16,9 @@ import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+
+import static com.poupa.vinylmusicplayer.helper.SortOrder.ArtistSortOrder.ARTIST_NUMBER_OF_ALBUMS;
+import static com.poupa.vinylmusicplayer.helper.SortOrder.ArtistSortOrder.ARTIST_NUMBER_OF_SONGS;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -27,10 +33,11 @@ public class SongLoader {
             AudioColumns.DURATION,// 4
             AudioColumns.DATA,// 5
             AudioColumns.DATE_MODIFIED,// 6
-            AudioColumns.ALBUM_ID,// 7
-            AudioColumns.ALBUM,// 8
-            AudioColumns.ARTIST_ID,// 9
-            AudioColumns.ARTIST,// 10
+            AudioColumns.DATE_ADDED,// 7
+            AudioColumns.ALBUM_ID,// 8
+            AudioColumns.ALBUM,// 9
+            AudioColumns.ARTIST_ID,// 10
+            AudioColumns.ARTIST,// 11
     };
 
     @NonNull
@@ -87,13 +94,14 @@ public class SongLoader {
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
         final String data = cursor.getString(5);
-        final long dateModified = cursor.getLong(6);
-        final int albumId = cursor.getInt(7);
-        final String albumName = cursor.getString(8);
-        final int artistId = cursor.getInt(9);
-        final String artistName = cursor.getString(10);
+        final long dateAdded = cursor.getLong(6);
+        final long dateModified = cursor.getLong(7);
+        final int albumId = cursor.getInt(8);
+        final String albumName = cursor.getString(9);
+        final int artistId = cursor.getInt(10);
+        final String artistName = cursor.getString(11);
 
-        return new Song(id, title, trackNumber, year, duration, data, dateModified, albumId, albumName, artistId, artistName);
+        return new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
     }
 
     @Nullable
@@ -125,12 +133,12 @@ public class SongLoader {
     }
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
-        String newSelection = selection != null && !selection.trim().equals("") ? selection + " AND " : "";
-        newSelection += AudioColumns.DATA + " NOT LIKE ?";
+        StringBuilder newSelection = new StringBuilder(selection != null && !selection.trim().equals("") ? selection + " AND " : "");
+        newSelection.append(AudioColumns.DATA + " NOT LIKE ?");
         for (int i = 0; i < pathCount - 1; i++) {
-            newSelection += " AND " + AudioColumns.DATA + " NOT LIKE ?";
+            newSelection.append(" AND " + AudioColumns.DATA + " NOT LIKE ?");
         }
-        return newSelection;
+        return newSelection.toString();
     }
 
     private static String[] addBlacklistSelectionValues(String[] selectionValues, ArrayList<String> paths) {

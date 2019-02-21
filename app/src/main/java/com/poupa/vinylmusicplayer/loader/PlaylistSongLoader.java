@@ -36,14 +36,15 @@ public class PlaylistSongLoader {
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
         final String data = cursor.getString(5);
-        final int dateModified = cursor.getInt(6);
-        final int albumId = cursor.getInt(7);
-        final String albumName = cursor.getString(8);
-        final int artistId = cursor.getInt(9);
-        final String artistName = cursor.getString(10);
-        final int idInPlaylist = cursor.getInt(11);
+        final int dateAdded = cursor.getInt(6);
+        final int dateModified = cursor.getInt(7);
+        final int albumId = cursor.getInt(8);
+        final String albumName = cursor.getString(9);
+        final int artistId = cursor.getInt(10);
+        final String artistName = cursor.getString(11);
+        final int idInPlaylist = cursor.getInt(12);
 
-        return new PlaylistSong(id, title, trackNumber, year, duration, data, dateModified, albumId, albumName, artistId, artistName, playlistId, idInPlaylist);
+        return new PlaylistSong(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName, playlistId, idInPlaylist);
     }
 
     public static Cursor makePlaylistSongCursor(@NonNull final Context context, final int playlistId) {
@@ -57,12 +58,13 @@ public class PlaylistSongLoader {
                             AudioColumns.YEAR,// 3
                             AudioColumns.DURATION,// 4
                             AudioColumns.DATA,// 5
-                            AudioColumns.DATE_MODIFIED,// 6
-                            AudioColumns.ALBUM_ID,// 7
-                            AudioColumns.ALBUM,// 8
-                            AudioColumns.ARTIST_ID,// 9
-                            AudioColumns.ARTIST,// 10
-                            MediaStore.Audio.Playlists.Members._ID // 11
+                            AudioColumns.DATE_ADDED,// 6
+                            AudioColumns.DATE_MODIFIED,// 7
+                            AudioColumns.ALBUM_ID,// 8
+                            AudioColumns.ALBUM,// 9
+                            AudioColumns.ARTIST_ID,// 10
+                            AudioColumns.ARTIST,// 11
+                            MediaStore.Audio.Playlists.Members._ID // 12
                     }, SongLoader.BASE_SELECTION, null,
                     MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {

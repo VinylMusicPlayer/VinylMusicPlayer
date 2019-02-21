@@ -353,6 +353,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_ARTIST));
             sortOrderMenu.add(0, R.id.action_album_sort_order_year, 3, R.string.sort_order_year)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_YEAR));
+            sortOrderMenu.add(0, R.id.action_album_sort_order_date_added, 4, R.string.sort_order_date_added)
+                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED));
         } else if (fragment instanceof ArtistsFragment) {
             sortOrderMenu.add(0, R.id.action_artist_sort_order_asc, 0, R.string.sort_order_a_z)
                     .setChecked(currentSortOrder.equals(SortOrder.ArtistSortOrder.ARTIST_A_Z));
@@ -369,6 +371,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_ALBUM));
             sortOrderMenu.add(0, R.id.action_song_sort_order_year, 4, R.string.sort_order_year)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_YEAR));
+            sortOrderMenu.add(0, R.id.action_song_sort_order_date_added, 5, R.string.sort_order_date_added)
+                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED));
         }
 
         sortOrderMenu.setGroupCheckable(0, true, true);
@@ -389,6 +393,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     break;
                 case R.id.action_album_sort_order_year:
                     sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR;
+                    break;
+                case R.id.action_album_sort_order_date_added:
+                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED;
                     break;
             }
         } else if (fragment instanceof ArtistsFragment) {
@@ -416,6 +423,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     break;
                 case R.id.action_song_sort_order_year:
                     sortOrder = SortOrder.SongSortOrder.SONG_YEAR;
+                    break;
+                case R.id.action_song_sort_order_date_added:
+                    sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED;
                     break;
             }
         }

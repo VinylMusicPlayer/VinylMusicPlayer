@@ -83,6 +83,9 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
         builder.append(AudioColumns.DATA);
         builder.append(" STRING NOT NULL,");
 
+        builder.append(AudioColumns.DATE_ADDED);
+        builder.append(" LONG NOT NULL,");
+
         builder.append(AudioColumns.DATE_MODIFIED);
         builder.append(" LONG NOT NULL,");
 
@@ -166,6 +169,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     values.put(AudioColumns.YEAR, song.year);
                     values.put(AudioColumns.DURATION, song.duration);
                     values.put(AudioColumns.DATA, song.data);
+                    values.put(AudioColumns.DATE_ADDED, song.dateAdded);
                     values.put(AudioColumns.DATE_MODIFIED, song.dateModified);
                     values.put(AudioColumns.ALBUM_ID, song.albumId);
                     values.put(AudioColumns.ALBUM, song.albumName);

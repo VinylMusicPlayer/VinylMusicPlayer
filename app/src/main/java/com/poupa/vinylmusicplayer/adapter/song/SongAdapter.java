@@ -33,7 +33,9 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -211,6 +213,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             case SortOrder.SongSortOrder.SONG_ARTIST:
                 sectionName = dataSet.get(position).artistName;
                 break;
+            case SortOrder.SongSortOrder.SONG_DATE_ADDED:
+                Date date = new Date(dataSet.get(position).dateAdded);
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
+                sectionName = dateFormat.format(date);
+                break;
             case SortOrder.SongSortOrder.SONG_YEAR:
                 return MusicUtil.getYearString(dataSet.get(position).year);
         }
@@ -228,11 +235,9 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             if (menu == null) {
                 return;
             }
-            menu.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent ev) {
-                    menu.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
+            menu.setOnTouchListener((v, ev) -> {
+                menu.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             });
             menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
                 @Override

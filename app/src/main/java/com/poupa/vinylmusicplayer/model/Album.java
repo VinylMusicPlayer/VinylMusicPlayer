@@ -44,6 +44,10 @@ public class Album implements Parcelable {
         return safeGetFirstSong().dateModified;
     }
 
+    public long getDateAdded() {
+        return safeGetFirstSong().dateAdded;
+    }
+
     public int getSongCount() {
         return songs.size();
     }

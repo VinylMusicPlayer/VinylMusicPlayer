@@ -29,7 +29,9 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,7 +44,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected int itemLayoutRes;
 
-    protected boolean usePalette = false;
+    protected boolean usePalette;
 
     public AlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
@@ -202,6 +204,11 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
                 break;
             case SortOrder.AlbumSortOrder.ALBUM_YEAR:
                 return MusicUtil.getYearString(dataSet.get(position).getYear());
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED:
+                Date date = new Date(dataSet.get(position).getDateAdded());
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
+                sectionName = dateFormat.format(date);
+                break;
         }
 
         return MusicUtil.getSectionName(sectionName);

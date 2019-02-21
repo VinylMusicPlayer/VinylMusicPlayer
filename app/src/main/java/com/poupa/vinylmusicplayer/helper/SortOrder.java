@@ -65,6 +65,9 @@ public final class SortOrder {
 
         /* Album sort order year */
         String ALBUM_YEAR = MediaStore.Audio.Media.YEAR + " DESC";
+
+        /* Album date added */
+        String ALBUM_DATE_ADDED = MediaStore.Audio.Media.DATE_ADDED + " DESC";
     }
 
     /**
@@ -90,7 +93,7 @@ public final class SortOrder {
         String SONG_DURATION = MediaStore.Audio.Media.DURATION + " DESC";
 
         /* Song sort order date */
-        String SONG_DATE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
+        String SONG_DATE_ADDED = MediaStore.Audio.Media.DATE_ADDED + " DESC";
     }
 
     /**
@@ -161,7 +164,7 @@ public final class SortOrder {
         String GENRE_A_Z = MediaStore.Audio.Genres.DEFAULT_SORT_ORDER;
 
         /* Genre sort order Z-A */
-        String ALBUM_Z_A = GENRE_A_Z + " DESC";
+        String GENRE_Z_A = GENRE_A_Z + " DESC";
     }
 
 }
