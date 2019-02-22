@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.19.2] - 2019-02-22
+### Added
+- Songs and Albums: sort by date added
+- Put song title text view into a horizontal scrollview
+- Swipe to remove song from playing queue
+- SD card write access using SAF API
+
+### Fixed
+- Set the top tracks number to 100
+- Shorter labels for launcher name
+- Fix transparent widget update
+- Improve ReplayGain
+
 ## [0.19.2] - 2019-01-22
 ### Fixed
 - Crash when tapping on "Library Categories" setting
@@ -65,11 +78,12 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Changed
 - Hide the tab bar when only one tab is activated.
 
-## 0.16.4.3 - 2018-01-02
+## [0.16.4.3] - 2018-01-02
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...HEAD
+[0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
 [0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...0.19.2
 [0.19.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.0...0.19.1
 [0.19.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.18.0...0.19.0
