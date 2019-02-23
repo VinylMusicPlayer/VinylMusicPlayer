@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.preferences;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEDialogPreference;
 
 public class PreAmpPreference extends ATEDialogPreference {

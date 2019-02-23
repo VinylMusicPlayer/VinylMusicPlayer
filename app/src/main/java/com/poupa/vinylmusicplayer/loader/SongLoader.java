@@ -2,9 +2,6 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorJoiner;
-import android.database.DatabaseUtils;
-import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
@@ -16,9 +13,6 @@ import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-
-import static com.poupa.vinylmusicplayer.helper.SortOrder.ArtistSortOrder.ARTIST_NUMBER_OF_ALBUMS;
-import static com.poupa.vinylmusicplayer.helper.SortOrder.ArtistSortOrder.ARTIST_NUMBER_OF_SONGS;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

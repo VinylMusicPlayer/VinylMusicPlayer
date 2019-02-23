@@ -7,15 +7,15 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 
+import org.jaudiotagger.audio.mp3.MP3File;
+import org.jaudiotagger.tag.images.Artwork;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.jaudiotagger.audio.mp3.MP3File;
-import org.jaudiotagger.tag.images.Artwork;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
-## [0.19.2] - 2019-02-22
+## [0.20.1] - 2019-01-22
+### Fixed
+- Bump database version
+
+## [0.20.0] - 2019-02-22
 ### Added
 - Songs and Albums: sort by date added
 - Put song title text view into a horizontal scrollview

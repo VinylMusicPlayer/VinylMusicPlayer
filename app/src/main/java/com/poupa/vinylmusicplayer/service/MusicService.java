@@ -33,6 +33,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.Toast;
+
 import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
@@ -60,6 +61,7 @@ import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

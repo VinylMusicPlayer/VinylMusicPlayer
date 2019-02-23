@@ -1,9 +1,9 @@
 package com.poupa.vinylmusicplayer.model;
 
-import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

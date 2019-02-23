@@ -32,7 +32,6 @@ import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
-import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;

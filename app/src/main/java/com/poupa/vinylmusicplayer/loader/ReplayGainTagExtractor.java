@@ -1,17 +1,19 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import com.poupa.vinylmusicplayer.model.Song;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReplayGainTagExtractor {
   // Normalize all tags using the Vorbis ones

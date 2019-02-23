@@ -18,8 +18,7 @@ import android.support.v7.preference.TwoStatePreference;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
@@ -35,10 +34,12 @@ import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
-import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
