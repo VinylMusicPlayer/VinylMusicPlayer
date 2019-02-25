@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.20.2] - 2019-01-25
+### Fixed
+- Titles not showing for Android 6 and below
+
 ## [0.20.1] - 2019-01-22
 ### Fixed
 - Bump database version
@@ -86,8 +90,10 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...HEAD
-[0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...HEAD
+[0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
+[0.20.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...0.20.1
+[0.20.0: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
 [0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...0.19.2
 [0.19.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.0...0.19.1
 [0.19.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.18.0...0.19.0

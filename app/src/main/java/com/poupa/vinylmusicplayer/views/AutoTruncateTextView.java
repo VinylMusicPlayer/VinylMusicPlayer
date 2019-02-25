@@ -85,8 +85,12 @@ public class AutoTruncateTextView extends AppCompatTextView {
 
         String fittedText = getText().toString();
 
-        final int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
         final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
+
+        if (textBoundsWidth == 0) {
+            textBoundsWidth =  getTouchInterceptFrameLayout().getMeasuredWidth();
+        }
 
         if (!fittedText.endsWith(TRUNCATED_MARKER) && !isUntruncated) {
             this.text = fittedText;

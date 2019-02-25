@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
 /**
@@ -63,6 +65,27 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         setLongClickable(false);
         setTag(TouchInterceptHorizontalScrollView.TAG);
         setHorizontalScrollBarEnabled(false);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        measureChild(getTouchInterceptTextView(), widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void measureChild(View child, int parentWidthMeasureSpec,
+                                int parentHeightMeasureSpec) {
+        ViewGroup.LayoutParams lp = child.getLayoutParams();
+
+        final int horizontalPadding = getPaddingLeft() + getPaddingRight();
+        final int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                Math.max(0, MeasureSpec.getSize(parentWidthMeasureSpec) - horizontalPadding),
+                MeasureSpec.UNSPECIFIED);
+
+        final int childHeightMeasureSpec = getChildMeasureSpec(parentHeightMeasureSpec,
+                getPaddingTop() + getPaddingBottom(), lp.height);
+        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
     }
 
     public TouchInterceptFrameLayout getTouchInterceptFrameLayout() {
