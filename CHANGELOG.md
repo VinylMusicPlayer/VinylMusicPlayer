@@ -93,7 +93,7 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 [Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...HEAD
 [0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
 [0.20.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...0.20.1
-[0.20.0: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
+[0.20.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
 [0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...0.19.2
 [0.19.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.0...0.19.1
 [0.19.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.18.0...0.19.0
