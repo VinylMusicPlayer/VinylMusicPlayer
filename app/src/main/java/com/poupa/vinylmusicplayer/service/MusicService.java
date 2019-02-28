@@ -18,6 +18,7 @@ import android.media.audiofx.AudioEffect;
 import android.media.session.MediaSession;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -32,6 +33,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.request.transition.Transition;
@@ -100,7 +102,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     public static final String APP_WIDGET_UPDATE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".appwidgetupdate";
     public static final String EXTRA_APP_WIDGET_NAME = VINYL_MUSIC_PLAYER_PACKAGE_NAME + "app_widget_name";
 
-    // do not change these three strings as it will break support with other apps (e.g. last.fm scrobbling)
+    // Do not change these three strings as it will break support with other apps (e.g. last.fm scrobbling)
     public static final String META_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".metachanged";
     public static final String QUEUE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".queuechanged";
     public static final String PLAY_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".playstatechanged";
@@ -110,6 +112,10 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     public static final String REPEAT_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".repeatmodechanged";
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".mediastorechanged";
+
+    public static final String CYCLE_REPEAT = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".cyclerepeat";
+    public static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
+    public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
     public static final String SAVED_POSITION = "POSITION";
     public static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
@@ -186,6 +192,8 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
 
     private Handler uiThreadHandler;
 
+    private MediaSessionCallback mMediaSessionCallback;
+
     private static String getTrackUri(@NonNull Song song) {
         return MusicUtil.getSongFileUri(song.id).toString();
     }
@@ -193,7 +201,6 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     @Override
     public void onCreate() {
         super.onCreate();
-
         final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         wakeLock.setReferenceCounted(false);
@@ -248,48 +255,11 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
         mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
 
         PendingIntent mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
-
+        mMediaSessionCallback = new MediaSessionCallback();
         mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
-        mediaSession.setCallback(new MediaSessionCompat.Callback() {
-            @Override
-            public void onPlay() {
-                play();
-            }
-
-            @Override
-            public void onPause() {
-                pause();
-            }
-
-            @Override
-            public void onSkipToNext() {
-                playNextSong(true);
-            }
-
-            @Override
-            public void onSkipToPrevious() {
-                back(true);
-            }
-
-            @Override
-            public void onStop() {
-                quit();
-            }
-
-            @Override
-            public void onSeekTo(long pos) {
-                seek((int) pos);
-            }
-
-            @Override
-            public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-                return MediaButtonIntentReceiver.handleIntent(MusicService.this, mediaButtonEvent);
-            }
-        });
-
+        mediaSession.setCallback(mMediaSessionCallback);
         mediaSession.setFlags(MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS
                 | MediaSession.FLAG_HANDLES_MEDIA_BUTTONS);
-
         mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
     }
 
@@ -569,12 +539,36 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     }
 
     private void updateMediaSessionPlaybackState() {
-        mediaSession.setPlaybackState(
-                new PlaybackStateCompat.Builder()
-                        .setActions(MEDIA_SESSION_ACTIONS)
-                        .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
-                                getPosition(), 1)
-                        .build());
+        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(MEDIA_SESSION_ACTIONS)
+                .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
+                        getSongProgressMillis(), 1);
+
+        setCustomAction(stateBuilder);
+
+        mediaSession.setPlaybackState(stateBuilder.build());
+    }
+
+    private void setCustomAction(PlaybackStateCompat.Builder stateBuilder) {
+        int repeatIcon = R.drawable.ic_repeat_white_nocircle_48dp;  // REPEAT_MODE_NONE
+        if (getRepeatMode() == REPEAT_MODE_THIS) {
+            repeatIcon = R.drawable.ic_repeat_one_white_circle_48dp;
+        } else if (getRepeatMode() == REPEAT_MODE_ALL) {
+            repeatIcon = R.drawable.ic_repeat_white_circle_48dp;
+        }
+        stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+                CYCLE_REPEAT, getString(R.string.action_cycle_repeat), repeatIcon)
+                .build());
+
+        final int shuffleIcon = getShuffleMode() == SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
+        stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+                TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
+                .build());
+
+        final int favoriteIcon = MusicUtil.isFavorite(getApplicationContext(), getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
+        stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+                TOGGLE_FAVORITE, getString(R.string.action_toggle_favorite), favoriteIcon)
+                .build());
     }
 
     private void updateMediaSessionMetaData() {
@@ -1199,6 +1193,127 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     public void onTrackEnded() {
         acquireWakeLock(30000);
         playerHandler.sendEmptyMessage(TRACK_ENDED);
+    }
+
+    public final class MediaSessionCallback extends MediaSessionCompat.Callback{
+        @Override
+        public void onPlay() {
+            play();
+        }
+
+        @Override
+        public void onPlayFromMediaId(String mediaId, Bundle extras) {
+            super.onPlayFromMediaId(mediaId, extras);
+
+            final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
+            final int itemId = musicId != null ? Integer.valueOf(musicId) : -1;
+            final ArrayList<Song> songs = new ArrayList<>();
+
+            final String category = AutoMediaIDHelper.extractCategory(mediaId);
+            switch (category) {
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
+                    Album album = AlbumLoader.getAlbum(getApplicationContext(), itemId);
+                    songs.addAll(album.songs);
+                    openQueue(songs, 0, true);
+                    break;
+
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
+                    Artist artist = ArtistLoader.getArtist(getApplicationContext(), itemId);
+                    songs.addAll(artist.getSongs());
+                    openQueue(songs, 0, true);
+                    break;
+
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
+                    Playlist playlist = PlaylistLoader.getPlaylist(getApplicationContext(), itemId);
+                    songs.addAll(PlaylistSongLoader.getPlaylistSongList(getApplicationContext(), playlist.id));
+                    openQueue(songs, 0, true);
+                    break;
+
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
+                    List<Song> tracks;
+                    if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
+                        tracks = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(getApplicationContext());
+                    } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
+                        tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(getApplicationContext());
+                    } else {
+                        tracks = MusicPlaybackQueueStore.getInstance(MusicService.this).getSavedOriginalPlayingQueue();
+                    }
+                    songs.addAll(tracks);
+                    int songIndex = MusicUtil.indexOfSongInList(tracks, itemId);
+                    if (songIndex == -1) {
+                        songIndex = 0;
+                    }
+                    openQueue(songs, songIndex, true);
+                    break;
+
+                case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE:
+                    ArrayList<Song> allSongs = SongLoader.getAllSongs(getApplicationContext());
+                    ShuffleHelper.makeShuffleList(allSongs, -1);
+                    openQueue(allSongs, 0, true);
+                    break;
+
+                default:
+                    break;
+            }
+
+            play();
+        }
+
+        @Override
+        public void onPause() {
+            pause();
+        }
+
+        @Override
+        public void onSkipToNext() {
+            playNextSong(true);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            back(true);
+        }
+
+        @Override
+        public void onStop() {
+            quit();
+        }
+
+        @Override
+        public void onSeekTo(long pos) {
+            seek((int) pos);
+        }
+
+        @Override
+        public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+            return MediaButtonIntentReceiver.handleIntent(MusicService.this, mediaButtonEvent);
+        }
+
+        @Override
+        public void onCustomAction(@NonNull String action, Bundle extras) {
+            switch (action) {
+                case CYCLE_REPEAT:
+                    cycleRepeatMode();
+                    updateMediaSessionPlaybackState();
+                    break;
+
+                case TOGGLE_SHUFFLE:
+                    toggleShuffle();
+                    updateMediaSessionPlaybackState();
+                    break;
+
+                case TOGGLE_FAVORITE:
+                    MusicUtil.toggleFavorite(getApplicationContext(), getCurrentSong());
+                    updateMediaSessionPlaybackState();
+                    break;
+
+                default:
+                    Log.d(TAG, "Unsupported action: " + action);
+                    break;
+            }
+        }
     }
 
     private static final class PlaybackHandler extends Handler {

@@ -336,4 +336,14 @@
     <string name="saf_guide_slide2_description">You need to select your SD card root directory</string>
     <string name="saf_guide_slide3_title">Tap \'select\' button at the bottom of the screen</string>
     <string name="saf_guide_slide3_description">Do not open any subfolders</string>
+    <!-- Android Auto -->
+    <string name="albums_label">Albums</string>
+    <string name="artists_label">Artists</string>
+    <string name="playlists_label">Playlists</string>
+    <string name="history_label">History</string>
+    <string name="top_tracks_label">Top Tracks</string>
+    <string name="queue_label">Queue</string>
+    <string name="action_cycle_repeat">Cycle repeat mode</string>
+    <string name="action_toggle_shuffle">Toggle shuffle mode</string>
+    <string name="action_toggle_favorite">Toggle favorite</string>
 </resources>
