@@ -40,6 +40,7 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
+import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.glide.BlurTransformation;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
@@ -47,8 +48,15 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.helper.StopWatch;
+import com.poupa.vinylmusicplayer.loader.AlbumLoader;
+import com.poupa.vinylmusicplayer.loader.ArtistLoader;
+import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
@@ -71,6 +79,8 @@ import java.util.Random;
  * @author Karim Abou Zeid (kabouzeid), Andrew Neal
  */
 public class MusicService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener, Playback.PlaybackCallbacks {
+
+    public static final String TAG = MusicService.class.getSimpleName();
 
     public static final String VINYL_MUSIC_PLAYER_PACKAGE_NAME = "com.poupa.vinylmusicplayer";
     public static final String MUSIC_PACKAGE_NAME = "com.android.music";

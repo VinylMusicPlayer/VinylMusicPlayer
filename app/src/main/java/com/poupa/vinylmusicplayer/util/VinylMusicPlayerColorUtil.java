@@ -66,12 +66,4 @@ public class VinylMusicPlayerColorUtil {
         }
         return backgroundColor;
     }
-
-    @ColorInt
-    public static int shiftBackgroundColorForDarkText(@ColorInt int backgroundColor) {
-        while (!ColorUtil.isColorLight(backgroundColor)) {
-            backgroundColor = ColorUtil.lightenColor(backgroundColor);
-        }
-        return backgroundColor;
-    }
 }
