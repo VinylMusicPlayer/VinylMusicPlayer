@@ -66,17 +66,12 @@ public class AutoMusicBrowserService extends MediaBrowserServiceCompat implement
     @Override
     public void onLoadChildren(@NonNull final String parentId, @NonNull final Result<List<MediaBrowserCompat.MediaItem>> result) {
         if (AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT.equals(parentId)) {
-            result.sendResult(new ArrayList<MediaBrowserCompat.MediaItem>());
+            result.sendResult(new ArrayList<>());
         } else if (mMusicProvider.isInitialized()) {
             result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
         } else {
             result.detach();
-            mMusicProvider.retrieveMediaAsync(new AutoMusicProvider.Callback() {
-                @Override
-                public void onMusicCatalogReady(boolean success) {
-                    result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
-                }
-            });
+            mMusicProvider.retrieveMediaAsync(success -> result.sendResult(mMusicProvider.getChildren(parentId, getResources())));
         }
     }
 
