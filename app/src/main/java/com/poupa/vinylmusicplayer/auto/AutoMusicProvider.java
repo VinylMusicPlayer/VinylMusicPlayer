@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -294,17 +293,13 @@ public class AutoMusicProvider {
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
                 for (final Uri uri : getHistory()) {
-                    final String albumId = uri.getPathSegments().get(PATH_SEGMENT_ALBUM_ID);
-                    final Bitmap bitmap = MusicUtil.getAlbumArtForAlbum(mContext, Integer.parseInt(albumId));
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST), bitmap, resources));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
                 for (final Uri uri : getTopTracks()) {
-                    final String albumId = uri.getPathSegments().get(PATH_SEGMENT_ALBUM_ID);
-                    final Bitmap bitmap = MusicUtil.getAlbumArtForAlbum(mContext, Integer.parseInt(albumId));
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST), bitmap, resources));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
 
@@ -316,9 +311,7 @@ public class AutoMusicProvider {
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
                 for (final Uri uri : getAlbums()) {
-                    final String albumId = uri.getPathSegments().get(PATH_SEGMENT_ALBUM_ID);
-                    final Bitmap bitmap = MusicUtil.getAlbumArtForAlbum(mContext, Integer.parseInt(albumId));
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST), bitmap, resources));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
 
@@ -331,9 +324,7 @@ public class AutoMusicProvider {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                 // TODO: auto scroll to current track, indicate that it's playing
                 for (final Uri uri : getQueue()) {
-                    final String albumId = uri.getPathSegments().get(PATH_SEGMENT_ALBUM_ID);
-                    final Bitmap bitmap = MusicUtil.getAlbumArtForAlbum(mContext, Integer.parseInt(albumId));
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST), bitmap, resources));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
         }
