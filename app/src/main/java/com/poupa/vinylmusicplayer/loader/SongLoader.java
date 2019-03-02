@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.loader;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.BaseColumns;
@@ -7,6 +10,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.media.MediaBrowserCompat;
 
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
@@ -46,6 +50,14 @@ public class SongLoader {
         return getSongs(cursor);
     }
 
+    public static LiveData<PagedList<Song>> getSongs(MediaBrowserCompat mediaBrowser) {
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setPageSize(10)
+                .build();
+        return new LivePagedListBuilder<>(new SongsDataSourceFactory(mediaBrowser), config).build();
+    }
+
     @NonNull
     public static Song getSong(@NonNull final Context context, final int queryId) {
         Cursor cursor = makeSongCursor(context, AudioColumns._ID + "=?", new String[]{String.valueOf(queryId)});
@@ -81,7 +93,7 @@ public class SongLoader {
     }
 
     @NonNull
-    private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
+    public static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         final int id = cursor.getInt(0);
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
