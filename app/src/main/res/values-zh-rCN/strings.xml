@@ -47,7 +47,6 @@
     <string name="lyrics">歌词</string>
     <string name="album_or_artist_empty">标题或艺术家名称为空。</string>
     <string name="saving_changes">正在保存更改</string>
-    <string name="saving_to_file">保存至文件...</string>
     <string name="label_details">详情</string>
     <string name="label_file_name">文件名</string>
     <string name="label_file_path">文件路径</string>
@@ -256,8 +255,6 @@
     <string name="playing_notification_description">正在播放通知提供了播放/暂停等便捷操作。</string>
     <string name="playing_notification_name">正在播放通知</string>
     <string name="only_the_first_5_colors_available">免费版仅能使用前 5 个主题色。</string>
-    <string name="restoring_purchase">正在恢复购买状态...</string>
-    <string name="could_not_restore_purchase">无法恢复购买状态</string>
     <string name="purchase">购买</string>
     <string name="restore">恢复</string>
     <string name="eugene_cheung_summary">因他对源代码的贡献。</string>

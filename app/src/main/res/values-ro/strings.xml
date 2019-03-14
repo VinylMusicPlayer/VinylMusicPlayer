@@ -48,7 +48,6 @@
     <string name="lyrics">Versuri</string>
     <string name="album_or_artist_empty">Titlul sau artistul lipseste.</string>
     <string name="saving_changes">Se salvează schimbările</string>
-    <string name="saving_to_file">Salvând în fișier...</string>
     <string name="label_details">Detalii</string>
     <string name="label_file_name">Nume fișier</string>
     <string name="label_file_path">Cale fișier</string>
@@ -262,8 +261,6 @@
     <string name="playing_notification_description">Notificarea de redare oferă acțiuni de redare/pauză etc.</string>
     <string name="playing_notification_name">Notificare de redare</string>
     <string name="only_the_first_5_colors_available">Numai primele 5 culori sunt disponibile în versiunea gratuită.</string>
-    <string name="restoring_purchase">Se restabilește achiziția...</string>
-    <string name="could_not_restore_purchase">Nu a putut fi restabilită achiziția.</string>
     <string name="purchase">Cumpărare</string>
     <string name="restore">Restabilire</string>
     <string name="eugene_cheung_summary">Pentru contribuțiile sale la codul sursă.</string>

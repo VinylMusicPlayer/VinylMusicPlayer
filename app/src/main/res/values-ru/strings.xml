@@ -48,7 +48,6 @@
     <string name="lyrics">Текст песни</string>
     <string name="album_or_artist_empty">Поля названия альбома или альбом исполнителя пусты</string>
     <string name="saving_changes">Сохранение изменений</string>
-    <string name="saving_to_file">Сохраняем файл...</string>
     <string name="label_details">Подробнее</string>
     <string name="label_file_name">Имя файла</string>
     <string name="label_file_path">Расположение</string>
@@ -262,8 +261,6 @@
     <string name="playing_notification_description">С помощью уведомления воспроизведения можно воспроизводить/ставить на паузу и т.д.</string>
     <string name="playing_notification_name">Уведомление воспроизведения</string>
     <string name="only_the_first_5_colors_available">Только первые 5 цветов доступны в бесплатной версии.</string>
-    <string name="restoring_purchase">Восстановление покупки...</string>
-    <string name="could_not_restore_purchase">Невозможно восстановить покупку.</string>
     <string name="purchase">Покупка</string>
     <string name="restore">Восстановление</string>
     <string name="eugene_cheung_summary">За его вклад в исходный код.</string>

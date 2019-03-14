@@ -47,7 +47,6 @@
     <string name="lyrics">Letras</string>
     <string name="album_or_artist_empty">El título o artista está vacío.</string>
     <string name="saving_changes">Guardando cambios...</string>
-    <string name="saving_to_file">Guardando al archivo...</string>
     <string name="label_details">Detalles</string>
     <string name="label_file_name">Nombre del archivo</string>
     <string name="label_file_path">Ubicación del archivo</string>
@@ -256,8 +255,6 @@
     <string name="playing_notification_description">La notificación de reproducción proporciona acciones para reproducir/pausar, etc.</string>
     <string name="playing_notification_name">Notificación de reproducción</string>
     <string name="only_the_first_5_colors_available">Solo los primeros 5 colores están disponibles en la versión gratuita.</string>
-    <string name="restoring_purchase">Restaurando compra...</string>
-    <string name="could_not_restore_purchase">No se pudo restaurar la compra.</string>
     <string name="purchase">Comprar</string>
     <string name="restore">Restaurar</string>
     <string name="eugene_cheung_summary">Por sus contribuciones al código fuente.</string>

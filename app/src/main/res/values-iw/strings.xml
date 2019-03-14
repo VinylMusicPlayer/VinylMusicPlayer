@@ -48,7 +48,6 @@
     <string name="lyrics">מילים</string>
     <string name="album_or_artist_empty">הכותרת או האמן ריקים.</string>
     <string name="saving_changes">שומר שינויים</string>
-    <string name="saving_to_file">שומר לקובץ...</string>
     <string name="label_details">פרטים</string>
     <string name="label_file_name">שם הקובץ</string>
     <string name="label_file_path">מיקום הקובץ</string>
@@ -262,8 +261,6 @@
     <string name="playing_notification_description">התראת הניגון מספקת פעולות הפעלה/השהייה וכו\'.</string>
     <string name="playing_notification_name">התראת ניגון</string>
     <string name="only_the_first_5_colors_available">רק 5 הצבעים הראשונים זמינים בגרסה החינמית.</string>
-    <string name="restoring_purchase">משחזר רכישה...</string>
-    <string name="could_not_restore_purchase">לא ניתן לשחזר רכישה.</string>
     <string name="purchase">קנה</string>
     <string name="restore">שחזר</string>
     <string name="eugene_cheung_summary">על התרומה שלו לקוד המקור.</string>

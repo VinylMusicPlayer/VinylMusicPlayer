@@ -48,7 +48,6 @@
     <string name="lyrics">Testi</string>
     <string name="album_or_artist_empty">Il titolo o l\'artista sono vuoti.</string>
     <string name="saving_changes">Salvando le modifiche</string>
-    <string name="saving_to_file">Salvataggio in corso...</string>
     <string name="label_details">Dettagli</string>
     <string name="label_file_name">Nome file</string>
     <string name="label_file_path">Percorso file</string>
@@ -263,8 +262,6 @@
     <string name="playing_notification_description">La notifica di riproduzione offre azioni per play/pausa ecc.</string>
     <string name="playing_notification_name">Notifica di riproduzione</string>
     <string name="only_the_first_5_colors_available">Solo i primi cinque colori sono disponibili nella versione gratuita.</string>
-    <string name="restoring_purchase">Ripristinando l\'acquisto...</string>
-    <string name="could_not_restore_purchase">Impossibile ripristinare l\'acquisto.</string>
     <string name="purchase">Acquista</string>
     <string name="restore">Ripristina</string>
     <string name="eugene_cheung_summary">Per il suo contributo al codice sorgente.</string>

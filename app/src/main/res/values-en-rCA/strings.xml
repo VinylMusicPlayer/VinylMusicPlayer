@@ -47,7 +47,6 @@
     <string name="lyrics">Lyrics</string>
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="saving_to_file">Saving to file…</string>
     <string name="label_details">Details</string>
     <string name="label_file_name">File name</string>
     <string name="label_file_path">File path</string>
@@ -256,8 +255,6 @@
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
     <string name="only_the_first_5_colors_available">Only the first 5 colors are available in the free version.</string>
-    <string name="restoring_purchase">Restoring purchase…</string>
-    <string name="could_not_restore_purchase">Could not restore purchase.</string>
     <string name="purchase">Purchase</string>
     <string name="restore">Restore</string>
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>
