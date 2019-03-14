@@ -27,15 +27,25 @@ android {
         versionCode 163
         versionName '0.20.2'
     }
+    signingConfigs {
+        circleci {
+            storeFile file("../.circleci/circleci-unsecured.jks")
+            keyAlias = "phono-unsecured"
+            storePassword = "phono-unsecured"
+            keyPassword = "phono-unsecured"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.circleci
         }
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix ' DEBUG '
+            signingConfig signingConfigs.circleci
         }
     }
     packagingOptions {

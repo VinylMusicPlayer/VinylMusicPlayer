@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function sync()
+{
+  tracking=$1
+  tracked=$2
+
+  # TODO check that the working zone is clean
+
+  git checkout ${tracking} || exit 1
+  git rebase ${tracked} || exit 1
+  git push --force-with-lease || exit 1
+}
+
+sync master upstream/master || exit 1
+sync cont-integ master || exit 1
+
+echo done
