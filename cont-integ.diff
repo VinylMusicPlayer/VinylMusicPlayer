@@ -1,0 +1,255 @@
+diff --git a/.circleci/config.yml b/.circleci/config.yml
+new file mode 100644
+index 00000000..9df75010
+--- /dev/null
++++ b/.circleci/config.yml
+@@ -0,0 +1,39 @@
++version: 2
++jobs:
++  build:
++    working_directory: ~/phono
++    docker:
++      - image: circleci/android:api-27-alpha
++    environment:
++      JVM_OPTS: -Xmx3200m
++    steps:
++      - checkout
++      - run:
++          name: Integration Merge
++          command: ./polymorphic-checkout
++      - restore_cache:
++          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
++      - run:
++          name: Download Dependencies
++          command: ./gradlew androidDependencies
++      - save_cache:
++          paths:
++            - ~/.gradle
++          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
++      #- run:
++      #    name: Build Debug
++      #    command: ./gradlew assembleDebug
++      - run:
++          name: Build Release
++          command: ./gradlew assembleRelease
++      - store_artifacts:
++          path: app/build/outputs/apk
++          destination: apk
++      - run:
++          name: Run Tests
++          command: ./gradlew lint test
++      - store_artifacts:
++          path: app/build/reports
++          destination: reports
++      - store_test_results:
++          path: app/build/test-results
+diff --git a/.gitignore b/.gitignore
+index abcaae74..8b072340 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -71,3 +71,6 @@ fastlane/test_output
+ 
+ # Google Play files
+ fastlane/metadata/
++
++# ctags
++tags
+diff --git a/README.md b/README.md
+index b7fc3cc0..91afc09b 100644
+--- a/README.md
++++ b/README.md
+@@ -1,5 +1,6 @@
+ # Phonograph
+ [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/kabouzeid/Phonograph/blob/master/LICENSE.txt)
++[![CircleCI](https://circleci.com/gh/soncaokim/Phonograph.svg?style=svg)](https://circleci.com/gh/soncaokim/Phonograph)
+ 
+ **A material designed local music player for Android.**
+ 
+diff --git a/app/build.gradle b/app/build.gradle
+index 9d04c9c6..89aa01b9 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -3,21 +3,35 @@ import javax.annotation.Nullable
+ apply plugin: 'com.android.application'
+ 
+ static def gitBranch() {
+-    def branch = 'GitHub'
++    def branch = ''
+     try {
+-        def gitcheck = 'command -v git >/dev/null 2>&1'.execute()
+-        gitcheck.waitFor()
+-        if (gitcheck.exitValue() == 0) {
+-            def proc = 'git rev-parse --abbrev-ref HEAD'.execute()
+-            proc.in.eachLine { line -> branch = line }
+-            proc.err.eachLine { line -> println line }
+-            proc.waitFor()
++        def proc = 'git rev-parse --abbrev-ref HEAD'.execute()
++        proc.in.eachLine { line -> branch = line }
++        proc.err.eachLine { line -> println line }
++        proc.waitFor()
++        if (proc.exitValue() != 0) {
++            branch = ''
+         }
+     } catch (Exception e) {
+         // Do nothing
+         println e
+     }
+-    branch
++
++    def sha1 = ''
++    try {
++        def proc = 'git rev-parse --short HEAD'.execute()
++        proc.in.eachLine { line -> sha1 = line }
++        proc.err.eachLine { line -> println line }
++        proc.waitFor()
++        if (proc.exitValue() != 0) {
++            sha1 = ''
++        }
++    } catch (Exception e) {
++        // Do nothing
++        println e
++    }
++    
++    return (branch + '-' + sha1)
+ }
+ 
+ def getProperties(String fileName) {
+@@ -49,11 +63,10 @@ android {
+     }
+     signingConfigs {
+         release {
+-            Properties properties = getProperties('/Users/karim/Documents/PhonographRessources/privatekeys/keystore.properties')
+-            storeFile file(getProperty(properties, 'storeFile'))
+-            keyAlias getProperty(properties, 'keyAlias')
+-            storePassword getProperty(properties, 'storePassword')
+-            keyPassword getProperty(properties, 'keyPassword')
++            storeFile file("phono-unsecured.jks")
++            keyAlias = "phono-unsecured"
++            storePassword = "phono-unsecured"
++            keyPassword = "phono-unsecured"
+         }
+     }
+     buildTypes {
+@@ -62,11 +75,23 @@ android {
+             shrinkResources true
+             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+             signingConfig signingConfigs.release
++            applicationVariants.all { variant ->
++                variant.outputs.all {
++                    def date = new Date().format('yyyyMMdd-HHmm')
++                    outputFileName = "phono_" + date + "_" + gitBranch() + "_release" + ".apk"
++                }
++            }
+         }
+-        debug {
+-            applicationIdSuffix '.debug'
+-            versionNameSuffix ' DEBUG (' + gitBranch() + ')'
+-        }
++        // debug {
++        //     debuggable true
++        //     signingConfig signingConfigs.release
++        //     applicationVariants.all { variant ->
++        //         variant.outputs.all {
++        //             def date = new Date().format('yyyyMMdd-HHmm')
++        //             outputFileName = "phono_" + date + "_" + gitBranch() + "_debug" + ".apk"
++        //         }
++        //     }
++        // }
+     }
+     packagingOptions {
+         exclude 'META-INF/LICENSE'
+diff --git a/app/phono-unsecured.jks b/app/phono-unsecured.jks
+new file mode 100644
+index 00000000..149cc2b4
+Binary files /dev/null and b/app/phono-unsecured.jks differ
+diff --git a/polymorphic-checkout b/polymorphic-checkout
+new file mode 100755
+index 00000000..ef3b1fe2
+--- /dev/null
++++ b/polymorphic-checkout
+@@ -0,0 +1,59 @@
++#!/bin/bash
++
++#set -x
++
++[ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
++[ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
++
++function git_init()
++{
++    git config --global user.email "$0@circleci"
++    git config --global user.name "$0"
++}
++
++case "${CIRCLE_BRANCH}" in
++    cont-integ-upstream)
++        echo "Branch ${CIRCLE_BRANCH} detected"
++        git_init
++
++        # Start from upstream/master
++        git remote add upstream https://github.com/kabouzeid/Phonograph.git
++        git fetch upstream
++        git rebase upstream/master || exit 1
++        ;;
++
++    cont-integ-origin)
++        echo "Branch ${CIRCLE_BRANCH} detected"
++        git_init
++        
++        # Start from origin/master
++        git fetch origin
++        git rebase origin/master || exit 1
++        ;;
++
++    *)
++        exit 0 # nothing to do
++        ;;
++esac
++
++function is_blacklisted()
++{
++    local branch=$1
++    local blacklist=""
++
++    for bl in ${blacklist}; do
++        [ "${branch}" = "${bl}" ] && return 0
++    done
++    return 1
++}
++
++# Merge with feature branches, unless black-listed
++branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
++for branch in ${branches}; do
++    [ "${branch}" = "${CIRCLE_BRANCH}" ] && continue
++
++    is_blacklisted ${branch} && continue
++
++    echo "Merge ${branch} into ${CIRCLE_BRANCH}..."
++    git merge --no-edit origin/${branch} || exit 1
++done
+diff --git a/sync-tracking-branches b/sync-tracking-branches
+new file mode 100755
+index 00000000..e93665b9
+--- /dev/null
++++ b/sync-tracking-branches
+@@ -0,0 +1,20 @@
++#!/bin/bash
++
++function sync()
++{
++  tracking=$1
++  tracked=$2
++
++  # TODO check that the working zone is clean
++
++  git checkout ${tracking} || exit 1
++  git rebase ${tracked} || exit 1
++  git push --force-with-lease || exit 1
++}
++
++sync master upstream/master || exit 1
++sync cont-integ master || exit 1
++sync cont-integ-origin cont-integ || exit 1
++sync cont-integ-upstream cont-integ || exit 1
++
++echo done

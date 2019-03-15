@@ -1,0 +1,383 @@
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/loader/TopAndRecentlyPlayedTracksLoader.java b/app/src/main/java/com/kabouzeid/gramophone/loader/TopAndRecentlyPlayedTracksLoader.java
+index 53c35eb2..b8aecfad 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/loader/TopAndRecentlyPlayedTracksLoader.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/loader/TopAndRecentlyPlayedTracksLoader.java
+@@ -19,7 +19,9 @@ package com.kabouzeid.gramophone.loader;
+ import android.content.Context;
+ import android.database.Cursor;
+ import android.provider.BaseColumns;
++import android.database.MergeCursor;
+ import android.provider.MediaStore;
++import android.provider.MediaStore.Audio.AudioColumns;
+ import android.support.annotation.NonNull;
+ import android.support.annotation.Nullable;
+ 
+@@ -29,72 +31,79 @@ import com.kabouzeid.gramophone.provider.SongPlayCountStore;
+ import com.kabouzeid.gramophone.util.PreferenceUtil;
+ 
+ import java.util.ArrayList;
++import java.util.function.BiFunction;
+ 
+ public class TopAndRecentlyPlayedTracksLoader {
+     public static final int NUMBER_OF_TOP_TRACKS = 100;
+ 
+     @NonNull
+     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
+-        return SongLoader.getSongs(makeRecentTracksCursorAndClearUpDatabase(context));
+-    }
+-
+-    @NonNull
+-    public static ArrayList<Song> getNotRecentlyPlayedTracks
+-(@NonNull Context context) {
+-        ArrayList<Song> allSongs = SongLoader.getSongs(
+-            SongLoader.makeSongCursor(
+-                context,
+-                null, null,
+-                MediaStore.Audio.Media.DATE_ADDED + " ASC"));
+-
+-        ArrayList<Song> recentlyPlayedSongs = SongLoader.getSongs(
+-            makeRecentTracksCursorAndClearUpDatabase(context));
++        SortedLongCursor cursor = makeRecentTracksCursorImpl(context);
+ 
+-        allSongs.removeAll(recentlyPlayedSongs);
++        // TODO clearUpDatabaseFromCursor(cursor, HistoryStore.getInstance(context));
++        // clean up the databases with any ids not found
++        if (cursor != null) {
++            ArrayList<Long> missingIds = cursor.getMissingIds();
++            if (missingIds != null && missingIds.size() > 0) {
++                for (long id : missingIds) {
++                    HistoryStore.getInstance(context).removeSongId(id);
++                }
++            }
++        }
+ 
+-        return allSongs;
++        return SongLoader.getSongs(cursor);
+     }
+ 
+     @NonNull
+-    public static ArrayList<Song> getTopTracks(@NonNull Context context) {
+-        return SongLoader.getSongs(makeTopTracksCursorAndClearUpDatabase(context));
+-    }
+-
+-    @Nullable
+-    public static Cursor makeRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
+-        SortedLongCursor retCursor = makeRecentTracksCursorImpl(context);
++    public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
++        SortedLongCursor cursor = makeNotRecentTracksCursorImpl(context);
+ 
++        // TODO clearUpDatabaseFromCursor(cursor, HistoryStore.getInstance(context));
+         // clean up the databases with any ids not found
+-        if (retCursor != null) {
+-            ArrayList<Long> missingIds = retCursor.getMissingIds();
++        if (cursor != null) {
++            ArrayList<Long> missingIds = cursor.getMissingIds();
+             if (missingIds != null && missingIds.size() > 0) {
+                 for (long id : missingIds) {
+                     HistoryStore.getInstance(context).removeSongId(id);
+                 }
+             }
+         }
+-        return retCursor;
++
++        return SongLoader.getSongs(cursor);
+     }
+ 
+-    @Nullable
+-    public static Cursor makeTopTracksCursorAndClearUpDatabase(@NonNull final Context context) {
+-        SortedLongCursor retCursor = makeTopTracksCursorImpl(context);
++    @NonNull
++    public static ArrayList<Song> getTopTracks(@NonNull Context context) {
++        SortedLongCursor cursor = makeTopTracksCursorImpl(context);
+ 
++        // TODO clearupDatabaseFromCursor(cursor, SongPlayCountStore.getInstance(context));
+         // clean up the databases with any ids not found
+-        if (retCursor != null) {
+-            ArrayList<Long> missingIds = retCursor.getMissingIds();
++        if (cursor != null) {
++            ArrayList<Long> missingIds = cursor.getMissingIds();
+             if (missingIds != null && missingIds.size() > 0) {
+                 for (long id : missingIds) {
+-                    SongPlayCountStore.getInstance(context).removeItem(id);
++                    SongPlayCountStore.getInstance(context).removeSongId(id);
+                 }
+             }
+         }
+-        return retCursor;
++
++        return SongLoader.getSongs(cursor);
+     }
+ 
++    // private static void clearUpDatabaseFromCursor(@Nullable final SortedLongCursor cursor, @NonNull AbstractClearableStore store) {
++    //     // clean up the databases with any ids not found
++    //     if (cursor != null) {
++    //         ArrayList<Long> missingIds = cursor.getMissingIds();
++    //         if (missingIds != null && missingIds.size() > 0) {
++    //             for (long id : missingIds) {
++    //                 store.removeSongId(id);
++    //             }
++    //         }
++    //     }
++    // }
++
+     @Nullable
+     private static SortedLongCursor makeRecentTracksCursorImpl(@NonNull final Context context) {
+-        // first get the top results ids from the internal database
+         final long cutoff = PreferenceUtil.getInstance(context).getRecentlyPlayedCutoffTimeMillis();
+         Cursor songs = HistoryStore.getInstance(context).queryRecentIds(cutoff);
+ 
+@@ -108,6 +117,77 @@ public class TopAndRecentlyPlayedTracksLoader {
+         }
+     }
+ 
++    @Nullable
++    private static SortedLongCursor makeNotRecentTracksCursorImpl(@NonNull final Context context) {
++        // utility function
++        java.util.function.BiFunction<Cursor, String, String> buildSelectionString = (cursor, selectionPrefix) -> {
++            if (cursor != null && cursor.moveToFirst()) return null;
++
++            final int idColumn = cursor.getColumnIndex(HistoryStore.RecentStoreColumns.ID);
++            StringBuilder selection = new StringBuilder();
++            selection.append(selectionPrefix);
++
++            selection.append(BaseColumns._ID);
++            selection.append(" IN (");
++            long id = cursor.getLong(idColumn);
++            selection.append(id);
++
++            while (cursor.moveToNext()) {
++                selection.append(",");
++                id = cursor.getLong(idColumn);
++                selection.append(String.valueOf(id));
++            }
++
++            selection.append(")");
++            return selection.toString();
++        };
++
++        ArrayList<Cursor> cursors = new ArrayList<>();
++
++        // not played songs, TODO sorted by date added
++        Cursor playedIds = HistoryStore.getInstance(context).queryRecentIds(0);
++        if (playedIds != null)
++        {
++            try {
++                Cursor notPlayedSongs = SongLoader.makeSongCursor(
++                        context,
++                        buildSelectionString.apply(playedIds, "NOT "),
++                        null,
++                        null);
++                cursors.add(notPlayedSongs);
++            } finally {
++                playedIds.close();
++            }
++        }
++
++        // not recently played songs, TODO sorted by last played
++        final long cutoff = PreferenceUtil.getInstance(context).getNotRecentlyPlayedCutoffTimeMillis();
++        Cursor notRecentlyPlayedIds = HistoryStore.getInstance(context).queryNotRecentIds(cutoff);
++        if (notRecentlyPlayedIds != null) {
++            try {
++                Cursor notRecentlyPlayedSongs = SongLoader.makeSongCursor(
++                        context,
++                        buildSelectionString.apply(notRecentlyPlayedIds, ""),
++                        null,
++                        null);
++                cursors.add(notRecentlyPlayedSongs);
++            } finally {
++                notRecentlyPlayedIds.close();
++            }
++        }
++
++        // combine the two cursors
++        if (cursors.isEmpty()) return null;
++        MergeCursor songs = new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
++
++        try {
++            return makeSortedCursor(context, songs,
++                    songs.getColumnIndex(MediaStore.Audio.AudioColumns._ID));
++        } finally {
++            songs.close();
++        }
++    }
++
+     @Nullable
+     private static SortedLongCursor makeTopTracksCursorImpl(@NonNull final Context context) {
+         // first get the top results ids from the internal database
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/model/smartplaylist/NotRecentlyPlayedPlaylist.java b/app/src/main/java/com/kabouzeid/gramophone/model/smartplaylist/NotRecentlyPlayedPlaylist.java
+index 3a22a0e3..596c35f2 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/model/smartplaylist/NotRecentlyPlayedPlaylist.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/model/smartplaylist/NotRecentlyPlayedPlaylist.java
+@@ -24,7 +24,7 @@ public class NotRecentlyPlayedPlaylist extends AbsSmartPlaylist {
+     @NonNull
+     @Override
+     public String getInfoString(@NonNull Context context) {
+-        String cutoff = PreferenceUtil.getInstance(context).getRecentlyPlayedCutoffText(context);
++        String cutoff = PreferenceUtil.getInstance(context).getNotRecentlyPlayedCutoffText(context);
+ 
+         return MusicUtil.buildInfoString(
+             cutoff,
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/provider/HistoryStore.java b/app/src/main/java/com/kabouzeid/gramophone/provider/HistoryStore.java
+index 62346aa4..3ef472de 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/provider/HistoryStore.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/provider/HistoryStore.java
+@@ -137,14 +137,22 @@ public class HistoryStore extends SQLiteOpenHelper {
+     }
+ 
+     public Cursor queryRecentIds(long cutoff) {
++        return queryRecentIds(cutoff, false);
++    }
++
++    public Cursor queryNotRecentIds(long cutoff) {
++        return queryRecentIds(cutoff, true);
++    }
++
++    private Cursor queryRecentIds(long cutoff, boolean reverse) {
+         final SQLiteDatabase database = getReadableDatabase();
+ 
+         return database.query(RecentStoreColumns.NAME,
+                 new String[]{RecentStoreColumns.ID}, 
+-                RecentStoreColumns.TIME_PLAYED + ">?",
++                RecentStoreColumns.TIME_PLAYED + (reverse ? "<?" : ">?"),
+                 new String[]{String.valueOf(cutoff)}, 
+                 null, null,
+-                RecentStoreColumns.TIME_PLAYED + " DESC");
++                RecentStoreColumns.TIME_PLAYED + (reverse ? " ASC" : " DESC"));
+     }
+ 
+     public interface RecentStoreColumns {
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/provider/SongPlayCountStore.java b/app/src/main/java/com/kabouzeid/gramophone/provider/SongPlayCountStore.java
+index 203bc02b..cd5dddd1 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/provider/SongPlayCountStore.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/provider/SongPlayCountStore.java
+@@ -324,7 +324,7 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
+     /**
+      * @param songId The song Id to remove.
+      */
+-    public void removeItem(final long songId) {
++    public void removeSongId(final long songId) {
+         final SQLiteDatabase database = getWritableDatabase();
+         deleteEntry(database, String.valueOf(songId));
+     }
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java b/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
+index 6eecd2f5..efab0db7 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
+@@ -63,6 +63,7 @@ public final class PreferenceUtil {
+ 
+     public static final String LAST_ADDED_CUTOFF = "last_added_interval";
+     public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
++    public static final String NOT_RECENTLY_PLAYED_CUTOFF = "recently_played_interval"; // TODO Separate pref for this
+ 
+     public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
+     public static final String BLURRED_ALBUM_ART = "blurred_album_art";
+@@ -294,6 +295,11 @@ public final class PreferenceUtil {
+         return getCutoffTimeMillis(RECENTLY_PLAYED_CUTOFF);
+     }
+ 
++    // The recently played cutoff time is compared against the internal (private) database timestamps, which is milliseconds based.
++    public long getNotRecentlyPlayedCutoffTimeMillis() {
++        return getCutoffTimeMillis(NOT_RECENTLY_PLAYED_CUTOFF);
++    }
++
+     private long getCutoffTimeMillis(final String cutoff) {
+         final CalendarUtil calendarUtil = new CalendarUtil();
+         long interval;
+@@ -307,7 +313,7 @@ public final class PreferenceUtil {
+                 interval = calendarUtil.getElapsedWeek();
+                 break;
+ 
+-             case "past_seven_days":
++            case "past_seven_days":
+                 interval = calendarUtil.getElapsedDays(7);
+                 break;
+ 
+@@ -315,7 +321,11 @@ public final class PreferenceUtil {
+                 interval = calendarUtil.getElapsedMonths(3);
+                 break;
+ 
+-            case "this_year":
++            case "past_100_days":
++                interval = calendarUtil.getElapsedDays(100);
++                break;
++
++           case "this_year":
+                 interval = calendarUtil.getElapsedYear();
+                 break;
+ 
+@@ -336,6 +346,10 @@ public final class PreferenceUtil {
+         return getCutoffText(RECENTLY_PLAYED_CUTOFF, context);
+     }
+ 
++    public String getNotRecentlyPlayedCutoffText(Context context) {
++        return getCutoffText(NOT_RECENTLY_PLAYED_CUTOFF, context);
++    }
++
+     private String getCutoffText(final String cutoff, Context context) {
+         switch (mPreferences.getString(cutoff, "")) {
+             case "today":
+@@ -344,12 +358,15 @@ public final class PreferenceUtil {
+             case "this_week":
+                 return context.getString(R.string.this_week);
+ 
+-             case "past_seven_days":
++            case "past_seven_days":
+                  return context.getString(R.string.past_seven_days);
+ 
+             case "past_three_months":
+                 return context.getString(R.string.past_three_months);
+ 
++            case "past_100_days":
++                 return context.getString(R.string.past_100_days);
++
+             case "this_year":
+                 return context.getString(R.string.this_year);
+ 
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 705e6266..950c60f9 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -109,6 +109,7 @@
+     <string name="past_seven_days">Past 7 days</string>
+     <string name="this_month">This month</string>
+     <string name="past_three_months">Past 3 months</string>
++    <string name="past_100_days">Past 100 days</string>
+     <string name="this_year">This year</string>
+     <string name="equalizer">Equalizer</string>
+     <string name="pref_header_colors">Colors</string>
+diff --git a/app/src/main/res/values/strings_activity_settings.xml b/app/src/main/res/values/strings_activity_settings.xml
+index 53990342..ae0db65d 100644
+--- a/app/src/main/res/values/strings_activity_settings.xml
++++ b/app/src/main/res/values/strings_activity_settings.xml
+@@ -30,6 +30,7 @@
+         <item>@string/past_seven_days</item>
+         <item>@string/this_month</item>
+         <item>@string/past_three_months</item>
++        <item>@string/past_100_days</item>
+         <item>@string/this_year</item>
+     </string-array>
+ 
+@@ -39,6 +40,7 @@
+         <item>past_seven_days</item>
+         <item>this_month</item>
+         <item>past_three_months</item>
++        <item>past_100_days</item>
+         <item>this_year</item>
+     </string-array>
+ 
+@@ -48,6 +50,7 @@
+         <item>@string/past_seven_days</item>
+         <item>@string/this_month</item>
+         <item>@string/past_three_months</item>
++        <item>@string/past_100_days</item>
+         <item>@string/this_year</item>
+     </string-array>
+ 
+@@ -57,6 +60,7 @@
+         <item>past_seven_days</item>
+         <item>this_month</item>
+         <item>past_three_months</item>
++        <item>past_100_days</item>
+         <item>this_year</item>
+     </string-array>
+ 

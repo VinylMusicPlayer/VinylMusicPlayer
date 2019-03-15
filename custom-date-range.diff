@@ -1,0 +1,91 @@
+diff --git a/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java b/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
+index 6eecd2f5..d4c2aa06 100644
+--- a/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
++++ b/app/src/main/java/com/kabouzeid/gramophone/util/PreferenceUtil.java
+@@ -307,7 +307,7 @@ public final class PreferenceUtil {
+                 interval = calendarUtil.getElapsedWeek();
+                 break;
+ 
+-             case "past_seven_days":
++            case "past_seven_days":
+                 interval = calendarUtil.getElapsedDays(7);
+                 break;
+ 
+@@ -315,7 +315,11 @@ public final class PreferenceUtil {
+                 interval = calendarUtil.getElapsedMonths(3);
+                 break;
+ 
+-            case "this_year":
++            case "past_100_days":
++                interval = calendarUtil.getElapsedDays(100);
++                break;
++
++           case "this_year":
+                 interval = calendarUtil.getElapsedYear();
+                 break;
+ 
+@@ -344,12 +348,15 @@ public final class PreferenceUtil {
+             case "this_week":
+                 return context.getString(R.string.this_week);
+ 
+-             case "past_seven_days":
++            case "past_seven_days":
+                  return context.getString(R.string.past_seven_days);
+ 
+             case "past_three_months":
+                 return context.getString(R.string.past_three_months);
+ 
++            case "past_100_days":
++                 return context.getString(R.string.past_100_days);
++
+             case "this_year":
+                 return context.getString(R.string.this_year);
+ 
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 705e6266..950c60f9 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -109,6 +109,7 @@
+     <string name="past_seven_days">Past 7 days</string>
+     <string name="this_month">This month</string>
+     <string name="past_three_months">Past 3 months</string>
++    <string name="past_100_days">Past 100 days</string>
+     <string name="this_year">This year</string>
+     <string name="equalizer">Equalizer</string>
+     <string name="pref_header_colors">Colors</string>
+diff --git a/app/src/main/res/values/strings_activity_settings.xml b/app/src/main/res/values/strings_activity_settings.xml
+index 53990342..ae0db65d 100644
+--- a/app/src/main/res/values/strings_activity_settings.xml
++++ b/app/src/main/res/values/strings_activity_settings.xml
+@@ -30,6 +30,7 @@
+         <item>@string/past_seven_days</item>
+         <item>@string/this_month</item>
+         <item>@string/past_three_months</item>
++        <item>@string/past_100_days</item>
+         <item>@string/this_year</item>
+     </string-array>
+ 
+@@ -39,6 +40,7 @@
+         <item>past_seven_days</item>
+         <item>this_month</item>
+         <item>past_three_months</item>
++        <item>past_100_days</item>
+         <item>this_year</item>
+     </string-array>
+ 
+@@ -48,6 +50,7 @@
+         <item>@string/past_seven_days</item>
+         <item>@string/this_month</item>
+         <item>@string/past_three_months</item>
++        <item>@string/past_100_days</item>
+         <item>@string/this_year</item>
+     </string-array>
+ 
+@@ -57,6 +60,7 @@
+         <item>past_seven_days</item>
+         <item>this_month</item>
+         <item>past_three_months</item>
++        <item>past_100_days</item>
+         <item>this_year</item>
+     </string-array>
+ 
