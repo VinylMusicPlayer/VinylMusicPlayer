@@ -85,9 +85,13 @@ android {
 
             signingConfig signingConfigs.circleci
             def buildId = "_" + buildTime() + "_" + gitSha1()
-            outputFileName = "vinyl" + buildId + ".apk"
             versionNameSuffix buildId
          }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "vinyl-${variant.name}-${variant.versionName}.apk"
+        }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
