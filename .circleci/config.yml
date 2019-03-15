@@ -28,12 +28,15 @@ jobs:
           command: ./gradlew assembleRelease
       - store_artifacts:
           path: app/build/outputs/apk
-          destination: apk
+          destination: outputs
       - run:
-          name: Run Tests
-          command: ./gradlew lint test
+          name: Static Analysis
+          command: ./gradlew lint
+      #- run:
+      #    name: Run Tests
+      #    command: ./gradlew test
       - store_artifacts:
           path: app/build/reports
-          destination: reports
-      - store_test_results:
-          path: app/build/test-results
+          destination: outputs
+      #- store_test_results:
+      #    path: app/build/test-results

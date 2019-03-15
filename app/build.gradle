@@ -10,6 +10,35 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+static def execAndCaptureOutput(String cmd) {
+    def output = ''
+    try {
+        def proc = cmd.execute()
+        proc.in.eachLine { line -> output = line }
+        proc.err.eachLine { line -> println line }
+        proc.waitFor()
+        if (proc.exitValue() != 0) {
+          output = ''
+        }
+    } catch (Exception e) {
+        // Do nothing
+        println e
+    }
+    return output
+}
+
+static def gitBranch() {
+    return execAndCaptureOutput('git rev-parse --abbrev-ref HEAD')
+}
+
+static def gitSha1() {
+    return execAndCaptureOutput('git rev-parse --short HEAD')
+}
+
+static def buildTime() {
+  return new Date().format('yyMMdd-HHmm')
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
@@ -27,6 +56,17 @@ android {
         versionCode 163
         versionName '0.20.2'
     }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix ' DEBUG '
+        }
+    }
     signingConfigs {
         circleci {
             storeFile file("../.circleci/circleci-unsecured.jks")
@@ -35,18 +75,19 @@ android {
             keyPassword = "phono-unsecured"
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.circleci
+    flavorDimensions "audience"
+    productFlavors {
+        production {
+            dimension "audience"
         }
-        debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix ' DEBUG '
+        circleci {
+            dimension "audience"
+
             signingConfig signingConfigs.circleci
-        }
+            def buildId = "_" + buildTime() + "_" + gitSha1()
+            outputFileName = "vinyl" + buildId + ".apk"
+            versionNameSuffix buildId
+         }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
