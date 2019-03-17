@@ -49,7 +49,6 @@
     <string name="lyrics">歌詞</string>
     <string name="album_or_artist_empty">專輯名稱或演出者欄是空的</string>
     <string name="saving_changes">正在儲存變更…</string>
-    <string name="saving_to_file">正在儲存為檔案...</string>
     <string name="label_details">詳細資訊</string>
     <string name="label_file_name">檔案名稱</string>
     <string name="label_file_path">檔案路徑</string>
@@ -262,8 +261,6 @@
     <string name="playing_notification_description">播放中通知提供了播放/暫停等操作</string>
     <string name="playing_notification_name">播放中通知</string>
     <string name="only_the_first_5_colors_available">免費版僅能使用前 5 個顏色</string>
-    <string name="restoring_purchase">恢復購買中...</string>
-    <string name="could_not_restore_purchase">恢復購買失敗</string>
     <string name="purchase">購買</string>
     <string name="restore">恢復</string>
     <string name="eugene_cheung_summary">原始碼貢獻者</string>

@@ -48,7 +48,6 @@
     <string name="lyrics">Songteksten</string>
     <string name="album_or_artist_empty">De titel of artiest is leeg.</string>
     <string name="saving_changes">Wijzigingen opslaan</string>
-    <string name="saving_to_file">Opslaan in bestand…</string>
     <string name="label_details">Details</string>
     <string name="label_file_name">Bestandsnaam</string>
     <string name="label_file_path">Bestandspad</string>
@@ -262,8 +261,6 @@
     <string name="playing_notification_description">De afspeelmelding biedt acties voor afspelen/pauzeren etc.</string>
     <string name="playing_notification_name">Afspeelmelding</string>
     <string name="only_the_first_5_colors_available">Alleen de eerste 5 kleuren zijn beschikbaar in de gratis versie.</string>
-    <string name="restoring_purchase">Aankoop herstellen…</string>
-    <string name="could_not_restore_purchase">Kan aankoop niet herstellen.</string>
     <string name="purchase">Koop</string>
     <string name="restore">Herstel</string>
     <string name="eugene_cheung_summary">Voor zijn bijdragen aan de broncode.</string>

@@ -47,7 +47,6 @@
     <string name="lyrics">歌詞</string>
     <string name="album_or_artist_empty">アルバム名またはアルバムアーティストの欄が空白です</string>
     <string name="saving_changes">変更を保存しています…</string>
-    <string name="saving_to_file">ファイルに保存…</string>
     <string name="label_details">詳細情報</string>
     <string name="label_file_name">ファイル名</string>
     <string name="label_file_path">パス</string>
@@ -256,8 +255,6 @@
     <string name="playing_notification_description">再生の通知は再生/一時停止などを提供します。</string>
     <string name="playing_notification_name">再生中の通知</string>
     <string name="only_the_first_5_colors_available">無料版では5色のみ利用可能です。</string>
-    <string name="restoring_purchase">購入を復元中…</string>
-    <string name="could_not_restore_purchase">購入情報を復元できませんでした。</string>
     <string name="purchase">購入</string>
     <string name="restore">復元</string>
     <string name="eugene_cheung_summary">ソースコードへの貢献。</string>
