@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#set -x
+
+[ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
+[ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
+
+function git_init()
+{
+    git config --global user.email "$0@circleci"
+    git config --global user.name "$0"
+}
+
+case "${CIRCLE_BRANCH}" in
+    cont-integ)
+        echo "Branch ${CIRCLE_BRANCH} detected"
+        git_init
+        git fetch origin
+        git rebase origin/master || exit 1
+        ;;
+
+    *)
+        exit 0 # nothing to do
+        ;;
+esac
+
+function is_blacklisted()
+{
+    local branch=$1
+    local blacklist=""
+
+    for bl in ${blacklist}; do
+        [ "${branch}" = "${bl}" ] && return 0
+    done
+    return 1
+}
+
+# Merge with feature branches, unless black-listed
+branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
+for branch in ${branches}; do
+    [ "${branch}" = "${CIRCLE_BRANCH}" ] && continue
+
+    is_blacklisted ${branch} && continue
+
+    echo "Merge ${branch} into ${CIRCLE_BRANCH}..."
+    git merge --no-edit origin/${branch} || exit 1
+done

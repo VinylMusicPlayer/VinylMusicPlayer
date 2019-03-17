@@ -10,6 +10,35 @@ buildscript {
 
 apply plugin: 'com.android.application'
 
+static def execAndCaptureOutput(String cmd) {
+    def output = ''
+    try {
+        def proc = cmd.execute()
+        proc.in.eachLine { line -> output = line }
+        proc.err.eachLine { line -> println line }
+        proc.waitFor()
+        if (proc.exitValue() != 0) {
+          output = ''
+        }
+    } catch (Exception e) {
+        // Do nothing
+        println e
+    }
+    return output
+}
+
+static def gitBranch() {
+    return execAndCaptureOutput('git rev-parse --abbrev-ref HEAD')
+}
+
+static def gitSha1() {
+    return execAndCaptureOutput('git rev-parse --short HEAD')
+}
+
+static def buildTime() {
+  return new Date().format('yyMMdd-HHmm')
+}
+
 android {
     compileSdkVersion 27
     buildToolsVersion '28.0.3'
@@ -36,6 +65,32 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix ' DEBUG '
+        }
+    }
+    signingConfigs {
+        circleci {
+            storeFile file("../.circleci/circleci-unsecured.jks")
+            keyAlias = "phono-unsecured"
+            storePassword = "phono-unsecured"
+            keyPassword = "phono-unsecured"
+        }
+    }
+    flavorDimensions "audience"
+    productFlavors {
+        production {
+            dimension "audience"
+        }
+        circleci {
+            dimension "audience"
+
+            signingConfig signingConfigs.circleci
+            def buildId = "_" + buildTime() + "_" + gitSha1()
+            versionNameSuffix buildId
+         }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "vinyl-${variant.name}-${variant.versionName}.apk"
         }
     }
     packagingOptions {
