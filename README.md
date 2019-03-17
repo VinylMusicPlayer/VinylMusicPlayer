@@ -1,5 +1,5 @@
 # Vinyl Music Player
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/LICENSE.txt)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/LICENSE.txt) [![CircleCI](https://circleci.com/gh/AdrienPoupa/VinylMusicPlayer/tree/master.svg?style=svg)](https://circleci.com/gh/AdrienPoupa/VinylMusicPlayer/tree/master)
 
 <a href="https://f-droid.org/packages/com.poupa.vinylmusicplayer/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
