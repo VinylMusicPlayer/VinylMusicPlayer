@@ -278,60 +278,78 @@ public class MusicUtil {
         final String[] projection = new String[]{
                 BaseColumns._ID, MediaStore.MediaColumns.DATA
         };
-        final StringBuilder selection = new StringBuilder();
-        selection.append(BaseColumns._ID + " IN (");
-        for (int i = 0; i < songs.size(); i++) {
-            selection.append(songs.get(i).id);
-            if (i < songs.size() - 1) {
+
+        // Split the query into multiple batches, and merge the resulting cursors
+        int batchStart = 0;
+        int batchEnd = 0;
+        final int batchSize = 1000000 / 10; // 10^6 being the SQLite limite on the query lenth in bytes, 10 being the max number of digits in an int, used to store the track ID
+        final int songCount = songs.size();
+
+        while (batchEnd < songCount)
+        {
+            batchStart = batchEnd;
+
+            final StringBuilder selection = new StringBuilder();
+            selection.append(BaseColumns._ID + " IN (");
+
+            for (int i = 0; (i < batchSize - 1) && (batchEnd < songCount - 1); i++, batchEnd++) {
+                selection.append(songs.get(batchEnd).id);
                 selection.append(",");
             }
-        }
-        selection.append(")");
+            // The last element of a batch
+            selection.append(songs.get(batchEnd).id);
+            batchEnd++;
+            selection.append(")");
+ 
+            try {
+                final Cursor cursor = activity.getContentResolver().query(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
+                        null, null);
+                // TODO: At this point, there is no guarantee that the size of the cursor is the same as the size of the selection string.
+                // Despite that, the Step 3 assumes that the safUris elements are tracking closely the content of the cursor.
 
-        try {
-            final Cursor cursor = activity.getContentResolver().query(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
-                    null, null);
-            if (cursor != null) {
-                // Step 1: Remove selected tracks from the current playlist, as well
-                // as from the album art cache
-                cursor.moveToFirst();
-                while (!cursor.isAfterLast()) {
-                    final int id = cursor.getInt(0);
-                    final Song song = SongLoader.getSong(activity, id);
-                    MusicPlayerRemote.removeFromQueue(song);
-                    cursor.moveToNext();
+                if (cursor != null) {
+                    // Step 1: Remove selected tracks from the current playlist, as well
+                    // as from the album art cache
+                    cursor.moveToFirst();
+                    while (!cursor.isAfterLast()) {
+                        final int id = cursor.getInt(0);
+                        final Song song = SongLoader.getSong(activity, id);
+                        MusicPlayerRemote.removeFromQueue(song);
+                        cursor.moveToNext();
+                    }
+
+                    // Step 2: Remove selected tracks from the database
+                    activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                            selection.toString(), null);
+ 
+                    // Step 3: Remove files from card
+                    cursor.moveToFirst();
+                    int i = batchStart;
+                    while (!cursor.isAfterLast()) {
+                        final String name = cursor.getString(1);
+                        final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                        SAFUtil.delete(activity, name, safUri);
+                        i++;
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
                 }
-
-                // Step 2: Remove selected tracks from the database
-                activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        selection.toString(), null);
-
-                // Step 3: Remove files from card
-                cursor.moveToFirst();
-                int i = 0;
-                while (!cursor.isAfterLast()) {
-                    final String name = cursor.getString(1);
-                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                    SAFUtil.delete(activity, name, safUri);
-                    i++;
-                    cursor.moveToNext();
-                }
-                cursor.close();
+            } catch (SecurityException ignored) {
             }
-            activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
+        }
 
-            activity.runOnUiThread(new Runnable() {
+        activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
+
+        activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songs.size()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
                     if (callback != null) {
                         callback.run();
                     }
                 }
-            });
-        } catch (SecurityException ignored) {
-        }
+        });
     }
 
     public static boolean isFavoritePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) {
