@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="what_do_you_want_to_share">"Apa yang ingin Anda bagikan? "</string>
-    <string name="currently_listening_to_x_by_x">%3$s</string>
     <string name="the_audio_file">Voice</string>
     <string name="x_has_been_set_as_ringtone">Setel %1$s sebagai nada dering anda?</string>
     <string name="action_set_as_ringtone">Setel sebagai nada dering</string>
