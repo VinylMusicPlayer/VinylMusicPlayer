@@ -111,6 +111,7 @@ public class SongLoader {
         int processed = 0;
 
         ArrayList<Cursor> cursors = new ArrayList<>();
+        final String sortOrder = PreferenceUtil.getInstance().getSongSortOrder();
         while (remaining > 0) {
             final int currentBatch = Math.min(BATCH_SIZE, remaining);
 
@@ -127,7 +128,7 @@ public class SongLoader {
                     BASE_PROJECTION, 
                     selection.toString(), 
                     paths.subList(processed, processed + currentBatch).toArray(new String[currentBatch]),
-                    PreferenceUtil.getInstance(context).getSongSortOrder()
+                    sortOrder
                 );
                 if (cursor != null) {cursors.add(cursor);};
             } catch (SecurityException ignored) {
