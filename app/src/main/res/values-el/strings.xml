@@ -169,13 +169,10 @@
     <string name="thank_you">Σας ευχαριστώ!</string>
     <string name="version">Έκδοση</string>
     <string name="author">Εκδότης</string>
-    <string name="add_to_google_plus_circles">Προσθήκη στους κύκλους σας στο Google Plus</string>
     <string name="follow_on_twitter">Ακολουθήστε στο Twitter</string>
     <string name="visit_website">Επισκεφθείτε την ιστοσελίδα μας</string>
     <string name="report_bugs">Αναφορά σφαλμάτων</string>
     <string name="report_bugs_summary">Αναφέρετε σφάλματα ή ζητείστε νέα χαρακτηριστικά.</string>
-    <string name="join_community">Γίνετε μέλος της κοινότητας μας στο Google Plus</string>
-    <string name="join_community_summary">Αν χρειάζεστε βοήθεια ή έχετε ερωτήσεις, η κοινότητά μας για το Vinyl Music Player στο Google Plus είναι ένα καλό μέρος για να πάτε.</string>
     <string name="translate">Μεταφράστε</string>
     <string name="translate_summary">Βοηθήστε την μετάφραση του Vinyl Music Player στη μητρική σας γλώσσα.</string>
     <string name="rate_on_google_play">Βαθμολογήστε</string>

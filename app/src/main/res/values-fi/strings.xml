@@ -186,14 +186,11 @@
     <string name="version">Versio</string>
     <string name="author">Luoja</string>
     <string name="write_an_email">Kirjoita sähköpostia</string>
-    <string name="add_to_google_plus_circles">Lisää Google Plus -piireihin</string>
     <string name="follow_on_twitter">Seuraa Twitterissä</string>
     <string name="fork_on_github">Forkkaa GitHubissa</string>
     <string name="visit_website">Vieraile verkkosivulla</string>
     <string name="report_bugs">Raportoi bugeja</string>
     <string name="report_bugs_summary">Raportoi bugeja tai ehdota uusia ominaisuuksia.</string>
-    <string name="join_community">Liity Google Plus -yhteisöön</string>
-    <string name="join_community_summary">Jos tarvitset apua tai sinulla on kysymyksiä, Vinyl Music Playerin Google Plus -yhteisö on hyvä paikka sille.</string>
     <string name="translate">Käännä</string>
     <string name="translate_summary">Auta kääntämään Vinyl Music Player sinun äidinkielellesi.</string>
     <string name="rate_on_google_play">Arvostele</string>
@@ -248,7 +245,6 @@
     <string name="you_will_be_forwarded_to_the_issue_tracker_website">Sinut johdatetaan vianseurantaohjelman verkkosivulle.</string>
     <string name="app_shortcut_shuffle_all_short">Sekoita</string>
     <string name="playlist_is_empty">Soittolista on tyhjä</string>
-    <string name="only_the_first_5_colors_available">Sovelluksen ilmaisversio on rajoitettu 5 ensimmäiseen värivaihtoehtoon.</string>
     <string name="eugene_cheung_summary">Työpanoksesta sovelluksen lähdekoodin parissa.</string>
     <string name="blacklist">Estolista</string>
     <string name="remove_from_blacklist">Poista estolistalta</string>

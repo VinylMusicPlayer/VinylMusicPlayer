@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="what_do_you_want_to_share">"Apa yang ingin Anda bagikan? "</string>
-    <string name="currently_listening_to_x_by_x">%3$s</string>
     <string name="the_audio_file">Voice</string>
     <string name="x_has_been_set_as_ringtone">Setel %1$s sebagai nada dering anda?</string>
     <string name="action_set_as_ringtone">Setel sebagai nada dering</string>
@@ -168,13 +167,10 @@
     <string name="thank_you">Terima kasih!</string>
     <string name="version">Versi</string>
     <string name="author">Penulis</string>
-    <string name="add_to_google_plus_circles">Tambahkan ke lingkaran Google Plus</string>
     <string name="follow_on_twitter">Ikuti di Twitter</string>
     <string name="visit_website">Kunjungi situs</string>
     <string name="report_bugs">Laporkan masalah</string>
     <string name="report_bugs_summary">Laporkan masalah atau sarankan fitur baru</string>
-    <string name="join_community">Gabung di komunitas Google Plus</string>
-    <string name="join_community_summary">"Anda dapat meminta bantuan atau mengajukan pertanyaan di komunitas Vinyl Music Player di Google Plus. "</string>
     <string name="translate">Terjemahkan</string>
     <string name="translate_summary">"Bantu terjemahkan Vinyl Music Player ke dalam bahasa Anda. "</string>
     <string name="rate_on_google_play">Beri nilai</string>
