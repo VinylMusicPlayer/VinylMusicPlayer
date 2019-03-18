@@ -181,7 +181,8 @@ public class SongLoader {
             remaining -= currentBatch;
             processed += currentBatch;
         }
-        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));    }
+        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
+    }
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
         StringBuilder newSelection = new StringBuilder(selection != null && !selection.trim().equals("") ? selection + " AND " : "");
