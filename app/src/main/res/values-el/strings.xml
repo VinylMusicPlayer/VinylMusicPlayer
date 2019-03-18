@@ -44,7 +44,7 @@
     <string name="track_hint">"Κομμάτι (2 για κομμάτι 2 ή 3004 από CD3 κομμάτι 4)"</string>
     <string name="lyrics">Στίχοι</string>
     <string name="album_or_artist_empty">Το πεδίο \"Τίτλος\" ή \"Καλλιτέχνης\" είναι άδειο</string>
-    <string name="saving_changes">"Γίνεται αποθήκευση αλλαγών... "</string>
+    <string name="saving_changes">"Γίνεται αποθήκευση αλλαγών… "</string>
     <string name="label_details">Λεπτομέρειες</string>
     <string name="label_file_name">Όνομα αρχείου</string>
     <string name="label_file_path">Διαδρομή αρχείου</string>
@@ -57,7 +57,7 @@
     <string name="action_go_to_album">Πήγαινε στο άλμπουμ</string>
     <string name="label_playing_queue">Ουρά αναπαραγωγής</string>
     <string name="no_results">Κανένα αποτέλεσμα</string>
-    <string name="updating">Γίνεται ανανέωση...</string>
+    <string name="updating">Γίνεται ανανέωση…</string>
     <string name="added_title_to_playing_queue">"Προστέθηκε ένας τίτλος στην ουρά αναπαραγωγής"</string>
     <string name="added_x_titles_to_playing_queue">"Προστέθηκαν %1$d τίτλοι στην ουρά αναπαραγωγής "</string>
     <string name="action_remove_from_playlist">Αφαίρεση από την λίστα</string>
@@ -143,7 +143,7 @@
     <string name="pref_summary_colored_app_shortcuts">Χρωματίζει τις συντομεύσεις της εφαρμογής στο κυρίως χρώμα.</string>
     <string name="pref_summary_audio_ducking">Ειδοποιήσεις, πλοήγηση κ.λπ.</string>
     <string name="could_not_download_album_cover">"\u0394\u03b5\u03bd \u03ae\u03c4\u03b1\u03bd \u03b4\u03c5\u03bd\u03b1\u03c4\u03ae \u03b7 \u03b5\u03cd\u03c1\u03b5\u03c3\u03b7 \u03ba\u03b1\u03b9 \u03b7 \u03bb\u03ae\u03c8\u03b7 \u03b5\u03bd\u03cc\u03c2 \u03b5\u03be\u03ce\u03c6\u03c5\u03bb\u03bb\u03bf\u03c5 \u03c0\u03bf\u03c5 \u03bd\u03b1 \u03c4\u03b1\u03b9\u03c1\u03b9\u03ac\u03b6\u03b5\u03b9."</string>
-    <string name="search_hint">Αναζήτηση στη βιβλιοθήκη...</string>
+    <string name="search_hint">Αναζήτηση στη βιβλιοθήκη…</string>
     <string name="favorites">Αγαπημένα</string>
     <string name="last_added">Προστέθηκαν τελευταία</string>
     <string name="history">Ιστορικό</string>
@@ -157,7 +157,7 @@
     <string name="cancel_current_timer">Ακύρωση τρέχοντος χρονοδιακόπτη</string>
     <string name="sleep_timer_canceled">Ο χρονοδιακόπτης ύπνου έχει ακυρωθεί.</string>
     <string name="sleep_timer_set">Ο χρονοδιακόπτης ύπνου έχει οριστεί σε %d λεπτά από τώρα.</string>
-    <string name="action_new_playlist">Νέα λίστα αναπαραγωγής...</string>
+    <string name="action_new_playlist">Νέα λίστα αναπαραγωγής…</string>
     <string name="new_playlist_title">Νέα λίστα αναπαραγωγής</string>
     <string name="colored_footers">Χρωματιστά υποσέλιδα</string>
     <string name="special_thanks_to">Ιδιαίτερες ευχαριστίες προς</string>
@@ -182,7 +182,7 @@
     <string name="maarten_corpel_summary">Για την δημιουργία της εικονογράφησης του Play Store και του άδειου εξώφυλλου του άλμπουμ.</string>
     <string name="aleksandar_tesic_summary">Για την βοήθειά του στον σχεδιασμό.</string>
     <string name="website">Ιστοσελίδα</string>
-    <string name="loading_products">Φόρτωση προϊόντων...</string>
+    <string name="loading_products">Φόρτωση προϊόντων…</string>
     <string name="up_next">Επόμενο</string>
     <string name="pref_title_now_playing_screen_appearance">Εμφάνιση</string>
     <string name="intro_label">Εισαγωγή</string>
@@ -216,7 +216,7 @@
     <string name="bug_report_no_description">Παρακαλώ εισάγετε μια περιγραφή του προβλήματος</string>
     <string name="bug_report_no_username">Παρακαλώ εισάγετε έγκυρο όνομα χρήστη GitHub</string>
     <string name="bug_report_no_password">Παρακαλώ εισάγετε έγκυρο κωδικό πρόσβασης GitHub</string>
-    <string name="bug_report_uploading">Αποστολή αναφοράς στο GitHub...</string>
+    <string name="bug_report_uploading">Αποστολή αναφοράς στο GitHub…</string>
     <string name="bug_report_failed">Δεν είναι δυνατή η αποστολή της αναφοράς</string>
     <string name="bug_report_failed_wrong_credentials">Λάθος όνομα χρήστη ή κωδικός πρόσβασης</string>
     <string name="bug_report_failed_invalid_token">Μη έγκυρο διακριτικό πρόσβασης. Παρακαλώ επικοινωνήστε με τον προγραμματιστή της εφαρμογής.</string>

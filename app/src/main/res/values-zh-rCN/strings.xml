@@ -20,7 +20,7 @@
     <string name="action_next">下一首</string>
     <string name="action_add_to_playing_queue">加入播放队列</string>
     <string name="action_remove_from_playing_queue">从播放队列中移除</string>
-    <string name="action_add_to_playlist">加入播放列表...</string>
+    <string name="action_add_to_playlist">加入播放列表…</string>
     <string name="action_tag_editor">音乐标签编辑器</string>
     <string name="action_delete_from_device">从设备中删除</string>
     <string name="action_details">详情</string>
@@ -235,7 +235,7 @@
     <string name="bug_report_no_description">请输入问题的说明</string>
     <string name="bug_report_no_username">请输入您在 Github 上的有效用户名</string>
     <string name="bug_report_no_password">请输入您在 Github 上的有效密码</string>
-    <string name="bug_report_uploading">正在将报告上传至 Github...</string>
+    <string name="bug_report_uploading">正在将报告上传至 Github…</string>
     <string name="bug_report_failed">无法发送报告</string>
     <string name="bug_report_failed_wrong_credentials">错误的用户名或密码</string>
     <string name="bug_report_failed_invalid_token">无效的访问令牌。请联系应用开发者。</string>

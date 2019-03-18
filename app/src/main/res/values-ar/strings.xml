@@ -39,7 +39,7 @@
     <string name="year">السنة</string>
     <string name="track_hint">"مقطع (2 للمقطع 2 أو 3004 لـCD3 للمقطع 4)"</string>
     <string name="album_or_artist_empty">حقل اسم الألبوم أو اسم الفنان فارغ</string>
-    <string name="saving_changes">يتم حفظ التغييرات...</string>
+    <string name="saving_changes">يتم حفظ التغييرات…</string>
     <string name="label_details">التفاصيل</string>
     <string name="label_file_name">اسم الملف</string>
     <string name="label_file_path">مسار الملف</string>
@@ -52,7 +52,7 @@
     <string name="action_go_to_album">اذهب إلى الألبوم</string>
     <string name="label_playing_queue">قائمة الانتظار</string>
     <string name="no_results">لا توجد نتائج</string>
-    <string name="updating">يتم التحديث...</string>
+    <string name="updating">يتم التحديث…</string>
     <string name="added_title_to_playing_queue">"تمت الإضافة إلى قائمة الانتظار"</string>
     <string name="added_x_titles_to_playing_queue">تم إضافة %1$d عنوان إلى قائمة الانتظار</string>
     <string name="action_remove_from_playlist">حذف من قائمة التشغيل</string>
@@ -134,7 +134,7 @@
     <string name="pref_summary_colored_navigation_bar">تلوين شريط التنقل باللون الأساسي</string>
     <string name="pref_summary_audio_ducking">الإشعارات، التنقل، إلى آخره.</string>
     <string name="could_not_download_album_cover">"\u0644\u0627 \u064a\u0645\u0643\u0646 \u062a\u062d\u0645\u064a\u0644 \u063a\u0644\u0627\u0641 \u0623\u0644\u0628\u0648\u0645 \u0645\u0637\u0627\u0628\u0642 ."</string>
-    <string name="search_hint">إبحث في مكتبتك...</string>
+    <string name="search_hint">إبحث في مكتبتك…</string>
     <string name="favorites">المفضلة</string>
     <string name="last_added">آخر ما تمت إضافته</string>
     <string name="history">السجل</string>
@@ -148,7 +148,7 @@
     <string name="cancel_current_timer">إلغاء المؤقت الحالي</string>
     <string name="sleep_timer_canceled">تم إلقاء مؤقت النوم</string>
     <string name="sleep_timer_set">تم ضبط مؤقت النوم لـ %d دقيقة من الآن.</string>
-    <string name="action_new_playlist">قائمة تشغيل جديدة ...</string>
+    <string name="action_new_playlist">قائمة تشغيل جديدة …</string>
     <string name="new_playlist_title">قائمة تشغيل جديدة</string>
     <string name="colored_footers">هوامش ملونة</string>
     <string name="special_thanks_to">شكر خاص إلى</string>
@@ -173,7 +173,7 @@
     <string name="maarten_corpel_summary">من أجل وضع توضيحات البرنامج المتواجدة على المتجر وأيضاً صورة الألبوم الإفتراضية</string>
     <string name="aleksandar_tesic_summary">لمساعدتي في تصميم البرنامج</string>
     <string name="website">الموقع</string>
-    <string name="loading_products">يتم تحميل المنتجات...</string>
+    <string name="loading_products">يتم تحميل المنتجات…</string>
     <string name="up_next">التالي</string>
     <string name="pref_title_now_playing_screen_appearance">المظهر</string>
     <string name="intro_label">المقدمة</string>

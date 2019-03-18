@@ -20,7 +20,7 @@
     <string name="action_next">Próxima</string>
     <string name="action_add_to_playing_queue">Adicionar à fila de reprodução</string>
     <string name="action_remove_from_playing_queue">Remover da fila de reprodução</string>
-    <string name="action_add_to_playlist">Adicionar à lista de reprodução...</string>
+    <string name="action_add_to_playlist">Adicionar à lista de reprodução…</string>
     <string name="action_tag_editor">Editor de Tag</string>
     <string name="action_delete_from_device">Excluir do dispositivo</string>
     <string name="action_details">Detalhes</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">Ir para o álbum</string>
     <string name="label_playing_queue">Fila de Reprodução</string>
     <string name="no_results">Sem resultados</string>
-    <string name="updating">Atualizando...</string>
+    <string name="updating">Atualizando…</string>
     <string name="added_title_to_playing_queue">"Adicionado 1 título à lista de reprodução"</string>
     <string name="added_x_titles_to_playing_queue">%1$d faixas adicionadas à fila de reprodução.</string>
     <string name="action_remove_from_playlist">Remover da playlist</string>
@@ -165,7 +165,7 @@
     <string name="pref_summary_synchronized_lyrics_show">Atualmente damos suporte apenas a letras de música no formato LRC. Tanto as encorporadas quanto as anexadas por um arquivo separado.</string>
     <string name="pref_summary_remember_last_tab">Ir para a última aba aberta ao iniciar</string>
     <string name="could_not_download_album_cover">"N\u00e3o foi poss\u00edvel baixar uma capa do \u00e1lbum correspondente."</string>
-    <string name="search_hint">Pesquisar na sua biblioteca...</string>
+    <string name="search_hint">Pesquisar na sua biblioteca…</string>
     <string name="favorites">Favoritos</string>
     <string name="last_added">Última Adição</string>
     <string name="history">Histórico</string>
@@ -179,7 +179,7 @@
     <string name="cancel_current_timer">Cancelar temporizador atual</string>
     <string name="sleep_timer_canceled">Temporizador cancelado.</string>
     <string name="sleep_timer_set">Temporizador definido para %d minutos a partir de agora.</string>
-    <string name="action_new_playlist">Nova playlist...</string>
+    <string name="action_new_playlist">Nova playlist…</string>
     <string name="new_playlist_title">Nova playlist</string>
     <string name="colored_footers">Rodapés coloridos</string>
     <string name="special_thanks_to">Agradecimentos especiais para</string>
@@ -206,7 +206,7 @@
     <string name="maarten_corpel_summary">Por fazer a ilustração da Play Store e a imagem dos álbuns vazios.</string>
     <string name="aleksandar_tesic_summary">Por me ajudar com o design.</string>
     <string name="website">Site</string>
-    <string name="loading_products">Carregando produtos...</string>
+    <string name="loading_products">Carregando produtos…</string>
     <string name="up_next">Próximo</string>
     <string name="pref_title_now_playing_screen_appearance">Aparência</string>
     <string name="intro_label">Introdução</string>
@@ -241,7 +241,7 @@
     <string name="bug_report_no_description">Por favor descreva o erro</string>
     <string name="bug_report_no_username">Por favor, digite seu nome de usuário do GitHub</string>
     <string name="bug_report_no_password">Por favor, digite sua senha do GitHub</string>
-    <string name="bug_report_uploading">Enviando o reporte ao GitHub...</string>
+    <string name="bug_report_uploading">Enviando o reporte ao GitHub…</string>
     <string name="bug_report_failed">Não foi possível enviar o relatório</string>
     <string name="bug_report_failed_wrong_credentials">Nome de usuário ou senha errada</string>
     <string name="bug_report_failed_invalid_token">Chave de acesso inválido. Por favor contate o desenvolvedor do aplicativo.</string>

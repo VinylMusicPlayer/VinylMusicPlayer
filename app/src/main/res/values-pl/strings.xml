@@ -20,7 +20,7 @@
     <string name="action_next">Następny</string>
     <string name="action_add_to_playing_queue">Dodaj do kolejki odtwarzania</string>
     <string name="action_remove_from_playing_queue">Usuń z kolejki odtwarzania</string>
-    <string name="action_add_to_playlist">Dodaj do listy odtwarzania...</string>
+    <string name="action_add_to_playlist">Dodaj do listy odtwarzania…</string>
     <string name="action_tag_editor">Edytor tagów</string>
     <string name="action_delete_from_device">Usuń z urządzenia</string>
     <string name="action_details">Szczegóły</string>
@@ -46,7 +46,7 @@
     <string name="track_hint">"Numer utworu (2 dla utworu 2 lub 3004 dla CD3 utworu 4)"</string>
     <string name="lyrics">Tekst</string>
     <string name="album_or_artist_empty">Pole tytułu lub artysty jest puste</string>
-    <string name="saving_changes">Zapisywanie zmian...</string>
+    <string name="saving_changes">Zapisywanie zmian…</string>
     <string name="label_details">Szczegóły</string>
     <string name="label_file_name">Nazwa pliku</string>
     <string name="label_file_path">Ścieżka pliku</string>
@@ -59,7 +59,7 @@
     <string name="action_go_to_album">Przejdź do albumu</string>
     <string name="label_playing_queue">Kolejka odtwarzania</string>
     <string name="no_results">Brak wyników</string>
-    <string name="updating">Aktualizowanie...</string>
+    <string name="updating">Aktualizowanie…</string>
     <string name="added_title_to_playing_queue">"Dodano 1 tytuł do kolejki odtwarzania"</string>
     <string name="added_x_titles_to_playing_queue">Dodano %1$d tytuły do kolejki odtwarzania</string>
     <string name="action_remove_from_playlist">Usuń z listy odtwarzania</string>
@@ -159,7 +159,7 @@
     <string name="pref_summary_audio_ducking">Notyfikacje, nawigacja, itp.</string>
     <string name="pref_summary_synchronized_lyrics_show">Obecnie wspierane są tylko napisy w formacie LRC oraz te osadzone w osobnym pliku.</string>
     <string name="could_not_download_album_cover">"Nie uda\u0142o si\u0119 pobra\u0107 pasuj\u0105cej ok\u0142adki albumu"</string>
-    <string name="search_hint">Szukaj w bibliotece...</string>
+    <string name="search_hint">Szukaj w bibliotece…</string>
     <string name="favorites">Ulubione</string>
     <string name="last_added">Ostatnio dodane</string>
     <string name="history">Historia odtwarzania</string>
@@ -173,7 +173,7 @@
     <string name="cancel_current_timer">Anuluj wyłącznik</string>
     <string name="sleep_timer_canceled">Anulowano wyłącznik czasowy</string>
     <string name="sleep_timer_set">Wyłącznik czasowy ustawiony na %d minut od teraz</string>
-    <string name="action_new_playlist">Nowa lista odtwarzania...</string>
+    <string name="action_new_playlist">Nowa lista odtwarzania…</string>
     <string name="new_playlist_title">Nowa lista odtwarzania</string>
     <string name="colored_footers">Kolorowe stopki</string>
     <string name="special_thanks_to">Specjalne podziękowania dla</string>
@@ -200,7 +200,7 @@
     <string name="maarten_corpel_summary">Za zilustrowanie aplikacji w sklepie Google Play</string>
     <string name="aleksandar_tesic_summary">Za pomoc w pracach nad wyglądem wizualnym</string>
     <string name="website">Strona internetowa</string>
-    <string name="loading_products">Ładowanie produktów...</string>
+    <string name="loading_products">Ładowanie produktów…</string>
     <string name="up_next">Za chwilę zagra</string>
     <string name="pref_title_now_playing_screen_appearance">Wygląd</string>
     <string name="intro_label">Wprowadzenie</string>
@@ -235,7 +235,7 @@
     <string name="bug_report_no_description">Dodaj opis problemu</string>
     <string name="bug_report_no_username">Podaj swój login z GitHub</string>
     <string name="bug_report_no_password">Wpisz swoje hasło z GitHub</string>
-    <string name="bug_report_uploading">Wysyłanie raportu do GitHub...</string>
+    <string name="bug_report_uploading">Wysyłanie raportu do GitHub…</string>
     <string name="bug_report_failed">Nie można wysłać raportu</string>
     <string name="bug_report_failed_wrong_credentials">Błędna nazwa użytkownika lub hasło</string>
     <string name="bug_report_failed_invalid_token">Niepoprawny token dostępu. Skontaktuj się z twórcą aplikacji</string>

@@ -59,7 +59,7 @@
     <string name="action_go_to_album">アルバムを表示</string>
     <string name="label_playing_queue">再生キュー</string>
     <string name="no_results">該当なし</string>
-    <string name="updating">更新中...</string>
+    <string name="updating">更新中…</string>
     <string name="added_title_to_playing_queue">"曲を再生キューに追加しました"</string>
     <string name="added_x_titles_to_playing_queue">%1$d曲を再生キューに追加しました</string>
     <string name="action_remove_from_playlist">プレイリストから除去</string>

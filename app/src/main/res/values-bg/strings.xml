@@ -20,7 +20,7 @@
     <string name="action_next">Следваща песен</string>
     <string name="action_add_to_playing_queue">Добави в списъка с възпроизвеждащи се песни</string>
     <string name="action_remove_from_playing_queue">Премахни от списъка с възпроизвеждащи се песни</string>
-    <string name="action_add_to_playlist">Добави към плейлист...</string>
+    <string name="action_add_to_playlist">Добави към плейлист…</string>
     <string name="action_tag_editor">Таг Едитор</string>
     <string name="action_delete_from_device">Изтрий от устройството</string>
     <string name="action_details">Детайли</string>
@@ -57,7 +57,7 @@
     <string name="action_go_to_album">Отиди в албум</string>
     <string name="label_playing_queue">Възпроизвеждащи се файлове</string>
     <string name="no_results">Няма резултати</string>
-    <string name="updating">Обновява се...</string>
+    <string name="updating">Обновява се…</string>
     <string name="added_title_to_playing_queue">"1 заглавие бе добавено към възпроизвеждащите се песни"</string>
     <string name="added_x_titles_to_playing_queue">%1$d заглавия бяха добавени към възпроизвеждащите се песни</string>
     <string name="action_remove_from_playlist">Премахни от плейлист</string>
@@ -142,7 +142,7 @@
     <string name="pref_summary_colored_app_shortcuts">Оцветява бутоните в главният цвят на апликацията.</string>
     <string name="pref_summary_audio_ducking">Известия, навигация etc.</string>
     <string name="could_not_download_album_cover">"\u041d\u0435 \u043c\u043e\u0436\u0435\u0448\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u0438\u0437\u0442\u0435\u0433\u043b\u0435\u043d\u0430 \u043e\u0431\u043b\u043e\u0436\u043a\u0430."</string>
-    <string name="search_hint">Търсене във вашата аудио библиотека...</string>
+    <string name="search_hint">Търсене във вашата аудио библиотека…</string>
     <string name="favorites">Любими</string>
     <string name="last_added">Последно добавени</string>
     <string name="history">История</string>
@@ -156,7 +156,7 @@
     <string name="cancel_current_timer">Премахни текущия таймер</string>
     <string name="sleep_timer_canceled">Таймерът бе премахнат</string>
     <string name="sleep_timer_set">Таймерът за заспиване бе зададен за %d минути от сега.</string>
-    <string name="action_new_playlist">Нов плейлист...</string>
+    <string name="action_new_playlist">Нов плейлист…</string>
     <string name="new_playlist_title">Нов плейлист</string>
     <string name="colored_footers">Оцветени кутийки за имената</string>
     <string name="special_thanks_to">Специални благодарности към</string>
@@ -181,7 +181,7 @@
     <string name="maarten_corpel_summary">За направата на Play Store илюстрацията и обложката по подразбиране.</string>
     <string name="aleksandar_tesic_summary">За помощта относно дизайн</string>
     <string name="website">Уебсайт</string>
-    <string name="loading_products">Зареждане...</string>
+    <string name="loading_products">Зареждане…</string>
     <string name="up_next">Следващи песни</string>
     <string name="pref_title_now_playing_screen_appearance">Изглед</string>
     <string name="intro_label">Въеведение</string>

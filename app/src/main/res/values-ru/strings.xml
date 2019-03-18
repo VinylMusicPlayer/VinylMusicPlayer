@@ -20,7 +20,7 @@
     <string name="action_next">Следующий</string>
     <string name="action_add_to_playing_queue">Добавить в очередь воспроизведения</string>
     <string name="action_remove_from_playing_queue">Удалить из очереди воспроизведения</string>
-    <string name="action_add_to_playlist">Добавить в плейлист...</string>
+    <string name="action_add_to_playlist">Добавить в плейлист…</string>
     <string name="action_tag_editor">Редактор тэгов</string>
     <string name="action_delete_from_device">Удалить с устройства</string>
     <string name="action_details">Подробнее</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">Перейти к альбому</string>
     <string name="label_playing_queue">Очередь воспроизведения</string>
     <string name="no_results">Нет результатов</string>
-    <string name="updating">Обновление...</string>
+    <string name="updating">Обновление…</string>
     <string name="added_title_to_playing_queue">"Композиция добавлена в очередь воспроизведения"</string>
     <string name="added_x_titles_to_playing_queue">%1$d композиций добавлено в очередь воспроизведения</string>
     <string name="action_remove_from_playlist">Удалить из плейлиста</string>
@@ -165,7 +165,7 @@
     <string name="pref_summary_synchronized_lyrics_show">Сейчас только синхронизированные тексты в LRC формате поддерживаются. Либо встроенный, либо отдельный файл.</string>
     <string name="pref_summary_remember_last_tab">Перейти на последнюю открытую вкладку при запуске</string>
     <string name="could_not_download_album_cover">"\u041d\u0435\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0449\u0443\u044e \u043e\u0431\u043b\u043e\u0436\u043a\u0443 \u0430\u043b\u044c\u0431\u043e\u043c\u0430."</string>
-    <string name="search_hint">Поиск библиотеки...</string>
+    <string name="search_hint">Поиск библиотеки…</string>
     <string name="favorites">Избранное</string>
     <string name="last_added">Последние добавленные</string>
     <string name="history">История прослушивания</string>
@@ -179,7 +179,7 @@
     <string name="cancel_current_timer">Отменить текущий таймер</string>
     <string name="sleep_timer_canceled">Таймер сна отменен.</string>
     <string name="sleep_timer_set">Таймер сна установлен на %d минут(ы) с текущего момента</string>
-    <string name="action_new_playlist">Новый плейлист...</string>
+    <string name="action_new_playlist">Новый плейлист…</string>
     <string name="new_playlist_title">Новый плейлист</string>
     <string name="colored_footers">Окрашенные нижние колонтитулы</string>
     <string name="special_thanks_to">Особая благодарность</string>
@@ -206,7 +206,7 @@
     <string name="maarten_corpel_summary">За иллюстрации в Play Store и пустые обложки альбомов.</string>
     <string name="aleksandar_tesic_summary">За помощь с дизайном.</string>
     <string name="website">Вебсайт</string>
-    <string name="loading_products">Загрузка продуктов...</string>
+    <string name="loading_products">Загрузка продуктов…</string>
     <string name="up_next">Далее</string>
     <string name="pref_title_now_playing_screen_appearance">Вид экрана воспроизведения</string>
     <string name="intro_label">Вступление</string>
@@ -241,7 +241,7 @@
     <string name="bug_report_no_description">Пожалуйста, дайте подробное описание проблемы</string>
     <string name="bug_report_no_username">Пожалуйста, введите действительное имя пользователя GitHub</string>
     <string name="bug_report_no_password">Пожалуйста, введите действительный пароль GitHub</string>
-    <string name="bug_report_uploading">Загрузка отчёта на GitHub...</string>
+    <string name="bug_report_uploading">Загрузка отчёта на GitHub…</string>
     <string name="bug_report_failed">Невозможно отправить отчёт</string>
     <string name="bug_report_failed_wrong_credentials">Неправильное имя пользователя или пароль</string>
     <string name="bug_report_failed_invalid_token">Неправильный токен авторизации. Пожалуйста, свяжитесь с разработчиком приложения.</string>

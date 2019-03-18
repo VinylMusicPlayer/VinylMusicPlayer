@@ -20,7 +20,7 @@
     <string name="action_next">Sljedeće</string>
     <string name="action_add_to_playing_queue">Dodaj u red čekanja</string>
     <string name="action_remove_from_playing_queue">Ukloni iz reda čekanja</string>
-    <string name="action_add_to_playlist">Dodaj na popis naslova...</string>
+    <string name="action_add_to_playlist">Dodaj na popis naslova…</string>
     <string name="action_tag_editor">Uređivač oznaka</string>
     <string name="action_delete_from_device">Izbriši s uređaja</string>
     <string name="action_details">Detalji</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">Idi na album</string>
     <string name="label_playing_queue">Red čekanja</string>
     <string name="no_results">Nema rezultata</string>
-    <string name="updating">Ažuriranje...</string>
+    <string name="updating">Ažuriranje…</string>
     <string name="added_title_to_playing_queue">"1 pjesma je dodana u red čekanja."</string>
     <string name="added_x_titles_to_playing_queue">Dodano je %1$d pjesama u red čekanja.</string>
     <string name="action_remove_from_playlist">Ukloni s popisa naslova</string>
@@ -165,7 +165,7 @@
     <string name="pref_summary_synchronized_lyrics_show">Trenutno su samo sinkronizirani stihovi u LRC formatu podržani. Ili ugrađeni ili u zasebnoj datoteci.</string>
     <string name="pref_summary_remember_last_tab">Pri pokretanju otvori zadnje otvorenu karticu</string>
     <string name="could_not_download_album_cover">"Nije mogu\u0107e preuzeti odgovaraju\u0107i omot albuma."</string>
-    <string name="search_hint">Pretražite svoju biblioteku...</string>
+    <string name="search_hint">Pretražite svoju biblioteku…</string>
     <string name="favorites">Favoriti</string>
     <string name="last_added">Posljednje dodano</string>
     <string name="history">Povijest</string>
@@ -179,7 +179,7 @@
     <string name="cancel_current_timer">Otkaži trenutni tajmer</string>
     <string name="sleep_timer_canceled">Tajmer za spavanje je otkazan.</string>
     <string name="sleep_timer_set">Tajmer za spavanje postavljen je %d min od sada.</string>
-    <string name="action_new_playlist">Novi popis naslova...</string>
+    <string name="action_new_playlist">Novi popis naslova…</string>
     <string name="new_playlist_title">Novi popis naslova</string>
     <string name="colored_footers">Obojena podnožja</string>
     <string name="special_thanks_to">Posebne zahvale</string>
@@ -206,7 +206,7 @@
     <string name="maarten_corpel_summary">Za izradu Play Store ilustracije i slike praznog omota albuma.</string>
     <string name="aleksandar_tesic_summary">Za pomoć u dizajnu.</string>
     <string name="website">Web-stranica</string>
-    <string name="loading_products">Učitavanje artikala...</string>
+    <string name="loading_products">Učitavanje artikala…</string>
     <string name="up_next">Sljedeće na redu</string>
     <string name="pref_title_now_playing_screen_appearance">Izgled</string>
     <string name="intro_label">Uvod</string>
@@ -241,7 +241,7 @@
     <string name="bug_report_no_description">Molimo unesite opis poteškoće</string>
     <string name="bug_report_no_username">Molimo unesite valjano GitHub korisničko ime</string>
     <string name="bug_report_no_password">Molimo unesite valjanu GitHub lozinku</string>
-    <string name="bug_report_uploading">Učitavanje izvješća na GitHub...</string>
+    <string name="bug_report_uploading">Učitavanje izvješća na GitHub…</string>
     <string name="bug_report_failed">Nije moguće poslati izvješće</string>
     <string name="bug_report_failed_wrong_credentials">Krivo korisničko ime ili lozinka</string>
     <string name="bug_report_failed_invalid_token">Nevažeći pristupni token. Molimo kontaktirajte razvojnog programera aplikacije.</string>

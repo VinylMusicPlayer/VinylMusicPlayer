@@ -221,7 +221,7 @@
     <string name="maarten_corpel_summary">Für das Machen der Play Store Illustration und des leeren Album Covers.</string>
     <string name="aleksandar_tesic_summary">Für die Hilfe beim Design.</string>
     <string name="website">Website</string>
-    <string name="loading_products">Produkte werden geladen...</string>
+    <string name="loading_products">Produkte werden geladen…</string>
     <string name="up_next">Als nächstes</string>
     <string name="pref_title_now_playing_screen_appearance">Aussehen</string>
     <string name="intro_label">Einführung</string>
@@ -259,7 +259,7 @@
     <string name="bug_report_no_description">Bitte gib eine Fehler-Beschreibung ein</string>
     <string name="bug_report_no_username">Bitte gib deinen gültigen GitHub Benutzernamen ein</string>
     <string name="bug_report_no_password">Bitte gib dein gültiges GitHub Passwort ein</string>
-    <string name="bug_report_uploading">Lade Fehlermeldung zu GitHub hoch...</string>
+    <string name="bug_report_uploading">Lade Fehlermeldung zu GitHub hoch…</string>
     <string name="bug_report_failed">Fehlermeldung konnte nicht gesendet werden</string>
     <string name="bug_report_failed_wrong_credentials">Falscher Benutzername oder Passwort</string>
     <string name="bug_report_failed_invalid_token">Ungültiges Zugangstoken. Bitte kontaktiere den App-Entwickler.</string>

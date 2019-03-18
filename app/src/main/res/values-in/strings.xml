@@ -19,7 +19,7 @@
     <string name="action_next">Musik Selanjutnya</string>
     <string name="action_add_to_playing_queue">Tambahkan ke antrean putar</string>
     <string name="action_remove_from_playing_queue">Hapus dari antrian</string>
-    <string name="action_add_to_playlist">Tambahkan ke daftar putar...</string>
+    <string name="action_add_to_playlist">Tambahkan ke daftar putar…</string>
     <string name="action_tag_editor">Ubah label</string>
     <string name="action_delete_from_device">Hapus dari perangkat</string>
     <string name="action_details">Rincian</string>
@@ -141,7 +141,7 @@
     <string name="pref_summary_colored_app_shortcuts">Mewarnai pintasan-pintasan dengan warna utama.</string>
     <string name="pref_summary_audio_ducking">Pemberitahuan, navigasi dll.</string>
     <string name="could_not_download_album_cover">"Tidak dapat mengunduh sampul album yang cocok."</string>
-    <string name="search_hint">Mencari pustaka Anda...</string>
+    <string name="search_hint">Mencari pustaka Anda…</string>
     <string name="favorites">Favorit</string>
     <string name="last_added">Terakhir ditambahkan</string>
     <string name="history">Riwayat</string>
@@ -155,7 +155,7 @@
     <string name="cancel_current_timer">Batalkan pewaktu yang sekarang</string>
     <string name="sleep_timer_canceled">"Pewaktu tidur dibatalkan. "</string>
     <string name="sleep_timer_set">"Pewaktu tidur diatur selama %d menit dari sekarang. "</string>
-    <string name="action_new_playlist">Daftar putar baru...</string>
+    <string name="action_new_playlist">Daftar putar baru…</string>
     <string name="new_playlist_title">Daftar putar baru</string>
     <string name="colored_footers">Bawahan berwarna</string>
     <string name="special_thanks_to">Terima kasih khusus kepada</string>
@@ -180,7 +180,7 @@
     <string name="maarten_corpel_summary">"Untuk pembuat ilustrasi Play Store dan sampul album yang kosong. "</string>
     <string name="aleksandar_tesic_summary">"Untuk yang membantu saya dengan desainnya. "</string>
     <string name="website">Situs</string>
-    <string name="loading_products">Memuat produk...</string>
+    <string name="loading_products">Memuat produk…</string>
     <string name="up_next">Berikutnya</string>
     <string name="pref_title_now_playing_screen_appearance">Tampilan</string>
     <string name="intro_label">Pengenalan</string>
@@ -214,7 +214,7 @@
     <string name="bug_report_no_description">Mohon masukkan deskripsi masalah</string>
     <string name="bug_report_no_username">Mohon masukkan nama pengguna Github Anda dengan benar</string>
     <string name="bug_report_no_password">Mohon masukkan kata sandi Github Anda dengan benar</string>
-    <string name="bug_report_uploading">Mengunggah laporan ke Github...</string>
+    <string name="bug_report_uploading">Mengunggah laporan ke Github…</string>
     <string name="bug_report_failed">Tidak dapat mengirim laporan</string>
     <string name="bug_report_failed_wrong_credentials">Salah nama pengguna atau kata sandi</string>
     <string name="bug_report_failed_invalid_token">Akses token tidak benar. Mohon hubungi pengembang aplikasi tersebut.</string>

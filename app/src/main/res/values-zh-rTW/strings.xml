@@ -20,7 +20,7 @@
     <string name="action_next">下一首</string>
     <string name="action_add_to_playing_queue">加入播放佇列</string>
     <string name="action_remove_from_playing_queue">從播放佇列中移除</string>
-    <string name="action_add_to_playlist">加入播放清單...</string>
+    <string name="action_add_to_playlist">加入播放清單…</string>
     <string name="action_tag_editor">編輯音樂資訊</string>
     <string name="action_delete_from_device">刪除</string>
     <string name="action_details">詳細資訊</string>
@@ -180,7 +180,7 @@
     <string name="cancel_current_timer">取消目前的計時器</string>
     <string name="sleep_timer_canceled">已取消睡眠定時器。</string>
     <string name="sleep_timer_set">%d分鐘後，音樂將會自動停止。</string>
-    <string name="action_new_playlist">新增播放清單...</string>
+    <string name="action_new_playlist">新增播放清單…</string>
     <string name="new_playlist_title">新增播放清單</string>
     <string name="colored_footers">彩色的註腳</string>
     <string name="special_thanks_to">特別感謝</string>

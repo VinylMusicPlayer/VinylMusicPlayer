@@ -20,7 +20,7 @@
     <string name="action_next">Siguiente</string>
     <string name="action_add_to_playing_queue">Añadir a cola de reproducción</string>
     <string name="action_remove_from_playing_queue">Eliminar de la cola de reproducción</string>
-    <string name="action_add_to_playlist">Añadir a la lista de reproducción...</string>
+    <string name="action_add_to_playlist">Añadir a la lista de reproducción…</string>
     <string name="action_tag_editor">Editor de información</string>
     <string name="action_delete_from_device">Eliminar del dispositivo</string>
     <string name="action_details">Detalles</string>
@@ -47,7 +47,7 @@
     <string name="track_hint">"Pista (2 para pista 2 o 3004 para CD3 pista 4)"</string>
     <string name="lyrics">Letras</string>
     <string name="album_or_artist_empty">El título o artista está vacío</string>
-    <string name="saving_changes">Guardando cambios...</string>
+    <string name="saving_changes">Guardando cambios…</string>
     <string name="label_details">Detalles</string>
     <string name="label_file_name">Nombre del archivo</string>
     <string name="label_file_path">Ubicación del archivo</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">Ir al álbum</string>
     <string name="label_playing_queue">Cola de reproducción</string>
     <string name="no_results">No hay resultados</string>
-    <string name="updating">Actualizando...</string>
+    <string name="updating">Actualizando…</string>
     <string name="added_title_to_playing_queue">"1 canción añadida a la cola de reproducción."</string>
     <string name="added_x_titles_to_playing_queue">%1$d canciones añadidas a la cola de reproducción.</string>
     <string name="action_remove_from_playlist">Eliminar de la lista de reproducción</string>
@@ -161,7 +161,7 @@
     <string name="pref_summary_audio_ducking">Notificaciones, navegación etc.</string>
     <string name="pref_summary_synchronized_lyrics_show">Actualmente sólo se admiten las letras sincronizadas en formato LRC. Tanto si están embebidas como si están en un archivo aparte.</string>
     <string name="could_not_download_album_cover">"No se puede descargar una car\u00e1tula de \u00e1lbum que coincida."</string>
-    <string name="search_hint">Buscar en la biblioteca...</string>
+    <string name="search_hint">Buscar en la biblioteca…</string>
     <string name="favorites">Favoritos</string>
     <string name="last_added">Último agregado</string>
     <string name="history">Historial de reproducción</string>
@@ -175,7 +175,7 @@
     <string name="cancel_current_timer">Cancelar temporizador actual</string>
     <string name="sleep_timer_canceled">Temporizador cancelado.</string>
     <string name="sleep_timer_set">La música se detendrá dentro de %d minutos a partir de ahora.</string>
-    <string name="action_new_playlist">Nueva lista de reproducción...</string>
+    <string name="action_new_playlist">Nueva lista de reproducción…</string>
     <string name="new_playlist_title">Nueva lista de reproducción</string>
     <string name="colored_footers">Pies de página coloreados</string>
     <string name="special_thanks_to">Agradecimientos especiales a</string>
@@ -202,7 +202,7 @@
     <string name="maarten_corpel_summary">Por la elaboración de la ilustración en Play Store y la carátula del álbum por defecto.</string>
     <string name="aleksandar_tesic_summary">Por ayudarme con el diseño.</string>
     <string name="website">Sitio web</string>
-    <string name="loading_products">Cargando productos...</string>
+    <string name="loading_products">Cargando productos…</string>
     <string name="up_next">A continuación</string>
     <string name="pref_title_now_playing_screen_appearance">Apariencia</string>
     <string name="intro_label">Introducción</string>
@@ -237,7 +237,7 @@
     <string name="bug_report_no_description">Por favor, introduzca la descripción del problema</string>
     <string name="bug_report_no_username">Por favor, introduzca un nombre de usuario de GitHub válido</string>
     <string name="bug_report_no_password">Por favor, introduzca una contraseña de GitHub válida</string>
-    <string name="bug_report_uploading">Subiendo el informe a GitHub...</string>
+    <string name="bug_report_uploading">Subiendo el informe a GitHub…</string>
     <string name="bug_report_failed">Incapaz de enviar informe</string>
     <string name="bug_report_failed_wrong_credentials">Nombre de usuario o contraseña incorrectos</string>
     <string name="bug_report_failed_invalid_token">Bono de acceso incorrecto. Por favor, contacte con el desarrollador.</string>
