@@ -186,7 +186,7 @@ public class SongLoader {
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
         StringBuilder newSelection = new StringBuilder(selection != null && !selection.trim().equals("") ? selection + " AND " : "");
-         newSelection.append(AudioColumns.DATA + " NOT LIKE ?");
+        newSelection.append(AudioColumns.DATA + " NOT LIKE ?");
         for (int i = 1; i < pathCount; i++) {
             newSelection.append(" AND " + AudioColumns.DATA + " NOT LIKE ?");
         }
