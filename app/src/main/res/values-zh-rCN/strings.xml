@@ -20,7 +20,7 @@
     <string name="action_next">下一首</string>
     <string name="action_add_to_playing_queue">加入播放队列</string>
     <string name="action_remove_from_playing_queue">从播放队列中移除</string>
-    <string name="action_add_to_playlist">加入播放列表...</string>
+    <string name="action_add_to_playlist">加入播放列表…</string>
     <string name="action_tag_editor">音乐标签编辑器</string>
     <string name="action_delete_from_device">从设备中删除</string>
     <string name="action_details">详情</string>
@@ -183,18 +183,14 @@
     <string name="permission_external_storage_denied">访问外部存储权限被拒绝。</string>
     <string name="support_development">支持开发者</string>
     <string name="thank_you">非常感谢您！</string>
-    <string name="restored_previous_purchase_please_restart">已恢复购买状态。请重启应用以使用所有功能。</string>
     <string name="version">版本</string>
     <string name="author">作者</string>
     <string name="write_an_email">撰写邮件</string>
-    <string name="add_to_google_plus_circles">添加到 Google+ 圈子</string>
     <string name="follow_on_twitter">在 Twitter 上关注</string>
     <string name="fork_on_github">创建 GitHub 分支</string>
     <string name="visit_website">访问网站</string>
     <string name="report_bugs">提交 bug</string>
     <string name="report_bugs_summary">提交 bug 或申请添加新功能</string>
-    <string name="join_community">加入 Google+ 社群</string>
-    <string name="join_community_summary">如果您需要帮助或遇到问题，Google+ 上的 Vinyl Music Player 社群或许是个好去处。</string>
     <string name="translate">翻译</string>
     <string name="translate_summary">帮助翻译 Vinyl Music Player 。</string>
     <string name="rate_on_google_play">评分</string>
@@ -239,7 +235,7 @@
     <string name="bug_report_no_description">请输入问题的说明</string>
     <string name="bug_report_no_username">请输入您在 Github 上的有效用户名</string>
     <string name="bug_report_no_password">请输入您在 Github 上的有效密码</string>
-    <string name="bug_report_uploading">正在将报告上传至 Github...</string>
+    <string name="bug_report_uploading">正在将报告上传至 Github…</string>
     <string name="bug_report_failed">无法发送报告</string>
     <string name="bug_report_failed_wrong_credentials">错误的用户名或密码</string>
     <string name="bug_report_failed_invalid_token">无效的访问令牌。请联系应用开发者。</string>
@@ -254,9 +250,6 @@
     <string name="playlist_is_empty">播放列表为空</string>
     <string name="playing_notification_description">正在播放通知提供了播放/暂停等便捷操作。</string>
     <string name="playing_notification_name">正在播放通知</string>
-    <string name="only_the_first_5_colors_available">免费版仅能使用前 5 个主题色。</string>
-    <string name="purchase">购买</string>
-    <string name="restore">恢复</string>
     <string name="eugene_cheung_summary">因他对源代码的贡献。</string>
     <string name="add_action">添加</string>
     <string name="blacklist">黑名单</string>

@@ -20,7 +20,7 @@
     <string name="action_next">הבא</string>
     <string name="action_add_to_playing_queue">הוספה לתור ההשמעה</string>
     <string name="action_remove_from_playing_queue">הסרה מתור ההשמעה</string>
-    <string name="action_add_to_playlist">הוסף לרשימת השמעה...</string>
+    <string name="action_add_to_playlist">הוסף לרשימת השמעה…</string>
     <string name="action_tag_editor">עריכת תווית</string>
     <string name="action_delete_from_device">מחק מהמכשיר</string>
     <string name="action_details">פרטים</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">מעבר לאלבום</string>
     <string name="label_playing_queue">מנגן תור השמעה</string>
     <string name="no_results">אין תוצאות</string>
-    <string name="updating">מעדכן...</string>
+    <string name="updating">מעדכן…</string>
     <string name="added_title_to_playing_queue">"נוסף שיר אחד לתור "</string>
     <string name="added_x_titles_to_playing_queue">נוספו %1$d שירים לתור</string>
     <string name="action_remove_from_playlist">הסר מרשימת ההשמעה</string>
@@ -165,7 +165,7 @@
     <string name="pref_summary_synchronized_lyrics_show">כרגע מסכרן מילות שירים רק בפורמט LRC.  מילות שרים מוטבעות או בקובץ נפרד.</string>
     <string name="pref_summary_remember_last_tab">עבור לכרטיסייה האחרונה שהייתה פתוחה בהפעלה</string>
     <string name="could_not_download_album_cover">"\u05dc\u05d0 \u05e0\u05d9\u05ea\u05df \u05dc\u05d4\u05d5\u05e8\u05d9\u05d3 \u05ea\u05de\u05d5\u05e0\u05ea \u05d0\u05dc\u05d1\u05d5\u05dd \u05de\u05ea\u05d0\u05d9\u05de\u05d4."</string>
-    <string name="search_hint">חפש בספרייה שלך...</string>
+    <string name="search_hint">חפש בספרייה שלך…</string>
     <string name="favorites">מועדפים</string>
     <string name="last_added">נוספו לאחרונה</string>
     <string name="history">היסטוריה</string>
@@ -179,7 +179,7 @@
     <string name="cancel_current_timer">בטל טיימר נוכחי</string>
     <string name="sleep_timer_canceled">טיימר השינה בוטל.</string>
     <string name="sleep_timer_set">טיימר השינה נקבע לעוד %d דקות מעכשיו.</string>
-    <string name="action_new_playlist">רשימת השמעה חדשה...</string>
+    <string name="action_new_playlist">רשימת השמעה חדשה…</string>
     <string name="new_playlist_title">רשימת השמעה חדשה</string>
     <string name="colored_footers">תחתית צבעונית</string>
     <string name="special_thanks_to">תודות מיוחדות ל</string>
@@ -189,18 +189,14 @@
     <string name="permission_external_storage_denied">הרשאה לגישה לאחסון החיצוני נדחתה.</string>
     <string name="support_development">תמיכה בפיתוח</string>
     <string name="thank_you">תודה לכם!</string>
-    <string name="restored_previous_purchase_please_restart">רכישה קודמת שוחזרה. אנא הפעל מחדש את האפליקציה כדי שתוכל להשתמש באפשרויות החדשות.</string>
     <string name="version">גרסה</string>
     <string name="author">מחבר</string>
     <string name="write_an_email">כתוב אימייל</string>
-    <string name="add_to_google_plus_circles">הוסף למעגלי Google+</string>
     <string name="follow_on_twitter">עקוב בטוויטר</string>
     <string name="fork_on_github">גירסה בGitHub</string>
     <string name="visit_website">ביקור באתר</string>
     <string name="report_bugs">דווח על באגים</string>
     <string name="report_bugs_summary">דווח על באגים או בקש פיצ\'רים חדשים.</string>
-    <string name="join_community">הצטרף לקהילת ה-Google+</string>
-    <string name="join_community_summary">אם אתה צריך עזרה או שיש לך שאלות, קהילת Vinyl Music Player ב-Google+ היא מקום טוב ללכת אליו.</string>
     <string name="translate">תרגם</string>
     <string name="translate_summary">עזור לתרגם את Vinyl Music Player לשפת האם שלך.</string>
     <string name="rate_on_google_play">דרג</string>
@@ -210,7 +206,7 @@
     <string name="maarten_corpel_summary">על יצירת האיור בחנות Play, ותמונת האלבום הריק.</string>
     <string name="aleksandar_tesic_summary">על העזרה עם העיצוב.</string>
     <string name="website">אתר</string>
-    <string name="loading_products">טוען מוצרים...</string>
+    <string name="loading_products">טוען מוצרים…</string>
     <string name="up_next">הבא בתור</string>
     <string name="pref_title_now_playing_screen_appearance">מראה</string>
     <string name="intro_label">מבוא</string>
@@ -260,9 +256,6 @@
     <string name="playlist_is_empty">רשימת ההשמעה ריקה</string>
     <string name="playing_notification_description">התראת הניגון מספקת פעולות הפעלה/השהייה וכו\'.</string>
     <string name="playing_notification_name">התראת ניגון</string>
-    <string name="only_the_first_5_colors_available">רק 5 הצבעים הראשונים זמינים בגרסה החינמית.</string>
-    <string name="purchase">קנה</string>
-    <string name="restore">שחזר</string>
     <string name="eugene_cheung_summary">על התרומה שלו לקוד המקור.</string>
     <string name="add_action">הוסף</string>
     <string name="blacklist">רשימה שחורה</string>

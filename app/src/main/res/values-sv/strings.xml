@@ -39,7 +39,7 @@
     <string name="year">År</string>
     <string name="track_hint">"Spår"</string>
     <string name="album_or_artist_empty">Textfältet för titel eller artist är tomt.</string>
-    <string name="saving_changes">Sparar ändringar ...</string>
+    <string name="saving_changes">Sparar ändringar …</string>
     <string name="label_details">Detaljer</string>
     <string name="label_file_name">Filnamn</string>
     <string name="label_file_path">Sökväg</string>
@@ -52,7 +52,7 @@
     <string name="action_go_to_album">Gå till album</string>
     <string name="label_playing_queue">Spelarkö</string>
     <string name="no_results">Inga resultat</string>
-    <string name="updating">Uppdaterar ...</string>
+    <string name="updating">Uppdaterar …</string>
     <string name="added_title_to_playing_queue">"Lagt till 1 titel till spellistan."</string>
     <string name="created_playlist_x">Spellista %1$s skapad</string>
     <string name="delete_playlist_x"><![CDATA[
@@ -85,6 +85,6 @@ Vill du radera <b>%1$d</b> låtar?
     <string name="no_playlists">Inga spellistor</string>
     <string name="song">Låt</string>
     <string name="pref_summary_colored_navigation_bar">I vilken vy navigeringslisten skall vara färgad</string>
-    <string name="search_hint">Sök i ditt bibliotek ...</string>
+    <string name="search_hint">Sök i ditt bibliotek …</string>
     <string name="new_playlist_title">Ny spellista</string>
 </resources>

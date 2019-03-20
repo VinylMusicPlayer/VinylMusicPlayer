@@ -20,7 +20,7 @@
     <string name="action_next">Următor</string>
     <string name="action_add_to_playing_queue">Adaugă la lista de redare</string>
     <string name="action_remove_from_playing_queue">Șterge din lista de redare</string>
-    <string name="action_add_to_playlist">Adăugaţi în lista de redare...</string>
+    <string name="action_add_to_playlist">Adăugaţi în lista de redare…</string>
     <string name="action_tag_editor">Editor etichete</string>
     <string name="action_delete_from_device">Ștergeți de pe dispozitiv</string>
     <string name="action_details">Detalii</string>
@@ -60,7 +60,7 @@
     <string name="action_go_to_album">Accesaţi albumul</string>
     <string name="label_playing_queue">Lista de redare</string>
     <string name="no_results">Niciun rezultat</string>
-    <string name="updating">Actualizare...</string>
+    <string name="updating">Actualizare…</string>
     <string name="added_title_to_playing_queue">"Melodie adăugată în lista de redare."</string>
     <string name="added_x_titles_to_playing_queue">%1$d melodii adăugate în lista de redare.</string>
     <string name="action_remove_from_playlist">Ștergeți din lista de redare.</string>
@@ -179,7 +179,7 @@
     <string name="cancel_current_timer">Anulează timer curent.</string>
     <string name="sleep_timer_canceled">Cronometru pentru somn anulat.</string>
     <string name="sleep_timer_set">Cronometrul pentru somn setat pentru %d minute din acest moment.</string>
-    <string name="action_new_playlist">Lista de redare nouă...</string>
+    <string name="action_new_playlist">Lista de redare nouă…</string>
     <string name="new_playlist_title">Listă de redare nouă</string>
     <string name="colored_footers">Subsoluri colorate</string>
     <string name="special_thanks_to">Mulțumiri speciale</string>
@@ -189,18 +189,14 @@
     <string name="permission_external_storage_denied">Permisiunea de a accesa stocarea externă a fost respinsă.</string>
     <string name="support_development">Susţineţi dezvoltarea</string>
     <string name="thank_you">Mulţumesc!</string>
-    <string name="restored_previous_purchase_please_restart">A fost restaurată achiziția anterioară. Reporniți aplicația pentru a utiliza toate funcțiile.</string>
     <string name="version">Versiune</string>
     <string name="author">Autor</string>
     <string name="write_an_email">Scrieţi un e-mail</string>
-    <string name="add_to_google_plus_circles">Adăugaţi în cercurile Google lus</string>
     <string name="follow_on_twitter">Urmăriţi pe Twitter</string>
     <string name="fork_on_github">Fork pe GitHub</string>
     <string name="visit_website">Vizitati site-ul web</string>
     <string name="report_bugs">Raportaţi probleme</string>
     <string name="report_bugs_summary">Raportați probleme sau solicitați noi funcții.</string>
-    <string name="join_community">Alăturați-vă comunității Google Plus</string>
-    <string name="join_community_summary">Dacă aveți nevoie de ajutor sau aveți întrebări, intraţi pe comunitatea Vinyl Music Player de pe Google Plus.</string>
     <string name="translate">Traducere</string>
     <string name="translate_summary">Ajutaţi la traducerea Vinyl Music Player în limba maternă.</string>
     <string name="rate_on_google_play">Evaluaţi</string>
@@ -210,7 +206,7 @@
     <string name="maarten_corpel_summary">Pentru ilustrația din magazinului Play și coperta albumului gol.</string>
     <string name="aleksandar_tesic_summary">Pentru ajutorul cu designul.</string>
     <string name="website">Site web</string>
-    <string name="loading_products">Încărcare produse...</string>
+    <string name="loading_products">Încărcare produse…</string>
     <string name="up_next">Urmează</string>
     <string name="pref_title_now_playing_screen_appearance">Aspect</string>
     <string name="intro_label">Introducere</string>
@@ -245,7 +241,7 @@
     <string name="bug_report_no_description">Introduceți o descriere a problemei</string>
     <string name="bug_report_no_username">Introduceți numele dvs. de utilizator GitHub valabil</string>
     <string name="bug_report_no_password">Introduceți parola GitHub validă</string>
-    <string name="bug_report_uploading">Se încarcă raportul către GitHub...</string>
+    <string name="bug_report_uploading">Se încarcă raportul către GitHub…</string>
     <string name="bug_report_failed">Imposibil de trimis raportul</string>
     <string name="bug_report_failed_wrong_credentials">Numele de utilizator sau parola greșite</string>
     <string name="bug_report_failed_invalid_token">Etichetă de acces nevalidă. Contactați dezvoltatorul de aplicației.</string>
@@ -260,9 +256,6 @@
     <string name="playlist_is_empty">Listă de redare goală</string>
     <string name="playing_notification_description">Notificarea de redare oferă acțiuni de redare/pauză etc.</string>
     <string name="playing_notification_name">Notificare de redare</string>
-    <string name="only_the_first_5_colors_available">Numai primele 5 culori sunt disponibile în versiunea gratuită.</string>
-    <string name="purchase">Cumpărare</string>
-    <string name="restore">Restabilire</string>
     <string name="eugene_cheung_summary">Pentru contribuțiile sale la codul sursă.</string>
     <string name="add_action">Adăugare</string>
     <string name="blacklist">Listă neagră</string>

@@ -20,7 +20,7 @@
     <string name="action_next">Kế tiếp</string>
     <string name="action_add_to_playing_queue">Thêm vào danh sách phát</string>
     <string name="action_remove_from_playing_queue">Xoá khỏi danh sách phát</string>
-    <string name="action_add_to_playlist">Thêm vào danh sách nhạc...</string>
+    <string name="action_add_to_playlist">Thêm vào danh sách nhạc…</string>
     <string name="action_tag_editor">Chỉnh sửa thẻ tag</string>
     <string name="action_delete_from_device">Xóa từ thiết bị</string>
     <string name="action_details">Chi tiết</string>
@@ -59,7 +59,7 @@
     <string name="action_go_to_album">Đi đến album</string>
     <string name="label_playing_queue">Hàng đợi phát</string>
     <string name="no_results">Không có kết quả</string>
-    <string name="updating">Đang cập nhật...</string>
+    <string name="updating">Đang cập nhật…</string>
     <string name="added_title_to_playing_queue">"Đã thêm 1 bài vào hàng đợi phát."</string>
     <string name="added_x_titles_to_playing_queue">Đã thêm %1$d bài vào hàng đợi phát.</string>
     <string name="action_remove_from_playlist">Xóa khỏi danh sách nhạc</string>
@@ -158,7 +158,7 @@
     <string name="pref_summary_audio_ducking">Thông báo, điều hướng, vv.</string>
     <string name="pref_summary_synchronized_lyrics_show">Hiện tại chỉ được đồng bộ lời bài hát ở định dạng LRC. Nhúng hoặc là một tập tin riêng biệt.</string>
     <string name="could_not_download_album_cover">"Kh\u00f4ng th\u1ec3 t\u1ea3i v\u1ec1 b\u00eca album ph\u00f9 h\u1ee3p."</string>
-    <string name="search_hint">Tìm kiếm thư viện của bạn...</string>
+    <string name="search_hint">Tìm kiếm thư viện của bạn…</string>
     <string name="favorites">Yêu thích</string>
     <string name="last_added">Được thêm sau cùng</string>
     <string name="history">Lịch sử</string>
@@ -172,7 +172,7 @@
     <string name="cancel_current_timer">Hủy hẹn giờ hiện tại</string>
     <string name="sleep_timer_canceled">Đã hủy hẹn giờ ngủ</string>
     <string name="sleep_timer_set">Hẹn giờ ngủ được cài cho %d phút từ bây giờ.</string>
-    <string name="action_new_playlist">Danh sách nhạc mới...</string>
+    <string name="action_new_playlist">Danh sách nhạc mới…</string>
     <string name="new_playlist_title">Danh sách nhạc mới</string>
     <string name="colored_footers">Màu cuối trang</string>
     <string name="special_thanks_to">Trân trọng cảm ơn</string>
@@ -182,18 +182,14 @@
     <string name="permission_external_storage_denied">Quyền truy cập lưu trữ bên ngoài bị từ chối.</string>
     <string name="support_development">Hỗ trợ phát triển</string>
     <string name="thank_you">Cảm ơn!</string>
-    <string name="restored_previous_purchase_please_restart">Khôi phục mua trước đó. Vui lòng khởi động lại ứng dụng để sử dụng tất cả các tính năng.</string>
     <string name="version">Phiên bản</string>
     <string name="author">Tác giả</string>
     <string name="write_an_email">Viết email</string>
-    <string name="add_to_google_plus_circles">Thêm vào vòng kết nối Google Plus</string>
     <string name="follow_on_twitter">Theo dõi trên Twitter</string>
     <string name="fork_on_github">Fork trên GitHub</string>
     <string name="visit_website">Truy cập trang web</string>
     <string name="report_bugs">Báo lỗi</string>
     <string name="report_bugs_summary">Báo lỗi và yêu cầu tính năng mới.</string>
-    <string name="join_community">Tham gia cộng đồng Google Plus</string>
-    <string name="join_community_summary">Nếu bạn cần trợ giúp hoặc có câu hỏi, hãy đến với cộng đồng Vinyl Music Player trên Google Plus.</string>
     <string name="translate">Dịch</string>
     <string name="translate_summary">Hỗ trợ dịch Vinyl Music Player sang ngôn ngữ của bạn.</string>
     <string name="rate_on_google_play">Đánh giá</string>
@@ -203,7 +199,7 @@
     <string name="maarten_corpel_summary">Ảnh minh họa trên Play Store và ảnh bìa album rỗng.</string>
     <string name="aleksandar_tesic_summary">Vì đã giúp tôi thiết kế.</string>
     <string name="website">Trang web</string>
-    <string name="loading_products">Đang tải sản phẩm...</string>
+    <string name="loading_products">Đang tải sản phẩm…</string>
     <string name="up_next">Tiếp theo</string>
     <string name="pref_title_now_playing_screen_appearance">Giao diện</string>
     <string name="intro_label">Giới thiệu</string>
@@ -238,7 +234,7 @@
     <string name="bug_report_no_description">Vui lòng mô tả vấn đề</string>
     <string name="bug_report_no_username">Vui lòng nhập tên người dùng GitHub hợp lệ</string>
     <string name="bug_report_no_password">Vui lòng nhập mật khẩu tài khoản GitHub</string>
-    <string name="bug_report_uploading">Đang gửi báo cáo lên GitHub...</string>
+    <string name="bug_report_uploading">Đang gửi báo cáo lên GitHub…</string>
     <string name="bug_report_failed">Không thể gửi báo cáo</string>
     <string name="bug_report_failed_wrong_credentials">Sai tên người dùng hoặc mật khẩu</string>
     <string name="bug_report_failed_invalid_token">Token truy cập không hợp lệ. Vui lòng liên hệ nhà phát triển ứng dụng này.</string>
@@ -253,9 +249,6 @@
     <string name="playlist_is_empty">Danh sách nhạc trống</string>
     <string name="playing_notification_description">Thông báo đang phát cung cấp các hành động để phát / tạm dừng vv.</string>
     <string name="playing_notification_name">Thông báo đang phát</string>
-    <string name="only_the_first_5_colors_available">Chỉ 5 màu đầu tiên có trong phiên bản miễn phí.</string>
-    <string name="purchase">Mua hàng</string>
-    <string name="restore">Khôi phục</string>
     <string name="eugene_cheung_summary">Đối với đóng góp cho mã nguồn.</string>
     <string name="add_action">Thêm</string>
     <string name="blacklist">Danh sách đen</string>

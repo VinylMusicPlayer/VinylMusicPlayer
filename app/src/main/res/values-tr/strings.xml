@@ -21,7 +21,7 @@
     <string name="action_next">Sonraki</string>
     <string name="action_add_to_playing_queue">Çalma sırasına ekle</string>
     <string name="action_remove_from_playing_queue">Çalma sırasından kaldır</string>
-    <string name="action_add_to_playlist">Çalma listesine ekle...</string>
+    <string name="action_add_to_playlist">Çalma listesine ekle…</string>
     <string name="action_tag_editor">Etiket düzenleyici</string>
     <string name="action_delete_from_device">Cihazdan sil</string>
     <string name="action_details">Detaylar</string>
@@ -61,7 +61,7 @@
     <string name="action_go_to_album">Albüme git</string>
     <string name="label_playing_queue">Çalma sırası</string>
     <string name="no_results">Sonuç bulunamadı</string>
-    <string name="updating">Güncelleniyor...</string>
+    <string name="updating">Güncelleniyor…</string>
     <string name="added_title_to_playing_queue">"Çalma sırasına 1 başlık eklendi."</string>
     <string name="added_x_titles_to_playing_queue">Çalma sırasına %1$d başlık eklendi.</string>
     <string name="action_remove_from_playlist">Çalma listesinden kaldır</string>
@@ -171,7 +171,7 @@
     <string name="pref_summary_remember_last_tab">Başlatıldığında son açılan sekmeye git</string>
     <string name="pref_summary_remember_shuffle">Yeni bir şarkı listesi seçerken karıştır modu açık kalacak.</string>
     <string name="could_not_download_album_cover">"E\\015fle\\015fen bir alb\\00fcm kapa\\011f\\0131 indirilemedi."</string>
-    <string name="search_hint">Kitaplığınız taranıyor...</string>
+    <string name="search_hint">Kitaplığınız taranıyor…</string>
     <string name="favorites">Favoriler</string>
     <string name="last_added">Son eklenen</string>
     <string name="history">Geçmiş</string>
@@ -185,7 +185,7 @@
     <string name="cancel_current_timer">Şu anki zamanlayıcıyı iptal et</string>
     <string name="sleep_timer_canceled">Uyku zamanlayıcı iptal edildi.</string>
     <string name="sleep_timer_set">Uyku zamanlayıcı %d dakika olarak ayarlandı.</string>
-    <string name="action_new_playlist">Yeni çalma listesi....</string>
+    <string name="action_new_playlist">Yeni çalma listesi….</string>
     <string name="new_playlist_title">Yeni çalma listesi</string>
     <string name="grid_size_1">1</string>
     <string name="grid_size_2">2</string>
@@ -203,18 +203,14 @@
     <string name="permission_external_storage_denied">Harici depolamaya erişim izin reddedildi.</string>
     <string name="support_development">Geliştirmeyi destekleyin</string>
     <string name="thank_you">Teşekkürler!</string>
-    <string name="restored_previous_purchase_please_restart">Önceki satın alma geri yüklendi. Tüm özellikleri kullanabilmek için lütfen uygulamayı tekrar başlatın.</string>
     <string name="version">Sürüm</string>
     <string name="author">Yapımcı</string>
     <string name="write_an_email">Bir e-posta yazın</string>
-    <string name="add_to_google_plus_circles">Google+ çevrelerine ekle</string>
     <string name="follow_on_twitter">Twitter\'da takip et</string>
     <string name="fork_on_github">GitHub\'a bağlanın</string>
     <string name="visit_website">Web sitesini ziyaret edin</string>
     <string name="report_bugs">Hataları raporlayın</string>
     <string name="report_bugs_summary">Hataları raporlayın ya da yeni özellikler talep edin.</string>
-    <string name="join_community">Google+ grubuna katılın</string>
-    <string name="join_community_summary">Eğer yardıma ihtiyacınız varsa veya sorularınız varsa Google+ Vinyl Music Player topluluğu en doğru yer.</string>
     <string name="translate">Çeviri</string>
     <string name="translate_summary">Vinyl Music Player\'ı kendi dilinize çevirmek için yardımcı olun.</string>
     <string name="rate_on_google_play">Oy ver</string>
@@ -225,7 +221,7 @@
     <string name="maarten_corpel_summary">Play Store ve boş albüm kapağı düzenlemeleri için.</string>
     <string name="aleksandar_tesic_summary">Tasarımda bana yardımcı olduğu için.</string>
     <string name="website">Web sitesi</string>
-    <string name="loading_products">İçerik yükleniyor...</string>
+    <string name="loading_products">İçerik yükleniyor…</string>
     <string name="up_next">Sırada olanlar</string>
     <string name="pref_title_now_playing_screen_appearance">Görünüm</string>
     <string name="intro_label">Tanıtım</string>
@@ -263,7 +259,7 @@
     <string name="bug_report_no_description">Sorun ile ilgili açıklama girin</string>
     <string name="bug_report_no_username">Lütfen geçerli GitHub kullanıcı adınızı girin</string>
     <string name="bug_report_no_password">Lütfen geçerli GitHub şifrenizi girin</string>
-    <string name="bug_report_uploading">Github raporu yükleniyor...</string>
+    <string name="bug_report_uploading">Github raporu yükleniyor…</string>
     <string name="bug_report_failed">Rapor gönderilemiyor</string>
     <string name="bug_report_failed_wrong_credentials">Kullanıcı adı veya şifre yanlış</string>
     <string name="bug_report_failed_invalid_token">Geçersiz erişim belirtisi. Uygulamanın geliştiricisi ile irtibata geçiniz.</string>
@@ -278,9 +274,6 @@
     <string name="playlist_is_empty">Çalma listesi boş</string>
     <string name="playing_notification_description">Çalma bildirimi, başlat/duraklat vb. işlemleri sağlar</string>
     <string name="playing_notification_name">Çalma bildirimi</string>
-    <string name="only_the_first_5_colors_available">Ücretsiz sürümde sadece ilk 5 renk mevcuttur.</string>
-    <string name="purchase">Satın Al</string>
-    <string name="restore">Geri yükle</string>
     <string name="eugene_cheung_summary">Kaynak koda yaptığı katkılardan dolayı.</string>
     <string name="adrian_summary">Albüm sayfası tasarımı oluşturmak için.</string>
     <string name="add_action">Ekle</string>

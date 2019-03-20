@@ -6,7 +6,7 @@
     <string name="action_play_next">Spel som neste</string>
     <string name="action_add_to_playing_queue">Legg til i køen</string>
     <string name="action_remove_from_playing_queue">Fjern frå køen</string>
-    <string name="action_add_to_playlist">Legg til i speleliste ...</string>
+    <string name="action_add_to_playlist">Legg til i speleliste …</string>
     <string name="action_tag_editor">Tag Editor</string>
     <string name="action_details">Detaljar</string>
     <string name="albums">Album</string>
@@ -24,7 +24,7 @@
     <string name="year">År</string>
     <string name="track_hint">"Spor (2 for spor 2 eller 3004 for CD3 spor 4)"</string>
     <string name="album_or_artist_empty">Tekstfeltet for albumtittel eller albumartist er tomt.</string>
-    <string name="saving_changes">Lagrar endringar...</string>
+    <string name="saving_changes">Lagrar endringar…</string>
     <string name="label_details">Detaljar</string>
     <string name="label_file_name">Filnamn</string>
     <string name="label_file_path">Sti til fil</string>
@@ -37,7 +37,7 @@
     <string name="action_go_to_album">Gå til album</string>
     <string name="label_playing_queue">Songkø</string>
     <string name="no_results">Ingen resultat</string>
-    <string name="updating">Oppdaterer...</string>
+    <string name="updating">Oppdaterer…</string>
     <string name="added_title_to_playing_queue">"La 1 tittel til songkøen."</string>
     <string name="added_x_titles_to_playing_queue">La %1$d titlar til songkøen.</string>
     <string name="created_playlist_x">Oppretta speleliste %1$s</string>
@@ -77,6 +77,6 @@
     <string name="playlist_empty_text">Spelelista er tom</string>
     <string name="no_playlists">Ingen spelelister</string>
     <string name="song">Song</string>
-    <string name="search_hint">Søk i biblioteket...</string>
+    <string name="search_hint">Søk i biblioteket…</string>
     <string name="new_playlist_title">Ny speleliste</string>
 </resources>

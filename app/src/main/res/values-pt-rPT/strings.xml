@@ -17,7 +17,7 @@
     <string name="action_play">Reproduzir</string>
     <string name="action_add_to_playing_queue">Adicionar à fila de reprodução</string>
     <string name="action_remove_from_playing_queue">Remover da fila de reprodução</string>
-    <string name="action_add_to_playlist">Adicionar à lista de reprodução...</string>
+    <string name="action_add_to_playlist">Adicionar à lista de reprodução…</string>
     <string name="action_tag_editor">Editor de etiquetas</string>
     <string name="action_delete_from_device">Eliminar do dispositivo</string>
     <string name="action_details">Detalhes</string>
@@ -53,7 +53,7 @@
     <string name="action_go_to_album">Ir para o álbum</string>
     <string name="label_playing_queue">Fila de reprodução</string>
     <string name="no_results">Sem resultados</string>
-    <string name="updating">A atualizar...</string>
+    <string name="updating">A atualizar…</string>
     <string name="added_title_to_playing_queue">"Adicionada uma música à fila de reprodução."</string>
     <string name="added_x_titles_to_playing_queue">Adicionadas %1$d títulos à fila de reprodução.</string>
     <string name="action_remove_from_playlist">Remover da lista de reprodução</string>
@@ -135,7 +135,7 @@
     <string name="pref_summary_colored_navigation_bar">Colorir a barra de navegação na cor primária.</string>
     <string name="pref_summary_audio_ducking">Notificações, navegação etc.</string>
     <string name="could_not_download_album_cover">"N\u00e3o foi encontrada uma capa para este \u00e1lbum."</string>
-    <string name="search_hint">Procurar na biblioteca...</string>
+    <string name="search_hint">Procurar na biblioteca…</string>
     <string name="favorites">Favoritos</string>
     <string name="last_added">Últimas adições</string>
     <string name="history">Histórico</string>
@@ -149,7 +149,7 @@
     <string name="cancel_current_timer">Cancelar temporizador atual</string>
     <string name="sleep_timer_canceled">Temporizador para dormir cancelado.</string>
     <string name="sleep_timer_set">Temporizador para dormir definido para %d minutos a partir de agora.</string>
-    <string name="action_new_playlist">Nova lista de reprodução...</string>
+    <string name="action_new_playlist">Nova lista de reprodução…</string>
     <string name="new_playlist_title">Nova lista de reprodução</string>
     <string name="colored_footers">Rodapés coloridos</string>
     <string name="special_thanks_to">Agradecimentos especiais a</string>
@@ -161,13 +161,10 @@
     <string name="thank_you">Obrigado!</string>
     <string name="version">Versão</string>
     <string name="author">Autor</string>
-    <string name="add_to_google_plus_circles">Adicionar aos seus círculos do Google Plus</string>
     <string name="follow_on_twitter">Seguir no Twitter</string>
     <string name="visit_website">Visitar sítio na Internet</string>
     <string name="report_bugs">Reportar erros</string>
     <string name="report_bugs_summary">Reportar erros ou sugerir novas funcionalidades.</string>
-    <string name="join_community">Junte-se à comunidade Google Plus</string>
-    <string name="join_community_summary">Se necessitar de ajuda ou tiver dúvidas, a comunidade Vinyl Music Player no Google Plus é um bom sítio para ir.</string>
     <string name="translate">Traduzir</string>
     <string name="translate_summary">Ajude a traduzir o Vinyl Music Player para o seu idioma nativo.</string>
     <string name="rate_on_google_play">Classifique</string>
@@ -177,7 +174,7 @@
     <string name="maarten_corpel_summary">Por fazer a ilustração na Play Store e pela capa de álbum vazia.</string>
     <string name="aleksandar_tesic_summary">Por me ajudar com o design.</string>
     <string name="website">Sítio da Internet</string>
-    <string name="loading_products">Carregando produtos...</string>
+    <string name="loading_products">Carregando produtos…</string>
     <string name="up_next">A seguir</string>
     <string name="pref_title_now_playing_screen_appearance">Aparência</string>
     <string name="intro_label">Introdução</string>
@@ -209,7 +206,7 @@
     <string name="bug_report_no_description">Por favor indique uma descrição do problema</string>
     <string name="bug_report_no_username">Por favor, introduza um utilizador GitHub válido</string>
     <string name="bug_report_no_password">Por favor, introduza uma senha válida</string>
-    <string name="bug_report_uploading">A enviar o relatório para o GitHub...</string>
+    <string name="bug_report_uploading">A enviar o relatório para o GitHub…</string>
     <string name="bug_report_failed">Impossível enviar relatório</string>
     <string name="bug_report_failed_wrong_credentials">Nome ou senha errados</string>
     <string name="bug_report_failed_invalid_token">Token de acesso inválido. Por favor contacte o desenvolvedor da aplicação.</string>

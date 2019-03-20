@@ -20,7 +20,7 @@
     <string name="action_next">Következő</string>
     <string name="action_add_to_playing_queue">Hozzáadás a lejátszási sorhoz</string>
     <string name="action_remove_from_playing_queue">Eltávolítás a lejátszási sorból</string>
-    <string name="action_add_to_playlist">Hozzáadás a lejátszási listához...</string>
+    <string name="action_add_to_playlist">Hozzáadás a lejátszási listához…</string>
     <string name="action_tag_editor">Címkeszerkesztő</string>
     <string name="action_delete_from_device">Törlés az eszközről</string>
     <string name="action_details">Részletek</string>
@@ -59,7 +59,7 @@
     <string name="action_go_to_album">Ugrás az albumhoz</string>
     <string name="label_playing_queue">Lejátszási sor</string>
     <string name="no_results">Nincs találat</string>
-    <string name="updating">Frissítés...</string>
+    <string name="updating">Frissítés…</string>
     <string name="added_title_to_playing_queue">"1 dal hozzáadva a lejátszási sorhoz."</string>
     <string name="added_x_titles_to_playing_queue">%1$d dal hozzáadva a lejátszási sorhoz.</string>
     <string name="action_remove_from_playlist">Eltávolítás a lejátszási listából</string>
@@ -158,7 +158,7 @@
     <string name="pref_summary_audio_ducking">Beérkező értesítéskor a lejátszás hangereje lecsökken, majd az értesítés végén visszaáll az eredeti hangerőre.</string>
     <string name="pref_summary_synchronized_lyrics_show">Jelenleg csak az LRC formátumban szinkronizált szövegeket támogatják. Beágyazott vagy külön fájlként.</string>
     <string name="could_not_download_album_cover">"Nem siker\u00fclt let\u00f6lteni a megfelel\u0151 albumbor\u00edt\u00f3t."</string>
-    <string name="search_hint">Keresés a könyvtárban...</string>
+    <string name="search_hint">Keresés a könyvtárban…</string>
     <string name="favorites">Kedvencek</string>
     <string name="last_added">Legfrissebb dalok</string>
     <string name="history">Előzmények</string>
@@ -172,7 +172,7 @@
     <string name="cancel_current_timer">Az aktuális időzítő törlése</string>
     <string name="sleep_timer_canceled">Elalvás időzítő törölve.</string>
     <string name="sleep_timer_set">Elalvás időzítő beállítva, mostantól számított %d percre.</string>
-    <string name="action_new_playlist">Új lejátszási lista...</string>
+    <string name="action_new_playlist">Új lejátszási lista…</string>
     <string name="new_playlist_title">Új lejátszási lista</string>
     <string name="colored_footers">Színes lábjegyzetek</string>
     <string name="special_thanks_to">Külön köszönet</string>
@@ -185,14 +185,11 @@
     <string name="version">Verzió</string>
     <string name="author">Készítő</string>
     <string name="write_an_email">Írjon e-mailt</string>
-    <string name="add_to_google_plus_circles">Google Plus</string>
     <string name="follow_on_twitter">Twitter</string>
     <string name="fork_on_github">Villog a GitHubon</string>
     <string name="visit_website">Látogassa meg a honlapot</string>
     <string name="report_bugs">Hibajelentés</string>
     <string name="report_bugs_summary">Problémák jelentése, új funkciók kérése.</string>
-    <string name="join_community">Csatlakozzon a Google Plus közösséghezGoogle Plus közösség</string>
-    <string name="join_community_summary">Ha segítségre lenne szüksége, vagy kérdései vannak, keresse fel a Vinyl Music Player közösséget a Google Plus-on.</string>
     <string name="translate">Fordítás</string>
     <string name="translate_summary">Segítsen lefordítani a Vinyl Music Player-ot a saját nyelvére.</string>
     <string name="rate_on_google_play">Értékelés</string>
@@ -202,7 +199,7 @@
     <string name="maarten_corpel_summary">A Play Áruházas illusztrációért és az üres albumborítóért.</string>
     <string name="aleksandar_tesic_summary">A dizájnban való segítségért.</string>
     <string name="website">Weboldal</string>
-    <string name="loading_products">Termékek betöltése...</string>
+    <string name="loading_products">Termékek betöltése…</string>
     <string name="up_next">Lejátszási sor</string>
     <string name="pref_title_now_playing_screen_appearance">Megjelenés</string>
     <string name="intro_label">Bevezető</string>
@@ -237,7 +234,7 @@
     <string name="bug_report_no_description">Kérem, adja meg a leírást</string>
     <string name="bug_report_no_username">Kérem, adja meg az érvényes GitHub felhasználónevét</string>
     <string name="bug_report_no_password">Kérem, adja meg az érvényes GitHub jelszavát</string>
-    <string name="bug_report_uploading">Jelentés feltöltése GitHub-ra...</string>
+    <string name="bug_report_uploading">Jelentés feltöltése GitHub-ra…</string>
     <string name="bug_report_failed">Nem sikerült elküldeni a jelentést</string>
     <string name="bug_report_failed_wrong_credentials">Hibás felhasználónév vagy jelszó</string>
     <string name="bug_report_failed_invalid_token">Érvénytelen belépési azonosító. Kérem, lépjen kapcsolatba az alkalmazás fejlesztőjével.</string>

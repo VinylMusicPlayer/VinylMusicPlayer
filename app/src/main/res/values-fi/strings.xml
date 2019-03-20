@@ -20,7 +20,7 @@
     <string name="action_next">Seuraava</string>
     <string name="action_add_to_playing_queue">Lisää toistojonoon</string>
     <string name="action_remove_from_playing_queue">Poista toistojonosta</string>
-    <string name="action_add_to_playlist">Lisää soittolistaan...</string>
+    <string name="action_add_to_playlist">Lisää soittolistaan…</string>
     <string name="action_tag_editor">Tagieditori</string>
     <string name="action_delete_from_device">Poista laitteesta</string>
     <string name="action_details">Yksityiskohdat</string>
@@ -46,7 +46,7 @@
     <string name="track_hint">"Raita(2 raidalle 2 tai 3004 CD3 raidalle 4)"</string>
     <string name="lyrics">Sanoitukset</string>
     <string name="album_or_artist_empty">Nimi- tai artistikenttä on tyhjä.</string>
-    <string name="saving_changes">Tallennetaan muutokset...</string>
+    <string name="saving_changes">Tallennetaan muutokset…</string>
     <string name="label_details">Yksityiskohdat</string>
     <string name="label_file_name">Tiedostonimi</string>
     <string name="label_file_path">Tiedostopolku</string>
@@ -59,7 +59,7 @@
     <string name="action_go_to_album">Näytä albumi</string>
     <string name="label_playing_queue">Toistojono</string>
     <string name="no_results">Ei hakutuloksia</string>
-    <string name="updating">Päivitetään...</string>
+    <string name="updating">Päivitetään…</string>
     <string name="added_title_to_playing_queue">"Kappale lisätty toistojonoon."</string>
     <string name="added_x_titles_to_playing_queue">%1$d kappaletta lisättiin toistojonoon</string>
     <string name="action_remove_from_playlist">Poista soittolistasta</string>
@@ -159,7 +159,7 @@
     <string name="pref_summary_synchronized_lyrics_show">Nykyiseltään sovellus tukee vain LRC-muodossa olevia sanoituksia, joko sulautettuna tai erillisinä tiedostoina.</string>
     <string name="pref_summary_remember_last_tab">Palauttaa käynnistyessään viimeksi avoinna olleen välilehden.</string>
     <string name="could_not_download_album_cover">"Ei voitu ladata albumia vastaavaa albumin kantta."</string>
-    <string name="search_hint">Etsi kirjastostasi...</string>
+    <string name="search_hint">Etsi kirjastostasi…</string>
     <string name="favorites">Suosikit</string>
     <string name="last_added">Viimeksi lisätyt</string>
     <string name="history">Historia</string>
@@ -173,7 +173,7 @@
     <string name="cancel_current_timer">Peru tämänhetkinen ajastin</string>
     <string name="sleep_timer_canceled">Ajastin peruttu.</string>
     <string name="sleep_timer_set">Ajastin asetettu %d minuutin päähän tästä hetkestä.</string>
-    <string name="action_new_playlist">Uusi soittolista...</string>
+    <string name="action_new_playlist">Uusi soittolista…</string>
     <string name="new_playlist_title">Uusi soittolista</string>
     <string name="colored_footers">Värilliset alatunnisteet</string>
     <string name="special_thanks_to">Erikoiskiitokset</string>
@@ -186,14 +186,11 @@
     <string name="version">Versio</string>
     <string name="author">Luoja</string>
     <string name="write_an_email">Kirjoita sähköpostia</string>
-    <string name="add_to_google_plus_circles">Lisää Google Plus -piireihin</string>
     <string name="follow_on_twitter">Seuraa Twitterissä</string>
     <string name="fork_on_github">Forkkaa GitHubissa</string>
     <string name="visit_website">Vieraile verkkosivulla</string>
     <string name="report_bugs">Raportoi bugeja</string>
     <string name="report_bugs_summary">Raportoi bugeja tai ehdota uusia ominaisuuksia.</string>
-    <string name="join_community">Liity Google Plus -yhteisöön</string>
-    <string name="join_community_summary">Jos tarvitset apua tai sinulla on kysymyksiä, Vinyl Music Playerin Google Plus -yhteisö on hyvä paikka sille.</string>
     <string name="translate">Käännä</string>
     <string name="translate_summary">Auta kääntämään Vinyl Music Player sinun äidinkielellesi.</string>
     <string name="rate_on_google_play">Arvostele</string>
@@ -203,7 +200,7 @@
     <string name="maarten_corpel_summary">Play-kaupan kuvituksesta ja tyhjän albumin kannesta.</string>
     <string name="aleksandar_tesic_summary">Sovelluksen designin kanssa auttamisesta.</string>
     <string name="website">Verkkosivu</string>
-    <string name="loading_products">Ladataan tuotteita...</string>
+    <string name="loading_products">Ladataan tuotteita…</string>
     <string name="up_next">Seuraavaksi</string>
     <string name="pref_title_now_playing_screen_appearance">Ulkonäkö</string>
     <string name="intro_label">Esittely</string>
@@ -237,7 +234,7 @@
     <string name="bug_report_no_description">Ole hyvä ja syötä ongelman kuvaus</string>
     <string name="bug_report_no_username">Ole hyvä ja syötä sinun toimiva GitHub-käyttäjänimi</string>
     <string name="bug_report_no_password">Ole hyvä ja syötä sinun toimiva GitHub-salasana</string>
-    <string name="bug_report_uploading">Lähetetään raporttia GitHubiin...</string>
+    <string name="bug_report_uploading">Lähetetään raporttia GitHubiin…</string>
     <string name="bug_report_failed">Raporttia ei voitu lähettää</string>
     <string name="bug_report_failed_wrong_credentials">Väärä käyttäjänimi tai salasana</string>
     <string name="bug_report_failed_invalid_token">Pätemätön käyttöoikeustunnus (access token). Ole hyvä ja ota yhteyttä sovelluksen kehittäjään.</string>
@@ -248,7 +245,6 @@
     <string name="you_will_be_forwarded_to_the_issue_tracker_website">Sinut johdatetaan vianseurantaohjelman verkkosivulle.</string>
     <string name="app_shortcut_shuffle_all_short">Sekoita</string>
     <string name="playlist_is_empty">Soittolista on tyhjä</string>
-    <string name="only_the_first_5_colors_available">Sovelluksen ilmaisversio on rajoitettu 5 ensimmäiseen värivaihtoehtoon.</string>
     <string name="eugene_cheung_summary">Työpanoksesta sovelluksen lähdekoodin parissa.</string>
     <string name="blacklist">Estolista</string>
     <string name="remove_from_blacklist">Poista estolistalta</string>

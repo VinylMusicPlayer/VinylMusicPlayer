@@ -59,7 +59,7 @@
     <string name="action_go_to_album">アルバムを表示</string>
     <string name="label_playing_queue">再生キュー</string>
     <string name="no_results">該当なし</string>
-    <string name="updating">更新中...</string>
+    <string name="updating">更新中…</string>
     <string name="added_title_to_playing_queue">"曲を再生キューに追加しました"</string>
     <string name="added_x_titles_to_playing_queue">%1$d曲を再生キューに追加しました</string>
     <string name="action_remove_from_playlist">プレイリストから除去</string>
@@ -183,18 +183,14 @@
     <string name="permission_external_storage_denied">内部ストレージへのアクセス権限が拒否されました</string>
     <string name="support_development">開発を支援</string>
     <string name="thank_you">ありがとう！</string>
-    <string name="restored_previous_purchase_please_restart">過去の購入を復元しました。すべての機能を使用するには、アプリを再起動してください。</string>
     <string name="version">バージョン</string>
     <string name="author">製作者</string>
     <string name="write_an_email">Eメールを書く</string>
-    <string name="add_to_google_plus_circles">Google Plusのサークルに追加</string>
     <string name="follow_on_twitter">Twitterをフォロー</string>
     <string name="fork_on_github">GitHubでフォーク</string>
     <string name="visit_website">ウェブサイトを開く</string>
     <string name="report_bugs">バグを報告</string>
     <string name="report_bugs_summary">パグの報告または新機能のリクエスト</string>
-    <string name="join_community">GooglePlusコミュニティに参加する</string>
-    <string name="join_community_summary">質問があったり、助けが必要な場合は、Vinyl Music PlayerのGoogle Plusコミュニティが良い場所として挙げられます。</string>
     <string name="translate">翻訳</string>
     <string name="translate_summary">Vinyl Music Playerをあなたのネイティブ言語に対応させましょう。</string>
     <string name="rate_on_google_play">評価</string>
@@ -254,9 +250,6 @@
     <string name="playlist_is_empty">プレイリストは空です</string>
     <string name="playing_notification_description">再生の通知は再生/一時停止などを提供します。</string>
     <string name="playing_notification_name">再生中の通知</string>
-    <string name="only_the_first_5_colors_available">無料版では5色のみ利用可能です。</string>
-    <string name="purchase">購入</string>
-    <string name="restore">復元</string>
     <string name="eugene_cheung_summary">ソースコードへの貢献。</string>
     <string name="add_action">追加</string>
     <string name="blacklist">ブラックリスト</string>
