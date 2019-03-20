@@ -137,14 +137,18 @@ public class HistoryStore extends SQLiteOpenHelper {
     }
 
     public Cursor queryRecentIds(long cutoff) {
+        final boolean noCutoffTime = (cutoff == 0);
+        final boolean reverseOrder = (cutoff < 0);
+        if (reverseOrder) cutoff = -cutoff;
+
         final SQLiteDatabase database = getReadableDatabase();
 
         return database.query(RecentStoreColumns.NAME,
-                new String[]{RecentStoreColumns.ID}, 
-                RecentStoreColumns.TIME_PLAYED + ">?",
-                new String[]{String.valueOf(cutoff)}, 
+                new String[]{RecentStoreColumns.ID},
+                noCutoffTime ? null : RecentStoreColumns.TIME_PLAYED + ">?",
+                noCutoffTime ? null : new String[]{String.valueOf(cutoff)},
                 null, null,
-                RecentStoreColumns.TIME_PLAYED + " DESC");
+                RecentStoreColumns.TIME_PLAYED + (reverseOrder ? " ASC" : " DESC"));
     }
 
     public interface RecentStoreColumns {
