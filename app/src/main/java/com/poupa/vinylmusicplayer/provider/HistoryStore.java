@@ -121,7 +121,7 @@ public class HistoryStore extends SQLiteOpenHelper {
 
         return database.query(RecentStoreColumns.NAME,
                 new String[]{RecentStoreColumns.ID},
-                noCutoffTime ? null : RecentStoreColumns.TIME_PLAYED + ">?",
+                noCutoffTime ? null : RecentStoreColumns.TIME_PLAYED + (reverseOrder ? "<?" : ">?"),
                 noCutoffTime ? null : new String[]{String.valueOf(cutoff)},
                 null, null,
                 RecentStoreColumns.TIME_PLAYED + (reverseOrder ? " ASC" : " DESC"));
