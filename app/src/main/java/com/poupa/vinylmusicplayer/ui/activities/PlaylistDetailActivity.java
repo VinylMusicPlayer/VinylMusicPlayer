@@ -28,7 +28,6 @@ import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -266,12 +265,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
         @Override
         public ArrayList<Song> loadInBackground() {
-            if (playlist instanceof AbsCustomPlaylist) {
-                return ((AbsCustomPlaylist) playlist).getSongs(getContext());
-            } else {
-                //noinspection unchecked
-                return (ArrayList<Song>) (List) PlaylistSongLoader.getPlaylistSongList(getContext(), playlist.id);
-            }
+            return playlist.getSongs(getContext());
         }
     }
 }

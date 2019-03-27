@@ -24,7 +24,6 @@ import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -220,11 +219,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     private ArrayList<Song> getSongList(@NonNull List<Playlist> playlists) {
         final ArrayList<Song> songs = new ArrayList<>();
         for (Playlist playlist : playlists) {
-            if (playlist instanceof AbsCustomPlaylist) {
-                songs.addAll(((AbsCustomPlaylist) playlist).getSongs(activity));
-            } else {
-                songs.addAll(PlaylistSongLoader.getPlaylistSongList(activity, playlist.id));
-            }
+            songs.addAll(playlist.getSongs(activity));
         }
         return songs;
     }

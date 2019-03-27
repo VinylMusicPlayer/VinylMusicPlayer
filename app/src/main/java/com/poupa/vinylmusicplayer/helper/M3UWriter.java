@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.helper;
 
 import android.content.Context;
 
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -20,12 +19,7 @@ public class M3UWriter implements M3UConstants {
             dir.mkdirs();
         File file = new File(dir, playlist.name.concat("." + EXTENSION));
 
-        ArrayList<? extends Song> songs;
-        if (playlist instanceof AbsCustomPlaylist) {
-            songs = ((AbsCustomPlaylist) playlist).getSongs(context);
-        } else {
-            songs = PlaylistSongLoader.getPlaylistSongList(context, playlist.id);
-        }
+        ArrayList<Song> songs = playlist.getSongs(context);
 
         if (songs.size() > 0) {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));

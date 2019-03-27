@@ -53,7 +53,6 @@ import com.poupa.vinylmusicplayer.helper.StopWatch;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
@@ -287,13 +286,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
                         int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, getShuffleMode());
                         if (playlist != null) {
-                            ArrayList<Song> playlistSongs;
-                            if (playlist instanceof AbsCustomPlaylist) {
-                                playlistSongs = ((AbsCustomPlaylist) playlist).getSongs(getApplicationContext());
-                            } else {
-                                //noinspection unchecked
-                                playlistSongs = (ArrayList<Song>) (List) PlaylistSongLoader.getPlaylistSongList(getApplicationContext(), playlist.id);
-                            }
+                            ArrayList<Song> playlistSongs = playlist.getSongs(getApplicationContext());
                             if (!playlistSongs.isEmpty()) {
                                 if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
                                     int startPosition = 0;
@@ -1225,7 +1218,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
 
                 case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
                     Playlist playlist = PlaylistLoader.getPlaylist(getApplicationContext(), itemId);
-                    songs.addAll(PlaylistSongLoader.getPlaylistSongList(getApplicationContext(), playlist.id));
+                    songs.addAll(playlist.getSongs(getApplicationContext()));
                     openQueue(songs, 0, true);
                     break;
 
