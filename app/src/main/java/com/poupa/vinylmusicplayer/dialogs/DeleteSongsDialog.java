@@ -75,8 +75,11 @@ public class DeleteSongsDialog extends DialogFragment {
                 .autoDismiss(false)
                 .onPositive((dialog, which) -> {
                     // If song removed was the playing song, then play the next song
-                    if (MusicPlayerRemote.isPlaying() && MusicPlayerRemote.getPosition() == 0) {
-                        MusicPlayerRemote.playNextSong();
+                    if (MusicPlayerRemote.isPlaying()) {
+                        final Song playingSong = MusicPlayerRemote.getCurrentSong();
+                        if ((songs.size() == 1) && (playingSong == songs.get(0))) {
+                            MusicPlayerRemote.playNextSong();
+                        }
                     }
 
                     // Now remove the track in background
