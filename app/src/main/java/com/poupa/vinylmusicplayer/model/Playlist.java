@@ -5,6 +5,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+
+import java.util.ArrayList;
+
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
@@ -24,7 +29,13 @@ public class Playlist implements Parcelable {
 
     @NonNull
     public String getInfoString(@NonNull Context context) {
-        return "";
+        int songCount = getSongs(context).size();
+        String songCountString = MusicUtil.getSongCountString(context, songCount);
+
+        return MusicUtil.buildInfoString(
+            songCountString,
+            ""
+        );
     }
 
     @Override
@@ -54,6 +65,11 @@ public class Playlist implements Parcelable {
                 '}';
     }
 
+    @NonNull
+    public ArrayList<Song> getSongs(Context context) {
+        // this default implementation covers static playlists
+        return PlaylistSongLoader.getPlaylistSongList(context, id);
+    }
 
     @Override
     public int describeContents() {

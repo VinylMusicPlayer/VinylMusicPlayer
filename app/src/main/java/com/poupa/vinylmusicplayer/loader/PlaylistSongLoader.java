@@ -7,14 +7,15 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import android.support.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
+import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
 
 public class PlaylistSongLoader {
 
     @NonNull
-    public static ArrayList<PlaylistSong> getPlaylistSongList(@NonNull final Context context, final int playlistId) {
-        ArrayList<PlaylistSong> songs = new ArrayList<>();
+    public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, final int playlistId) {
+        ArrayList<Song> songs = new ArrayList<>();
         Cursor cursor = makePlaylistSongCursor(context, playlistId);
 
         if (cursor != null && cursor.moveToFirst()) {
