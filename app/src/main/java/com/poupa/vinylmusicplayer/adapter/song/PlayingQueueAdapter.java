@@ -174,7 +174,6 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public void onSwipeItemStarted(ViewHolder holder, int position) {
-
     }
 
     @Override
@@ -185,7 +184,6 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public SwipeResultAction onSwipeItem(ViewHolder holder, int position, @SwipeableItemResults int result) {
-
         if (result == SwipeableItemConstants.RESULT_CANCELED) {
             return new SwipeResultActionDefault();
         } else {
@@ -194,7 +192,6 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     public class ViewHolder extends SongAdapter.ViewHolder {
-
         @DraggableItemStateFlags
         private int mDragStateFlags;
 
@@ -219,13 +216,18 @@ public class PlayingQueueAdapter extends SongAdapter
         protected boolean onSongMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_remove_from_playing_queue:
-                    final int position = getAdapterPosition();
-                    MusicPlayerRemote.removeFromQueue(position);
-                    //If song removed was the playing song, then play the next song
-                    if (MusicPlayerRemote.isPlaying() && position == 0) {
-                        MusicPlayerRemote.playSongAt(0);
+                    // If song removed was the playing song, then play the next song
+                    if (MusicPlayerRemote.isPlaying())
+                    {
+                        final Song playingSong = MusicPlayerRemote.getCurrentSong();
+                        final Song removedSong = getSong();
+                        if (playingSong == removedSong) {
+                            MusicPlayerRemote.playNextSong();
+                        }
                     }
 
+                    final int position = getAdapterPosition();
+                    MusicPlayerRemote.removeFromQueue(position);
                     return true;
             }
             return super.onSongMenuItemClick(item);
@@ -274,8 +276,7 @@ public class PlayingQueueAdapter extends SongAdapter
             //If song removed was the playing song, then play the next song
             if (isPlaying) {
                 final Song currentSong = MusicPlayerRemote.getCurrentSong();
-                final boolean removeCurrentSong = (songToRemove == MusicPlayerRemote.getCurrentSong());
-                if (removeCurrentSong) {
+                if (songToRemove == currentSong) {
                     MusicPlayerRemote.playNextSong();
                 }
             }
