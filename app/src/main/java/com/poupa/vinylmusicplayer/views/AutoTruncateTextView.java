@@ -112,30 +112,32 @@ public class AutoTruncateTextView extends AppCompatTextView {
 
         String fittedText = getText().toString();
 
-        int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
-        final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
+        if (!fittedText.equals("")) {
+            int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
+            final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
 
-        if (textBoundsWidth == 0) {
-            textBoundsWidth =  getTouchInterceptFrameLayout().getMeasuredWidth();
+            if (textBoundsWidth == 0) {
+                textBoundsWidth =  getTouchInterceptFrameLayout().getMeasuredWidth();
+            }
+
+            if (!fittedText.endsWith(TRUNCATED_MARKER) && !isUntruncated) {
+                this.text = fittedText;
+            }
+
+            if (!isUntruncated && (getWidth() == 0 | textBoundsWidth < getPaint().measureText(fittedText))) {
+                // Mimics behavior of `android:ellipsize="end"`, except it works in a HorizontalScrollView.
+                // Truncates the string so it doesn't get cut off in the HorizontalScrollView with an
+                // ellipsis at the end of it.
+                final String ellipsizedText = TextUtils.ellipsize(fittedText,
+                        getPaint(),
+                        (float) textBoundsWidth,
+                        TextUtils.TruncateAt.END).toString();
+                fittedText = ellipsizedText + TRUNCATED_MARKER;
+            }
+
+            setText(fittedText);
+            initiateTruncateText(text, fittedText);
         }
-
-        if (!fittedText.endsWith(TRUNCATED_MARKER) && !isUntruncated) {
-            this.text = fittedText;
-        }
-
-        if (!isUntruncated && (getWidth() == 0 | textBoundsWidth < getPaint().measureText(fittedText))) {
-            // Mimics behavior of `android:ellipsize="end"`, except it works in a HorizontalScrollView.
-            // Truncates the string so it doesn't get cut off in the HorizontalScrollView with an
-            // ellipsis at the end of it.
-            final String ellipsizedText = TextUtils.ellipsize(fittedText,
-                    getPaint(),
-                    (float) textBoundsWidth,
-                    TextUtils.TruncateAt.END).toString();
-            fittedText = ellipsizedText + TRUNCATED_MARKER;
-        }
-
-        setText(fittedText);
-        initiateTruncateText(text, fittedText);
     }
 
     /**
@@ -188,8 +190,8 @@ public class AutoTruncateTextView extends AppCompatTextView {
      * Untruncates and sets the text.
      */
     public void untruncateText() {
-        String untrunucatedText = text + MARKER_UNTRUNCATED;
-        setText(untrunucatedText);
+        String untruncatedText = text + MARKER_UNTRUNCATED;
+        setText(untruncatedText);
     }
 
     /**
