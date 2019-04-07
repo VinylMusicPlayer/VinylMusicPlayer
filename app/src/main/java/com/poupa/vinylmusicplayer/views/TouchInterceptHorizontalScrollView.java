@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.views;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,52 +20,35 @@ import android.widget.HorizontalScrollView;
  */
 public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
 
+    private GestureDetector mDetector;
+    private boolean mIsScrolling = false;
+
     public static final String TAG = TouchInterceptHorizontalScrollView.class.getSimpleName();
 
     /** Delay before triggering {@link OnEndScrollListener#onEndScroll} */
     private static final int ON_END_SCROLL_DELAY = 1000;
 
-    private static final int MAX_CLICK_DISTANCE = 5;
-
-    private float startX;
     private long lastScrollUpdate = -1;
     private boolean scrollable;
-    private boolean isFling;
     private Rect scrollViewRect;
     private OnEndScrollListener onEndScrollListener;
 
     // Whether user is interacting with this again and to cancel text retruncate
     private boolean cancel;
-    private boolean cancelCheck;
-
-    // ID of the active pointer
-    private int activePointerId;
-
-    // Whether to untruncate the text in the TouchInterceptTextView
-    private boolean untruncate;
-
-    public TouchInterceptHorizontalScrollView(Context context) {
-        super(context);
-        init();
-    }
 
     public TouchInterceptHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
-    public TouchInterceptHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
+    private void init(Context context) {
         lastScrollUpdate = -1;
         scrollable = true;
         scrollViewRect = new Rect();
         setLongClickable(false);
         setTag(TouchInterceptHorizontalScrollView.TAG);
         setHorizontalScrollBarEnabled(false);
+        mDetector = new GestureDetector(context, new GestureListener());
     }
 
     @Override
@@ -88,22 +72,11 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
     }
 
-    public TouchInterceptFrameLayout getTouchInterceptFrameLayout() {
-        return (TouchInterceptFrameLayout) getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
-    }
-
     /**
      * @return Returns the child {@link AutoTruncateTextView}.
      */
     public AutoTruncateTextView getTouchInterceptTextView() {
         return (AutoTruncateTextView) this.getChildAt(0);
-    }
-
-    /**
-     * @return Returns the set {@link OnEndScrollListener}.
-     */
-    public OnEndScrollListener getOnEndScrollListener() {
-        return onEndScrollListener;
     }
 
     /**
@@ -124,78 +97,34 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         return scrollable;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                cancel = true;
-                startX = e.getX();
-
-                // If we can scroll, pass the event to the superclass
-                if (scrollable) {
-                    return super.onTouchEvent(e);
-                }
-
-                // Don't continue to handle the touch event if scrolling is disabled
-                return false;
-
-            case MotionEvent.ACTION_MOVE:
-                float distance = Math.abs(e.getX() - startX);
-
-                // Currently scrolling, so untruncate text
-                if (untruncate && distance > MAX_CLICK_DISTANCE) {
-                    getTouchInterceptTextView().untruncateText();
-                    untruncate = false;
-                }
-
-            case MotionEvent.ACTION_UP:
-                // User is done interacting with the scroll view
-                cancel = false;
-                postDelayed(new ScrollStateHandler(), ON_END_SCROLL_DELAY);
-                lastScrollUpdate = System.currentTimeMillis();
-                untruncate = true;
-
-            default:
-                return super.onTouchEvent(e);
-        }
-    }
-
+    /**
+     * Intercept the touch event here, we arrive here since this is a HorizontalScrollView
+     * Force onTouchEvent to be fired
+     * @param e
+     * @return
+     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
-        int x = Math.round(e.getRawX());
-        int y = Math.round(e.getRawY());
+        onTouchEvent(e);
+        return false;
+    }
 
-        // Check to see if it's a valid pointerID.
-        // If it's invalid, a long click is triggered. This stops that.
-        switch (e.getAction() & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                activePointerId = e.getPointerId(0);
-                break;
+    /**
+     * Handle touch events
+     * @param e
+     * @return
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        // Fire the detector
+        mDetector.onTouchEvent(e);
 
-            case MotionEvent.ACTION_MOVE:
-                if (e.findPointerIndex(activePointerId) == -1) {
-                    cancelLongClick();
-                }
-                break;
+        // Detect if we have a scroll that just finished
+        if (e.getAction() == MotionEvent.ACTION_UP && mIsScrolling) {
+            scrollFinished();
         }
 
-        getGlobalVisibleRect(scrollViewRect);
-
-        boolean touchedScrollView =
-                x > scrollViewRect.left && x < scrollViewRect.right &&
-                y > scrollViewRect.top && y < scrollViewRect.bottom;
-
-        if (!touchedScrollView) {
-            return false;
-        }
-
-        // Don't do anything with intercepted touch events if not scrollable
-        if (!scrollable) {
-            onTouchEvent(e);
-            return false;
-        }
-
-        return super.onInterceptTouchEvent(e);
+        return super.onTouchEvent(e);
     }
 
     /**
@@ -207,40 +136,14 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         this.onEndScrollListener = onEndScrollListener;
     }
 
-    @Override
-    public void fling(int velocityX) {
-        super.fling(velocityX);
-        isFling = true;
-    }
-
-    @Override
-    protected void onScrollChanged(int x, int y, int oldX, int oldY) {
-        super.onScrollChanged(x, y, oldX, oldY);
-
-        cancelLongClick();
-
-        if (cancelCheck) {
-            cancel = true;
-        }
-
-        if (isFling && (Math.abs(x - oldX) < 2 || x >= getMeasuredWidth() || x == 0)) {
-            // User is done interacting with the scroll view
-            cancel = false;
-            postDelayed(new ScrollStateHandler(), ON_END_SCROLL_DELAY);
-            lastScrollUpdate = System.currentTimeMillis();
-            isFling = false;
-            cancelCheck = false;
-            untruncate = true;
-        }
-    }
-
     /**
-     * Cancels any long presses. Used to prevent views from stealing touches while the user is
-     * scrolling something.
+     * User is done interacting with the scroll view
      */
-    private void cancelLongClick() {
-        getRootView().cancelLongPress();
-        this.cancelLongPress();
+    private void scrollFinished() {
+        mIsScrolling  = false;
+        cancel = false;
+        postDelayed(new ScrollStateHandler(), ON_END_SCROLL_DELAY);
+        lastScrollUpdate = System.currentTimeMillis();
     }
 
     interface OnEndScrollListener {
@@ -260,7 +163,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
                 if ((currentTime - lastScrollUpdate) > ON_END_SCROLL_DELAY) {
                     lastScrollUpdate = -1;
                     if (onEndScrollListener != null) {
-                        cancelCheck = true;
                         onEndScrollListener.onEndScroll();
                     }
                 } else {
@@ -273,5 +175,41 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
     public Rect getScrollViewRect() {
         getGlobalVisibleRect(scrollViewRect);
         return scrollViewRect;
+    }
+
+    /**
+     * Gesture Listener
+     */
+    class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        /**
+         * Tapping the scrollview
+         * @param e
+         * @return
+         */
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+
+            // TODO here: start to play song from a single tap
+
+            return false;
+        }
+
+        /**
+         * Scrolling the scrollview
+         * @param e1
+         * @param e2
+         * @param distanceX
+         * @param distanceY
+         * @return
+         */
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                float distanceX, float distanceY) {
+            mIsScrolling = true;
+
+            getTouchInterceptTextView().untruncateText();
+
+            return false;
+        }
     }
 }
