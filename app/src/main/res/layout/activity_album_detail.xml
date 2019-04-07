@@ -26,9 +26,9 @@
 
                 <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
                     android:id="@+id/title"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+                    android:layout_height="wrap_content" />
 
             </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
 

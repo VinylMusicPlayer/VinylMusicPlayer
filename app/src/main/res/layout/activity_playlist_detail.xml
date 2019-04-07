@@ -9,57 +9,65 @@
 
     <include layout="@layout/status_bar" />
 
-    <FrameLayout
+    <!-- for getSwipeableContainerView() -->
+    <com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout
+        android:id="@+id/touch_intercept_framelayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?colorPrimary"
-        android:elevation="@dimen/toolbar_elevation"
-        tools:ignore="UnusedAttribute">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/Toolbar"
-            android:background="@android:color/transparent">
-
-            <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
-                android:id="@+id/title_scrollview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-            </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
-
-        </android.support.v7.widget.Toolbar>
-
-        <ViewStub
-            android:id="@+id/cab_stub"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize" />
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary"
+            android:elevation="@dimen/toolbar_elevation"
+            tools:ignore="UnusedAttribute">
 
-    </FrameLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:background="@android:color/transparent">
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center_vertical"
-        android:text="@string/playlist_empty_text"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="@dimen/empty_text_size"
-        android:visibility="gone" />
+                <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                    android:id="@+id/title_scrollview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="none" />
+                    <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+                </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+
+            </android.support.v7.widget.Toolbar>
+
+            <ViewStub
+                android:id="@+id/cab_stub"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:text="@string/playlist_empty_text"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="@dimen/empty_text_size"
+            android:visibility="gone" />
+
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+
+    </com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout>
 
 </LinearLayout>

@@ -82,11 +82,16 @@ public class AutoTruncateTextView extends AppCompatTextView {
         if (view.getId() == targetId) {
             return (ViewParent)view;
         }
-        View parent = (View) view.getParent();
-        if (parent == null) {
+        ViewParent viewParent = view.getParent();
+        if (viewParent instanceof View) {
+            View parent = (View) view.getParent();
+            if (parent == null) {
+                return null;
+            }
+            return findParentRecursively(parent, targetId);
+        } else {
             return null;
         }
-        return findParentRecursively(parent, targetId);
     }
 
     /**
