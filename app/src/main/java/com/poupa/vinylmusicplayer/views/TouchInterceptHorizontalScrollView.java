@@ -198,6 +198,15 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         }
 
         /**
+         * Pass back long presses (adding to playlist, etc)
+         * @param e
+         */
+        @Override
+        public void onLongPress(MotionEvent e) {
+            ((FrameLayout) getTouchInterceptTextView().getTouchInterceptFrameLayout().getParent()).performLongClick();
+        }
+
+        /**
          * Scrolling the scrollview
          * @param e1
          * @param e2
