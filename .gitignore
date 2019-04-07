@@ -34,6 +34,13 @@ local.properties
 ajcore.*.txt
 captures/
 
+# VSCode project files
+.settings
+.vscode
+
+# CTags files
+tags
+
 # Mac
 .DS_Store
 
