@@ -7,10 +7,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 
 /**
  * @author Lincoln (theduffmaster)
+ * @author Adrien Poupa
  *
  * A custom {@link HorizontalScrollView} that is only useful as the child of a
  * {@link TouchInterceptFrameLayout}. Allows for the layout to disable and enable scrolling in
@@ -183,13 +185,14 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
     class GestureListener extends GestureDetector.SimpleOnGestureListener {
         /**
          * Tapping the scrollview
+         * Here we go back all the way up to the framelayout that contains the song,
+         * and we click manually to play it
          * @param e
          * @return
          */
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-
-            // TODO here: start to play song from a single tap
+            ((FrameLayout) getTouchInterceptTextView().getTouchInterceptFrameLayout().getParent()).performClick();
 
             return false;
         }

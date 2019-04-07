@@ -7,6 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewParent;
+
+import com.poupa.vinylmusicplayer.R;
 
 /**
  * @author Lincoln (theduffmaster)
@@ -30,7 +34,6 @@ public class AutoTruncateTextView extends AppCompatTextView {
     private static final String MARKER_UNTRUNCATED = "\uFEFF";
 
     private String text;
-    private String truncatedText;
 
     public AutoTruncateTextView(Context context) {
         super(context);
@@ -62,9 +65,28 @@ public class AutoTruncateTextView extends AppCompatTextView {
 
     /**
      * @return Returns the {@link TouchInterceptFrameLayout} inside this layout.
+     * We need to find it recursively or we may return the first one shown on the screen but
+     * not the one tapped
      */
     public TouchInterceptFrameLayout getTouchInterceptFrameLayout() {
-        return (TouchInterceptFrameLayout) getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
+        return (TouchInterceptFrameLayout) findParentRecursively(this, R.id.touch_intercept_framelayout);
+    }
+
+    /**
+     * Find the view parent recursively
+     * @param view
+     * @param targetId
+     * @return
+     */
+    public ViewParent findParentRecursively(View view, int targetId) {
+        if (view.getId() == targetId) {
+            return (ViewParent)view;
+        }
+        View parent = (View) view.getParent();
+        if (parent == null) {
+            return null;
+        }
+        return findParentRecursively(parent, targetId);
     }
 
     /**
@@ -122,7 +144,6 @@ public class AutoTruncateTextView extends AppCompatTextView {
         if (!originalText.endsWith(TRUNCATED_MARKER)) {
             this.text = originalText;
         }
-        this.truncatedText = truncatedText;
 
         final TouchInterceptHorizontalScrollView scrollView = getTouchInterceptHorizontalScrollView();
         post(() -> {
@@ -164,20 +185,6 @@ public class AutoTruncateTextView extends AppCompatTextView {
     public void untruncateText() {
         String untrunucatedText = text + MARKER_UNTRUNCATED;
         setText(untrunucatedText);
-    }
-
-    /**
-     * @return Returns the truncated text.
-     */
-    public String getTruncatedText() {
-        return this.truncatedText;
-    }
-
-    /**
-     * @return Returns the untruncated text.
-     */
-    public String getUntruncatedText() {
-        return this.text;
     }
 
     /**

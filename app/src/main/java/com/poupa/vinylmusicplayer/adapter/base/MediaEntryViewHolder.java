@@ -25,7 +25,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public LinearLayout songView;
 
     @Nullable
-    @BindView(R.id.dummy_view)
+    @BindView(R.id.touch_intercept_framelayout)
     public FrameLayout dummyContainer;
 
     @Nullable
