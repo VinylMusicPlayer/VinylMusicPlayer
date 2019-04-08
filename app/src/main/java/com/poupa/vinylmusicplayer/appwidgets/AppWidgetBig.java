@@ -34,7 +34,7 @@ public class AppWidgetBig extends BaseAppWidget {
      * Update all active widget instances by pushing changes
      */
     public void performUpdate(final MusicService service, final int[] appWidgetIds) {
-        appWidgetView = new RemoteViews(service.getPackageName(), R.layout.app_widget_big);
+        appWidgetView = new RemoteViews(service.getPackageName(), getLayout());
 
         // Set the titles and artwork
         setTitlesArtwork(service);
@@ -90,7 +90,7 @@ public class AppWidgetBig extends BaseAppWidget {
     }
 
     public int getId() {
-        return 0;
+        return R.id.app_widget_big;
     }
 
     public int getImageSize(MusicService service) {

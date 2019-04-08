@@ -22,7 +22,7 @@ public class AppWidgetClassic extends BaseAppWidget {
      * Update all active widget instances by pushing changes
      */
     public void performUpdate(final MusicService service, final int[] appWidgetIds) {
-        appWidgetView = new RemoteViews(service.getPackageName(), R.layout.app_widget_classic);
+        appWidgetView = new RemoteViews(service.getPackageName(), getLayout());
 
         // Set the titles and artwork
         setTitlesArtwork(service);
