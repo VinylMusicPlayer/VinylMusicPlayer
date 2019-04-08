@@ -7,9 +7,13 @@
 
 **A material designed local music player for Android.**
 
-**Forked from Phonograph; makes all Pro features free, as they used to be**
+**Forked from [Phonograph](https://github.com/kabouzeid/Phonograph); makes all Pro features free, as they used to be.**
 
-[Original code](https://github.com/kabouzeid/Phonograph)
+Additional features:
+* Android Auto support
+* ReplayGain
+* SD Card write access
+* [...and more!](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/CHANGELOG.md)
 
 ![Screenshots](./art/art.png?raw=true)
 

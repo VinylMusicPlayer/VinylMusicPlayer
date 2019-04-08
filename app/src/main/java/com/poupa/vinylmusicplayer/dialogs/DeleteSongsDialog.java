@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
@@ -73,6 +74,15 @@ public class DeleteSongsDialog extends DialogFragment {
                 .negativeText(android.R.string.cancel)
                 .autoDismiss(false)
                 .onPositive((dialog, which) -> {
+                    // If song removed was the playing song, then play the next song
+                    if (MusicPlayerRemote.isPlaying()) {
+                        final Song playingSong = MusicPlayerRemote.getCurrentSong();
+                        if ((songs.size() == 1) && (playingSong == songs.get(0))) {
+                            MusicPlayerRemote.playNextSong();
+                        }
+                    }
+
+                    // Now remove the track in background
                     songsToRemove = songs;
                     deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialog.this);
                     deleteSongsTask.execute(new DeleteSongsAsyncTask.LoadingInfo(songs, null));
