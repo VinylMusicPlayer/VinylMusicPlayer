@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter;
 
+import android.graphics.Typeface;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -93,6 +94,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             case SONG:
                 final Song song = (Song) dataSet.get(position);
                 holder.title.setText(song.title);
+                if (MusicPlayerRemote.isPlaying(song)) {
+                    holder.title.setTypeface(null, Typeface.BOLD);
+                }
                 holder.text.setText(MusicUtil.getSongInfoString(song));
                 break;
             default:

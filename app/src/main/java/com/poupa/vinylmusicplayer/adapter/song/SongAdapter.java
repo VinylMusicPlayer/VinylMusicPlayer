@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,7 +120,10 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         }
 
         if (holder.title != null) {
-            holder.title.setText(getSongTitle(song));
+            holder.title.setText(song.title);
+            if (MusicPlayerRemote.isPlaying(song)) {
+                holder.title.setTypeface(null, Typeface.BOLD);
+            }
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));
@@ -163,10 +167,6 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                             setColors(getDefaultFooterColor(), holder);
                     }
                 });
-    }
-
-    protected String getSongTitle(Song song) {
-        return song.title;
     }
 
     protected String getSongText(Song song) {

@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
+import android.graphics.Typeface;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 
 import java.util.ArrayList;
@@ -83,6 +85,9 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         }
 
         songTitle.setText(song.title);
+        if (MusicPlayerRemote.isPlaying(song)) {
+            songTitle.setTypeface(null, Typeface.BOLD);
+        }
         songInfo.setText(song.albumName);
 
         GlideApp.with(activity)

@@ -49,7 +49,6 @@ public class PlayingQueueAdapter extends SongAdapter
     public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
         this.current = current;
-
     }
 
     @Override
@@ -64,7 +63,7 @@ public class PlayingQueueAdapter extends SongAdapter
             holder.imageText.setText(String.valueOf(position - current));
         }
 
-        if (holder.getItemViewType() == HISTORY || holder.getItemViewType() == CURRENT) {
+        if (holder.getItemViewType() == HISTORY) {
             setAlpha(holder, 0.5f);
         }
     }
@@ -217,13 +216,9 @@ public class PlayingQueueAdapter extends SongAdapter
             switch (item.getItemId()) {
                 case R.id.action_remove_from_playing_queue:
                     // If song removed was the playing song, then play the next song
-                    if (MusicPlayerRemote.isPlaying())
+                    if (MusicPlayerRemote.isPlaying(getSong()))
                     {
-                        final Song playingSong = MusicPlayerRemote.getCurrentSong();
-                        final Song removedSong = getSong();
-                        if (playingSong == removedSong) {
-                            MusicPlayerRemote.playNextSong();
-                        }
+                        MusicPlayerRemote.playNextSong();
                     }
 
                     final int position = getAdapterPosition();
@@ -274,11 +269,8 @@ public class PlayingQueueAdapter extends SongAdapter
             songToRemove = adapter.dataSet.get(position);
 
             //If song removed was the playing song, then play the next song
-            if (isPlaying) {
-                final Song currentSong = MusicPlayerRemote.getCurrentSong();
-                if (songToRemove == currentSong) {
-                    MusicPlayerRemote.playNextSong();
-                }
+            if (MusicPlayerRemote.isPlaying(songToRemove)) {
+                MusicPlayerRemote.playNextSong();
             }
 
             //Swipe animation is much smoother when we do the heavy lifting after it's completed
