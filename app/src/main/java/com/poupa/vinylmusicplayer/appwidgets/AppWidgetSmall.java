@@ -50,6 +50,10 @@ public class AppWidgetSmall extends BaseAppWidget {
     }
 
     public int getLayout() {
+        return R.layout.app_widget_small;
+    }
+
+    public int getId() {
         return R.id.app_widget_small;
     }
 

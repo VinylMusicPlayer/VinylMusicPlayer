@@ -86,15 +86,17 @@ public class AppWidgetBig extends BaseAppWidget {
     }
 
     public int getLayout() {
+        return R.layout.app_widget_big;
+    }
+
+    public int getId() {
         return 0;
     }
 
-    @Override
     public int getImageSize(MusicService service) {
         return 0;
     }
 
-    @Override
     public float getCardRadius(MusicService service) {
         return 0;
     }

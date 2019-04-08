@@ -187,10 +187,6 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         return path;
     }
 
-    abstract public void performUpdate(final MusicService service, final int[] appWidgetIds);
-
-    abstract public int getLayout();
-
     protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap) {
         Drawable image;
         if (bitmap == null) {
@@ -207,9 +203,9 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
 
     protected void setBackground() {
         if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
-            appWidgetView.setInt(getLayout(), "setBackgroundResource", android.R.color.transparent);
+            appWidgetView.setInt(getId(), "setBackgroundResource", android.R.color.transparent);
         } else {
-            appWidgetView.setInt(getLayout(), "setBackgroundResource", R.color.md_grey_50);
+            appWidgetView.setInt(getId(), "setBackgroundResource", R.color.md_grey_50);
         }
     }
 
@@ -295,4 +291,10 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     public abstract int getImageSize(final MusicService service);
 
     public abstract float getCardRadius(final MusicService service);
+
+    public abstract void performUpdate(final MusicService service, final int[] appWidgetIds);
+
+    public abstract int getLayout();
+
+    public abstract int getId();
 }

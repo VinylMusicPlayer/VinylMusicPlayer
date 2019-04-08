@@ -38,6 +38,10 @@ public class AppWidgetCard extends BaseAppWidget {
     }
 
     public int getLayout() {
+        return R.layout.app_widget_card;
+    }
+
+    public int getId() {
         return R.id.app_widget_card;
     }
 
