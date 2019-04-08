@@ -106,8 +106,6 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
     public static final String QUEUE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".queuechanged";
     public static final String PLAY_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".playstatechanged";
 
-    public static final String TRANSPARENT_WIDGET_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".transparentwidgetchanged";
-
     public static final String REPEAT_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".repeatmodechanged";
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".mediastorechanged";
@@ -1163,7 +1161,7 @@ public class MusicService extends Service implements SharedPreferences.OnSharedP
                 updateNotification();
                 break;
             case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
-                sendChangeInternal(MusicService.TRANSPARENT_WIDGET_CHANGED);
+                sendChangeInternal(MusicService.META_CHANGED);
                 break;
             case PreferenceUtil.RG_SOURCE_MODE:
                 applyReplayGain();

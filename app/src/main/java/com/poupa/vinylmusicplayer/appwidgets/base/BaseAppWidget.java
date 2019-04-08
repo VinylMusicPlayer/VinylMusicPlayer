@@ -16,15 +16,33 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.graphics.Palette;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.glide.GlideApp;
+import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
+import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
+import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
+import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 public abstract class BaseAppWidget extends AppWidgetProvider {
     public static final String NAME = "app_widget";
+
+    protected Target target; // for cancellation
+    protected RemoteViews appWidgetView;
 
     /**
      * {@inheritDoc}
@@ -41,6 +59,53 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     }
 
     /**
+     * Initialize given widgets to default state, where we launch Music on
+     * default click and hide actions if service not running.
+     */
+    protected void defaultAppWidget(final Context context, final int[] appWidgetIds) {
+        appWidgetView = new RemoteViews(context.getPackageName(), getLayout());
+
+        setBackground();
+        appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
+        appWidgetView.setImageViewResource(R.id.image, R.drawable.default_album_art);
+        appWidgetView.setImageViewBitmap(R.id.button_next, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(context, R.drawable.ic_skip_next_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true))));
+        appWidgetView.setImageViewBitmap(R.id.button_prev, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(context, R.drawable.ic_skip_previous_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true))));
+        appWidgetView.setImageViewBitmap(R.id.button_toggle_play_pause, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(context, R.drawable.ic_play_arrow_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true))));
+
+        linkButtons(context);
+        pushUpdate(context, appWidgetIds);
+    }
+
+    /**
+     * Link up various button actions using {@link PendingIntent}.
+     */
+    protected void linkButtons(final Context context) {
+        Intent action;
+        PendingIntent pendingIntent;
+
+        final ComponentName serviceName = new ComponentName(context, MusicService.class);
+
+        // Home
+        action = new Intent(context, MainActivity.class);
+        action.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        pendingIntent = PendingIntent.getActivity(context, 0, action, 0);
+        appWidgetView.setOnClickPendingIntent(R.id.image, pendingIntent);
+        appWidgetView.setOnClickPendingIntent(R.id.media_titles, pendingIntent);
+
+        // Previous track
+        pendingIntent = buildPendingIntent(context, MusicService.ACTION_REWIND, serviceName);
+        appWidgetView.setOnClickPendingIntent(R.id.button_prev, pendingIntent);
+
+        // Play and pause
+        pendingIntent = buildPendingIntent(context, MusicService.ACTION_TOGGLE_PAUSE, serviceName);
+        appWidgetView.setOnClickPendingIntent(R.id.button_toggle_play_pause, pendingIntent);
+
+        // Next track
+        pendingIntent = buildPendingIntent(context, MusicService.ACTION_SKIP, serviceName);
+        appWidgetView.setOnClickPendingIntent(R.id.button_next, pendingIntent);
+    }
+
+    /**
      * Handle a change notification coming over from
      * {@link MusicService}
      */
@@ -49,18 +114,15 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
             if (MusicService.META_CHANGED.equals(what) || MusicService.PLAY_STATE_CHANGED.equals(what)) {
                 performUpdate(service, null);
             }
-            if (MusicService.TRANSPARENT_WIDGET_CHANGED.equals(what)) {
-                performUpdateBackground(service, null);
-            }
         }
     }
 
-    protected void pushUpdate(final Context context, final int[] appWidgetIds, final RemoteViews views) {
+    protected void pushUpdate(final Context context, final int[] appWidgetIds) {
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         if (appWidgetIds != null) {
-            appWidgetManager.updateAppWidget(appWidgetIds, views);
+            appWidgetManager.updateAppWidget(appWidgetIds, appWidgetView);
         } else {
-            appWidgetManager.updateAppWidget(new ComponentName(context, getClass()), views);
+            appWidgetManager.updateAppWidget(new ComponentName(context, getClass()), appWidgetView);
         }
     }
 
@@ -125,11 +187,9 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         return path;
     }
 
-    abstract protected void defaultAppWidget(final Context context, final int[] appWidgetIds);
-
     abstract public void performUpdate(final MusicService service, final int[] appWidgetIds);
 
-    public void performUpdateBackground(final MusicService service, final int[] appWidgetIds) { }
+    abstract public int getLayout();
 
     protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap) {
         Drawable image;
@@ -144,4 +204,95 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     protected String getSongArtistAndAlbum(final Song song) {
         return MusicUtil.getSongInfoString(song);
     }
+
+    protected void setBackground() {
+        if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
+            appWidgetView.setInt(getLayout(), "setBackgroundResource", android.R.color.transparent);
+        } else {
+            appWidgetView.setInt(getLayout(), "setBackgroundResource", R.color.md_grey_50);
+        }
+    }
+
+    protected void loadAlbumCover(final MusicService service, final int[] appWidgetIds) {
+        final Context appContext = service.getApplicationContext();
+
+        service.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (target != null) {
+                    GlideApp.with(appContext).clear(target);
+                }
+                final Song song = service.getCurrentSong();
+                final boolean isPlaying = service.isPlaying();
+
+                final int imageSize = getImageSize(service);
+
+                target = GlideApp.with(appContext)
+                        .asBitmapPalette()
+                        .load(VinylGlideExtension.getSongModel(song))
+                        .transition(VinylGlideExtension.getDefaultTransition())
+                        .songOptions(song)
+                        .into(new VinylSimpleTarget<BitmapPaletteWrapper>(imageSize, imageSize) {
+                            @Override
+                            public void onResourceReady(@NonNull BitmapPaletteWrapper resource, Transition<? super BitmapPaletteWrapper> glideAnimation) {
+                                Palette palette = resource.getPalette();
+                                update(resource.getBitmap(), palette.getVibrantColor(palette.getMutedColor(MaterialValueHelper.getSecondaryTextColor(appContext, true))));
+                            }
+
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                super.onLoadFailed(errorDrawable);
+                                update(null, MaterialValueHelper.getSecondaryTextColor(appContext, true));
+                            }
+
+                            private void update(@Nullable Bitmap bitmap, int color) {
+                                final int imageSize = getImageSize(service);
+                                final float cardRadius = getCardRadius(service);
+
+                                // Set correct drawable for pause state
+                                int playPauseRes = isPlaying ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp;
+                                appWidgetView.setImageViewBitmap(R.id.button_toggle_play_pause, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, playPauseRes, color)));
+
+                                // Set prev/next button drawables
+                                appWidgetView.setImageViewBitmap(R.id.button_next, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, R.drawable.ic_skip_next_white_24dp, color)));
+                                appWidgetView.setImageViewBitmap(R.id.button_prev, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, R.drawable.ic_skip_previous_white_24dp, color)));
+
+                                final Drawable image = getAlbumArtDrawable(appContext.getResources(), bitmap);
+                                final Bitmap roundedBitmap = createRoundedBitmap(image, imageSize, imageSize, cardRadius, 0, cardRadius, 0);
+                                appWidgetView.setImageViewBitmap(R.id.image, roundedBitmap);
+
+                                setBackground();
+
+                                pushUpdate(appContext, appWidgetIds);
+                            }
+                        });
+            }
+        });
+    }
+
+    protected void setTitlesArtwork(final MusicService service) {
+        final Song song = service.getCurrentSong();
+        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(song.artistName)) {
+            appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
+        } else {
+            appWidgetView.setViewVisibility(R.id.media_titles, View.VISIBLE);
+            appWidgetView.setTextViewText(R.id.title, song.title);
+            appWidgetView.setTextViewText(R.id.text, getSongArtistAndAlbum(song));
+        }
+    }
+
+    protected void setButtons(final MusicService service) {
+        final boolean isPlaying = service.isPlaying();
+        // Set correct drawable for pause state
+        int playPauseRes = isPlaying ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp;
+        appWidgetView.setImageViewBitmap(R.id.button_toggle_play_pause, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(service, playPauseRes, MaterialValueHelper.getSecondaryTextColor(service, true))));
+
+        // Set prev/next button drawables
+        appWidgetView.setImageViewBitmap(R.id.button_next, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(service, R.drawable.ic_skip_next_white_24dp, MaterialValueHelper.getSecondaryTextColor(service, true))));
+        appWidgetView.setImageViewBitmap(R.id.button_prev, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(service, R.drawable.ic_skip_previous_white_24dp, MaterialValueHelper.getSecondaryTextColor(service, true))));
+    }
+
+    public abstract int getImageSize(final MusicService service);
+
+    public abstract float getCardRadius(final MusicService service);
 }
