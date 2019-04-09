@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
@@ -22,11 +23,6 @@ public class AlbumSongAdapter extends SongAdapter {
     }
 
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
-    }
-
-    @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
@@ -37,25 +33,19 @@ public class AlbumSongAdapter extends SongAdapter {
             final String trackNumberString = trackNumber > 0 ? String.valueOf(trackNumber) : "-";
             holder.imageText.setText(trackNumberString);
         }
+
+        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+        if (holder.imageText != null) {
+            holder.imageText.setVisibility(isPlaying ? View.GONE : View.VISIBLE);
+        }
+        if (holder.image != null) {
+            holder.image.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
     protected String getSongText(Song song) {
         return MusicUtil.getReadableDurationString(song.duration);
-    }
-
-    public class ViewHolder extends SongAdapter.ViewHolder {
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            if (imageText != null) {
-                imageText.setVisibility(View.VISIBLE);
-            }
-            if (image != null) {
-                image.setVisibility(View.GONE);
-            }
-        }
     }
 
     @Override

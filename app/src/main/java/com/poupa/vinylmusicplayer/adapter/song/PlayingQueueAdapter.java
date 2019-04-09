@@ -59,6 +59,7 @@ public class PlayingQueueAdapter extends SongAdapter
     @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
         if (holder.imageText != null) {
             holder.imageText.setText(String.valueOf(position - current));
         }
@@ -66,7 +67,15 @@ public class PlayingQueueAdapter extends SongAdapter
         if (holder.getItemViewType() == HISTORY) {
             setAlpha(holder, 0.5f);
         }
-    }
+
+        final boolean isPlaying = MusicPlayerRemote.isPlaying(holder.getSong());
+        if (holder.imageText != null) {
+            holder.imageText.setVisibility(isPlaying ? View.GONE : View.VISIBLE);
+        }
+        if (holder.image != null) {
+            holder.image.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
+        }
+     }
 
     @Override
     public int getItemViewType(int position) {
@@ -196,14 +205,6 @@ public class PlayingQueueAdapter extends SongAdapter
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            if (imageText != null) {
-                imageText.setVisibility(View.VISIBLE);
-            }
-            if (image != null) {
-                image.setVisibility(View.GONE);
-            }
-
         }
 
         @Override

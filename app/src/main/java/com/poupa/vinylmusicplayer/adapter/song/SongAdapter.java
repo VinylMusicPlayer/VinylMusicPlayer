@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
@@ -129,7 +130,20 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             holder.text.setText(getSongText(song));
         }
 
-        loadAlbumCover(song, holder);
+        if (holder.image != null) {
+            if (MusicPlayerRemote.isPlaying(song)) {
+                holder.image.setScaleType(ImageView.ScaleType.CENTER);
+                GlideApp.with(activity)
+                    .asBitmap()
+                    .load(R.drawable.ic_volume_up_white_24dp)
+                    .transition(VinylGlideExtension.getDefaultTransition())
+                    .songOptions(song)
+                    .into(holder.image);
+            }
+            else {
+                loadAlbumCover(song, holder);
+            }
+        }
     }
 
     private void setColors(int color, ViewHolder holder) {
@@ -147,36 +161,26 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     protected void loadAlbumCover(Song song, final ViewHolder holder) {
         if (holder.image == null) return;
 
-        if (MusicPlayerRemote.isPlaying(song)) {
-            GlideApp.with(activity)
-                    .asBitmap()
-                    .load(R.drawable.ic_volume_up_white_24dp)
-                    .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song)
-                    .into(holder.image);
-        }
-        else {
-            GlideApp.with(activity)
-                    .asBitmapPalette()
-                    .load(VinylGlideExtension.getSongModel(song))
-                    .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song)
-                    .into(new VinylColoredTarget(holder.image) {
-                        @Override
-                        public void onLoadCleared(Drawable placeholder) {
-                            super.onLoadCleared(placeholder);
-                            setColors(getDefaultFooterColor(), holder);
-                        }
+        GlideApp.with(activity)
+                .asBitmapPalette()
+                .load(VinylGlideExtension.getSongModel(song))
+                .transition(VinylGlideExtension.getDefaultTransition())
+                .songOptions(song)
+                .into(new VinylColoredTarget(holder.image) {
+                    @Override
+                    public void onLoadCleared(Drawable placeholder) {
+                        super.onLoadCleared(placeholder);
+                        setColors(getDefaultFooterColor(), holder);
+                    }
 
-                        @Override
-                        public void onColorReady(int color) {
-                            if (usePalette)
-                                setColors(color, holder);
-                            else
-                                setColors(getDefaultFooterColor(), holder);
-                        }
-                    });
-        }
+                    @Override
+                    public void onColorReady(int color) {
+                        if (usePalette)
+                            setColors(color, holder);
+                        else
+                            setColors(getDefaultFooterColor(), holder);
+                    }
+                });
     }
 
     protected String getSongText(Song song) {
@@ -267,6 +271,9 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         }
 
         protected Song getSong() {
+            final int position = getAdapterPosition();
+            if (position < 0 || position >= dataSet.size()) {return Song.EMPTY_SONG;}
+
             return dataSet.get(getAdapterPosition());
         }
 

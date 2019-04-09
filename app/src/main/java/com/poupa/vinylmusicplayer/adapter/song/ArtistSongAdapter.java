@@ -91,6 +91,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         songInfo.setText(song.albumName);
 
         if (MusicPlayerRemote.isPlaying(song)) {
+            albumArt.setScaleType(ImageView.ScaleType.CENTER);
             GlideApp.with(activity)
                 .asDrawable()
                 .load(R.drawable.ic_volume_up_white_24dp)

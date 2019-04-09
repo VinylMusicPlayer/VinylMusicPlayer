@@ -165,7 +165,7 @@ public class MusicPlayerRemote {
         return musicService != null && musicService.isPlaying();
     }
 
-    public static boolean isPlaying(Song song) {
+    public static boolean isPlaying(@NonNull Song song) {
         if (!isPlaying()) {return false;}
         return (song.id == getCurrentSong().id);
     }

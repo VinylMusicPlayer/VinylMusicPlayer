@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
@@ -97,6 +98,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 if (MusicPlayerRemote.isPlaying(song)) {
                     holder.title.setTypeface(null, Typeface.BOLD);
 
+                    holder.image.setScaleType(ImageView.ScaleType.CENTER);
                     GlideApp.with(activity)
                         .asBitmap()
                         .load(R.drawable.ic_volume_up_white_24dp)
@@ -152,6 +154,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     break;
                 case ARTIST:
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
+                    break;
+                 case SONG:
+                    // TODO transition?
                     break;
                 default:
                     View container = itemView.findViewById(R.id.image_container);
