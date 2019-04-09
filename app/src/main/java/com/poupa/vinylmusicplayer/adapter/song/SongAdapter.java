@@ -147,26 +147,36 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     protected void loadAlbumCover(Song song, final ViewHolder holder) {
         if (holder.image == null) return;
 
-        GlideApp.with(activity)
-                .asBitmapPalette()
-                .load(VinylGlideExtension.getSongModel(song))
-                .transition(VinylGlideExtension.getDefaultTransition())
-                .songOptions(song)
-                .into(new VinylColoredTarget(holder.image) {
-                    @Override
-                    public void onLoadCleared(Drawable placeholder) {
-                        super.onLoadCleared(placeholder);
-                        setColors(getDefaultFooterColor(), holder);
-                    }
-
-                    @Override
-                    public void onColorReady(int color) {
-                        if (usePalette)
-                            setColors(color, holder);
-                        else
+        if (MusicPlayerRemote.isPlaying(song)) {
+            GlideApp.with(activity)
+                    .asBitmap()
+                    .load(R.drawable.ic_volume_up_white_24dp)
+                    .transition(VinylGlideExtension.getDefaultTransition())
+                    .songOptions(song)
+                    .into(holder.image);
+        }
+        else {
+            GlideApp.with(activity)
+                    .asBitmapPalette()
+                    .load(VinylGlideExtension.getSongModel(song))
+                    .transition(VinylGlideExtension.getDefaultTransition())
+                    .songOptions(song)
+                    .into(new VinylColoredTarget(holder.image) {
+                        @Override
+                        public void onLoadCleared(Drawable placeholder) {
+                            super.onLoadCleared(placeholder);
                             setColors(getDefaultFooterColor(), holder);
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onColorReady(int color) {
+                            if (usePalette)
+                                setColors(color, holder);
+                            else
+                                setColors(getDefaultFooterColor(), holder);
+                        }
+                    });
+        }
     }
 
     protected String getSongText(Song song) {

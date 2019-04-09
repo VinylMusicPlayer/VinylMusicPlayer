@@ -90,12 +90,23 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         }
         songInfo.setText(song.albumName);
 
-        GlideApp.with(activity)
+        if (MusicPlayerRemote.isPlaying(song)) {
+            GlideApp.with(activity)
+                .asDrawable()
+                .load(R.drawable.ic_volume_up_white_24dp)
+                .transition(VinylGlideExtension.getDefaultTransition())
+                .songOptions(song)
+                .into(albumArt);
+        }
+        else
+        {
+            GlideApp.with(activity)
                 .asDrawable()
                 .load(VinylGlideExtension.getSongModel(song))
                 .transition(VinylGlideExtension.getDefaultTransition())
                 .songOptions(song)
                 .into(albumArt);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             albumArt.setTransitionName(activity.getString(R.string.transition_album_art));

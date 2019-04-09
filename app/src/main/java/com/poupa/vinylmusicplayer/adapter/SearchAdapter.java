@@ -96,6 +96,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 holder.title.setText(song.title);
                 if (MusicPlayerRemote.isPlaying(song)) {
                     holder.title.setTypeface(null, Typeface.BOLD);
+
+                    GlideApp.with(activity)
+                        .asBitmap()
+                        .load(R.drawable.ic_volume_up_white_24dp)
+                        .transition(VinylGlideExtension.getDefaultTransition())
+                        .songOptions(song)
+                        .into(holder.image);
                 }
                 holder.text.setText(MusicUtil.getSongInfoString(song));
                 break;
