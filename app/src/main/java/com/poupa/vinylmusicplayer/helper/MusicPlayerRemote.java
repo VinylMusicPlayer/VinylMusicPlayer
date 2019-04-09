@@ -166,6 +166,7 @@ public class MusicPlayerRemote {
     }
 
     public static boolean isPlaying(Song song) {
+        if (!isPlaying()) {return false;}
         return (song.id == getCurrentSong().id);
     }
 
