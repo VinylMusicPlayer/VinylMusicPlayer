@@ -1,10 +1,18 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
 ## [Unreleased]
+
+## [0.21.0] - 2019-04-10
+### Added
+- Experimental Android Auto support
+- Continue playing on song removal
+
+### Fixed
+- Songs not playing after a tap on the title
+- Transparent widget losing its transparency randomly
+
+### Changed
+- Place the not played tracks first in the not recently played list
 
 ## [0.20.2] - 2019-02-25
 ### Fixed
@@ -90,7 +98,8 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...HEAD
+[0.21.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...0.21.0
 [0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
 [0.20.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...0.20.1
 [0.20.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
