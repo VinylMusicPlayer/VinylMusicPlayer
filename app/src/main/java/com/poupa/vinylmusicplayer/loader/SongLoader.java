@@ -174,8 +174,11 @@ public class SongLoader {
                     batchSelectionValues.toArray(new String[batchSelectionValues.size()]),
                     sortOrder
                 );
-                if (cursor != null) {cursors.add(cursor);}
+                if (cursor != null) {
+                    cursors.add(cursor);
+                }
             } catch (SecurityException ignored) {
+                return null;
             }
 
             remaining -= currentBatch;
