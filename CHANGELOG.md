@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [0.21.1] - 2019-04-13
+### Fixed
+- Songs not playing in the folder view
+- Crash during first launch
+
 ## [0.21.0] - 2019-04-10
 ### Added
 - Experimental Android Auto support
@@ -98,7 +103,8 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...HEAD
+[0.21.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...0.21.1
 [0.21.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...0.21.0
 [0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
 [0.20.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...0.20.1
