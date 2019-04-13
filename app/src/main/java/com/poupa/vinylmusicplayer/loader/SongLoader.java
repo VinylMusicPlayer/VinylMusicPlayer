@@ -197,12 +197,12 @@ public class SongLoader {
     }
 
     private static ArrayList<String> addBlacklistSelectionValues(String[] selectionValues, @NonNull final List<String> paths) {
-        ArrayList<String> newSelectionValues = null;
+        ArrayList<String> newSelectionValues;
         if (selectionValues == null) {
-            newSelectionValues = new ArrayList<String>(paths.size());
+            newSelectionValues = new ArrayList<>(paths.size());
         }
         else {
-            newSelectionValues = new ArrayList<String>(selectionValues.length + paths.size());
+            newSelectionValues = new ArrayList<>(selectionValues.length + paths.size());
             for (int i=0; i < selectionValues.length; ++i) {
                 newSelectionValues.add(selectionValues[i]);
             }
