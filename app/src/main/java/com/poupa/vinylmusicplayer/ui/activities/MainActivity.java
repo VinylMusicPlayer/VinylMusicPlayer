@@ -9,11 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
@@ -46,6 +42,10 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -69,6 +69,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     private View navigationDrawerHeader;
 
     private boolean blockRequestPermissions;
+    private boolean scanning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -327,6 +328,14 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             return true;
         }
         return false;
+    }
+
+    public boolean isNotScanning() {
+        return !scanning;
+    }
+
+    public void setScanning(boolean scanning) {
+        this.scanning = scanning;
     }
 
     private void showChangelog() {

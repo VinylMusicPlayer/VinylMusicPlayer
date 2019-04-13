@@ -9,16 +9,13 @@ import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
 import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
+import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -28,6 +25,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * @author Aidan Follestad (afollestad), modified by Karim Abou Zeid
@@ -113,10 +115,18 @@ public class ScanMediaFolderChooserDialog extends DialogFragment implements Mate
                         .itemsCallback(this)
                         .autoDismiss(false)
                         .onPositive((dialog, which) -> {
-                            final Context applicationContext = getActivity().getApplicationContext();
-                            final WeakReference<Activity> activityWeakReference = new WeakReference<>(getActivity());
-                            dismiss();
-                            new FoldersFragment.ListPathsAsyncTask(getActivity(), paths -> scanPaths(activityWeakReference, applicationContext, paths)).execute(new FoldersFragment.ListPathsAsyncTask.LoadingInfo(parentFolder, FoldersFragment.AUDIO_FILE_FILTER));
+                            if (getActivity() instanceof MainActivity) {
+                                MainActivity mainActivity = (MainActivity) getActivity();
+                                if (mainActivity.isNotScanning()) {
+                                    mainActivity.setScanning(true);
+                                    final Context applicationContext = getActivity().getApplicationContext();
+                                    final WeakReference<Activity> activityWeakReference = new WeakReference<>(getActivity());
+                                    dismiss();
+                                    new FoldersFragment.ListPathsAsyncTask(getActivity(), paths -> scanPaths(activityWeakReference, applicationContext, paths)).execute(new FoldersFragment.ListPathsAsyncTask.LoadingInfo(parentFolder, FoldersFragment.AUDIO_FILE_FILTER));
+                                } else {
+                                    dismiss();
+                                }
+                            }
                         })
                         .onNegative((materialDialog, dialogAction) -> dismiss())
                         .positiveText(R.string.action_scan_directory)

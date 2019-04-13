@@ -6,16 +6,6 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +19,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
@@ -61,6 +53,14 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -292,7 +292,11 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
             case R.id.action_scan:
                 BreadCrumbLayout.Crumb crumb = getActiveCrumb();
                 if (crumb != null) {
-                    new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(crumb.getFile(), AUDIO_FILE_FILTER));
+                    if (((MainActivity) getActivity()).isNotScanning()) {
+                        ((MainActivity) getActivity()).setScanning(true);
+                        new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(crumb.getFile(), AUDIO_FILE_FILTER));
+                    }
+
                 }
                 return true;
         }
@@ -392,7 +396,11 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                         Toast.makeText(getActivity(), String.format(getString(R.string.new_start_directory), file.getPath()), Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.action_scan:
-                        new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER));
+                        if (((MainActivity) getActivity()).isNotScanning()) {
+                            ((MainActivity) getActivity()).setScanning(true);
+                            new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER));
+                        }
+
                         return true;
                 }
                 return false;
@@ -589,10 +597,12 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     public static class ListPathsAsyncTask extends ListingFilesDialogAsyncTask<ListPathsAsyncTask.LoadingInfo, String, String[]> {
         private WeakReference<OnPathsListedCallback> onPathsListedCallbackWeakReference;
+        private WeakReference<Context> context;
 
         public ListPathsAsyncTask(Context context, OnPathsListedCallback callback) {
             super(context, 500);
             onPathsListedCallbackWeakReference = new WeakReference<>(callback);
+            this.context = new WeakReference<>(context);
         }
 
         @Override
@@ -604,7 +614,9 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         @Override
         protected String[] doInBackground(LoadingInfo... params) {
             try {
-                if (isCancelled() || checkCallbackReference() == null) return null;
+                if (isCancelled() || checkCallbackReference() == null) {
+                    return null;
+                }
 
                 LoadingInfo info = params[0];
 
@@ -613,14 +625,18 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 if (info.file.isDirectory()) {
                     List<File> files = FileUtil.listFilesDeep(info.file, info.fileFilter);
 
-                    if (isCancelled() || checkCallbackReference() == null) return null;
+                    if (isCancelled() || checkCallbackReference() == null) {
+                        return null;
+                    }
 
                     paths = new String[files.size()];
                     for (int i = 0; i < files.size(); i++) {
                         File f = files.get(i);
                         paths[i] = FileUtil.safeGetCanonicalPath(f);
 
-                        if (isCancelled() || checkCallbackReference() == null) return null;
+                        if (isCancelled() || checkCallbackReference() == null) {
+                            return null;
+                        }
                     }
                 } else {
                     paths = new String[1];
@@ -636,8 +652,15 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         }
 
         @Override
+        protected void onCancelled(String[] result) {
+            disableScanning();
+            super.onCancelled(result);
+        }
+
+        @Override
         protected void onPostExecute(String[] paths) {
             super.onPostExecute(paths);
+            disableScanning();
             OnPathsListedCallback callback = checkCallbackReference();
             if (callback != null && paths != null) {
                 callback.onPathsListed(paths);
@@ -650,6 +673,13 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 cancel(false);
             }
             return callback;
+        }
+
+        private void disableScanning() {
+            Context context = this.context.get();
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).setScanning(false);
+            }
         }
 
         public static class LoadingInfo {
@@ -668,9 +698,6 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     private static abstract class ListingFilesDialogAsyncTask<Params, Progress, Result> extends DialogAsyncTask<Params, Progress, Result> {
-        public ListingFilesDialogAsyncTask(Context context) {
-            super(context);
-        }
 
         public ListingFilesDialogAsyncTask(Context context, int showDelay) {
             super(context, showDelay);
