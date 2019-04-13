@@ -1,11 +1,11 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.graphics.Rect;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -307,7 +307,7 @@ public class PlayingQueueAdapter extends SongAdapter
                 snackBarTitle,
                 Snackbar.LENGTH_LONG);
 
-        TextView songTitle = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        TextView songTitle = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
 
         songTitle.setSingleLine();
         songTitle.setEllipsize(TextUtils.TruncateAt.END);

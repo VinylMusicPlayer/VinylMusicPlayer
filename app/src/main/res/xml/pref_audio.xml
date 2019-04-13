@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_audio">
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
             android:defaultValue="true"
             android:key="audio_ducking"
             android:summary="@string/pref_summary_audio_ducking"
             android:title="@string/pref_title_audio_ducking" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="gapless_playback"
             android:summary="@string/pref_summary_gapless_playback"
             android:title="@string/pref_title_gapless_playback" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
             android:defaultValue="true"
             android:key="remember_shuffle"
             android:summary="@string/pref_summary_remember_shuffle"
             android:title="@string/pref_title_remember_shuffle" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+            app:iconSpaceReserved="false"
             android:key="equalizer"
             android:title="@string/equalizer" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+            app:iconSpaceReserved="false"
             android:defaultValue="none"
             android:entries="@array/pref_audio_replaygain_source_mode_titles"
             android:entryValues="@array/pref_audio_replaygain_source_mode_values"
@@ -35,6 +41,7 @@
             android:title="@string/pref_title_rg_source_mode" />
 
         <com.poupa.vinylmusicplayer.preferences.PreAmpPreference
+            app:iconSpaceReserved="false"
             android:key="replaygain_preamp"
             android:summary="@string/pref_summary_rg_preamp"
             android:title="@string/pref_title_rg_preamp"
@@ -42,4 +49,4 @@
 
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

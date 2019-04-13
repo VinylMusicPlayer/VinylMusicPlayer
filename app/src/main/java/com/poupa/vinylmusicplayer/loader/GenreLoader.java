@@ -3,8 +3,8 @@ package com.poupa.vinylmusicplayer.loader;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore.Audio.Genres;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;

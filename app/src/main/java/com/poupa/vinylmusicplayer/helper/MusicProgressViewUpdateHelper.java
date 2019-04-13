@@ -2,7 +2,7 @@ package com.poupa.vinylmusicplayer.helper;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

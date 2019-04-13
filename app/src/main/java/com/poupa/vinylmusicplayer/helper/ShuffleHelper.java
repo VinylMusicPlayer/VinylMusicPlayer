@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.helper;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Song;
 

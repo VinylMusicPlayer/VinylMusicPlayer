@@ -1,9 +1,8 @@
 package com.poupa.vinylmusicplayer.helper.menu;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -14,9 +13,7 @@ import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.RenamePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
-import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
-import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.io.IOException;

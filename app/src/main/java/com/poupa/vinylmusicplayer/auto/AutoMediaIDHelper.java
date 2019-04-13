@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.auto;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by Beesham Sarendranauth (Beesham)

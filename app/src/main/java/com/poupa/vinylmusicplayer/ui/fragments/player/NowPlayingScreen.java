@@ -1,7 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.fragments.player;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 import com.poupa.vinylmusicplayer.R;
 

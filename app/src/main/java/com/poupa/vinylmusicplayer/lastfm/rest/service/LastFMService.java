@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.lastfm.rest.service;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmAlbum;
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmArtist;

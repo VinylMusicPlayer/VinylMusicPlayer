@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.interfaces;
 
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 /**
  * @author Aidan Follestad (afollestad)

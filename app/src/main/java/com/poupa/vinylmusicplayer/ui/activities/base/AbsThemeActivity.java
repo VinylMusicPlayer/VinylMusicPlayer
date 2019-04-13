@@ -3,7 +3,7 @@ package com.poupa.vinylmusicplayer.ui.activities.base;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.view.View;
 
 import com.kabouzeid.appthemehelper.ATH;
