@@ -77,18 +77,20 @@ android {
             keyPassword = "phono-unsecured"
         }
     }
-    flavorDimensions "audience"
+    flavorDimensions "default"
     productFlavors {
-        production {
-            dimension "audience"
+        playStore {
+            dimension "default"
+        }
+        fdroid {
+            dimension "default"
         }
         circleci {
-            dimension "audience"
-
+            dimension "default"
             signingConfig signingConfigs.circleci
             def buildId = "_" + buildTime() + "_" + gitSha1()
             versionNameSuffix buildId
-         }
+        }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
