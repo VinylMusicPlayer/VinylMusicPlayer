@@ -261,6 +261,6 @@
     <string name="do_you_want_to_clear_the_blacklist">¿Quieres eliminar la lista negra?</string>
     <string name="pref_summary_blacklist">"
 El contenido de las carpetas de la lista negra está oculto en tu biblioteca"</string>
-    <string name="reset_artist_image">Resetear la imagen del artista</string>
+    <string name="reset_artist_image">Restablecer la imagen del artista</string>
     <string name="set_artist_image">Establecer la imagen del artista</string>
 </resources>
