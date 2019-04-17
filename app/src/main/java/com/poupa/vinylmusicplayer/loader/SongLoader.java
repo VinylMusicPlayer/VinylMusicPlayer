@@ -137,6 +137,7 @@ public class SongLoader {
             remaining -= currentBatch;
             processed += currentBatch;
         }
+        if (cursors.isEmpty()) {return null;}
         return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
     }
 
@@ -178,12 +179,12 @@ public class SongLoader {
                     cursors.add(cursor);
                 }
             } catch (SecurityException ignored) {
-                return null;
             }
 
             remaining -= currentBatch;
             processed += currentBatch;
         }
+        if (cursors.isEmpty()) {return null;}
         return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
     }
 
