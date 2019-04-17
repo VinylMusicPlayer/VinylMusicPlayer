@@ -179,7 +179,6 @@ public class SongLoader {
                     cursors.add(cursor);
                 }
             } catch (SecurityException ignored) {
-                return null;
             }
 
             remaining -= currentBatch;
