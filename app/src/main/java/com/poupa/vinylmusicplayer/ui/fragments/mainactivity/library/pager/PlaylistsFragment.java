@@ -57,18 +57,6 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
     }
 
     @Override
-    public void onPlayingMetaChanged() {
-        // Propagate the event to update the currently playing song decoration
-        getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void onPlayStateChanged() {
-        // Propagate the event to update the currently playing song decoration
-        getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
     public Loader<ArrayList<Playlist>> onCreateLoader(int id, Bundle args) {
         return new AsyncPlaylistLoader(getActivity());
     }
