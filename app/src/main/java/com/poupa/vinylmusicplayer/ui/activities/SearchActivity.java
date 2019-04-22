@@ -148,6 +148,14 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     }
 
     @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // TODO Update only the old playing and new playing track, not whole the dataset
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         hideSoftKeyboard();
         return false;

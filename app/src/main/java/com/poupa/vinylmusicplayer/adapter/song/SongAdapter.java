@@ -122,9 +122,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
 
         if (holder.title != null) {
             holder.title.setText(song.title);
-            if (MusicPlayerRemote.isPlaying(song)) {
-                holder.title.setTypeface(null, Typeface.BOLD);
-            }
+            holder.title.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));

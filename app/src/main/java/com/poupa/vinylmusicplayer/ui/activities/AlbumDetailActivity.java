@@ -404,6 +404,14 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // TODO Update only the old playing and new playing track, not whole the dataset
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void setStatusbarColor(int color) {
         super.setStatusbarColor(color);
         setLightStatusbar(false);

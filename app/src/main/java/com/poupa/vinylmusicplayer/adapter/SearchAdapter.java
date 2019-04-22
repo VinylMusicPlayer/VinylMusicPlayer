@@ -95,9 +95,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             case SONG:
                 final Song song = (Song) dataSet.get(position);
                 holder.title.setText(song.title);
-                if (MusicPlayerRemote.isPlaying(song)) {
-                    holder.title.setTypeface(null, Typeface.BOLD);
+                holder.title.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
 
+                if (MusicPlayerRemote.isPlaying(song)) {
                     holder.image.setScaleType(ImageView.ScaleType.CENTER);
                     GlideApp.with(activity)
                         .asBitmap()
@@ -106,6 +106,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         .songOptions(song)
                         .into(holder.image);
                 }
+                else {
+                    holder.image.setVisibility(View.GONE);
+                }
+
                 holder.text.setText(MusicUtil.getSongInfoString(song));
                 break;
             default:
@@ -156,7 +160,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
                     break;
                  case SONG:
-                    // TODO transition?
                     break;
                 default:
                     View container = itemView.findViewById(R.id.image_container);

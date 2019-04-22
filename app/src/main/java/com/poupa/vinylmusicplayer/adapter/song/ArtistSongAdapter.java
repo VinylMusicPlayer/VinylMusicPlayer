@@ -85,9 +85,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         }
 
         songTitle.setText(song.title);
-        if (MusicPlayerRemote.isPlaying(song)) {
-            songTitle.setTypeface(null, Typeface.BOLD);
-        }
+        songTitle.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
         songInfo.setText(song.albumName);
 
         if (MusicPlayerRemote.isPlaying(song)) {
