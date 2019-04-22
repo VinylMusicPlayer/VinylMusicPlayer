@@ -201,6 +201,15 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
+
+    @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // TODO Update only the old playing and new playing track, not the whole dataset
+        adapter.notifyDataSetChanged();
+    }
+
     private void checkIsEmpty() {
         empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE

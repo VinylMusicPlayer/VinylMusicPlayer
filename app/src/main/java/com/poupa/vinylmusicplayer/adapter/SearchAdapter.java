@@ -98,6 +98,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 holder.title.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
 
                 if (MusicPlayerRemote.isPlaying(song)) {
+                    // TODO On white theme, this is not visible
+                    // TODO Consider overlaying the icon over album art, or use an animated icon
                     holder.image.setScaleType(ImageView.ScaleType.CENTER);
                     GlideApp.with(activity)
                         .asBitmap()
