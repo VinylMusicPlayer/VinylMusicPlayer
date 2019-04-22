@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter;
 
-import android.graphics.Typeface;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
@@ -23,6 +21,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,24 +94,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             case SONG:
                 final Song song = (Song) dataSet.get(position);
                 holder.title.setText(song.title);
-                holder.title.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
-
-                if (MusicPlayerRemote.isPlaying(song)) {
-                    // TODO On white theme, this is not visible
-                    // TODO Consider overlaying the icon over album art, or use an animated icon
-                    holder.image.setScaleType(ImageView.ScaleType.CENTER);
-                    GlideApp.with(activity)
-                        .asBitmap()
-                        .load(R.drawable.ic_volume_up_white_24dp)
-                        .transition(VinylGlideExtension.getDefaultTransition())
-                        .songOptions(song)
-                        .into(holder.image);
-                }
-                else {
-                    holder.image.setVisibility(View.GONE);
-                }
-
                 holder.text.setText(MusicUtil.getSongInfoString(song));
+
+                PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, false);
                 break;
             default:
                 holder.title.setText(dataSet.get(position).toString());

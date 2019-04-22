@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.graphics.drawable.Drawable;
-import android.graphics.Typeface;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
@@ -20,9 +18,6 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
@@ -31,6 +26,7 @@ import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
@@ -50,6 +46,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
 
     protected boolean usePalette = false;
     protected boolean showSectionName = true;
+    protected boolean showAlbumImage = true;
 
     public RecyclerView recyclerView;
 
@@ -78,9 +75,17 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         notifyDataSetChanged();
     }
 
+    public boolean isUsePalette() {
+        return this.usePalette;
+    }
+
     public void usePalette(boolean usePalette) {
         this.usePalette = usePalette;
         notifyDataSetChanged();
+    }
+
+    public boolean isShowAlbumImage() {
+        return this.showAlbumImage;
     }
 
     public ArrayList<Song> getDataSet() {
@@ -122,29 +127,15 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
 
         if (holder.title != null) {
             holder.title.setText(song.title);
-            holder.title.setTypeface(null, MusicPlayerRemote.isPlaying(song) ? Typeface.BOLD : Typeface.NORMAL);
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));
         }
 
-        if (holder.image != null) {
-            if (MusicPlayerRemote.isPlaying(song)) {
-                holder.image.setScaleType(ImageView.ScaleType.CENTER);
-                GlideApp.with(activity)
-                    .asBitmap()
-                    .load(R.drawable.ic_volume_up_white_24dp)
-                    .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song)
-                    .into(holder.image);
-            }
-            else {
-                loadAlbumCover(song, holder);
-            }
-        }
+        PlayingSongDecorationUtil.decorate(this, holder, song, activity);
     }
 
-    private void setColors(int color, ViewHolder holder) {
+    public void setColors(int color, ViewHolder holder) {
         if (holder.paletteColorContainer != null) {
             holder.paletteColorContainer.setBackgroundColor(color);
             if (holder.title != null) {
@@ -154,31 +145,6 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                 holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
             }
         }
-    }
-
-    protected void loadAlbumCover(Song song, final ViewHolder holder) {
-        if (holder.image == null) return;
-
-        GlideApp.with(activity)
-                .asBitmapPalette()
-                .load(VinylGlideExtension.getSongModel(song))
-                .transition(VinylGlideExtension.getDefaultTransition())
-                .songOptions(song)
-                .into(new VinylColoredTarget(holder.image) {
-                    @Override
-                    public void onLoadCleared(Drawable placeholder) {
-                        super.onLoadCleared(placeholder);
-                        setColors(getDefaultFooterColor(), holder);
-                    }
-
-                    @Override
-                    public void onColorReady(int color) {
-                        if (usePalette)
-                            setColors(color, holder);
-                        else
-                            setColors(getDefaultFooterColor(), holder);
-                    }
-                });
     }
 
     protected String getSongText(Song song) {
@@ -280,15 +246,12 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         }
 
         protected boolean onSongMenuItemClick(MenuItem item) {
-            if (image != null && image.getVisibility() == View.VISIBLE) {
-                switch (item.getItemId()) {
-                    case R.id.action_go_to_album:
-                        Pair[] albumPairs = new Pair[]{
-                                Pair.create(image, activity.getResources().getString(R.string.transition_album_art))
-                        };
-                        NavigationUtil.goToAlbum(activity, getSong().albumId, albumPairs);
-                        return true;
-                }
+            if ((image != null) && (image.getVisibility() == View.VISIBLE) && (item.getItemId() == R.id.action_go_to_album)) {
+                Pair[] albumPairs = new Pair[]{
+                        Pair.create(image, activity.getResources().getString(R.string.transition_album_art))
+                };
+                NavigationUtil.goToAlbum(activity, getSong().albumId, albumPairs);
+                return true;
             }
             return false;
         }
