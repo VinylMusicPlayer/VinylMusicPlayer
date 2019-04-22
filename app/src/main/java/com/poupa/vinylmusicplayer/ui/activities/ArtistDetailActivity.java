@@ -466,9 +466,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     @Override
     public void onPlayingMetaChanged() {
         super.onPlayingMetaChanged();
-
-        // TODO Update only the old playing and new playing track, not whole the dataset
-        songAdapter.notifyDataSetChanged();
+        songAdapter.notifyDataSetChanged(); // give the adapter a chance to update the decoration
     }
 
     @Override

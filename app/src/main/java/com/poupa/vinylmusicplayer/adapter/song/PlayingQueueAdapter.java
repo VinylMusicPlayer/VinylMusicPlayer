@@ -68,7 +68,7 @@ public class PlayingQueueAdapter extends SongAdapter
         if (holder.getItemViewType() == HISTORY) {
             setAlpha(holder, 0.5f);
         }
-     }
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -174,8 +174,8 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public void onSetSwipeBackground(ViewHolder holder, int i, int i1) {
-            holder.itemView.setBackgroundColor(getBackgroundColor(activity));
-            holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        holder.itemView.setBackgroundColor(getBackgroundColor(activity));
+        holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
     }
 
     @Override

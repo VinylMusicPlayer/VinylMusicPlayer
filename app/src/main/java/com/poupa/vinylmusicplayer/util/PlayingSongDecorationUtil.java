@@ -30,7 +30,9 @@ public class PlayingSongDecorationUtil {
     {
         PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, songAdapter.isShowAlbumImage());
 
-        if ((holder.image != null) && songAdapter.isShowAlbumImage()) {
+        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+
+        if ((holder.image != null) && !isPlaying && songAdapter.isShowAlbumImage()) {
             GlideApp.with(activity)
                     .asBitmapPalette()
                     .load(VinylGlideExtension.getSongModel(song))
