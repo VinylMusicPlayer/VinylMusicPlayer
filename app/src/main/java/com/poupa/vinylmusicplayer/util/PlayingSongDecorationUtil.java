@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kabouzeid.appthemehelper.ThemeStore;
+import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
@@ -71,9 +74,12 @@ public class PlayingSongDecorationUtil {
             image.setVisibility((isPlaying || showAlbumImage) ? View.VISIBLE : View.GONE);
 
             if (isPlaying) {
-                // TODO On white theme, the indicator icon is not visible
                 // TODO Consider overlaying the icon over album art, or use an animated icon
                 image.setScaleType(ImageView.ScaleType.CENTER);
+
+                final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
+                image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+
                 GlideApp.with(activity)
                         .asBitmap()
                         .load(R.drawable.ic_volume_up_white_24dp)
