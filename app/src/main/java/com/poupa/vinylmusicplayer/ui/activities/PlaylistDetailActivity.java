@@ -201,11 +201,26 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
-
     @Override
     public void onPlayingMetaChanged() {
         super.onPlayingMetaChanged();
-        adapter.notifyDataSetChanged(); // give the adapter a chance to update the decoration
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemRangeChanged(position - 1, position);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemChanged(position);
+        adapter.notifyDataSetChanged();
     }
 
     private void checkIsEmpty() {

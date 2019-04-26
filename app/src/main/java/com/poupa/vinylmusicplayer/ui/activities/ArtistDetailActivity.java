@@ -466,7 +466,23 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     @Override
     public void onPlayingMetaChanged() {
         super.onPlayingMetaChanged();
-        songAdapter.notifyDataSetChanged(); // give the adapter a chance to update the decoration
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemRangeChanged(position - 1, position);
+        songAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemChanged(position);
+        songAdapter.notifyDataSetChanged();
     }
 
     @Override

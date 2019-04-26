@@ -150,7 +150,23 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     @Override
     public void onPlayingMetaChanged() {
         super.onPlayingMetaChanged();
-        adapter.notifyDataSetChanged(); // give the adapter a chance to update the decoration
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemRangeChanged(position - 1, position);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        // TODO: Dont force refreshing the whole dataset
+        // final int position = MusicPlayerRemote.getPosition();
+        // adapter.notifyItemChanged(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
