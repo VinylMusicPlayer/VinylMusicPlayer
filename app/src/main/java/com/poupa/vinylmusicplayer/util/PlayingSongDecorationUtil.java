@@ -87,7 +87,7 @@ public class PlayingSongDecorationUtil {
                         .into(image);
             }
             else {
-                // TODO Rollback the colorFilter
+                image.clearColorFilter();
             }
         }
 
