@@ -152,9 +152,6 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
         super.onPlayingMetaChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemRangeChanged(position - 1, position);
         adapter.notifyDataSetChanged();
     }
 
@@ -163,9 +160,6 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
         super.onPlayStateChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemChanged(position);
         adapter.notifyDataSetChanged();
     }
 

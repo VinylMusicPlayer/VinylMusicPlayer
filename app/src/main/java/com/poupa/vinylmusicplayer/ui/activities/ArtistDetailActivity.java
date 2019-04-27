@@ -468,9 +468,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         super.onPlayingMetaChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemRangeChanged(position - 1, position);
         songAdapter.notifyDataSetChanged();
     }
 
@@ -479,9 +476,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         super.onPlayStateChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemChanged(position);
         songAdapter.notifyDataSetChanged();
     }
 

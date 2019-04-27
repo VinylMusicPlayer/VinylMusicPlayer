@@ -76,9 +76,6 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
         super.onPlayingMetaChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemRangeChanged(position - 1, position);
         getAdapter().notifyDataSetChanged();
     }
 
@@ -87,9 +84,6 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
         super.onPlayStateChanged();
 
         // give the adapter a chance to update the decoration
-        // TODO: Dont force refreshing the whole dataset
-        // final int position = MusicPlayerRemote.getPosition();
-        // adapter.notifyItemChanged(position);
         getAdapter().notifyDataSetChanged();
     }
 
