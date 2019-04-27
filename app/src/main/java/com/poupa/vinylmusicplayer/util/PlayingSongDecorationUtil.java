@@ -74,7 +74,6 @@ public class PlayingSongDecorationUtil {
             image.setVisibility((isPlaying || showAlbumImage) ? View.VISIBLE : View.GONE);
 
             if (isPlaying) {
-                // TODO Consider overlaying the icon over album art, or use an animated icon
                 image.setScaleType(ImageView.ScaleType.CENTER);
 
                 final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
@@ -86,6 +85,9 @@ public class PlayingSongDecorationUtil {
                         .transition(VinylGlideExtension.getDefaultTransition())
                         .songOptions(song)
                         .into(image);
+            }
+            else {
+                // TODO Rollback the colorFilter
             }
         }
 
