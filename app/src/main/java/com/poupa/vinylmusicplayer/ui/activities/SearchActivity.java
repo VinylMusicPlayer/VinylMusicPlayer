@@ -148,6 +148,22 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     }
 
     @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // give the adapter a chance to update the decoration
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         hideSoftKeyboard();
         return false;

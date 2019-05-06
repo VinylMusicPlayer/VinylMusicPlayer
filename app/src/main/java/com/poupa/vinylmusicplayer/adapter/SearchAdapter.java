@@ -21,6 +21,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 final Song song = (Song) dataSet.get(position);
                 holder.title.setText(song.title);
                 holder.text.setText(MusicUtil.getSongInfoString(song));
+
+                PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, false);
                 break;
             default:
                 holder.title.setText(dataSet.get(position).toString());
@@ -141,6 +144,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     break;
                 case ARTIST:
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
+                    break;
+                 case SONG:
                     break;
                 default:
                     View container = itemView.findViewById(R.id.image_container);

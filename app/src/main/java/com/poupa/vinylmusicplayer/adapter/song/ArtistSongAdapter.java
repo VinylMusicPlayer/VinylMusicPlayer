@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 
 import java.util.ArrayList;
 
@@ -72,25 +73,23 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         final ImageView albumArt = convertView.findViewById(R.id.image);
         final View shortSeparator = convertView.findViewById(R.id.short_separator);
 
-        if (position == getCount() - 1) {
-            if (shortSeparator != null) {
-                shortSeparator.setVisibility(View.GONE);
-            }
-        } else {
-            if (shortSeparator != null) {
-                shortSeparator.setVisibility(View.VISIBLE);
-            }
+        if (shortSeparator != null) {
+            shortSeparator.setVisibility((position == getCount() - 1) ? View.GONE : View.VISIBLE);
         }
 
         songTitle.setText(song.title);
         songInfo.setText(song.albumName);
 
-        GlideApp.with(activity)
+        // TODO This album art loading can be factorized with the decorate() helper function
+        if (!MusicPlayerRemote.isPlaying(song)) {
+            GlideApp.with(activity)
                 .asDrawable()
                 .load(VinylGlideExtension.getSongModel(song))
                 .transition(VinylGlideExtension.getDefaultTransition())
                 .songOptions(song)
                 .into(albumArt);
+        }
+        PlayingSongDecorationUtil.decorate(songTitle, albumArt, null, song, activity, true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             albumArt.setTransitionName(activity.getString(R.string.transition_album_art));
@@ -146,7 +145,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
             final int size = checked.size();
             if (size <= 0) cab.finish();
             else if (size == 1) cab.setTitle(checked.get(0).title);
-            else if (size > 1) cab.setTitle(String.valueOf(size));
+            else cab.setTitle(String.valueOf(size));
         }
     }
 

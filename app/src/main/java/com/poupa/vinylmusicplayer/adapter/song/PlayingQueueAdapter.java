@@ -48,8 +48,8 @@ public class PlayingQueueAdapter extends SongAdapter
 
     public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
+        this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
-
     }
 
     @Override
@@ -60,11 +60,12 @@ public class PlayingQueueAdapter extends SongAdapter
     @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
         if (holder.imageText != null) {
             holder.imageText.setText(String.valueOf(position - current));
         }
 
-        if (holder.getItemViewType() == HISTORY || holder.getItemViewType() == CURRENT) {
+        if (holder.getItemViewType() == HISTORY) {
             setAlpha(holder, 0.5f);
         }
     }
@@ -77,11 +78,6 @@ public class PlayingQueueAdapter extends SongAdapter
             return UP_NEXT;
         }
         return CURRENT;
-    }
-
-    @Override
-    protected void loadAlbumCover(Song song, SongAdapter.ViewHolder holder) {
-        // We don't want to load it in this adapter
     }
 
     public void swapDataSet(ArrayList<Song> dataSet, int position) {
@@ -178,8 +174,8 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public void onSetSwipeBackground(ViewHolder holder, int i, int i1) {
-            holder.itemView.setBackgroundColor(getBackgroundColor(activity));
-            holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        holder.itemView.setBackgroundColor(getBackgroundColor(activity));
+        holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
     }
 
     @Override
@@ -197,14 +193,6 @@ public class PlayingQueueAdapter extends SongAdapter
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            if (imageText != null) {
-                imageText.setVisibility(View.VISIBLE);
-            }
-            if (image != null) {
-                image.setVisibility(View.GONE);
-            }
-
         }
 
         @Override
@@ -214,21 +202,16 @@ public class PlayingQueueAdapter extends SongAdapter
 
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.action_remove_from_playing_queue:
-                    // If song removed was the playing song, then play the next song
-                    if (MusicPlayerRemote.isPlaying())
-                    {
-                        final Song playingSong = MusicPlayerRemote.getCurrentSong();
-                        final Song removedSong = getSong();
-                        if (playingSong == removedSong) {
-                            MusicPlayerRemote.playNextSong();
-                        }
-                    }
+            if (item.getItemId() == R.id.action_remove_from_playing_queue) {
+                // If song removed was the playing song, then play the next song
+                if (MusicPlayerRemote.isPlaying(getSong()))
+                {
+                    MusicPlayerRemote.playNextSong();
+                }
 
-                    final int position = getAdapterPosition();
-                    MusicPlayerRemote.removeFromQueue(position);
-                    return true;
+                final int position = getAdapterPosition();
+                MusicPlayerRemote.removeFromQueue(position);
+                return true;
             }
             return super.onSongMenuItemClick(item);
         }
@@ -274,11 +257,8 @@ public class PlayingQueueAdapter extends SongAdapter
             songToRemove = adapter.dataSet.get(position);
 
             //If song removed was the playing song, then play the next song
-            if (isPlaying) {
-                final Song currentSong = MusicPlayerRemote.getCurrentSong();
-                if (songToRemove == currentSong) {
-                    MusicPlayerRemote.playNextSong();
-                }
+            if (MusicPlayerRemote.isPlaying(songToRemove)) {
+                MusicPlayerRemote.playNextSong();
             }
 
             //Swipe animation is much smoother when we do the heavy lifting after it's completed
@@ -289,11 +269,10 @@ public class PlayingQueueAdapter extends SongAdapter
 
     public static int getBackgroundColor(AppCompatActivity activity){
         //TODO: Find a better way to get the album background color
-        TextView tV = ((TextView) activity.findViewById(R.id.player_queue_sub_header));
+        TextView tV = activity.findViewById(R.id.player_queue_sub_header);
         if(tV != null){
-            int color = tV.getCurrentTextColor();
-            return color;
-        }else{
+            return tV.getCurrentTextColor();
+        } else {
             return ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor);
         }
     }
@@ -303,11 +282,11 @@ public class PlayingQueueAdapter extends SongAdapter
 
         CharSequence snackBarTitle = activity.getString(R.string.snack_bar_title_removed_song);
 
-        Snackbar snackbar = Snackbar.make((View) activity.findViewById(R.id.content_container),
+        Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.content_container),
                 snackBarTitle,
                 Snackbar.LENGTH_LONG);
 
-        TextView songTitle = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
+        TextView songTitle = snackbar.getView().findViewById(R.id.snackbar_text);
 
         songTitle.setSingleLine();
         songTitle.setEllipsize(TextUtils.TruncateAt.END);

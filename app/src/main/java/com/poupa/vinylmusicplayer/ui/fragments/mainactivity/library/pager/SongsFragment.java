@@ -72,6 +72,22 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
     }
 
     @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // give the adapter a chance to update the decoration
+        getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     protected String loadSortOrder() {
         return PreferenceUtil.getInstance().getSongSortOrder();
     }

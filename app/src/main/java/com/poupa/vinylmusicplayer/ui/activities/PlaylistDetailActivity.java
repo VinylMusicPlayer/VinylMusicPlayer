@@ -201,6 +201,22 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
+    @Override
+    public void onPlayingMetaChanged() {
+        super.onPlayingMetaChanged();
+
+        // give the adapter a chance to update the decoration
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPlayStateChanged() {
+        super.onPlayStateChanged();
+
+        // give the adapter a chance to update the decoration
+        adapter.notifyDataSetChanged();
+    }
+
     private void checkIsEmpty() {
         empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE

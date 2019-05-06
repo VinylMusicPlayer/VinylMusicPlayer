@@ -165,6 +165,11 @@ public class MusicPlayerRemote {
         return musicService != null && musicService.isPlaying();
     }
 
+    public static boolean isPlaying(@NonNull Song song) {
+        if (!isPlaying()) {return false;}
+        return (song.id == getCurrentSong().id);
+    }
+
     public static void resumePlaying() {
         if (musicService != null) {
             musicService.play();
