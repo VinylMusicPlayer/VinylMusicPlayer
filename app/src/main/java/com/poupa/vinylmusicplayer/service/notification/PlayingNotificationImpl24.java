@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_REWIND;
 import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_SKIP;
 import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_TOGGLE_PAUSE;
+import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
 
 public class PlayingNotificationImpl24 extends PlayingNotification {
 
@@ -39,10 +40,12 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
         final Song song = service.getCurrentSong();
 
         final boolean isPlaying = service.isPlaying();
+        final boolean isFavorite = MusicUtil.isFavorite(service, song);
         final String text = MusicUtil.getSongInfoString(song);
 
         final int playButtonResId = isPlaying
                 ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp;
+        final int favButtonResId = isFavorite ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp;
 
         Intent action = new Intent(service, MainActivity.class);
         action.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -83,6 +86,9 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
                         NotificationCompat.Action nextAction = new NotificationCompat.Action(R.drawable.ic_skip_next_white_24dp,
                                 service.getString(R.string.action_next),
                                 retrievePlaybackAction(ACTION_SKIP));
+                        NotificationCompat.Action favoriteAction = new NotificationCompat.Action(favButtonResId,
+                                service.getString(R.string.action_toggle_favorite),
+                                retrievePlaybackAction(TOGGLE_FAVORITE));
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
                                 .setSmallIcon(R.drawable.ic_notification)
                                 .setLargeIcon(bitmap)
@@ -94,7 +100,8 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
                                 .setShowWhen(false)
                                 .addAction(previousAction)
                                 .addAction(playPauseAction)
-                                .addAction(nextAction);
+                                .addAction(nextAction)
+                                .addAction(favoriteAction);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             builder.setStyle(new MediaStyle().setMediaSession(service.getMediaSession().getSessionToken()).setShowActionsInCompactView(0, 1, 2))

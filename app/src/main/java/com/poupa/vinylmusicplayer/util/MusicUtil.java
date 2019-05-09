@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
+import com.poupa.vinylmusicplayer.service.MusicService;
 
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -378,6 +379,8 @@ public class MusicUtil {
         } else {
             PlaylistsUtil.addToPlaylist(context, song, getOrCreateFavoritesPlaylist(context).id, false);
         }
+
+        context.sendBroadcast(new Intent(MusicService.FAVORITE_STATE_CHANGED));
     }
 
     public static boolean isArtistNameUnknown(@Nullable String artistName) {

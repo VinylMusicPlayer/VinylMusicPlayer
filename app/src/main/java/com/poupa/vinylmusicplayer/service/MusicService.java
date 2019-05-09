@@ -96,6 +96,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final String QUEUE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".queuechanged";
     public static final String PLAY_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".playstatechanged";
 
+    public static final String FAVORITE_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + "favoritestatechanged";
+
     public static final String REPEAT_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".repeatmodechanged";
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".mediastorechanged";
@@ -213,6 +215,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         uiThreadHandler = new Handler();
 
         registerReceiver(widgetIntentReceiver, new IntentFilter(APP_WIDGET_UPDATE));
+        registerReceiver(updateFavoriteReceiver, new IntentFilter(FAVORITE_STATE_CHANGED));
 
         initNotification();
 
@@ -305,6 +308,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         break;
                     case ACTION_SKIP:
                         playNextSong(true);
+                        break;
+                    case TOGGLE_FAVORITE:
+                        MusicUtil.toggleFavorite(getApplicationContext(), getCurrentSong());
                         break;
                     case ACTION_STOP:
                     case ACTION_QUIT:
@@ -510,6 +516,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             playingNotification.update();
         }
     }
+
+    private final BroadcastReceiver updateFavoriteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            updateNotification();
+        }
+    };
 
     public void updateMediaSessionPlaybackState() {
         PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
@@ -1079,6 +1092,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 songPlayCountHelper.notifyPlayStateChanged(isPlaying);
                 break;
+            case FAVORITE_STATE_CHANGED:
             case META_CHANGED:
                 updateNotification();
                 updateMediaSessionMetaData();

@@ -135,6 +135,20 @@
             android:scaleType="fitCenter"
             tools:ignore="ContentDescription" />
 
+        <ImageButton
+            android:id="@+id/action_fav"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/notification_selector"
+            android:gravity="center"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription" />
+
     </LinearLayout>
 
 </RelativeLayout>

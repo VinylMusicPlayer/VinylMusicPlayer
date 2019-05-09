@@ -32,10 +32,10 @@
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
             android:scaleType="centerInside"
             tools:ignore="ContentDescription" />
 
@@ -81,7 +81,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_marginRight="2dp"
         android:layoutDirection="ltr"
         android:orientation="horizontal"
         tools:ignore="UnusedAttribute">
@@ -90,42 +90,56 @@
         <ImageButton
             android:id="@+id/action_prev"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_weight="1"
             android:background="@drawable/notification_selector"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
             tools:ignore="ContentDescription" />
 
         <ImageButton
             android:id="@+id/action_play_pause"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_weight="1"
             android:background="@drawable/notification_selector"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="5dp"
             android:scaleType="fitCenter"
             tools:ignore="ContentDescription" />
 
         <ImageButton
             android:id="@+id/action_next"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="48dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_weight="1"
             android:background="@drawable/notification_selector"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="5dp"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/action_fav"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/notification_selector"
+            android:gravity="center"
+            android:padding="5dp"
             android:scaleType="fitCenter"
             tools:ignore="ContentDescription" />
 
