@@ -210,10 +210,13 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     protected String getUpNextAndQueueTime() {
         final long duration = MusicPlayerRemote.getQueueDurationMillis(MusicPlayerRemote.getPosition());
+        final int position = MusicPlayerRemote.getPosition() + 1;
+        final int length = MusicPlayerRemote.getQueueDurationSongs();
 
         return MusicUtil.buildInfoString(
             getResources().getString(R.string.up_next),
-            MusicUtil.getReadableDurationString(duration)
+            MusicUtil.getReadableDurationString(duration),
+            position + "/" + length
         );
     }
 

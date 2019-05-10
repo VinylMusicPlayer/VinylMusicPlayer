@@ -229,6 +229,25 @@ public class MusicUtil {
         return builder.toString();
     }
 
+    public static String buildInfoString(@NonNull final String string1, @NonNull final String string2, @NonNull final String string3)
+    {
+        // Skip empty strings
+        if (string1.isEmpty()) {return buildInfoString(string2, string3);}
+        if (string2.isEmpty()) {return buildInfoString(string1, string3);}
+        if (string3.isEmpty()) {return buildInfoString(string1, string2);}
+
+        final String separator = "  •  ";
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append(string1);
+        builder.append(separator);
+        builder.append(string2);
+        builder.append(separator);
+        builder.append(string3);
+
+        return builder.toString();
+    }
+
     //iTunes uses for example 1002 for track 2 CD1 or 3011 for track 11 CD3.
     //this method converts those values to normal tracknumbers
     public static int getFixedTrackNumber(int trackNumberToFix) {
