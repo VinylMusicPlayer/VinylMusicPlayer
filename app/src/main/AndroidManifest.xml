@@ -23,6 +23,7 @@
         android:theme="@style/Theme.VinylMusicPlayer.Light"
         tools:ignore="UnusedAttribute">
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.MainActivity"
+            android:theme="@style/SplashTheme"
             android:label="@string/app_short_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
