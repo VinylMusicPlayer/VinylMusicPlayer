@@ -214,39 +214,46 @@ public class MusicUtil {
      * to a music library item.
      * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
      */
-    public static String buildInfoString(@NonNull final String string1, @NonNull final String string2)
+    @NonNull
+    public static String buildInfoString(@Nullable final String string1, @Nullable final String string2)
     {
         // Skip empty strings
-        if (string1.isEmpty()) {return string2;}
-        if (string2.isEmpty()) {return string1;}
+        if (TextUtils.isEmpty(string1)) {
+            //noinspection ConstantConditions
+            return TextUtils.isEmpty(string2) ? "" : string2;
+        }
+        if (TextUtils.isEmpty(string2)) {
+            //noinspection ConstantConditions
+            return TextUtils.isEmpty(string1) ? "" : string1;
+        }
 
-        final String separator = "  •  ";
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append(string1);
-        builder.append(separator);
-        builder.append(string2);
-
-        return builder.toString();
+        return string1 + "  •  " + string2;
     }
 
-    public static String buildInfoString(@NonNull final String string1, @NonNull final String string2, @NonNull final String string3)
+    /**
+     * Build a concatenated string from the provided arguments
+     * The intended purpose is to show extra annotations
+     * to a music library item.
+     * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
+     */
+    @NonNull
+    public static String buildInfoString(@Nullable final String string1, @Nullable final String string2, @NonNull final String string3)
     {
         // Skip empty strings
-        if (string1.isEmpty()) {return buildInfoString(string2, string3);}
-        if (string2.isEmpty()) {return buildInfoString(string1, string3);}
-        if (string3.isEmpty()) {return buildInfoString(string1, string2);}
+        if (TextUtils.isEmpty(string1)) {
+            //noinspection ConstantConditions
+            return TextUtils.isEmpty(string2) ? "" : string2;
+        }
+        if (TextUtils.isEmpty(string2)) {
+            //noinspection ConstantConditions
+            return TextUtils.isEmpty(string1) ? "" : string1;
+        }
+        if (TextUtils.isEmpty(string3)) {
+            //noinspection ConstantConditions
+            return TextUtils.isEmpty(string1) ? "" : string3;
+        }
 
-        final String separator = "  •  ";
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append(string1);
-        builder.append(separator);
-        builder.append(string2);
-        builder.append(separator);
-        builder.append(string3);
-
-        return builder.toString();
+        return string1 + "  •  " + string2 + "  •  " + string3;
     }
 
     //iTunes uses for example 1002 for track 2 CD1 or 3011 for track 11 CD3.
