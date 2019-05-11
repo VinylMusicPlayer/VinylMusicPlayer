@@ -83,6 +83,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             filter.addAction(MusicService.META_CHANGED);
             filter.addAction(MusicService.QUEUE_CHANGED);
             filter.addAction(MusicService.MEDIA_STORE_CHANGED);
+            filter.addAction(MusicService.FAVORITE_STATE_CHANGED);
 
             registerReceiver(musicStateReceiver, filter);
 
@@ -178,6 +179,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             AbsMusicServiceActivity activity = reference.get();
             if (activity != null) {
                 switch (action) {
+                    case MusicService.FAVORITE_STATE_CHANGED:
                     case MusicService.META_CHANGED:
                         activity.onPlayingMetaChanged();
                         break;
