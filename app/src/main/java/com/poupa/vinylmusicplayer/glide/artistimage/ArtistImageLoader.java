@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.glide.artistimage;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.Options;
@@ -51,12 +52,20 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
 
         public Factory(Context context) {
             this.context = context;
+
             okHttp = new OkHttpClient.Builder()
                     .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .build();
-            deezerClient = DeezerApiService.Companion.invoke(context);
+
+            deezerClient = DeezerApiService.Companion.invoke(
+                    DeezerApiService.Companion.createDefaultOkHttpClient(context)
+                            .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                            .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                            .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                            .build()
+            );
         }
 
         @Override

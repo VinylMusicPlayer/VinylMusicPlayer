@@ -19,7 +19,6 @@ private const val BASE_URL = "https://api.deezer.com/"
 /**
  * @author Paolo Valerdi
  */
-
 interface DeezerApiService {
 
     @GET("$BASE_QUERY_ARTIST&limit=1")
@@ -28,21 +27,19 @@ interface DeezerApiService {
     ) : Call<DeezerResponse>
 
     companion object {
-        operator fun invoke(context: Context): DeezerApiService {
-
-            val okHttpClient = OkHttpClient.Builder()
-                    .cache(createDefaultCache(context))
-                    .addInterceptor(createCacheControlInterceptor())
-                    .build()
-
+        operator fun invoke(client: okhttp3.Call.Factory): DeezerApiService {
             return Retrofit.Builder()
-                    .client(okHttpClient)
                     .baseUrl(BASE_URL)
-                    .callFactory(okHttpClient)
+                    .callFactory(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                     .create()
         }
+
+        fun createDefaultOkHttpClient(context: Context): OkHttpClient.Builder =
+                OkHttpClient.Builder()
+                        .cache(createDefaultCache(context))
+                        .addInterceptor(createCacheControlInterceptor())
 
         private fun createDefaultCache(context: Context): Cache? {
             val cacheDir = File(context.applicationContext.cacheDir.absolutePath, "/okhttp-deezer/")

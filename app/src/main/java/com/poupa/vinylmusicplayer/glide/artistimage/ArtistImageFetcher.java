@@ -1,9 +1,9 @@
 package com.poupa.vinylmusicplayer.glide.artistimage;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher;
@@ -35,7 +35,7 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     private OkHttpClient okhttp;
     private OkHttpStreamFetcher streamFetcher;
 
-    public ArtistImageFetcher(Context context, DeezerApiService deezerRestClient, OkHttpClient okhttp, ArtistImage model) {
+    ArtistImageFetcher(Context context, DeezerApiService deezerRestClient, OkHttpClient okhttp, ArtistImage model) {
         this.context = context;
         this.deezerRestClient = deezerRestClient;
         this.okhttp = okhttp;
@@ -58,7 +58,6 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
         try {
             if (!MusicUtil.isArtistNameUnknown(model.artistName) && PreferenceUtil.isAllowedToDownloadMetadata(context)) {
-                Log.d("DEEZER", model.artistName);
                 call = deezerRestClient.getArtistImage(model.artistName);
                 call.enqueue(new Callback<DeezerResponse>() {
                     @Override
@@ -68,15 +67,13 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
                             return;
                         }
 
-                        DeezerResponse lastFmArtist = response.body();
-                        Log.d("DEEZER", String.valueOf(lastFmArtist));
-                        if (lastFmArtist == null) {
+                        DeezerResponse deezerResponse = response.body();
+                        if (deezerResponse == null || deezerResponse.getData().size() == 0) {
                             callback.onLoadFailed(new Exception("No artist image url found"));
                             return;
                         }
 
-                        String url = lastFmArtist.getData().get(0).getPictureMedium();
-                        Log.d("DEEZER", url);
+                        String url = deezerResponse.getData().get(0).getPictureMedium();
                         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(url.trim())) {
                             callback.onLoadFailed(new Exception("No artist image url found"));
                             return;
