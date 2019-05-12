@@ -8,7 +8,7 @@ import com.bumptech.glide.load.model.ModelLoader;
 import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.signature.ObjectKey;
-import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
+import com.poupa.vinylmusicplayer.deezer.DeezerApiService;
 
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -24,19 +24,19 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
     private static final int TIMEOUT = 500;
 
     private Context context;
-    private LastFMRestClient lastFMClient;
+    private DeezerApiService deezerClient;
     private OkHttpClient okhttp;
 
-    public ArtistImageLoader(Context context, LastFMRestClient lastFMRestClient, OkHttpClient okhttp) {
+    public ArtistImageLoader(Context context, DeezerApiService lastFMRestClient, OkHttpClient okhttp) {
         this.context = context;
-        this.lastFMClient = lastFMRestClient;
+        this.deezerClient = lastFMRestClient;
         this.okhttp = okhttp;
     }
 
     @Override
     public LoadData<InputStream> buildLoadData(@NonNull ArtistImage model, int width, int height,
                                                @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(model.artistName), new ArtistImageFetcher(context, lastFMClient, okhttp, model, width, height));
+        return new LoadData<>(new ObjectKey(model.artistName), new ArtistImageFetcher(context, deezerClient, okhttp, model));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
     }
 
     public static class Factory implements ModelLoaderFactory<ArtistImage, InputStream> {
-        private LastFMRestClient lastFMClient;
+        private DeezerApiService deezerClient;
         private Context context;
         private OkHttpClient okHttp;
 
@@ -56,17 +56,13 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
                     .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     .build();
-            lastFMClient = new LastFMRestClient(LastFMRestClient.createDefaultOkHttpClientBuilder(context)
-                    .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    .build());
+            deezerClient = DeezerApiService.Companion.invoke(context);
         }
 
         @Override
         @NonNull
         public ModelLoader<ArtistImage, InputStream> build(@NonNull MultiModelLoaderFactory multiFactory) {
-            return new ArtistImageLoader(context, lastFMClient, okHttp);
+            return new ArtistImageLoader(context, deezerClient, okHttp);
         }
 
         @Override

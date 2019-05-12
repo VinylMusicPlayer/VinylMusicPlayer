@@ -3,15 +3,15 @@ package com.poupa.vinylmusicplayer.glide.artistimage;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
-import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmArtist;
-import com.poupa.vinylmusicplayer.util.LastFMUtil;
+import com.poupa.vinylmusicplayer.deezer.DeezerApiService;
+import com.poupa.vinylmusicplayer.deezer.DeezerResponse;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -28,16 +28,16 @@ import retrofit2.Response;
 public class ArtistImageFetcher implements DataFetcher<InputStream> {
     public static final String TAG = ArtistImageFetcher.class.getSimpleName();
     private Context context;
-    private final LastFMRestClient lastFMRestClient;
+    private final DeezerApiService deezerRestClient;
     private final ArtistImage model;
     private volatile boolean isCancelled;
-    private Call<LastFmArtist> call;
+    private Call<DeezerResponse> call;
     private OkHttpClient okhttp;
     private OkHttpStreamFetcher streamFetcher;
 
-    public ArtistImageFetcher(Context context, LastFMRestClient lastFMRestClient, OkHttpClient okhttp, ArtistImage model, int width, int height) {
+    public ArtistImageFetcher(Context context, DeezerApiService deezerRestClient, OkHttpClient okhttp, ArtistImage model) {
         this.context = context;
-        this.lastFMRestClient = lastFMRestClient;
+        this.deezerRestClient = deezerRestClient;
         this.okhttp = okhttp;
         this.model = model;
     }
@@ -58,22 +58,25 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
         try {
             if (!MusicUtil.isArtistNameUnknown(model.artistName) && PreferenceUtil.isAllowedToDownloadMetadata(context)) {
-                call = lastFMRestClient.getApiService().getArtistInfo(model.artistName, null, model.skipOkHttpCache ? "no-cache" : null);
-                call.enqueue(new Callback<LastFmArtist>() {
+                Log.d("DEEZER", model.artistName);
+                call = deezerRestClient.getArtistImage(model.artistName);
+                call.enqueue(new Callback<DeezerResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<LastFmArtist> call, @NonNull Response<LastFmArtist> response) {
+                    public void onResponse(@NonNull Call<DeezerResponse> call, @NonNull Response<DeezerResponse> response) {
                         if (isCancelled) {
                             callback.onDataReady(null);
                             return;
                         }
 
-                        LastFmArtist lastFmArtist = response.body();
-                        if (lastFmArtist == null || lastFmArtist.getArtist() == null || lastFmArtist.getArtist().getImage() == null) {
+                        DeezerResponse lastFmArtist = response.body();
+                        Log.d("DEEZER", String.valueOf(lastFmArtist));
+                        if (lastFmArtist == null) {
                             callback.onLoadFailed(new Exception("No artist image url found"));
                             return;
                         }
 
-                        String url = LastFMUtil.getLargestArtistImageUrl(lastFmArtist.getArtist().getImage());
+                        String url = lastFmArtist.getData().get(0).getPictureMedium();
+                        Log.d("DEEZER", url);
                         if (TextUtils.isEmpty(url) || TextUtils.isEmpty(url.trim())) {
                             callback.onLoadFailed(new Exception("No artist image url found"));
                             return;
@@ -84,7 +87,7 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<LastFmArtist> call, @NonNull Throwable throwable) {
+                    public void onFailure(@NonNull Call<DeezerResponse> call, @NonNull Throwable throwable) {
                         callback.onLoadFailed(new Exception(throwable));
                     }
                 });
