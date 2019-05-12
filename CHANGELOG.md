@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+## [0.22.0] - 2019-05-12
+### Added
+- Splash screen
+- Play queue progress
+- Favorite button to notifications
+- Highlight current song
+
+### Fixed
+- Null exception
+- ANR
+
+### Changed
+- Allow only one task at a time
+- Artist and Album cover not loading (LastFM API replaced by Deezer's)
+
 ## [0.21.1] - 2019-04-13
 ### Fixed
 - Songs not playing in the folder view
@@ -103,7 +118,8 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.0...HEAD
+[0.22.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...0.22.0
 [0.21.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...0.21.1
 [0.21.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...0.21.0
 [0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
