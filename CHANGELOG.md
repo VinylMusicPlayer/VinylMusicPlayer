@@ -123,7 +123,7 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 - Initial version.
 
 [Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.1...HEAD
-[0.22.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.0...0.22.1
+[0.22.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.0...0.22.1
 [0.22.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...0.22.0
 [0.21.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...0.21.1
 [0.21.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...0.21.0
