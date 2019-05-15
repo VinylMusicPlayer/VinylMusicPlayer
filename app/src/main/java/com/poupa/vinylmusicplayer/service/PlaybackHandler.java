@@ -62,7 +62,7 @@ final class PlaybackHandler extends Handler {
                     service.pause();
                     service.seek(0);
                 } else {
-                    service.setPosition(service.getNextPosition(false));
+                    service.setPositionToNextPosition();
                     service.prepareNextImpl();
                     service.notifyChange(MusicService.META_CHANGED);
                 }

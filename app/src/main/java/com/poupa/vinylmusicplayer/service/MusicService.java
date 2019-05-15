@@ -819,6 +819,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         playerHandler.obtainMessage(SET_POSITION, position, 0).sendToTarget();
     }
 
+    public void setPositionToNextPosition() {
+        this.position = this.nextPosition;
+    }
+
     public void playSongAtImpl(int position) {
         if (openTrackAndPrepareNextAt(position)) {
             play();
