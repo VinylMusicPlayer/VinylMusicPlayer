@@ -198,7 +198,7 @@ public final class PreferenceUtil {
     public void setNowPlayingScreen(NowPlayingScreen nowPlayingScreen) {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt(NOW_PLAYING_SCREEN_ID, nowPlayingScreen.id);
-        editor.commit();
+        editor.apply();
     }
 
     public final boolean coloredNotification() {
@@ -268,7 +268,7 @@ public final class PreferenceUtil {
     public void setArtistSortOrder(final String sortOrder) {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(ARTIST_SORT_ORDER, sortOrder);
-        editor.commit();
+        editor.apply();
     }
 
     public final String getArtistSongSortOrder() {
@@ -286,7 +286,7 @@ public final class PreferenceUtil {
     public void setAlbumSortOrder(final String sortOrder) {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(ALBUM_SORT_ORDER, sortOrder);
-        editor.commit();
+        editor.apply();
     }
 
     public final String getAlbumSongSortOrder() {
@@ -300,7 +300,7 @@ public final class PreferenceUtil {
     public void setSongSortOrder(final String sortOrder) {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(SONG_SORT_ORDER, sortOrder);
-        editor.commit();
+        editor.apply();
     }
 
     public final String getGenreSortOrder() {
