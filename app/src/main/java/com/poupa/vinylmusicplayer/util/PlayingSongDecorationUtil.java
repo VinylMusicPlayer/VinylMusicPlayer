@@ -81,7 +81,8 @@ public class PlayingSongDecorationUtil {
 
                 GlideApp.with(activity)
                         .asBitmap()
-                        .load(R.drawable.ic_volume_up_white_24dp)
+                        .load(R.drawable.ic_notification)
+                        .override(48, 48) // TODO Any way to avoid hard coding the size?
                         .transition(VinylGlideExtension.getDefaultTransition())
                         .songOptions(song)
                         .into(image);
