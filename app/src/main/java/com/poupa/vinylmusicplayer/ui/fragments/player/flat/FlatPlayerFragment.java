@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -480,6 +481,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                     return super.onMenuItemClick(item);
                 }
             });
+            currentSongViewHolder.title.setTypeface(null, Typeface.BOLD);
         }
 
         @Override
