@@ -3,6 +3,8 @@ package com.poupa.vinylmusicplayer.util;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -79,16 +81,24 @@ public class PlayingSongDecorationUtil {
                 final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
                 image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
+                final int size = (int)(24 * activity.getResources().getDisplayMetrics().density);
+
                 GlideApp.with(activity)
                         .asBitmap()
                         .load(R.drawable.ic_notification)
-                        .override(48, 48) // TODO Any way to avoid hard coding the size?
+                        .override(size)
                         .transition(VinylGlideExtension.getDefaultTransition())
                         .songOptions(song)
                         .into(image);
+
+                RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotate.setDuration(1500);
+                rotate.setRepeatCount(Animation.INFINITE);
+                image.startAnimation(rotate);
             }
             else {
                 image.clearColorFilter();
+                image.clearAnimation();
             }
         }
 
