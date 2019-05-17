@@ -27,6 +27,16 @@ import com.poupa.vinylmusicplayer.model.Song;
  * @author SC (soncaokim)
  */
 public class PlayingSongDecorationUtil {
+
+    public static final int iconPlaying = R.drawable.ic_notification;
+
+    public static Animation iconAnimation;
+    static {
+        iconAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        iconAnimation.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
+        iconAnimation.setRepeatCount(Animation.INFINITE);
+    }
+
     public static void decorate(
             @NonNull final SongAdapter songAdapter,
             @NonNull final SongAdapter.ViewHolder holder,
@@ -85,16 +95,13 @@ public class PlayingSongDecorationUtil {
 
                 GlideApp.with(activity)
                         .asBitmap()
-                        .load(R.drawable.ic_notification)
+                        .load(iconPlaying)
                         .override(size)
                         .transition(VinylGlideExtension.getDefaultTransition())
                         .songOptions(song)
                         .into(image);
 
-                RotateAnimation rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                rotate.setDuration(1500);
-                rotate.setRepeatCount(Animation.INFINITE);
-                image.startAnimation(rotate);
+                image.startAnimation(iconAnimation);
             }
             else {
                 image.clearColorFilter();

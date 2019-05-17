@@ -43,6 +43,7 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.PlayerAlbumCoverFragment;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
@@ -166,6 +167,11 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     }
 
     @Override
+    public void onPlayStateChanged() {
+        updateCurrentSong();
+    }
+
+    @Override
     public void onQueueChanged() {
         updateQueue();
     }
@@ -194,6 +200,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
+
+        // give the adapter a chance to update the decoration
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void setUpSubFragments() {
@@ -449,7 +458,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSongViewHolder.shortSeparator.setVisibility(View.GONE);
             currentSongViewHolder.image.setScaleType(ImageView.ScaleType.CENTER);
             currentSongViewHolder.image.setColorFilter(ATHUtil.resolveColor(fragment.getActivity(), R.attr.iconColor, ThemeStore.textColorSecondary(fragment.getActivity())), PorterDuff.Mode.SRC_IN);
-            currentSongViewHolder.image.setImageResource(R.drawable.ic_notification);
+            currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.iconPlaying);
             currentSongViewHolder.itemView.setOnClickListener(v -> {
                 // toggle the panel
                 if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -504,6 +513,13 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSong = song;
             currentSongViewHolder.title.setText(song.title);
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
+
+            final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+            if (isPlaying) {
+                currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.iconAnimation);
+            } else {
+                currentSongViewHolder.image.clearAnimation();
+            }
         }
 
         @Override
