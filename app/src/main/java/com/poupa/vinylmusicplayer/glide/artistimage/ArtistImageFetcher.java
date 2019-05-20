@@ -67,20 +67,14 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
                             return;
                         }
 
-                        DeezerResponse deezerResponse = response.body();
-                        if (deezerResponse == null || deezerResponse.getData().size() == 0) {
+                        try {
+                            DeezerResponse deezerResponse = response.body();
+                            String url = deezerResponse.getData().get(0).getPictureMedium();
+                            streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
+                            streamFetcher.loadData(priority, callback);
+                        } catch (Exception e) {
                             callback.onLoadFailed(new Exception("No artist image url found"));
-                            return;
                         }
-
-                        String url = deezerResponse.getData().get(0).getPictureMedium();
-                        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(url.trim())) {
-                            callback.onLoadFailed(new Exception("No artist image url found"));
-                            return;
-                        }
-
-                        streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
-                        streamFetcher.loadData(priority, callback);
                     }
 
                     @Override
@@ -88,8 +82,6 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
                         callback.onLoadFailed(new Exception(throwable));
                     }
                 });
-
-
             }
         } catch (Exception e) {
             callback.onLoadFailed(e);
