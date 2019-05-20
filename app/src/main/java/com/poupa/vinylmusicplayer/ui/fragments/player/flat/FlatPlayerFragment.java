@@ -458,7 +458,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSongViewHolder.shortSeparator.setVisibility(View.GONE);
             currentSongViewHolder.image.setScaleType(ImageView.ScaleType.CENTER);
             currentSongViewHolder.image.setColorFilter(ATHUtil.resolveColor(fragment.getActivity(), R.attr.iconColor, ThemeStore.textColorSecondary(fragment.getActivity())), PorterDuff.Mode.SRC_IN);
-            currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.iconPlaying);
+            currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.sIconPlaying);
             currentSongViewHolder.itemView.setOnClickListener(v -> {
                 // toggle the panel
                 if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -516,7 +516,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
             if (isPlaying) {
-                currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.iconAnimation);
+                currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.sIconAnimation);
             } else {
                 currentSongViewHolder.image.clearAnimation();
             }
