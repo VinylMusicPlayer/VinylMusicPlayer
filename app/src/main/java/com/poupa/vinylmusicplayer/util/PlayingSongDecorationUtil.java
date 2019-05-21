@@ -45,10 +45,9 @@ public class PlayingSongDecorationUtil {
     {
         PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, songAdapter.isShowAlbumImage());
 
-        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
-
-        if ((holder.image != null) && !isPlaying && songAdapter.isShowAlbumImage()) {
-            GlideApp.with(activity)
+        if ((holder.image != null) && songAdapter.isShowAlbumImage()) {
+            if (!MusicPlayerRemote.isPlaying(song)) {
+                GlideApp.with(activity)
                     .asBitmapPalette()
                     .load(VinylGlideExtension.getSongModel(song))
                     .transition(VinylGlideExtension.getDefaultTransition())
@@ -65,6 +64,7 @@ public class PlayingSongDecorationUtil {
                             songAdapter.setColors(songAdapter.isUsePalette() ? color : getDefaultFooterColor(), holder);
                         }
                     });
+            }
         }
     }
 
@@ -98,7 +98,6 @@ public class PlayingSongDecorationUtil {
                         .asBitmap()
                         .load(sIconPlaying)
                         .override(size)
-                        .songOptions(song)
                         .into(image);
 
                 image.startAnimation(sIconAnimation);
