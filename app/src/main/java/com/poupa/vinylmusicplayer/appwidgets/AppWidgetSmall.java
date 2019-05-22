@@ -1,16 +1,12 @@
 package com.poupa.vinylmusicplayer.appwidgets;
 
-import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.RemoteViews;
 
-import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
-import com.poupa.vinylmusicplayer.util.ImageUtil;
 
 public class AppWidgetSmall extends BaseAppWidget {
     public static final String NAME = "app_widget_small";

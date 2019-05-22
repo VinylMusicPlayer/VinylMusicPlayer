@@ -1,11 +1,12 @@
 package com.poupa.vinylmusicplayer.adapter.base;
 
 import android.content.Context;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.annotation.MenuRes;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.poupa.vinylmusicplayer.R;

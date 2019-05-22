@@ -92,7 +92,7 @@
             android:layout_marginTop="@dimen/status_bar_padding"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/playing_queue_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
 
                 </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </com.poupa.vinylmusicplayer.views.StatusBarMarginFrameLayout>
 

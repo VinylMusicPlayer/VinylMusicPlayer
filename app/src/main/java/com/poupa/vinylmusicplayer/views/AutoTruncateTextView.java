@@ -3,12 +3,13 @@ package com.poupa.vinylmusicplayer.views;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewParent;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.poupa.vinylmusicplayer.R;
 

@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.model.smartplaylist;
 
 import android.content.Context;
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.R;

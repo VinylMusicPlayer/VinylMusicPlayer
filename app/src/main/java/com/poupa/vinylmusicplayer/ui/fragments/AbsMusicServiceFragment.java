@@ -2,9 +2,10 @@ package com.poupa.vinylmusicplayer.ui.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.view.View;
 
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;

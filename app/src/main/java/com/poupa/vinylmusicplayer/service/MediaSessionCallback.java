@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -22,8 +24,6 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 import static com.poupa.vinylmusicplayer.helper.MusicPlayerRemote.cycleRepeatMode;
 import static com.poupa.vinylmusicplayer.helper.MusicPlayerRemote.getCurrentSong;
@@ -42,7 +42,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         this.context = context;
         this.musicService = musicService;
     }
-    
+
     @Override
     public void onPlay() {
         musicService.play();

@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.glide.palette;
 
 import android.graphics.Bitmap;
+
 import androidx.palette.graphics.Palette;
 
 public class BitmapPaletteWrapper {

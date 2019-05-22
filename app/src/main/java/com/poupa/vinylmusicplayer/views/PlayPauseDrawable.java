@@ -13,9 +13,10 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
 import android.util.Property;
 import android.view.animation.DecelerateInterpolator;
+
+import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.R;
 

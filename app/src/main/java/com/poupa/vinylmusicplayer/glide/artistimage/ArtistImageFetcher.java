@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.glide.artistimage;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 

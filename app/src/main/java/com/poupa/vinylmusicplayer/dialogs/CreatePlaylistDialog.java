@@ -2,11 +2,12 @@ package com.poupa.vinylmusicplayer.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import android.text.InputType;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;

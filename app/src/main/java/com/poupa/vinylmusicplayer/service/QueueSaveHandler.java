@@ -4,9 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import java.lang.ref.WeakReference;
-
 import androidx.annotation.NonNull;
+
+import java.lang.ref.WeakReference;
 
 class QueueSaveHandler extends Handler {
     @NonNull

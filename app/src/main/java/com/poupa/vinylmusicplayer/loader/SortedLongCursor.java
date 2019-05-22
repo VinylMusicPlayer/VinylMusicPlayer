@@ -17,6 +17,7 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.database.AbstractCursor;
 import android.database.Cursor;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.glide.palette;
 
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.Options;

@@ -1,14 +1,15 @@
 package com.poupa.vinylmusicplayer.views;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * @author Lincoln (theduffmaster)
- * 
+ *
  * A custom {@link FrameLayout} that intercepts touch events and decides whether to consume them or
  * pass them on to a child {@link TouchInterceptHorizontalScrollView} and its
  * {@link AutoTruncateTextView}.

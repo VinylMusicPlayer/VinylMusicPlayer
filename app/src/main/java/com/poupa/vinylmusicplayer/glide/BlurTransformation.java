@@ -10,6 +10,7 @@ import android.renderscript.Element;
 import android.renderscript.RSRuntimeException;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 

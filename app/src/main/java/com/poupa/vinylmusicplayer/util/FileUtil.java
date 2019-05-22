@@ -3,9 +3,10 @@ package com.poupa.vinylmusicplayer.util;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.webkit.MimeTypeMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.webkit.MimeTypeMap;
 
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.loader.SortedCursor;

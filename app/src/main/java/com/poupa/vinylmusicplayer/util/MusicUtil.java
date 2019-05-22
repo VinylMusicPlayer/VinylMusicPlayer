@@ -13,11 +13,12 @@ import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.TextUtils;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
-import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -327,7 +328,7 @@ public class MusicUtil {
             selection.append(songs.get(batchEnd).id);
             batchEnd++;
             selection.append(")");
- 
+
             try {
                 final Cursor cursor = activity.getContentResolver().query(
                         MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
@@ -349,7 +350,7 @@ public class MusicUtil {
                     // Step 2: Remove selected tracks from the database
                     activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                             selection.toString(), null);
- 
+
                     // Step 3: Remove files from card
                     cursor.moveToFirst();
                     int i = batchStart;
