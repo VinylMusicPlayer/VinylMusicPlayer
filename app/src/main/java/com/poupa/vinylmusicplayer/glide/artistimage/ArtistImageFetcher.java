@@ -11,10 +11,12 @@ import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.poupa.vinylmusicplayer.deezer.DeezerApiService;
 import com.poupa.vinylmusicplayer.deezer.DeezerResponse;
+import com.poupa.vinylmusicplayer.deezer.Data;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.InputStream;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -68,11 +70,21 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
 
                         try {
                             DeezerResponse deezerResponse = response.body();
-                            String url = deezerResponse.getData().get(0).getPictureMedium();
-                            streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
-                            streamFetcher.loadData(priority, callback);
+                            List<Data> data = deezerResponse.getData();
+                            if (data.size() > 0) {
+                                String url = data.get(0).getPictureMedium();
+
+                                // Fragile way to detect a place holder image returned from Deezer:
+                                // ex: "https://e-cdns-images.dzcdn.net/images/artist//250x250-000000-80-0-0.jpg"
+                                // the double slash implies no artist identified
+                                final boolean placeholderUrl = url.contains("/images/artist//");
+                                if (!placeholderUrl) {
+                                    streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
+                                    streamFetcher.loadData(priority, callback);
+                                }
+                            }
                         } catch (Exception e) {
-                            callback.onLoadFailed(new Exception("No artist image url found"));
+                            callback.onLoadFailed(e);
                         }
                     }
 
