@@ -5,14 +5,15 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.ColorInt;
-import androidx.annotation.FloatRange;
-import androidx.annotation.LayoutRes;
-import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.PathInterpolator;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.LayoutRes;
+import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;

@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.model;
 
 import android.os.Parcel;
-import androidx.annotation.NonNull;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

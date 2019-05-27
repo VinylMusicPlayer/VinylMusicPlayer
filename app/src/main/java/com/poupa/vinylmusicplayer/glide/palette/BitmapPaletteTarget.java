@@ -1,7 +1,8 @@
 package com.poupa.vinylmusicplayer.glide.palette;
 
-import androidx.annotation.Nullable;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.request.target.ImageViewTarget;
 

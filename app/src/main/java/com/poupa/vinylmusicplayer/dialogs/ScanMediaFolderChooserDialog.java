@@ -12,6 +12,11 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
@@ -25,11 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
 
 /**
  * @author Aidan Follestad (afollestad), modified by Karim Abou Zeid

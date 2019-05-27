@@ -6,6 +6,7 @@ import android.database.MergeCursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -125,8 +126,8 @@ public class SongLoader {
             try {
                 Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    BASE_PROJECTION, 
-                    selection.toString(), 
+                    BASE_PROJECTION,
+                    selection.toString(),
                     paths.subList(processed, processed + currentBatch).toArray(new String[currentBatch]),
                     sortOrder
                 );

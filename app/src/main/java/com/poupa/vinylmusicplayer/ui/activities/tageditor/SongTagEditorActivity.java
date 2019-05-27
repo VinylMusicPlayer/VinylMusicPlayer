@@ -2,10 +2,11 @@ package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+
+import androidx.annotation.NonNull;
 
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;

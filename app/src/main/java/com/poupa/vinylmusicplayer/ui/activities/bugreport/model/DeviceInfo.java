@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
 import androidx.annotation.IntRange;
 
 import java.util.Arrays;

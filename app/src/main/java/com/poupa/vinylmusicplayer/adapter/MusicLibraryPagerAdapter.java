@@ -2,12 +2,13 @@ package com.poupa.vinylmusicplayer.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.SparseArray;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import android.util.SparseArray;
-import android.view.ViewGroup;
 
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AlbumsFragment;

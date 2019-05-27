@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.helper;
 
 import android.content.Context;
 
-import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 
