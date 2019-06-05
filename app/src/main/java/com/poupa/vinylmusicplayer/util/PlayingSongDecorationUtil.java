@@ -84,6 +84,7 @@ public class PlayingSongDecorationUtil {
 
         if (image != null) {
             image.setVisibility((isPlaying || showAlbumImage) ? View.VISIBLE : View.GONE);
+            final boolean animateIcon = PreferenceUtil.getInstance().animatePlayingSongIcon();
 
             if (isPlaying) {
                 image.setScaleType(ImageView.ScaleType.CENTER);
@@ -100,11 +101,11 @@ public class PlayingSongDecorationUtil {
                         .override(size)
                         .into(image);
 
-                image.startAnimation(sIconAnimation);
+                if (animateIcon) { image.startAnimation(sIconAnimation); }
             }
             else {
                 image.clearColorFilter();
-                image.clearAnimation();
+                if (animateIcon) { image.clearAnimation(); }
             }
         }
 

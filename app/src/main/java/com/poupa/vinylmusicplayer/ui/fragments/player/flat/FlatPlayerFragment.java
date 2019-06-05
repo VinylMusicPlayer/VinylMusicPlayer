@@ -44,6 +44,7 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.PlayerAlbumCoverFragment;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
@@ -514,11 +515,13 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSongViewHolder.title.setText(song.title);
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
 
-            final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
-            if (isPlaying) {
-                currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.sIconAnimation);
-            } else {
-                currentSongViewHolder.image.clearAnimation();
+            if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
+                final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+                if (isPlaying) {
+                    currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.sIconAnimation);
+                } else {
+                    currentSongViewHolder.image.clearAnimation();
+                }
             }
         }
 
