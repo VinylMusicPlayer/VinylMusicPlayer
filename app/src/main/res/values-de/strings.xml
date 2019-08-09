@@ -36,7 +36,7 @@
     <string name="playlists">Wiedergabelisten</string>
     <string name="unplayable_file">Der Song konnte nicht abgespielt werden.</string>
     <string name="biography_unavailable">Die Biografie dieses Interpreten wurde nicht gefunden.</string>
-    <string name="wiki_unavailable">Es konnte kein Wiki-Eintrag f\\00fcr dieses Album gefunden werden.</string>
+    <string name="wiki_unavailable">Es konnte kein Wiki-Eintrag für dieses Album gefunden werden.</string>
     <string name="biography">Biografie</string>
     <string name="wiki">Wiki</string>
     <string name="audio_focus_denied">Kein Audiofokus.</string>
@@ -73,7 +73,7 @@
     <string name="playlist_exists">Wiedergabeliste %1$s existiert bereit.</string>
     <string name="could_not_create_playlist">Wiedergabeliste konnte nicht erstellt werden.</string>
     <string name="delete_playlist_x">Willst du die Wiedergabeliste <b>%1$s</b> löschen?</string>
-    <string name="clear_playlist_x">M\\00f6chtest du die Wiedergabeliste <b>%1$s</b> wirklich leeren?</string>
+    <string name="clear_playlist_x">Möchtest du die Wiedergabeliste <b>%1$s</b> wirklich leeren?</string>
     <string name="delete_x_playlists">Willst du <b>%1$d</b> Wiedergabelisten löschen?</string>
     <string name="delete_song_x">Willst du den Titel <b>%1$s</b> löschen?</string>
     <string name="delete_x_songs">Willst du <b>%1$d</b> Titel löschen?</string>
@@ -160,7 +160,7 @@
     <string name="pref_summary_album_art_on_lockscreen">Das Album Cover des aktuellen Titels wird als Hintergrund im Sperrbildschirm verwendet.</string>
     <string name="pref_summary_blurred_album_art">Lässt das Album Cover auf dem Sperrbildschirm verschwommen aussehen. Kann Probleme mit Apps und Widgets von Dritten verursachen.</string>
     <string name="pref_summary_classic_notification">Das klassische Benachrichtigungsdesign verwenden.</string>
-    <string name="pref_summary_colored_notification">"Die Benachrichtigung ist in der Farbe des Album Covers gef\\00e4rbt."</string>
+    <string name="pref_summary_colored_notification">"Die Benachrichtigung ist in der Farbe des Album Covers gefärbt."</string>
     <string name="pref_summary_gapless_playback">"Kann bei einigen Geräten Wiedergabeprobleme verursachen."</string>
     <string name="pref_summary_ignore_media_store_artwork">Kann die Album Cover Qualität verbessern was jedoch die Ladezeit beeinträchtigt. Nur aktivieren falls Probleme mit niedrig aufgelösten Album Covern auftreten.</string>
     <string name="pref_summary_colored_navigation_bar">Färbt die Navigationsleiste mit der Hauptfarbe.</string>
