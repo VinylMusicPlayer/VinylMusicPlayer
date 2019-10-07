@@ -365,8 +365,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         } else if (!lhs.isDirectory() && rhs.isDirectory()) {
             return 1;
         } else {
-            return lhs.getName().compareToIgnoreCase
-                    (rhs.getName());
+            return lhs.getAbsolutePath().compareToIgnoreCase
+                    (rhs.getAbsolutePath());
         }
     };
 
