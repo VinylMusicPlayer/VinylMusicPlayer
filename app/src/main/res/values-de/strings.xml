@@ -43,6 +43,7 @@
     <string name="album">Album</string>
     <string name="artist">Interpret</string>
     <string name="genre">Genre</string>
+    <string name="unknown_genre">Unbekanntes Genre</string>
     <string name="album_artist">Album Interpret</string>
     <string name="year">Jahr</string>
     <string name="track_hint">"Track (2 für Track 2 oder 3004 für CD 3 Track 4)"</string>
@@ -57,6 +58,7 @@
     <string name="label_track_length">Länge</string>
     <string name="label_bit_rate">Bitrate</string>
     <string name="label_sampling_rate">Samplingrate</string>
+    <string name="label_replay_gain">ReplayGain</string>
     <string name="action_go_to_artist">Gehe zu Interpret</string>
     <string name="action_go_to_album">Gehe zum Album</string>
     <string name="label_playing_queue">Warteschlange</string>
@@ -106,6 +108,7 @@
     <string name="never">Niemals</string>
     <string name="today">Heute</string>
     <string name="this_week">Diese Woche</string>
+    <string name="past_seven_days">Letzte 7 Tage</string>
     <string name="this_month">Diesen Monat</string>
     <string name="past_three_months">Letzte 3 Monate</string>
     <string name="this_year">Dieses Jahr</string>
@@ -130,6 +133,7 @@
     <string name="pref_title_ignore_media_store_artwork">Media Store Cover ignorieren</string>
     <string name="pref_title_gapless_playback">Lückenlose Wiedergabe</string>
     <string name="pref_title_audio_ducking">Lautstärke bei Fokusverlust verringern</string>
+    <string name="pref_title_recently_played_interval">Intervall der \"Kürzlich abgespielt\"-Wiedergabeliste</string>
     <string name="pref_title_last_added_interval">Intervall der \"Zuletzt hinzugefügt\"-Wiedergabeliste</string>
     <string name="pref_title_synchronized_lyrics_show">Synchronisierten Songtext anzeigen</string>
     <string name="pref_title_remember_last_tab">Letzten Tab merken</string>
@@ -176,6 +180,7 @@
     <string name="last_added">Zuletzt hinzugefügt</string>
     <string name="history">Verlauf</string>
     <string name="my_top_tracks">Meine Lieblingstitel</string>
+    <string name="not_recently_played">Nicht kürzlich abgespielt</string>
     <string name="remove_cover">Cover entfernen</string>
     <string name="download_from_last_fm">Von Last.fm herunterladen</string>
     <string name="pick_from_local_storage">Aus lokalem Speicher wählen</string>
@@ -268,10 +273,13 @@
     <string name="copied_device_info_to_clipboard">Geräteinformation wurde in die Zwischenablage kopiert.</string>
     <string name="your_account_data_is_only_used_for_authentication">Deine Konto Daten werden ausschließlich zur Authentifizierung genutzt.</string>
     <string name="you_will_be_forwarded_to_the_issue_tracker_website">Du wirst zur Issue Tracker Webseite weitergeleitet.</string>
+    <string name="deleting_songs">Lösche Titel</string>
     <string name="app_shortcut_shuffle_all_short">Zufällig</string>
     <string name="app_shortcut_top_tracks_short">Lieblingstitel</string>
     <string name="app_shortcut_last_added_short">Zuletzt hinzugefügt</string>
     <string name="playlist_is_empty">Die Wiedergabeliste ist leer</string>
+    <string name="snack_bar_action_undo">rückgängig</string>
+    <string name="snack_bar_title_removed_song">Entfernt</string>
     <string name="playing_notification_description">Die Benachrichtigung zur Steuerung von Play/Pause etc.</string>
     <string name="playing_notification_name">Wiedergabe-Benachrichtigung</string>
     <string name="eugene_cheung_summary">Für seinen Beitrag zum Quellcode.</string>
@@ -294,6 +302,8 @@
     <string name="sort_order_artist">Interpret</string>
     <string name="sort_order_album">Album</string>
     <string name="sort_order_year">Jahr</string>
+    <string name="sort_order_date_added">Datum hinzugefügt</string>
+    <string name="finish_current_music_sleep_timer">Letzten Titel zu Ende spielen</string>
     <string name="action_scan_directory">Ordner scannen</string>
     <string name="scan_media">Medien Scannen</string>
     <string name="none">Keine</string>
@@ -303,5 +313,30 @@
     <string name="pref_title_rg_source_mode">ReplayGain Herkunft</string>
     <string name="pref_title_rg_preamp">ReplayGain Vorverstärkung</string>
     <string name="pref_summary_rg_preamp">Sezte Vorverstärkung wenn ReplayGain aktiviert ist</string>
+    <string name="pref_rg_disabled">Deaktiviert</string>
     <string name="error_no_app_for_intent">Keine Anwendung zum öffnen dieser Seite vorhanden.</string>
+    <!-- SAF -->
+    <string name="saf_error_uri">Kann SAF URI nicht lesen</string>
+    <string name="saf_write_failed">Schreiben der Datei fehlgeschlagen: %s</string>
+    <string name="saf_delete_failed">Löschen der Datei fehlgeschlagen: %s</string>
+    <string name="saf_pick_sdcard">Zugriff auf die SD-Karte erforderlich. Bitte das Stammverzeichnis der SD-Karte auswählen</string>
+    <string name="saf_pick_file">Dateizugriff erforderlich. Wähle %s aus</string>
+    <!-- SAF guide -->
+    <string name="saf_guide_slide1_title">%s benötigt Zugriff auf die SD-Karte</string>
+    <string name="saf_guide_slide1_description_before_o">Wähle \'SD-Karte anzeigen\' im Overflow-Menü</string>
+    <string name="saf_guide_slide1_description">Öffne das Navigationsmenü</string>
+    <string name="saf_guide_slide2_title">Wähle die SD-Karte im Navigationsmenü</string>
+    <string name="saf_guide_slide2_description">Wähle das Stammverzeichnis der SD-Karte aus</string>
+    <string name="saf_guide_slide3_title">Tippe auf \'Auswählen\' am unteren Bildschirmrand</string>
+    <string name="saf_guide_slide3_description">Öffne keine Unterordner</string>
+    <!-- Android Auto -->
+    <string name="albums_label">Alben</string>
+    <string name="artists_label">Interpreten</string>
+    <string name="playlists_label">Wiedergabelisten</string>
+    <string name="history_label">Verlauf</string>
+    <string name="top_tracks_label">Lieblingstitel</string>
+    <string name="queue_label">Warteschlange</string>
+    <string name="action_cycle_repeat">Wiederholungsmodus</string>
+    <string name="action_toggle_shuffle">Zufällige Wiedergabe</string>
+    <string name="action_toggle_favorite">Favorit</string>
 </resources>
