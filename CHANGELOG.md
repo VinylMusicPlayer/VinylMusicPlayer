@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [0.23.0] - 2020-01-19
+### Changed
+- Updated Kotlin, organize dependencies
+- Removed dependency on legacy preferences and fragments
+- Updated German translation
+- Animated playing indicator icon
+
+### Fixed
+- Crash while scrolling on artist list
+- Playing a folder results in unexpected sorting of all songs from subfolders
+- Album tag editor deleting 'artist' tag if 'album artist' is empty
+- Playing wrong song when restoring to play queue
+
 ## [0.22.1] - 2019-05-14
 ### Fixed
 - Next track not playing when gapless playback is enabled
