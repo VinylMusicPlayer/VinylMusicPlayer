@@ -136,6 +136,7 @@
     <string name="pref_title_recently_played_interval">Recently played playlist interval</string>
     <string name="pref_title_last_added_interval">Last added playlist interval</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
+    <string name="pref_title_animate_playing_song_icon">Animate playing song icon</string>
     <string name="pref_title_remember_last_tab">Remember last tab</string>
     <string name="pref_title_remember_shuffle">Remember shuffle</string>
     <string name="no_equalizer">No equalizer found.</string>
@@ -172,6 +173,7 @@
     <string name="pref_summary_widget_background_transparent">Makes the background of widgets transparent.</string>
     <string name="pref_summary_audio_ducking">Notifications, navigation etc.</string>
     <string name="pref_summary_synchronized_lyrics_show">Currently only synchronized lyrics in LRC format are supported. Either embedded or as a separate file.</string>
+    <string name="pref_summary_animate_playing_song_icon">Animate the icon of the playing song in different song-related views</string>
     <string name="pref_summary_remember_last_tab">Go to the last opened tab on launch</string>
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>

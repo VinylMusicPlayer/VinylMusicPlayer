@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,6 +46,8 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.PlayerAlbumCoverFragment;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
@@ -176,6 +179,11 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     }
 
     @Override
+    public void onPlayStateChanged() {
+        updateCurrentSong();
+    }
+
+    @Override
     public void onQueueChanged() {
         updateQueue();
     }
@@ -204,6 +212,9 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
+
+        // give the adapter a chance to update the decoration
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     private void setUpSubFragments() {
@@ -490,7 +501,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSongViewHolder.shortSeparator.setVisibility(View.GONE);
             currentSongViewHolder.image.setScaleType(ImageView.ScaleType.CENTER);
             currentSongViewHolder.image.setColorFilter(ATHUtil.resolveColor(fragment.getActivity(), R.attr.iconColor, ThemeStore.textColorSecondary(fragment.getActivity())), PorterDuff.Mode.SRC_IN);
-            currentSongViewHolder.image.setImageResource(R.drawable.ic_volume_up_white_24dp);
+            currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.sIconPlaying);
             currentSongViewHolder.itemView.setOnClickListener(v -> {
                 // toggle the panel
                 if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -522,6 +533,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                     return super.onMenuItemClick(item);
                 }
             });
+            currentSongViewHolder.title.setTypeface(null, Typeface.BOLD);
         }
 
         @Override
@@ -544,6 +556,15 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSong = song;
             currentSongViewHolder.title.setText(song.title);
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
+
+            if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
+                final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+                if (isPlaying) {
+                    currentSongViewHolder.image.startAnimation(PlayingSongDecorationUtil.sIconAnimation);
+                } else {
+                    currentSongViewHolder.image.clearAnimation();
+                }
+            }
         }
 
         @Override

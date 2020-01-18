@@ -3,6 +3,8 @@ package com.poupa.vinylmusicplayer.util;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +27,16 @@ import com.poupa.vinylmusicplayer.model.Song;
  * @author SC (soncaokim)
  */
 public class PlayingSongDecorationUtil {
+
+    public static final int sIconPlaying = R.drawable.ic_notification;
+
+    public static Animation sIconAnimation;
+    static {
+        sIconAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        sIconAnimation.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
+        sIconAnimation.setRepeatCount(Animation.INFINITE);
+    }
+
     public static void decorate(
             @NonNull final SongAdapter songAdapter,
             @NonNull final SongAdapter.ViewHolder holder,
@@ -33,10 +45,9 @@ public class PlayingSongDecorationUtil {
     {
         PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, songAdapter.isShowAlbumImage());
 
-        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
-
-        if ((holder.image != null) && !isPlaying && songAdapter.isShowAlbumImage()) {
-            GlideApp.with(activity)
+        if ((holder.image != null) && songAdapter.isShowAlbumImage()) {
+            if (!MusicPlayerRemote.isPlaying(song)) {
+                GlideApp.with(activity)
                     .asBitmapPalette()
                     .load(VinylGlideExtension.getSongModel(song))
                     .transition(VinylGlideExtension.getDefaultTransition())
@@ -53,6 +64,7 @@ public class PlayingSongDecorationUtil {
                             songAdapter.setColors(songAdapter.isUsePalette() ? color : getDefaultFooterColor(), holder);
                         }
                     });
+            }
         }
     }
 
@@ -72,6 +84,7 @@ public class PlayingSongDecorationUtil {
 
         if (image != null) {
             image.setVisibility((isPlaying || showAlbumImage) ? View.VISIBLE : View.GONE);
+            final boolean animateIcon = PreferenceUtil.getInstance().animatePlayingSongIcon();
 
             if (isPlaying) {
                 image.setScaleType(ImageView.ScaleType.CENTER);
@@ -79,15 +92,20 @@ public class PlayingSongDecorationUtil {
                 final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
                 image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
+                final int size = (int)(24 * activity.getResources().getDisplayMetrics().density);
+
+                // Note: No transition for Glide, the animation is explicitly controlled
                 GlideApp.with(activity)
                         .asBitmap()
-                        .load(R.drawable.ic_volume_up_white_24dp)
-                        .transition(VinylGlideExtension.getDefaultTransition())
-                        .songOptions(song)
+                        .load(sIconPlaying)
+                        .override(size)
                         .into(image);
+
+                if (animateIcon) { image.startAnimation(sIconAnimation); }
             }
             else {
                 image.clearColorFilter();
+                if (animateIcon) { image.clearAnimation(); }
             }
         }
 
