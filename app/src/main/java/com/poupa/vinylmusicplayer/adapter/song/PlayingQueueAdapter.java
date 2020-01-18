@@ -254,11 +254,13 @@ public class PlayingQueueAdapter extends SongAdapter
         }
         @Override
         protected void onSlideAnimationEnd() {
-            initializeSnackBar(adapter, position, activity, isPlaying);
             songToRemove = adapter.dataSet.get(position);
+            boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
+
+            initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);
 
             //If song removed was the playing song, then play the next song
-            if (MusicPlayerRemote.isPlaying(songToRemove)) {
+            if (isPlayingSongToRemove) {
                 MusicPlayerRemote.playNextSong();
             }
 
@@ -279,7 +281,8 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     public static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
-                                          final AppCompatActivity activity, final Boolean isPlaying){
+                                          final AppCompatActivity activity,
+                                          final boolean isPlayingSongToRemove) {
 
         CharSequence snackBarTitle = activity.getString(R.string.snack_bar_title_removed_song);
 
@@ -297,8 +300,8 @@ public class PlayingQueueAdapter extends SongAdapter
             MusicPlayerRemote.addSong(position,adapter.getSongToRemove());
             //If playing and currently playing song is removed, then added back, then play it at
             //current song progress
-            if (isPlaying && position == 0) {
-                MusicPlayerRemote.playSongAt(0);
+            if (isPlayingSongToRemove) {
+                MusicPlayerRemote.playSongAt(position);
             }
         });
         snackbar.setActionTextColor(getBackgroundColor(activity));
