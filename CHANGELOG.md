@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.23.1] - 2020-01-19
+### Fixed
+- Release typo
+
 ## [0.23.0] - 2020-01-19
 ### Changed
 - Updated Kotlin, organize dependencies
@@ -135,7 +139,9 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ### Added
 - Initial version.
 
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.1...HEAD
+[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.23.1...HEAD
+[0.23.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.23.0...0.23.1
+[0.23.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.1...0.23.0
 [0.22.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.0...0.22.1
 [0.22.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...0.22.0
 [0.21.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...0.21.1
