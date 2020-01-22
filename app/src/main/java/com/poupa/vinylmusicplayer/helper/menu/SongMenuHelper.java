@@ -20,6 +20,7 @@ import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.SongTagEditorActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.RingtoneManager;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -30,7 +31,12 @@ public class SongMenuHelper {
     public static boolean handleMenuClick(@NonNull FragmentActivity activity, @NonNull Song song, int menuItemId) {
         switch (menuItemId) {
             case R.id.action_set_as_ringtone:
-                MusicUtil.setRingtone(activity, song.id);
+                if (RingtoneManager.requiresDialog(activity)) {
+                    RingtoneManager.showDialog(activity);
+                } else {
+                    RingtoneManager ringtoneManager = new RingtoneManager();
+                    ringtoneManager.setRingtone(activity, song.id);
+                }
                 return true;
             case R.id.action_share:
                 activity.startActivity(Intent.createChooser(MusicUtil.createShareSongFileIntent(song, activity), null));
