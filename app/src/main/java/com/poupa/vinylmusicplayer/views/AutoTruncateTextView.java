@@ -13,6 +13,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.poupa.vinylmusicplayer.R;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author Lincoln (theduffmaster)
  *
@@ -74,20 +76,12 @@ public class AutoTruncateTextView extends AppCompatTextView {
     }
 
     /**
-     * @return Returns the {@link TouchInterceptFrameLayout} inside this layout.
-     * Get it using TAG for Android 6 and below
-     */
-    public TouchInterceptFrameLayout getTouchInterceptFrameLayoutByTag() {
-        return (TouchInterceptFrameLayout) getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
-    }
-
-    /**
      * Find the view parent recursively
      * @param view
      * @param targetId
      * @return
      */
-    public ViewParent findParentRecursively(View view, int targetId) {
+    public ViewParent findParentRecursively(@NotNull View view, int targetId) {
         if (view.getId() == targetId) {
             return (ViewParent)view;
         }
@@ -123,18 +117,17 @@ public class AutoTruncateTextView extends AppCompatTextView {
 
         if (!fittedText.equals("")) {
             int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
-            final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
-
             // If getSize return 0 (Android <= 6), get it from the layout
             if (textBoundsWidth == 0) {
-                textBoundsWidth = getTouchInterceptFrameLayoutByTag().getMeasuredWidth();
+                textBoundsWidth = getTouchInterceptFrameLayout().getMeasuredWidth();
             }
 
+            final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
             if (!fittedText.endsWith(TRUNCATED_MARKER) && !isUntruncated) {
                 this.text = fittedText;
             }
 
-            if (!isUntruncated && (getWidth() == 0 | textBoundsWidth < getPaint().measureText(fittedText))) {
+            if (!isUntruncated && (textBoundsWidth < getPaint().measureText(fittedText))) {
                 // Mimics behavior of `android:ellipsize="end"`, except it works in a HorizontalScrollView.
                 // Truncates the string so it doesn't get cut off in the HorizontalScrollView with an
                 // ellipsis at the end of it.
