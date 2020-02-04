@@ -76,6 +76,14 @@ public class AutoTruncateTextView extends AppCompatTextView {
     }
 
     /**
+     * @return Returns the {@link TouchInterceptFrameLayout} inside this layout.
+     * Get it using TAG for Android 6 and below
+     */
+    public TouchInterceptFrameLayout getTouchInterceptFrameLayoutByTag() {
+        return (TouchInterceptFrameLayout) getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
+    }
+
+    /**
      * Find the view parent recursively
      * @param view
      * @param targetId
@@ -117,9 +125,10 @@ public class AutoTruncateTextView extends AppCompatTextView {
 
         if (!fittedText.equals("")) {
             int textBoundsWidth = MeasureSpec.getSize(widthMeasureSpec);
+
             // If getSize return 0 (Android <= 6), get it from the layout
             if (textBoundsWidth == 0) {
-                textBoundsWidth = getTouchInterceptFrameLayout().getMeasuredWidth();
+                textBoundsWidth = getTouchInterceptFrameLayoutByTag().getMeasuredWidth();
             }
 
             final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
