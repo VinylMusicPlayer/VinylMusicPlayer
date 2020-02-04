@@ -129,6 +129,10 @@ public class AutoTruncateTextView extends AppCompatTextView {
             // If getSize return 0 (Android <= 6), get it from the layout
             if (textBoundsWidth == 0) {
                 textBoundsWidth = getTouchInterceptFrameLayoutByTag().getMeasuredWidth();
+                // If the size is still zero, admit that you've lost
+                if (textBoundsWidth == 0) {
+                    return;
+                }
             }
 
             final boolean isUntruncated = fittedText.endsWith(MARKER_UNTRUNCATED);
