@@ -34,7 +34,7 @@ static def buildTime() {
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '30.0.0'
+    buildToolsVersion '29.0.3'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
