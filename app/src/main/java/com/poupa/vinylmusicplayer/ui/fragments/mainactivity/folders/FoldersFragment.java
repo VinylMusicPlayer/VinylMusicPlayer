@@ -597,25 +597,23 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     public static class ListPathsAsyncTask extends ListingFilesDialogAsyncTask<ListPathsAsyncTask.LoadingInfo, String, String[]> {
-        private WeakReference<OnPathsListedCallback> onPathsListedCallbackWeakReference;
-        private WeakReference<Context> context;
+        private OnPathsListedCallback onPathsListedCallback;
 
         public ListPathsAsyncTask(Context context, OnPathsListedCallback callback) {
             super(context, 500);
-            onPathsListedCallbackWeakReference = new WeakReference<>(callback);
-            this.context = new WeakReference<>(context);
+            this.onPathsListedCallback = callback;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            checkCallbackReference();
+            isContextStillInMemory();
         }
 
         @Override
         protected String[] doInBackground(LoadingInfo... params) {
             try {
-                if (isCancelled() || checkCallbackReference() == null) {
+                if (isCancelled() || !isContextStillInMemory()) {
                     return null;
                 }
 
@@ -626,7 +624,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 if (info.file.isDirectory()) {
                     List<File> files = FileUtil.listFilesDeep(info.file, info.fileFilter);
 
-                    if (isCancelled() || checkCallbackReference() == null) {
+                    if (isCancelled() || !isContextStillInMemory()) {
                         return null;
                     }
 
@@ -635,7 +633,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                         File f = files.get(i);
                         paths[i] = FileUtil.safeGetCanonicalPath(f);
 
-                        if (isCancelled() || checkCallbackReference() == null) {
+                        if (isCancelled() || !isContextStillInMemory()) {
                             return null;
                         }
                     }
@@ -662,24 +660,24 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         protected void onPostExecute(String[] paths) {
             super.onPostExecute(paths);
             disableScanning();
-            OnPathsListedCallback callback = checkCallbackReference();
-            if (callback != null && paths != null) {
-                callback.onPathsListed(paths);
+            if (onPathsListedCallback != null && paths != null) {
+                onPathsListedCallback.onPathsListed(paths);
             }
-        }
-
-        private OnPathsListedCallback checkCallbackReference() {
-            OnPathsListedCallback callback = onPathsListedCallbackWeakReference.get();
-            if (callback == null) {
-                cancel(false);
-            }
-            return callback;
         }
 
         private void disableScanning() {
-            Context context = this.context.get();
+            Context context = getContext();
             if (context instanceof MainActivity) {
                 ((MainActivity) context).setScanning(false);
+            }
+        }
+
+        private boolean isContextStillInMemory() {
+            if (getContext() == null) {
+                cancel(false);
+                return false;
+            } else {
+                return true;
             }
         }
 
