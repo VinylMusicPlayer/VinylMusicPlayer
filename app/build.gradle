@@ -33,10 +33,7 @@ static def buildTime() {
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
-    dataBinding {
-        enabled = true
-    }
+    buildToolsVersion '29.0.3'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
@@ -94,6 +91,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding = true
     }
 }
 
