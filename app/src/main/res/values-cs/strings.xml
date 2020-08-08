@@ -187,14 +187,6 @@
     <string name="sleep_timer_set">Přehrávání se ukončí za %d minut.</string>
     <string name="action_new_playlist">Nový playlist…</string>
     <string name="new_playlist_title">Nový playlist</string>
-    <string name="grid_size_1">1</string>
-    <string name="grid_size_2">2</string>
-    <string name="grid_size_3">3</string>
-    <string name="grid_size_4">4</string>
-    <string name="grid_size_5">5</string>
-    <string name="grid_size_6">6</string>
-    <string name="grid_size_7">7</string>
-    <string name="grid_size_8">8</string>
     <string name="colored_footers">"Barevné zápatí "</string>
     <string name="special_thanks_to">Zvláštní poděkování</string>
     <string name="changelog">"Co je nového "</string>
