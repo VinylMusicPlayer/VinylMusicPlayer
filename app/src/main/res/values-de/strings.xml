@@ -58,7 +58,6 @@
     <string name="label_track_length">Länge</string>
     <string name="label_bit_rate">Bitrate</string>
     <string name="label_sampling_rate">Samplingrate</string>
-    <string name="label_replay_gain">ReplayGain</string>
     <string name="action_go_to_artist">Gehe zu Interpret</string>
     <string name="action_go_to_album">Gehe zum Album</string>
     <string name="label_playing_queue">Warteschlange</string>
@@ -192,14 +191,6 @@
     <string name="sleep_timer_set">Der Schlaf Timer geht ab jetzt %d Minuten lang.</string>
     <string name="action_new_playlist">Neue Wiedergabeliste…</string>
     <string name="new_playlist_title">Neue Wiedergabeliste</string>
-    <string name="grid_size_1">1</string>
-    <string name="grid_size_2">2</string>
-    <string name="grid_size_3">3</string>
-    <string name="grid_size_4">4</string>
-    <string name="grid_size_5">5</string>
-    <string name="grid_size_6">6</string>
-    <string name="grid_size_7">7</string>
-    <string name="grid_size_8">8</string>
     <string name="colored_footers">Farbige Balken</string>
     <string name="special_thanks_to">Besonderes Dankeschön an</string>
     <string name="changelog">Änderungen</string>
