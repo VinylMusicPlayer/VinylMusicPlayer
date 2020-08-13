@@ -191,7 +191,11 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
          */
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            playSong();
+            ViewGroup viewGroup = getViewGroup();
+
+            if (viewGroup != null) {
+                viewGroup.performClick();
+            }
 
             return false;
         }
@@ -202,7 +206,11 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
          */
         @Override
         public void onLongPress(MotionEvent e) {
-            playSong();
+            ViewGroup viewGroup = getViewGroup();
+
+            if (viewGroup != null) {
+                viewGroup.performLongClick();
+            }
         }
 
         /**
@@ -223,14 +231,17 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         }
 
         /**
-         * Play song on tap
+         * Get View Group
+         * @return ViewGroup
          */
-        private void playSong() {
+        private ViewGroup getViewGroup() {
             TouchInterceptFrameLayout touchInterceptFrameLayout = getTouchInterceptTextView().getTouchInterceptFrameLayout();
 
             if (touchInterceptFrameLayout != null) {
-                ((ViewGroup) touchInterceptFrameLayout.getParent()).performClick();
+                return (ViewGroup) touchInterceptFrameLayout.getParent();
             }
+
+            return null;
         }
     }
 }
