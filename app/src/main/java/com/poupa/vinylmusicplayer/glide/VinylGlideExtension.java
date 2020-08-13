@@ -10,6 +10,7 @@ import com.bumptech.glide.annotation.GlideOption;
 import com.bumptech.glide.annotation.GlideType;
 import com.bumptech.glide.load.Key;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.BaseRequestOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.signature.MediaStoreSignature;
@@ -35,12 +36,14 @@ public final class VinylGlideExtension {
     }
 
     @GlideType(BitmapPaletteWrapper.class)
-    public static void asBitmapPalette(RequestBuilder<BitmapPaletteWrapper> requestBuilder) {
+    @NonNull
+    public static RequestBuilder<BitmapPaletteWrapper> asBitmapPalette(@NonNull RequestBuilder<BitmapPaletteWrapper> requestBuilder) {
+        return requestBuilder;
     }
 
     @GlideOption
     @NonNull
-    public static RequestOptions artistOptions(RequestOptions requestOptions, Artist artist) {
+    public static BaseRequestOptions<?> artistOptions(@NonNull BaseRequestOptions<?> requestOptions, Artist artist) {
         return requestOptions
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .error(R.drawable.default_artist_image)
@@ -52,7 +55,7 @@ public final class VinylGlideExtension {
 
     @GlideOption
     @NonNull
-    public static RequestOptions songOptions(RequestOptions requestOptions, Song song) {
+    public static BaseRequestOptions<?> songOptions(@NonNull BaseRequestOptions<?> requestOptions, Song song) {
         return requestOptions
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.drawable.default_album_art)

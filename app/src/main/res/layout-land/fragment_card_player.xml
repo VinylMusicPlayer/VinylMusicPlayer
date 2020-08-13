@@ -83,6 +83,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginTop="0dp"
+                        android:theme="@style/Theme.MaterialComponents.Light"
                         app:cardBackgroundColor="?cardBackgroundColor"
                         app:cardElevation="@dimen/card_elevation"
                         app:cardUseCompatPadding="false">
