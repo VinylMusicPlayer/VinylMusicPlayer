@@ -97,8 +97,9 @@ public class MusicUtil {
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
-            song.artistName,
-            song.albumName
+                String.valueOf(getFixedTrackNumber(song.trackNumber)),
+                song.artistName,
+                song.albumName
         );
     }
 
