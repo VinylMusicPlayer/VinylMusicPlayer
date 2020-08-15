@@ -45,7 +45,7 @@ public final class AppShortcutIconGenerator {
 
         // Return an Icon of iconId with those colors
         return generateThemedIcon(context, iconId,
-                ThemeStore.primaryColor(context),
+                ThemeStore.accentColor(context),
                 typedColorBackground.data
         );
     }
