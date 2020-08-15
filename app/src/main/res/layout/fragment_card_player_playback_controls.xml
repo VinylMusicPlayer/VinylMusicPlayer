@@ -44,8 +44,8 @@
             android:id="@+id/player_progress_slider"
             style="@style/MusicProgressSlider"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/player_song_total_time"
-            android:layout_toRightOf="@id/player_song_current_progress"
+            android:layout_marginLeft="-14dp"
+            android:layout_marginRight="-14dp"
             tools:ignore="RtlHardcoded,UnusedAttribute" />
 
     </RelativeLayout>
