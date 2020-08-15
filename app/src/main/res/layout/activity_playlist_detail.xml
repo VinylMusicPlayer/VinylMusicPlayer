@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:transitionGroup="true"
     tools:ignore="UnusedAttribute">
-
-    <include layout="@layout/status_bar" />
 
     <!-- for getSwipeableContainerView() -->
     <com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout
@@ -15,39 +12,55 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?colorPrimary"
-            android:elevation="@dimen/toolbar_elevation"
-            tools:ignore="UnusedAttribute">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/Toolbar"
-                android:background="@android:color/transparent">
+            <include layout="@layout/status_bar" />
 
-                <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
-                    android:id="@+id/title_scrollview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-                </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
-
-            </androidx.appcompat.widget.Toolbar>
-
-            <ViewStub
-                android:id="@+id/cab_stub"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize" />
+                android:layout_height="wrap_content"
+                android:background="?colorPrimary"
+                android:elevation="@dimen/toolbar_elevation"
+                tools:ignore="UnusedAttribute">
 
-        </FrameLayout>
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Toolbar"
+                    android:background="@android:color/transparent">
+
+                    <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                        android:id="@+id/title_scrollview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+                    </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+
+                </androidx.appcompat.widget.Toolbar>
+
+                <ViewStub
+                    android:id="@+id/cab_stub"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize" />
+
+            </FrameLayout>
+
+            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:scrollbars="none" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@android:id/empty"
@@ -61,13 +74,6 @@
             android:textSize="@dimen/empty_text_size"
             android:visibility="gone" />
 
-        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:scrollbars="none" />
-
     </com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout>
 
-</LinearLayout>
+</FrameLayout>
