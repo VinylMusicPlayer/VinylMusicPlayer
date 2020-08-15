@@ -92,7 +92,7 @@
     <string name="action_shuffle_album">Lecture aléatoire des albums</string>
     <string name="action_shuffle_artist">Lecture aléatoire des artistes</string>
     <string name="action_shuffle_playlist">Lecture aléatoire des playlists</string>
-    <string name="action_clear_playing_queue">Effacer la file de lecture</string>
+    <string name="action_clear_playing_queue">Vider la file de lecture</string>
     <string name="action_save_playing_queue">Sauvegarder la file de lecture</string>
     <string name="action_go_to_start_directory">Aller au répertoire de départ</string>
     <string name="action_show_lyrics">Afficher les paroles</string>
