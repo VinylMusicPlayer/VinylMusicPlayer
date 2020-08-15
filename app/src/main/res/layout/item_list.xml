@@ -18,12 +18,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
-            android:layout_marginLeft="-8dp"
-            android:layout_marginStart="-8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
             android:tint="?attr/iconColor"
             android:tintMode="src_in"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_drag_vertical_white_24dp"
+            app:srcCompat="@drawable/ic_baseline_drag_indicator_24"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
