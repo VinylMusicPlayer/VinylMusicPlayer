@@ -237,6 +237,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     @Override
     public MaterialCab openCab(int menuRes, MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
+        adapter.setColor(ThemeStore.primaryColor(getActivity()));
         cab = new MaterialCab(getMainActivity(), R.id.cab_stub)
                 .setMenu(menuRes)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
