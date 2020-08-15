@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
@@ -135,6 +136,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
                 .setMenu(menu)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(this)))
+                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(callback);
         return cab;
     }
