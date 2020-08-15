@@ -105,6 +105,8 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         titleTextView.setText(genre.name);
+
+        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     @Override

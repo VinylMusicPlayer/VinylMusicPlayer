@@ -132,6 +132,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTitle(null);
         titleTextView.setText(playlist.name);
+
+        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     private void setToolbarTitle(String title) {
