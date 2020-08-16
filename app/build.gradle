@@ -53,10 +53,14 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "Vinyl Music Player"
+            resValue "string", "app_short_name", "Vinyl"
         }
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix ' DEBUG'
+            resValue "string", "app_name", "Vinyl DEBUG"
+            resValue "string", "app_short_name", "Vinyl DEBUG"
         }
     }
     signingConfigs {
