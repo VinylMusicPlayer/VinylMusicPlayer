@@ -149,8 +149,8 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
         playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
         playPauseFab.post(() -> {
             if (playPauseFab != null) {
-                playPauseFab.setPivotX(playPauseFab.getWidth() / 2);
-                playPauseFab.setPivotY(playPauseFab.getHeight() / 2);
+                playPauseFab.setPivotX(playPauseFab.getWidth() / 2f);
+                playPauseFab.setPivotY(playPauseFab.getHeight() / 2f);
             }
         });
     }
@@ -193,13 +193,10 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     }
 
     private void updateShuffleState() {
-        switch (MusicPlayerRemote.getShuffleMode()) {
-            case MusicService.SHUFFLE_MODE_SHUFFLE:
-                shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-                break;
-            default:
-                shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-                break;
+        if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
+            shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+        } else {
+            shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
         }
     }
 

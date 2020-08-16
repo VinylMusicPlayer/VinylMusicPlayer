@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.loader;
 
+import android.os.Build;
+
 import com.poupa.vinylmusicplayer.model.Song;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -12,6 +14,7 @@ import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,7 +106,12 @@ public class ReplayGainTagExtractor {
     s.seek(0x24);
     s.read(chunk);
 
-    String lameMark = new String(chunk, 0, 4, "ISO-8859-1");
+    String lameMark;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      lameMark = new String(chunk, 0, 4, StandardCharsets.ISO_8859_1);
+    } else {
+      lameMark = new String(chunk, 0, 4, "ISO-8859-1");
+    }
 
     if (lameMark.equals("Info") || lameMark.equals("Xing")) {
       s.seek(0xAB);

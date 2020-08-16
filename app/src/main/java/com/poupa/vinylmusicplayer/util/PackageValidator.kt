@@ -35,6 +35,8 @@ import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.util.*
+import kotlin.collections.LinkedHashMap
 
 /**
  * Validates that the calling package is authorized to browse a [MediaBrowserServiceCompat].
@@ -204,11 +206,11 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
     private fun getSignature(packageInfo: PackageInfo): String? {
         // Security best practices dictate that an app should be signed with exactly one (1)
         // signature. Because of this, if there are multiple signatures, reject it.
-        if (packageInfo.signatures == null || packageInfo.signatures.size != 1) {
-            return null
+        return if (packageInfo.signatures == null || packageInfo.signatures.size != 1) {
+            null
         } else {
             val certificate = packageInfo.signatures[0].toByteArray()
-            return getSignatureSha256(certificate)
+            getSignatureSha256(certificate)
         }
     }
 
@@ -272,7 +274,7 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
         var eventType = parser.next()
         while (eventType != XmlResourceParser.END_TAG) {
             val isRelease = parser.getAttributeBooleanValue(null, "release", false)
-            val signature = parser.nextText().replace(WHITESPACE_REGEX, "").toLowerCase()
+            val signature = parser.nextText().replace(WHITESPACE_REGEX, "").toLowerCase(Locale.ROOT)
             callerSignatures += KnownSignature(signature, isRelease)
 
             eventType = parser.next()

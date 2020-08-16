@@ -522,7 +522,7 @@ public final class PreferenceUtil {
         return mPreferences.getInt(LAST_CHANGELOG_VERSION, -1);
     }
 
-    @SuppressLint("CommitPrefEdits")
+    @SuppressLint("ApplySharedPref")
     public void setIntroShown() {
         // don't use apply here
         mPreferences.edit().putBoolean(INTRO_SHOWN, true).commit();

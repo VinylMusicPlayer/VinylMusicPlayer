@@ -7,12 +7,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -198,7 +196,6 @@ public class MusicUtil {
             return TextUtils.isEmpty(string1) ? "" : string1;
         }
         if (TextUtils.isEmpty(string3)) {
-            //noinspection ConstantConditions
             return TextUtils.isEmpty(string1) ? "" : string3;
         }
 
@@ -317,14 +314,11 @@ public class MusicUtil {
 
         activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-        activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
+        activity.runOnUiThread(() -> {
+            Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
+            if (callback != null) {
+                callback.run();
+            }
         });
     }
 

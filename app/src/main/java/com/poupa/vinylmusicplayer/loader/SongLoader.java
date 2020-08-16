@@ -15,6 +15,7 @@ import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -131,7 +132,7 @@ public class SongLoader {
                     paths.subList(processed, processed + currentBatch).toArray(new String[currentBatch]),
                     sortOrder
                 );
-                if (cursor != null) {cursors.add(cursor);};
+                if (cursor != null) {cursors.add(cursor);}
             } catch (SecurityException ignored) {
             }
 
@@ -139,7 +140,7 @@ public class SongLoader {
             processed += currentBatch;
         }
         if (cursors.isEmpty()) {return null;}
-        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
+        return new MergeCursor(cursors.toArray(new Cursor[0]));
     }
 
     @Nullable
@@ -173,7 +174,7 @@ public class SongLoader {
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     BASE_PROJECTION,
                     batchSelection,
-                    batchSelectionValues.toArray(new String[batchSelectionValues.size()]),
+                    batchSelectionValues.toArray(new String[0]),
                     sortOrder
                 );
                 if (cursor != null) {
@@ -186,7 +187,7 @@ public class SongLoader {
             processed += currentBatch;
         }
         if (cursors.isEmpty()) {return null;}
-        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
+        return new MergeCursor(cursors.toArray(new Cursor[0]));
     }
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
@@ -205,9 +206,7 @@ public class SongLoader {
         }
         else {
             newSelectionValues = new ArrayList<>(selectionValues.length + paths.size());
-            for (int i=0; i < selectionValues.length; ++i) {
-                newSelectionValues.add(selectionValues[i]);
-            }
+            newSelectionValues.addAll(Arrays.asList(selectionValues));
         }
 
         for (int i = 0; i < paths.size(); i++) {

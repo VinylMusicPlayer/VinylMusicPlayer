@@ -50,7 +50,6 @@ public class AddToPlaylistDialog extends DialogFragment {
                 .title(R.string.add_playlist_title)
                 .items(playlistNames)
                 .itemsCallback((materialDialog, view, i, charSequence) -> {
-                    //noinspection unchecked
                     final ArrayList<Song> songs = getArguments().getParcelableArrayList("songs");
                     if (songs == null) return;
                     if (i == 0) {

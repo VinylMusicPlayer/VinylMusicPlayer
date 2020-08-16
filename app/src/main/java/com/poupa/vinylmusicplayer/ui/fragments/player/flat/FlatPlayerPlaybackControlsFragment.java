@@ -154,8 +154,8 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
         playPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
         playPauseButton.post(() -> {
             if (playPauseButton != null) {
-                playPauseButton.setPivotX(playPauseButton.getWidth() / 2);
-                playPauseButton.setPivotY(playPauseButton.getHeight() / 2);
+                playPauseButton.setPivotX(playPauseButton.getWidth() / 2f);
+                playPauseButton.setPivotY(playPauseButton.getHeight() / 2f);
             }
         });
     }
@@ -202,13 +202,10 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     }
 
     private void updateShuffleState() {
-        switch (MusicPlayerRemote.getShuffleMode()) {
-            case MusicService.SHUFFLE_MODE_SHUFFLE:
-                shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-                break;
-            default:
-                shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-                break;
+        if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
+            shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+        } else {
+            shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
         }
     }
 

@@ -53,11 +53,10 @@ public class TopAndRecentlyPlayedTracksLoader {
         ArrayList<Song> notRecentlyPlayedSongs = SongLoader.getSongs(
             makeNotRecentTracksCursorAndClearUpDatabase(context));
 
-        ArrayList<Song> result = allSongs;
-        result.removeAll(playedSongs);
-        result.addAll(notRecentlyPlayedSongs);
+        allSongs.removeAll(playedSongs);
+        allSongs.addAll(notRecentlyPlayedSongs);
 
-        return result;
+        return allSongs;
     }
 
     @NonNull
@@ -115,30 +114,20 @@ public class TopAndRecentlyPlayedTracksLoader {
     @Nullable
     private static SortedLongCursor makeRecentTracksCursorImpl(@NonNull final Context context, boolean ignoreCutoffTime, boolean reverseOrder) {
         final long cutoff = (ignoreCutoffTime ? 0 : PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis());
-        Cursor songs = HistoryStore.getInstance(context).queryRecentIds(cutoff * (reverseOrder ? -1 : 1));
 
-        try {
+        try (Cursor songs = HistoryStore.getInstance(context).queryRecentIds(cutoff * (reverseOrder ? -1 : 1))) {
             return makeSortedCursor(context, songs,
                     songs.getColumnIndex(HistoryStore.RecentStoreColumns.ID));
-        } finally {
-            if (songs != null) {
-                songs.close();
-            }
         }
     }
 
     @Nullable
     private static SortedLongCursor makeTopTracksCursorImpl(@NonNull final Context context) {
         // first get the top results ids from the internal database
-        Cursor songs = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS);
 
-        try {
+        try (Cursor songs = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)) {
             return makeSortedCursor(context, songs,
                     songs.getColumnIndex(SongPlayCountStore.SongPlayCountColumns.ID));
-        } finally {
-            if (songs != null) {
-                songs.close();
-            }
         }
     }
 
@@ -162,7 +151,7 @@ public class TopAndRecentlyPlayedTracksLoader {
 
                 id = cursor.getLong(idColumn);
                 order[cursor.getPosition()] = id;
-                selection.append(String.valueOf(id));
+                selection.append(id);
             }
 
             selection.append(")");

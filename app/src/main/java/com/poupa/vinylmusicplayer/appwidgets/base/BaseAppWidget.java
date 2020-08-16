@@ -22,6 +22,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.request.target.Target;
@@ -188,10 +189,10 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         return path;
     }
 
-    protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap) {
+    protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap, final Resources.Theme theme) {
         Drawable image;
         if (bitmap == null) {
-            image = resources.getDrawable(R.drawable.default_album_art);
+            image = ResourcesCompat.getDrawable(resources, R.drawable.default_album_art, theme);
         } else {
             image = new BitmapDrawable(resources, bitmap);
         }
@@ -254,7 +255,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
                                 appWidgetView.setImageViewBitmap(R.id.button_next, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, R.drawable.ic_skip_next_white_24dp, color)));
                                 appWidgetView.setImageViewBitmap(R.id.button_prev, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, R.drawable.ic_skip_previous_white_24dp, color)));
 
-                                final Drawable image = getAlbumArtDrawable(appContext.getResources(), bitmap);
+                                final Drawable image = getAlbumArtDrawable(appContext.getResources(), bitmap, appContext.getTheme());
                                 final Bitmap roundedBitmap = createRoundedBitmap(image, imageSize, imageSize, cardRadius, 0, cardRadius, 0);
                                 appWidgetView.setImageViewBitmap(R.id.image, roundedBitmap);
 

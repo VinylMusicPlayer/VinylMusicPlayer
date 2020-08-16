@@ -29,7 +29,6 @@ public class NavigationUtil {
         final Intent intent = new Intent(activity, ArtistDetailActivity.class);
         intent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, artistId);
 
-        //noinspection unchecked
         if (sharedElements != null && sharedElements.length > 0) {
             activity.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElements).toBundle());
         } else {
@@ -41,7 +40,6 @@ public class NavigationUtil {
         final Intent intent = new Intent(activity, AlbumDetailActivity.class);
         intent.putExtra(AlbumDetailActivity.EXTRA_ALBUM_ID, albumId);
 
-        //noinspection unchecked
         if (sharedElements != null && sharedElements.length > 0) {
             activity.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedElements).toBundle());
         } else {

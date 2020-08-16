@@ -63,9 +63,8 @@ public class ScalingUtil {
         options.inJustDecodeBounds = false;
         options.inSampleSize = calculateSampleSize(options.outWidth, options.outHeight, dstWidth,
                 dstHeight, scalingLogic);
-        Bitmap unscaledBitmap = BitmapFactory.decodeResource(res, resId, options);
 
-        return unscaledBitmap;
+        return BitmapFactory.decodeResource(res, resId, options);
     }
 
     /**
@@ -104,7 +103,7 @@ public class ScalingUtil {
      * destination dimensions might be adjusted to a smaller size than
      * requested.
      */
-    public static enum ScalingLogic {
+    public enum ScalingLogic {
         CROP, FIT
     }
 

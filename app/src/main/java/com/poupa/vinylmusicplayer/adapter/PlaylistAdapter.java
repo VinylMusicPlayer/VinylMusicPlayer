@@ -266,10 +266,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
-                        popupMenu.setOnMenuItemClickListener(item -> {
-                            return PlaylistMenuHelper.handleMenuClick(
-                                activity, dataSet.get(getAdapterPosition()), item);
-                        });
+                        popupMenu.setOnMenuItemClickListener(item ->
+                                PlaylistMenuHelper.handleMenuClick(
+                                        activity, dataSet.get(getAdapterPosition()), item));
                     }
                     popupMenu.show();
                 });

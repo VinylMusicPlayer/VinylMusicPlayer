@@ -53,7 +53,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         super.onPlayFromMediaId(mediaId, extras);
 
         final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
-        final int itemId = musicId != null ? Integer.valueOf(musicId) : -1;
+        final int itemId = musicId != null ? Integer.parseInt(musicId) : -1;
         final ArrayList<Song> songs = new ArrayList<>();
 
         final String category = AutoMediaIDHelper.extractCategory(mediaId);

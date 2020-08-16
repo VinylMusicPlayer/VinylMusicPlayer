@@ -151,7 +151,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private boolean pausedByTransientLossOfFocus;
     private PlayingNotification playingNotification;
     private AudioManager audioManager;
-    @SuppressWarnings("deprecation")
     private MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
     private PlaybackHandler playerHandler;
@@ -180,8 +179,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private boolean notHandledMetaChangedForCurrentTrack;
 
     private Handler uiThreadHandler;
-
-    private MediaSessionCallback mMediaSessionCallback;
 
     private PackageValidator mPackageValidator;
 
@@ -250,7 +247,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
 
         PendingIntent mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
-        mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
+        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
         mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
                 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
@@ -1164,11 +1161,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 sendChangeInternal(MusicService.META_CHANGED);
                 break;
             case PreferenceUtil.RG_SOURCE_MODE:
-                applyReplayGain();
-                break;
             case PreferenceUtil.RG_PREAMP_WITH_TAG:
-                applyReplayGain();
-                break;
             case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
                 applyReplayGain();
                 break;

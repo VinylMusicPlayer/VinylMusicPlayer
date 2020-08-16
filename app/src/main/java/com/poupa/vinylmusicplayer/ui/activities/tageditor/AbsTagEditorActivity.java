@@ -94,7 +94,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 alpha = 1;
             }
             toolbar.setBackgroundColor(ColorUtil.withAlpha(paletteColorPrimary, alpha));
-            image.setTranslationY(scrollY / 2);
+            image.setTranslationY(scrollY / 2f);
         }
     };
     private List<String> songPaths;
@@ -231,10 +231,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
+        if (id == android.R.id.home) {
+            super.onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -426,7 +425,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 }
 
-                return paths.toArray(new String[paths.size()]);
+                return paths.toArray(new String[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
