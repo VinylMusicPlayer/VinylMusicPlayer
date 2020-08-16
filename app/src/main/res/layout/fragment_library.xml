@@ -38,11 +38,6 @@
             android:layout_height="@dimen/tab_height"
             app:tabContentStart="72dp"
             app:tabMode="scrollable" />
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_height"
-        app:tabContentStart="72dp"
-        app:tabMode="scrollable" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
