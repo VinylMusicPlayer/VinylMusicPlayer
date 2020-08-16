@@ -84,7 +84,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
         setUpToolbar();
 
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
             }
         }
 
-        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     @Override

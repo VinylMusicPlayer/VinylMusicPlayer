@@ -24,9 +24,9 @@ public final class AppShortcutIconGenerator {
 
     public static Icon generateThemedIcon(Context context, int iconId) {
         if (PreferenceUtil.getInstance().coloredAppShortcuts()) {
-            return generateUserThemedIcon(context, iconId).toIcon();
+            return generateUserThemedIcon(context, iconId).toIcon(context);
         } else {
-            return generateDefaultThemedIcon(context, iconId).toIcon();
+            return generateDefaultThemedIcon(context, iconId).toIcon(context);
         }
     }
 

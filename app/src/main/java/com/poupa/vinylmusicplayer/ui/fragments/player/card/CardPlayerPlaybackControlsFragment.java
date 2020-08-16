@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.ui.fragments.player.card;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -242,8 +243,10 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     private void setUpProgressSlider() {
         int color = MaterialValueHelper.getPrimaryTextColor(getContext(), false);
-        progressSlider.getThumb().mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        progressSlider.getProgressDrawable().mutate().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+        progressSlider.getThumb().mutate().setColorFilter(
+                new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        progressSlider.getProgressDrawable().mutate().setColorFilter(
+                new PorterDuffColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN));
 
         progressSlider.setOnSeekBarChangeListener(new SimpleOnSeekbarChangeListener() {
             @Override

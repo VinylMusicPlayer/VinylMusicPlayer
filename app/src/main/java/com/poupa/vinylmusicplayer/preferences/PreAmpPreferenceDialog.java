@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.preferences;
 
 import android.app.Dialog;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SeekBar;
@@ -46,14 +47,18 @@ public class PreAmpPreferenceDialog extends DialogFragment implements SeekBar.On
         SeekBar seekbarWithRg = view.findViewById(R.id.seekbar_with_rg);
         seekbarWithRg.setOnSeekBarChangeListener(this);
         seekbarWithRg.setProgress((int) ((withRgValue + 15) / 0.2f));
-        seekbarWithRg.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        seekbarWithRg.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        seekbarWithRg.getProgressDrawable().setColorFilter(
+                new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        seekbarWithRg.getThumb().setColorFilter(
+                new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
 
         SeekBar seekbarWithoutRg = view.findViewById(R.id.seekbar_without_rg);
         seekbarWithoutRg.setOnSeekBarChangeListener(this);
         seekbarWithoutRg.setProgress((int) ((withoutRgValue + 15) / 0.2f));
-        seekbarWithoutRg.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        seekbarWithoutRg.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        seekbarWithoutRg.getProgressDrawable().setColorFilter(
+                new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        seekbarWithoutRg.getThumb().setColorFilter(
+                new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
 
         return new MaterialDialog.Builder(getContext())
                 .title(R.string.pref_title_rg_preamp)
