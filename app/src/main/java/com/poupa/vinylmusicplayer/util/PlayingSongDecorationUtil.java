@@ -23,6 +23,8 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.model.Song;
 
+import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
+
 /**
  * @author SC (soncaokim)
  */
@@ -87,12 +89,12 @@ public class PlayingSongDecorationUtil {
             final boolean animateIcon = PreferenceUtil.getInstance().animatePlayingSongIcon();
 
             if (isPlaying) {
-                image.setScaleType(ImageView.ScaleType.CENTER);
-
                 final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
                 image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
+                // sizing and positioning
                 final int size = (int)(24 * activity.getResources().getDisplayMetrics().density);
+                image.setScaleType(ImageView.ScaleType.CENTER);
 
                 // Note: No transition for Glide, the animation is explicitly controlled
                 GlideApp.with(activity)
@@ -104,7 +106,10 @@ public class PlayingSongDecorationUtil {
                 if (animateIcon) { image.startAnimation(sIconAnimation); }
             }
             else {
+                // restore default setting
                 image.clearColorFilter();
+                image.setScaleType(VINYL_ALBUM_ART_SCALE_TYPE);
+
                 if (animateIcon) { image.clearAnimation(); }
             }
         }
