@@ -15,6 +15,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.PathInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -31,6 +32,7 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 public class ViewUtil {
 
     public final static int VINYL_MUSIC_PLAYER_ANIM_TIME = 1000;
+    public final static ImageView.ScaleType VINYL_ALBUM_ART_SCALE_TYPE = ImageView.ScaleType.CENTER_CROP;
 
     public static Animator createBackgroundColorTransition(final View v, @ColorInt final int startColor, @ColorInt final int endColor) {
         return createColorAnimator(v, "backgroundColor", startColor, endColor);
