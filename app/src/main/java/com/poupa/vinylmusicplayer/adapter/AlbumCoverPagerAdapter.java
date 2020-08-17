@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,14 @@ import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.misc.CustomFragmentStatePagerAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -75,7 +75,7 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
         }
     }
 
-    public static class AlbumCoverFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class AlbumCoverFragment extends Fragment {
         private static final String SONG_ARG = "song";
 
         private Unbinder unbinder;
@@ -113,17 +113,13 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
         @Override
         public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            forceSquareAlbumCover(false);
-            // TODO
-//            forceSquareAlbumCover(PreferenceUtil.getInstance().forceSquareAlbumCover());
-            PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
+            albumCover.setScaleType(VINYL_ALBUM_ART_SCALE_TYPE);
             loadAlbumCover();
         }
 
         @Override
         public void onDestroyView() {
             super.onDestroyView();
-            PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
             unbinder.unbind();
             colorReceiver = null;
         }
@@ -140,20 +136,6 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
                             setColor(color);
                         }
                     });
-        }
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch (key) {
-                case PreferenceUtil.FORCE_SQUARE_ALBUM_COVER:
-                    // TODO
-//                    forceSquareAlbumCover(PreferenceUtil.getInstance().forceSquareAlbumCover());
-                    break;
-            }
-        }
-
-        public void forceSquareAlbumCover(boolean forceSquareAlbumCover) {
-            albumCover.setScaleType(forceSquareAlbumCover ? ImageView.ScaleType.FIT_CENTER : ImageView.ScaleType.CENTER_CROP);
         }
 
         private void setColor(int color) {
