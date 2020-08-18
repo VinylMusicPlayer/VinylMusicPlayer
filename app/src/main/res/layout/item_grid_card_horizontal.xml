@@ -6,7 +6,6 @@
     android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp"
     android:foreground="?attr/rectSelectorStrong"
-    android:theme="@style/Theme.MaterialComponents.Light"
     app:cardBackgroundColor="?cardBackgroundColor">
 
     <!-- for getSwipeableContainerView() -->
