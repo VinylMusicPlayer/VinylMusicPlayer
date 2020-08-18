@@ -23,6 +23,13 @@
             android:positiveButtonText="@null"
             android:title="@string/pref_title_last_added_interval" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="maintain_skipped_songs_playlist"
+            android:summary="@string/pref_summary_maintain_skipped_songs_playlist"
+            android:title="@string/pref_title_maintain_skipped_songs_playlist" />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

@@ -65,6 +65,7 @@ public final class PreferenceUtil {
 
     public static final String LAST_ADDED_CUTOFF = "last_added_interval";
     public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
     public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
     public static final String BLURRED_ALBUM_ART = "blurred_album_art";
@@ -556,6 +557,9 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(ANIMATE_PLAYING_SONG_ICON, false);
     }
 
+    public final boolean maintainSkippedSongsPlaylist() {
+        return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
+    }
     public void setInitializedBlacklist() {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putBoolean(INITIALIZED_BLACKLIST, true);

@@ -59,6 +59,7 @@ import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl24
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PackageValidator;
+import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
@@ -448,6 +449,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void playNextSong(boolean force) {
+        if (PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
+            PlaylistsUtil.addToPlaylist(
+                    this,
+                    getCurrentSong(),
+                    MusicUtil.getOrCreateSkippedPlaylist(this).id,
+                    true);
+        }
+
         playSongAt(getNextPosition(force));
     }
 
