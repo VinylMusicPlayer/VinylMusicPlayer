@@ -53,8 +53,6 @@ public final class PreferenceUtil {
     public static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
     public static final String ALBUM_ARTIST_COLORED_FOOTERS = "album_artist_colored_footers";
 
-    public static final String FORCE_SQUARE_ALBUM_COVER = "force_square_album_art";
-
     public static final String COLORED_NOTIFICATION = "colored_notification";
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
