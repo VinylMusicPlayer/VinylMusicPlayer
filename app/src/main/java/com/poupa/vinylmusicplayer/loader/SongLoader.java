@@ -70,7 +70,7 @@ public class SongLoader {
     }
 
     @NonNull
-    public static Song getSong(@Nullable Cursor cursor) {
+    private static Song getSong(@Nullable Cursor cursor) {
         Song song;
         if (cursor != null && cursor.moveToFirst()) {
             song = getSongFromCursorImpl(cursor);

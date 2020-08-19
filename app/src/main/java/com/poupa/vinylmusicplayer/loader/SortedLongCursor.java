@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -94,16 +93,9 @@ public class SortedLongCursor extends AbstractCursor {
     /**
      * @return the list of ids that weren't found in the underlying cursor
      */
+    @NonNull
     public ArrayList<Long> getMissingIds() {
         return mMissingIds;
-    }
-
-    /**
-     * @return the list of ids that were in the underlying cursor but not part of the ordered list
-     */
-    @NonNull
-    public Collection<Long> getExtraIds() {
-        return mMapCursorPositions.keySet();
     }
 
     @Override
