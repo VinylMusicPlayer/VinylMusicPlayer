@@ -449,12 +449,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void playNextSong(boolean force) {
-        if (PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
-            PlaylistsUtil.addToPlaylist(
-                    this,
-                    getCurrentSong(),
-                    MusicUtil.getOrCreateSkippedPlaylist(this).id,
-                    true);
+        if (force && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
+            final int playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
+            PlaylistsUtil.addToPlaylist(this, getCurrentSong(), playlistId, true);
         }
 
         playSongAt(getNextPosition(force));
