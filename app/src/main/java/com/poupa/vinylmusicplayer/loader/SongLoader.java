@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
@@ -15,6 +14,7 @@ import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,8 +36,6 @@ public class SongLoader {
             AudioColumns.ARTIST_ID,// 10
             AudioColumns.ARTIST,// 11
     };
-
-    private static final int BATCH_SIZE = 900; // used in makeSongCursor* functions. SQLite limit on the number of ?argument is 999, we leave some to the other call sites.
 
     @NonNull
     public static ArrayList<Song> getAllSongs(@NonNull Context context) {
@@ -117,37 +115,20 @@ public class SongLoader {
         }
 
         // Blacklist
+        // Note: There is a SQLite limit on the number of ?argument.
+        // Being 999, it is unlikely that we reach that limit for the number of black-listed paths
         final ArrayList<String> paths = BlacklistStore.getInstance(context).getPaths();
-        int remaining = paths.size();
-        int processed = 0;
-
-        ArrayList<Cursor> cursors = new ArrayList<>();
-        do {
-            final int currentBatch = Math.min(BATCH_SIZE, remaining);
-
-            // Enrich the base selection with the current batch parameters
-            String batchSelection = generateBlacklistSelection(selection, currentBatch);
-            String[] batchSelectionValues = addBlacklistSelectionValues(selectionValues, paths.subList(processed, processed + currentBatch));
-
-            try {
-                Cursor cursor = context.getContentResolver().query(
+        try {
+            return context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     BASE_PROJECTION,
-                    batchSelection,
-                    batchSelectionValues,
+                    generateBlacklistSelection(selection, paths.size()),
+                    addBlacklistSelectionValues(selectionValues, paths),
                     sortOrder
-                );
-                if (cursor != null) {
-                    cursors.add(cursor);
-                }
-            } catch (SecurityException ignored) {
-            }
-
-            remaining -= currentBatch;
-            processed += currentBatch;
-        } while (remaining > 0);
-        if (cursors.isEmpty()) {return null;}
-        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
+            );
+        } catch (SecurityException ignored) {
+            return null;
+        }
     }
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
@@ -174,9 +155,7 @@ public class SongLoader {
         }
         else {
             newSelectionValues = new ArrayList<>(selectionValues.length + paths.size());
-            for (int i=0; i < selectionValues.length; ++i) {
-                newSelectionValues.add(selectionValues[i]);
-            }
+            newSelectionValues.addAll(Arrays.asList(selectionValues));
         }
 
         for (int i = 0; i < paths.size(); i++) {
