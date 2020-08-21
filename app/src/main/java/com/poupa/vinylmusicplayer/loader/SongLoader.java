@@ -203,7 +203,7 @@ public class SongLoader {
     }
 
     private static String[] addBlacklistSelectionValues(String[] selectionValues, @NonNull final List<String> paths) {
-        if (paths.empty()) {
+        if (paths.isEmpty()) {
             return selectionValues;
         }
 
