@@ -104,45 +104,6 @@ public class SongLoader {
     }
 
     @Nullable
-    public static Cursor makeSongCursorFromPaths(@NonNull final Context context, @NonNull ArrayList<String> paths) {
-        // Exclude blacklist
-        paths.removeAll(BlacklistStore.getInstance(context).getPaths());
-
-        int remaining = paths.size();
-        int processed = 0;
-
-        ArrayList<Cursor> cursors = new ArrayList<>();
-        final String sortOrder = PreferenceUtil.getInstance().getSongSortOrder();
-        while (remaining > 0) {
-            final int currentBatch = Math.min(BATCH_SIZE, remaining);
-
-            StringBuilder selection = new StringBuilder();
-            selection.append(BASE_SELECTION + " AND " + MediaStore.Audio.AudioColumns.DATA + " IN (?");
-            for (int i = 1; i < currentBatch; i++) {
-                selection.append(",?");
-            }
-            selection.append(")");
-
-            try {
-                Cursor cursor = context.getContentResolver().query(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    BASE_PROJECTION,
-                    selection.toString(),
-                    paths.subList(processed, processed + currentBatch).toArray(new String[currentBatch]),
-                    sortOrder
-                );
-                if (cursor != null) {cursors.add(cursor);};
-            } catch (SecurityException ignored) {
-            }
-
-            remaining -= currentBatch;
-            processed += currentBatch;
-        }
-        if (cursors.isEmpty()) {return null;}
-        return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
-    }
-
-    @Nullable
     public static Cursor makeSongCursor(@NonNull final Context context, @Nullable final String selection, final String[] selectionValues) {
         return makeSongCursor(context, selection, selectionValues, PreferenceUtil.getInstance().getSongSortOrder());
     }
