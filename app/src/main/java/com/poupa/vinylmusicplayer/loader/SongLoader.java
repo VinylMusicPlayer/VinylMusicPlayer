@@ -161,19 +161,19 @@ public class SongLoader {
         int processed = 0;
 
         ArrayList<Cursor> cursors = new ArrayList<>();
-        while (remaining > 0) {
+        do {
             final int currentBatch = Math.min(BATCH_SIZE, remaining);
 
             // Enrich the base selection with the current batch parameters
             String batchSelection = generateBlacklistSelection(selection, currentBatch);
-            ArrayList<String> batchSelectionValues = addBlacklistSelectionValues(selectionValues, paths.subList(processed, processed + currentBatch));
+            String[] batchSelectionValues = addBlacklistSelectionValues(selectionValues, paths.subList(processed, processed + currentBatch));
 
             try {
                 Cursor cursor = context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     BASE_PROJECTION,
                     batchSelection,
-                    batchSelectionValues.toArray(new String[batchSelectionValues.size()]),
+                    batchSelectionValues,
                     sortOrder
                 );
                 if (cursor != null) {
@@ -184,12 +184,16 @@ public class SongLoader {
 
             remaining -= currentBatch;
             processed += currentBatch;
-        }
+        } while (remaining > 0);
         if (cursors.isEmpty()) {return null;}
         return new MergeCursor(cursors.toArray(new Cursor[cursors.size()]));
     }
 
     private static String generateBlacklistSelection(String selection, int pathCount) {
+        if (pathCount <= 0) {
+            return selection;
+        }
+
         StringBuilder newSelection = new StringBuilder(selection != null && !selection.trim().equals("") ? selection + " AND " : "");
         newSelection.append(AudioColumns.DATA + " NOT LIKE ?");
         for (int i = 1; i < pathCount; i++) {
@@ -198,7 +202,11 @@ public class SongLoader {
         return newSelection.toString();
     }
 
-    private static ArrayList<String> addBlacklistSelectionValues(String[] selectionValues, @NonNull final List<String> paths) {
+    private static String[] addBlacklistSelectionValues(String[] selectionValues, @NonNull final List<String> paths) {
+        if (paths.empty()) {
+            return selectionValues;
+        }
+
         ArrayList<String> newSelectionValues;
         if (selectionValues == null) {
             newSelectionValues = new ArrayList<>(paths.size());
@@ -213,6 +221,6 @@ public class SongLoader {
         for (int i = 0; i < paths.size(); i++) {
             newSelectionValues.add(paths.get(i) + "%");
         }
-        return newSelectionValues;
+        return newSelectionValues.toArray(new String[0]);
     }
 }
