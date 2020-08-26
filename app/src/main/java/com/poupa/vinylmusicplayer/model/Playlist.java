@@ -34,8 +34,8 @@ public class Playlist implements Parcelable {
         String songCountString = MusicUtil.getSongCountString(context, songCount);
 
         return MusicUtil.buildInfoString(
-            songCountString,
-            ""
+                songCountString,
+                ""
         );
     }
 

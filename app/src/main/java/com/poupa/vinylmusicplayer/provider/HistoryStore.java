@@ -25,6 +25,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class HistoryStore extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "history.db";
     private static final int VERSION = 1;
@@ -72,7 +74,7 @@ public class HistoryStore extends SQLiteOpenHelper {
 
         try {
             // remove previous entries
-            removeSongId(songId);
+            removeSongId(database, songId);
 
             // add the entry
             final ContentValues values = new ContentValues(2);
@@ -85,12 +87,25 @@ public class HistoryStore extends SQLiteOpenHelper {
         }
     }
 
-    public void removeSongId(final long songId) {
+    public void removeSongIds(@NonNull ArrayList<Long> missingIds) {
+        if (missingIds.isEmpty()) return;
+
         final SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+        try {
+            for (long id : missingIds) {
+                removeSongId(database, id);
+            }
+        } finally {
+            database.setTransactionSuccessful();
+            database.endTransaction();
+        }
+    }
+
+    private void removeSongId(@NonNull final SQLiteDatabase database, final long songId) {
         database.delete(RecentStoreColumns.NAME, RecentStoreColumns.ID + " = ?", new String[]{
                 String.valueOf(songId)
         });
-
     }
 
     public void clear() {

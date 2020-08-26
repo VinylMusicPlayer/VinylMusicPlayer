@@ -18,6 +18,7 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 
@@ -41,23 +42,11 @@ public class TopAndRecentlyPlayedTracksLoader {
 
     @NonNull
     public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
-        ArrayList<Song> allSongs = SongLoader.getSongs(
-            SongLoader.makeSongCursor(
-                context,
-                null, null,
-                MediaStore.Audio.Media.DATE_ADDED + " ASC"));
-
-        ArrayList<Song> playedSongs = SongLoader.getSongs(
-            makePlayedTracksCursorAndClearUpDatabase(context));
-
-        ArrayList<Song> notRecentlyPlayedSongs = SongLoader.getSongs(
-            makeNotRecentTracksCursorAndClearUpDatabase(context));
-
-        ArrayList<Song> result = allSongs;
-        result.removeAll(playedSongs);
-        result.addAll(notRecentlyPlayedSongs);
-
-        return result;
+        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{
+                makeNotPlayedTracksCursorAndClearUpDatabase(context),
+                makeNotRecentTracksCursorAndClearUpDatabase(context)
+        });
+        return SongLoader.getSongs(mergeCursor);
     }
 
     @NonNull
@@ -71,8 +60,32 @@ public class TopAndRecentlyPlayedTracksLoader {
     }
 
      @Nullable
-    public static Cursor makePlayedTracksCursorAndClearUpDatabase(@NonNull final Context context) {
-        return makeRecentTracksCursorAndClearUpDatabaseImpl(context, true, false);
+    private static Cursor makeNotPlayedTracksCursorAndClearUpDatabase(@NonNull final Context context) {
+         String selection = null;
+         Cursor playedSongs = makeRecentTracksCursorAndClearUpDatabaseImpl(context, true, false);
+
+         if (playedSongs != null && playedSongs.moveToFirst()) {
+             StringBuilder playedSongExclusion = new StringBuilder();
+             playedSongExclusion.append(BaseColumns._ID);
+             playedSongExclusion.append(" NOT IN (");
+
+             final int columnIndex = playedSongs.getColumnIndex(BaseColumns._ID);
+             playedSongExclusion.append(playedSongs.getLong(columnIndex));
+
+             while (playedSongs.moveToNext()) {
+                 playedSongExclusion.append(",");
+                 playedSongExclusion.append(playedSongs.getLong(columnIndex));
+             }
+
+             playedSongExclusion.append(")");
+             selection = playedSongExclusion.toString();
+         }
+
+         return SongLoader.makeSongCursor(
+                 context,
+                 selection,
+                 null,
+                 MediaStore.Audio.Media.DATE_ADDED + " ASC");
     }
 
      @Nullable
@@ -80,35 +93,25 @@ public class TopAndRecentlyPlayedTracksLoader {
         return makeRecentTracksCursorAndClearUpDatabaseImpl(context, false, true);
     }
 
-     @Nullable
+    private static void cleanupDatabase(@NonNull final Context context, @Nullable final SortedLongCursor cursor) {
+        if (cursor != null) {
+            HistoryStore.getInstance(context).removeSongIds(cursor.getMissingIds());
+        }
+    }
+
+    @Nullable
     private static Cursor makeRecentTracksCursorAndClearUpDatabaseImpl(@NonNull final Context context, boolean ignoreCutoffTime, boolean reverseOrder) {
         SortedLongCursor retCursor = makeRecentTracksCursorImpl(context, ignoreCutoffTime, reverseOrder);
+        cleanupDatabase(context, retCursor);
 
-        // clean up the databases with any ids not found
-        if (retCursor != null) {
-            ArrayList<Long> missingIds = retCursor.getMissingIds();
-            if (missingIds != null && missingIds.size() > 0) {
-                for (long id : missingIds) {
-                    HistoryStore.getInstance(context).removeSongId(id);
-                }
-            }
-        }
         return retCursor;
     }
 
     @Nullable
     public static Cursor makeTopTracksCursorAndClearUpDatabase(@NonNull final Context context) {
         SortedLongCursor retCursor = makeTopTracksCursorImpl(context);
+        cleanupDatabase(context, retCursor);
 
-        // clean up the databases with any ids not found
-        if (retCursor != null) {
-            ArrayList<Long> missingIds = retCursor.getMissingIds();
-            if (missingIds != null && missingIds.size() > 0) {
-                for (long id : missingIds) {
-                    SongPlayCountStore.getInstance(context).removeItem(id);
-                }
-            }
-        }
         return retCursor;
     }
 
@@ -129,7 +132,6 @@ public class TopAndRecentlyPlayedTracksLoader {
 
     @Nullable
     private static SortedLongCursor makeTopTracksCursorImpl(@NonNull final Context context) {
-        // first get the top results ids from the internal database
         Cursor songs = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS);
 
         try {
@@ -162,7 +164,7 @@ public class TopAndRecentlyPlayedTracksLoader {
 
                 id = cursor.getLong(idColumn);
                 order[cursor.getPosition()] = id;
-                selection.append(String.valueOf(id));
+                selection.append(id);
             }
 
             selection.append(")");
@@ -170,7 +172,7 @@ public class TopAndRecentlyPlayedTracksLoader {
             // get a list of songs with the data given the selection statement
             Cursor songCursor = SongLoader.makeSongCursor(context, selection.toString(), null);
             if (songCursor != null) {
-                // now return the wrapped TopTracksCursor to handle sorting given order
+                // now return the wrapped cursor to handle sorting given order
                 return new SortedLongCursor(songCursor, order, BaseColumns._ID);
             }
         }
