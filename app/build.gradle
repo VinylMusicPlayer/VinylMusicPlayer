@@ -70,6 +70,9 @@ android {
         abortOnError false
     }
     compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -111,7 +114,6 @@ dependencies {
 
     implementation 'com.github.AdrienPoupa:jaudiotagger:2.2.3'
 
-    // TODO Upgrade com.squareup.retrofit2 requires JVM target upgrade
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -128,4 +130,6 @@ dependencies {
     implementation 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
 
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
 }

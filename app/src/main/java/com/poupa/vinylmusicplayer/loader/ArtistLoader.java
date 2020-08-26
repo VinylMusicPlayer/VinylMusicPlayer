@@ -1,80 +1,81 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
-import android.provider.MediaStore.Audio.AudioColumns;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Artist;
-import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class ArtistLoader {
-    public static String getSongLoaderSortOrder(Context context) {
-        return PreferenceUtil.getInstance().getArtistSortOrder() + ", " + PreferenceUtil.getInstance().getArtistAlbumSortOrder() + ", " + PreferenceUtil.getInstance().getAlbumSongSortOrder();
-    }
-
     @NonNull
     public static ArrayList<Artist> getAllArtists(@NonNull final Context context) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                context,
-                null,
-                null,
-                getSongLoaderSortOrder(context))
-        );
-        return splitIntoArtists(songs);
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            ArrayList<Artist> artists = new ArrayList<>(discog.getAllArtists());
+            Collections.sort(artists, getSortOrder());
+            return artists;
+        }
     }
 
     @NonNull
     public static ArrayList<Artist> getArtists(@NonNull final Context context, String query) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                context,
-                AudioColumns.ARTIST + " LIKE ?",
-                new String[]{"%" + query + "%"},
-                getSongLoaderSortOrder(context))
-        );
-        return splitIntoArtists(songs);
-    }
-
-    @NonNull
-    public static Artist getArtist(@NonNull final Context context, long artistId) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                context,
-                AudioColumns.ARTIST_ID + "=?",
-                new String[]{String.valueOf(artistId)},
-                getSongLoaderSortOrder(context))
-        );
-        return new Artist(AlbumLoader.splitIntoAlbums(songs));
-    }
-
-    @NonNull
-    public static ArrayList<Artist> splitIntoArtists(@Nullable final ArrayList<Song> songs) {
-        ArrayList<Artist> artists = new ArrayList<>();
-        if (songs != null) {
-            for (Song song : songs) {
-                Artist artist = getOrCreateArtist(artists, song.artistId);
-                Album album = AlbumLoader.getOrCreateAlbum(artist.albums, song.albumId);
-                album.songs.add(song);
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            ArrayList<Artist> artists = new ArrayList<>();
+            for (Artist artist : discog.getAllArtists()) {
+                // TODO Case/accent insensitive comparison
+                if (artist.getName().contains(query)) {
+                    artists.add(artist);
+                }
             }
+            Collections.sort(artists, getSortOrder());
+            return artists;
         }
-        return artists;
     }
 
-    private static Artist getOrCreateArtist(ArrayList<Artist> artists, long artistId) {
-        for (Artist artist : artists) {
-            if (!artist.albums.isEmpty() && !artist.albums.get(0).songs.isEmpty() && artist.albums.get(0).songs.get(0).artistId == artistId) {
+    @NonNull
+    public static Artist getArtist(@NonNull final Context context, int artistId) {
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            Artist artist = discog.getArtist(artistId);
+            if (artist != null) {
                 return artist;
+            } else {
+                return new Artist();
             }
         }
-        Artist artist = new Artist();
-        artists.add(artist);
-        return artist;
+    }
+
+    @NonNull
+    private static Comparator<Artist> getSortOrder() {
+        final Collator collator = Collator.getInstance();
+
+        Comparator<Artist> byArtistName = (a1, a2) -> collator.compare(
+                a1.safeGetFirstAlbum().safeGetFirstSong().artistName,
+                a2.safeGetFirstAlbum().safeGetFirstSong().artistName);
+
+        Function<Comparator<Artist>, Comparator<Artist>> inverse =
+                (c) -> (Comparator<Artist>) (a1, a2) -> c.compare(a2, a1);
+
+        switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
+            case SortOrder.ArtistSortOrder.ARTIST_Z_A:
+                return inverse.apply(byArtistName);
+
+            case SortOrder.ArtistSortOrder.ARTIST_A_Z:
+            default:
+                return byArtistName;
+        }
     }
 }

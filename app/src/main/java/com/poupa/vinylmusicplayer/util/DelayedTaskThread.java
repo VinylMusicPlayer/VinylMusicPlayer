@@ -16,16 +16,16 @@ public class DelayedTaskThread {
     public final static long ONE_MINUTE = PRECISION.convert(60, TimeUnit.SECONDS);
 
     private abstract static class Task implements Runnable, Delayed {
-        private final long expectedStart; // expressed in the unit specified by PRECISION
-        private final boolean isRecurrent;
+        private long expectedStart; // expressed in the unit specified by PRECISION
+        private final long recurrence; // expressed in the unit specified by PRECISION
 
         private static long now() {
             return PRECISION.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         }
 
-        public Task(long delay, boolean isRecurrent) {
+        public Task(long delay, long recurrence) {
             this.expectedStart = now() + delay;
-            this.isRecurrent = isRecurrent;
+            this.recurrence = recurrence;
         }
 
         @Override
@@ -76,7 +76,8 @@ public class DelayedTaskThread {
                         e.printStackTrace();
                     }
 
-                    if (task.isRecurrent) {
+                    if (task.recurrence > 0) {
+                        task.expectedStart = Task.now() + task.recurrence;
                         taskQueue.add(task);
                     }
                 }
@@ -99,8 +100,8 @@ public class DelayedTaskThread {
         }
     }
 
-    public synchronized void addTask(long delay, boolean isRecurrent, Runnable runnable) {
-        Task task = new Task(delay, isRecurrent) {
+    public synchronized void addTask(long delay, long recurrence, Runnable runnable) {
+        Task task = new Task(delay, recurrence) {
             @Override
             public void run() {
                 runnable.run();

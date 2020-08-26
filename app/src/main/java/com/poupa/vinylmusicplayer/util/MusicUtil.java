@@ -28,6 +28,7 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
+import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 import org.jaudiotagger.audio.AudioFileIO;
@@ -256,7 +257,7 @@ public class MusicUtil {
         // Split the query into multiple batches, and merge the resulting cursors
         int batchStart = 0;
         int batchEnd = 0;
-        final int batchSize = 1000000 / 10; // 10^6 being the SQLite limite on the query lenth in bytes, 10 being the max number of digits in an int, used to store the track ID
+        final int batchSize = 1000000 / 10; // 10^6 being the SQLite limit on the query length in bytes, 10 being the max number of digits in an int, used to store the track ID
         final int songCount = songs.size();
 
         while (batchEnd < songCount)
@@ -288,7 +289,7 @@ public class MusicUtil {
                     cursor.moveToFirst();
                     while (!cursor.isAfterLast()) {
                         final long id = cursor.getLong(0);
-                        final Song song = SongLoader.getSong(activity, id);
+                        final Song song = Discography.getInstance().getSong(id);
                         MusicPlayerRemote.removeFromQueue(song);
                         cursor.moveToNext();
                     }
@@ -361,10 +362,18 @@ public class MusicUtil {
     }
 
     public static boolean isArtistNameUnknown(@Nullable String artistName) {
-        if (TextUtils.isEmpty(artistName)) return false;
-        if (artistName.equals(Artist.UNKNOWN_ARTIST_DISPLAY_NAME)) return true;
-        artistName = artistName.trim().toLowerCase();
-        return artistName.equals("unknown") || artistName.equals("<unknown>");
+        return isNameUnknown(artistName, Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+    }
+
+    public static boolean isAlbumNameUnknown(@Nullable String albumName) {
+        return isNameUnknown(albumName, Album.UNKNOWN_ALBUM_DISPLAY_NAME);
+    }
+
+    private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
+        if (TextUtils.isEmpty(name)) return true;
+        if (name.equals(defaultDisplayName)) return true;
+        name = name.trim().toLowerCase();
+        return name.equals("unknown") || name.equals("<unknown>");
     }
 
     @NonNull

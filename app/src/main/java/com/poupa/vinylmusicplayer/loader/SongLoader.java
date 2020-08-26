@@ -51,12 +51,6 @@ public class SongLoader {
     }
 
     @NonNull
-    public static Song getSong(@NonNull final Context context, final long queryId) {
-        Cursor cursor = makeSongCursor(context, AudioColumns._ID + "=?", new String[]{String.valueOf(queryId)});
-        return getSong(cursor);
-    }
-
-    @NonNull
     public static ArrayList<Song> getSongs(@Nullable final Cursor cursor) {
         ArrayList<Song> songs = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
@@ -71,20 +65,6 @@ public class SongLoader {
     }
 
     @NonNull
-    private static Song getSong(@Nullable Cursor cursor) {
-        Song song;
-        if (cursor != null && cursor.moveToFirst()) {
-            song = getSongFromCursorImpl(cursor);
-        } else {
-            song = Song.EMPTY_SONG;
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return song;
-    }
-
-    @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         final long id = cursor.getLong(0);
         final String data = cursor.getString(5);
@@ -92,14 +72,18 @@ public class SongLoader {
         final long dateModified = cursor.getLong(7);
 
         // search in the discog cache first
-        Song song = Discography.getInstance().getSong(id);
-        if (song != null) {
+        Discography discog = Discography.getInstance();
+        Song song = discog.getSong(id);
+        if (song != Song.EMPTY_SONG) {
             if (song.data.equals(data) && song.dateAdded == dateAdded && song.dateModified == dateModified) {
+                // existing and up-to-date
                 return song;
+            } else {
+                // existing but obsolete
+                discog.removeSongById(id);
             }
         }
 
-        // either none in cache, or obsolete
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
         final int year = cursor.getInt(3);
@@ -110,7 +94,7 @@ public class SongLoader {
         final String artistName = cursor.getString(11);
 
         song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
-        Discography.getInstance().addSong(song);
+        discog.addSong(song);
 
         return song;
     }

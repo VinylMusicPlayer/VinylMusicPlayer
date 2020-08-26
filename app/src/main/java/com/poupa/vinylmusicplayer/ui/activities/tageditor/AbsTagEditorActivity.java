@@ -34,6 +34,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
+import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -446,6 +447,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
 
         private void scan(String[] toBeScanned) {
+            for (final String path : toBeScanned) {
+                Discography.getInstance().removeSongByPath(path);
+            }
+
             Activity activity = this.activity.get();
             if (activity != null) {
                 MediaScannerConnection.scanFile(activity, toBeScanned, null, new UpdateToastMediaScannerCompletionListener(activity, toBeScanned));

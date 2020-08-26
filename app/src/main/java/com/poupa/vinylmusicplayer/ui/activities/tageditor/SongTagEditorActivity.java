@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.provider.Discography;
 
 import org.jaudiotagger.tag.FieldKey;
 
@@ -114,7 +115,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     @Override
     protected List<String> getSongPaths() {
         ArrayList<String> paths = new ArrayList<>(1);
-        paths.add(SongLoader.getSong(this, getId()).data);
+        paths.add(Discography.getInstance().getSong(getId()).data);
         return paths;
     }
 

@@ -40,8 +40,9 @@ public class PlaylistSongLoader {
         final int idInPlaylist = cursor.getInt(12);
 
         // search in the discog cache first
-        Song song = Discography.getInstance().getSong(id);
-        if (song != null) {
+        Discography discog = Discography.getInstance();
+        Song song = discog.getSong(id);
+        if (song != Song.EMPTY_SONG) {
             if (song.data.equals(data) && song.dateAdded == dateAdded && song.dateModified == dateModified) {
                 PlaylistSong playlistSong = new PlaylistSong(
                         id,
@@ -59,6 +60,8 @@ public class PlaylistSongLoader {
                         playlistId,
                         idInPlaylist);
                 return playlistSong;
+            } else {
+                discog.removeSongById(id);
             }
         }
 
@@ -87,7 +90,7 @@ public class PlaylistSongLoader {
                 artistName,
                 playlistId,
                 idInPlaylist);
-        Discography.getInstance().addSong(playlistSong);
+        discog.addSong(playlistSong);
 
         return playlistSong;
     }

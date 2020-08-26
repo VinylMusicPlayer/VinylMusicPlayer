@@ -1,87 +1,60 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.MediaStore.Audio.Genres;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.provider.Discography;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class GenreLoader {
 
     @NonNull
     public static ArrayList<Genre> getAllGenres(@NonNull final Context context) {
-        return getGenresFromCursor(context, makeGenreCursor(context));
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            ArrayList<Genre> genres = new ArrayList<>(discog.getAllGenres());
+            final Collator collator = Collator.getInstance();
+            Collections.sort(genres,
+                    (g1, g2) -> {
+                        if (g1.name == null) {return g2.name == null ? 0 : -1;}
+                        else if (g2.name == null) {return 1;}
+
+                        return collator.compare(g1.name, g2.name);
+                    });
+            return genres;
+        }
     }
 
     @NonNull
     public static ArrayList<Song> getSongs(@NonNull final Context context, final long genreId) {
-        return SongLoader.getSongs(makeGenreSongCursor(context, genreId));
-    }
-
-    @NonNull
-    private static ArrayList<Genre> getGenresFromCursor(@NonNull final Context context, @Nullable final Cursor cursor) {
-        final ArrayList<Genre> genres = new ArrayList<>();
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    Genre genre = getGenreFromCursor(context, cursor);
-                    if (genre.songCount > 0) {
-                        genres.add(genre);
-                    } else {
-                        // try to remove the empty genre from the media store
-                        try {
-                            context.getContentResolver().delete(Genres.EXTERNAL_CONTENT_URI, Genres._ID + " == " + genre.id, null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            // nothing we can do then
-                        }
-                    }
-                } while (cursor.moveToNext());
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            Collection<Song> genreSongs = discog.getSongsForGenre(genreId);
+            if (genreSongs == null) {
+                return new ArrayList<>();
             }
-            cursor.close();
-        }
-        return genres;
-    }
+            else {
+                ArrayList<Song> songs = new ArrayList<>(genreSongs);
 
-    @NonNull
-    private static Genre getGenreFromCursor(@NonNull final Context context, @NonNull final Cursor cursor) {
-        final long id = cursor.getLong(0);
-        final String name = cursor.getString(1);
-        final int songs = getSongs(context, id).size();
-        return new Genre(id, name, songs);
-    }
+                // TODO Do we need other sorting option here?
+                final Collator collator = Collator.getInstance();
+                Collections.sort(songs,
+                        (s1, s2) -> {
+                            if (s1.title == null) {return s2.title == null ? 0 : -1;}
+                            else if (s2.title == null) {return 1;}
 
-    @Nullable
-    private static Cursor makeGenreSongCursor(@NonNull final Context context, long genreId) {
-        try {
-            return context.getContentResolver().query(
-                    Genres.Members.getContentUri("external", genreId),
-                    SongLoader.BASE_PROJECTION, SongLoader.BASE_SELECTION, null, PreferenceUtil.getInstance().getSongSortOrder());
-        } catch (SecurityException e) {
-            return null;
-        }
-    }
+                            return collator.compare(s1.title, s2.title);
+                        });
 
-    @Nullable
-    private static Cursor makeGenreCursor(@NonNull final Context context) {
-        final String[] projection = new String[]{
-                Genres._ID,
-                Genres.NAME
-        };
-
-        try {
-            return context.getContentResolver().query(
-                    Genres.EXTERNAL_CONTENT_URI,
-                    projection, null, null, PreferenceUtil.getInstance().getGenreSortOrder());
-        } catch (SecurityException e) {
-            return null;
+                return songs;
+            }
         }
     }
 }
