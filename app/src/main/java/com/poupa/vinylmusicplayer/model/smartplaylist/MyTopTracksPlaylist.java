@@ -8,7 +8,10 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,18 @@ public class MyTopTracksPlaylist extends AbsSmartPlaylist {
     @Override
     public ArrayList<Song> getSongs(@NonNull Context context) {
         return TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
+    }
+
+    // TODO This is for debug only - the Top track is hijacked to display debug info
+    @NonNull
+    @Override
+    public String getInfoString(@NonNull Context context) {
+        String discog = Discography.getInstance().getStatsString();
+
+        return MusicUtil.buildInfoString(
+                super.getInfoString(context),
+                discog
+        );
     }
 
     @Override

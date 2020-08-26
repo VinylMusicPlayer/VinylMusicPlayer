@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
+import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -86,19 +87,33 @@ public class SongLoader {
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         final int id = cursor.getInt(0);
+        final String data = cursor.getString(5);
+        final long dateAdded = cursor.getLong(6);
+        final long dateModified = cursor.getLong(7);
+
+        // TODO Do the same for PlaylistSongLoader
+        // search in the discog cache first
+        Song song = Discography.getInstance().getSong(id);
+        if (song != null) {
+            if (song.data.equals(data) && song.dateAdded == dateAdded && song.dateModified == dateModified) {
+                return song;
+            }
+        }
+
+        // either none in cache, or obsolete
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
-        final String data = cursor.getString(5);
-        final long dateAdded = cursor.getLong(6);
-        final long dateModified = cursor.getLong(7);
         final int albumId = cursor.getInt(8);
         final String albumName = cursor.getString(9);
         final int artistId = cursor.getInt(10);
         final String artistName = cursor.getString(11);
 
-        return new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
+        song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
+        Discography.getInstance().addSong(song);
+
+        return song;
     }
 
     @Nullable
