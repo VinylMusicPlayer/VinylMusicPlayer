@@ -66,7 +66,8 @@ public class AlbumLoader {
         return albums;
     }
 
-    private static Album getOrCreateAlbum(ArrayList<Album> albums, int albumId) {
+    public static Album getOrCreateAlbum(ArrayList<Album> albums, int albumId) {
+        // TODO Avoid sequential search here
         for (Album album : albums) {
             if (!album.songs.isEmpty() && album.songs.get(0).albumId == albumId) {
                 return album;

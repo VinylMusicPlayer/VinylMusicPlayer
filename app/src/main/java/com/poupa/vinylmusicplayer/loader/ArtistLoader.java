@@ -29,7 +29,7 @@ public class ArtistLoader {
                 null,
                 getSongLoaderSortOrder(context))
         );
-        return splitIntoArtists(AlbumLoader.splitIntoAlbums(songs));
+        return splitIntoArtists(songs);
     }
 
     @NonNull
@@ -40,7 +40,7 @@ public class ArtistLoader {
                 new String[]{"%" + query + "%"},
                 getSongLoaderSortOrder(context))
         );
-        return splitIntoArtists(AlbumLoader.splitIntoAlbums(songs));
+        return splitIntoArtists(songs);
     }
 
     @NonNull
@@ -55,11 +55,13 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static ArrayList<Artist> splitIntoArtists(@Nullable final ArrayList<Album> albums) {
+    public static ArrayList<Artist> splitIntoArtists(@Nullable final ArrayList<Song> songs) {
         ArrayList<Artist> artists = new ArrayList<>();
-        if (albums != null) {
-            for (Album album : albums) {
-                getOrCreateArtist(artists, album.getArtistId()).albums.add(album);
+        if (songs != null) {
+            for (Song song : songs) {
+                Artist artist = getOrCreateArtist(artists, song.artistId);
+                Album album = AlbumLoader.getOrCreateAlbum(artist.albums, song.albumId);
+                album.songs.add(song);
             }
         }
         return artists;
