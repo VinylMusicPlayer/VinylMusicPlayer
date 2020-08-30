@@ -397,6 +397,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                 .setMenu(menuRes)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(getPaletteColor()))
+                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(new MaterialCab.Callback() {
                     @Override
                     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
