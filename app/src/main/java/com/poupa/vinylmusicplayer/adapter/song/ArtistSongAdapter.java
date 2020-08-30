@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.afollestad.materialcab.MaterialCab;
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -24,8 +27,10 @@ import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 
@@ -38,6 +43,8 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
     private MaterialCab cab;
     private ArrayList<Song> dataSet;
     private ArrayList<Song> checked;
+
+    private int color;
 
     @NonNull
     private final AppCompatActivity activity;
@@ -171,8 +178,13 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         return cab != null && cab.isActive();
     }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     @Override
     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+        AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
         return true;
     }
 
@@ -186,6 +198,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
 
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
+        AbsThemeActivity.static_setStatusbarColor(activity, color);
         unCheckAll();
         return true;
     }

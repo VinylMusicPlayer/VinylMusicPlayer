@@ -136,6 +136,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @Override
     public MaterialCab openCab(final int menu, final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
+        adapter.setColor(ThemeStore.primaryColor(this));
         cab = new MaterialCab(this, R.id.cab_stub)
                 .setMenu(menu)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)

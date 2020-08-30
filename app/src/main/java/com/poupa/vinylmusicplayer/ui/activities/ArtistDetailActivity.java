@@ -395,6 +395,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     @Override
     public MaterialCab openCab(int menuRes, @NonNull final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
+        songAdapter.setColor(getPaletteColor());
         cab = new MaterialCab(this, R.id.cab_stub)
                 .setMenu(menuRes)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)

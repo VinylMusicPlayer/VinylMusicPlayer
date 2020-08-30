@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -106,6 +107,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
         @Override
         public boolean onLongClick(View view) {
             if (getItemViewType() == OFFSET_ITEM) return false;
+            setColor(ThemeStore.primaryColor(activity));
             toggleChecked(getAdapterPosition());
             return true;
         }

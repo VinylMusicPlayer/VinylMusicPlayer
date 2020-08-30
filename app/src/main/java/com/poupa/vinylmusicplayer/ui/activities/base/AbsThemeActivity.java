@@ -1,9 +1,11 @@
 package com.poupa.vinylmusicplayer.ui.activities.base;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 
 import androidx.annotation.ColorInt;
 
@@ -42,12 +44,29 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
      *
      * @param color the new statusbar color (will be shifted down on Lollipop and above)
      */
+    public static final void static_setStatusbarColor(final Activity pActivity, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            final View statusBar = pActivity.getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
+            if (statusBar != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    statusBar.setBackgroundColor(color);
+                    ATH.setLightStatusbar(pActivity, ColorUtil.isColorLight(color));
+                } else {
+                    statusBar.setBackgroundColor(color);
+                }
+            } else if (Build.VERSION.SDK_INT >= 21) {
+                pActivity.getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
+                ATH.setLightStatusbar(pActivity, ColorUtil.isColorLight(color));
+            }
+        }
+    }
+
     public void setStatusbarColor(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
             if (statusBar != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    statusBar.setBackgroundColor(ColorUtil.darkenColor(color));
+                    statusBar.setBackgroundColor(color);
                     setLightStatusbarAuto(color);
                 } else {
                     statusBar.setBackgroundColor(color);
