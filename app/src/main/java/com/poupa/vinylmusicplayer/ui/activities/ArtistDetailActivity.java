@@ -310,6 +310,8 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         durationTextView.setTextColor(secondaryTextColor);
         songCountTextView.setTextColor(secondaryTextColor);
         albumCountTextView.setTextColor(secondaryTextColor);
+
+        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
     }
 
     private void setUpToolbar() {

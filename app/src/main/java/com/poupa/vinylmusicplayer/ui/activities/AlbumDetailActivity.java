@@ -202,6 +202,8 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
         durationTextView.setTextColor(secondaryTextColor);
         songCountTextView.setTextColor(secondaryTextColor);
         albumYearTextView.setTextColor(secondaryTextColor);
+
+        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
     }
 
     @Override
