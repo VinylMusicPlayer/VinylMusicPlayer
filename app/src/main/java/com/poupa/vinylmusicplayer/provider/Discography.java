@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.provider;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -170,8 +169,7 @@ public class Discography extends SQLiteOpenHelper {
 
     private void extractTags(@NonNull Song song) {
         try {
-            // To workaround the Android MediaStore bugs (genre, album artist, track/disc count, unicode text,...)
-            // we override with metadata extracted from the file ourselves
+            // Override with metadata extracted from the file ourselves
             AudioFile file = AudioFileIO.read(new File(song.data));
             Tag tags = file.getTagOrCreateAndSetDefault();
 

@@ -91,7 +91,6 @@ public class SongLoader {
         final long dateAdded = cursor.getLong(6);
         final long dateModified = cursor.getLong(7);
 
-        // TODO Do the same for PlaylistSongLoader
         // search in the discog cache first
         Song song = Discography.getInstance().getSong(id);
         if (song != null) {
