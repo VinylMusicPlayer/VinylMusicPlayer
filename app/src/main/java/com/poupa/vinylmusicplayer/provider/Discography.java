@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class Discography extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @Nullable
     private static Discography sInstance = null;
@@ -92,6 +93,8 @@ public class Discography extends SQLiteOpenHelper {
                         + SongColumns.DATA_PATH + " TEXT, "
                         + SongColumns.DATE_ADDED + " LONG, "
                         + SongColumns.DATE_MODIFIED + " LONG, "
+                        + SongColumns.REPLAYGAIN_ALBUM + " REAL, "
+                        + SongColumns.REPLAYGAIN_TRACK + " REAL, "
                         + SongColumns.TRACK_DURATION + " LONG, "
                         + SongColumns.TRACK_NUMBER + " LONG, "
                         + SongColumns.TRACK_TITLE + " TEXT, "
@@ -154,6 +157,8 @@ public class Discography extends SQLiteOpenHelper {
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
+            values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
+            values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
             values.put(SongColumns.TRACK_DURATION, song.duration);
             values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
             values.put(SongColumns.TRACK_TITLE, song.title);
@@ -179,7 +184,7 @@ public class Discography extends SQLiteOpenHelper {
             try {song.trackNumber = Integer.parseInt(tags.getFirst(FieldKey.TRACK));} catch (NumberFormatException ignored) {}
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
 
-            // TODO Add ReplayGain
+            ReplayGainTagExtractor.setReplayGainValues(song);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,6 +215,8 @@ public class Discography extends SQLiteOpenHelper {
                         SongColumns.DATA_PATH,
                         SongColumns.DATE_ADDED,
                         SongColumns.DATE_MODIFIED,
+                        SongColumns.REPLAYGAIN_ALBUM,
+                        SongColumns.REPLAYGAIN_TRACK,
                         SongColumns.TRACK_DURATION,
                         SongColumns.TRACK_NUMBER,
                         SongColumns.TRACK_TITLE,
@@ -235,12 +242,14 @@ public class Discography extends SQLiteOpenHelper {
                 final String dataPath = cursor.getString(columnIndex++);
                 final long dateAdded = cursor.getLong(columnIndex++);
                 final long dateModified = cursor.getLong(columnIndex++);
+                final float replaygainAlbum = cursor.getFloat(columnIndex++);
+                final float replaygainTrack = cursor.getFloat(columnIndex++);
                 final long trackDuration = cursor.getLong(columnIndex++);
                 final int trackNumber = cursor.getInt(columnIndex++);
                 final String trackTitle = cursor.getString(columnIndex++);
                 final int year = cursor.getInt(columnIndex++);
 
-                songsById.put(id, new Song(
+                Song song = new Song(
                         id,
                         trackTitle,
                         trackNumber,
@@ -252,7 +261,10 @@ public class Discography extends SQLiteOpenHelper {
                         albumId,
                         albumName,
                         artistId,
-                        artistName));
+                        artistName);
+                song.setReplayGainValues(replaygainTrack, replaygainAlbum);
+
+                songsById.put(id, song);
             } while (cursor.moveToNext());
         }
     }
@@ -268,6 +280,8 @@ public class Discography extends SQLiteOpenHelper {
         String DATA_PATH = "data_path";
         String DATE_ADDED = "date_added";
         String DATE_MODIFIED = "date_modified";
+        String REPLAYGAIN_ALBUM = "replaygain_album";
+        String REPLAYGAIN_TRACK = "replaygain_track";
         String TRACK_DURATION = "track_duration";
         String TRACK_TITLE = "track_title";
         String TRACK_NUMBER = "track_number";
