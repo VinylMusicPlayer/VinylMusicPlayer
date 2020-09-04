@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.provider;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
+import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.HouseKeeper;
 
@@ -20,9 +22,9 @@ import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author SC (soncaokim)
@@ -36,7 +38,6 @@ public class Discography extends SQLiteOpenHelper {
     private static Discography sInstance = null;
 
     private HashMap<Integer, Song> songsById = new HashMap<>();
-    private List<Song> songsToAdd = new ArrayList<>();
 
     public Discography() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -44,8 +45,13 @@ public class Discography extends SQLiteOpenHelper {
         fetchAllSongs();
 
         // TODO Merge albums and artist with same name
-        // TODO Clean orphan entries, once a while
 
+        // House keeping - clean orphan songs
+        HouseKeeper.getInstance().addTask(
+                HouseKeeper.ONE_MINUTE,
+                true,
+                () -> cleanOrphanSongsImpl()
+        );
     }
 
     @NonNull
@@ -95,11 +101,13 @@ public class Discography extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    public synchronized void clear() {
+    public void clear() {
         try (SQLiteDatabase database = getWritableDatabase()) {
             database.delete(SongColumns.NAME, null, null);
         }
-        songsById.clear();
+        synchronized (this) {
+            songsById.clear();
+        }
     }
 
     @Nullable
@@ -107,15 +115,15 @@ public class Discography extends SQLiteOpenHelper {
         return songsById.get(songId);
     }
 
-    public synchronized void addSong(@NonNull Song song) {
+    public void addSong(@NonNull Song song) {
         HouseKeeper.getInstance().addTask(
                 HouseKeeper.ONE_MILLIS,
-                () -> {addSongImpl(song);}
+                false,
+                () -> addSongImpl(song)
         );
-        songsToAdd.add(song);
     }
 
-    public synchronized void addSongImpl(@NonNull Song song) {
+    public void addSongImpl(@NonNull Song song) {
         final SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
 
@@ -142,10 +150,33 @@ public class Discography extends SQLiteOpenHelper {
             values.put(SongColumns.YEAR, song.year);
 
             database.insert(SongColumns.NAME, null, values);
-            songsById.put(song.id, song);
+            synchronized (this) {
+                songsById.put(song.id, song);
+            }
         } finally {
             database.setTransactionSuccessful();
             database.endTransaction();
+        }
+    }
+
+    private void cleanOrphanSongsImpl() {
+        final Context context = App.getInstance().getApplicationContext();
+
+        HashSet<Integer> allSongIds = new HashSet<>();
+        try (final Cursor cursor = SongLoader.makeSongCursor(context, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    final int id = cursor.getInt(0);
+                    allSongIds.add(id);
+                } while (cursor.moveToNext());
+            }
+        }
+
+        synchronized (this) {
+            Set<Integer> orphanSongsId = new HashSet<>(songsById.keySet()); // make a copy
+            if (orphanSongsId.removeAll(allSongIds)) {
+                removeSongsById(orphanSongsId);
+            }
         }
     }
 
@@ -167,8 +198,10 @@ public class Discography extends SQLiteOpenHelper {
         }
     }
 
-    private synchronized void removeSongById(@NonNull final SQLiteDatabase database, final long songId) {
-        songsById.remove(songId);
+    private void removeSongById(@NonNull final SQLiteDatabase database, final int songId) {
+        synchronized (this) {
+            songsById.remove(songId);
+        }
         database.delete(
                 SongColumns.NAME,
                 SongColumns.ID + " = ?",
@@ -177,8 +210,24 @@ public class Discography extends SQLiteOpenHelper {
                 });
     }
 
-    private synchronized void fetchAllSongs() {
-        songsById.clear();
+    private void removeSongsById(@NonNull final Set<Integer> songsId) {
+        final SQLiteDatabase database = getWritableDatabase();
+        database.beginTransaction();
+
+        try {
+            for (int id : songsId) {
+                removeSongById(database, id);
+            }
+        } finally {
+            database.setTransactionSuccessful();
+            database.endTransaction();
+        }
+    }
+
+    private void fetchAllSongs() {
+        synchronized (this) {
+            songsById.clear();
+        }
 
         final SQLiteDatabase database = getReadableDatabase();
 
@@ -210,21 +259,21 @@ public class Discography extends SQLiteOpenHelper {
             }
 
             do {
-                int columnIndex = 0;
-                final int id = cursor.getInt(columnIndex++);
-                final int albumId = cursor.getInt(columnIndex++);
-                final String albumName = cursor.getString(columnIndex++);
-                final int artistId = cursor.getInt(columnIndex++);
-                final String artistName = cursor.getString(columnIndex++);
-                final String dataPath = cursor.getString(columnIndex++);
-                final long dateAdded = cursor.getLong(columnIndex++);
-                final long dateModified = cursor.getLong(columnIndex++);
-                final float replaygainAlbum = cursor.getFloat(columnIndex++);
-                final float replaygainTrack = cursor.getFloat(columnIndex++);
-                final long trackDuration = cursor.getLong(columnIndex++);
-                final int trackNumber = cursor.getInt(columnIndex++);
-                final String trackTitle = cursor.getString(columnIndex++);
-                final int year = cursor.getInt(columnIndex++);
+                int columnIndex = -1;
+                final int id = cursor.getInt(++columnIndex);
+                final int albumId = cursor.getInt(++columnIndex);
+                final String albumName = cursor.getString(++columnIndex);
+                final int artistId = cursor.getInt(++columnIndex);
+                final String artistName = cursor.getString(++columnIndex);
+                final String dataPath = cursor.getString(++columnIndex);
+                final long dateAdded = cursor.getLong(++columnIndex);
+                final long dateModified = cursor.getLong(++columnIndex);
+                final float replaygainAlbum = cursor.getFloat(++columnIndex);
+                final float replaygainTrack = cursor.getFloat(++columnIndex);
+                final long trackDuration = cursor.getLong(++columnIndex);
+                final int trackNumber = cursor.getInt(++columnIndex);
+                final String trackTitle = cursor.getString(++columnIndex);
+                final int year = cursor.getInt(++columnIndex);
 
                 Song song = new Song(
                         id,
@@ -241,7 +290,9 @@ public class Discography extends SQLiteOpenHelper {
                         artistName);
                 song.setReplayGainValues(replaygainTrack, replaygainAlbum);
 
-                songsById.put(id, song);
+                synchronized (this) {
+                    songsById.put(id, song);
+                }
             } while (cursor.moveToNext());
         }
     }

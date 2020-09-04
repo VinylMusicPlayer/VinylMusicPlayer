@@ -12,19 +12,25 @@ import java.util.concurrent.TimeUnit;
 public class HouseKeeper {
     public final static TimeUnit PRECISION = TimeUnit.MICROSECONDS;
     public final static long ONE_MILLIS = PRECISION.convert(1, TimeUnit.MILLISECONDS);
-    public final static long ONE_SEC = PRECISION.convert(1, TimeUnit.MILLISECONDS);
+    public final static long ONE_SEC = PRECISION.convert(1, TimeUnit.SECONDS);
+    public final static long ONE_MINUTE = PRECISION.convert(60, TimeUnit.SECONDS);
 
     private abstract static class Task implements Runnable, Delayed {
-        private long expectedStart; // expressed in the unit specified by PRECISION
+        private final long expectedStart; // expressed in the unit specified by PRECISION
+        private final boolean isRecurrent;
 
-        public Task(long expectedStart) {
-            this.expectedStart = expectedStart;
+        private static long now() {
+            return PRECISION.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        }
+
+        public Task(long delay, boolean isRecurrent) {
+            this.expectedStart = now() + delay;
+            this.isRecurrent = isRecurrent;
         }
 
         @Override
         public long getDelay(TimeUnit unit) {
-            long now = PRECISION.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-            long diff = expectedStart - now;
+            long diff = expectedStart - now();
             return unit.convert(diff, PRECISION);
         }
 
@@ -38,7 +44,7 @@ public class HouseKeeper {
     }
 
     private static HouseKeeper sInstance = null;
-    private DelayQueue taskQueue = new DelayQueue();
+    private DelayQueue<Task> taskQueue = new DelayQueue<>();
     private Thread runner;
 
     public static synchronized HouseKeeper getInstance() {
@@ -57,16 +63,26 @@ public class HouseKeeper {
 
         runner = new Thread(() -> {
             do {
-                Task task = (Task)(taskQueue.poll());
+                try {Thread.sleep(1);} catch (InterruptedException ignored) {}
+
+                Task task;
+                synchronized (this) {
+                    task = taskQueue.poll();
+                }
                 if (task != null) {
                     try {
                         task.run();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if (task.isRecurrent) {
+                        taskQueue.add(task);
+                    }
                 }
             } while (!Thread.interrupted());
         });
+        runner.setPriority(Thread.MIN_PRIORITY);
         runner.start();
     }
 
@@ -83,8 +99,8 @@ public class HouseKeeper {
         }
     }
 
-    public void addTask(long delay, Runnable runnable) {
-        Task task = new Task(delay) {
+    public synchronized void addTask(long delay, boolean isRecurrent, Runnable runnable) {
+        Task task = new Task(delay, isRecurrent) {
             @Override
             public void run() {
                 runnable.run();
