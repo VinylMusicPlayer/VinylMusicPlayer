@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.HouseKeeper;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -29,51 +30,22 @@ import java.util.List;
 
 public class Discography extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 1;
 
     @Nullable
     private static Discography sInstance = null;
 
     private HashMap<Integer, Song> songsById = new HashMap<>();
     private List<Song> songsToAdd = new ArrayList<>();
-    private Thread backgroundThread;
 
     public Discography() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
 
         fetchAllSongs();
-        startBackgroundThread();
-    }
 
-    private void startBackgroundThread() {
-        backgroundThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                do {
-                    try {Thread.sleep(1);}
-                    catch (InterruptedException interrupted) {break;}
+        // TODO Merge albums and artist with same name
+        // TODO Clean orphan entries, once a while
 
-                    // Scan and add songs
-                    if (!songsToAdd.isEmpty()) {
-                        addSongImpl(songsToAdd.remove(0));
-                    }
-
-                    // TODO Merge albums and artist with same name
-                    // TODO Clean orphan entries
-                } while (!Thread.interrupted());
-            }
-        });
-        backgroundThread.start();
-    }
-
-    // TODO Where to trigger this?
-    private void stopBackgroundThread() {
-        backgroundThread.interrupt();
-        try {
-            backgroundThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @NonNull
@@ -124,8 +96,9 @@ public class Discography extends SQLiteOpenHelper {
     }
 
     public synchronized void clear() {
-        final SQLiteDatabase database = getWritableDatabase();
-        database.delete(SongColumns.NAME, null, null);
+        try (SQLiteDatabase database = getWritableDatabase()) {
+            database.delete(SongColumns.NAME, null, null);
+        }
         songsById.clear();
     }
 
@@ -135,6 +108,10 @@ public class Discography extends SQLiteOpenHelper {
     }
 
     public synchronized void addSong(@NonNull Song song) {
+        HouseKeeper.getInstance().addTask(
+                HouseKeeper.ONE_MILLIS,
+                () -> {addSongImpl(song);}
+        );
         songsToAdd.add(song);
     }
 
