@@ -30,18 +30,6 @@ public class MyTopTracksPlaylist extends AbsSmartPlaylist {
         return TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
     }
 
-    // TODO This is for debug only - the Top track is hijacked to display debug info
-    @NonNull
-    @Override
-    public String getInfoString(@NonNull Context context) {
-        String discog = Discography.getInstance().getStatsString();
-
-        return MusicUtil.buildInfoString(
-                super.getInfoString(context),
-                discog
-        );
-    }
-
     @Override
     public void clear(@NonNull Context context) {
         SongPlayCountStore.getInstance(context).clear();

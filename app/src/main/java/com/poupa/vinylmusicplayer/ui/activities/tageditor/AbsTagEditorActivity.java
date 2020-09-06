@@ -539,8 +539,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     }
 
-    // TODO Rely on discog instead?
-
     @Nullable
     protected String getSongTitle() {
         try {
