@@ -23,6 +23,13 @@
             android:summary="@string/pref_summary_animate_playing_song_icon"
             android:title="@string/pref_title_animate_playing_song_icon" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="show_song_number_on_playing_queue"
+            android:summary="@string/pref_summary_show_song_number"
+            android:title="@string/pref_title_show_song_number" />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

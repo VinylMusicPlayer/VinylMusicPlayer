@@ -332,4 +332,6 @@
     <string name="action_cycle_repeat">Mode répetition</string>
     <string name="action_toggle_favorite">Favoris</string>
     <string name="saf_pick_file">Accès au ficher requis. Sélectionner %s</string>
+    <string name="pref_summary_show_song_number">Afficher le numéro de piste dans la liste de lecture et les notifications</string>
+    <string name="pref_title_show_song_number">Afficher le numéro de la piste</string>
 </resources>
