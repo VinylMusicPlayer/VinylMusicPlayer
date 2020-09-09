@@ -13,7 +13,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.HouseKeeper;
+import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -44,11 +44,9 @@ public class Discography extends SQLiteOpenHelper {
 
         fetchAllSongs();
 
-        // TODO Merge albums and artist with same name
-
         // House keeping - clean orphan songs
-        HouseKeeper.getInstance().addTask(
-                HouseKeeper.ONE_MINUTE,
+        DelayedTaskThread.getInstance().addTask(
+                DelayedTaskThread.ONE_MINUTE,
                 true,
                 () -> cleanOrphanSongsImpl()
         );
@@ -116,8 +114,8 @@ public class Discography extends SQLiteOpenHelper {
     }
 
     public void addSong(@NonNull Song song) {
-        HouseKeeper.getInstance().addTask(
-                HouseKeeper.ONE_MILLIS,
+        DelayedTaskThread.getInstance().addTask(
+                DelayedTaskThread.ONE_MILLIS,
                 false,
                 () -> addSongImpl(song)
         );

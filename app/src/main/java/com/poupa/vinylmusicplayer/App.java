@@ -6,7 +6,7 @@ import android.os.Build;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
-import com.poupa.vinylmusicplayer.util.HouseKeeper;
+import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -38,7 +38,7 @@ public class App extends Application {
             new DynamicShortcutManager(this).initDynamicShortcuts();
         }
 
-        HouseKeeper.getInstance().start();
+        DelayedTaskThread.getInstance().start();
     }
 
     public static App getInstance() {
@@ -51,7 +51,7 @@ public class App extends Application {
 
     @Override
     public void onTerminate() {
-        HouseKeeper.getInstance().stop();
+        DelayedTaskThread.getInstance().stop();
         super.onTerminate();
     }
 }

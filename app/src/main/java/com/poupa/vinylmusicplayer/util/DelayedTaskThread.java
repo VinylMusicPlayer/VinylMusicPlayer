@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author SC (soncaokim)
  */
-public class HouseKeeper {
+public class DelayedTaskThread {
     public final static TimeUnit PRECISION = TimeUnit.MICROSECONDS;
     public final static long ONE_MILLIS = PRECISION.convert(1, TimeUnit.MILLISECONDS);
     public final static long ONE_SEC = PRECISION.convert(1, TimeUnit.SECONDS);
@@ -43,18 +43,18 @@ public class HouseKeeper {
         }
     }
 
-    private static HouseKeeper sInstance = null;
+    private static DelayedTaskThread sInstance = null;
     private DelayQueue<Task> taskQueue = new DelayQueue<>();
     private Thread runner;
 
-    public static synchronized HouseKeeper getInstance() {
+    public static synchronized DelayedTaskThread getInstance() {
         if (sInstance == null) {
-            sInstance = new HouseKeeper();
+            sInstance = new DelayedTaskThread();
         }
         return sInstance;
     }
 
-    private HouseKeeper() {}
+    private DelayedTaskThread() {}
 
     public void start() {
         if (runner != null) {
