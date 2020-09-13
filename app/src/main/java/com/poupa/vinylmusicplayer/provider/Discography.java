@@ -121,7 +121,12 @@ public class Discography extends SQLiteOpenHelper {
         );
     }
 
-    public void addSongImpl(@NonNull Song song) {
+    public synchronized void addSongImpl(@NonNull Song song) {
+        // Race condition check: If the song has been added in between time --> skip
+        if (songsById.containsKey(song.id)) {
+            return;
+        }
+
         final SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
 
@@ -148,9 +153,7 @@ public class Discography extends SQLiteOpenHelper {
             values.put(SongColumns.YEAR, song.year);
 
             database.insert(SongColumns.NAME, null, values);
-            synchronized (this) {
-                songsById.put(song.id, song);
-            }
+            songsById.put(song.id, song);
         } finally {
             database.setTransactionSuccessful();
             database.endTransaction();
