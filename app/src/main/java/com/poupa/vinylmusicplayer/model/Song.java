@@ -12,17 +12,17 @@ public class Song implements Parcelable {
     public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, "");
 
     public final int id;
-    public final String title;
-    public final int trackNumber;
-    public final int year;
+    public String title;
+    public int trackNumber;
+    public int year;
     public final long duration;
     public final String data;
     public final long dateAdded;
     public final long dateModified;
     public final int albumId;
-    public final String albumName;
+    public String albumName;
     public final int artistId;
-    public final String artistName;
+    public String artistName;
 
     private float replaygainTrack = Float.NaN;
     private float replaygainAlbum = Float.NaN;
