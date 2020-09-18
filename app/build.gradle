@@ -3,35 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-static def execAndCaptureOutput(String cmd) {
-    def output = ''
-    try {
-        def proc = cmd.execute()
-        proc.in.eachLine { line -> output = line }
-        proc.err.eachLine { line -> println line }
-        proc.waitFor()
-        if (proc.exitValue() != 0) {
-            output = ''
-        }
-    } catch (Exception e) {
-        // Do nothing
-        println e
-    }
-    return output
-}
-
-static def gitBranch() {
-    return execAndCaptureOutput('git rev-parse --abbrev-ref HEAD')
-}
-
-static def gitSha1() {
-    return execAndCaptureOutput('git rev-parse --short HEAD')
-}
-
-static def buildTime() {
-    return new Date().format('yyMMdd-HHmm')
-}
-
 android {
     compileSdkVersion 29
     buildToolsVersion '29.0.3'
@@ -77,9 +48,14 @@ android {
         }
         circleci {
             dimension "default"
+
+            String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+            String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
+            String buildTime = new Date().format('yyMMdd-HHmm')
+            String buildId = gitBranch + "_" + gitSha1 + "_" + buildTime
+
             signingConfig signingConfigs.circleci
-            def buildId = "_" + buildTime() + "_" + gitSha1()
-            versionNameSuffix buildId
+            archivesBaseName = 'vinyl_' + buildId
         }
     }
     packagingOptions {
