@@ -55,7 +55,6 @@ android {
             String buildId = gitBranch + "_" + gitSha1 + "_" + buildTime
 
             signingConfig signingConfigs.circleci
-            versionNameSuffix ' ' + buildId
             archivesBaseName = 'vinyl_' + buildId
         }
     }
