@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -71,7 +72,7 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
                         try {
                             DeezerResponse deezerResponse = response.body();
                             List<Data> data = deezerResponse.getData();
-                            if (data.size() > 0) {
+                            if (data != null && data.size() > 0) {
                                 String url = data.get(0).getPictureMedium();
 
                                 // Fragile way to detect a place holder image returned from Deezer:
