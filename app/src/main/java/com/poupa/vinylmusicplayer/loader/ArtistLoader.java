@@ -7,9 +7,10 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.provider.Discography;
+import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
+ * @author SC (soncaokim)
  */
 public class ArtistLoader {
     @NonNull
@@ -31,12 +33,14 @@ public class ArtistLoader {
 
     @NonNull
     public static ArrayList<Artist> getArtists(@NonNull final Context context, String query) {
+        final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
+
         Discography discog = Discography.getInstance();
         synchronized (discog) {
             ArrayList<Artist> artists = new ArrayList<>();
             for (Artist artist : discog.getAllArtists()) {
-                // TODO Case/accent insensitive comparison
-                if (artist.getName().contains(query)) {
+                final String strippedArtist = StringUtil.stripAccent(artist.getName().toLowerCase());
+                if (strippedArtist.contains(strippedQuery)) {
                     artists.add(artist);
                 }
             }
@@ -60,18 +64,14 @@ public class ArtistLoader {
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        final Collator collator = Collator.getInstance();
-
-        Comparator<Artist> byArtistName = (a1, a2) -> collator.compare(
-                a1.safeGetFirstAlbum().safeGetFirstSong().artistName,
-                a2.safeGetFirstAlbum().safeGetFirstSong().artistName);
-
-        Function<Comparator<Artist>, Comparator<Artist>> inverse =
-                (c) -> (Comparator<Artist>) (a1, a2) -> c.compare(a2, a1);
+        Function<Artist, String> getArtistName = (a) -> a.safeGetFirstAlbum().safeGetFirstSong().artistName;
+        Comparator<Artist> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
+                getArtistName.apply(a1),
+                getArtistName.apply(a2));
 
         switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
             case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                return inverse.apply(byArtistName);
+                return ComparatorUtil.reverse(byArtistName);
 
             case SortOrder.ArtistSortOrder.ARTIST_A_Z:
             default:

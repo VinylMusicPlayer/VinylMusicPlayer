@@ -9,13 +9,18 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.provider.Discography;
+import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -45,9 +50,47 @@ public class SongLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, final String query) {
-        Cursor cursor = makeSongCursor(context, AudioColumns.TITLE + " LIKE ?", new String[]{"%" + query + "%"});
-        return getSongs(cursor);
+    public static ArrayList<Song> getSongs(@NonNull final Context context, @NonNull final String query) {
+        final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
+
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            ArrayList<Song> songs = new ArrayList<>();
+            for (Song song : discog.getAllSongs()) {
+                final String strippedTitle = StringUtil.stripAccent(song.title.toLowerCase());
+                if (strippedTitle.contains(strippedQuery)) {
+                    songs.add(song);
+                }
+            }
+            Collections.sort(songs, getSortOrder());
+            return songs;
+        }
+    }
+
+    @NonNull
+    private static Comparator<Song> getSortOrder() {
+        Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistName, a2.artistName);
+        Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
+        Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
+        Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
+
+        switch (PreferenceUtil.getInstance().getSongSortOrder()) {
+            case SortOrder.SongSortOrder.SONG_Z_A:
+                return ComparatorUtil.chain(ComparatorUtil.reverse(byTitle), ComparatorUtil.reverse(byArtist));
+            case SortOrder.SongSortOrder.SONG_ARTIST:
+                return ComparatorUtil.chain(byArtist, byAlbum);
+            case SortOrder.SongSortOrder.SONG_ALBUM:
+                return ComparatorUtil.chain(byAlbum, byArtist);
+            case SortOrder.SongSortOrder.SONG_YEAR:
+                return ComparatorUtil.chain(byYearDesc, byArtist);
+            case SortOrder.SongSortOrder.SONG_DATE_ADDED:
+                return ComparatorUtil.chain(byDateAddedDesc, byArtist);
+
+            case SortOrder.SongSortOrder.SONG_A_Z:
+            default:
+                return ComparatorUtil.chain(byTitle, byArtist);
+        }
     }
 
     @NonNull

@@ -17,6 +17,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -48,6 +49,7 @@ public class Discography {
     // TODO Support multiple artists
     // TODO Refact the SortOrder to rely on enum/enum class, i.e. avoid doing string comparison
     // TODO Replace DelayedTaskThread by the standard AsyncTask (or any more modern alternative)
+    // TODO Investigate why the notification play/pause state doesnt reflect the current playback state
 
     @Nullable
     private static Discography sInstance = null;
@@ -145,6 +147,12 @@ public class Discography {
                 return;
             }
 
+            // Unicode normalization
+            song.artistName = StringUtil.unicodeNormalize(song.artistName);
+            song.albumName = StringUtil.unicodeNormalize(song.albumName);
+            song.title = StringUtil.unicodeNormalize(song.title);
+            song.genre = StringUtil.unicodeNormalize(song.genre);
+
             // Merge artist by name
             Artist artist = getOrCreateArtistByName(song);
             if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
@@ -159,7 +167,6 @@ public class Discography {
             album.songs.add(song);
 
             // Update genre cache
-            // TODO Reduce songCount on old genre
             Genre genre = getOrCreateGenreByName(song);
             ArrayList<Song> songs = songsByGenreId.get(genre.id);
             if (songs != null) {

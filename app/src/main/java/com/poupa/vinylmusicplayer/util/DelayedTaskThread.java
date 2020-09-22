@@ -36,10 +36,7 @@ public class DelayedTaskThread {
 
         @Override
         public int compareTo(Delayed other) {
-            long diff = this.expectedStart - ((Task)other).expectedStart;
-            if (diff < Integer.MIN_VALUE) {diff = Integer.MIN_VALUE;}
-            if (diff > Integer.MAX_VALUE) {diff = Integer.MAX_VALUE;}
-            return (int)diff;
+            return ComparatorUtil.compareLongInts(this.expectedStart, ((Task)other).expectedStart);
         }
     }
 
