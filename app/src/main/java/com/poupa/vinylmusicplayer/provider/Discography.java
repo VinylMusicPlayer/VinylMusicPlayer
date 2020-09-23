@@ -55,19 +55,12 @@ public class Discography {
     private static Discography sInstance = null;
 
     private DB database;
-
-    private HashMap<Long, Song> songsById = new HashMap<>();
-
-    HashMap<String, Artist> artistsByName = new HashMap<>();
-    HashMap<Long, Artist> artistsById = new HashMap<>();
-
-    HashMap<Long, Album> albumsById = new HashMap<>();
-
-    HashMap<String, Genre> genresByName = new HashMap<>();
-    HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    private MemCache cache;
 
     public Discography() {
         database = new DB();
+        cache = new MemCache();
+
         fetchAllSongs();
 
         // TODO Instead of polling, register a MusicServiceEventListener/ContentObserver to be aware of MediaStore changes
@@ -89,43 +82,43 @@ public class Discography {
 
     @NonNull
     public synchronized Song getSong(int songId) {
-        Song song = songsById.get(songId);
+        Song song = cache.songsById.get(songId);
         return song == null ? Song.EMPTY_SONG : song;
     }
 
     @NonNull
     public synchronized Collection<Song> getAllSongs() {
-        return songsById.values();
+        return cache.songsById.values();
     }
 
     @Nullable
     public synchronized Artist getArtist(int artistId) {
-        return artistsById.get(artistId);
+        return cache.artistsById.get(artistId);
     }
 
     @NonNull
     public synchronized Collection<Artist> getAllArtists() {
-        return artistsById.values();
+        return cache.artistsById.values();
     }
 
     @Nullable
     public synchronized Album getAlbum(int albumId) {
-        return albumsById.get(albumId);
+        return cache.albumsById.get(albumId);
     }
 
     @NonNull
     public synchronized Collection<Album> getAllAlbums() {
-        return albumsById.values();
+        return cache.albumsById.values();
     }
 
     @NonNull
     public synchronized Collection<Genre> getAllGenres() {
-        return genresByName.values();
+        return cache.genresByName.values();
     }
 
     @Nullable
     public synchronized Collection<Song> getSongsForGenre(long genreId) {
-        return songsByGenreId.get(genreId);
+        return cache.songsByGenreId.get(genreId);
     }
 
     public void addSong(@NonNull Song song) {
@@ -143,7 +136,7 @@ public class Discography {
 
         synchronized (this) {
             // Race condition check: If the song has been added in between time --> skip
-            if (songsById.containsKey(song.id)) {
+            if (cache.songsById.containsKey(song.id)) {
                 return;
             }
 
@@ -168,7 +161,7 @@ public class Discography {
 
             // Update genre cache
             Genre genre = getOrCreateGenreByName(song);
-            ArrayList<Song> songs = songsByGenreId.get(genre.id);
+            ArrayList<Song> songs = cache.songsByGenreId.get(genre.id);
             if (songs != null) {
                 songs.add(song);
                 genre.songCount = songs.size();
@@ -178,7 +171,7 @@ public class Discography {
             Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
             Collections.sort(album.songs, (s1, s2) -> s1.trackNumber - s2.trackNumber);
 
-            songsById.put(song.id, song);
+            cache.songsById.put(song.id, song);
         }
 
         if (!cacheOnly) {
@@ -198,7 +191,7 @@ public class Discography {
 
         synchronized (this) {
             // Clean orphan songs (removed from MediaStore)
-            Set<Long> cacheSongsId = new HashSet<>(songsById.keySet()); // make a copy
+            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             if (cacheSongsId.removeAll(allSongIds)) {
                 for (long songId : cacheSongsId) {
                     removeSongById(songId);
@@ -229,7 +222,7 @@ public class Discography {
     public synchronized void removeSongByPath(@NonNull final String path) {
         // TODO Avoid sequential search
         Song matchingSong = null;
-        for (Song song : songsById.values()) {
+        for (Song song : cache.songsById.values()) {
             if (song.data.equals(path))
             {
                 matchingSong = song;
@@ -243,36 +236,36 @@ public class Discography {
 
     public void removeSongById(long songId) {
         synchronized (this) {
-            Song song = songsById.get(songId);
+            Song song = cache.songsById.get(songId);
             if (song != null) {
                 // Remove the song from linked Artist/Album cache
-                Artist artist = artistsById.get(song.artistId);
+                Artist artist = cache.artistsById.get(song.artistId);
                 if (artist != null) {
                     for (Album album : artist.albums) {
                         if (album.getId() == song.albumId) {
                             album.songs.remove(song);
                             if (album.songs.isEmpty()) {
                                 artist.albums.remove(album);
-                                albumsById.remove(song.albumId);
+                                cache.albumsById.remove(song.albumId);
                             }
                             break;
                         }
                     }
                     if (artist.albums.isEmpty()) {
-                        artistsById.remove(song.artistId);
-                        artistsByName.remove(song.artistName);
+                        cache.artistsById.remove(song.artistId);
+                        cache.artistsByName.remove(song.artistName);
                     }
                 }
 
                 // Remove song from Genre cache
-                Genre genre = genresByName.get(song.genre);
+                Genre genre = cache.genresByName.get(song.genre);
                 if (genre != null) {
-                    ArrayList<Song> songs = songsByGenreId.get(genre.id);
+                    ArrayList<Song> songs = cache.songsByGenreId.get(genre.id);
                     if (songs != null) {
                         songs.remove(song);
                         if (songs.isEmpty()) {
-                            genresByName.remove(genre.name);
-                            songsByGenreId.remove(genre.id);
+                            cache.genresByName.remove(genre.name);
+                            cache.songsByGenreId.remove(genre.id);
                         } else {
                             genre.songCount = songs.size();
                         }
@@ -280,7 +273,7 @@ public class Discography {
                 }
 
                 // Remove the song from the memory cache
-                songsById.remove(songId);
+                cache.songsById.remove(songId);
             }
         }
 
@@ -296,12 +289,12 @@ public class Discography {
 
     @NonNull
     private synchronized Artist getOrCreateArtistByName(@NonNull final Song song) {
-        Artist artist = artistsByName.get(song.artistName);
+        Artist artist = cache.artistsByName.get(song.artistName);
         if (artist == null) {
             artist = new Artist();
 
-            artistsByName.put(song.artistName, artist);
-            artistsById.put(song.artistId, artist);
+            cache.artistsByName.put(song.artistName, artist);
+            cache.artistsById.put(song.artistId, artist);
         }
         return artist;
     }
@@ -316,19 +309,19 @@ public class Discography {
         }
         Album album = new Album();
         artist.albums.add(album);
-        albumsById.put(song.albumId, album);
+        cache.albumsById.put(song.albumId, album);
 
         return album;
     }
 
     @NonNull
     private synchronized Genre getOrCreateGenreByName(@NonNull final Song song) {
-        Genre genre = genresByName.get(song.genre);
+        Genre genre = cache.genresByName.get(song.genre);
         if (genre == null) {
-            genre = new Genre(genresByName.size(), song.genre, 0);
+            genre = new Genre(cache.genresByName.size(), song.genre, 0);
 
-            genresByName.put(song.genre, genre);
-            songsByGenreId.put(genre.id, new ArrayList<>());
+            cache.genresByName.put(song.genre, genre);
+            cache.songsByGenreId.put(genre.id, new ArrayList<>());
         }
         return genre;
     }
@@ -500,5 +493,18 @@ public class Discography {
         String TRACK_TITLE = "track_title";
         String TRACK_NUMBER = "track_number";
         String YEAR = "year";
+    }
+
+    private static class MemCache {
+        public HashMap<Long, Song> songsById = new HashMap<>();
+
+        public HashMap<String, Artist> artistsByName = new HashMap<>();
+        public HashMap<Long, Artist> artistsById = new HashMap<>();
+
+        public HashMap<Long, Album> albumsById = new HashMap<>();
+
+        public HashMap<String, Genre> genresByName = new HashMap<>();
+        public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+
     }
 }
