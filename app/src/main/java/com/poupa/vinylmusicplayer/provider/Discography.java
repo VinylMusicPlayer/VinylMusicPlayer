@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.provider;
+package com.poupa.vinylmusicplayer.discog;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.discog.DelayedTaskThread;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
-import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;

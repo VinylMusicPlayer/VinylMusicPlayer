@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.util;
+package com.poupa.vinylmusicplayer.discog;
 
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author SC (soncaokim)
  */
-public class DelayedTaskThread {
+
+class DelayedTaskThread {
     public final static TimeUnit PRECISION = TimeUnit.MICROSECONDS;
     public final static long ONE_MILLIS = PRECISION.convert(1, TimeUnit.MILLISECONDS);
     public final static long ONE_SEC = PRECISION.convert(1, TimeUnit.SECONDS);

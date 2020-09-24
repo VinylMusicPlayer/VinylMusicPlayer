@@ -19,16 +19,15 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
-import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 import org.jaudiotagger.audio.AudioFileIO;

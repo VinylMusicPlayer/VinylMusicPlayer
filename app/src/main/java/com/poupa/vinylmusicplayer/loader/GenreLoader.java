@@ -4,10 +4,10 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.Discography;
-import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

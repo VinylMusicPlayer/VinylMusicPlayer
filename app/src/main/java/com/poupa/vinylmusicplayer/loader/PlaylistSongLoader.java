@@ -7,9 +7,9 @@ import android.provider.MediaStore.Audio.AudioColumns;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.Discography;
 
 import java.util.ArrayList;
 

@@ -9,9 +9,9 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
+
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
-import com.poupa.vinylmusicplayer.provider.Discography;
+import com.poupa.vinylmusicplayer.discog.Discography;
 
 import org.jaudiotagger.tag.FieldKey;
 

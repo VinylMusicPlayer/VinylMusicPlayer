@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.util;
+package com.poupa.vinylmusicplayer.discog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
