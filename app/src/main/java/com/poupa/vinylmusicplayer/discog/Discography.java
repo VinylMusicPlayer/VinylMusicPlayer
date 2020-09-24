@@ -17,6 +17,7 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.reference.GenreTypes;
 
 import java.io.File;
 
@@ -32,19 +33,6 @@ import java.util.Set;
  */
 
 public class Discography {
-    // TODO Genre editor.
-    // For some select song (ex Evanescence / Fallen album), changing genre to 'Heavy Metal' always turn it into 137 (instead of the text inserted).
-    // As if the change is redacted by JAudioTagger or the OS.
-
-    // TODO The by-year ordering in the Songs tab is messed up since it relies on the year info provided by MediaStore (which is buggy)
-    // TODO Extract album artist from ID3 tags and use that for album grouping/sorting
-    // TODO Provide observer for add/remove/update entries in the in-memory cache
-    // TODO Adopt play history database, in order to provide dynamic playlist
-    // TODO Support multiple artists
-    // TODO Refact the SortOrder to rely on enum/enum class, i.e. avoid doing string comparison
-    // TODO Replace DelayedTaskThread by the standard AsyncTask (or any more modern alternative)
-    // TODO Investigate why the notification play/pause state doesnt reflect the current playback state
-
     @Nullable
     private static Discography sInstance = null;
 
@@ -157,6 +145,17 @@ public class Discography {
         song.albumName = StringUtil.unicodeNormalize(song.albumName);
         song.title = StringUtil.unicodeNormalize(song.title);
         song.genre = StringUtil.unicodeNormalize(song.genre);
+
+        // ID3 genre mapping, replacing numerical ID3v1 values by textual ones
+        try {
+            Integer genreId = Integer.parseInt(song.genre);
+            if (genreId != null) {
+                String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
+                if (genre != null) {
+                    song.genre = genre;
+                }
+            }
+        } catch (NumberFormatException ignored) {}
 
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
