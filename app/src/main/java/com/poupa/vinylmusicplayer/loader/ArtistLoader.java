@@ -50,7 +50,7 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static Artist getArtist(@NonNull final Context context, int artistId) {
+    public static Artist getArtist(@NonNull final Context context, long artistId) {
         Discography discog = Discography.getInstance();
         synchronized (discog) {
             Artist artist = discog.getArtist(artistId);

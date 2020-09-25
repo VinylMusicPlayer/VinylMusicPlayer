@@ -71,7 +71,7 @@ public class Discography {
     }
 
     @NonNull
-    public Song getSong(int songId) {
+    public Song getSong(long songId) {
         synchronized (cache) {
             Song song = cache.songsById.get(songId);
             return song == null ? Song.EMPTY_SONG : song;
@@ -86,7 +86,7 @@ public class Discography {
     }
 
     @Nullable
-    public Artist getArtist(int artistId) {
+    public Artist getArtist(long artistId) {
         synchronized (cache) {
             return cache.artistsById.get(artistId);
         }
@@ -100,7 +100,7 @@ public class Discography {
     }
 
     @Nullable
-    public Album getAlbum(int albumId) {
+    public Album getAlbum(long albumId) {
         synchronized (cache) {
             return cache.albumsById.get(albumId);
         }
@@ -201,16 +201,16 @@ public class Discography {
 
         // By querying via SongLoader, any newly added ones will be added to the cache
         ArrayList<Song> allSongs = SongLoader.getAllSongs(context);
-        final HashSet<Integer> allSongIds = new HashSet<>();
+        final HashSet<Long> allSongIds = new HashSet<>();
         for (Song song : allSongs) {
             allSongIds.add(song.id);
         }
 
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
-            Set<Integer> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
+            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             if (cacheSongsId.removeAll(allSongIds)) {
-                for (int songId : cacheSongsId) {
+                for (long songId : cacheSongsId) {
                     removeSongById(songId);
                 }
             }
@@ -253,7 +253,7 @@ public class Discography {
         }
     }
 
-    public void removeSongById(int songId) {
+    public void removeSongById(long songId) {
         synchronized (cache) {
             Song song = cache.songsById.get(songId);
             if (song != null) {
@@ -352,12 +352,12 @@ public class Discography {
     }
 
     private static class MemCache {
-        public HashMap<Integer, Song> songsById = new HashMap<>();
+        public HashMap<Long, Song> songsById = new HashMap<>();
 
         public HashMap<String, Artist> artistsByName = new HashMap<>();
-        public HashMap<Integer, Artist> artistsById = new HashMap<>();
+        public HashMap<Long, Artist> artistsById = new HashMap<>();
 
-        public HashMap<Integer, Album> albumsById = new HashMap<>();
+        public HashMap<Long, Album> albumsById = new HashMap<>();
 
         public HashMap<String, Genre> genresByName = new HashMap<>();
         public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();

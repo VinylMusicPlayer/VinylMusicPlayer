@@ -49,14 +49,17 @@ public class AlbumLoader {
         }
     }
 
-    public static Album getOrCreateAlbum(ArrayList<Album> albums, long albumId) {
-        // TODO Avoid sequential search here
-        for (Album album : albums) {
-            if (!album.songs.isEmpty() && album.songs.get(0).albumId == albumId) {
+    @NonNull
+    public static Album getAlbum(@NonNull final Context context, long albumId) {
+        Discography discog = Discography.getInstance();
+        synchronized (discog) {
+            Album album = discog.getAlbum(albumId);
+            if (album != null) {
                 return album;
+            } else {
+                return new Album();
             }
         }
-        return new Album();
     }
 
     @NonNull

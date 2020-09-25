@@ -78,7 +78,7 @@ class DB extends SQLiteOpenHelper {
         db.insert(SongColumns.NAME, null, values);
     }
 
-    public void removeSongById(int songId) {
+    public void removeSongById(long songId) {
         final SQLiteDatabase db = getWritableDatabase();
         db.delete(
                 SongColumns.NAME,
