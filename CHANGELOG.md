@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+## [0.24.0] - 2020-01-19
+### Fixed
+- Compatible with Android 11
+- Fix ringtone sharing
+- Detect and avoid fetching deezer place holder image
+- Fix scanning large folders
+- Fix the ellipsize bug
+- Fix long-pressing on title starting playback
+- Fix default album cover is not consistent
+
+### Changed
+- Made Vinyl resizable 
+
 ## [0.23.1] - 2020-01-19
 ### Fixed
 - Release typo
