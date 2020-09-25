@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [0.24.0] - 2020-01-19
+## [0.24.0] - 2020-09-24
 ### Fixed
 - Compatible with Android 11
 - Fix ringtone sharing
