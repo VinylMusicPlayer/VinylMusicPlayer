@@ -37,7 +37,7 @@ public class Discography {
     private static Discography sInstance = null;
 
     private DB database;
-    private MemCache cache;
+    private final MemCache cache;
 
     public Discography() {
         database = new DB();
@@ -146,50 +146,16 @@ public class Discography {
         song.title = StringUtil.unicodeNormalize(song.title);
         song.genre = StringUtil.unicodeNormalize(song.genre);
 
-        // ID3 genre mapping, replacing numerical ID3v1 values by textual ones
+        // Replace genre numerical ID3v1 values by textual ones
         try {
-            Integer genreId = Integer.parseInt(song.genre);
-            if (genreId != null) {
-                String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
-                if (genre != null) {
-                    song.genre = genre;
-                }
+            int genreId = Integer.parseInt(song.genre);
+            String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
+            if (genre != null) {
+                song.genre = genre;
             }
         } catch (NumberFormatException ignored) {}
 
-        synchronized (cache) {
-            // Race condition check: If the song has been added -> skip
-            if (cache.songsById.containsKey(song.id)) {
-                return;
-            }
-
-            // Merge artist by name
-            Artist artist = getOrCreateArtistByName(song);
-            if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
-                song.artistId = artist.getId();
-            }
-
-            // Merge album by name
-            Album album = getOrCreateAlbumByName(song);
-            if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
-                song.albumId = album.getId();
-            }
-            album.songs.add(song);
-
-            // Update genre cache
-            Genre genre = getOrCreateGenreByName(song);
-            ArrayList<Song> songs = cache.songsByGenreId.get(genre.id);
-            if (songs != null) {
-                songs.add(song);
-                genre.songCount = songs.size();
-            }
-
-            // Only sort albums after the song has been added
-            Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
-            Collections.sort(album.songs, (s1, s2) -> s1.trackNumber - s2.trackNumber);
-
-            cache.songsById.put(song.id, song);
-        }
+        cache.addSong(song);
 
         if (!cacheOnly) {
             database.addSong(song);
@@ -254,48 +220,7 @@ public class Discography {
     }
 
     public void removeSongById(long songId) {
-        synchronized (cache) {
-            Song song = cache.songsById.get(songId);
-            if (song != null) {
-                // Remove the song from linked Artist/Album cache
-                Artist artist = cache.artistsById.get(song.artistId);
-                if (artist != null) {
-                    for (Album album : artist.albums) {
-                        if (album.getId() == song.albumId) {
-                            album.songs.remove(song);
-                            if (album.songs.isEmpty()) {
-                                artist.albums.remove(album);
-                                cache.albumsById.remove(song.albumId);
-                            }
-                            break;
-                        }
-                    }
-                    if (artist.albums.isEmpty()) {
-                        cache.artistsById.remove(song.artistId);
-                        cache.artistsByName.remove(song.artistName);
-                    }
-                }
-
-                // Remove song from Genre cache
-                Genre genre = cache.genresByName.get(song.genre);
-                if (genre != null) {
-                    ArrayList<Song> songs = cache.songsByGenreId.get(genre.id);
-                    if (songs != null) {
-                        songs.remove(song);
-                        if (songs.isEmpty()) {
-                            cache.genresByName.remove(genre.name);
-                            cache.songsByGenreId.remove(genre.id);
-                        } else {
-                            genre.songCount = songs.size();
-                        }
-                    }
-                }
-
-                // Remove the song from the memory cache
-                cache.songsById.remove(songId);
-            }
-        }
-
+        cache.removeSongById(songId);
         database.removeSongById(songId);
     }
 
@@ -303,51 +228,6 @@ public class Discography {
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSongImpl(song, true);
-        }
-    }
-
-    @NonNull
-    private Artist getOrCreateArtistByName(@NonNull final Song song) {
-        synchronized (cache) {
-            Artist artist = cache.artistsByName.get(song.artistName);
-            if (artist == null) {
-                artist = new Artist();
-
-                cache.artistsByName.put(song.artistName, artist);
-                cache.artistsById.put(song.artistId, artist);
-            }
-            return artist;
-        }
-    }
-
-    @NonNull
-    private Album getOrCreateAlbumByName(@NonNull final Song song) {
-        synchronized (cache) {
-            Artist artist = getOrCreateArtistByName(song);
-            for (Album album : artist.albums) {
-                if (album.getTitle().equals(song.albumName)) {
-                    return album;
-                }
-            }
-            Album album = new Album();
-            artist.albums.add(album);
-            cache.albumsById.put(song.albumId, album);
-
-            return album;
-        }
-    }
-
-    @NonNull
-    private Genre getOrCreateGenreByName(@NonNull final Song song) {
-        synchronized (cache) {
-            Genre genre = cache.genresByName.get(song.genre);
-            if (genre == null) {
-                genre = new Genre(cache.genresByName.size(), song.genre, 0);
-
-                cache.genresByName.put(song.genre, genre);
-                cache.songsByGenreId.put(genre.id, new ArrayList<>());
-            }
-            return genre;
         }
     }
 
@@ -361,5 +241,120 @@ public class Discography {
 
         public HashMap<String, Genre> genresByName = new HashMap<>();
         public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+
+        public synchronized void addSong(@NonNull final Song song) {
+            // Race condition check: If the song has been added -> skip
+            if (songsById.containsKey(song.id)) {
+                return;
+            }
+
+            // Merge artist by name
+            Artist artist = getOrCreateArtistByName(song);
+            if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
+                song.artistId = artist.getId();
+            }
+
+            // Merge album by name
+            Album album = getOrCreateAlbumByName(song);
+            if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
+                song.albumId = album.getId();
+            }
+            album.songs.add(song);
+
+            // Update genre cache
+            Genre genre = getOrCreateGenreByName(song);
+            ArrayList<Song> songs = songsByGenreId.get(genre.id);
+            if (songs != null) {
+                songs.add(song);
+                genre.songCount = songs.size();
+            }
+
+            // Only sort albums after the song has been added
+            Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
+            Collections.sort(album.songs, (s1, s2) -> s1.trackNumber - s2.trackNumber);
+
+            songsById.put(song.id, song);
+        }
+
+        public synchronized void removeSongById(long songId) {
+            Song song = songsById.get(songId);
+            if (song != null) {
+                // Remove the song from linked Artist/Album cache
+                Artist artist = artistsById.get(song.artistId);
+                if (artist != null) {
+                    for (Album album : artist.albums) {
+                        if (album.getId() == song.albumId) {
+                            album.songs.remove(song);
+                            if (album.songs.isEmpty()) {
+                                artist.albums.remove(album);
+                                albumsById.remove(song.albumId);
+                            }
+                            break;
+                        }
+                    }
+                    if (artist.albums.isEmpty()) {
+                        artistsById.remove(song.artistId);
+                        artistsByName.remove(song.artistName);
+                    }
+                }
+
+                // Remove song from Genre cache
+                Genre genre = genresByName.get(song.genre);
+                if (genre != null) {
+                    ArrayList<Song> songs = songsByGenreId.get(genre.id);
+                    if (songs != null) {
+                        songs.remove(song);
+                        if (songs.isEmpty()) {
+                            genresByName.remove(genre.name);
+                            songsByGenreId.remove(genre.id);
+                        } else {
+                            genre.songCount = songs.size();
+                        }
+                    }
+                }
+
+                // Remove the song from the memory cache
+                songsById.remove(songId);
+            }
+        }
+
+        @NonNull
+        private synchronized Artist getOrCreateArtistByName(@NonNull final Song song) {
+            Artist artist = artistsByName.get(song.artistName);
+            if (artist == null) {
+                artist = new Artist();
+
+                artistsByName.put(song.artistName, artist);
+                artistsById.put(song.artistId, artist);
+            }
+            return artist;
+        }
+
+        @NonNull
+        private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
+            Artist artist = getOrCreateArtistByName(song);
+            for (Album album : artist.albums) {
+                if (album.getTitle().equals(song.albumName)) {
+                    return album;
+                }
+            }
+            Album album = new Album();
+            artist.albums.add(album);
+            albumsById.put(song.albumId, album);
+
+            return album;
+        }
+
+        @NonNull
+        private synchronized Genre getOrCreateGenreByName(@NonNull final Song song) {
+            Genre genre = genresByName.get(song.genre);
+            if (genre == null) {
+                genre = new Genre(genresByName.size(), song.genre, 0);
+
+                genresByName.put(song.genre, genre);
+                songsByGenreId.put(genre.id, new ArrayList<>());
+            }
+            return genre;
+        }
     }
 }

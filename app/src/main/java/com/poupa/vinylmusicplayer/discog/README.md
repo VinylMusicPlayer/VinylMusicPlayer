@@ -2,6 +2,8 @@
 
 ## Features roadmap
 
+- [ ] First run UI to give visual feedback to the potentially slow import of MediaStore data to Discog database
+
 - [x] Genre editor.
   For some select song (ex Evanescence / Fallen album), changing genre to 'Heavy Metal' always turn it into 137 (instead of the text inserted).
   As if the change is redacted by JAudioTagger or the OS.
