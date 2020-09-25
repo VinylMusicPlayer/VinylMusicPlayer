@@ -1,8 +1,9 @@
 package com.poupa.vinylmusicplayer;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+
+import androidx.multidex.MultiDexApplication;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
@@ -11,7 +12,7 @@ import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class App extends Application {
+public class App extends MultiDexApplication {
     public static final String TAG = App.class.getSimpleName();
 
     private static App app;
