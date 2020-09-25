@@ -86,7 +86,7 @@ public class SongLoader {
 
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
-        final int id = cursor.getInt(0);
+        final long id = cursor.getLong(0);
         final String data = cursor.getString(5);
         final long dateAdded = cursor.getLong(6);
         final long dateModified = cursor.getLong(7);
@@ -104,9 +104,9 @@ public class SongLoader {
         final int trackNumber = cursor.getInt(2);
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
-        final int albumId = cursor.getInt(8);
+        final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
-        final int artistId = cursor.getInt(10);
+        final long artistId = cursor.getLong(10);
         final String artistName = cursor.getString(11);
 
         song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);

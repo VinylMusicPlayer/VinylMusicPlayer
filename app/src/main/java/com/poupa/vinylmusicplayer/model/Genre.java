@@ -30,10 +30,10 @@ public class Genre implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = (int) id;
+        long result = id;
         result = 31 * result + name.hashCode();
         result = 31 * result + songCount;
-        return result;
+        return (int)result;
     }
 
     @Override
@@ -52,13 +52,13 @@ public class Genre implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt((int)this.id);
+        dest.writeLong((int)this.id);
         dest.writeString(this.name);
         dest.writeInt(this.songCount);
     }
 
     protected Genre(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.name = in.readString();
         this.songCount = in.readInt();
     }

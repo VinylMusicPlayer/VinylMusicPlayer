@@ -45,7 +45,7 @@ public class AlbumLoader {
     }
 
     @NonNull
-    public static Album getAlbum(@NonNull final Context context, int albumId) {
+    public static Album getAlbum(@NonNull final Context context, long albumId) {
         ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, AudioColumns.ALBUM_ID + "=?", new String[]{String.valueOf(albumId)}, getSongLoaderSortOrder(context)));
         Album album = new Album(songs);
         sortSongsByTrackNumber(album);
@@ -66,7 +66,7 @@ public class AlbumLoader {
         return albums;
     }
 
-    public static Album getOrCreateAlbum(ArrayList<Album> albums, int albumId) {
+    public static Album getOrCreateAlbum(ArrayList<Album> albums, long albumId) {
         // TODO Avoid sequential search here
         for (Album album : albums) {
             if (!album.songs.isEmpty() && album.songs.get(0).albumId == albumId) {
