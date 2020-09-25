@@ -37,7 +37,7 @@ public class Discography extends SQLiteOpenHelper {
     @Nullable
     private static Discography sInstance = null;
 
-    private HashMap<Integer, Song> songsById = new HashMap<>();
+    private HashMap<Long, Song> songsById = new HashMap<>();
 
     public Discography() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -109,7 +109,7 @@ public class Discography extends SQLiteOpenHelper {
     }
 
     @Nullable
-    public synchronized Song getSong(int songId) {
+    public synchronized Song getSong(long songId) {
         return songsById.get(songId);
     }
 
@@ -163,18 +163,18 @@ public class Discography extends SQLiteOpenHelper {
     private void cleanOrphanSongsImpl() {
         final Context context = App.getInstance().getApplicationContext();
 
-        HashSet<Integer> allSongIds = new HashSet<>();
+        HashSet<Long> allSongIds = new HashSet<>();
         try (final Cursor cursor = SongLoader.makeSongCursor(context, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    final int id = cursor.getInt(0);
+                    final long id = cursor.getInt(0);
                     allSongIds.add(id);
                 } while (cursor.moveToNext());
             }
         }
 
         synchronized (this) {
-            Set<Integer> orphanSongsId = new HashSet<>(songsById.keySet()); // make a copy
+            Set<Long> orphanSongsId = new HashSet<>(songsById.keySet()); // make a copy
             if (orphanSongsId.removeAll(allSongIds)) {
                 removeSongsById(orphanSongsId);
             }
@@ -199,7 +199,7 @@ public class Discography extends SQLiteOpenHelper {
         }
     }
 
-    private void removeSongById(@NonNull final SQLiteDatabase database, final int songId) {
+    private void removeSongById(@NonNull final SQLiteDatabase database, final long songId) {
         synchronized (this) {
             songsById.remove(songId);
         }
@@ -211,12 +211,12 @@ public class Discography extends SQLiteOpenHelper {
                 });
     }
 
-    private void removeSongsById(@NonNull final Set<Integer> songsId) {
+    private void removeSongsById(@NonNull final Set<Long> songsId) {
         final SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
 
         try {
-            for (int id : songsId) {
+            for (long id : songsId) {
                 removeSongById(database, id);
             }
         } finally {
@@ -261,10 +261,10 @@ public class Discography extends SQLiteOpenHelper {
 
             do {
                 int columnIndex = -1;
-                final int id = cursor.getInt(++columnIndex);
-                final int albumId = cursor.getInt(++columnIndex);
+                final long id = cursor.getLong(++columnIndex);
+                final long albumId = cursor.getLong(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
-                final int artistId = cursor.getInt(++columnIndex);
+                final long artistId = cursor.getLong(++columnIndex);
                 final String artistName = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
