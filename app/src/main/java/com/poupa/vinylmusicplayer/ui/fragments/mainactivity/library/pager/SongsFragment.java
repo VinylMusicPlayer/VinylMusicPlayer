@@ -17,8 +17,6 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 /**
@@ -146,19 +144,19 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
         getAdapter().notifyDataSetChanged();
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Loader<ArrayList<Song>> onCreateLoader(int id, Bundle args) {
         return new AsyncSongLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(@NotNull Loader<ArrayList<Song>> loader, ArrayList<Song> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Song>> loader, ArrayList<Song> data) {
         getAdapter().swapDataSet(data);
     }
 
     @Override
-    public void onLoaderReset(@NotNull Loader<ArrayList<Song>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Song>> loader) {
         getAdapter().swapDataSet(new ArrayList<>());
     }
 

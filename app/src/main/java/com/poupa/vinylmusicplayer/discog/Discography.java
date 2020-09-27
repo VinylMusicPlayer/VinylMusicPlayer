@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -65,7 +66,6 @@ public class Discography {
     public void startService(@NonNull final View progressBarView) {
         addSongProgressBarView = progressBarView;
 
-        // TODO In addition to this one-off sync, register a MusicServiceEventListener/ContentObserver to be aware of MediaStore changes
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -74,8 +74,6 @@ public class Discography {
             }
         }.execute();
     }
-
-    public void stopService() {}
 
     @NonNull
     public Song getSong(long songId) {
@@ -135,8 +133,6 @@ public class Discography {
     }
 
     public void addSong(@NonNull Song song) {
-        // TODO This methods can be called from multiple callers --> dedupe or the counter is incorrectly inflated
-
         new AsyncTask<Song, Void, Boolean>() {
             @Override
             protected void onPreExecute() {
@@ -155,7 +151,10 @@ public class Discography {
             protected void onPostExecute(Boolean result) {
                 --addSongQueueSize;
                 if (addSongQueueSize > 0) {
-                    final String message = String.format("%d songs left to scan", addSongQueueSize);
+                    final int discogSize = Discography.this.cache.songsById.size();
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
+                            discogSize);
                     if (addSongProgressBar == null) {
                         addSongProgressBar = Snackbar.make(
                                 addSongProgressBarView,
@@ -181,29 +180,36 @@ public class Discography {
     }
 
     private void addSongImpl(@NonNull Song song, boolean cacheOnly) {
-        if (!cacheOnly) {
-            extractTags(song);
-        }
-
-        // Unicode normalization
-        song.artistName = StringUtil.unicodeNormalize(song.artistName);
-        song.albumName = StringUtil.unicodeNormalize(song.albumName);
-        song.title = StringUtil.unicodeNormalize(song.title);
-        song.genre = StringUtil.unicodeNormalize(song.genre);
-
-        // Replace genre numerical ID3v1 values by textual ones
-        try {
-            int genreId = Integer.parseInt(song.genre);
-            String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
-            if (genre != null) {
-                song.genre = genre;
+        synchronized (cache) {
+            // Race condition check: If the song has been added -> skip
+            if (cache.songsById.containsKey(song.id)) {
+                return;
             }
-        } catch (NumberFormatException ignored) {}
 
-        cache.addSong(song);
+            if (!cacheOnly) {
+                extractTags(song);
+            }
 
-        if (!cacheOnly) {
-            database.addSong(song);
+            // Unicode normalization
+            song.artistName = StringUtil.unicodeNormalize(song.artistName);
+            song.albumName = StringUtil.unicodeNormalize(song.albumName);
+            song.title = StringUtil.unicodeNormalize(song.title);
+            song.genre = StringUtil.unicodeNormalize(song.genre);
+
+            // Replace genre numerical ID3v1 values by textual ones
+            try {
+                int genreId = Integer.parseInt(song.genre);
+                String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
+                if (genre != null) {
+                    song.genre = genre;
+                }
+            } catch (NumberFormatException ignored) {}
+
+            cache.addSong(song);
+
+            if (!cacheOnly) {
+                database.addSong(song);
+            }
         }
     }
 
@@ -251,7 +257,6 @@ public class Discography {
         synchronized (cache) {
             Song matchingSong = null;
 
-            // TODO Avoid sequential search
             for (Song song : cache.songsById.values()) {
                 if (song.data.equals(path)) {
                     matchingSong = song;
@@ -288,11 +293,6 @@ public class Discography {
         public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
         public synchronized void addSong(@NonNull final Song song) {
-            // Race condition check: If the song has been added -> skip
-            if (songsById.containsKey(song.id)) {
-                return;
-            }
-
             // Merge artist by name
             Artist artist = getOrCreateArtistByName(song);
             if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {

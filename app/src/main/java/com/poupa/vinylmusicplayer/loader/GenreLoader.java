@@ -34,7 +34,6 @@ public class GenreLoader {
             }
             else {
                 ArrayList<Song> songs = new ArrayList<>(genreSongs);
-                // TODO Do we need other sorting option here?
                 Collections.sort(songs, (s1, s2) -> StringUtil.compareIgnoreAccent(s1.title, s2.title));
                 return songs;
             }

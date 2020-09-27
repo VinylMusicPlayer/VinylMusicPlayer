@@ -96,7 +96,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         }
 
         Discography.getInstance().startService(findViewById(R.id.drawer_layout));
-        // TODO Who calls Discography.getInstance().stopService(); ????
     }
 
     private void setMusicChooser(int key) {
