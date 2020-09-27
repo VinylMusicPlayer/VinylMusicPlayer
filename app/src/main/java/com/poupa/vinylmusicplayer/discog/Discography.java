@@ -1,9 +1,13 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
@@ -39,6 +43,10 @@ public class Discography {
     private DB database;
     private final MemCache cache;
 
+    private int addSongQueueSize;
+    private Snackbar addSongProgressBar;
+    private View addSongProgressBarView;
+
     public Discography() {
         database = new DB();
         cache = new MemCache();
@@ -62,7 +70,9 @@ public class Discography {
         return sInstance;
     }
 
-    public void startService() {
+    public void startService(@NonNull final View progressBarView) {
+        addSongProgressBarView = progressBarView;
+
         DelayedTaskThread.getInstance().start();
     }
 
@@ -128,11 +138,48 @@ public class Discography {
     }
 
     public void addSong(@NonNull Song song) {
-        DelayedTaskThread.getInstance().addTask(
-                DelayedTaskThread.ONE_MILLIS,
-                0,
-                () -> addSongImpl(song, false)
-        );
+//        DelayedTaskThread.getInstance().addTask(
+//                DelayedTaskThread.ONE_MILLIS,
+//                0,
+//                () -> addSongImpl(song, false)
+//        );
+
+        new AsyncTask<Song, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                ++addSongQueueSize;
+                if (addSongQueueSize > 0) {
+                    if (addSongProgressBar == null) {
+                        addSongProgressBar = Snackbar.make(
+                                addSongProgressBarView,
+                                "blah blah blah",
+                                Snackbar.LENGTH_INDEFINITE);
+                    }
+
+                    addSongProgressBar.setText(String.format("%d songs left to scan", addSongQueueSize));
+                    if (!addSongProgressBar.isShownOrQueued()) {
+                        addSongProgressBar.show();
+                    }
+                }
+            }
+
+            @Override
+            protected Boolean doInBackground(Song... songs) {
+                for (Song song : songs) {
+                    Discography.this.addSongImpl(song, false);
+                }
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                --addSongQueueSize;
+                if (addSongQueueSize <= 0) {
+                    addSongProgressBar.dismiss();
+                    // TODO Force reload the UI
+                }
+            }
+        }.execute(song);
     }
 
     private void addSongImpl(@NonNull Song song, boolean cacheOnly) {

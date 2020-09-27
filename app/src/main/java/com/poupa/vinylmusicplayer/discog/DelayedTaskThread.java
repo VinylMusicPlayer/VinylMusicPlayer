@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import androidx.annotation.NonNull;
+
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -98,12 +100,10 @@ class DelayedTaskThread {
         }
     }
 
-    public synchronized void addTask(long delay, long recurrence, Runnable runnable) {
+    public synchronized void addTask(long delay, long recurrence, @NonNull Runnable runnable) {
         Task task = new Task(delay, recurrence) {
             @Override
-            public void run() {
-                runnable.run();
-            }
+            public void run() {runnable.run();}
         };
         taskQueue.add(task);
     }
