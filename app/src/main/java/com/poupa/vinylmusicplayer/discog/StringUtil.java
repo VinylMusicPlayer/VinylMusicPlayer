@@ -27,7 +27,11 @@ public class StringUtil {
     }
 
     public static String unicodeNormalize(@NonNull final String text) {
-        return Normalizer.normalize(text, Normalizer.Form.NFD);
+        try {
+            return Normalizer.normalize(text, Normalizer.Form.NFD);
+        } catch (Exception ignored) {
+            return text;
+        }
     }
 
     @NonNull

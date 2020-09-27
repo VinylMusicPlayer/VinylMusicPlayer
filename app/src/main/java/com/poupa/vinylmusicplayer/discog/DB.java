@@ -57,25 +57,29 @@ class DB extends SQLiteOpenHelper {
     }
 
     public void addSong(@NonNull Song song) {
-        final ContentValues values = new ContentValues();
-        values.put(SongColumns.ID, song.id);
-        values.put(SongColumns.ALBUM_ID, song.albumId);
-        values.put(SongColumns.ALBUM_NAME, song.albumName);
-        values.put(SongColumns.ARTIST_ID, song.artistId);
-        values.put(SongColumns.ARTIST_NAME, song.artistName);
-        values.put(SongColumns.DATA_PATH, song.data);
-        values.put(SongColumns.DATE_ADDED, song.dateAdded);
-        values.put(SongColumns.DATE_MODIFIED, song.dateModified);
-        values.put(SongColumns.GENRE, song.genre);
-        values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
-        values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
-        values.put(SongColumns.TRACK_DURATION, song.duration);
-        values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
-        values.put(SongColumns.TRACK_TITLE, song.title);
-        values.put(SongColumns.YEAR, song.year);
+        try {
+            final ContentValues values = new ContentValues();
+            values.put(SongColumns.ID, song.id);
+            values.put(SongColumns.ALBUM_ID, song.albumId);
+            values.put(SongColumns.ALBUM_NAME, song.albumName);
+            values.put(SongColumns.ARTIST_ID, song.artistId);
+            values.put(SongColumns.ARTIST_NAME, song.artistName);
+            values.put(SongColumns.DATA_PATH, song.data);
+            values.put(SongColumns.DATE_ADDED, song.dateAdded);
+            values.put(SongColumns.DATE_MODIFIED, song.dateModified);
+            values.put(SongColumns.GENRE, song.genre);
+            values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
+            values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
+            values.put(SongColumns.TRACK_DURATION, song.duration);
+            values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
+            values.put(SongColumns.TRACK_TITLE, song.title);
+            values.put(SongColumns.YEAR, song.year);
 
-        final SQLiteDatabase db = getWritableDatabase();
-        db.insert(SongColumns.NAME, null, values);
+            final SQLiteDatabase db = getWritableDatabase();
+            db.insert(SongColumns.NAME, null, values);
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 
     public void removeSongById(long songId) {

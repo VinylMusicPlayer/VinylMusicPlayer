@@ -150,30 +150,34 @@ public class Discography {
             @Override
             protected void onPostExecute(Boolean result) {
                 --addSongQueueSize;
-                if (addSongQueueSize > 0) {
-                    final int discogSize = Discography.this.cache.songsById.size();
-                    final String message = String.format(
-                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
-                            discogSize);
-                    if (addSongProgressBar == null) {
-                        addSongProgressBar = Snackbar.make(
-                                addSongProgressBarView,
-                                message,
-                                Snackbar.LENGTH_INDEFINITE);
-                        addSongProgressBar.show();
-                    } else {
-                        addSongProgressBar.setText(message);
-                        if (!addSongProgressBar.isShownOrQueued()) {
+                try {
+                    if (addSongQueueSize > 0) {
+                        final int discogSize = Discography.this.cache.songsById.size();
+                        final String message = String.format(
+                                App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
+                                discogSize);
+                        if (addSongProgressBar == null) {
+                            addSongProgressBar = Snackbar.make(
+                                    addSongProgressBarView,
+                                    message,
+                                    Snackbar.LENGTH_INDEFINITE);
                             addSongProgressBar.show();
+                        } else {
+                            addSongProgressBar.setText(message);
+                            if (!addSongProgressBar.isShownOrQueued()) {
+                                addSongProgressBar.show();
+                            }
                         }
-                    }
-                } else {
-                    if (addSongProgressBar.isShownOrQueued()) {
-                        addSongProgressBar.dismiss();
-                    }
+                    } else {
+                        if (addSongProgressBar.isShownOrQueued()) {
+                            addSongProgressBar.dismiss();
+                        }
 
-                    // Force reload the UI
-                    addSongProgressBarView.getRootView().invalidate();
+                        // Force reload the UI
+                        addSongProgressBarView.getRootView().invalidate();
+                    }
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
                 }
             }
         }.execute(song);
@@ -203,7 +207,9 @@ public class Discography {
                 if (genre != null) {
                     song.genre = genre;
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
 
             cache.addSong(song);
 
@@ -248,8 +254,8 @@ public class Discography {
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
 
             ReplayGainTagExtractor.setReplayGainValues(song);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
     }
 
