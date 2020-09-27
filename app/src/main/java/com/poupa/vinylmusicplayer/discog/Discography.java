@@ -148,19 +148,6 @@ public class Discography {
             @Override
             protected void onPreExecute() {
                 ++addSongQueueSize;
-                if (addSongQueueSize > 0) {
-                    if (addSongProgressBar == null) {
-                        addSongProgressBar = Snackbar.make(
-                                addSongProgressBarView,
-                                "blah blah blah",
-                                Snackbar.LENGTH_INDEFINITE);
-                    }
-
-                    addSongProgressBar.setText(String.format("%d songs left to scan", addSongQueueSize));
-                    if (!addSongProgressBar.isShownOrQueued()) {
-                        addSongProgressBar.show();
-                    }
-                }
             }
 
             @Override
@@ -174,9 +161,27 @@ public class Discography {
             @Override
             protected void onPostExecute(Boolean result) {
                 --addSongQueueSize;
-                if (addSongQueueSize <= 0) {
-                    addSongProgressBar.dismiss();
-                    // TODO Force reload the UI
+                if (addSongQueueSize > 0) {
+                    final String message = String.format("%d songs left to scan", addSongQueueSize);
+                    if (addSongProgressBar == null) {
+                        addSongProgressBar = Snackbar.make(
+                                addSongProgressBarView,
+                                message,
+                                Snackbar.LENGTH_INDEFINITE);
+                        addSongProgressBar.show();
+                    } else {
+                        addSongProgressBar.setText(message);
+                        if (!addSongProgressBar.isShownOrQueued()) {
+                            addSongProgressBar.show();
+                        }
+                    }
+                } else {
+                    if (addSongProgressBar.isShownOrQueued()) {
+                        addSongProgressBar.dismiss();
+                    }
+
+                    // Force reload the UI
+                    addSongProgressBarView.getRootView().invalidate();
                 }
             }
         }.execute(song);
