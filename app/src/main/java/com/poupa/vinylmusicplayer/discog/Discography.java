@@ -163,13 +163,11 @@ public class Discography {
                         addSongProgressBar.show();
                     } else {
                         addSongProgressBar.setText(message);
-                        if (!addSongProgressBar.isShownOrQueued()) {
-                            addSongProgressBar.show();
-                        }
                     }
                 } else {
-                    if (addSongProgressBar.isShownOrQueued()) {
+                    if (addSongProgressBar != null) {
                         addSongProgressBar.dismiss();
+                        addSongProgressBar = null;
                     }
 
                     // Force reload the UI
