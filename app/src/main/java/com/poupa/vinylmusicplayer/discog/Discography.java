@@ -52,14 +52,6 @@ public class Discography {
         cache = new MemCache();
 
         fetchAllSongs();
-
-        // TODO Instead of polling, register a MusicServiceEventListener/ContentObserver to be aware of MediaStore changes
-        // Note that periodical polling is still necessary for deleted songs, and those changed while the app is not active
-        DelayedTaskThread.getInstance().addTask(
-                DelayedTaskThread.ONE_MINUTE,
-                DelayedTaskThread.ONE_MINUTE,
-                this::syncWithMediaStore
-        );
     }
 
     @NonNull
@@ -73,12 +65,17 @@ public class Discography {
     public void startService(@NonNull final View progressBarView) {
         addSongProgressBarView = progressBarView;
 
-        DelayedTaskThread.getInstance().start();
+        // TODO In addition to this one-off sync, register a MusicServiceEventListener/ContentObserver to be aware of MediaStore changes
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Discography.this.syncWithMediaStore();
+                return true;
+            }
+        }.execute();
     }
 
-    public void stopService() {
-        DelayedTaskThread.getInstance().stop();
-    }
+    public void stopService() {}
 
     @NonNull
     public Song getSong(long songId) {
@@ -138,11 +135,7 @@ public class Discography {
     }
 
     public void addSong(@NonNull Song song) {
-//        DelayedTaskThread.getInstance().addTask(
-//                DelayedTaskThread.ONE_MILLIS,
-//                0,
-//                () -> addSongImpl(song, false)
-//        );
+        // TODO This methods can be called from multiple callers --> dedupe or the counter is incorrectly inflated
 
         new AsyncTask<Song, Void, Boolean>() {
             @Override

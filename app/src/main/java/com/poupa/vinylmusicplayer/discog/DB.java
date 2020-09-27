@@ -15,7 +15,7 @@ import java.util.Collection;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 2;
 
     public DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);

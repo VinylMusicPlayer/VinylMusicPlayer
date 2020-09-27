@@ -2,7 +2,7 @@
 
 ## Features roadmap
 
-- [ ] First run UI to give visual feedback to the potentially slow import of MediaStore data to Discog database
+- [x] First run UI to give visual feedback to the potentially slow import of MediaStore data to Discog database
 
 - [x] Genre editor.
   For some select song (ex Evanescence / Fallen album), changing genre to 'Heavy Metal' always turn it into 137 (instead of the text inserted).
@@ -22,7 +22,7 @@
 
 - [ ] Refact the SortOrder to rely on enum/enum class, i.e. avoid doing string comparison
 
-- [ ] Replace DelayedTaskThread by the standard AsyncTask (or any more modern alternative)
+- [x] Replace DelayedTaskThread by the standard AsyncTask (or any more modern alternative)
 
 ## Misc todo
 
