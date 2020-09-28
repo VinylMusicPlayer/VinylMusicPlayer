@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VinylMusicPlayer.Light"
         android:resizeableActivity="true"
+        android:requestLegacyExternalStorage="true"
         tools:ignore="UnusedAttribute">
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.MainActivity"
             android:theme="@style/SplashTheme"
