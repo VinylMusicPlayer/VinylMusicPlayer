@@ -24,6 +24,12 @@
 
 - [x] Replace DelayedTaskThread by the standard AsyncTask (or any more modern alternative)
 
+- [ ] show empty genre as 'unknown'
+
+- [ ] refresh discog on blacklist update (put a folder in the blacklist after indexation, those title will remain inside a genre category for some time before being removed)
+
+- [ ] 'sort by date added' on album tab is not correct
+
 ## Misc todo
 
 - [ ]  Investigate why the notification play/pause state doesnt reflect the current playback state
