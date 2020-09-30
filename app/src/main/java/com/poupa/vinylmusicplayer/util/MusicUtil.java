@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
@@ -297,16 +298,19 @@ public class MusicUtil {
                     activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                             selection.toString(), null);
 
-                    // Step 3: Remove files from card
-                    cursor.moveToFirst();
-                    int i = batchStart;
-                    while (!cursor.isAfterLast()) {
-                        final String name = cursor.getString(1);
-                        final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                        SAFUtil.delete(activity, name, safUri);
-                        i++;
-                        cursor.moveToNext();
+                    // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        cursor.moveToFirst();
+                        int i = batchStart;
+                        while (!cursor.isAfterLast()) {
+                            final String name = cursor.getString(1);
+                            final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                            SAFUtil.delete(activity, name, safUri);
+                            i++;
+                            cursor.moveToNext();
+                        }
                     }
+
                     cursor.close();
                 }
             } catch (SecurityException ignored) {
