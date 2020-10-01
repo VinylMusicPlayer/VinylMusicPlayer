@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import com.poupa.vinylmusicplayer.App;
@@ -18,7 +19,6 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -46,9 +46,7 @@ public class Discography implements MusicServiceEventListener {
     private DB database;
     private final MemCache cache;
 
-    private int addSongQueueSize;
-    private Snackbar addSongProgressBar;
-    private View addSongProgressBarView;
+    private View parentView;
 
     public Discography() {
         database = new DB();
@@ -65,8 +63,8 @@ public class Discography implements MusicServiceEventListener {
         return sInstance;
     }
 
-    public void startService(@NonNull final View progressBarView) {
-        addSongProgressBarView = progressBarView;
+    public void startService(@NonNull final View parentView) {
+        this.parentView = parentView;
         triggerSyncWithMediaStore();
     }
 
@@ -130,54 +128,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void addSong(@NonNull Song song) {
-        new AsyncTask<Song, Void, Boolean>() {
-            @Override
-            protected void onPreExecute() {
-                ++addSongQueueSize;
-            }
-
-            @Override
-            protected Boolean doInBackground(Song... songs) {
-                for (Song song : songs) {
-                    Discography.this.addSongImpl(song, false);
-                }
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                --addSongQueueSize;
-                try {
-                    if (addSongQueueSize > 0) {
-                        final int discogSize = Discography.this.cache.songsById.size();
-                        final String message = String.format(
-                                App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
-                                discogSize);
-                        if (addSongProgressBar == null) {
-                            addSongProgressBar = Snackbar.make(
-                                    addSongProgressBarView,
-                                    message,
-                                    Snackbar.LENGTH_INDEFINITE);
-                            addSongProgressBar.show();
-                        } else {
-                            addSongProgressBar.setText(message);
-                            if (!addSongProgressBar.isShownOrQueued()) {
-                                addSongProgressBar.show();
-                            }
-                        }
-                    } else {
-                        if (addSongProgressBar.isShownOrQueued()) {
-                            addSongProgressBar.dismiss();
-                        }
-
-                        // Force reload the UI
-                        addSongProgressBarView.getRootView().invalidate();
-                    }
-                } catch (Exception ignored) {
-                    ignored.printStackTrace();
-                }
-            }
-        }.execute(song);
+        new AddSongAsyncTask().execute(song);
     }
 
     private void addSongImpl(@NonNull Song song, boolean cacheOnly) {
@@ -322,6 +273,58 @@ public class Discography implements MusicServiceEventListener {
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSongImpl(song, true);
+        }
+    }
+
+    private static class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
+        private static int pendingCount;
+        private static Snackbar progressBar;
+
+        @Override
+        protected void onPreExecute() {
+            ++pendingCount;
+        }
+
+        @Override
+        protected Boolean doInBackground(Song... songs) {
+            for (Song song : songs) {
+                Discography.getInstance().addSongImpl(song, false);
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            --pendingCount;
+            try {
+                if (pendingCount > 0) {
+                    final int discogSize = Discography.getInstance().cache.songsById.size();
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
+                            discogSize);
+                    if (progressBar == null) {
+                        progressBar = Snackbar.make(
+                                Discography.getInstance().parentView,
+                                message,
+                                Snackbar.LENGTH_INDEFINITE);
+                        progressBar.show();
+                    } else {
+                        progressBar.setText(message);
+                        if (!progressBar.isShownOrQueued()) {
+                            progressBar.show();
+                        }
+                    }
+                } else {
+                    if (progressBar.isShownOrQueued()) {
+                        progressBar.setDuration(BaseTransientBottomBar.LENGTH_LONG);
+                    }
+
+                    // Force reload the UI
+                    Discography.getInstance().parentView.getRootView().invalidate();
+                }
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
         }
     }
 
