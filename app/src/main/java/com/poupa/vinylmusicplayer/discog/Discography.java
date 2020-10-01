@@ -17,6 +17,7 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -249,6 +250,11 @@ public class Discography {
             song.albumName = tags.getFirst(FieldKey.ALBUM);
             song.artistName = tags.getFirst(FieldKey.ARTIST);
             song.title = tags.getFirst(FieldKey.TITLE);
+            if (song.title.trim().isEmpty()) {
+                // fallback to use the file name
+                song.title = file.getFile().getName();
+            }
+
             song.genre = tags.getFirst(FieldKey.GENRE);
             try {song.trackNumber = Integer.parseInt(tags.getFirst(FieldKey.TRACK));} catch (NumberFormatException ignored) {}
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
