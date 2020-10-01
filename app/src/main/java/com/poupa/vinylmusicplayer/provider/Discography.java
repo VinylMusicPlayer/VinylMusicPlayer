@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
 
@@ -32,7 +34,7 @@ import java.util.Set;
 
 public class Discography extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @Nullable
     private static Discography sInstance = null;
@@ -187,9 +189,9 @@ public class Discography extends SQLiteOpenHelper {
             AudioFile file = AudioFileIO.read(new File(song.data));
             Tag tags = file.getTagOrCreateAndSetDefault();
 
-            song.albumName = tags.getFirst(FieldKey.ALBUM);
-            song.artistName = tags.getFirst(FieldKey.ARTIST);
-            song.title = tags.getFirst(FieldKey.TITLE);
+            song.albumName = getAlbumName(tags);
+            song.artistName = getArtistName(tags);
+            song.title = getSongTitle(tags, song);
             try {song.trackNumber = Integer.parseInt(tags.getFirst(FieldKey.TRACK));} catch (NumberFormatException ignored) {}
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
 
@@ -197,6 +199,36 @@ public class Discography extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String getArtistName(Tag tags) {
+        String artist = tags.getFirst(FieldKey.TITLE);
+
+        if (artist.trim().isEmpty()) {
+            artist = Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
+        }
+
+        return artist;
+    }
+
+    private String getAlbumName(Tag tags) {
+        String artist = tags.getFirst(FieldKey.ALBUM);
+
+        if (artist.trim().isEmpty()) {
+            artist = Album.UNKNOWN_ALBUM_DISPLAY_NAME;
+        }
+
+        return artist;
+    }
+
+    private String getSongTitle(Tag tags, Song song) {
+        String title = tags.getFirst(FieldKey.TITLE);
+
+        if (title.trim().isEmpty()) {
+            title = song.data.substring(song.data.lastIndexOf("/") + 1);
+        }
+
+        return title;
     }
 
     private void removeSongById(@NonNull final SQLiteDatabase database, final long songId) {
