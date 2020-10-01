@@ -11,6 +11,8 @@ import java.util.ArrayList;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Album implements Parcelable {
+    public static final String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
+
     public final ArrayList<Song> songs;
 
     public Album(ArrayList<Song> songs) {
