@@ -372,6 +372,10 @@ public class MusicUtil {
         return isNameUnknown(albumName, Album.UNKNOWN_ALBUM_DISPLAY_NAME);
     }
 
+    public static boolean isGenreNameUnknown(@Nullable String genreName) {
+        return isNameUnknown(genreName, Genre.UNKNOWN_GENRE_DISPLAY_NAME);
+    }
+
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
         if (TextUtils.isEmpty(name)) return true;
         if (name.equals(defaultDisplayName)) return true;

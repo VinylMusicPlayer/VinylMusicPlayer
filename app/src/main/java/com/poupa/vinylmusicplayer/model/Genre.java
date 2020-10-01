@@ -5,7 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+
 public class Genre implements Parcelable {
+    public static final String UNKNOWN_GENRE_DISPLAY_NAME = "Unknown Genre";
+
     public final long id;
     public final String name;
 
@@ -15,6 +19,13 @@ public class Genre implements Parcelable {
         this.id = id;
         this.name = name;
         this.songCount = songCount;
+    }
+
+    public String getName() {
+        if (MusicUtil.isGenreNameUnknown(name)) {
+            return UNKNOWN_GENRE_DISPLAY_NAME;
+        }
+        return name;
     }
 
     @Override

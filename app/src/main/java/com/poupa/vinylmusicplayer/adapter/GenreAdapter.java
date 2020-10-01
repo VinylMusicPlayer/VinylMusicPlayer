@@ -71,7 +71,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
             holder.menu.setVisibility(View.GONE);
         }
         if (holder.title != null) {
-            holder.title.setText(genre.name);
+            holder.title.setText(genre.getName());
         }
         if (holder.text != null) {
             holder.text.setText(MusicUtil.getGenreInfoString(activity, genre));
@@ -87,7 +87,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     @Override
     public String getSectionName(int position) {
         final Genre genre = dataSet.get(position);
-        return genre.id == -1 ? "" : MusicUtil.getSectionName(dataSet.get(position).name);
+        return genre.id == -1 ? "" : MusicUtil.getSectionName(dataSet.get(position).getName());
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
