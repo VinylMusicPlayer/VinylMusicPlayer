@@ -47,6 +47,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,7 +96,18 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             showChangelog();
         }
 
-        Discography.getInstance().startService(findViewById(R.id.drawer_layout));
+        final Discography discog = Discography.getInstance();
+        discog.startService(findViewById(R.id.drawer_layout));
+        addMusicServiceEventListener(discog);
+    }
+
+    @Override
+    protected void onDestroy() {
+        final Discography discog = Discography.getInstance();
+        removeMusicServiceEventListener(discog);
+        discog.stopService();
+
+        super.onDestroy();
     }
 
     private void setMusicChooser(int key) {

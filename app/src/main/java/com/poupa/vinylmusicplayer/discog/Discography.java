@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -38,7 +39,7 @@ import java.util.Set;
  * @author SC (soncaokim)
  */
 
-public class Discography {
+public class Discography implements MusicServiceEventListener {
     @Nullable
     private static Discography sInstance = null;
 
@@ -66,15 +67,10 @@ public class Discography {
 
     public void startService(@NonNull final View progressBarView) {
         addSongProgressBarView = progressBarView;
-
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                Discography.this.syncWithMediaStore();
-                return true;
-            }
-        }.execute();
+        triggerSyncWithMediaStore();
     }
+
+    public void stopService() {}
 
     @NonNull
     public Song getSong(long songId) {
@@ -220,6 +216,16 @@ public class Discography {
         }
     }
 
+    public void triggerSyncWithMediaStore() {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Discography.this.syncWithMediaStore();
+                return true;
+            }
+        }.execute();
+    }
+
     private void syncWithMediaStore() {
         final Context context = App.getInstance().getApplicationContext();
 
@@ -239,6 +245,32 @@ public class Discography {
                 }
             }
         }
+    }
+
+    @Override
+    public void onServiceConnected() {}
+
+    @Override
+    public void onServiceDisconnected() {}
+
+    @Override
+    public void onQueueChanged() {}
+
+    @Override
+    public void onPlayingMetaChanged() {}
+
+    @Override
+    public void onPlayStateChanged() {}
+
+    @Override
+    public void onRepeatModeChanged() {}
+
+    @Override
+    public void onShuffleModeChanged() {}
+
+    @Override
+    public void onMediaStoreChanged() {
+        triggerSyncWithMediaStore();
     }
 
     private void extractTags(@NonNull Song song) {
