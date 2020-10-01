@@ -202,7 +202,7 @@ public class Discography extends SQLiteOpenHelper {
     }
 
     private String getArtistName(Tag tags) {
-        String artist = tags.getFirst(FieldKey.TITLE);
+        String artist = tags.getFirst(FieldKey.ARTIST);
 
         if (artist.trim().isEmpty()) {
             artist = Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
