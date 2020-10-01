@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.24.1] - 2020-10-01
+### Fixed
+- Filename not showing for songs without tags
+
 ## [0.24.0] - 2020-09-24
 ### Fixed
 - Compatible with Android 11
