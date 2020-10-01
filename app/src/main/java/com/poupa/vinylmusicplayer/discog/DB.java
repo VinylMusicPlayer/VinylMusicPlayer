@@ -127,10 +127,10 @@ class DB extends SQLiteOpenHelper {
 
             do {
                 int columnIndex = -1;
-                final int id = cursor.getInt(++columnIndex);
-                final int albumId = cursor.getInt(++columnIndex);
+                final long id = cursor.getInt(++columnIndex);
+                final long albumId = cursor.getInt(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
-                final int artistId = cursor.getInt(++columnIndex);
+                final long artistId = cursor.getInt(++columnIndex);
                 final String artistName = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
