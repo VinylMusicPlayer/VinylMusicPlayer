@@ -34,7 +34,7 @@ import java.util.Set;
 
 public class Discography extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @Nullable
     private static Discography sInstance = null;
