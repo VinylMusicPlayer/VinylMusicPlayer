@@ -71,6 +71,22 @@ public class Discography implements MusicServiceEventListener {
     public void stopService() {}
 
     @NonNull
+    public Song getOrAddSong(@NonNull  final Song song) {
+        Song discogSong = getSong(song.id);
+        if (discogSong != Song.EMPTY_SONG) {
+            if (song.data.equals(discogSong.data) && song.dateAdded == discogSong.dateAdded && song.dateModified == discogSong.dateModified) {
+                return discogSong;
+            } else {
+                removeSongById(song.id);
+            }
+        }
+
+        addSong(song);
+
+        return song;
+    }
+
+    @NonNull
     public Song getSong(long songId) {
         synchronized (cache) {
             Song song = cache.songsById.get(songId);
