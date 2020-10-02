@@ -18,6 +18,7 @@ import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
+import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -148,11 +149,11 @@ public class Discography implements MusicServiceEventListener {
         new AddSongAsyncTask().execute(song);
     }
 
-    private void addSongImpl(@NonNull Song song, boolean cacheOnly) {
+    private boolean addSongImpl(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
             if (cache.songsById.containsKey(song.id)) {
-                return;
+                return false;
             }
 
             if (!cacheOnly) {
@@ -181,6 +182,8 @@ public class Discography implements MusicServiceEventListener {
             if (!cacheOnly) {
                 database.addSong(song);
             }
+
+            return true;
         }
     }
 
@@ -295,6 +298,8 @@ public class Discography implements MusicServiceEventListener {
 
     private static class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
         private static int pendingCount;
+        private static int burstSongCount;
+
         private static Snackbar progressBar;
         private final static Discography discography = Discography.getInstance();
 
@@ -305,21 +310,25 @@ public class Discography implements MusicServiceEventListener {
 
         @Override
         protected Boolean doInBackground(Song... songs) {
+            boolean effectiveAdd = false;
             for (Song song : songs) {
-                discography.addSongImpl(song, false);
+                effectiveAdd = discography.addSongImpl(song, false);
             }
-            return true;
+            return effectiveAdd;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             --pendingCount;
+            if (result) {
+                ++burstSongCount;
+            }
+
             try {
-                final int discogSize = discography.cache.songsById.size();
                 if (pendingCount > 0) {
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                            discogSize);
+                            burstSongCount);
                     if (progressBar == null) {
                         progressBar = Snackbar.make(
                                 discography.parentView,
@@ -339,11 +348,13 @@ public class Discography implements MusicServiceEventListener {
 
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                            discogSize);
+                            burstSongCount);
                     Snackbar.make(
                             Discography.getInstance().parentView,
                             message,
                             Snackbar.LENGTH_LONG).show();
+
+                    burstSongCount = 0;
 
                     // Force reload the UI
                     discography.parentView.getRootView().invalidate();
