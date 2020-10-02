@@ -191,7 +191,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                 sectionName = dataSet.get(position).artistName;
                 break;
             case SortOrder.SongSortOrder.SONG_DATE_ADDED:
-                Date date = new Date(dataSet.get(position).dateAdded);
+                Date date = new Date(1000 * dataSet.get(position).dateAdded);
                 DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
                 sectionName = dateFormat.format(date);
                 break;
