@@ -21,11 +21,12 @@ import java.util.function.Function;
  * @author SC (soncaokim)
  */
 public class ArtistLoader {
+    private final static Discography discography = Discography.getInstance();
+
     @NonNull
     public static ArrayList<Artist> getAllArtists(@NonNull final Context context) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            ArrayList<Artist> artists = new ArrayList<>(discog.getAllArtists());
+        synchronized (discography) {
+            ArrayList<Artist> artists = new ArrayList<>(discography.getAllArtists());
             Collections.sort(artists, getSortOrder());
             return artists;
         }
@@ -35,10 +36,9 @@ public class ArtistLoader {
     public static ArrayList<Artist> getArtists(@NonNull final Context context, String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
+        synchronized (discography) {
             ArrayList<Artist> artists = new ArrayList<>();
-            for (Artist artist : discog.getAllArtists()) {
+            for (Artist artist : discography.getAllArtists()) {
                 final String strippedArtist = StringUtil.stripAccent(artist.getName().toLowerCase());
                 if (strippedArtist.contains(strippedQuery)) {
                     artists.add(artist);
@@ -51,9 +51,8 @@ public class ArtistLoader {
 
     @NonNull
     public static Artist getArtist(@NonNull final Context context, long artistId) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            Artist artist = discog.getArtist(artistId);
+        synchronized (discography) {
+            Artist artist = discography.getArtist(artistId);
             if (artist != null) {
                 return artist;
             } else {

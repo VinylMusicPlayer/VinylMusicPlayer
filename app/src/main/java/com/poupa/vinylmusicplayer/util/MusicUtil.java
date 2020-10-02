@@ -268,6 +268,8 @@ public class MusicUtil {
         final int batchSize = 1000000 / 10; // 10^6 being the SQLite limit on the query length in bytes, 10 being the max number of digits in an int, used to store the track ID
         final int songCount = songs.size();
 
+        final Discography discography = Discography.getInstance();
+
         while (batchEnd < songCount)
         {
             batchStart = batchEnd;
@@ -297,7 +299,7 @@ public class MusicUtil {
                     cursor.moveToFirst();
                     while (!cursor.isAfterLast()) {
                         final long id = cursor.getLong(0);
-                        final Song song = Discography.getInstance().getSong(id);
+                        final Song song = discography.getSong(id);
                         MusicPlayerRemote.removeFromQueue(song);
                         cursor.moveToNext();
                     }

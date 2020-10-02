@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author SC (soncaokim)
@@ -295,6 +296,7 @@ public class Discography implements MusicServiceEventListener {
     private static class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
         private static int pendingCount;
         private static Snackbar progressBar;
+        private final static Discography discography = Discography.getInstance();
 
         @Override
         protected void onPreExecute() {
@@ -304,7 +306,7 @@ public class Discography implements MusicServiceEventListener {
         @Override
         protected Boolean doInBackground(Song... songs) {
             for (Song song : songs) {
-                Discography.getInstance().addSongImpl(song, false);
+                discography.addSongImpl(song, false);
             }
             return true;
         }
@@ -314,13 +316,13 @@ public class Discography implements MusicServiceEventListener {
             --pendingCount;
             try {
                 if (pendingCount > 0) {
-                    final int discogSize = Discography.getInstance().cache.songsById.size();
+                    final int discogSize = discography.cache.songsById.size();
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
                             discogSize);
                     if (progressBar == null) {
                         progressBar = Snackbar.make(
-                                Discography.getInstance().parentView,
+                                discography.parentView,
                                 message,
                                 Snackbar.LENGTH_INDEFINITE);
                         progressBar.show();
@@ -336,7 +338,7 @@ public class Discography implements MusicServiceEventListener {
                     }
 
                     // Force reload the UI
-                    Discography.getInstance().parentView.getRootView().invalidate();
+                    discography.parentView.getRootView().invalidate();
                 }
             } catch (Exception ignored) {
                 ignored.printStackTrace();

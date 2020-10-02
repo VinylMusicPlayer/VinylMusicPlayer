@@ -14,6 +14,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import java.util.ArrayList;
 
 public class PlaylistSongLoader {
+    private final static Discography discography = Discography.getInstance();
 
     @NonNull
     public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, final long playlistId) {
@@ -49,8 +50,7 @@ public class PlaylistSongLoader {
 
         Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
 
-        Discography discog = Discography.getInstance();
-        song = discog.getOrAddSong(song);
+        song = discography.getOrAddSong(song);
 
         PlaylistSong playlistSong = new PlaylistSong(
                 id,

@@ -14,11 +14,12 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class GenreLoader {
+    private final static Discography discography = Discography.getInstance();
+
     @NonNull
     public static ArrayList<Genre> getAllGenres(@NonNull final Context context) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            ArrayList<Genre> genres = new ArrayList<>(discog.getAllGenres());
+        synchronized (discography) {
+            ArrayList<Genre> genres = new ArrayList<>(discography.getAllGenres());
             Collections.sort(genres, (g1, g2) -> StringUtil.compareIgnoreAccent(g1.name, g2.name));
             return genres;
         }
@@ -26,9 +27,8 @@ public class GenreLoader {
 
     @NonNull
     public static ArrayList<Song> getSongs(@NonNull final Context context, final long genreId) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            Collection<Song> genreSongs = discog.getSongsForGenre(genreId);
+        synchronized (discography) {
+            Collection<Song> genreSongs = discography.getSongsForGenre(genreId);
             if (genreSongs == null) {
                 return new ArrayList<>();
             }

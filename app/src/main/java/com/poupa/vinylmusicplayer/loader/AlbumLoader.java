@@ -21,11 +21,12 @@ import java.util.function.Function;
  * @author SC (soncaokim)
  */
 public class AlbumLoader {
+    private final static Discography discography = Discography.getInstance();
+
     @NonNull
     public static ArrayList<Album> getAllAlbums(@NonNull final Context context) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            ArrayList<Album> albums = new ArrayList<>(discog.getAllAlbums());
+        synchronized (discography) {
+            ArrayList<Album> albums = new ArrayList<>(discography.getAllAlbums());
             Collections.sort(albums, getSortOrder());
             return albums;
         }
@@ -35,10 +36,9 @@ public class AlbumLoader {
     public static ArrayList<Album> getAlbums(@NonNull final Context context, String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
+        synchronized (discography) {
             ArrayList<Album> albums = new ArrayList<>();
-            for (Album album : discog.getAllAlbums()) {
+            for (Album album : discography.getAllAlbums()) {
                 final String strippedAlbum = StringUtil.stripAccent(album.getTitle().toLowerCase());
                 if (strippedAlbum.contains(strippedQuery)) {
                     albums.add(album);
@@ -51,9 +51,8 @@ public class AlbumLoader {
 
     @NonNull
     public static Album getAlbum(@NonNull final Context context, long albumId) {
-        Discography discog = Discography.getInstance();
-        synchronized (discog) {
-            Album album = discog.getAlbum(albumId);
+        synchronized (discography) {
+            Album album = discography.getAlbum(albumId);
             if (album != null) {
                 return album;
             } else {
