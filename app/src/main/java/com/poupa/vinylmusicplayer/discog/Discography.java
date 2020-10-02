@@ -315,10 +315,10 @@ public class Discography implements MusicServiceEventListener {
         protected void onPostExecute(Boolean result) {
             --pendingCount;
             try {
+                final int discogSize = discography.cache.songsById.size();
                 if (pendingCount > 0) {
-                    final int discogSize = discography.cache.songsById.size();
                     final String message = String.format(
-                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_so_far),
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
                             discogSize);
                     if (progressBar == null) {
                         progressBar = Snackbar.make(
@@ -334,8 +334,16 @@ public class Discography implements MusicServiceEventListener {
                     }
                 } else {
                     if (progressBar.isShownOrQueued()) {
-                        progressBar.setDuration(BaseTransientBottomBar.LENGTH_LONG);
+                        progressBar.dismiss();
                     }
+
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                            discogSize);
+                    Snackbar.make(
+                            Discography.getInstance().parentView,
+                            message,
+                            Snackbar.LENGTH_LONG).show();
 
                     // Force reload the UI
                     discography.parentView.getRootView().invalidate();
