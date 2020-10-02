@@ -32,7 +32,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,9 +89,8 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected String getAlbumText(Album album) {
         return MusicUtil.buildInfoString(
-            (new SimpleDateFormat("yyyyMMdd-HHmmss")).format(new Date(album.getDateAdded())),
-            album.getArtistName(),
-            MusicUtil.getSongCountString(activity, album.songs.size())
+                album.getArtistName(),
+                MusicUtil.getSongCountString(activity, album.songs.size())
         );
     }
 
