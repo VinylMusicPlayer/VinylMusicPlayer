@@ -68,7 +68,7 @@ public class Discography implements MusicServiceEventListener {
 
     public void startService(@NonNull final View parentView) {
         this.parentView = parentView;
-        triggerSyncWithMediaStore();
+        triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {}
@@ -188,10 +188,13 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void triggerSyncWithMediaStore() {
+    public void triggerSyncWithMediaStore(boolean reset) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+                if (reset) {
+                    Discography.this.clear();
+                }
                 Discography.this.syncWithMediaStore();
                 return true;
             }
@@ -242,7 +245,7 @@ public class Discography implements MusicServiceEventListener {
 
     @Override
     public void onMediaStoreChanged() {
-        triggerSyncWithMediaStore();
+        triggerSyncWithMediaStore(false);
     }
 
     private void extractTags(@NonNull Song song) {
@@ -288,6 +291,11 @@ public class Discography implements MusicServiceEventListener {
     public void removeSongById(long songId) {
         cache.removeSongById(songId);
         database.removeSongById(songId);
+    }
+
+    private void clear() {
+        database.clear();
+        cache.clear();
     }
 
     private void fetchAllSongs() {
@@ -446,6 +454,18 @@ public class Discography implements MusicServiceEventListener {
                 // Remove the song from the memory cache
                 songsById.remove(songId);
             }
+        }
+
+        public synchronized void clear() {
+            songsById.clear();
+
+            artistsByName.clear();
+            artistsById.clear();
+
+            albumsById.clear();
+
+            genresByName.clear();
+            songsByGenreId.clear();
         }
 
         @NonNull

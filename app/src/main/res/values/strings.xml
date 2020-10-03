@@ -315,6 +315,7 @@
     <string name="dialog_ringtone_message">Please allow Vinyl Music Player to modify system settings in the next screen before setting the ringtone.</string>
     <string name="action_scan_directory">Scan directory</string>
     <string name="scan_media">Scan media</string>
+    <string name="reset_discography">Rescan library</string>
     <string name="none">None</string>
     <string name="track">Track</string>
     <string name="label_with_rg_info">With ReplayGain Tags :</string>

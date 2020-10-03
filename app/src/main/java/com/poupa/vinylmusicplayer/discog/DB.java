@@ -82,6 +82,11 @@ class DB extends SQLiteOpenHelper {
         }
     }
 
+    public void clear() {
+        final SQLiteDatabase db = getWritableDatabase();
+        db.delete(SongColumns.NAME, null, null);
+    }
+
     public void removeSongById(long songId) {
         final SQLiteDatabase db = getWritableDatabase();
         db.delete(
