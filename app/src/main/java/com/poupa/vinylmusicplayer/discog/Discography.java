@@ -20,6 +20,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -463,7 +464,10 @@ public class Discography implements MusicServiceEventListener {
         private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
             Artist artist = getOrCreateArtistByName(song);
             for (Album album : artist.albums) {
-                if (album.getTitle().equals(song.albumName)) {
+                // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
+                final String albumTitle = album.safeGetFirstSong().albumName;
+
+                if (albumTitle.equals(song.albumName)) {
                     return album;
                 }
             }
