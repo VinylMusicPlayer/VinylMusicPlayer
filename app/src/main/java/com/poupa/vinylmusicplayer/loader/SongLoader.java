@@ -116,8 +116,8 @@ public class SongLoader {
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
         final String data = cursor.getString(5);
-        final long dateAdded = cursor.getLong(6);
-        final long dateModified = cursor.getLong(7);
+        final long dateModified = cursor.getLong(6);
+        final long dateAdded = cursor.getLong(7);
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
