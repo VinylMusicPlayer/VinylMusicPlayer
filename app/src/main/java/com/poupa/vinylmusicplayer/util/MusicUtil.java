@@ -388,8 +388,9 @@ public class MusicUtil {
 
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
         if (TextUtils.isEmpty(name)) return true;
+        if (name.equals(defaultDisplayName)) return true;
         name = name.trim().toLowerCase();
-        return (name.equals(defaultDisplayName) || name.equals("unknown") || name.equals("<unknown>"));
+        return (name.equals("unknown") || name.equals("<unknown>"));
     }
 
     @NonNull
