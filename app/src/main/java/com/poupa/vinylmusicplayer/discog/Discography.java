@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import com.poupa.vinylmusicplayer.App;
@@ -18,9 +17,7 @@ import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
-import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -36,7 +33,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author SC (soncaokim)
@@ -174,8 +170,8 @@ public class Discography implements MusicServiceEventListener {
                 if (genre != null) {
                     song.genre = genre;
                 }
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             cache.addSong(song);
@@ -267,8 +263,8 @@ public class Discography implements MusicServiceEventListener {
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
 
             ReplayGainTagExtractor.setReplayGainValues(song);
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -368,8 +364,8 @@ public class Discography implements MusicServiceEventListener {
                     // Force reload the UI
                     discography.parentView.getRootView().invalidate();
                 }
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -388,12 +384,14 @@ public class Discography implements MusicServiceEventListener {
         public synchronized void addSong(@NonNull final Song song) {
             // Merge artist by name
             Artist artist = getOrCreateArtistByName(song);
+            assert(artist.albums != null);
             if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
                 song.artistId = artist.getId();
             }
 
             // Merge album by name
             Album album = getOrCreateAlbumByName(song);
+            assert(album.songs != null);
             if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
                 song.albumId = album.getId();
             }
@@ -420,8 +418,10 @@ public class Discography implements MusicServiceEventListener {
                 // Remove the song from linked Artist/Album cache
                 Artist artist = artistsById.get(song.artistId);
                 if (artist != null) {
+                    assert(artist.albums != null);
                     for (Album album : artist.albums) {
                         if (album.getId() == song.albumId) {
+                            assert(album.songs != null);
                             album.songs.remove(song);
                             if (album.songs.isEmpty()) {
                                 artist.albums.remove(album);
@@ -483,6 +483,7 @@ public class Discography implements MusicServiceEventListener {
         @NonNull
         private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
             Artist artist = getOrCreateArtistByName(song);
+            assert(artist.albums != null);
             for (Album album : artist.albums) {
                 // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
                 final String albumTitle = album.safeGetFirstSong().albumName;
