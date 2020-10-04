@@ -165,9 +165,7 @@ public class Discography implements MusicServiceEventListener {
                 if (genre != null) {
                     song.genre = genre;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (NumberFormatException ignored) {}
 
             cache.addSong(song);
 
