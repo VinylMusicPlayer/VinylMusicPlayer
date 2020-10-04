@@ -290,8 +290,8 @@ public class Discography implements MusicServiceEventListener {
     private void fetchAllSongs() {
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
-            addSongImpl(song, true);
+            boolean effectiveAdd = addSongImpl(song, true);
+            assert(effectiveAdd);
         }
     }
-
 }

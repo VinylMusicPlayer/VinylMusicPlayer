@@ -61,7 +61,7 @@ class DB extends SQLiteOpenHelper {
     }
 
     public void addSong(@NonNull Song song) {
-        try {
+        try (final SQLiteDatabase db = getWritableDatabase()) {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
             values.put(SongColumns.ALBUM_ID, song.albumId);
@@ -79,7 +79,6 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.TRACK_TITLE, song.title);
             values.put(SongColumns.YEAR, song.year);
 
-            final SQLiteDatabase db = getWritableDatabase();
             db.insert(SongColumns.NAME, null, values);
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,18 +86,24 @@ class DB extends SQLiteOpenHelper {
     }
 
     public void clear() {
-        final SQLiteDatabase db = getWritableDatabase();
-        db.delete(SongColumns.NAME, null, null);
+        try (final SQLiteDatabase db = getWritableDatabase()) {
+            db.delete(SongColumns.NAME, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeSongById(long songId) {
-        final SQLiteDatabase db = getWritableDatabase();
-        db.delete(
-                SongColumns.NAME,
-                SongColumns.ID + " = ?",
-                new String[]{
-                        String.valueOf(songId)
-                });
+        try (final SQLiteDatabase db = getWritableDatabase()) {
+            db.delete(
+                    SongColumns.NAME,
+                    SongColumns.ID + " = ?",
+                    new String[]{
+                            String.valueOf(songId)
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @NonNull
