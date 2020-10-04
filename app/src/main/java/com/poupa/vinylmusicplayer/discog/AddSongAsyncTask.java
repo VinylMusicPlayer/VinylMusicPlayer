@@ -7,6 +7,10 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 
+/**
+ * @author SC (soncaokim)
+ */
+
 class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     private static int pendingCount;
     private static int burstSongCount;

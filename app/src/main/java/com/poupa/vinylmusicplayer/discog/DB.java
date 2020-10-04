@@ -13,6 +13,10 @@ import com.poupa.vinylmusicplayer.model.Song;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author SC (soncaokim)
+ */
+
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
     private static final int VERSION = 3;
@@ -77,8 +81,8 @@ class DB extends SQLiteOpenHelper {
 
             final SQLiteDatabase db = getWritableDatabase();
             db.insert(SongColumns.NAME, null, values);
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
