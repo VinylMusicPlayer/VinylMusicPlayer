@@ -47,7 +47,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                             burstSongCount);
                     if (progressBar == null) {
                         progressBar = Snackbar.make(
-                                discography.parentView,
+                                discography.mainActivity.getSnackBarContainer(),
                                 message,
                                 Snackbar.LENGTH_INDEFINITE);
                         progressBar.show();
@@ -68,15 +68,15 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
                             burstSongCount);
                     Snackbar.make(
-                            Discography.getInstance().parentView,
+                            Discography.getInstance().mainActivity.getSnackBarContainer(),
                             message,
                             Snackbar.LENGTH_LONG).show();
 
                     burstSongCount = 0;
-                }
 
-                // Force reload the UI
-                discography.parentView.getRootView().invalidate();
+                    // Notify the main activity to reload the tabs content
+                    discography.mainActivity.onMediaStoreChanged();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -97,7 +97,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         }
 
         final Discography discog = Discography.getInstance();
-        discog.startService(findViewById(R.id.drawer_layout));
+        discog.startService(this);
         addMusicServiceEventListener(discog);
     }
 

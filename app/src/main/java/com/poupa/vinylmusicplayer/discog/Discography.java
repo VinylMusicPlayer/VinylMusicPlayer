@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +14,7 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -40,7 +40,7 @@ public class Discography implements MusicServiceEventListener {
     private DB database;
     private final MemCache cache;
 
-    View parentView;
+    MainActivity mainActivity;
 
     public Discography() {
         database = new DB();
@@ -57,8 +57,8 @@ public class Discography implements MusicServiceEventListener {
         return sInstance;
     }
 
-    public void startService(@NonNull final View parentView) {
-        this.parentView = parentView;
+    public void startService(@NonNull final MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         triggerSyncWithMediaStore(false);
     }
 
@@ -290,8 +290,7 @@ public class Discography implements MusicServiceEventListener {
     private void fetchAllSongs() {
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
-            boolean effectiveAdd = addSongImpl(song, true);
-            assert(effectiveAdd);
+            addSongImpl(song, true);
         }
     }
 }
