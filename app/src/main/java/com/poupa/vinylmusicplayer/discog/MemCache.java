@@ -29,14 +29,12 @@ class MemCache {
     public synchronized void addSong(@NonNull final Song song) {
         // Merge artist by name
         Artist artist = getOrCreateArtistByName(song);
-        assert(artist.albums != null);
         if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
             song.artistId = artist.getId();
         }
 
         // Merge album by name
         Album album = getOrCreateAlbumByName(song);
-        assert(album.songs != null);
         if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
             song.albumId = album.getId();
         }
@@ -128,7 +126,6 @@ class MemCache {
     @NonNull
     private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
         Artist artist = getOrCreateArtistByName(song);
-        assert(artist.albums != null);
         for (Album album : artist.albums) {
             // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
             final String albumTitle = album.safeGetFirstSong().albumName;
@@ -137,9 +134,14 @@ class MemCache {
                 return album;
             }
         }
-        Album album = new Album();
+
+        // For multi-artist album, there might be already an album created
+        Album album = albumsById.get(song.albumId);
+        if (album == null) {
+            album = new Album();
+            albumsById.put(song.albumId, album);
+        }
         artist.albums.add(album);
-        albumsById.put(song.albumId, album);
 
         return album;
     }
