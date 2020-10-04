@@ -41,19 +41,21 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
 
         try {
             if (pendingCount > 0) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                        burstSongCount);
-                if (progressBar == null) {
-                    progressBar = Snackbar.make(
-                            discography.parentView,
-                            message,
-                            Snackbar.LENGTH_INDEFINITE);
-                    progressBar.show();
-                } else {
-                    progressBar.setText(message);
-                    if (!progressBar.isShownOrQueued()) {
+                if (burstSongCount > 0) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                            burstSongCount);
+                    if (progressBar == null) {
+                        progressBar = Snackbar.make(
+                                discography.parentView,
+                                message,
+                                Snackbar.LENGTH_INDEFINITE);
                         progressBar.show();
+                    } else {
+                        progressBar.setText(message);
+                        if (!progressBar.isShownOrQueued()) {
+                            progressBar.show();
+                        }
                     }
                 }
             } else {
@@ -61,15 +63,17 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                     progressBar.dismiss();
                 }
 
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        burstSongCount);
-                Snackbar.make(
-                        Discography.getInstance().parentView,
-                        message,
-                        Snackbar.LENGTH_LONG).show();
+                if (burstSongCount > 0) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                            burstSongCount);
+                    Snackbar.make(
+                            Discography.getInstance().parentView,
+                            message,
+                            Snackbar.LENGTH_LONG).show();
 
-                burstSongCount = 0;
+                    burstSongCount = 0;
+                }
 
                 // Force reload the UI
                 discography.parentView.getRootView().invalidate();
