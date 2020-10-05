@@ -56,6 +56,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                 if (progressBar.isShownOrQueued()) {
                     progressBar.dismiss();
                 }
+                progressBar = null; // to force creating a new one next time
 
                 if (burstSongCount > 0) {
                     final String message = String.format(
