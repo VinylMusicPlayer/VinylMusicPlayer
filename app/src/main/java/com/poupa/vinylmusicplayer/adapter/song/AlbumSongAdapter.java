@@ -36,6 +36,8 @@ public class AlbumSongAdapter extends SongAdapter {
 
     @Override
     protected String getSongText(Song song) {
-        return MusicUtil.getReadableDurationString(song.duration);
+        return MusicUtil.buildInfoString(
+                MusicUtil.getReadableDurationString(song.duration),
+                song.artistName);
     }
 }

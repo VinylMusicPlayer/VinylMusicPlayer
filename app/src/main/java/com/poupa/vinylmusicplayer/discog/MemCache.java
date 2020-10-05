@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Album;
@@ -115,7 +117,7 @@ class MemCache {
     private synchronized Artist getOrCreateArtistByName(@NonNull final Song song) {
         Artist artist = artistsByName.get(song.artistName);
         if (artist == null) {
-            artist = new Artist();
+            artist = new Artist(song.artistId, song.artistName);
 
             artistsByName.put(song.artistName, artist);
             artistsById.put(song.artistId, artist);
@@ -136,14 +138,23 @@ class MemCache {
         }
 
         // For multi-artist album, there might be already an album created
-        // We can reuse that album, since it may make the Artist.safeGetFirstSong pointing to a different artist
+        // Reuse the album if it has the same albumArtist
+        Album album = albumsById.get(song.albumId);
+        if (album != null) {
+            final String albumArtist = album.safeGetFirstSong().albumArtistName;
+            if (TextUtils.equals(albumArtist, song.albumArtistName)) {
+                artist.albums.add(album);
+                return album;
+            }
+        }
+
+        // Safe bet: dont reuse album, since it may make the Artist.safeGetFirstSong pointing to a different artist
         // -> create a new album with a different albumId
-        // TODO Revise this fragile workaround
         long albumId = song.albumId;
         while (albumsById.containsKey(albumId)) {albumId += 10000;}
         song.albumId = albumId;
 
-        Album album = new Album();
+        album = new Album();
         albumsById.put(song.albumId, album);
         artist.albums.add(album);
 

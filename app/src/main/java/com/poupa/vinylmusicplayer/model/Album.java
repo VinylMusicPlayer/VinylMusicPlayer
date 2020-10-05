@@ -49,6 +49,14 @@ public class Album implements Parcelable {
         return name;
     }
 
+    public String getAlbumArtistName() {
+        String name = safeGetFirstSong().albumArtistName;
+        if (MusicUtil.isArtistNameUnknown(name)) {
+            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
+        }
+        return name;
+    }
+
     public int getYear() {
         return safeGetFirstSong().year;
     }

@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -56,14 +57,17 @@ public class ArtistLoader {
             if (artist != null) {
                 return artist;
             } else {
-                return new Artist();
+                return Artist.EMPTY;
             }
         }
     }
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        Function<Artist, String> getArtistName = (a) -> a.safeGetFirstAlbum().safeGetFirstSong().artistName;
+        Function<Artist, String> getArtistName = (a) -> {
+            if (!TextUtils.isEmpty(a.name)) {return a.name;}
+            return a.safeGetFirstAlbum().safeGetFirstSong().artistName;
+        };
         Comparator<Artist> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 getArtistName.apply(a1),
                 getArtistName.apply(a2));

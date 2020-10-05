@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -14,22 +15,25 @@ import java.util.ArrayList;
  */
 public class Artist implements Parcelable {
     public static final String UNKNOWN_ARTIST_DISPLAY_NAME = "Unknown Artist";
+    public static final Artist EMPTY = new Artist(-1, "");
 
+    public final long id;
+    public final String name;
     public final ArrayList<Album> albums;
 
-    public Artist(ArrayList<Album> albums) {
-        this.albums = albums;
-    }
-
-    public Artist() {
+    public Artist(long id, String name) {
+        this.id = id;
+        this.name = name;
         this.albums = new ArrayList<>();
     }
 
     public long getId() {
+        if (id >= 0) {return id;}
         return safeGetFirstAlbum().getArtistId();
     }
 
     public String getName() {
+        if (!TextUtils.isEmpty(name)) {return name;}
         return safeGetFirstAlbum().getArtistName();
     }
 
@@ -89,10 +93,14 @@ public class Artist implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
         dest.writeTypedList(this.albums);
     }
 
     protected Artist(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
         this.albums = in.createTypedArrayList(Album.CREATOR);
     }
 

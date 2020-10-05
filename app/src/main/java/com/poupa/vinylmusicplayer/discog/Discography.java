@@ -259,7 +259,7 @@ public class Discography implements MusicServiceEventListener {
 
             song.albumName = safeGetTag.apply(FieldKey.ALBUM);
             song.artistName = safeGetTag.apply(FieldKey.ARTIST);
-            // TODO song.albumArtistName = safeGetTag.apply(FieldKey.ALBUM_ARTIST);
+            song.albumArtistName = safeGetTag.apply(FieldKey.ALBUM_ARTIST);
             song.title = safeGetTag.apply(FieldKey.TITLE);
             if (song.title.isEmpty()) {
                 // fallback to use the file name
