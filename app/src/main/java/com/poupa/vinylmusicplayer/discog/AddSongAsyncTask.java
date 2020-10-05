@@ -18,7 +18,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     private static int pendingCount;
-    private static int burstSongCount;
+    private static int currentBatchCount;
 
     private static Snackbar progressBar;
     private final static Discography discography = Discography.getInstance();
@@ -41,30 +41,31 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         --pendingCount;
         if (result) {
-            ++burstSongCount;
+            ++currentBatchCount;
         }
 
         try {
             if (pendingCount > 0) {
-                if (burstSongCount > 0) {
+                if (currentBatchCount > 0) {
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                            burstSongCount);
+                            currentBatchCount);
                     updateProgressBar(message, Snackbar.LENGTH_INDEFINITE);
                 }
             } else {
+                // None pending, we are at the end of the batch
                 if (progressBar.isShownOrQueued()) {
                     progressBar.dismiss();
                 }
                 progressBar = null; // to force creating a new one next time
 
-                if (burstSongCount > 0) {
+                if (currentBatchCount > 0) {
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                            burstSongCount);
+                            currentBatchCount);
                     updateProgressBar(message, Snackbar.LENGTH_LONG);
 
-                    burstSongCount = 0;
+                    currentBatchCount = 0;
 
                     // Notify the main activity to reload the tabs content
                     discography.mainActivity.onMediaStoreChanged();
