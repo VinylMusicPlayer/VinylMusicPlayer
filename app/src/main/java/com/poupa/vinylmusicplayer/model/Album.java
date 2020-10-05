@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -42,7 +43,10 @@ public class Album implements Parcelable {
     }
 
     public String getArtistName() {
-        String name = safeGetFirstSong().artistName;
+        String name = safeGetFirstSong().albumArtistName;
+        if (TextUtils.isEmpty(name)) {
+            name = safeGetFirstSong().artistName;
+        }
         if (MusicUtil.isArtistNameUnknown(name)) {
             return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
         }
