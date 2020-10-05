@@ -1,6 +1,11 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.os.AsyncTask;
+import android.os.Build;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
@@ -45,18 +50,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
                             burstSongCount);
-                    if (progressBar == null) {
-                        progressBar = Snackbar.make(
-                                discography.mainActivity.getSnackBarContainer(),
-                                message,
-                                Snackbar.LENGTH_INDEFINITE);
-                        progressBar.show();
-                    } else {
-                        progressBar.setText(message);
-                        if (!progressBar.isShownOrQueued()) {
-                            progressBar.show();
-                        }
-                    }
+                    updateProgressBar(message, Snackbar.LENGTH_INDEFINITE);
                 }
             } else {
                 if (progressBar.isShownOrQueued()) {
@@ -67,10 +61,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                     final String message = String.format(
                             App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
                             burstSongCount);
-                    Snackbar.make(
-                            Discography.getInstance().mainActivity.getSnackBarContainer(),
-                            message,
-                            Snackbar.LENGTH_LONG).show();
+                    updateProgressBar(message, Snackbar.LENGTH_LONG);
 
                     burstSongCount = 0;
 
@@ -80,6 +71,32 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @NonNull
+    private static void updateProgressBar(@NonNull final CharSequence message, int length) {
+        SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            messageWithIcon.append(
+                    " ",
+                    new ImageSpan(App.getInstance().getApplicationContext(), Discography.ICON),
+                    0);
+            messageWithIcon.append(" "); // some extra space before the text message
+        }
+        messageWithIcon.append(message);
+
+        if (progressBar == null) {
+            progressBar = Snackbar.make(
+                    discography.mainActivity.getSnackBarContainer(),
+                    messageWithIcon,
+                    length);
+            progressBar.show();
+        } else {
+            progressBar.setText(messageWithIcon);
+            if (!progressBar.isShownOrQueued()) {
+                progressBar.show();
+            }
         }
     }
 }

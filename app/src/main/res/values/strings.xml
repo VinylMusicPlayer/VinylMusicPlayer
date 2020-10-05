@@ -249,8 +249,8 @@
     <string name="nothing_to_scan">Nothing to scan.</string>
     <string name="scanned_files">Scanned %1$d of %2$d files.</string>
     <string name="could_not_scan_files">Could not scan %d files.</string>
-    <string name="scanning_x_songs_in_progress">Scanning new or updated songs - %1$d so far…</string>
-    <string name="scanning_x_songs_finished">Finished scanning %1$d songs</string>
+    <string name="scanning_x_songs_in_progress">Updating %1$d songs…</string>
+    <string name="scanning_x_songs_finished">Updated %1$d songs</string>
     <string name="listing_files">Listing files</string>
     <string name="new_start_directory">%s is the new start directory.</string>
     <string name="app_widget_big_name">Vinyl Music Player - Big</string>

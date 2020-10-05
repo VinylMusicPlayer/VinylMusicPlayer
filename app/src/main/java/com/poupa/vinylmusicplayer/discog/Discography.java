@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
@@ -34,6 +35,8 @@ import java.util.Set;
  */
 
 public class Discography implements MusicServiceEventListener {
+    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
+
     @Nullable
     private static Discography sInstance = null;
 
