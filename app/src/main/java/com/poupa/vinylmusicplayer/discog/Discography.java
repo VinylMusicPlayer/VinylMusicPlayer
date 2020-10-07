@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,8 @@ public class Discography implements MusicServiceEventListener {
     private final MemCache cache;
 
     MainActivity mainActivity;
+    private Runnable mainActivityRefreshTask = () -> mainActivity.onMediaStoreChanged();
+    private Handler mainActivityTaskQueue;
 
     public Discography() {
         database = new DB();
@@ -62,6 +65,7 @@ public class Discography implements MusicServiceEventListener {
 
     public void startService(@NonNull final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+        this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
         triggerSyncWithMediaStore(false);
     }
 
@@ -176,6 +180,8 @@ public class Discography implements MusicServiceEventListener {
                 database.addSong(song);
             }
 
+            notifyDiscographyChanged();
+
             return true;
         }
     }
@@ -240,6 +246,17 @@ public class Discography implements MusicServiceEventListener {
         triggerSyncWithMediaStore(false);
     }
 
+    void notifyDiscographyChanged() {
+        // Notify the main activity to reload the tabs content
+        // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
+        if (mainActivityTaskQueue != null) {
+            // Post as much 1 event per a coalescence period
+            final long COALESCENCE_DELAY = 500;
+            mainActivityTaskQueue.removeCallbacks(mainActivityRefreshTask);
+            mainActivityTaskQueue.postDelayed(mainActivityRefreshTask, COALESCENCE_DELAY);
+        }
+    }
+
     private void extractTags(@NonNull Song song) {
         try {
             // Override with metadata extracted from the file ourselves
@@ -283,6 +300,8 @@ public class Discography implements MusicServiceEventListener {
     public void removeSongById(long songId) {
         cache.removeSongById(songId);
         database.removeSongById(songId);
+
+        notifyDiscographyChanged();
     }
 
     private void clear() {
