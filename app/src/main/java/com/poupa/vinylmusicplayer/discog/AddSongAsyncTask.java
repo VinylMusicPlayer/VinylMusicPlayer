@@ -77,6 +77,9 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                             Snackbar.LENGTH_LONG).show();
 
                     currentBatchCount = 0;
+
+                    // Notify the main activity to reload the tabs content
+                    discography.mainActivity.onMediaStoreChanged();
                 }
             }
         } catch (Exception e) {
