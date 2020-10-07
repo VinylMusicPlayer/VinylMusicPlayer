@@ -2,7 +2,7 @@
 
 ## Features roadmap
 
-- [ ] Extract album artist from ID3 tags and use that for album grouping/sorting
+- [x] Extract album artist from ID3 tags and use that for album grouping/sorting
 
 - [ ] Handle compilation albums (with TCMP/cpil tag)
 
@@ -16,7 +16,7 @@
 
 - [ ] Refact the SortOrder to rely on enum/enum class, i.e. avoid doing string comparison
 
-- [ ] Provide observer for add/remove/update entries in the in-memory cache
+- [x] Provide observer for add/remove/update entries in the in-memory cache
 
 ## Misc todo
 
