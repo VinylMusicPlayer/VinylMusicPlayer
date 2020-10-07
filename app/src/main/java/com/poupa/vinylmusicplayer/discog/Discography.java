@@ -47,6 +47,7 @@ public class Discography implements MusicServiceEventListener {
     private final MemCache cache;
 
     MainActivity mainActivity;
+    private Runnable mainActivityRefreshTask = () -> mainActivity.onMediaStoreChanged();
 
     public Discography() {
         database = new DB();
@@ -250,7 +251,9 @@ public class Discography implements MusicServiceEventListener {
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
         if (mainActivity != null) {
             Handler handler = new Handler(mainActivity.getMainLooper());
-            handler.post(() -> mainActivity.onMediaStoreChanged());
+            final long THROTTLE = 500; // delay to coalesce/aggregate multiple refresh calls
+            handler.removeCallbacks(mainActivityRefreshTask);
+            handler.postDelayed(mainActivityRefreshTask, THROTTLE);
         }
     }
 
