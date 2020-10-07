@@ -218,15 +218,16 @@ public class MusicUtil {
         return trackNumberToFix % 1000;
     }
 
-    public static void insertAlbumArt(@NonNull Context context, long albumId, String path) {
+    public static void insertAlbumArt(@NonNull Context context, long albumId, String path, @NonNull final String mimeType) {
         ContentResolver contentResolver = context.getContentResolver();
 
         Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
         contentResolver.delete(ContentUris.withAppendedId(artworkUri, albumId), null, null);
 
         ContentValues values = new ContentValues();
-        values.put("album_id", albumId);
-        values.put("_data", path);
+        values.put(MediaStore.Audio.AlbumColumns.ALBUM_ID, albumId);
+        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+        values.put(MediaStore.MediaColumns.DATA, path);
 
         contentResolver.insert(artworkUri, values);
     }
