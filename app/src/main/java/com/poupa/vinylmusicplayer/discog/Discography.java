@@ -48,6 +48,7 @@ public class Discography implements MusicServiceEventListener {
 
     MainActivity mainActivity;
     private Runnable mainActivityRefreshTask = () -> mainActivity.onMediaStoreChanged();
+    private Handler mainActivityTaskQueue;
 
     public Discography() {
         database = new DB();
@@ -66,6 +67,7 @@ public class Discography implements MusicServiceEventListener {
 
     public void startService(@NonNull final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
+        this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
         triggerSyncWithMediaStore(false);
     }
 
@@ -249,11 +251,11 @@ public class Discography implements MusicServiceEventListener {
     void notifyDiscographyChanged() {
         // Notify the main activity to reload the tabs content
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
-        if (mainActivity != null) {
-            Handler handler = new Handler(mainActivity.getMainLooper());
-            final long THROTTLE = 500; // delay to coalesce/aggregate multiple refresh calls
-            handler.removeCallbacks(mainActivityRefreshTask);
-            handler.postDelayed(mainActivityRefreshTask, THROTTLE);
+        if (mainActivityTaskQueue != null) {
+            // Post as much 1 event per a coalescence period
+            final long COALESCENCE_DELAY = 500;
+            mainActivityTaskQueue.removeCallbacks(mainActivityRefreshTask);
+            mainActivityTaskQueue.postDelayed(mainActivityRefreshTask, COALESCENCE_DELAY);
         }
     }
 
