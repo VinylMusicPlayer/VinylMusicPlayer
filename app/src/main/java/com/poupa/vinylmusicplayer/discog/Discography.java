@@ -245,13 +245,10 @@ public class Discography implements MusicServiceEventListener {
 
     void notifyDiscographyChanged() {
         // Notify the main activity to reload the tabs content
+        // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
         if (mainActivity != null) {
-            // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
             Handler handler = new Handler(mainActivity.getMainLooper());
-            final long REFRESH_DELAY = 500;
-            handler.postDelayed(
-                    () -> mainActivity.onMediaStoreChanged(),
-                    REFRESH_DELAY);
+            handler.post(() -> mainActivity.onMediaStoreChanged());
         }
     }
 
