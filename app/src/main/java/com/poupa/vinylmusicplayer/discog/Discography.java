@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -176,6 +177,8 @@ public class Discography implements MusicServiceEventListener {
                 database.addSong(song);
             }
 
+            notifyDiscographyChanged();
+
             return true;
         }
     }
@@ -240,6 +243,15 @@ public class Discography implements MusicServiceEventListener {
         triggerSyncWithMediaStore(false);
     }
 
+    void notifyDiscographyChanged() {
+        // Notify the main activity to reload the tabs content
+        // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
+        if (mainActivity != null) {
+            Handler handler = new Handler(mainActivity.getMainLooper());
+            handler.post(() -> mainActivity.onMediaStoreChanged());
+        }
+    }
+
     private void extractTags(@NonNull Song song) {
         try {
             // Override with metadata extracted from the file ourselves
@@ -283,6 +295,8 @@ public class Discography implements MusicServiceEventListener {
     public void removeSongById(long songId) {
         cache.removeSongById(songId);
         database.removeSongById(songId);
+
+        notifyDiscographyChanged();
     }
 
     private void clear() {
