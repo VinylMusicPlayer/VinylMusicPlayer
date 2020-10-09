@@ -28,13 +28,11 @@ public class Artist implements Parcelable {
     }
 
     public long getId() {
-        if (id >= 0) {return id;}
-        return safeGetFirstAlbum().getArtistId();
+        return id;
     }
 
     public String getName() {
-        if (!TextUtils.isEmpty(name)) {return name;}
-        return safeGetFirstAlbum().getArtistName();
+        return name;
     }
 
     public int getSongCount() {

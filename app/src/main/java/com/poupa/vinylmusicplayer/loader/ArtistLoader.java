@@ -64,13 +64,7 @@ public class ArtistLoader {
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        Function<Artist, String> getArtistName = (a) -> {
-            if (!TextUtils.isEmpty(a.name)) {return a.name;}
-            return a.safeGetFirstAlbum().safeGetFirstSong().artistName;
-        };
-        Comparator<Artist> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
-                getArtistName.apply(a1),
-                getArtistName.apply(a2));
+        Comparator<Artist> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
 
         switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
             case SortOrder.ArtistSortOrder.ARTIST_Z_A:

@@ -148,11 +148,9 @@ class MemCache {
             }
         }
 
-        // Safe bet: dont reuse album, since it may make the Artist.safeGetFirstSong pointing to a different artist
-        // -> create a new album with a different albumId
-        long albumId = song.albumId;
-        while (albumsById.containsKey(albumId)) {albumId += 10000;}
-        song.albumId = albumId;
+        //long albumId = song.albumId;
+        //while (albumsById.containsKey(albumId)) {albumId += 10000;}
+        //song.albumId = albumId;
 
         album = new Album();
         albumsById.put(song.albumId, album);
