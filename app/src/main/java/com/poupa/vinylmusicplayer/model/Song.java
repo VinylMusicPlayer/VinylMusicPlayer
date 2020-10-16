@@ -23,6 +23,7 @@ public class Song implements Parcelable {
     public String albumName;
     public long artistId;
     public String artistName;
+    public String albumArtistName;
     public String genre;
 
     private float replayGainTrack = Float.NaN;
