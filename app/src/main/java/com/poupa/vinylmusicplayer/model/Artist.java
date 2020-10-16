@@ -32,6 +32,9 @@ public class Artist implements Parcelable {
     }
 
     public String getName() {
+        if (MusicUtil.isArtistNameUnknown(name)) {
+            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
+        }
         return name;
     }
 
