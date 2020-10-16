@@ -153,6 +153,7 @@ class MemCache {
         //song.albumId = albumId;
 
         album = new Album();
+
         albumsById.put(song.albumId, album);
         artist.albums.add(album);
 

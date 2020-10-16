@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.0.0] - 2020-10-15
+### Added
+- Library handling with a local database, circumventing the MediaStore
+- Setting to show/hide track number
+### Fixed
+- White line around app icon
+- Playlist bug on Android 10
+
 ## [0.24.1] - 2020-10-01
 ### Fixed
 - Filename not showing for songs without tags
