@@ -46,21 +46,19 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
         }
 
         try {
-            if (pendingCount > 0) {
-                if (currentBatchCount > 0) {
-                    final CharSequence message = buildMessage(R.string.scanning_x_songs_in_progress, currentBatchCount);
+            if (pendingCount > 0 && currentBatchCount > 0) {
+                final CharSequence message = buildMessage(R.string.scanning_x_songs_in_progress, currentBatchCount);
 
-                    if (progressBar == null) {
-                        progressBar = Snackbar.make(
-                                discography.mainActivity.getSnackBarContainer(),
-                                message,
-                                Snackbar.LENGTH_INDEFINITE);
+                if (progressBar == null) {
+                    progressBar = Snackbar.make(
+                            discography.mainActivity.getSnackBarContainer(),
+                            message,
+                            Snackbar.LENGTH_INDEFINITE);
+                    progressBar.show();
+                } else {
+                    progressBar.setText(message);
+                    if (!progressBar.isShownOrQueued()) {
                         progressBar.show();
-                    } else {
-                        progressBar.setText(message);
-                        if (!progressBar.isShownOrQueued()) {
-                            progressBar.show();
-                        }
                     }
                 }
             } else {

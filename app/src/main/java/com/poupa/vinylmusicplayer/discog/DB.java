@@ -141,17 +141,17 @@ class DB extends SQLiteOpenHelper {
 
             do {
                 int columnIndex = -1;
-                final long id = cursor.getInt(++columnIndex);
-                final long albumId = cursor.getInt(++columnIndex);
+                final long id = cursor.getLong(++columnIndex);
+                final long albumId = cursor.getLong(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
-                final long artistId = cursor.getInt(++columnIndex);
+                final long artistId = cursor.getLong(++columnIndex);
                 final String artistName = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
                 final long dateModified = cursor.getLong(++columnIndex);
                 final String genre = cursor.getString(++columnIndex);
-                final float replaygainAlbum = cursor.getFloat(++columnIndex);
-                final float replaygainTrack = cursor.getFloat(++columnIndex);
+                final float replayGainAlbum = cursor.getFloat(++columnIndex);
+                final float replayGainTrack = cursor.getFloat(++columnIndex);
                 final long trackDuration = cursor.getLong(++columnIndex);
                 final int trackNumber = cursor.getInt(++columnIndex);
                 final String trackTitle = cursor.getString(++columnIndex);
@@ -170,7 +170,7 @@ class DB extends SQLiteOpenHelper {
                         albumName,
                         artistId,
                         artistName);
-                song.setReplayGainValues(replaygainTrack, replaygainAlbum);
+                song.setReplayGainValues(replayGainTrack, replayGainAlbum);
                 song.genre = genre;
 
                 songs.add(song);

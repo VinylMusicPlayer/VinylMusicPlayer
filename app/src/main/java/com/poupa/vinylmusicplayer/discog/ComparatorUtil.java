@@ -21,8 +21,14 @@ public class ComparatorUtil {
     public static int compareLongInts(long v1, long v2) {
         long diff = v1 - v2;
 
-        if (diff < Integer.MIN_VALUE) {diff = Integer.MIN_VALUE;}
-        if (diff > Integer.MAX_VALUE) {diff = Integer.MAX_VALUE;}
+        if (diff < Integer.MIN_VALUE) {
+            diff = Integer.MIN_VALUE;
+        }
+
+        if (diff > Integer.MAX_VALUE) {
+            diff = Integer.MAX_VALUE;
+        }
+
         return (int)diff;
     }
 }
