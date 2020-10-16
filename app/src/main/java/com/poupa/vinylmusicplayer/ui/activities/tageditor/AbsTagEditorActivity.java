@@ -31,6 +31,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.TintHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
@@ -453,6 +454,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         private void scan(String[] toBeScanned) {
             if (toBeScanned == null) {
                 return;
+            }
+            for (final String path : toBeScanned) {
+                Discography.getInstance().removeSongByPath(path);
             }
 
             Activity activity = this.activity.get();

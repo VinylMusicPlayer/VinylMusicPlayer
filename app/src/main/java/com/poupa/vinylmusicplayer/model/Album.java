@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -28,7 +30,11 @@ public class Album implements Parcelable {
     }
 
     public String getTitle() {
-        return safeGetFirstSong().albumName;
+        String name = safeGetFirstSong().albumName;
+        if (MusicUtil.isAlbumNameUnknown(name)) {
+            return UNKNOWN_ALBUM_DISPLAY_NAME;
+        }
+        return name;
     }
 
     public long getArtistId() {
@@ -36,15 +42,15 @@ public class Album implements Parcelable {
     }
 
     public String getArtistName() {
-        return safeGetFirstSong().artistName;
+        String name = safeGetFirstSong().artistName;
+        if (MusicUtil.isArtistNameUnknown(name)) {
+            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
+        }
+        return name;
     }
 
     public int getYear() {
         return safeGetFirstSong().year;
-    }
-
-    public long getDateModified() {
-        return safeGetFirstSong().dateModified;
     }
 
     public long getDateAdded() {

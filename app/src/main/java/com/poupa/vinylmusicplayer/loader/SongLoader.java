@@ -9,19 +9,26 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
-import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class SongLoader {
+    private final static Discography discography = Discography.getInstance();
+
     protected static final String BASE_SELECTION = AudioColumns.IS_MUSIC + "=1" + " AND " + AudioColumns.TITLE + " != ''";
     protected static final String[] BASE_PROJECTION = new String[]{
             BaseColumns._ID,// 0
@@ -30,8 +37,8 @@ public class SongLoader {
             AudioColumns.YEAR,// 3
             AudioColumns.DURATION,// 4
             AudioColumns.DATA,// 5
-            AudioColumns.DATE_MODIFIED,// 6
-            AudioColumns.DATE_ADDED,// 7
+            AudioColumns.DATE_ADDED,// 6
+            AudioColumns.DATE_MODIFIED,// 7
             AudioColumns.ALBUM_ID,// 8
             AudioColumns.ALBUM,// 9
             AudioColumns.ARTIST_ID,// 10
@@ -45,15 +52,46 @@ public class SongLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, final String query) {
-        Cursor cursor = makeSongCursor(context, AudioColumns.TITLE + " LIKE ?", new String[]{"%" + query + "%"});
-        return getSongs(cursor);
+    public static ArrayList<Song> getSongs(@NonNull final Context context, @NonNull final String query) {
+        final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
+
+        synchronized (discography) {
+            ArrayList<Song> songs = new ArrayList<>();
+            for (Song song : discography.getAllSongs()) {
+                final String strippedTitle = StringUtil.stripAccent(song.title.toLowerCase());
+                if (strippedTitle.contains(strippedQuery)) {
+                    songs.add(song);
+                }
+            }
+            Collections.sort(songs, getSortOrder());
+            return songs;
+        }
     }
 
     @NonNull
-    public static Song getSong(@NonNull final Context context, final long queryId) {
-        Cursor cursor = makeSongCursor(context, AudioColumns._ID + "=?", new String[]{String.valueOf(queryId)});
-        return getSong(cursor);
+    private static Comparator<Song> getSortOrder() {
+        Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistName, a2.artistName);
+        Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
+        Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
+        Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
+
+        switch (PreferenceUtil.getInstance().getSongSortOrder()) {
+            case SortOrder.SongSortOrder.SONG_Z_A:
+                return ComparatorUtil.chain(ComparatorUtil.reverse(byTitle), ComparatorUtil.reverse(byArtist));
+            case SortOrder.SongSortOrder.SONG_ARTIST:
+                return ComparatorUtil.chain(byArtist, byAlbum);
+            case SortOrder.SongSortOrder.SONG_ALBUM:
+                return ComparatorUtil.chain(byAlbum, byArtist);
+            case SortOrder.SongSortOrder.SONG_YEAR:
+                return ComparatorUtil.chain(byYearDesc, byArtist);
+            case SortOrder.SongSortOrder.SONG_DATE_ADDED:
+                return ComparatorUtil.chain(byDateAddedDesc, byArtist);
+
+            case SortOrder.SongSortOrder.SONG_A_Z:
+            default:
+                return ComparatorUtil.chain(byTitle, byArtist);
+        }
     }
 
     @NonNull
@@ -71,48 +109,24 @@ public class SongLoader {
     }
 
     @NonNull
-    private static Song getSong(@Nullable Cursor cursor) {
-        Song song;
-        if (cursor != null && cursor.moveToFirst()) {
-            song = getSongFromCursorImpl(cursor);
-        } else {
-            song = Song.EMPTY_SONG;
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return song;
-    }
-
-    @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         final long id = cursor.getLong(0);
-        final String data = cursor.getString(5);
-        final long dateAdded = cursor.getLong(6);
-        final long dateModified = cursor.getLong(7);
-
-        // search in the discog cache first
-        Song song = Discography.getInstance().getSong(id);
-        if (song != null) {
-            if (song.data.equals(data) && song.dateAdded == dateAdded && song.dateModified == dateModified) {
-                return song;
-            }
-        }
-
-        // either none in cache, or obsolete
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
+        final String data = cursor.getString(5);
+        final long dateAdded = cursor.getLong(6);
+        final long dateModified = cursor.getLong(7);
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
         final String artistName = cursor.getString(11);
 
-        song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
-        Discography.getInstance().addSong(song);
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
 
-        return song;
+        Discography discog = Discography.getInstance();
+        return discog.getOrAddSong(song);
     }
 
     @Nullable

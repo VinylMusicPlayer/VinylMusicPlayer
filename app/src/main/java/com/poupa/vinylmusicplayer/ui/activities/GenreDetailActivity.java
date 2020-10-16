@@ -107,7 +107,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         //noinspection ConstantConditions
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleTextView.setText(genre.name);
+        titleTextView.setText(genre.getName());
 
         titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }

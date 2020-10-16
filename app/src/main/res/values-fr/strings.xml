@@ -279,8 +279,8 @@
     <string name="sort_order_artist">Artiste</string>
     <string name="sort_order_album">Album</string>
     <string name="sort_order_year">Année</string>
-    <string name="action_scan_directory">Scanner dossier</string>
-    <string name="scan_media">Scanner bibliothèque</string>
+    <string name="action_scan_directory">Scanner les dossiers</string>
+    <string name="scan_media">Scanner les médias</string>
     <string name="pref_summary_widget_background_transparent">Rend le fond des widgets transparents.</string>
     <string name="pref_title_widget_background_transparent">Fond des widgets transparents</string>
     <string name="karim_abou_zeid_summary">Auteur original.</string>
@@ -299,7 +299,7 @@
     <string name="pref_title_remember_shuffle">Se souvenir de la lecture aléatoire</string>
     <string name="pref_summary_animate_playing_song_icon">Animé l\'icon lecture en cours dans les différentes vues lié au chanson</string>
     <string name="pref_summary_remember_shuffle">"Le mode aléatoire restera activé lors de la sélection d'une nouvelle liste de titre "</string>
-    <string name="not_recently_played">Titres peu écoutés</string>
+    <string name="not_recently_played">Titres pas écoutés récemment</string>
     <string name="saved_x_playlists_to_x">%1$d playlists sauvegardé dans %2$s.</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">%1$d playlists sauvegardé dans %2$s, %3$d sont impossible à sauvegarder.</string>
     <string name="some_files_are_not_listed_in_the_media_store">Certain fichier ne sont pas listé dans le catalogue de médias</string>
@@ -337,4 +337,7 @@
     <string name="saf_pick_file">Accès au ficher requis. Sélectionner %s</string>
     <string name="pref_summary_show_song_number">Afficher le numéro de piste dans la liste de lecture et les notifications</string>
     <string name="pref_title_show_song_number">Afficher le numéro de la piste</string>
+    <string name="scanning_x_songs_in_progress">Mise à jour de %1$d titres…</string>
+    <string name="scanning_x_songs_finished">%1$d titres mis à jour</string>
+    <string name="reset_discography">Réanalyser la bibliothèque</string>
 </resources>

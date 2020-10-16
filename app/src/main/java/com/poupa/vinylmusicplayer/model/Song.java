@@ -19,13 +19,14 @@ public class Song implements Parcelable {
     public final String data;
     public final long dateAdded;
     public final long dateModified;
-    public final long albumId;
+    public long albumId;
     public String albumName;
-    public final long artistId;
+    public long artistId;
     public String artistName;
+    public String genre;
 
-    private float replaygainTrack = Float.NaN;
-    private float replaygainAlbum = Float.NaN;
+    private float replayGainTrack = Float.NaN;
+    private float replayGainAlbum = Float.NaN;
 
     public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, long artistId, String artistName) {
         this.id = id;
@@ -43,24 +44,24 @@ public class Song implements Parcelable {
     }
 
     public void setReplayGainValues(float track, float album) {
-        replaygainTrack = track;
-        replaygainAlbum = album;
+        replayGainTrack = track;
+        replayGainAlbum = album;
     }
 
     public float getReplayGainTrack() {
         // Since the extraction of RG tags incurs I/O, only extract the replay gain values if needed
-        if (Float.isNaN(replaygainTrack)) {
+        if (Float.isNaN(replayGainTrack)) {
             ReplayGainTagExtractor.setReplayGainValues(this);
         }
-        return replaygainTrack;
+        return replayGainTrack;
     }
 
     public float getReplayGainAlbum() {
         // Since the extraction of RG tags incurs I/O, only extract the replay gain values if needed
-        if (Float.isNaN(replaygainAlbum)) {
+        if (Float.isNaN(replayGainAlbum)) {
             ReplayGainTagExtractor.setReplayGainValues(this);
         }
-        return replaygainAlbum;
+        return replayGainAlbum;
     }
 
     @Override
@@ -118,6 +119,7 @@ public class Song implements Parcelable {
                 ", albumName='" + albumName + '\'' +
                 ", artistId=" + artistId +
                 ", artistName='" + artistName + '\'' +
+                ", genre='" + genre + '\'' +
                 '}';
     }
 

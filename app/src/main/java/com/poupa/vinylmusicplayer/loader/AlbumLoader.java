@@ -1,84 +1,93 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
-import android.provider.MediaStore.Audio.AudioColumns;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Album;
-import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
+ * @author SC (soncaokim)
  */
 public class AlbumLoader {
-
-    public static String getSongLoaderSortOrder(Context context) {
-        return PreferenceUtil.getInstance().getAlbumSortOrder() + ", " + PreferenceUtil.getInstance().getAlbumSongSortOrder();
-    }
+    private final static Discography discography = Discography.getInstance();
 
     @NonNull
     public static ArrayList<Album> getAllAlbums(@NonNull final Context context) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                context,
-                null,
-                null,
-                getSongLoaderSortOrder(context))
-        );
-        return splitIntoAlbums(songs);
+        synchronized (discography) {
+            ArrayList<Album> albums = new ArrayList<>(discography.getAllAlbums());
+            Collections.sort(albums, getSortOrder());
+            return albums;
+        }
     }
 
     @NonNull
     public static ArrayList<Album> getAlbums(@NonNull final Context context, String query) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                context,
-                AudioColumns.ALBUM + " LIKE ?",
-                new String[]{"%" + query + "%"},
-                getSongLoaderSortOrder(context))
-        );
-        return splitIntoAlbums(songs);
+        final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
+
+        synchronized (discography) {
+            ArrayList<Album> albums = new ArrayList<>();
+            for (Album album : discography.getAllAlbums()) {
+                final String strippedAlbum = StringUtil.stripAccent(album.getTitle().toLowerCase());
+                if (strippedAlbum.contains(strippedQuery)) {
+                    albums.add(album);
+                }
+            }
+            Collections.sort(albums, getSortOrder());
+            return albums;
+        }
     }
 
     @NonNull
     public static Album getAlbum(@NonNull final Context context, long albumId) {
-        ArrayList<Song> songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, AudioColumns.ALBUM_ID + "=?", new String[]{String.valueOf(albumId)}, getSongLoaderSortOrder(context)));
-        Album album = new Album(songs);
-        sortSongsByTrackNumber(album);
-        return album;
+        synchronized (discography) {
+            Album album = discography.getAlbum(albumId);
+            if (album != null) {
+                return album;
+            } else {
+                return new Album();
+            }
+        }
     }
 
     @NonNull
-    public static ArrayList<Album> splitIntoAlbums(@Nullable final ArrayList<Song> songs) {
-        ArrayList<Album> albums = new ArrayList<>();
-        if (songs != null) {
-            for (Song song : songs) {
-                getOrCreateAlbum(albums, song.albumId).songs.add(song);
-            }
-        }
-        for (Album album : albums) {
-            sortSongsByTrackNumber(album);
-        }
-        return albums;
-    }
+    private static Comparator<Album> getSortOrder() {
+        Function<Album, String> getArtistName = (a) -> a.safeGetFirstSong().artistName;
+        Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
 
-    public static Album getOrCreateAlbum(ArrayList<Album> albums, long albumId) {
-        // TODO Avoid sequential search here
-        for (Album album : albums) {
-            if (!album.songs.isEmpty() && album.songs.get(0).albumId == albumId) {
-                return album;
-            }
-        }
-        Album album = new Album();
-        albums.add(album);
-        return album;
-    }
+        Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(
+                getAlbumName.apply(a1),
+                getAlbumName.apply(a2));
+        Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
+                getArtistName.apply(a1),
+                getArtistName.apply(a2));
+        Comparator<Album> byYear = (a1, a2) -> a1.getYear() - a2.getYear();
+        Comparator<Album> byDateAdded = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
 
-    private static void sortSongsByTrackNumber(Album album) {
-        Collections.sort(album.songs, (o1, o2) -> o1.trackNumber - o2.trackNumber);
+        switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
+            case SortOrder.AlbumSortOrder.ALBUM_Z_A:
+                return ComparatorUtil.chain(ComparatorUtil.reverse(byAlbumName), ComparatorUtil.reverse(byArtistName));
+            case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
+                return ComparatorUtil.chain(byArtistName, byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_YEAR:
+                return ComparatorUtil.chain(byYear, byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED:
+                return ComparatorUtil.chain(ComparatorUtil.reverse(byDateAdded), byAlbumName);
+
+            case SortOrder.AlbumSortOrder.ALBUM_A_Z:
+            default:
+                return ComparatorUtil.chain(byAlbumName, byArtistName);
+        }
     }
 }

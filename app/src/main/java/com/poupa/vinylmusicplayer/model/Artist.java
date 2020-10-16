@@ -30,11 +30,7 @@ public class Artist implements Parcelable {
     }
 
     public String getName() {
-        String name = safeGetFirstAlbum().getArtistName();
-        if (MusicUtil.isArtistNameUnknown(name)) {
-            return UNKNOWN_ARTIST_DISPLAY_NAME;
-        }
-        return name;
+        return safeGetFirstAlbum().getArtistName();
     }
 
     public int getSongCount() {
