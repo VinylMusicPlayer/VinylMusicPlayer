@@ -3,16 +3,29 @@ package com.poupa.vinylmusicplayer.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+
 public class Genre implements Parcelable {
+    public static final String UNKNOWN_GENRE_DISPLAY_NAME = "Unknown Genre";
+
     public final long id;
     public final String name;
 
-    public final int songCount;
+    public int songCount;
 
     public Genre(final long id, final String name, final int songCount) {
         this.id = id;
         this.name = name;
         this.songCount = songCount;
+    }
+
+    public String getName() {
+        if (MusicUtil.isGenreNameUnknown(name)) {
+            return UNKNOWN_GENRE_DISPLAY_NAME;
+        }
+        return name;
     }
 
     @Override
@@ -36,6 +49,7 @@ public class Genre implements Parcelable {
         return (int)result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Genre{" +

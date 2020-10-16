@@ -8,10 +8,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.Discography;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 

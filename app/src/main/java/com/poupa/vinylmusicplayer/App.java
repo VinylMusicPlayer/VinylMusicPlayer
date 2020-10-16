@@ -7,7 +7,6 @@ import androidx.multidex.MultiDexApplication;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
-import com.poupa.vinylmusicplayer.util.DelayedTaskThread;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -38,8 +37,6 @@ public class App extends MultiDexApplication {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             new DynamicShortcutManager(this).initDynamicShortcuts();
         }
-
-        DelayedTaskThread.getInstance().start();
     }
 
     public static App getInstance() {
@@ -52,7 +49,6 @@ public class App extends MultiDexApplication {
 
     @Override
     public void onTerminate() {
-        DelayedTaskThread.getInstance().stop();
         super.onTerminate();
     }
 }

@@ -7,13 +7,14 @@ import android.provider.MediaStore.Audio.AudioColumns;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.Discography;
 
 import java.util.ArrayList;
 
 public class PlaylistSongLoader {
+    private final static Discography discography = Discography.getInstance();
 
     @NonNull
     public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, final long playlistId) {
@@ -34,61 +35,38 @@ public class PlaylistSongLoader {
     @NonNull
     private static PlaylistSong getPlaylistSongFromCursorImpl(@NonNull Cursor cursor, long playlistId) {
         final long id = cursor.getLong(0);
-        final String data = cursor.getString(5);
-        final int dateAdded = cursor.getInt(6);
-        final int dateModified = cursor.getInt(7);
-        final int idInPlaylist = cursor.getInt(12);
-
-        // search in the discog cache first
-        Song song = Discography.getInstance().getSong(id);
-        if (song != null) {
-            if (song.data.equals(data) && song.dateAdded == dateAdded && song.dateModified == dateModified) {
-                PlaylistSong playlistSong = new PlaylistSong(
-                        id,
-                        song.title,
-                        song.trackNumber,
-                        song.year,
-                        song.duration,
-                        data,
-                        dateAdded,
-                        dateModified,
-                        song.albumId,
-                        song.albumName,
-                        song.artistId,
-                        song.artistName,
-                        playlistId,
-                        idInPlaylist);
-                return playlistSong;
-            }
-        }
-
-        // either none in cache, or obsolete
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
         final int year = cursor.getInt(3);
         final long duration = cursor.getLong(4);
+        final String data = cursor.getString(5);
+        final int dateAdded = cursor.getInt(6);
+        final int dateModified = cursor.getInt(7);
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
         final String artistName = cursor.getString(11);
+        final int idInPlaylist = cursor.getInt(12);
+
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
+
+        song = discography.getOrAddSong(song);
 
         PlaylistSong playlistSong = new PlaylistSong(
                 id,
-                title,
-                trackNumber,
-                year,
-                duration,
+                song.title,
+                song.trackNumber,
+                song.year,
+                song.duration,
                 data,
                 dateAdded,
                 dateModified,
-                albumId,
-                albumName,
-                artistId,
-                artistName,
+                song.albumId,
+                song.albumName,
+                song.artistId,
+                song.artistName,
                 playlistId,
                 idInPlaylist);
-        Discography.getInstance().addSong(playlistSong);
-
         return playlistSong;
     }
 

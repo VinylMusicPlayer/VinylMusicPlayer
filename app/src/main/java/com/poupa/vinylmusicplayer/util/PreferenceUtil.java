@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 
 import androidx.annotation.StyleRes;
 
@@ -32,12 +33,8 @@ public final class PreferenceUtil {
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
 
     public static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    public static final String ARTIST_SONG_SORT_ORDER = "artist_song_sort_order";
-    public static final String ARTIST_ALBUM_SORT_ORDER = "artist_album_sort_order";
     public static final String ALBUM_SORT_ORDER = "album_sort_order";
-    public static final String ALBUM_SONG_SORT_ORDER = "album_song_sort_order";
     public static final String SONG_SORT_ORDER = "song_sort_order";
-    public static final String GENRE_SORT_ORDER = "genre_sort_order";
 
     public static final String ALBUM_GRID_SIZE = "album_grid_size";
     public static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
@@ -273,14 +270,6 @@ public final class PreferenceUtil {
         editor.apply();
     }
 
-    public final String getArtistSongSortOrder() {
-        return mPreferences.getString(ARTIST_SONG_SORT_ORDER, SortOrder.ArtistSongSortOrder.SONG_A_Z);
-    }
-
-    public final String getArtistAlbumSortOrder() {
-        return mPreferences.getString(ARTIST_ALBUM_SORT_ORDER, SortOrder.ArtistAlbumSortOrder.ALBUM_YEAR);
-    }
-
     public final String getAlbumSortOrder() {
         return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
     }
@@ -291,10 +280,6 @@ public final class PreferenceUtil {
         editor.apply();
     }
 
-    public final String getAlbumSongSortOrder() {
-        return mPreferences.getString(ALBUM_SONG_SORT_ORDER, SortOrder.AlbumSongSortOrder.SONG_TRACK_LIST);
-    }
-
     public final String getSongSortOrder() {
         return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
     }
@@ -303,10 +288,6 @@ public final class PreferenceUtil {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(SONG_SORT_ORDER, sortOrder);
         editor.apply();
-    }
-
-    public final String getGenreSortOrder() {
-        return mPreferences.getString(GENRE_SORT_ORDER, SortOrder.GenreSortOrder.GENRE_A_Z);
     }
 
     // The last added cutoff time is compared against the Android media store timestamps, which is seconds based.

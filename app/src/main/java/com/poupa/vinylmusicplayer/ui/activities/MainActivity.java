@@ -28,6 +28,7 @@ import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -46,6 +47,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +95,19 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         if (!checkShowIntro()) {
             showChangelog();
         }
+
+        final Discography discog = Discography.getInstance();
+        discog.startService(this);
+        addMusicServiceEventListener(discog);
+    }
+
+    @Override
+    protected void onDestroy() {
+        final Discography discog = Discography.getInstance();
+        removeMusicServiceEventListener(discog);
+        discog.stopService();
+
+        super.onDestroy();
     }
 
     private void setMusicChooser(int key) {
@@ -162,6 +177,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                         ScanMediaFolderChooserDialog dialog = ScanMediaFolderChooserDialog.create();
                         dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
                     }, 200);
+                    break;
+                case R.id.action_reset_discography:
+                    Discography.getInstance().triggerSyncWithMediaStore(true);
                     break;
                 case R.id.nav_settings:
                     new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);

@@ -285,19 +285,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     @Override
-    protected View getSnackBarContainer() {
+    public View getSnackBarContainer() {
         return findViewById(R.id.content_container);
-    }
-
-    public SlidingUpPanelLayout getSlidingUpPanelLayout() {
-        return slidingUpPanelLayout;
-    }
-
-    public MiniPlayerFragment getMiniPlayerFragment() {
-        return miniPlayerFragment;
-    }
-
-    public AbsPlayerFragment getPlayerFragment() {
-        return playerFragment;
     }
 }

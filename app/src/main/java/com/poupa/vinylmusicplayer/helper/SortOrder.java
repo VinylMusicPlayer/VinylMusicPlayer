@@ -35,14 +35,6 @@ public final class SortOrder {
 
         /* Artist sort order Z-A */
         String ARTIST_Z_A = ARTIST_A_Z + " DESC";
-
-        /* Artist sort order number of songs */
-        String ARTIST_NUMBER_OF_SONGS = MediaStore.Audio.Artists.NUMBER_OF_TRACKS
-                + " DESC";
-
-        /* Artist sort order number of albums */
-        String ARTIST_NUMBER_OF_ALBUMS = MediaStore.Audio.Artists.NUMBER_OF_ALBUMS
-                + " DESC";
     }
 
     /**
@@ -54,10 +46,6 @@ public final class SortOrder {
 
         /* Album sort order Z-A */
         String ALBUM_Z_A = ALBUM_A_Z + " DESC";
-
-        /* Album sort order songs */
-        String ALBUM_NUMBER_OF_SONGS = MediaStore.Audio.Albums.NUMBER_OF_SONGS
-                + " DESC";
 
         /* Album sort order artist */
         String ALBUM_ARTIST = MediaStore.Audio.Artists.DEFAULT_SORT_ORDER
@@ -89,82 +77,7 @@ public final class SortOrder {
         /* Song sort order year */
         String SONG_YEAR = MediaStore.Audio.Media.YEAR + " DESC";
 
-        /* Song sort order duration */
-        String SONG_DURATION = MediaStore.Audio.Media.DURATION + " DESC";
-
         /* Song sort order date */
         String SONG_DATE_ADDED = MediaStore.Audio.Media.DATE_ADDED + " DESC";
     }
-
-    /**
-     * Album song sort order entries.
-     */
-    public interface AlbumSongSortOrder {
-        /* Album song sort order A-Z */
-        String SONG_A_Z = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
-
-        /* Album song sort order Z-A */
-        String SONG_Z_A = SONG_A_Z + " DESC";
-
-        /* Album song sort order track list */
-        String SONG_TRACK_LIST = MediaStore.Audio.Media.TRACK + ", "
-                + MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
-
-        /* Album song sort order duration */
-        String SONG_DURATION = SongSortOrder.SONG_DURATION;
-    }
-
-    /**
-     * Artist song sort order entries.
-     */
-    public interface ArtistSongSortOrder {
-        /* Artist song sort order A-Z */
-        String SONG_A_Z = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
-
-        /* Artist song sort order Z-A */
-        String SONG_Z_A = SONG_A_Z + " DESC";
-
-        /* Artist song sort order album */
-        String SONG_ALBUM = MediaStore.Audio.Media.ALBUM;
-
-        /* Artist song sort order year */
-        String SONG_YEAR = MediaStore.Audio.Media.YEAR + " DESC";
-
-        /* Artist song sort order duration */
-        String SONG_DURATION = MediaStore.Audio.Media.DURATION + " DESC";
-
-        /* Artist song sort order date */
-        String SONG_DATE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
-    }
-
-    /**
-     * Artist album sort order entries.
-     */
-    public interface ArtistAlbumSortOrder {
-        /* Artist album sort order A-Z */
-        String ALBUM_A_Z = MediaStore.Audio.Albums.DEFAULT_SORT_ORDER;
-
-        /* Artist album sort order Z-A */
-        String ALBUM_Z_A = ALBUM_A_Z + " DESC";
-
-        /* Artist album sort order year */
-        String ALBUM_YEAR = MediaStore.Audio.Media.YEAR
-                + " DESC";
-
-        /* Artist album sort order year */
-        String ALBUM_YEAR_ASC = MediaStore.Audio.Media.YEAR
-                + " ASC";
-    }
-
-    /**
-     * Genre sort order entries.
-     */
-    public interface GenreSortOrder {
-        /* Genre sort order A-Z */
-        String GENRE_A_Z = MediaStore.Audio.Genres.DEFAULT_SORT_ORDER;
-
-        /* Genre sort order Z-A */
-        String GENRE_Z_A = GENRE_A_Z + " DESC";
-    }
-
 }

@@ -19,10 +19,11 @@ public class Song implements Parcelable {
     public final String data;
     public final long dateAdded;
     public final long dateModified;
-    public final long albumId;
+    public long albumId;
     public String albumName;
-    public final long artistId;
+    public long artistId;
     public String artistName;
+    public String genre;
 
     private float replaygainTrack = Float.NaN;
     private float replaygainAlbum = Float.NaN;
@@ -118,6 +119,7 @@ public class Song implements Parcelable {
                 ", albumName='" + albumName + '\'' +
                 ", artistId=" + artistId +
                 ", artistName='" + artistName + '\'' +
+                ", genre='" + genre + '\'' +
                 '}';
     }
 
