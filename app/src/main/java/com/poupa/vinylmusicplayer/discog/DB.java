@@ -19,7 +19,7 @@ import java.util.Collection;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     public DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -37,6 +37,7 @@ class DB extends SQLiteOpenHelper {
                         + SongColumns.DATA_PATH + " TEXT, "
                         + SongColumns.DATE_ADDED + " LONG, "
                         + SongColumns.DATE_MODIFIED + " LONG, "
+                        + SongColumns.DISC_NUMBER + " LONG, "
                         + SongColumns.GENRE +  " TEXT, "
                         + SongColumns.REPLAYGAIN_ALBUM + " REAL, "
                         + SongColumns.REPLAYGAIN_TRACK + " REAL, "
@@ -71,6 +72,7 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
+            values.put(SongColumns.DISC_NUMBER, song.discNumber);
             values.put(SongColumns.GENRE, song.genre);
             values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
             values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
@@ -121,6 +123,7 @@ class DB extends SQLiteOpenHelper {
                         SongColumns.DATA_PATH,
                         SongColumns.DATE_ADDED,
                         SongColumns.DATE_MODIFIED,
+                        SongColumns.DISC_NUMBER,
                         SongColumns.GENRE,
                         SongColumns.REPLAYGAIN_ALBUM,
                         SongColumns.REPLAYGAIN_TRACK,
@@ -149,6 +152,7 @@ class DB extends SQLiteOpenHelper {
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
                 final long dateModified = cursor.getLong(++columnIndex);
+                final int discNumber = cursor.getInt(++columnIndex);
                 final String genre = cursor.getString(++columnIndex);
                 final float replayGainAlbum = cursor.getFloat(++columnIndex);
                 final float replayGainTrack = cursor.getFloat(++columnIndex);
@@ -170,6 +174,7 @@ class DB extends SQLiteOpenHelper {
                         albumName,
                         artistId,
                         artistName);
+                song.discNumber = discNumber;
                 song.setReplayGainValues(replayGainTrack, replayGainAlbum);
                 song.genre = genre;
 
@@ -190,6 +195,7 @@ class DB extends SQLiteOpenHelper {
         String DATA_PATH = "data_path";
         String DATE_ADDED = "date_added";
         String DATE_MODIFIED = "date_modified";
+        String DISC_NUMBER = "disc_number";
         String GENRE = "genre";
         String REPLAYGAIN_ALBUM = "replaygain_album";
         String REPLAYGAIN_TRACK = "replaygain_track";

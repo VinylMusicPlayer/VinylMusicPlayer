@@ -50,7 +50,12 @@ class MemCache {
 
         // Only sort albums after the song has been added
         Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
-        Collections.sort(album.songs, (s1, s2) -> s1.trackNumber - s2.trackNumber);
+
+        Collections.sort(album.songs,
+                (s1, s2) -> (s1.discNumber != s2.discNumber)
+                        ? (s1.discNumber - s2.discNumber)
+                        : (s1.trackNumber - s2.trackNumber)
+        );
 
         songsById.put(song.id, song);
     }

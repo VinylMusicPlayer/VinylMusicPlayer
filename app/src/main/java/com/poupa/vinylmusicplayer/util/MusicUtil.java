@@ -45,7 +45,6 @@ import java.util.regex.Pattern;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MusicUtil {
-
     public static Uri getMediaStoreAlbumCoverUri(long albumId) {
         final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
@@ -98,8 +97,9 @@ public class MusicUtil {
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
         if (PreferenceUtil.getInstance().showSongNumber()) {
+
             return MusicUtil.buildInfoString(
-                    String.valueOf(getFixedTrackNumber(song.trackNumber)),
+                    MusicUtil.getTrackNumberInfoString(song),
                     song.artistName,
                     song.albumName
             );
@@ -212,10 +212,19 @@ public class MusicUtil {
         return string1 + "  •  " + string2 + "  •  " + string3;
     }
 
-    //iTunes uses for example 1002 for track 2 CD1 or 3011 for track 11 CD3.
-    //this method converts those values to normal tracknumbers
-    public static int getFixedTrackNumber(int trackNumberToFix) {
-        return trackNumberToFix % 1000;
+    @NonNull
+    public static String getTrackNumberInfoString(@NonNull final Song song) {
+        String result = "";
+        if (song.discNumber > 0) {
+            result = String.valueOf(song.discNumber) + "-";
+        }
+        if (song.trackNumber > 0) {
+            result += String.valueOf(song.trackNumber);
+        }
+        else if (result.isEmpty()) {
+            result = "-";
+        }
+        return result;
     }
 
     public static void insertAlbumArt(@NonNull Context context, long albumId, String path, @NonNull final String mimeType) {
