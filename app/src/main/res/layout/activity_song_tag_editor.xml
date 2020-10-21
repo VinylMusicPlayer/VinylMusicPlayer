@@ -150,7 +150,8 @@
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
-                        android:inputType="number"
+                        android:hint="@string/track_number"
+                        android:inputType="text|number"
                         android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -167,7 +168,8 @@
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
-                        android:inputType="number"
+                        android:inputType="text|number"
+                        android:hint="@string/disc_number"
                         android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 

@@ -47,6 +47,8 @@
     <string name="album_artist">Album artist</string>
     <string name="year">Year</string>
     <string name="track_hint">"Track (2 for track 2 or 3004 for CD3 track 4)"</string>
+    <string name="track_number">"Track Number"</string>
+    <string name="disc_number">"Disc Number"</string>
     <string name="lyrics">Lyrics</string>
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
