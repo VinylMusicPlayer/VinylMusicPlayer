@@ -144,14 +144,30 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/image_text"
+                        android:id="@+id/track_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
-                        android:hint="@string/track_hint"
-                        android:inputType="text|number"
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/disc_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center_vertical"
+                        android:inputType="number"
                         android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 

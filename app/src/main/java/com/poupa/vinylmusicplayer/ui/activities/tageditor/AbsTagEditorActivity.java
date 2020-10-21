@@ -607,6 +607,15 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
+    protected String getDiscNumber() {
+        try {
+            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    @Nullable
     protected String getTrackNumber() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
