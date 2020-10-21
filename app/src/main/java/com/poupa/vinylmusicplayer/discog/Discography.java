@@ -272,17 +272,8 @@ public class Discography implements MusicServiceEventListener {
             }
 
             song.genre = tags.getFirst(FieldKey.GENRE);
-
             try {song.discNumber = Integer.parseInt(tags.getFirst(FieldKey.DISC_NO));} catch (NumberFormatException ignored) {}
             try {song.trackNumber = Integer.parseInt(tags.getFirst(FieldKey.TRACK));} catch (NumberFormatException ignored) {}
-            // iTunes uses for example 1002 for track 2 CD1 or 3011 for track 11 CD3.
-            // this method converts those values to normal track numbers
-            final int DISC_NUMBER_DISGUISE_FACTOR = 1000;
-            if (song.discNumber == 0 && song.trackNumber > DISC_NUMBER_DISGUISE_FACTOR) {
-                song.discNumber = (song.trackNumber / DISC_NUMBER_DISGUISE_FACTOR);
-                song.trackNumber = (song.trackNumber % DISC_NUMBER_DISGUISE_FACTOR);
-            }
-
             try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
 
             ReplayGainTagExtractor.setReplayGainValues(song);
