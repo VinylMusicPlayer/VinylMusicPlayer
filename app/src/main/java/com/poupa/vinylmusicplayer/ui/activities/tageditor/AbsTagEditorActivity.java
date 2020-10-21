@@ -382,7 +382,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (info.fieldKeyValueMap != null) {
                             for (Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
                                 try {
-                                    tag.setField(entry.getKey(), entry.getValue());
+                                    if (entry.getValue().isEmpty()) {
+                                        tag.deleteField(entry.getKey());
+                                    }
+                                    else {
+                                        tag.setField(entry.getKey(), entry.getValue());
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -601,6 +606,15 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     protected String getSongYear() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    @Nullable
+    protected String getDiscNumber() {
+        try {
+            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
         } catch (Exception ignored) {
             return null;
         }

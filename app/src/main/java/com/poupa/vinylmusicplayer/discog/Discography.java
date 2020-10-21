@@ -284,6 +284,7 @@ public class Discography implements MusicServiceEventListener {
             }
 
             song.genre = safeGetTag.apply(FieldKey.GENRE);
+            song.discNumber = safeGetTagAsInteger.apply(FieldKey.DISC_NO);
             song.trackNumber = safeGetTagAsInteger.apply(FieldKey.TRACK);
             song.year = safeGetTagAsInteger.apply(FieldKey.YEAR);
 
