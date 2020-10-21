@@ -382,7 +382,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (info.fieldKeyValueMap != null) {
                             for (Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
                                 try {
-                                    tag.setField(entry.getKey(), entry.getValue());
+                                    if (entry.getValue().isEmpty()) {
+                                        tag.deleteField(entry.getKey());
+                                    }
+                                    else {
+                                        tag.setField(entry.getKey(), entry.getValue());
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
