@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -16,6 +17,7 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +42,8 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author SC (soncaokim)
@@ -52,6 +57,7 @@ public class Discography implements MusicServiceEventListener {
 
     private DB database;
     private final MemCache cache;
+    private final PlayHistory history;
 
     public MainActivity mainActivity;
     private Handler mainActivityTaskQueue;
@@ -60,8 +66,10 @@ public class Discography implements MusicServiceEventListener {
     public Discography() {
         database = new DB();
         cache = new MemCache();
-
         fetchAllSongs();
+
+        history = new PlayHistory(cache);
+        fetchPlayHistory();
     }
 
     @NonNull
@@ -191,8 +199,27 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    @NonNull
+    public ArrayList<Song> getPlayedSongs(long cutoff) {
+        final Collection<List<Long>> idLists =
+                (cutoff > 0)
+                        ? history.songsByTimePlayed.tailMap(cutoff).values()
+                        : history.songsByTimePlayed.headMap(-1 * cutoff).values();
+        ArrayList<Song> songs = new ArrayList<>();
+        for (List<Long> idList : idLists) {
+            for (long id : idList) {
+                songs.add(getSong(id));
+            }
+        }
+        return songs;
+    }
+
     private void addSong(@NonNull Song song) {
         new AddSongAsyncTask().execute(song);
+    }
+
+    public void addPlayedSong(long songId, long playedTime) {
+        history.add(songId, playedTime);
     }
 
     boolean addSongImpl(@NonNull Song song, boolean cacheOnly) {
@@ -394,6 +421,69 @@ public class Discography implements MusicServiceEventListener {
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSongImpl(song, true);
+        }
+    }
+
+    private void fetchPlayHistory() {
+        try (Cursor cursor = HistoryStore.getInstance(App.getInstance().getApplicationContext()).queryRecentIds(0)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                final int idColumn = cursor.getColumnIndex(HistoryStore.RecentStoreColumns.ID);
+                final int idTimePlayed = cursor.getColumnIndex(HistoryStore.RecentStoreColumns.TIME_PLAYED);
+
+                do {
+                    long id = cursor.getLong(idColumn);
+                    long time = cursor.getLong(idTimePlayed);
+                    history.add(id, time);
+                } while (cursor.moveToNext());
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    class PlayHistory {
+        private final long NEVER_PLAYED = 0;
+
+        private final SortedMap<Long, List<Long>> songsByTimePlayed = new TreeMap<>();
+        private final Map<Long, Long> timePlayedBySongId = new HashMap<>();
+
+        private final MemCache songCache;
+
+        public PlayHistory(@NonNull final MemCache cache) {
+            songCache = cache;
+
+            // For all songs, initialize them as never played
+            // TODO Sort by date added
+            ArrayList<Long> allSongIds = new ArrayList<>(songCache.songsById.keySet()); // make a copy
+            songsByTimePlayed.put(NEVER_PLAYED, allSongIds);
+            for (long id : allSongIds) {
+                timePlayedBySongId.put(id, NEVER_PLAYED);
+            }
+        }
+
+        public void remove(long songId) {
+            final Long time = timePlayedBySongId.get(songId);
+            if (time == null) {return;}
+
+            List<Long> songIds = songsByTimePlayed.get(time);
+            if (songIds == null) {return;}
+
+            songIds.remove(songId);
+            songsByTimePlayed.put(time, songIds);
+            timePlayedBySongId.put(songId, NEVER_PLAYED);
+        }
+
+        public void add(long songId, long time) {
+            remove(songId);
+
+            List<Long> songs = songsByTimePlayed.get(time);
+            if (songs == null) {
+                songs = new ArrayList<>();
+            }
+            songs.add(songId);
+            songsByTimePlayed.put(time, songs);
+            timePlayedBySongId.put(songId, time);
         }
     }
 }

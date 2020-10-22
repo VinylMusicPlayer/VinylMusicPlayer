@@ -25,6 +25,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
+
 import java.util.ArrayList;
 
 public class HistoryStore extends SQLiteOpenHelper {
@@ -64,7 +66,7 @@ public class HistoryStore extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    public void addSongId(final long songId) {
+    public void addSongId(long songId) {
         if (songId == -1) {
             return;
         }
@@ -77,10 +79,13 @@ public class HistoryStore extends SQLiteOpenHelper {
             removeSongId(database, songId);
 
             // add the entry
+            final long now = System.currentTimeMillis();
             final ContentValues values = new ContentValues(2);
             values.put(RecentStoreColumns.ID, songId);
-            values.put(RecentStoreColumns.TIME_PLAYED, System.currentTimeMillis());
+            values.put(RecentStoreColumns.TIME_PLAYED, now);
             database.insert(RecentStoreColumns.NAME, null, values);
+
+            Discography.getInstance().addPlayedSong(songId, now);
         } finally {
             database.setTransactionSuccessful();
             database.endTransaction();
@@ -113,21 +118,6 @@ public class HistoryStore extends SQLiteOpenHelper {
         database.delete(RecentStoreColumns.NAME, null, null);
     }
 
-    public boolean contains(long id) {
-        final SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(RecentStoreColumns.NAME,
-                new String[]{RecentStoreColumns.ID},
-                RecentStoreColumns.ID + "=?",
-                new String[]{String.valueOf(id)},
-                null, null, null, null);
-
-        boolean containsId = cursor != null && cursor.moveToFirst();
-        if (cursor != null) {
-            cursor.close();
-        }
-        return containsId;
-    }
-
     public Cursor queryRecentIds(long cutoff) {
         final boolean noCutoffTime = (cutoff == 0);
         final boolean reverseOrder = (cutoff < 0);
@@ -136,7 +126,7 @@ public class HistoryStore extends SQLiteOpenHelper {
         final SQLiteDatabase database = getReadableDatabase();
 
         return database.query(RecentStoreColumns.NAME,
-                new String[]{RecentStoreColumns.ID},
+                new String[]{RecentStoreColumns.ID, RecentStoreColumns.TIME_PLAYED},
                 noCutoffTime ? null : RecentStoreColumns.TIME_PLAYED + (reverseOrder ? "<?" : ">?"),
                 noCutoffTime ? null : new String[]{String.valueOf(cutoff)},
                 null, null,

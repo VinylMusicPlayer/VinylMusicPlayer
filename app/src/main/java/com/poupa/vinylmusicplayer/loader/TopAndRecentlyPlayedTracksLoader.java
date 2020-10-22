@@ -25,6 +25,7 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
@@ -34,28 +35,48 @@ import java.util.ArrayList;
 
 public class TopAndRecentlyPlayedTracksLoader {
     public static final int NUMBER_OF_TOP_TRACKS = 100;
+    private static final boolean USE_DISCOGRAPHY = true;
+    private static final int AMPLIFICATION_FACTOR = 1;
 
     @NonNull
     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
-        return SongLoader.getSongs(makeRecentTracksCursorAndClearUpDatabase(context));
+        ArrayList<Song> result = new ArrayList<>();
+        for (int i=0; i<AMPLIFICATION_FACTOR; ++i)
+        {
+            if (USE_DISCOGRAPHY) {
+                result = Discography.getInstance().getPlayedSongs(PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis());
+            } else {
+                result = SongLoader.getSongs(makeRecentTracksCursorAndClearUpDatabase(context));
+            }
+        }
+        return result;
     }
 
     @NonNull
     public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
-        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{
-                makeNotPlayedTracksCursorAndClearUpDatabase(context),
-                makeNotRecentTracksCursorAndClearUpDatabase(context)
-        });
-        return SongLoader.getSongs(mergeCursor);
+        ArrayList<Song> result = new ArrayList<>();
+        for (int i=0; i<AMPLIFICATION_FACTOR; ++i) {
+            if (USE_DISCOGRAPHY) {
+                result = Discography.getInstance().getPlayedSongs(-1 * PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis());
+            } else {
+                MergeCursor mergeCursor = new MergeCursor(new Cursor[]{
+                        makeNotPlayedTracksCursorAndClearUpDatabase(context),
+                        makeNotRecentTracksCursorAndClearUpDatabase(context)
+                });
+                result = SongLoader.getSongs(mergeCursor);
+            }
+        }
+        return result;
     }
 
     @NonNull
     public static ArrayList<Song> getTopTracks(@NonNull Context context) {
+        // TODO Use discog
         return SongLoader.getSongs(makeTopTracksCursorAndClearUpDatabase(context));
     }
 
     @Nullable
-    public static Cursor makeRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
+    private static Cursor makeRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
         return makeRecentTracksCursorAndClearUpDatabaseImpl(context, false, false);
     }
 
@@ -89,7 +110,7 @@ public class TopAndRecentlyPlayedTracksLoader {
     }
 
      @Nullable
-    public static Cursor makeNotRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
+    private static Cursor makeNotRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
         return makeRecentTracksCursorAndClearUpDatabaseImpl(context, false, true);
     }
 
