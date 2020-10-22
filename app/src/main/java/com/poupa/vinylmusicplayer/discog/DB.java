@@ -60,7 +60,7 @@ class DB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addSong(@NonNull Song song) {
+    public synchronized void addSong(@NonNull Song song) {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
@@ -85,7 +85,7 @@ class DB extends SQLiteOpenHelper {
         }
     }
 
-    public void clear() {
+    public synchronized void clear() {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(SongColumns.NAME, null, null);
         } catch (Exception e) {
@@ -93,7 +93,7 @@ class DB extends SQLiteOpenHelper {
         }
     }
 
-    public void removeSongById(long songId) {
+    public synchronized void removeSongById(long songId) {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(
                     SongColumns.NAME,
@@ -107,7 +107,7 @@ class DB extends SQLiteOpenHelper {
     }
 
     @NonNull
-    public Collection<Song> fetchAllSongs() {
+    public synchronized Collection<Song> fetchAllSongs() {
         ArrayList<Song> songs = new ArrayList<>();
         final SQLiteDatabase database = getReadableDatabase();
 
