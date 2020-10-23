@@ -17,6 +17,7 @@ case "${CIRCLE_BRANCH}" in
         git_init
         git fetch origin
         git rebase origin/master || exit 1
+        echo
         ;;
 
     *)
@@ -27,7 +28,7 @@ esac
 function is_blacklisted()
 {
     local branch=$1
-    local blacklist="discog-v2 toto"
+    local blacklist="discog-v2 slow-ui"
 
     for bl in ${blacklist}; do
         [ "${branch}" = "${bl}" ] && return 0
@@ -44,4 +45,5 @@ for branch in ${branches}; do
 
     echo "Merge ${branch} into ${CIRCLE_BRANCH}..."
     git merge --no-edit origin/${branch} || exit 1
+    echo
 done
