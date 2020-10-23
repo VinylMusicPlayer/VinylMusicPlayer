@@ -27,7 +27,7 @@ esac
 function is_blacklisted()
 {
     local branch=$1
-    local blacklist=""
+    local blacklist="discog-v2 toto"
 
     for bl in ${blacklist}; do
         [ "${branch}" = "${bl}" ] && return 0
