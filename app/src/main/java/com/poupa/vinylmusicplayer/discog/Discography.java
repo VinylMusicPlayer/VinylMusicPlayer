@@ -21,6 +21,7 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author SC (soncaokim)
@@ -263,17 +265,28 @@ public class Discography implements MusicServiceEventListener {
             AudioFile file = AudioFileIO.read(new File(song.data));
             Tag tags = file.getTagOrCreateAndSetDefault();
 
-            song.albumName = tags.getFirst(FieldKey.ALBUM);
-            song.artistName = tags.getFirst(FieldKey.ARTIST);
-            song.title = tags.getFirst(FieldKey.TITLE);
-            if (song.title.trim().isEmpty()) {
+            Function<FieldKey, String> safeGetTag = (tag) -> {
+                try {return tags.getFirst(tag).trim();}
+                catch (KeyNotFoundException ignored) {return "";}
+            };
+            Function<FieldKey, Integer> safeGetTagAsInteger = (tag) -> {
+                try {return Integer.parseInt(safeGetTag.apply(tag));}
+                catch (NumberFormatException ignored) {return 0;}
+            };
+
+            song.albumName = safeGetTag.apply(FieldKey.ALBUM);
+            song.artistName = safeGetTag.apply(FieldKey.ARTIST);
+            song.albumArtistName = safeGetTag.apply(FieldKey.ALBUM_ARTIST);
+            song.title = safeGetTag.apply(FieldKey.TITLE);
+            if (song.title.isEmpty()) {
                 // fallback to use the file name
                 song.title = file.getFile().getName();
             }
 
-            song.genre = tags.getFirst(FieldKey.GENRE);
-            try {song.trackNumber = Integer.parseInt(tags.getFirst(FieldKey.TRACK));} catch (NumberFormatException ignored) {}
-            try {song.year = Integer.parseInt(tags.getFirst(FieldKey.YEAR));} catch (NumberFormatException ignored) {}
+            song.genre = safeGetTag.apply(FieldKey.GENRE);
+            song.discNumber = safeGetTagAsInteger.apply(FieldKey.DISC_NO);
+            song.trackNumber = safeGetTagAsInteger.apply(FieldKey.TRACK);
+            song.year = safeGetTagAsInteger.apply(FieldKey.YEAR);
 
             ReplayGainTagExtractor.setReplayGainValues(song);
         } catch (Exception e) {

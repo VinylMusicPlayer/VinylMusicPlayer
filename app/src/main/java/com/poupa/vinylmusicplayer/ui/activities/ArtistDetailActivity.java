@@ -459,7 +459,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     }
 
     private Artist getArtist() {
-        if (artist == null) artist = new Artist();
+        if (artist == null) artist = Artist.EMPTY;
         return artist;
     }
 
@@ -491,7 +491,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @Override
     public void onLoaderReset(Loader<Artist> loader) {
-        this.artist = new Artist();
+        this.artist = Artist.EMPTY;
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);
     }

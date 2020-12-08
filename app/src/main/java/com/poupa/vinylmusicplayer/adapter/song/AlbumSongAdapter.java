@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
@@ -28,14 +29,16 @@ public class AlbumSongAdapter extends SongAdapter {
         final Song song = dataSet.get(position);
 
         if (holder.imageText != null) {
-            final int trackNumber = MusicUtil.getFixedTrackNumber(song.trackNumber);
-            final String trackNumberString = trackNumber > 0 ? String.valueOf(trackNumber) : "-";
+            final String trackNumberString = MusicUtil.getTrackNumberInfoString(song);
             holder.imageText.setText(trackNumberString);
         }
     }
 
     @Override
     protected String getSongText(Song song) {
-        return MusicUtil.getReadableDurationString(song.duration);
+        final String artist = MusicUtil.isArtistNameUnknown(song.artistName) ? Artist.UNKNOWN_ARTIST_DISPLAY_NAME : song.artistName;
+        return MusicUtil.buildInfoString(
+                MusicUtil.getReadableDurationString(song.duration),
+                artist);
     }
 }
