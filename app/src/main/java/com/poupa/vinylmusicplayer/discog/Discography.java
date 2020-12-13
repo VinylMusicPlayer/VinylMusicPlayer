@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -46,9 +47,9 @@ public class Discography implements MusicServiceEventListener {
     private DB database;
     private final MemCache cache;
 
-    MainActivity mainActivity;
-    private Runnable mainActivityRefreshTask = () -> mainActivity.onMediaStoreChanged();
+    public MainActivity mainActivity;
     private Handler mainActivityTaskQueue;
+    private Collection<Runnable> changedListeners = new LinkedList<>();
 
     public Discography() {
         database = new DB();
@@ -248,14 +249,25 @@ public class Discography implements MusicServiceEventListener {
         triggerSyncWithMediaStore(false);
     }
 
-    void notifyDiscographyChanged() {
+    public void addChangedListener(Runnable listener) {
+        changedListeners.add(listener);
+    }
+
+    public void removeChangedListener(Runnable listener) {
+        mainActivityTaskQueue.removeCallbacks(listener);
+        changedListeners.remove(listener);
+    }
+
+    private void notifyDiscographyChanged() {
         // Notify the main activity to reload the tabs content
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
         if (mainActivityTaskQueue != null) {
             // Post as much 1 event per a coalescence period
             final long COALESCENCE_DELAY = 500;
-            mainActivityTaskQueue.removeCallbacks(mainActivityRefreshTask);
-            mainActivityTaskQueue.postDelayed(mainActivityRefreshTask, COALESCENCE_DELAY);
+            for (Runnable listener : changedListeners) {
+                mainActivityTaskQueue.removeCallbacks(listener);
+                mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
+            }
         }
     }
 
