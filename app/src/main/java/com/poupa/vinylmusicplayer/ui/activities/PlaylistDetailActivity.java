@@ -26,7 +26,9 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.OrderablePlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -71,6 +73,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private RecyclerView.Adapter wrappedAdapter;
     private RecyclerViewDragDropManager recyclerViewDragDropManager;
 
+    private final WeakMethodReference<PlaylistDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, PlaylistDetailActivity::reload);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,24 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         setUpToolbar();
 
         LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
+    }
+
+    @Override
+    protected void onStop() {
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        reload();
     }
 
     @Override
@@ -205,8 +227,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
                 setToolbarTitle(playlist.name);
             }
         }
-
-        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -276,6 +296,10 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     public void onLoaderReset(Loader<ArrayList<Song>> loader) {
         if (adapter != null)
             adapter.swapDataSet(new ArrayList<>());
+    }
+
+    private void reload() {
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {
