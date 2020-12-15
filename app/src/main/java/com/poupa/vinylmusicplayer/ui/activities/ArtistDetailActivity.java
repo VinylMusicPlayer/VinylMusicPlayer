@@ -33,10 +33,12 @@ import com.poupa.vinylmusicplayer.adapter.album.HorizontalAlbumAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
@@ -132,6 +134,8 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         }
     };
 
+    private final WeakMethodReference<ArtistDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, ArtistDetailActivity::reload);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +151,24 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         setUpViews();
 
         LoaderManager.getInstance(this).initLoader(LOADER_ID, getIntent().getExtras(), this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
+    }
+
+    @Override
+    protected void onStop() {
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        reload();
     }
 
     @Override
@@ -427,12 +449,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
             albumRecyclerView.stopScroll();
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onMediaStoreChanged() {
-        super.onMediaStoreChanged();
-        reload();
     }
 
     @Override
