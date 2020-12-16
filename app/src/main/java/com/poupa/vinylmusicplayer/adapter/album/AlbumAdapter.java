@@ -204,9 +204,9 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
             case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
                 sectionName = dataSet.get(position).getArtistName();
                 break;
-            case SortOrder.AlbumSortOrder.ALBUM_YEAR:
+            case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
                 return MusicUtil.getYearString(dataSet.get(position).getYear());
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED:
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
                 Date date = new Date(1000 * dataSet.get(position).getDateAdded());
                 DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
                 sectionName = dateFormat.format(date);
