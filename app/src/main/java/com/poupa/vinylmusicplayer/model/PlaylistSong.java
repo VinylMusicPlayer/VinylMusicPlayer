@@ -2,6 +2,8 @@ package com.poupa.vinylmusicplayer.model;
 
 import android.os.Parcel;
 
+import java.util.Arrays;
+
 public class PlaylistSong extends Song {
     public static final PlaylistSong EMPTY_PLAYLIST_SONG = new PlaylistSong(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, "", -1, -1);
 

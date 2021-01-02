@@ -69,7 +69,7 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.ALBUM_ID, song.albumId);
             values.put(SongColumns.ALBUM_NAME, song.albumName);
             values.put(SongColumns.ARTIST_ID, song.artistId);
-            // TODO Dont do this ugly mege each time
+            // TODO Dont do this ugly merge each time
             values.put(SongColumns.ARTIST_NAME, MusicUtil.artistNamesMerge(song));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);

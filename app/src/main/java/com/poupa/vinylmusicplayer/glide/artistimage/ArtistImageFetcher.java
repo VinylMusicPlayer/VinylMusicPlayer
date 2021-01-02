@@ -16,7 +16,6 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
