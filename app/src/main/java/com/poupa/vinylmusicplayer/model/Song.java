@@ -4,13 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
-    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, "");
+    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""));
 
     public final long id;
     public String title;
@@ -23,15 +29,18 @@ public class Song implements Parcelable {
     public final long dateModified;
     public long albumId;
     public String albumName;
-    public long artistId;
-    public String artistName;
-    public String albumArtistName;
+
+    public long artistId; // TODO Rename to mainTrackArtistId
+    public static final int TRACK_ARTIST_MAIN = 0;
+    public List<String> artistNames = Arrays.asList("");
+
+    public String albumArtistName; // TODO Merge into the artistNames
     public String genre;
 
     private float replayGainTrack = Float.NaN;
     private float replayGainAlbum = Float.NaN;
 
-    public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, long artistId, String artistName) {
+    public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, long artistId, @NonNull List<String> artistNames) {
         this.id = id;
         this.title = title;
         this.trackNumber = trackNumber;
@@ -43,7 +52,7 @@ public class Song implements Parcelable {
         this.albumId = albumId;
         this.albumName = albumName;
         this.artistId = artistId;
-        this.artistName = artistName;
+        this.artistNames = artistNames;
         // Note: Ignore since it's not supported by MediaStore: discNumber, genre
     }
 
@@ -87,7 +96,10 @@ public class Song implements Parcelable {
         if (!TextUtils.equals(title, song.title)) return false;
         if (!TextUtils.equals(data, song.data)) return false;
         if (!TextUtils.equals(albumName, song.albumName)) return false;
-        if (!TextUtils.equals(artistName, song.artistName)) return false;
+        if (artistNames.size() != song.artistNames.size()) return false;
+        for (int i=0; i<artistNames.size(); ++i) {
+            if (!TextUtils.equals(artistNames.get(i), song.artistNames.get(i))) return false;
+        }
         // Note: Ignore since it's not supported by MediaStore: if (!TextUtils.equals(genre, song.genre)) return false;
 
         return true;
@@ -107,7 +119,8 @@ public class Song implements Parcelable {
         result = 31 * result + (int)albumId;
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
         result = 31 * result + (int)artistId;
-        result = 31 * result + (artistName != null ? artistName.hashCode() : 0);
+        // TODO Consider the whole artist list
+        result = 31 * result + artistNames.get(TRACK_ARTIST_MAIN).hashCode();
         // Note: Ignore since it's not supported by MediaStore: result = 31 * result + (genre != null ? genre.hashCode() : 0);
 
         return result;
@@ -128,7 +141,8 @@ public class Song implements Parcelable {
                 ", albumId=" + albumId +
                 ", albumName='" + albumName + '\'' +
                 ", artistId=" + artistId +
-                ", artistName='" + artistName + '\'' +
+                // TODO Consider the whole artist list
+                ", artistNames='" + artistNames.get(TRACK_ARTIST_MAIN) + '\'' +
                 ", genre='" + genre + '\'' +
                 '}';
     }
@@ -152,7 +166,7 @@ public class Song implements Parcelable {
         dest.writeLong(this.albumId);
         dest.writeString(this.albumName);
         dest.writeLong(this.artistId);
-        dest.writeString(this.artistName);
+        dest.writeStringList(this.artistNames);
         // Note: Ignore since it's not supported by MediaStore: dest.writeString(this.genre);
     }
 
@@ -169,7 +183,7 @@ public class Song implements Parcelable {
         this.albumId = in.readLong();
         this.albumName = in.readString();
         this.artistId = in.readLong();
-        this.artistName = in.readString();
+        in.readStringList(this.artistNames);
         // Note: Ignore since it's not supported by MediaStore: this.genre = in.readString();
     }
 

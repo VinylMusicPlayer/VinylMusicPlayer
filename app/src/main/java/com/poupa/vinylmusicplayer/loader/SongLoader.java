@@ -71,7 +71,7 @@ public class SongLoader {
     @NonNull
     private static Comparator<Song> getSortOrder() {
         Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
-        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistName, a2.artistName);
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistNames.get(Song.TRACK_ARTIST_MAIN), a2.artistNames.get(Song.TRACK_ARTIST_MAIN));
         Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
         Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
         Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
@@ -123,7 +123,7 @@ public class SongLoader {
         final long artistId = cursor.getLong(10);
         final String artistName = cursor.getString(11);
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, Arrays.asList(artistName));
 
         Discography discog = Discography.getInstance();
         return discog.getOrAddSong(song);

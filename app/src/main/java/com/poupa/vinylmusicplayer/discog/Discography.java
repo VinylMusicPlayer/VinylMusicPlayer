@@ -17,6 +17,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -162,7 +163,11 @@ public class Discography implements MusicServiceEventListener {
             }
 
             // Unicode normalization
-            song.artistName = StringUtil.unicodeNormalize(song.artistName);
+            ArrayList<String> artistNames = new ArrayList<>();
+            for (String name : song.artistNames) {
+                artistNames.add(StringUtil.unicodeNormalize(name));
+            }
+            song.artistNames = artistNames;
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
             song.title = StringUtil.unicodeNormalize(song.title);
             song.genre = StringUtil.unicodeNormalize(song.genre);
@@ -275,7 +280,8 @@ public class Discography implements MusicServiceEventListener {
             };
 
             song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistName = safeGetTag.apply(FieldKey.ARTIST);
+            song.artistNames  = MusicUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ARTIST));
+
             song.albumArtistName = safeGetTag.apply(FieldKey.ALBUM_ARTIST);
             song.title = safeGetTag.apply(FieldKey.TITLE);
             if (song.title.isEmpty()) {

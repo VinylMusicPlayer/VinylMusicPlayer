@@ -12,6 +12,8 @@ import com.poupa.vinylmusicplayer.model.Song;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author SC (soncaokim)
@@ -29,12 +31,6 @@ class MemCache {
     public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     public synchronized void addSong(@NonNull final Song song) {
-        // Merge artist by name
-        Artist artist = getOrCreateArtistByName(song);
-        if (!artist.albums.isEmpty() && (artist.getId() != song.artistId)) {
-            song.artistId = artist.getId();
-        }
-
         // Merge album by name
         Album album = getOrCreateAlbumByName(song);
         if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
@@ -51,7 +47,10 @@ class MemCache {
         }
 
         // Only sort albums after the song has been added
-        Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
+        List<Artist> artists = getOrCreateArtistByName(song);
+        for (Artist artist : artists) {
+            Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
+        }
 
         Collections.sort(album.songs,
                 (s1, s2) -> (s1.discNumber != s2.discNumber)
@@ -66,23 +65,26 @@ class MemCache {
         Song song = songsById.get(songId);
         if (song != null) {
             // Remove the song from linked Artist/Album cache
-            Artist artist = artistsById.get(song.artistId);
-            if (artist != null) {
-                assert(artist.albums != null);
-                for (Album album : artist.albums) {
-                    if (album.getId() == song.albumId) {
-                        assert(album.songs != null);
-                        album.songs.remove(song);
-                        if (album.songs.isEmpty()) {
-                            artist.albums.remove(album);
-                            albumsById.remove(song.albumId);
+            final List<String> artistNames = song.artistNames;
+            for (final String artistName : artistNames) {
+                Artist artist = artistsByName.get(artistName);
+                if (artist != null) {
+                    assert(artist.albums != null);
+                    for (Album album : artist.albums) {
+                        if (album.getId() == song.albumId) {
+                            assert(album.songs != null);
+                            album.songs.remove(song);
+                            if (album.songs.isEmpty()) {
+                                artist.albums.remove(album);
+                                albumsById.remove(song.albumId);
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
-                if (artist.albums.isEmpty()) {
-                    artistsById.remove(song.artistId);
-                    artistsByName.remove(song.artistName);
+                    if (artist.albums.isEmpty()) {
+                        artistsById.remove(artist.id);
+                        artistsByName.remove(artistName);
+                    }
                 }
             }
 
@@ -119,26 +121,43 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized Artist getOrCreateArtistByName(@NonNull final Song song) {
-        Artist artist = artistsByName.get(song.artistName);
-        if (artist == null) {
-            artist = new Artist(song.artistId, song.artistName);
+    private synchronized List<Artist> getOrCreateArtistByName(@NonNull final Song song) {
+        Function<String, Artist> getOrCreateArtist = (@NonNull final String artistName) -> {
+            Artist artist = artistsByName.get(artistName);
+            if (artist == null) {
+                long artistId = artistName.hashCode(); // TODO: It is not safe to consider this as an unique ID
+                artist = new Artist(artistId, artistName);
 
-            artistsByName.put(song.artistName, artist);
-            artistsById.put(song.artistId, artist);
+                artistsByName.put(artistName, artist);
+                artistsById.put(artistId, artist);
+            }
+            return artist;
+        };
+
+        ArrayList<Artist> artists = new ArrayList<>();
+        for (final String artistName : song.artistNames) {
+            artists.add(getOrCreateArtist.apply(artistName));
         }
-        return artist;
+
+        // Since the MediaStore artistId is disregarded, correct the link on the Song object
+        Artist mainArtist = artists.get(Song.TRACK_ARTIST_MAIN);
+        if (!mainArtist.albums.isEmpty() && (mainArtist.getId() != song.artistId)) {
+            song.artistId = mainArtist.getId();
+        }
+        return artists;
     }
 
     @NonNull
     private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
-        Artist artist = getOrCreateArtistByName(song);
-        for (Album album : artist.albums) {
-            // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
-            final String albumTitle = album.safeGetFirstSong().albumName;
+        List<Artist> artists = getOrCreateArtistByName(song);
+        for (Artist artist : artists) {
+            for (Album album : artist.albums) {
+                // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
+                final String albumTitle = album.safeGetFirstSong().albumName;
 
-            if (albumTitle.equals(song.albumName)) {
-                return album;
+                if (albumTitle.equals(song.albumName)) {
+                    return album;
+                }
             }
         }
 
@@ -148,7 +167,7 @@ class MemCache {
         if (album != null) {
             final String albumArtist = album.safeGetFirstSong().albumArtistName;
             if (TextUtils.equals(albumArtist, song.albumArtistName)) {
-                artist.albums.add(album);
+                for (Artist artist : artists) {artist.albums.add(album);}
                 return album;
             }
         }
@@ -156,7 +175,7 @@ class MemCache {
         album = new Album();
 
         albumsById.put(song.albumId, album);
-        artist.albums.add(album);
+        for (Artist artist : artists) {artist.albums.add(album);}
 
         return album;
     }

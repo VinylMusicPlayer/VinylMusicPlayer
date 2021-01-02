@@ -37,6 +37,7 @@ import org.jaudiotagger.tag.FieldKey;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -123,6 +124,19 @@ public class MusicUtil {
     public static String getSongCountString(@NonNull final Context context, int songCount) {
         final String songString = songCount == 1 ? context.getResources().getString(R.string.song) : context.getResources().getString(R.string.songs);
         return songCount + " " + songString; // TODO Make text localizable
+    }
+
+    public static final String MULTIPLE_ARTIST_NAME_SEPARATOR = ";";
+
+    @NonNull
+    public static List<String> artistNamesSplit(@NonNull final String names) {
+        // TODO Proceed to extract multiple values from a tag instead of text parsing here
+        return Arrays.asList(names.split(MULTIPLE_ARTIST_NAME_SEPARATOR));
+    }
+
+    @NonNull
+    public static String artistNamesMerge(@NonNull final Song song) {
+        return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR, song.artistNames.toArray(new String[0]));
     }
 
     @NonNull

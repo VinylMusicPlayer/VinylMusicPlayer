@@ -9,6 +9,7 @@ import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
 import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        Function<Album, String> getArtistName = (a) -> a.safeGetFirstSong().artistName;
+        Function<Album, String> getArtistName = (a) -> a.safeGetFirstSong().artistNames.get(Song.TRACK_ARTIST_MAIN);
         Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
 
         Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(

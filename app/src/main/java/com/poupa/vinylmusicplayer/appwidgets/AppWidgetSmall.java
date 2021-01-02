@@ -30,9 +30,9 @@ public class AppWidgetSmall extends BaseAppWidget {
         setTitlesArtwork(service);
 
         final Song song = service.getCurrentSong();
-
-        if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(song.artistName)) &&
-                TextUtils.isEmpty(song.title) || TextUtils.isEmpty(song.artistName)) {
+        final String artistName = song.artistNames.get(Song.TRACK_ARTIST_MAIN);
+        if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistName)) &&
+                TextUtils.isEmpty(song.title) || TextUtils.isEmpty(artistName)) {
             appWidgetView.setTextViewText(R.id.text_separator, "");
         } else {
             appWidgetView.setTextViewText(R.id.text_separator, "•");

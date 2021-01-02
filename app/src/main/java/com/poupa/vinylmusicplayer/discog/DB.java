@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +69,8 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.ALBUM_ID, song.albumId);
             values.put(SongColumns.ALBUM_NAME, song.albumName);
             values.put(SongColumns.ARTIST_ID, song.artistId);
-            values.put(SongColumns.ARTIST_NAME, song.artistName);
+            // TODO Dont do this ugly mege each time
+            values.put(SongColumns.ARTIST_NAME, MusicUtil.artistNamesMerge(song));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
@@ -148,7 +150,7 @@ class DB extends SQLiteOpenHelper {
                 final long albumId = cursor.getLong(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
                 final long artistId = cursor.getLong(++columnIndex);
-                final String artistName = cursor.getString(++columnIndex);
+                final String artistNames = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
                 final long dateModified = cursor.getLong(++columnIndex);
@@ -173,7 +175,8 @@ class DB extends SQLiteOpenHelper {
                         albumId,
                         albumName,
                         artistId,
-                        artistName);
+                        // TODO Dont do this ugly parsing each time
+                        MusicUtil.artistNamesSplit(artistNames));
                 song.discNumber = discNumber;
                 song.setReplayGainValues(replayGainTrack, replayGainAlbum);
                 song.genre = genre;
