@@ -36,7 +36,8 @@ public class AlbumSongAdapter extends SongAdapter {
 
     @Override
     protected String getSongText(Song song) {
-        final String artist = MusicUtil.isArtistNameUnknown(song.artistName) ? Artist.UNKNOWN_ARTIST_DISPLAY_NAME : song.artistName;
+        String artist = song.artistNames.get(Song.TRACK_ARTIST_MAIN);
+        if (MusicUtil.isArtistNameUnknown(artist)) artist = Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
         return MusicUtil.buildInfoString(
                 MusicUtil.getReadableDurationString(song.duration),
                 artist);

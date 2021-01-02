@@ -452,7 +452,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         titleTextView.setText(artist.getName());
         songCountTextView.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));
         albumCountTextView.setText(MusicUtil.getAlbumCountString(this, artist.getAlbumCount()));
-        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(this, artist.getSongs())));
+        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.getSongs())));
 
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);

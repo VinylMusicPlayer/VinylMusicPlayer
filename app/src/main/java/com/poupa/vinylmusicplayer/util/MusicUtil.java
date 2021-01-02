@@ -89,26 +89,18 @@ public class MusicUtil {
         int songCount = album.getSongCount();
 
         return MusicUtil.buildInfoString(
-            album.getArtistName(),
+            album.getArtistName(), // TODO Get the album artist instead?
             MusicUtil.getSongCountString(context, songCount)
         );
     }
 
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
-        if (PreferenceUtil.getInstance().showSongNumber()) {
-
-            return MusicUtil.buildInfoString(
-                    MusicUtil.getTrackNumberInfoString(song),
-                    song.artistName,
-                    song.albumName
-            );
-        } else {
-            return MusicUtil.buildInfoString(
-                    song.artistName,
-                    song.albumName
-            );
-        }
+        return MusicUtil.buildInfoString(
+                PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
+                MusicUtil.artistNamesMerge(song),
+                song.albumName
+        );
     }
 
     @NonNull
@@ -119,7 +111,7 @@ public class MusicUtil {
 
     @NonNull
     public static String getPlaylistInfoString(@NonNull final Context context, @NonNull List<Song> songs) {
-        final long duration = getTotalDuration(context, songs);
+        final long duration = getTotalDuration(songs);
 
         return MusicUtil.buildInfoString(
             MusicUtil.getSongCountString(context, songs.size()),
@@ -130,13 +122,13 @@ public class MusicUtil {
     @NonNull
     public static String getSongCountString(@NonNull final Context context, int songCount) {
         final String songString = songCount == 1 ? context.getResources().getString(R.string.song) : context.getResources().getString(R.string.songs);
-        return songCount + " " + songString;
+        return songCount + " " + songString; // TODO Make text localizable
     }
 
     @NonNull
     public static String getAlbumCountString(@NonNull final Context context, int albumCount) {
         final String albumString = albumCount == 1 ? context.getResources().getString(R.string.album) : context.getResources().getString(R.string.albums);
-        return albumCount + " " + albumString;
+        return albumCount + " " + albumString; // TODO Make text localizable
     }
 
     @NonNull
@@ -144,7 +136,7 @@ public class MusicUtil {
         return year > 0 ? String.valueOf(year) : "-";
     }
 
-    public static long getTotalDuration(@NonNull final Context context, @NonNull List<Song> songs) {
+    public static long getTotalDuration(@NonNull List<Song> songs) {
         long duration = 0;
         for (int i = 0; i < songs.size(); i++) {
             duration += songs.get(i).duration;
@@ -171,52 +163,28 @@ public class MusicUtil {
      * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
      */
     @NonNull
-    public static String buildInfoString(@Nullable final String string1, @Nullable final String string2)
+    public static String buildInfoString(final String... values)
     {
-        // Skip empty strings
-        if (TextUtils.isEmpty(string1)) {
-            //noinspection ConstantConditions
-            return TextUtils.isEmpty(string2) ? "" : string2;
-        }
-        if (TextUtils.isEmpty(string2)) {
-            //noinspection ConstantConditions
-            return TextUtils.isEmpty(string1) ? "" : string1;
-        }
-
-        return string1 + "  •  " + string2;
+        return MusicUtil.buildInfoStringImpl("  •  ", values);
     }
 
-    /**
-     * Build a concatenated string from the provided arguments
-     * The intended purpose is to show extra annotations
-     * to a music library item.
-     * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
-     */
     @NonNull
-    public static String buildInfoString(@Nullable final String string1, @Nullable final String string2, @NonNull final String string3)
+    private static String buildInfoStringImpl(@NonNull final String separator, @NonNull final String[] values)
     {
-        // Skip empty strings
-        if (TextUtils.isEmpty(string1)) {
-            //noinspection ConstantConditions
-            return TextUtils.isEmpty(string2) ? "" : string2;
+        StringBuilder result = new StringBuilder();
+        for (String value : values) {
+            if (TextUtils.isEmpty(value)) continue;
+            if (result.length() > 0) result.append(separator);
+            result.append(value);
         }
-        if (TextUtils.isEmpty(string2)) {
-            //noinspection ConstantConditions
-            return TextUtils.isEmpty(string1) ? "" : string1;
-        }
-        if (TextUtils.isEmpty(string3)) {
-            //noinspection ConstantConditions
-            return TextUtils.isEmpty(string1) ? "" : string3;
-        }
-
-        return string1 + "  •  " + string2 + "  •  " + string3;
+        return result.toString();
     }
 
     @NonNull
     public static String getTrackNumberInfoString(@NonNull final Song song) {
         String result = "";
         if (song.discNumber > 0) {
-            result = String.valueOf(song.discNumber) + "-";
+            result = song.discNumber + "-";
         }
         if (song.trackNumber > 0) {
             result += String.valueOf(song.trackNumber);
@@ -273,7 +241,7 @@ public class MusicUtil {
         };
 
         // Split the query into multiple batches, and merge the resulting cursors
-        int batchStart = 0;
+        int batchStart;
         int batchEnd = 0;
         final int batchSize = 1000000 / 10; // 10^6 being the SQLite limit on the query length in bytes, 10 being the max number of digits in an int, used to store the track ID
         final int songCount = songs.size();
@@ -339,14 +307,11 @@ public class MusicUtil {
 
         activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-        activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
+        activity.runOnUiThread(() -> {
+            Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
+            if (callback != null) {
+                callback.run();
+            }
         });
     }
 
