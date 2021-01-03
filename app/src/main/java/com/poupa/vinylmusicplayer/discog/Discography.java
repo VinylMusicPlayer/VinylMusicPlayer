@@ -165,7 +165,7 @@ public class Discography implements MusicServiceEventListener {
             // Unicode normalization
             ArrayList<String> artistNames = new ArrayList<>();
             for (String name : song.artistNames) {
-                artistNames.add(StringUtil.unicodeNormalize(name));
+                artistNames.add(StringUtil.unicodeNormalize(name.trim()));
             }
             song.artistNames = artistNames;
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
