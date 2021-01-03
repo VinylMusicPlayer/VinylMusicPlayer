@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -131,7 +132,12 @@ public class MusicUtil {
     @NonNull
     public static List<String> artistNamesSplit(@NonNull final String names) {
         // TODO Proceed to extract multiple values from a tag instead of text parsing here
-        return Arrays.asList(names.split(MULTIPLE_ARTIST_NAME_SEPARATOR));
+        List<String> namesSplit = Arrays.asList(names.split(MULTIPLE_ARTIST_NAME_SEPARATOR));
+        ArrayList<String> result = new ArrayList<>();
+        for (String name : namesSplit) {
+            result.add(name.trim());
+        }
+        return result;
     }
 
     @NonNull
