@@ -147,7 +147,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void addSong(@NonNull Song song) {
+    private void addSong(@NonNull Song song) {
         new AddSongAsyncTask().execute(song);
     }
 
@@ -316,7 +316,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void removeSongById(long songId) {
+    private void removeSongById(long songId) {
         cache.removeSongById(songId);
         database.removeSongById(songId);
 
