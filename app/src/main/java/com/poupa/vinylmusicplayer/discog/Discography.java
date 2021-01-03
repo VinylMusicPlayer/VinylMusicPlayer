@@ -162,10 +162,18 @@ public class Discography implements MusicServiceEventListener {
                 extractTags(song);
             }
 
+            // As the song metadata can come from MediaStore (no multi-artist support)
+            // or from our own ID3 extractor (which handles multi-artist support)
+            // -> split if is not already done
+            final boolean possiblyNotSplit = (song.artistNames.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
+            if (possiblyNotSplit) {
+                song.artistNames = MusicUtil.artistNamesSplit(song.artistNames.get(0));
+            }
+
             // Unicode normalization
             ArrayList<String> artistNames = new ArrayList<>();
             for (String name : song.artistNames) {
-                artistNames.add(StringUtil.unicodeNormalize(name.trim()));
+                artistNames.add(StringUtil.unicodeNormalize(name));
             }
             song.artistNames = artistNames;
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
