@@ -16,7 +16,9 @@ import androidx.annotation.LayoutRes;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.MiniPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
@@ -50,6 +52,8 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
     private ValueAnimator navigationBarColorAnimator;
     private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+
+    private final WeakMethodReference<AbsSlidingMusicPanelActivity> onDiscographyChanged = new WeakMethodReference<>(this, AbsSlidingMusicPanelActivity::reload);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +104,24 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
+    }
+
+    @Override
+    protected void onStop() {
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
+        super.onStop();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (currentNowPlayingScreen != PreferenceUtil.getInstance().getNowPlayingScreen()) {
             postRecreate();
         }
+        reload();
     }
 
     public void setAntiDragView(View antiDragView) {
@@ -112,6 +129,8 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     protected abstract View createContentView();
+
+    protected abstract void reload();
 
     @Override
     public void onServiceConnected() {

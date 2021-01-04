@@ -85,24 +85,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Discography.getInstance().addChangedListener(onDiscographyChanged);
-    }
-
-    @Override
-    protected void onStop() {
-        Discography.getInstance().removeChangedListener(onDiscographyChanged);
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        reload();
-    }
-
-    @Override
     protected View createContentView() {
         return wrapSlidingMusicPanel(R.layout.activity_genre_detail);
     }
@@ -217,7 +199,8 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
             adapter.swapDataSet(new ArrayList<>());
     }
 
-    private void reload() {
+    @Override
+    protected void reload() {
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 

@@ -370,6 +370,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         }
     }
 
+    @Override
+    protected void reload() {}
+
     public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();
     }
