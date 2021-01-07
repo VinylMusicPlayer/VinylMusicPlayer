@@ -326,7 +326,7 @@
     <string name="saf_guide_slide3_title">Appuyé sur le boutton \'selectionner\' en bas de l\'écran</string>
     <string name="saf_guide_slide3_description">N\'ouvrez aucun sous-dossier</string>
     <string name="albums_label">Albums</string>
-    <string name="artists_label">Aritstes</string>
+    <string name="artists_label">Artistes</string>
     <string name="playlists_label">Playlists</string>
     <string name="history_label">Historique</string>
     <string name="queue_label">File d\'attente</string>
