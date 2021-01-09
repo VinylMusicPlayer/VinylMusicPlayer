@@ -142,6 +142,7 @@ public class MusicUtil {
 
     @NonNull
     public static String artistNamesMerge(@NonNull final Song song) {
+        if (song.artistNames.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
         return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR, song.artistNames.toArray(new String[0]));
     }
 
