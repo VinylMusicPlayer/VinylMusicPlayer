@@ -73,8 +73,6 @@ public class MusicUtil {
         }
     }
 
-
-
     @NonNull
     public static String getArtistInfoString(@NonNull final Context context, @NonNull final Artist artist) {
         int albumCount = artist.getAlbumCount();

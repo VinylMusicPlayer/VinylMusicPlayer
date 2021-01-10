@@ -150,12 +150,15 @@ class MemCache {
     @NonNull
     private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
         List<Artist> artists = getOrCreateArtistByName(song);
+
+        // ---- Find by artist and by album name
         Artist mainArtist = artists.get(Song.TRACK_ARTIST_MAIN);
         for (Album album : mainArtist.albums) {
             // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
             final String albumTitle = album.safeGetFirstSong().albumName;
 
             if (albumTitle.equals(song.albumName)) {
+                // attach to the other artists
                 for (Artist artist : artists) {
                     if (artist == mainArtist) continue;
                     if (artist.albums.contains(album)) continue;
@@ -166,18 +169,23 @@ class MemCache {
             }
         }
 
-//        // For multi-artist album, there might be already an album created
-//        // Reuse the album if it has the same albumArtist
-//        Album album = albumsById.get(song.albumId);
-//        if (album != null) {
-//            final String albumArtist = album.safeGetFirstSong().albumArtistName;
-//            if (TextUtils.equals(albumArtist, song.albumArtistName)) {
-//                for (Artist artist : artists) {artist.albums.add(album);}
-//                return album;
-//            }
-//        }
+        // ---- For multi-artist album (i.e compilation ones), there might be already an album created
+        // Reuse the album if it has the same albumArtist
+        Album album = albumsById.get(song.albumId);
+        if (album != null) {
+            final String albumArtist = album.safeGetFirstSong().albumArtistName;
+            if (TextUtils.equals(albumArtist, song.albumArtistName)) {
+                for (Artist artist : artists) {
+                    if (artist.albums.contains(album)) continue;
 
-        Album album = new Album();
+                    artist.albums.add(album);
+                }
+                return album;
+            }
+        }
+
+        // ---- None found
+        album = new Album();
 
         albumsById.put(song.albumId, album);
         for (Artist artist : artists) {artist.albums.add(album);}
