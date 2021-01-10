@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class PlaylistSongLoader {
     private final static Discography discography = Discography.getInstance();
@@ -46,10 +48,11 @@ public class PlaylistSongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        final String artistName = cursor.getString(11);
+        // TODO Stop doing this ugly split each time
+        final List<String> artistNames = MusicUtil.artistNamesSplit(cursor.getString(11));
         final int idInPlaylist = cursor.getInt(12);
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, Arrays.asList(artistName));
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
 
         song = discography.getOrAddSong(song);
 
@@ -65,7 +68,7 @@ public class PlaylistSongLoader {
                 song.albumId,
                 song.albumName,
                 song.artistId,
-                song.artistNames.get(Song.TRACK_ARTIST_MAIN),
+                song.artistNames,
                 playlistId,
                 idInPlaylist);
         return playlistSong;

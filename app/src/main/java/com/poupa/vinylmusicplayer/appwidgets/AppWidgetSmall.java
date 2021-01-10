@@ -7,6 +7,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 public class AppWidgetSmall extends BaseAppWidget {
     public static final String NAME = "app_widget_small";
@@ -30,7 +31,7 @@ public class AppWidgetSmall extends BaseAppWidget {
         setTitlesArtwork(service);
 
         final Song song = service.getCurrentSong();
-        final String artistName = song.artistNames.get(Song.TRACK_ARTIST_MAIN);
+        final String artistName = MusicUtil.artistNamesMerge(song);
         if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistName)) &&
                 TextUtils.isEmpty(song.title) || TextUtils.isEmpty(artistName)) {
             appWidgetView.setTextViewText(R.id.text_separator, "");

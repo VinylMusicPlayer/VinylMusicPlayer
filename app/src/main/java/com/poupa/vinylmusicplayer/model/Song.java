@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,8 +119,9 @@ public class Song implements Parcelable {
         result = 31 * result + (int)albumId;
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
         result = 31 * result + (int)artistId;
-        // TODO Consider the whole artist list
-        result = 31 * result + artistNames.get(TRACK_ARTIST_MAIN).hashCode();
+        for (String artistName : artistNames) {
+            result = 31 * result + artistName.hashCode();
+        }
         // Note: Ignore since it's not supported by MediaStore: result = 31 * result + (genre != null ? genre.hashCode() : 0);
 
         return result;
@@ -142,7 +143,7 @@ public class Song implements Parcelable {
                 ", albumName='" + albumName + '\'' +
                 ", artistId=" + artistId +
                 // TODO Consider the whole artist list
-                ", artistNames='" + artistNames.get(TRACK_ARTIST_MAIN) + '\'' +
+                ", artistNames='" + MusicUtil.artistNamesMerge(this) + '\'' +
                 ", genre='" + genre + '\'' +
                 '}';
     }

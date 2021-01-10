@@ -15,6 +15,7 @@ import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class SongLoader {
     @NonNull
     private static Comparator<Song> getSortOrder() {
         Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
-        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistNames.get(Song.TRACK_ARTIST_MAIN), a2.artistNames.get(Song.TRACK_ARTIST_MAIN));
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(MusicUtil.artistNamesMerge(a1), MusicUtil.artistNamesMerge(a2));
         Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
         Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
         Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
@@ -121,9 +122,10 @@ public class SongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        final String artistName = cursor.getString(11);
+        // TODO Dont do this ugly split every time
+        final List<String> artistNames = MusicUtil.artistNamesSplit(cursor.getString(11));
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, Arrays.asList(artistName));
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
 
         Discography discog = Discography.getInstance();
         return discog.getOrAddSong(song);

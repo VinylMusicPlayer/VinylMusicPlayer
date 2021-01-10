@@ -151,41 +151,40 @@ class MemCache {
     private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
         List<Artist> artists = getOrCreateArtistByName(song);
 
-        // ---- Find by artist and by album name
-        Artist mainArtist = artists.get(Song.TRACK_ARTIST_MAIN);
-        for (Album album : mainArtist.albums) {
-            // dont rely on the Album.getTitle since it goes through the 'unknown album' filter
-            final String albumTitle = album.safeGetFirstSong().albumName;
-
-            if (albumTitle.equals(song.albumName)) {
-                // attach to the other artists
+        // ---- For multi-artist album (i.e compilation ones), there might be already an album created
+        Album albumById = albumsById.get(song.albumId);
+        if (albumById != null) {
+            final String albumArtist = albumById.safeGetFirstSong().albumArtistName;
+            final String albumName = albumById.safeGetFirstSong().albumName;
+            if (TextUtils.equals(albumArtist, song.albumArtistName) && TextUtils.equals(albumName, song.albumName)) {
                 for (Artist artist : artists) {
-                    if (artist == mainArtist) continue;
-                    if (artist.albums.contains(album)) continue;
+                    if (artist.albums.contains(albumById)) continue;
 
-                    artist.albums.add(album);
+                    artist.albums.add(albumById);
                 }
-                return album;
+                return albumById;
             }
         }
 
-        // ---- For multi-artist album (i.e compilation ones), there might be already an album created
-        // Reuse the album if it has the same albumArtist
-        Album album = albumsById.get(song.albumId);
-        if (album != null) {
-            final String albumArtist = album.safeGetFirstSong().albumArtistName;
-            if (TextUtils.equals(albumArtist, song.albumArtistName)) {
-                for (Artist artist : artists) {
-                    if (artist.albums.contains(album)) continue;
+        // ---- Find by album name
+        for (Artist artist : artists) {
+            for (Album artistAlbum : artist.albums) {
+                final String albumTitle = artistAlbum.safeGetFirstSong().albumName;
+                if (albumTitle.equals(song.albumName)) {
+                    // attach to the other artists
+                    for (Artist otherArtist : artists) {
+                        if (otherArtist == artist) continue;
+                        if (otherArtist.albums.contains(artistAlbum)) continue;
 
-                    artist.albums.add(album);
+                        otherArtist.albums.add(artistAlbum);
+                    }
+                    return artistAlbum;
                 }
-                return album;
             }
         }
 
         // ---- None found
-        album = new Album();
+        Album album = new Album();
 
         albumsById.put(song.albumId, album);
         for (Artist artist : artists) {artist.albums.add(album);}

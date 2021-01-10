@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,7 +27,7 @@ public class M3UWriter implements M3UConstants {
             bw.write(HEADER);
             for (Song song : songs) {
                 bw.newLine();
-                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + song.artistNames.get(Song.TRACK_ARTIST_MAIN) + " - " + song.title);
+                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + MusicUtil.artistNamesMerge(song) + " - " + song.title);
                 bw.newLine();
                 bw.write(song.data);
             }

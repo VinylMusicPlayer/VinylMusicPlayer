@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 
@@ -175,7 +176,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     values.put(AudioColumns.ALBUM_ID, song.albumId);
                     values.put(AudioColumns.ALBUM, song.albumName);
                     values.put(AudioColumns.ARTIST_ID, song.artistId);
-                    values.put(AudioColumns.ARTIST, song.artistNames.get(Song.TRACK_ARTIST_MAIN));
+                    values.put(AudioColumns.ARTIST, MusicUtil.artistNamesMerge(song));
 
                     database.insert(tableName, null, values);
                 }

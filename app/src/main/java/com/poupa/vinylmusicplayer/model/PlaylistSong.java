@@ -3,15 +3,16 @@ package com.poupa.vinylmusicplayer.model;
 import android.os.Parcel;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class PlaylistSong extends Song {
-    public static final PlaylistSong EMPTY_PLAYLIST_SONG = new PlaylistSong(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, "", -1, -1);
+    public static final PlaylistSong EMPTY_PLAYLIST_SONG = new PlaylistSong(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""), -1, -1);
 
     public final long playlistId;
     public final long idInPlayList;
 
-    public PlaylistSong(long id, String title, int trackNumber, int year, long duration, String data, int dateAdded, int dateModified, long albumId, String albumName, long artistId, String artistName, final long playlistId, final long idInPlayList) {
-        super(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, Arrays.asList(artistName));
+    public PlaylistSong(long id, String title, int trackNumber, int year, long duration, String data, int dateAdded, int dateModified, long albumId, String albumName, long artistId, List<String> artistNames, final long playlistId, final long idInPlayList) {
+        super(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
         this.playlistId = playlistId;
         this.idInPlayList = idInPlayList;
     }

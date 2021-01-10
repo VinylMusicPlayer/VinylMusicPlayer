@@ -46,7 +46,7 @@ public class Album implements Parcelable {
         final Song song = safeGetFirstSong();
         String name = song.albumArtistName;
         if (TextUtils.isEmpty(name)) {
-            name = song.artistNames.get(Song.TRACK_ARTIST_MAIN);
+            name = MusicUtil.artistNamesMerge(song);
         }
         if (MusicUtil.isArtistNameUnknown(name)) {
             return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
