@@ -64,23 +64,42 @@ class MemCache {
     public synchronized void removeSongById(long songId) {
         Song song = songsById.get(songId);
         if (song != null) {
-            // Remove the song from linked Artist/Album cache
+            // ---- Remove the song from linked Artist/Album cache
             final List<String> artistNames = song.artistNames;
+            Album impactedAlbum = null;
             for (final String artistName : artistNames) {
                 Artist artist = artistsByName.get(artistName);
-                if (artist != null) {
-                    assert(artist.albums != null);
-                    for (Album album : artist.albums) {
-                        if (album.getId() == song.albumId) {
-                            assert(album.songs != null);
-                            album.songs.remove(song);
-                            if (album.songs.isEmpty()) {
-                                artist.albums.remove(album);
-                                albumsById.remove(song.albumId);
-                            }
-                            break;
-                        }
+                for (Album album : artist.albums) {
+                    if (album.getId() == song.albumId) {
+                        impactedAlbum = album;
+                        break;
                     }
+                }
+                if (impactedAlbum != null) {
+                    // there is only one impacted album
+                    break;
+                }
+            }
+            impactedAlbum.songs.remove(song);
+            if (impactedAlbum.songs.isEmpty()) {
+                albumsById.remove(song.albumId);
+            }
+
+            // Due to the approach to handle multi-artist per song
+            // different artists can be linked to the same album.
+            // As soon as a multi-artist song is removed from an album,
+            // the artist-album link may become obsolete
+            for (final String artistName : artistNames) {
+                boolean isArtistAlbumLinkNeeded = false;
+                for (Song albumSong : impactedAlbum.songs) {
+                    if (albumSong.artistNames.contains(artistName)) {
+                        isArtistAlbumLinkNeeded = true;
+                        break;
+                    }
+                }
+                if (!isArtistAlbumLinkNeeded) {
+                    Artist artist = artistsByName.get(artistName);
+                    artist.albums.remove(impactedAlbum);
                     if (artist.albums.isEmpty()) {
                         artistsById.remove(artist.id);
                         artistsByName.remove(artistName);
@@ -88,7 +107,7 @@ class MemCache {
                 }
             }
 
-            // Remove song from Genre cache
+            // ---- Remove song from Genre cache
             Genre genre = genresByName.get(song.genre);
             if (genre != null) {
                 ArrayList<Song> songs = songsByGenreId.get(genre.id);
@@ -103,7 +122,7 @@ class MemCache {
                 }
             }
 
-            // Remove the song from the memory cache
+            // ---- Remove the song from the memory cache
             songsById.remove(songId);
         }
     }
