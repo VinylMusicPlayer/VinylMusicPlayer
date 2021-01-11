@@ -89,7 +89,7 @@ public class MusicUtil {
         int songCount = album.getSongCount();
 
         return MusicUtil.buildInfoString(
-            album.getArtistName(), // TODO Get the album artist instead?
+            album.getArtistName(),
             MusicUtil.getSongCountString(context, songCount)
         );
     }

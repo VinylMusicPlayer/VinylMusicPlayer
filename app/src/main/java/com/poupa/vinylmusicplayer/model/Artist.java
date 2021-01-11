@@ -58,11 +58,6 @@ public class Artist implements Parcelable {
         return songs;
     }
 
-    @NonNull
-    public Album safeGetFirstAlbum() {
-        return albums.isEmpty() ? new Album() : albums.get(0);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,12 +65,13 @@ public class Artist implements Parcelable {
 
         Artist artist = (Artist) o;
 
+        // TODO Dont consider id and name?
         return albums != null ? albums.equals(artist.albums) : artist.albums == null;
-
     }
 
     @Override
     public int hashCode() {
+        // TODO Dont consider id and name?
         return albums != null ? albums.hashCode() : 0;
     }
 
@@ -85,7 +81,6 @@ public class Artist implements Parcelable {
                 "albums=" + albums +
                 '}';
     }
-
 
     @Override
     public int describeContents() {

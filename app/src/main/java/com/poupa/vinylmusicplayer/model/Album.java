@@ -39,6 +39,7 @@ public class Album implements Parcelable {
     }
 
     public long getArtistId() {
+        // TODO Return the albumArtist instead
         return safeGetFirstSong().artistId;
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Song implements Parcelable {
     public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""));
-    public static final int TRACK_ARTIST_MAIN = 0;
+    //public static final int TRACK_ARTIST_MAIN = 0;
 
     public final long id;
 
@@ -25,7 +25,7 @@ public class Song implements Parcelable {
     public String albumName;
     public long albumId;
     public List<String> artistNames = Arrays.asList("");
-    public long artistId; // TODO Rename to mainTrackArtistId
+    public long artistId;
     public final String data;
     public final long dateAdded;
     public final long dateModified;
