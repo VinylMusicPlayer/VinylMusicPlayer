@@ -31,7 +31,7 @@ public class Playlist implements Parcelable {
     @NonNull
     public String getInfoString(@NonNull Context context) {
         int songCount = getSongs(context).size();
-        return MusicUtil.buildInfoString(MusicUtil.getSongCountString(context, songCount));
+        return MusicUtil.getSongCountString(context, songCount);
     }
 
     @Override

@@ -122,7 +122,7 @@ public class MusicUtil {
     @NonNull
     public static String getSongCountString(@NonNull final Context context, int songCount) {
         final String songString = songCount == 1 ? context.getResources().getString(R.string.song) : context.getResources().getString(R.string.songs);
-        return songCount + " " + songString; // TODO Make text localizable
+        return songCount + " " + songString;
     }
 
     public static final String MULTIPLE_ARTIST_NAME_SEPARATOR = ";";
