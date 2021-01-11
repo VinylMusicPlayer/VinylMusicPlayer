@@ -17,43 +17,62 @@ import java.util.List;
  */
 public class Song implements Parcelable {
     public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""));
+    public static final int TRACK_ARTIST_MAIN = 0;
 
     public final long id;
-    public String title;
-    public int trackNumber;
-    public int discNumber = 0;
-    public int year;
-    public final long duration;
+
+    public String albumArtistName; // TODO Merge into the artistNames
+    public String albumName;
+    public long albumId;
+    public List<String> artistNames = Arrays.asList("");
+    public long artistId; // TODO Rename to mainTrackArtistId
     public final String data;
     public final long dateAdded;
     public final long dateModified;
-    public long albumId;
-    public String albumName;
-
-    public long artistId; // TODO Rename to mainTrackArtistId
-    public static final int TRACK_ARTIST_MAIN = 0;
-    public List<String> artistNames = Arrays.asList("");
-
-    public String albumArtistName; // TODO Merge into the artistNames
+    public int discNumber = 0;
+    public final long duration;
     public String genre;
-
-    private float replayGainTrack = Float.NaN;
     private float replayGainAlbum = Float.NaN;
+    private float replayGainTrack = Float.NaN;
+    public String title;
+    public int trackNumber;
+    public int year;
 
     public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, long artistId, @NonNull List<String> artistNames) {
         this.id = id;
-        this.title = title;
-        this.trackNumber = trackNumber;
-        this.year = year;
-        this.duration = duration;
+        this.albumName = albumName;
+        this.albumId = albumId;
+        this.artistNames = artistNames;
+        this.artistId = artistId;
         this.data = data;
         this.dateAdded = dateAdded;
         this.dateModified = dateModified;
-        this.albumId = albumId;
-        this.albumName = albumName;
-        this.artistId = artistId;
-        this.artistNames = artistNames;
-        // Note: Ignore since it's not supported by MediaStore: discNumber, genre
+        this.duration = duration;
+        this.title = title;
+        this.trackNumber = trackNumber;
+        this.year = year;
+        // Note: Skip following fields since they are not supported by MediaStore:
+        // discNumber, genre, albumArtistName, replayGainTrack, replayGainAlbum
+    }
+
+    public Song(final @NonNull Song song) {
+        this.id = song.id;
+        this.albumArtistName = song.albumArtistName;
+        this.albumName = song.albumName;
+        this.albumId = song.albumId;
+        this.artistNames = song.artistNames;
+        this.artistId = song.artistId;
+        this.data = song.data;
+        this.dateAdded = song.dateAdded;
+        this.dateModified = song.dateModified;
+        this.discNumber = song.discNumber;
+        this.duration = song.duration;
+        this.genre = song.genre;
+        this.replayGainAlbum = song.replayGainAlbum;
+        this.replayGainTrack = song.replayGainTrack;
+        this.title = song.title;
+        this.trackNumber = song.trackNumber;
+        this.year = song.year;
     }
 
     public void setReplayGainValues(float track, float album) {
@@ -84,23 +103,30 @@ public class Song implements Parcelable {
 
         Song song = (Song) o;
 
+        // Compare numerical fields first
         if (id != song.id) return false;
-        if (trackNumber != song.trackNumber) return false;
-        // Note: Ignore since it's not supported by MediaStore: if (discNumber != song.discNumber) return false;
-        if (year != song.year) return false;
-        if (duration != song.duration) return false;
-        if (dateAdded != song.dateAdded) return false;
-        if (dateModified != song.dateModified) return false;
         if (albumId != song.albumId) return false;
         if (artistId != song.artistId) return false;
-        if (!TextUtils.equals(title, song.title)) return false;
-        if (!TextUtils.equals(data, song.data)) return false;
+        if (dateAdded != song.dateAdded) return false;
+        if (dateModified != song.dateModified) return false;
+        if (discNumber != song.discNumber) return false;
+        if (duration != song.duration) return false;
+        if (trackNumber != song.trackNumber) return false;
+        if (year != song.year) return false;
+
+        // Note: Skip following fields since floating point comparison is not precise:
+        // replayGainTrack, replayGainAlbum
+
+        // Compare object fields
+        if (!TextUtils.equals(albumArtistName, song.albumArtistName)) return false;
         if (!TextUtils.equals(albumName, song.albumName)) return false;
         if (artistNames.size() != song.artistNames.size()) return false;
         for (int i=0; i<artistNames.size(); ++i) {
             if (!TextUtils.equals(artistNames.get(i), song.artistNames.get(i))) return false;
         }
-        // Note: Ignore since it's not supported by MediaStore: if (!TextUtils.equals(genre, song.genre)) return false;
+        if (!TextUtils.equals(data, song.data)) return false;
+        if (!TextUtils.equals(genre, song.genre)) return false;
+        if (!TextUtils.equals(title, song.title)) return false;
 
         return true;
     }
@@ -108,21 +134,22 @@ public class Song implements Parcelable {
     @Override
     public int hashCode() {
         int result = (int)id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + trackNumber;
-        // Note: Ignore since it's not supported by MediaStore: result = 31 * result + discNumber;
-        result = 31 * result + year;
-        result = 31 * result + (int) (duration ^ (duration >>> 32));
-        result = 31 * result + (data != null ? data.hashCode() : 0);
-        result = 31 * result + (int) (dateAdded ^ (dateAdded >>> 32));
-        result = 31 * result + (int) (dateModified ^ (dateModified >>> 32));
-        result = 31 * result + (int)albumId;
+        result = 31 * result + (albumArtistName != null ? albumArtistName.hashCode() : 0);
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
-        result = 31 * result + (int)artistId;
+        result = 31 * result + (int)albumId;
         for (String artistName : artistNames) {
             result = 31 * result + artistName.hashCode();
         }
-        // Note: Ignore since it's not supported by MediaStore: result = 31 * result + (genre != null ? genre.hashCode() : 0);
+        result = 31 * result + (int)artistId;
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (int) (dateAdded ^ (dateAdded >>> 32));
+        result = 31 * result + (int) (dateModified ^ (dateModified >>> 32));
+        result = 31 * result + discNumber;
+        result = 31 * result + (int) (duration ^ (duration >>> 32));
+        result = 31 * result + (genre != null ? genre.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + trackNumber;
+        result = 31 * result + year;
 
         return result;
     }
@@ -131,20 +158,20 @@ public class Song implements Parcelable {
     public String toString() {
         return "Song{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
-                ", trackNumber=" + trackNumber +
-                ", discNumber=" + discNumber +
-                ", year=" + year +
-                ", duration=" + duration +
+                ", albumArtistName='" + albumArtistName + '\'' +
+                ", albumName='" + albumName + '\'' +
+                ", albumId=" + albumId +
+                ", artistNames='" + MusicUtil.artistNamesMerge(this) + '\'' +
+                ", artistId=" + artistId +
                 ", data='" + data + '\'' +
                 ", dateAdded=" + dateAdded +
                 ", dateModified=" + dateModified +
-                ", albumId=" + albumId +
-                ", albumName='" + albumName + '\'' +
-                ", artistId=" + artistId +
-                // TODO Consider the whole artist list
-                ", artistNames='" + MusicUtil.artistNamesMerge(this) + '\'' +
+                ", discNumber=" + discNumber +
+                ", duration=" + duration +
                 ", genre='" + genre + '\'' +
+                ", title='" + title + '\'' +
+                ", trackNumber=" + trackNumber +
+                ", year=" + year +
                 '}';
     }
 
@@ -156,36 +183,38 @@ public class Song implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeString(this.title);
-        dest.writeInt(this.trackNumber);
-        // Note: Ignore since it's not supported by MediaStore: dest.writeInt(this.discNumber);
-        dest.writeInt(this.year);
-        dest.writeLong(this.duration);
+        dest.writeString(this.albumArtistName);
+        dest.writeString(this.albumName);
+        dest.writeLong(this.albumId);
+        dest.writeStringList(this.artistNames);
+        dest.writeLong(this.artistId);
         dest.writeString(this.data);
         dest.writeLong(this.dateAdded);
         dest.writeLong(this.dateModified);
-        dest.writeLong(this.albumId);
-        dest.writeString(this.albumName);
-        dest.writeLong(this.artistId);
-        dest.writeStringList(this.artistNames);
-        // Note: Ignore since it's not supported by MediaStore: dest.writeString(this.genre);
+        dest.writeInt(this.discNumber);
+        dest.writeLong(this.duration);
+        dest.writeString(this.genre);
+        dest.writeString(this.title);
+        dest.writeInt(this.trackNumber);
+        dest.writeInt(this.year);
     }
 
     protected Song(Parcel in) {
         this.id = in.readLong();
-        this.title = in.readString();
-        this.trackNumber = in.readInt();
-        // Note: Ignore since it's not supported by MediaStore: this.discNumber = in.readInt();
-        this.year = in.readInt();
-        this.duration = in.readLong();
+        this.albumArtistName = in.readString();
+        this.albumName = in.readString();
+        this.albumId = in.readLong();
+        in.readStringList(this.artistNames);
+        this.artistId = in.readLong();
         this.data = in.readString();
         this.dateAdded = in.readLong();
         this.dateModified = in.readLong();
-        this.albumId = in.readLong();
-        this.albumName = in.readString();
-        this.artistId = in.readLong();
-        in.readStringList(this.artistNames);
-        // Note: Ignore since it's not supported by MediaStore: this.genre = in.readString();
+        this.discNumber = in.readInt();
+        this.duration = in.readLong();
+        this.genre = in.readString();
+        this.title = in.readString();
+        this.trackNumber = in.readInt();
+        this.year = in.readInt();
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {

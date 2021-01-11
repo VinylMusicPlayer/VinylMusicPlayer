@@ -13,7 +13,6 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlaylistSongLoader {
@@ -53,24 +52,9 @@ public class PlaylistSongLoader {
         final int idInPlaylist = cursor.getInt(12);
 
         Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
-
         song = discography.getOrAddSong(song);
 
-        PlaylistSong playlistSong = new PlaylistSong(
-                id,
-                song.title,
-                song.trackNumber,
-                song.year,
-                song.duration,
-                data,
-                dateAdded,
-                dateModified,
-                song.albumId,
-                song.albumName,
-                song.artistId,
-                song.artistNames,
-                playlistId,
-                idInPlaylist);
+        PlaylistSong playlistSong = new PlaylistSong(song, playlistId, idInPlaylist);
         return playlistSong;
     }
 
@@ -92,7 +76,9 @@ public class PlaylistSongLoader {
                             AudioColumns.ARTIST_ID,// 10
                             AudioColumns.ARTIST,// 11
                             MediaStore.Audio.Playlists.Members._ID // 12
-                    }, SongLoader.BASE_SELECTION, null,
+                    },
+                    SongLoader.BASE_SELECTION,
+                    null,
                     MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
             return null;
