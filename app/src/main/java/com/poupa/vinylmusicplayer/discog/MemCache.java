@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.discog;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Album;
@@ -32,7 +30,7 @@ class MemCache {
 
     public synchronized void addSong(@NonNull final Song song) {
         // Merge album by name
-        Album album = getOrCreateAlbumByName(song);
+        Album album = getOrCreateAlbumById(song);
         if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
             song.albumId = album.getId();
         }
@@ -64,31 +62,19 @@ class MemCache {
     public synchronized void removeSongById(long songId) {
         Song song = songsById.get(songId);
         if (song != null) {
-            // ---- Remove the song from linked Artist/Album cache
-            final List<String> artistNames = song.artistNames;
-            Album impactedAlbum = null;
-            for (final String artistName : artistNames) {
-                Artist artist = artistsByName.get(artistName);
-                for (Album album : artist.albums) {
-                    if (album.getId() == song.albumId) {
-                        impactedAlbum = album;
-                        break;
-                    }
-                }
-                if (impactedAlbum != null) {
-                    // there is only one impacted album
-                    break;
-                }
-            }
+            // ---- Remove the song from linked Album cache
+            Album impactedAlbum = albumsById.get(song.albumId);
             impactedAlbum.songs.remove(song);
             if (impactedAlbum.songs.isEmpty()) {
                 albumsById.remove(song.albumId);
             }
 
+            // ---- Check the Artist/Album link
             // Due to the approach to handle multi-artist per song
             // different artists can be linked to the same album.
             // As soon as a multi-artist song is removed from an album,
             // the artist-album link may become obsolete
+            final List<String> artistNames = song.artistNames;
             for (final String artistName : artistNames) {
                 boolean isArtistAlbumLinkNeeded = false;
                 for (Song albumSong : impactedAlbum.songs) {
@@ -161,52 +147,26 @@ class MemCache {
 
         // Since the MediaStore artistId is disregarded, correct the link on the Song object
         song.artistId = artists.get(0).getId();
-        //Artist mainArtist = artists.get(Song.TRACK_ARTIST_MAIN);
-        //if (!mainArtist.albums.isEmpty() && (mainArtist.getId() != song.artistId)) {
-        //    song.artistId = mainArtist.getId();
-        //}
         return artists;
     }
 
     @NonNull
-    private synchronized Album getOrCreateAlbumByName(@NonNull final Song song) {
+    private synchronized Album getOrCreateAlbumById(@NonNull final Song song) {
         List<Artist> artists = getOrCreateArtistByName(song);
 
-        // ---- For multi-artist album (i.e compilation ones), there might be already an album created
-        Album albumById = albumsById.get(song.albumId);
-        if (albumById != null) {
-            final String albumArtist = albumById.safeGetFirstSong().albumArtistName;
-            final String albumName = albumById.safeGetFirstSong().albumName;
-            if (TextUtils.equals(albumArtist, song.albumArtistName) && TextUtils.equals(albumName, song.albumName)) {
-                for (Artist artist : artists) {
-                    if (artist.albums.contains(albumById)) continue;
-
-                    artist.albums.add(albumById);
-                }
-                return albumById;
+        // For multi-artist album (i.e compilation ones), there might be already an album created
+        Album album = albumsById.get(song.albumId);
+        if (album != null) {
+            // attach to the artists if needed
+            for (Artist artist : artists) {
+                if (artist.albums.contains(album)) continue;
+                artist.albums.add(album);
             }
+            return album;
         }
 
-        // ---- Find by album name
-        for (Artist artist : artists) {
-            for (Album artistAlbum : artist.albums) {
-                final String albumTitle = artistAlbum.safeGetFirstSong().albumName;
-                if (albumTitle.equals(song.albumName)) {
-                    // attach to the other artists
-                    for (Artist otherArtist : artists) {
-                        if (otherArtist == artist) continue;
-                        if (otherArtist.albums.contains(artistAlbum)) continue;
-
-                        otherArtist.albums.add(artistAlbum);
-                    }
-                    return artistAlbum;
-                }
-            }
-        }
-
-        // ---- None found
-        Album album = new Album();
-
+        // None found
+        album = new Album();
         albumsById.put(song.albumId, album);
         for (Artist artist : artists) {artist.albums.add(album);}
 
