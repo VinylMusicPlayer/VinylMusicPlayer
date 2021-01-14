@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 /**
@@ -18,15 +20,15 @@ import java.util.function.Function;
  */
 
 class MemCache {
-    public HashMap<Long, Song> songsById = new HashMap<>();
+    public Map<Long, Song> songsById = new HashMap<>();
 
-    public HashMap<String, Artist> artistsByName = new HashMap<>();
-    public HashMap<Long, Artist> artistsById = new HashMap<>();
+    public Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<Long, Artist> artistsById = new HashMap<>();
 
-    public HashMap<Long, Album> albumsById = new HashMap<>();
+    public Map<Long, Album> albumsById = new HashMap<>();
 
-    public HashMap<String, Genre> genresByName = new HashMap<>();
-    public HashMap<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     public synchronized void addSong(@NonNull final Song song) {
         // Merge album by name
