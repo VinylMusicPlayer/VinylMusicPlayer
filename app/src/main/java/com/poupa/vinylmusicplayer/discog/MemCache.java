@@ -143,12 +143,18 @@ class MemCache {
             return artist;
         };
 
-        Set<Artist> artists = new HashSet<>();
-        for (final String artistName : song.artistNames) {
-            artists.add(getOrCreateArtist.apply(artistName));
+        Set<String> names = new HashSet<>();
+        names.addAll(song.artistNames);
+        names.addAll(song.albumArtistNames);
+        if (names.size() > 1) {
+            // after merging two artists list, one may be empty
+            // and we end up with a list containing empty element
+            // remove it if that's the case
+            names.remove("");
         }
-        for (final String artistName : song.albumArtistNames) {
-            artists.add(getOrCreateArtist.apply(artistName));
+        Set<Artist> artists = new HashSet<>();
+        for (final String name : names) {
+            artists.add(getOrCreateArtist.apply(name));
         }
 
         // Since the MediaStore artistId is disregarded, correct the link on the Song object
