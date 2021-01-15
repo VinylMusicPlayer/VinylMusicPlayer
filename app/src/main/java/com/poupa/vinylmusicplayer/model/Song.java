@@ -25,7 +25,7 @@ public class Song implements Parcelable {
     public String albumName;
     public long albumId;
     public List<String> artistNames = Arrays.asList("");
-    public long artistId;
+    public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     public final String data;
     public final long dateAdded;
     public final long dateModified;

@@ -112,6 +112,13 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    @Nullable
+    public Artist getArtistByName(String artistName) {
+        synchronized (cache) {
+            return cache.artistsByName.get(artistName);
+        }
+    }
+
     @NonNull
     public Collection<Artist> getAllArtists() {
         synchronized (cache) {

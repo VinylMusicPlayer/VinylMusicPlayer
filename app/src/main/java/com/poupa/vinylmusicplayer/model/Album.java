@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -40,20 +41,30 @@ public class Album implements Parcelable {
     }
 
     public long getArtistId() {
-        // TODO Return the albumArtist instead
-        return safeGetFirstSong().artistId;
+        return getArtist().id;
     }
 
     public String getArtistName() {
+        return getArtist().name;
+    }
+
+    @NonNull
+    private Artist getArtist() {
+        // Try getting the album artist
         final Song song = safeGetFirstSong();
-        String name = MusicUtil.artistNamesMerge(song.albumArtistNames);
-        if (TextUtils.isEmpty(name)) {
-            name = MusicUtil.artistNamesMerge(song.artistNames);
+        final String name = song.albumArtistNames.get(0);
+
+        if (!MusicUtil.isArtistNameUnknown(name)) {
+            final Artist artist = Discography.getInstance().getArtistByName(name);
+            if (artist != null) return artist;
         }
-        if (MusicUtil.isArtistNameUnknown(name)) {
-            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
-        }
-        return name;
+
+        // Fallback: use the first song's first artist
+        final Artist artist = Discography.getInstance().getArtist(song.artistId);
+        if (artist != null) return artist;
+
+        // Give up
+        return Artist.EMPTY;
     }
 
     public int getYear() {
