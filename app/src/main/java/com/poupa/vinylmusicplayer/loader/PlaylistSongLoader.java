@@ -47,7 +47,6 @@ public class PlaylistSongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        // TODO Stop doing this ugly split each time
         final List<String> artistNames = MusicUtil.artistNamesSplit(cursor.getString(11));
         final int idInPlaylist = cursor.getInt(12);
 

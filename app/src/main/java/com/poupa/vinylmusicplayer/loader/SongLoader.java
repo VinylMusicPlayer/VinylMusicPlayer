@@ -122,7 +122,6 @@ public class SongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        // TODO Dont do this ugly split every time
         final List<String> artistNames = MusicUtil.artistNamesSplit(cursor.getString(11));
 
         Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);

@@ -147,7 +147,7 @@ public class MusicUtil {
     @NonNull
     public static String getAlbumCountString(@NonNull final Context context, int albumCount) {
         final String albumString = albumCount == 1 ? context.getResources().getString(R.string.album) : context.getResources().getString(R.string.albums);
-        return albumCount + " " + albumString; // TODO Make text localizable
+        return albumCount + " " + albumString;
     }
 
     @NonNull
