@@ -137,14 +137,10 @@ public class Song implements Parcelable {
     @Override
     public int hashCode() {
         int result = (int)id;
-        for (String artistName : albumArtistNames) {
-            result = 31 * result + artistName.hashCode();
-        }
+        result = 31 * result + albumArtistNames.hashCode();
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
         result = 31 * result + (int)albumId;
-        for (String artistName : artistNames) {
-            result = 31 * result + artistName.hashCode();
-        }
+        result = 31 * result + artistNames.hashCode();
         result = 31 * result + (int)artistId;
         result = 31 * result + (data != null ? data.hashCode() : 0);
         result = 31 * result + (int) (dateAdded ^ (dateAdded >>> 32));

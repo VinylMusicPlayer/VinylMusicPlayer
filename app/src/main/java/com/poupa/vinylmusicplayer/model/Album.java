@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -79,7 +80,7 @@ public class Album implements Parcelable {
 
         Album that = (Album) o;
 
-        return songs != null ? songs.equals(that.songs) : that.songs == null;
+        return Objects.equals(songs, that.songs);
 
     }
 
