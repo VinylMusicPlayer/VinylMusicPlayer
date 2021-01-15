@@ -31,7 +31,7 @@ public class Song implements Parcelable {
     public final long dateModified;
     public int discNumber = 0;
     public final long duration;
-    public String genre;
+    public String genre = "";
     private float replayGainAlbum = Float.NaN;
     private float replayGainTrack = Float.NaN;
     public String title;
