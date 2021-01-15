@@ -50,7 +50,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
         final RemoteViews notificationLayout = new RemoteViews(service.getPackageName(), R.layout.notification);
         final RemoteViews notificationLayoutBig = new RemoteViews(service.getPackageName(), R.layout.notification_big);
 
-        final String artistNames = MusicUtil.artistNamesMerge(song);
+        final String artistNames = MusicUtil.artistNamesMerge(song.artistNames);
         if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistNames)) {
             notificationLayout.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         } else {

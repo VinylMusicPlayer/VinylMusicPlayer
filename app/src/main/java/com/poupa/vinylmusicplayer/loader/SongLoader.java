@@ -72,7 +72,7 @@ public class SongLoader {
     @NonNull
     private static Comparator<Song> getSortOrder() {
         Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
-        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(MusicUtil.artistNamesMerge(a1), MusicUtil.artistNamesMerge(a2));
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(MusicUtil.artistNamesMerge(a1.artistNames), MusicUtil.artistNamesMerge(a2.artistNames));
         Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
         Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
         Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);

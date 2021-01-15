@@ -10,8 +10,10 @@ import com.poupa.vinylmusicplayer.model.Song;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
 
@@ -47,7 +49,7 @@ class MemCache {
         }
 
         // Only sort albums after the song has been added
-        List<Artist> artists = getOrCreateArtistByName(song);
+        Set<Artist> artists = getOrCreateArtistByName(song);
         for (Artist artist : artists) {
             Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
         }
@@ -128,7 +130,7 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized List<Artist> getOrCreateArtistByName(@NonNull final Song song) {
+    private synchronized Set<Artist> getOrCreateArtistByName(@NonNull final Song song) {
         Function<String, Artist> getOrCreateArtist = (@NonNull final String artistName) -> {
             Artist artist = artistsByName.get(artistName);
             if (artist == null) {
@@ -141,21 +143,25 @@ class MemCache {
             return artist;
         };
 
-        ArrayList<Artist> artists = new ArrayList<>();
+        Set<Artist> artists = new HashSet<>();
         for (final String artistName : song.artistNames) {
             artists.add(getOrCreateArtist.apply(artistName));
         }
-        // TODO Process albumArtist as well
+        for (final String artistName : song.albumArtistNames) {
+            artists.add(getOrCreateArtist.apply(artistName));
+        }
 
         // Since the MediaStore artistId is disregarded, correct the link on the Song object
-        song.artistId = artists.get(0).getId();
+        final Artist mainArtist = getOrCreateArtist.apply(song.artistNames.get(0));
+        song.artistId = mainArtist.getId();
         return artists;
     }
 
     @NonNull
     private synchronized Album getOrCreateAlbumById(@NonNull final Song song) {
-        List<Artist> artists = getOrCreateArtistByName(song);
+        Set<Artist> artists = getOrCreateArtistByName(song);
 
+        // TODO Create per-artist 'album fragment' - rename albumsById to albumsByAlbumIdArtistIdPair
         // For multi-artist album (i.e compilation ones), there might be already an album created
         Album album = albumsById.get(song.albumId);
         if (album != null) {

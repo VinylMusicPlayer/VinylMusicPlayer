@@ -68,11 +68,10 @@ class DB extends SQLiteOpenHelper {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
             values.put(SongColumns.ALBUM_ID, song.albumId);
-            values.put(SongColumns.ALBUM_ARTIST_NAME, song.albumArtistName);
+            values.put(SongColumns.ALBUM_ARTIST_NAME, MusicUtil.artistNamesMerge(song.albumArtistNames));
             values.put(SongColumns.ALBUM_NAME, song.albumName);
             values.put(SongColumns.ARTIST_ID, song.artistId);
-            // TODO Dont do this ugly merge each time
-            values.put(SongColumns.ARTIST_NAME, MusicUtil.artistNamesMerge(song));
+            values.put(SongColumns.ARTIST_NAME, MusicUtil.artistNamesMerge(song.artistNames));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
@@ -151,7 +150,7 @@ class DB extends SQLiteOpenHelper {
                 int columnIndex = -1;
                 final long id = cursor.getLong(++columnIndex);
                 final long albumId = cursor.getLong(++columnIndex);
-                final String albumArtistName = cursor.getString(++columnIndex);
+                final String albumArtistNames = cursor.getString(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
                 final long artistId = cursor.getLong(++columnIndex);
                 final String artistNames = cursor.getString(++columnIndex);
@@ -179,10 +178,9 @@ class DB extends SQLiteOpenHelper {
                         albumId,
                         albumName,
                         artistId,
-                        // TODO Dont do this ugly parsing each time
                         MusicUtil.artistNamesSplit(artistNames));
                 song.discNumber = discNumber;
-                song.albumArtistName = albumArtistName;
+                song.albumArtistNames = MusicUtil.artistNamesSplit(albumArtistNames);
                 song.genre = genre;
                 song.setReplayGainValues(replayGainTrack, replayGainAlbum);
 

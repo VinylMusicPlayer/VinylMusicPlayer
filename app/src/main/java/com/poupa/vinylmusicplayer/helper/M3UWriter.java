@@ -27,7 +27,7 @@ public class M3UWriter implements M3UConstants {
             bw.write(HEADER);
             for (Song song : songs) {
                 bw.newLine();
-                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + MusicUtil.artistNamesMerge(song) + " - " + song.title);
+                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + MusicUtil.artistNamesMerge(song.artistNames) + " - " + song.title);
                 bw.newLine();
                 bw.write(song.data);
             }

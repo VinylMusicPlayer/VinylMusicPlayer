@@ -188,7 +188,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                 sectionName = dataSet.get(position).albumName;
                 break;
             case SortOrder.SongSortOrder.SONG_ARTIST:
-                sectionName = MusicUtil.artistNamesMerge(dataSet.get(position));
+                sectionName = MusicUtil.artistNamesMerge(dataSet.get(position).artistNames);
                 break;
             case SortOrder.SongSortOrder.SONG_DATE_ADDED:
                 Date date = new Date(1000 * dataSet.get(position).dateAdded);

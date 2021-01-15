@@ -38,6 +38,6 @@ public class AlbumSongAdapter extends SongAdapter {
     protected String getSongText(Song song) {
         return MusicUtil.buildInfoString(
                 MusicUtil.getReadableDurationString(song.duration),
-                MusicUtil.artistNamesMerge(song));
+                MusicUtil.artistNamesMerge(song.artistNames));
     }
 }

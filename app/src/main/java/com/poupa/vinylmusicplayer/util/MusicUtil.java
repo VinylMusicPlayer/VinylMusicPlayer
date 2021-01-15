@@ -98,7 +98,7 @@ public class MusicUtil {
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
                 PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                MusicUtil.artistNamesMerge(song),
+                MusicUtil.artistNamesMerge(song.artistNames),
                 song.albumName
         );
     }
@@ -139,9 +139,9 @@ public class MusicUtil {
     }
 
     @NonNull
-    public static String artistNamesMerge(@NonNull final Song song) {
-        if (song.artistNames.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
-        return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR + " ", song.artistNames.toArray(new String[0]));
+    public static String artistNamesMerge(@NonNull final List<String> names) {
+        if (names.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
+        return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR + " ", names.toArray(new String[0]));
     }
 
     @NonNull

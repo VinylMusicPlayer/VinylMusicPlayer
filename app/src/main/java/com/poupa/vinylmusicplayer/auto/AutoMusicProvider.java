@@ -129,7 +129,7 @@ public class AutoMusicProvider {
                 Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
                 topTracksData.appendPath(String.valueOf(s.id))
                         .appendPath(s.title)
-                        .appendPath(MusicUtil.artistNamesMerge(s))
+                        .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
                         .appendPath(String.valueOf(s.albumId));
                 queueList.putIfAbsent(i, topTracksData.build());
             }
@@ -181,7 +181,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(MusicUtil.artistNamesMerge(s))
+                    .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByHistory.putIfAbsent(i, topTracksData.build());
         }
@@ -198,7 +198,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(MusicUtil.artistNamesMerge(s))
+                    .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByTopTracks.putIfAbsent(i, topTracksData.build());
         }

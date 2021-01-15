@@ -65,7 +65,7 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        Function<Album, String> getArtistName = (a) -> MusicUtil.artistNamesMerge(a.safeGetFirstSong());
+        Function<Album, String> getArtistName = (a) -> MusicUtil.artistNamesMerge(a.safeGetFirstSong().artistNames);
         Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
 
         Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(

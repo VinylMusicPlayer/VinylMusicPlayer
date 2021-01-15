@@ -574,8 +574,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MusicUtil.artistNamesMerge(song))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, song.albumArtistName)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MusicUtil.artistNamesMerge(song.artistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MusicUtil.artistNamesMerge(song.albumArtistNames))
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
@@ -1063,7 +1063,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("id", song.id);
 
-        intent.putExtra("artist", MusicUtil.artistNamesMerge(song));
+        intent.putExtra("artist", MusicUtil.artistNamesMerge(song.artistNames));
         intent.putExtra("album", song.albumName);
         intent.putExtra("track", song.title);
 

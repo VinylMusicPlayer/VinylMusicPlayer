@@ -21,7 +21,7 @@ public class Song implements Parcelable {
 
     public final long id;
 
-    public String albumArtistName; // TODO Merge into the artistNames
+    public List<String> albumArtistNames = Arrays.asList("");
     public String albumName;
     public long albumId;
     public List<String> artistNames = Arrays.asList("");
@@ -52,12 +52,12 @@ public class Song implements Parcelable {
         this.trackNumber = trackNumber;
         this.year = year;
         // Note: Skip following fields since they are not supported by MediaStore:
-        // discNumber, genre, albumArtistName, replayGainTrack, replayGainAlbum
+        // discNumber, genre, albumArtistNames, replayGainTrack, replayGainAlbum
     }
 
     public Song(final @NonNull Song song) {
         this.id = song.id;
-        this.albumArtistName = song.albumArtistName;
+        this.albumArtistNames = song.albumArtistNames;
         this.albumName = song.albumName;
         this.albumId = song.albumId;
         this.artistNames = song.artistNames;
@@ -118,7 +118,10 @@ public class Song implements Parcelable {
         // replayGainTrack, replayGainAlbum
 
         // Compare object fields
-        if (!TextUtils.equals(albumArtistName, song.albumArtistName)) return false;
+        if (albumArtistNames.size() != song.albumArtistNames.size()) return false;
+        for (int i=0; i<albumArtistNames.size(); ++i) {
+            if (!TextUtils.equals(albumArtistNames.get(i), song.albumArtistNames.get(i))) return false;
+        }
         if (!TextUtils.equals(albumName, song.albumName)) return false;
         if (artistNames.size() != song.artistNames.size()) return false;
         for (int i=0; i<artistNames.size(); ++i) {
@@ -134,7 +137,9 @@ public class Song implements Parcelable {
     @Override
     public int hashCode() {
         int result = (int)id;
-        result = 31 * result + (albumArtistName != null ? albumArtistName.hashCode() : 0);
+        for (String artistName : albumArtistNames) {
+            result = 31 * result + artistName.hashCode();
+        }
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
         result = 31 * result + (int)albumId;
         for (String artistName : artistNames) {
@@ -158,10 +163,10 @@ public class Song implements Parcelable {
     public String toString() {
         return "Song{" +
                 "id=" + id +
-                ", albumArtistName='" + albumArtistName + '\'' +
+                ", albumArtistName='" + MusicUtil.artistNamesMerge(albumArtistNames) + '\'' +
                 ", albumName='" + albumName + '\'' +
                 ", albumId=" + albumId +
-                ", artistNames='" + MusicUtil.artistNamesMerge(this) + '\'' +
+                ", artistNames='" + MusicUtil.artistNamesMerge(artistNames) + '\'' +
                 ", artistId=" + artistId +
                 ", data='" + data + '\'' +
                 ", dateAdded=" + dateAdded +
@@ -183,7 +188,7 @@ public class Song implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
-        dest.writeString(this.albumArtistName);
+        dest.writeStringList(this.albumArtistNames);
         dest.writeString(this.albumName);
         dest.writeLong(this.albumId);
         dest.writeStringList(this.artistNames);
@@ -201,7 +206,7 @@ public class Song implements Parcelable {
 
     protected Song(Parcel in) {
         this.id = in.readLong();
-        this.albumArtistName = in.readString();
+        in.readStringList(this.albumArtistNames);
         this.albumName = in.readString();
         this.albumId = in.readLong();
         in.readStringList(this.artistNames);
