@@ -31,7 +31,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -172,17 +174,24 @@ public class Discography implements MusicServiceEventListener {
             // As the song metadata can come from MediaStore (no multi-artist support)
             // or from our own ID3 extractor (which handles multi-artist support)
             // -> split if is not already done
-            final boolean possiblyNotSplit = (song.artistNames.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
-            if (possiblyNotSplit) {
-                song.artistNames = MusicUtil.artistNamesSplit(song.artistNames.get(0));
-            }
+            Consumer<List<String>> splitAndNormNames = (@NonNull List<String> names) -> {
+                List<String> clonedNames = new ArrayList<>();
+                final boolean possiblyNotSplit = (names.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
+                if (possiblyNotSplit) {
+                    clonedNames = MusicUtil.artistNamesSplit(names.get(0));
+                }
+                else {
+                    clonedNames.addAll(names);
+                }
 
-            // Unicode normalization
-            ArrayList<String> artistNames = new ArrayList<>();
-            for (String name : song.artistNames) {
-                artistNames.add(StringUtil.unicodeNormalize(name));
-            }
-            song.artistNames = artistNames;
+                // Unicode normalization
+                names.clear();
+                for (String name : clonedNames) {
+                    names.add(StringUtil.unicodeNormalize(name));
+                }
+            };
+            splitAndNormNames.accept(song.albumArtistNames);
+            splitAndNormNames.accept(song.artistNames);
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
             song.title = StringUtil.unicodeNormalize(song.title);
             song.genre = StringUtil.unicodeNormalize(song.genre);
