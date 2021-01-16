@@ -12,6 +12,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -118,19 +119,15 @@ public class Song implements Parcelable {
         // Note: Skip following fields since floating point comparison is not precise:
         // replayGainTrack, replayGainAlbum
 
-        // Compare object fields
-        if (albumArtistNames.size() != song.albumArtistNames.size()) return false;
-        for (int i=0; i<albumArtistNames.size(); ++i) {
-            if (!TextUtils.equals(albumArtistNames.get(i), song.albumArtistNames.get(i))) return false;
-        }
+        // Compare simple object fields
         if (!TextUtils.equals(albumName, song.albumName)) return false;
-        if (artistNames.size() != song.artistNames.size()) return false;
-        for (int i=0; i<artistNames.size(); ++i) {
-            if (!TextUtils.equals(artistNames.get(i), song.artistNames.get(i))) return false;
-        }
         if (!TextUtils.equals(data, song.data)) return false;
         if (!TextUtils.equals(genre, song.genre)) return false;
         if (!TextUtils.equals(title, song.title)) return false;
+
+        // Compare structured object fields
+        if (!Objects.equals(albumArtistNames, song.albumArtistNames)) return false;
+        if (!Objects.equals(artistNames, song.artistNames)) return false;
 
         return true;
     }

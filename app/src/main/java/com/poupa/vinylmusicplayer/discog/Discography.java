@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -80,7 +81,14 @@ public class Discography implements MusicServiceEventListener {
     public Song getOrAddSong(@NonNull  final Song song) {
         Song discogSong = getSong(song.id);
         if (discogSong != Song.EMPTY_SONG) {
-            if (song.data.equals(discogSong.data) && song.dateAdded == discogSong.dateAdded && song.dateModified == discogSong.dateModified) {
+            BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
+                if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
+                if (incomingSong.dateModified != cachedSong.dateModified) return true;
+                if (!incomingSong.data.equals(cachedSong.data)) return true;
+                return false;
+            };
+
+            if (!isMetadataObsolete.test(song, discogSong)) {
                 return discogSong;
             } else {
                 removeSongById(song.id);

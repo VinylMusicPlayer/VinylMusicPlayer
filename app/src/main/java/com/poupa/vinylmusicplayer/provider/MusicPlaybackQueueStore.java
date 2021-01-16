@@ -177,6 +177,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     values.put(AudioColumns.ALBUM, song.albumName);
                     values.put(AudioColumns.ARTIST_ID, song.artistId);
                     values.put(AudioColumns.ARTIST, MusicUtil.artistNamesMerge(song.artistNames));
+                    // Skip genre, discNumber, albumArtist fields since not supported in this DB.
 
                     database.insert(tableName, null, values);
                 }

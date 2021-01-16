@@ -64,15 +64,14 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        Function<Album, String> getArtistName = (a) -> MusicUtil.artistNamesMerge(a.safeGetFirstSong().artistNames);
         Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
 
         Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 getAlbumName.apply(a1),
                 getAlbumName.apply(a2));
         Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
-                getArtistName.apply(a1),
-                getArtistName.apply(a2));
+                a1.getArtistName(),
+                a2.getArtistName());
         Comparator<Album> byYear = (a1, a2) -> a1.getYear() - a2.getYear();
         Comparator<Album> byDateAdded = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
 

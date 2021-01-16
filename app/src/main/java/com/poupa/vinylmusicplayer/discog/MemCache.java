@@ -133,7 +133,7 @@ class MemCache {
         Function<String, Artist> getOrCreateArtist = (@NonNull final String artistName) -> {
             Artist artist = artistsByName.get(artistName);
             if (artist == null) {
-                long artistId = artistName.hashCode(); // TODO: It is not safe to consider this as an unique ID
+                long artistId = artistsByName.size();
                 artist = new Artist(artistId, artistName);
 
                 artistsByName.put(artistName, artist);
