@@ -175,13 +175,13 @@ public class Discography implements MusicServiceEventListener {
             // or from our own ID3 extractor (which handles multi-artist support)
             // -> split if is not already done
             Consumer<List<String>> splitAndNormNames = (@NonNull List<String> names) -> {
-                List<String> clonedNames = new ArrayList<>();
+                List<String> clonedNames;
                 final boolean possiblyNotSplit = (names.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
                 if (possiblyNotSplit) {
                     clonedNames = MusicUtil.artistNamesSplit(names.get(0));
                 }
                 else {
-                    clonedNames.addAll(names);
+                    clonedNames = new ArrayList<>(names);
                 }
 
                 // Unicode normalization

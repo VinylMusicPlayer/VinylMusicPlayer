@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,10 +22,10 @@ public class Song implements Parcelable {
 
     public final long id;
 
-    public List<String> albumArtistNames = Arrays.asList("");
+    public List<String> albumArtistNames = new ArrayList<>(Arrays.asList("")); // TODO Enforce the mutable list constraint
     public String albumName;
     public long albumId;
-    public List<String> artistNames = Arrays.asList("");
+    public List<String> artistNames = new ArrayList<>(Arrays.asList("")); // TODO Enforce the mutable list constraint
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     public final String data;
     public final long dateAdded;
