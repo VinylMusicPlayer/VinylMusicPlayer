@@ -47,7 +47,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

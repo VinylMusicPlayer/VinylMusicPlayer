@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -15,7 +14,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)

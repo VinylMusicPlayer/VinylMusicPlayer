@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.afollestad.materialcab.MaterialCab;
-import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;

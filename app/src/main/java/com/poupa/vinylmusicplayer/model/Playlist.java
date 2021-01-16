@@ -10,6 +10,7 @@ import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
