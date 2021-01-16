@@ -6,12 +6,12 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -78,11 +78,10 @@ class MemCache {
             // different artists can be linked to the same album.
             // As soon as a multi-artist song is removed from an album,
             // the artist-album link may become obsolete
-            final List<String> artistNames = song.artistNames;
-            for (final String artistName : artistNames) {
+            for (final String artistName : MusicUtil.artistNamesMerge(song.artistNames, song.albumArtistNames)) {
                 boolean isArtistAlbumLinkNeeded = false;
                 for (Song albumSong : impactedAlbum.songs) {
-                    if (albumSong.artistNames.contains(artistName)) {
+                    if (albumSong.artistNames.contains(artistName) || albumSong.albumArtistNames.contains(artistName)) {
                         isArtistAlbumLinkNeeded = true;
                         break;
                     }
@@ -143,15 +142,7 @@ class MemCache {
             return artist;
         };
 
-        Set<String> names = new HashSet<>();
-        names.addAll(song.artistNames);
-        names.addAll(song.albumArtistNames);
-        if (names.size() > 1) {
-            // after merging two artists list, one may be empty
-            // and we end up with a list containing empty element
-            // remove it if that's the case
-            names.remove("");
-        }
+        Set<String> names = MusicUtil.artistNamesMerge(song.artistNames, song.albumArtistNames);
         Set<Artist> artists = new HashSet<>();
         for (final String name : names) {
             artists.add(getOrCreateArtist.apply(name));

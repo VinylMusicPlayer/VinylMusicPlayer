@@ -38,8 +38,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -141,6 +143,20 @@ public class MusicUtil {
     public static String artistNamesMerge(@NonNull final List<String> names) {
         if (names.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
         return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR + " ", names.toArray(new String[0]));
+    }
+
+    @NonNull
+    public static Set<String> artistNamesMerge(@NonNull final List<String> names1, @NonNull final List<String> names2) {
+        Set<String> names = new HashSet<>();
+        names.addAll(names1);
+        names.addAll(names2);
+        if (names.size() > 1) {
+            // after merging two artists list, one may be empty
+            // and we end up with a list containing empty element
+            // remove it if that's the case
+            names.remove("");
+        }
+        return names;
     }
 
     @NonNull
