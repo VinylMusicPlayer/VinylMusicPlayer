@@ -340,4 +340,6 @@
     <string name="scanning_x_songs_in_progress">Mise à jour de %1$d titres…</string>
     <string name="scanning_x_songs_finished">%1$d titres mis à jour</string>
     <string name="reset_discography">Réanalyser la bibliothèque</string>
+    <string name="track_number">Numéro de piste</string>
+    <string name="disc_number">Numéro de disque</string>
 </resources>
