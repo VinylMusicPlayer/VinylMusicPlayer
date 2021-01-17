@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -139,15 +140,33 @@ public class Discography implements MusicServiceEventListener {
     @Nullable
     public Album getAlbum(long albumId) {
         synchronized (cache) {
-            return cache.albumsById.get(albumId);
+            Map<Long, Album> albumsByArtist = cache.albumsByAlbumIdAndArtistId.get(albumId);
+            if (albumsByArtist == null) return null;
+            return mergeFullAlbum(albumsByArtist.values());
         }
     }
 
     @NonNull
     public Collection<Album> getAllAlbums() {
         synchronized (cache) {
-            return cache.albumsById.values();
+            ArrayList<Album> fullAlbums = new ArrayList<>();
+            for (Map<Long, Album> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
+                fullAlbums.add(mergeFullAlbum(albumsByArtist.values()));
+            }
+            return fullAlbums;
         }
+    }
+
+    @NonNull
+    private Album mergeFullAlbum(@NonNull Collection<Album> albumParts) {
+        Album fullAlbum = new Album();
+        for (Album fragment : albumParts) {
+            for (Song song : fragment.songs) {
+                if (fullAlbum.songs.contains(song)) continue;
+                fullAlbum.songs.add(song);
+            }
+        }
+        return fullAlbum;
     }
 
     @NonNull

@@ -27,18 +27,20 @@ class MemCache {
     public Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, Artist> artistsById = new HashMap<>();
 
-    public Map<Long, Album> albumsById = new HashMap<>();
+    public Map<Long, Map<Long, Album>> albumsByAlbumIdAndArtistId = new HashMap<>();
 
     public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     public synchronized void addSong(@NonNull final Song song) {
-        // Merge album by name
-        Album album = getOrCreateAlbumById(song);
-        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
-            song.albumId = album.getId();
+        Map<Long, Album> albums = getOrCreateAlbumById(song);
+//        TODO // Merge album by name - MediaStore may index album of same name with different IDs
+//        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
+//            song.albumId = album.getId();
+//        }
+        for (Album album : albums.values()) {
+            album.songs.add(song);
         }
-        album.songs.add(song);
 
         // Update genre cache
         Genre genre = getOrCreateGenreByName(song);
@@ -48,52 +50,52 @@ class MemCache {
             genre.songCount = songs.size();
         }
 
+        songsById.put(song.id, song);
+
         // Only sort albums after the song has been added
-        Set<Artist> artists = getOrCreateArtistByName(song);
-        for (Artist artist : artists) {
+        // TODO Find a way to delay this sort operation if addSong is being called in batch
+        for (Long artistId : albums.keySet()) {
+            Artist artist = artistsById.get(artistId);
             Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
         }
-
-        Collections.sort(album.songs,
-                (s1, s2) -> (s1.discNumber != s2.discNumber)
-                        ? (s1.discNumber - s2.discNumber)
-                        : (s1.trackNumber - s2.trackNumber)
-        );
-
-        songsById.put(song.id, song);
+        for (Album album : albums.values()) {
+            Collections.sort(album.songs,
+                    (s1, s2) -> (s1.discNumber != s2.discNumber)
+                            ? (s1.discNumber - s2.discNumber)
+                            : (s1.trackNumber - s2.trackNumber)
+            );
+        }
     }
 
     public synchronized void removeSongById(long songId) {
         Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
-            Album impactedAlbum = albumsById.get(song.albumId);
-            impactedAlbum.songs.remove(song);
-            if (impactedAlbum.songs.isEmpty()) {
-                albumsById.remove(song.albumId);
+            Map<Long, Album> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+            Set<Long> orphanArtists = new HashSet<>();
+            for (Map.Entry<Long, Album> pair : impactedAlbumsByArtist.entrySet()) {
+                Album album = pair.getValue();
+                if (album.songs.remove(song)) {
+                    if (album.songs.isEmpty()) {
+                        orphanArtists.add(pair.getKey());
+                    }
+                }
             }
 
             // ---- Check the Artist/Album link
-            // Due to the approach to handle multi-artist per song
-            // different artists can be linked to the same album.
-            // As soon as a multi-artist song is removed from an album,
-            // the artist-album link may become obsolete
-            for (final String artistName : MusicUtil.artistNamesMerge(song.artistNames, song.albumArtistNames)) {
-                boolean isArtistAlbumLinkNeeded = false;
-                for (Song albumSong : impactedAlbum.songs) {
-                    if (albumSong.artistNames.contains(artistName) || albumSong.albumArtistNames.contains(artistName)) {
-                        isArtistAlbumLinkNeeded = true;
-                        break;
-                    }
+            for (Long artistId : orphanArtists) {
+                Artist artist = artistsById.get(artistId);
+                Album album = impactedAlbumsByArtist.get(artistId);
+
+                impactedAlbumsByArtist.remove(artistId);
+                artist.albums.remove(album);
+                if (artist.albums.isEmpty()) {
+                    artistsById.remove(artist.id);
+                    artistsByName.remove(artist.name);
                 }
-                if (!isArtistAlbumLinkNeeded) {
-                    Artist artist = artistsByName.get(artistName);
-                    artist.albums.remove(impactedAlbum);
-                    if (artist.albums.isEmpty()) {
-                        artistsById.remove(artist.id);
-                        artistsByName.remove(artistName);
-                    }
-                }
+            }
+            if (impactedAlbumsByArtist.isEmpty()) {
+                albumsByAlbumIdAndArtistId.remove(song.albumId);
             }
 
             // ---- Remove song from Genre cache
@@ -122,7 +124,7 @@ class MemCache {
         artistsByName.clear();
         artistsById.clear();
 
-        albumsById.clear();
+        albumsByAlbumIdAndArtistId.clear();
 
         genresByName.clear();
         songsByGenreId.clear();
@@ -155,27 +157,26 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized Album getOrCreateAlbumById(@NonNull final Song song) {
+    private synchronized Map<Long, Album> getOrCreateAlbumById(@NonNull final Song song) {
         Set<Artist> artists = getOrCreateArtistByName(song);
+        Map<Long, Album> albumsByArtist = new HashMap<>();
 
-        // TODO Create per-artist 'album fragment' - rename albumsById to albumsByAlbumIdArtistIdPair
-        // For multi-artist album (i.e compilation ones), there might be already an album created
-        Album album = albumsById.get(song.albumId);
-        if (album != null) {
-            // attach to the artists if needed
-            for (Artist artist : artists) {
-                if (artist.albums.contains(album)) continue;
+        Map<Long, Album> existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        if (existingAlbumsByArtist == null) {
+            albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
+            existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        }
+        // attach to the artists if needed
+        for (Artist artist : artists) {
+            if (!existingAlbumsByArtist.containsKey(artist.id)) {
+                Album album = new Album();
+                existingAlbumsByArtist.put(artist.id, album);
                 artist.albums.add(album);
             }
-            return album;
+
+            albumsByArtist.put(artist.id, existingAlbumsByArtist.get(artist.id));
         }
-
-        // None found
-        album = new Album();
-        albumsById.put(song.albumId, album);
-        for (Artist artist : artists) {artist.albums.add(album);}
-
-        return album;
+        return albumsByArtist;
     }
 
     @NonNull
