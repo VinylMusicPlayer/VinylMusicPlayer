@@ -23,7 +23,7 @@ public class ArtistLoader {
     private final static Discography discography = Discography.getInstance();
 
     @NonNull
-    public static ArrayList<Artist> getAllArtists(@NonNull final Context context) {
+    public static ArrayList<Artist> getAllArtists() {
         synchronized (discography) {
             ArrayList<Artist> artists = new ArrayList<>(discography.getAllArtists());
             Collections.sort(artists, getSortOrder());
@@ -32,7 +32,7 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static ArrayList<Artist> getArtists(@NonNull final Context context, String query) {
+    public static ArrayList<Artist> getArtists(String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         synchronized (discography) {
@@ -49,7 +49,7 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static Artist getArtist(@NonNull final Context context, long artistId) {
+    public static Artist getArtist(long artistId) {
         synchronized (discography) {
             Artist artist = discography.getArtist(artistId);
             if (artist != null) {

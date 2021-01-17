@@ -478,7 +478,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @Override
         public Album loadInBackground() {
-            return AlbumLoader.getAlbum(getContext(), albumId);
+            return AlbumLoader.getAlbum(albumId);
         }
     }
 }

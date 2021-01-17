@@ -87,6 +87,6 @@ public class SearchQueryHelper {
             return songs;
         }
 
-        return SongLoader.getSongs(context, query);
+        return SongLoader.getSongs(query);
     }
 }

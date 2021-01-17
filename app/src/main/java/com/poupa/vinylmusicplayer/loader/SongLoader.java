@@ -53,7 +53,7 @@ public class SongLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, @NonNull final String query) {
+    public static ArrayList<Song> getSongs(@NonNull final String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         synchronized (discography) {

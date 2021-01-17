@@ -142,7 +142,7 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
 
         @Override
         public ArrayList<Artist> loadInBackground() {
-            return ArtistLoader.getAllArtists(getContext());
+            return ArtistLoader.getAllArtists();
         }
     }
 }

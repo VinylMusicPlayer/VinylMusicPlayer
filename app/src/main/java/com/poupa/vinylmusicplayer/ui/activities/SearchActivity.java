@@ -213,19 +213,19 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
             if (!TextUtils.isEmpty(query)) {
                 final String normalizedQuery = StringUtil.unicodeNormalize(query.trim());
 
-                List songs = SongLoader.getSongs(getContext(), normalizedQuery);
+                List songs = SongLoader.getSongs(normalizedQuery);
                 if (!songs.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.songs));
                     results.addAll(songs);
                 }
 
-                List artists = ArtistLoader.getArtists(getContext(), normalizedQuery);
+                List artists = ArtistLoader.getArtists(normalizedQuery);
                 if (!artists.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.artists));
                     results.addAll(artists);
                 }
 
-                List albums = AlbumLoader.getAlbums(getContext(), normalizedQuery);
+                List albums = AlbumLoader.getAlbums(normalizedQuery);
                 if (!albums.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.albums));
                     results.addAll(albums);

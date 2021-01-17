@@ -506,7 +506,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
         @Override
         public Artist loadInBackground() {
-            return ArtistLoader.getArtist(getContext(), artistId);
+            return ArtistLoader.getArtist(artistId);
         }
     }
 }
