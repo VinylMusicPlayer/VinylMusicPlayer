@@ -27,13 +27,15 @@ class MemCache {
     public Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, Artist> artistsById = new HashMap<>();
 
-    public Map<Long, Map<Long, Album>> albumsByAlbumIdAndArtistId = new HashMap<>();
+    // internal implementation class, to make explicit that we are dealing with slices of album, not the full one
+    class AlbumSlice extends Album {}
+    public Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
 
     public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     public synchronized void addSong(@NonNull final Song song) {
-        Map<Long, Album> albums = getOrCreateAlbumById(song);
+        Map<Long, AlbumSlice> albums = getOrCreateAlbumById(song);
 //        TODO // Merge album by name - MediaStore may index album of same name with different IDs
 //        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
 //            song.albumId = album.getId();
@@ -71,9 +73,9 @@ class MemCache {
         Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
-            Map<Long, Album> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+            Map<Long, AlbumSlice> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
             Set<Long> orphanArtists = new HashSet<>();
-            for (Map.Entry<Long, Album> pair : impactedAlbumsByArtist.entrySet()) {
+            for (Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
                 Album album = pair.getValue();
                 if (album.songs.remove(song)) {
                     if (album.songs.isEmpty()) {
@@ -157,11 +159,11 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized Map<Long, Album> getOrCreateAlbumById(@NonNull final Song song) {
+    private synchronized Map<Long, AlbumSlice> getOrCreateAlbumById(@NonNull final Song song) {
         Set<Artist> artists = getOrCreateArtistByName(song);
-        Map<Long, Album> albumsByArtist = new HashMap<>();
+        Map<Long, AlbumSlice> albumsByArtist = new HashMap<>();
 
-        Map<Long, Album> existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        Map<Long, AlbumSlice> existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (existingAlbumsByArtist == null) {
             albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
             existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
@@ -169,7 +171,7 @@ class MemCache {
         // attach to the artists if needed
         for (Artist artist : artists) {
             if (!existingAlbumsByArtist.containsKey(artist.id)) {
-                Album album = new Album();
+                AlbumSlice album = new AlbumSlice();
                 existingAlbumsByArtist.put(artist.id, album);
                 artist.albums.add(album);
             }

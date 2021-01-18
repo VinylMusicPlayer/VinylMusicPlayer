@@ -140,7 +140,7 @@ public class Discography implements MusicServiceEventListener {
     @Nullable
     public Album getAlbum(long albumId) {
         synchronized (cache) {
-            Map<Long, Album> albumsByArtist = cache.albumsByAlbumIdAndArtistId.get(albumId);
+            Map<Long, MemCache.AlbumSlice> albumsByArtist = cache.albumsByAlbumIdAndArtistId.get(albumId);
             if (albumsByArtist == null) return null;
             return mergeFullAlbum(albumsByArtist.values());
         }
@@ -150,7 +150,7 @@ public class Discography implements MusicServiceEventListener {
     public Collection<Album> getAllAlbums() {
         synchronized (cache) {
             ArrayList<Album> fullAlbums = new ArrayList<>();
-            for (Map<Long, Album> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
+            for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
                 fullAlbums.add(mergeFullAlbum(albumsByArtist.values()));
             }
             return fullAlbums;
@@ -158,7 +158,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    private Album mergeFullAlbum(@NonNull Collection<Album> albumParts) {
+    private Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
         Album fullAlbum = new Album();
         for (Album fragment : albumParts) {
             for (Song song : fragment.songs) {
