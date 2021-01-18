@@ -19,14 +19,13 @@ import java.util.Objects;
  */
 public class Song implements Parcelable {
     public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""));
-    //public static final int TRACK_ARTIST_MAIN = 0;
 
     public final long id;
 
-    public List<String> albumArtistNames = new ArrayList<>(Arrays.asList("")); // TODO Enforce the mutable list constraint
+    public List<String> albumArtistNames = new ArrayList<>(Arrays.asList(""));
     public String albumName;
     public long albumId;
-    public List<String> artistNames = new ArrayList<>(Arrays.asList("")); // TODO Enforce the mutable list constraint
+    public List<String> artistNames = new ArrayList<>(Arrays.asList(""));
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     public final String data;
     public final long dateAdded;

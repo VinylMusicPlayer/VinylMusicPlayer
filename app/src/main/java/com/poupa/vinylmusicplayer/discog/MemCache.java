@@ -28,7 +28,7 @@ class MemCache {
     public Map<Long, Artist> artistsById = new HashMap<>();
 
     // internal implementation class, to make explicit that we are dealing with slices of album, not the full one
-    class AlbumSlice extends Album {}
+    static class AlbumSlice extends Album {}
     public Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
 
     public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
