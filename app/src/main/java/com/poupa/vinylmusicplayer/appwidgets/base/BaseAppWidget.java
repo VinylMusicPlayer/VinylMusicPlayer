@@ -28,6 +28,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
@@ -269,7 +270,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
 
     protected void setTitlesArtwork(final MusicService service) {
         final Song song = service.getCurrentSong();
-        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(MusicUtil.artistNamesMerge(song.artistNames))) {
+        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(MultiArtistUtil.artistNamesMerge(song.artistNames))) {
             appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         } else {
             appWidgetView.setViewVisibility(R.id.media_titles, View.VISIBLE);

@@ -6,8 +6,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,10 +156,10 @@ public class Song implements Parcelable {
     public String toString() {
         return "Song{" +
                 "id=" + id +
-                ", albumArtistName='" + MusicUtil.artistNamesMerge(albumArtistNames) + '\'' +
+                ", albumArtistName='" + MultiArtistUtil.artistNamesMerge(albumArtistNames) + '\'' +
                 ", albumName='" + albumName + '\'' +
                 ", albumId=" + albumId +
-                ", artistNames='" + MusicUtil.artistNamesMerge(artistNames) + '\'' +
+                ", artistNames='" + MultiArtistUtil.artistNamesMerge(artistNames) + '\'' +
                 ", artistId=" + artistId +
                 ", data='" + data + '\'' +
                 ", dateAdded=" + dateAdded +

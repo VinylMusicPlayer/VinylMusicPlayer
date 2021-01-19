@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
@@ -23,7 +24,6 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -129,7 +129,7 @@ public class AutoMusicProvider {
                 Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
                 topTracksData.appendPath(String.valueOf(s.id))
                         .appendPath(s.title)
-                        .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
+                        .appendPath(MultiArtistUtil.artistNamesMerge(s.artistNames))
                         .appendPath(String.valueOf(s.albumId));
                 queueList.putIfAbsent(i, topTracksData.build());
             }
@@ -181,7 +181,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
+                    .appendPath(MultiArtistUtil.artistNamesMerge(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByHistory.putIfAbsent(i, topTracksData.build());
         }
@@ -198,7 +198,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(MusicUtil.artistNamesMerge(s.artistNames))
+                    .appendPath(MultiArtistUtil.artistNamesMerge(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByTopTracks.putIfAbsent(i, topTracksData.build());
         }

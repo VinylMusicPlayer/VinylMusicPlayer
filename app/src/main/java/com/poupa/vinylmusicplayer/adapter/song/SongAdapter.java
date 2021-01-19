@@ -18,6 +18,7 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
@@ -188,7 +189,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                 sectionName = dataSet.get(position).albumName;
                 break;
             case SortOrder.SongSortOrder.SONG_ARTIST:
-                sectionName = MusicUtil.artistNamesMerge(dataSet.get(position).artistNames);
+                sectionName = MultiArtistUtil.artistNamesMerge(dataSet.get(position).artistNames);
                 break;
             case SortOrder.SongSortOrder.SONG_DATE_ADDED:
                 Date date = new Date(1000 * dataSet.get(position).dateAdded);

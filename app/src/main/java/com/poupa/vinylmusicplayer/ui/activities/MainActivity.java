@@ -95,6 +95,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             showChangelog();
         }
 
+        // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
         final Discography discog = Discography.getInstance();
         discog.startService(this);
         addMusicServiceEventListener(discog);
@@ -178,6 +179,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }, 200);
                     break;
                 case R.id.action_reset_discography:
+                    // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
                     Discography.getInstance().triggerSyncWithMediaStore(true);
                     break;
                 case R.id.nav_settings:

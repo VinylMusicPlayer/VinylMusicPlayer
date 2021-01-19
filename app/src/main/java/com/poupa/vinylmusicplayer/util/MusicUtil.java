@@ -21,6 +21,7 @@ import androidx.core.content.FileProvider;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -37,11 +38,8 @@ import org.jaudiotagger.tag.FieldKey;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -99,7 +97,7 @@ public class MusicUtil {
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
                 PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                MusicUtil.artistNamesMerge(song.artistNames),
+                MultiArtistUtil.artistNamesMerge(song.artistNames),
                 song.albumName
         );
     }
@@ -124,39 +122,6 @@ public class MusicUtil {
     public static String getSongCountString(@NonNull final Context context, int songCount) {
         final String songString = songCount == 1 ? context.getResources().getString(R.string.song) : context.getResources().getString(R.string.songs);
         return songCount + " " + songString;
-    }
-
-    public static final String MULTIPLE_ARTIST_NAME_SEPARATOR = ";";
-
-    @NonNull
-    public static List<String> artistNamesSplit(@NonNull final String names) {
-        // TODO Proceed to extract multiple values from a tag instead of text parsing here
-        List<String> namesSplit = Arrays.asList(names.split(MULTIPLE_ARTIST_NAME_SEPARATOR));
-        ArrayList<String> result = new ArrayList<>();
-        for (String name : namesSplit) {
-            result.add(name.trim());
-        }
-        return result;
-    }
-
-    @NonNull
-    public static String artistNamesMerge(@NonNull final List<String> names) {
-        if (names.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
-        return MusicUtil.buildInfoStringImpl(MULTIPLE_ARTIST_NAME_SEPARATOR + " ", names.toArray(new String[0]));
-    }
-
-    @NonNull
-    public static Set<String> artistNamesMerge(@NonNull final List<String> names1, @NonNull final List<String> names2) {
-        Set<String> names = new HashSet<>();
-        names.addAll(names1);
-        names.addAll(names2);
-        if (names.size() > 1) {
-            // after merging two artists list, one may be empty
-            // and we end up with a list containing empty element
-            // remove it if that's the case
-            names.remove("");
-        }
-        return names;
     }
 
     @NonNull
@@ -199,11 +164,11 @@ public class MusicUtil {
     @NonNull
     public static String buildInfoString(final String... values)
     {
-        return MusicUtil.buildInfoStringImpl("  •  ", values);
+        return MusicUtil.buildInfoString("  •  ", values);
     }
 
     @NonNull
-    private static String buildInfoStringImpl(@NonNull final String separator, @NonNull final String[] values)
+    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values)
     {
         StringBuilder result = new StringBuilder();
         for (String value : values) {

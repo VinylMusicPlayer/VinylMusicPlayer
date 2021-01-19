@@ -5,6 +5,7 @@ import android.widget.RemoteViews;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -31,7 +32,7 @@ public class AppWidgetSmall extends BaseAppWidget {
         setTitlesArtwork(service);
 
         final Song song = service.getCurrentSong();
-        final String artistName = MusicUtil.artistNamesMerge(song.artistNames);
+        final String artistName = MultiArtistUtil.artistNamesMerge(song.artistNames);
         if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistName)) &&
                 TextUtils.isEmpty(song.title) || TextUtils.isEmpty(artistName)) {
             appWidgetView.setTextViewText(R.id.text_separator, "");

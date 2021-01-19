@@ -6,7 +6,6 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,7 +145,7 @@ class MemCache {
             return artist;
         };
 
-        Set<String> names = MusicUtil.artistNamesMerge(song.artistNames, song.albumArtistNames);
+        Set<String> names = MultiArtistUtil.artistNamesMerge(song.artistNames, song.albumArtistNames);
         Set<Artist> artists = new HashSet<>();
         for (final String name : names) {
             artists.add(getOrCreateArtist.apply(name));

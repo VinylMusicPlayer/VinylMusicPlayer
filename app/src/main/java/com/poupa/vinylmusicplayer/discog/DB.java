@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,10 +67,10 @@ class DB extends SQLiteOpenHelper {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
             values.put(SongColumns.ALBUM_ID, song.albumId);
-            values.put(SongColumns.ALBUM_ARTIST_NAME, MusicUtil.artistNamesMerge(song.albumArtistNames));
+            values.put(SongColumns.ALBUM_ARTIST_NAME, MultiArtistUtil.artistNamesMerge(song.albumArtistNames));
             values.put(SongColumns.ALBUM_NAME, song.albumName);
             values.put(SongColumns.ARTIST_ID, song.artistId);
-            values.put(SongColumns.ARTIST_NAME, MusicUtil.artistNamesMerge(song.artistNames));
+            values.put(SongColumns.ARTIST_NAME, MultiArtistUtil.artistNamesMerge(song.artistNames));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
@@ -178,9 +177,9 @@ class DB extends SQLiteOpenHelper {
                         albumId,
                         albumName,
                         artistId,
-                        MusicUtil.artistNamesSplit(artistNames));
+                        MultiArtistUtil.artistNamesSplit(artistNames));
                 song.discNumber = discNumber;
-                song.albumArtistNames = MusicUtil.artistNamesSplit(albumArtistNames);
+                song.albumArtistNames = MultiArtistUtil.artistNamesSplit(albumArtistNames);
                 song.genre = genre;
                 song.setReplayGainValues(replayGainTrack, replayGainAlbum);
 

@@ -17,7 +17,6 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -205,7 +204,7 @@ public class Discography implements MusicServiceEventListener {
                 List<String> clonedNames;
                 final boolean possiblyNotSplit = (names.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
                 if (possiblyNotSplit) {
-                    clonedNames = MusicUtil.artistNamesSplit(names.get(0));
+                    clonedNames = MultiArtistUtil.artistNamesSplit(names.get(0));
                 }
                 else {
                     clonedNames = new ArrayList<>(names);
@@ -331,8 +330,8 @@ public class Discography implements MusicServiceEventListener {
             };
 
             song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistNames  = MusicUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ARTIST));
-            song.albumArtistNames = MusicUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ALBUM_ARTIST));
+            song.artistNames  = MultiArtistUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ARTIST));
+            song.albumArtistNames = MultiArtistUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ALBUM_ARTIST));
             song.title = safeGetTag.apply(FieldKey.TITLE);
             if (song.title.isEmpty()) {
                 // fallback to use the file name

@@ -8,9 +8,9 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class PlaylistSongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        final List<String> artistNames = MusicUtil.artistNamesSplit(cursor.getString(11));
+        final List<String> artistNames = MultiArtistUtil.artistNamesSplit(cursor.getString(11));
         final int idInPlaylist = cursor.getInt(12);
 
         Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
