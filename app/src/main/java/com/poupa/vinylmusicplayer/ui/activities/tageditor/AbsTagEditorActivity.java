@@ -218,7 +218,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         // Start search intent if possible: https://stackoverflow.com/questions/36592450/unexpected-intent-with-action-web-search
         if (Intent.ACTION_WEB_SEARCH.equals(intent.getAction()) && intent.getExtras() != null) {
             String query = intent.getExtras().getString(SearchManager.QUERY, null);
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+query));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+Uri.encode(query)));
             boolean browserExists = intent.resolveActivityInfo(getPackageManager(), 0) != null;
             if (browserExists && query != null) {
                 startActivity(browserIntent);
