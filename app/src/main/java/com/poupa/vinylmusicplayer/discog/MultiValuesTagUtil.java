@@ -7,9 +7,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author SC (soncaokim)
@@ -17,23 +15,17 @@ import java.util.Set;
 
 public class MultiValuesTagUtil {
     private static final String SINGLE_LINE_SEPARATOR = ";";
+    private static final String MULTI_LINE_SEPARATOR = "\n";
     private static final String INFO_STRING_SEPARATOR = "; ";
 
     @NonNull
     public static List<String> split(@NonNull final String names) {
-        List<String> namesSplit = Arrays.asList(names.split(SINGLE_LINE_SEPARATOR));
-        ArrayList<String> result = new ArrayList<>();
-        for (String name : namesSplit) {
-            result.add(name.trim());
-        }
-        return result;
+        return MultiValuesTagUtil.splitImpl(names, SINGLE_LINE_SEPARATOR);
     }
 
     @NonNull
     public static String merge(@NonNull final List<String> names) {
-        if (names.size() == 0) {return "";}
-        return MusicUtil.buildInfoString(SINGLE_LINE_SEPARATOR,
-                names.toArray(new String[0]));
+        return MultiValuesTagUtil.mergeImpl(names, SINGLE_LINE_SEPARATOR, "");
     }
 
     @NonNull
@@ -46,8 +38,34 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static String infoString(@NonNull final List<String> names) {
-        if (names.size() == 0) {return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;}
-        return MusicUtil.buildInfoString(INFO_STRING_SEPARATOR,
+        return MultiValuesTagUtil.mergeImpl(names, INFO_STRING_SEPARATOR, Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+    }
+
+    @NonNull
+    public static List<String> tagEditorSplit(@NonNull final String names) {
+        return MultiValuesTagUtil.splitIfNeeded(MultiValuesTagUtil.splitImpl(names, MULTI_LINE_SEPARATOR));
+    }
+
+    @NonNull
+    public static String tagEditorMerge(@NonNull final List<String> names) {
+        return MultiValuesTagUtil.mergeImpl(MultiValuesTagUtil.splitIfNeeded(names), MULTI_LINE_SEPARATOR, "");
+    }
+
+    @NonNull
+    private static List<String> splitImpl(@NonNull final String names, @NonNull final String separator) {
+        List<String> namesSplit = Arrays.asList(names.split(separator));
+        ArrayList<String> result = new ArrayList<>();
+        for (String name : namesSplit) {
+            result.add(name.trim());
+        }
+        return result;
+    }
+
+    @NonNull
+    private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue) {
+        if (names.size() == 0) {return defaultValue;}
+        return MusicUtil.buildInfoString(separator,
                 names.toArray(new String[0]));
     }
+
 }

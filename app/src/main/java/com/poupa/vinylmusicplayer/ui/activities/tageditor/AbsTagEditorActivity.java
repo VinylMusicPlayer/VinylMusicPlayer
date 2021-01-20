@@ -32,6 +32,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.TintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
@@ -385,6 +386,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                     if (entry.getValue().isEmpty()) {
                                         tag.deleteField(entry.getKey());
                                     }
+                                    else if (entry.getKey() == FieldKey.ARTIST || entry.getKey() == FieldKey.ALBUM_ARTIST) {
+                                        tag.deleteField(entry.getKey());
+                                        final List<String> values = MultiValuesTagUtil.tagEditorSplit(entry.getValue());
+                                        for (final String value : values) {
+                                            tag.addField(entry.getKey(), value);
+                                            Log.println(0, "TAG", value);
+                                        }
+                                    }
                                     else {
                                         tag.setField(entry.getKey(), entry.getValue());
                                     }
@@ -578,7 +587,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     protected String getArtistName() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.ARTIST);
+            List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
+            return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
         }
@@ -587,7 +597,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     protected String getAlbumArtistName() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM_ARTIST);
+            List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
+            return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
         }
