@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -145,7 +146,15 @@ class MemCache {
             return artist;
         };
 
-        Set<String> names = MultiArtistUtil.artistNamesMerge(song.artistNames, song.albumArtistNames);
+        Set<String> names = new HashSet<>();
+        names.addAll(song.artistNames);
+        names.addAll(song.albumArtistNames);
+        if (names.size() > 1) {
+            // after merging one empty and one non-empty artists lists,
+            // we end up with a list containing an empty element
+            // remove it if that's the case
+            names.remove("");
+        }
         Set<Artist> artists = new HashSet<>();
         for (final String name : names) {
             artists.add(getOrCreateArtist.apply(name));

@@ -42,7 +42,7 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.auto.AutoMusicProvider;
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.BlurTransformation;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
@@ -575,8 +575,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiArtistUtil.artistNamesMerge(song.artistNames))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiArtistUtil.artistNamesMerge(song.albumArtistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoString(song.artistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoString(song.albumArtistNames))
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
@@ -1064,7 +1064,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("id", song.id);
 
-        intent.putExtra("artist", MultiArtistUtil.artistNamesMerge(song.artistNames));
+        intent.putExtra("artist", MultiValuesTagUtil.infoString(song.artistNames));
         intent.putExtra("album", song.albumName);
         intent.putExtra("track", song.title);
 

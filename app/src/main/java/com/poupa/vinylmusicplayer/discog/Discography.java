@@ -28,6 +28,7 @@ import org.jaudiotagger.tag.reference.GenreTypes;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -197,27 +198,14 @@ public class Discography implements MusicServiceEventListener {
                 extractTags(song);
             }
 
-            // As the song metadata can come from MediaStore (no multi-artist support)
-            // or from our own ID3 extractor (which handles multi-artist support)
-            // -> split if is not already done
-            Consumer<List<String>> splitAndNormNames = (@NonNull List<String> names) -> {
-                List<String> clonedNames;
-                final boolean possiblyNotSplit = (names.size() == 1); // size = 0 -> nothing to do; size > 1 -> already split
-                if (possiblyNotSplit) {
-                    clonedNames = MultiArtistUtil.artistNamesSplit(names.get(0));
-                }
-                else {
-                    clonedNames = new ArrayList<>(names);
-                }
-
-                // Unicode normalization
-                names.clear();
-                for (String name : clonedNames) {
-                    names.add(StringUtil.unicodeNormalize(name));
+            Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
+                List<String> result = new ArrayList<>();
+                for (String name : names) {
+                    result.add(StringUtil.unicodeNormalize(name));
                 }
             };
-            splitAndNormNames.accept(song.albumArtistNames);
-            splitAndNormNames.accept(song.artistNames);
+            normNames.accept(song.albumArtistNames);
+            normNames.accept(song.artistNames);
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
             song.title = StringUtil.unicodeNormalize(song.title);
             song.genre = StringUtil.unicodeNormalize(song.genre);
@@ -328,10 +316,14 @@ public class Discography implements MusicServiceEventListener {
                 try {return Integer.parseInt(safeGetTag.apply(tag));}
                 catch (NumberFormatException ignored) {return 0;}
             };
+            Function<FieldKey, List<String>> safeGetTagAsList = (tag) -> {
+                try {return tags.getAll(tag);}
+                catch (KeyNotFoundException ignored) {return new ArrayList<>(Arrays.asList(""));}
+            };
 
             song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistNames  = MultiArtistUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ARTIST));
-            song.albumArtistNames = MultiArtistUtil.artistNamesSplit(safeGetTag.apply(FieldKey.ALBUM_ARTIST));
+            song.artistNames  = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ARTIST));
+            song.albumArtistNames = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ALBUM_ARTIST));
             song.title = safeGetTag.apply(FieldKey.TITLE);
             if (song.title.isEmpty()) {
                 // fallback to use the file name

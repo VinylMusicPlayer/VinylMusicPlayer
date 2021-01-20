@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -38,6 +38,6 @@ public class AlbumSongAdapter extends SongAdapter {
     protected String getSongText(Song song) {
         return MusicUtil.buildInfoString(
                 MusicUtil.getReadableDurationString(song.duration),
-                MultiArtistUtil.artistNamesMerge(song.artistNames));
+                MultiValuesTagUtil.infoString(song.artistNames));
     }
 }

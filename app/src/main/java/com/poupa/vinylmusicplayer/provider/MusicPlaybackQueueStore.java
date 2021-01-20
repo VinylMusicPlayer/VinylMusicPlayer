@@ -26,7 +26,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
@@ -176,7 +176,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     values.put(AudioColumns.ALBUM_ID, song.albumId);
                     values.put(AudioColumns.ALBUM, song.albumName);
                     values.put(AudioColumns.ARTIST_ID, song.artistId);
-                    values.put(AudioColumns.ARTIST, MultiArtistUtil.artistNamesMerge(song.artistNames));
+                    values.put(AudioColumns.ARTIST, MultiValuesTagUtil.merge(song.artistNames));
                     // Skip genre, discNumber, albumArtist fields since not supported in this DB.
 
                     database.insert(tableName, null, values);

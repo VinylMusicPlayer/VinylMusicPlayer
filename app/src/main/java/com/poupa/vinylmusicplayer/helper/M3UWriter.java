@@ -2,7 +2,7 @@ package com.poupa.vinylmusicplayer.helper;
 
 import android.content.Context;
 
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 
@@ -27,7 +27,7 @@ public class M3UWriter implements M3UConstants {
             bw.write(HEADER);
             for (Song song : songs) {
                 bw.newLine();
-                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + MultiArtistUtil.artistNamesMerge(song.artistNames) + " - " + song.title);
+                bw.write(ENTRY + song.duration + DURATION_SEPARATOR + MultiValuesTagUtil.infoString(song.artistNames) + " - " + song.title);
                 bw.newLine();
                 bw.write(song.data);
             }

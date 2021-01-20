@@ -21,7 +21,7 @@ import androidx.core.content.FileProvider;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -97,7 +97,7 @@ public class MusicUtil {
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
                 PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                MultiArtistUtil.artistNamesMerge(song.artistNames),
+                MultiValuesTagUtil.infoString(song.artistNames),
                 song.albumName
         );
     }

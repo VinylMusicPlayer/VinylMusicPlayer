@@ -21,7 +21,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.MultiArtistUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
@@ -51,7 +51,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
         final RemoteViews notificationLayout = new RemoteViews(service.getPackageName(), R.layout.notification);
         final RemoteViews notificationLayoutBig = new RemoteViews(service.getPackageName(), R.layout.notification_big);
 
-        final String artistNames = MultiArtistUtil.artistNamesMerge(song.artistNames);
+        final String artistNames = MultiValuesTagUtil.infoString(song.artistNames);
         if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistNames)) {
             notificationLayout.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         } else {
