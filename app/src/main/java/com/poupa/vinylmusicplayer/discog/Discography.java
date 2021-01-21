@@ -199,10 +199,11 @@ public class Discography implements MusicServiceEventListener {
             }
 
             Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
-                List<String> result = new ArrayList<>();
+                List<String> normalized = new ArrayList<>();
                 for (String name : names) {
-                    result.add(StringUtil.unicodeNormalize(name));
+                    normalized.add(StringUtil.unicodeNormalize(name));
                 }
+                names.clear(); names.addAll(normalized);
             };
             normNames.accept(song.albumArtistNames);
             normNames.accept(song.artistNames);
