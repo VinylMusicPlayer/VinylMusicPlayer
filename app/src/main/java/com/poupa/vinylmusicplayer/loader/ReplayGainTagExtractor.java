@@ -84,11 +84,11 @@ public class ReplayGainTagExtractor {
   private static Map<String, Float> parseVorbisTags(VorbisCommentTag tag) {
     Map<String, Float> tags = new HashMap<>();
 
-    if (tag.hasField("REPLAYGAIN_TRACK_GAIN")) {
-      tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst("REPLAYGAIN_TRACK_GAIN")));
+    if (tag.hasField(REPLAYGAIN_TRACK_GAIN)) {
+      tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst(REPLAYGAIN_TRACK_GAIN)));
     }
-    if (tag.hasField("REPLAYGAIN_ALBUM_GAIN")) {
-      tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst("REPLAYGAIN_ALBUM_GAIN")));
+    if (tag.hasField(REPLAYGAIN_ALBUM_GAIN)) {
+      tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst(REPLAYGAIN_ALBUM_GAIN)));
     }
 
     return tags;
