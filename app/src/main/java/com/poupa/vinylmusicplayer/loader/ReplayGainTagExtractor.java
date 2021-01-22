@@ -7,6 +7,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.flac.FlacTag;
+import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 
 import java.io.File;
@@ -30,10 +31,10 @@ public class ReplayGainTagExtractor {
       AudioFile file = AudioFileIO.read(new File(song.data));
       Tag tag = file.getTag();
 
-      if (tag instanceof VorbisCommentTag) {
-        tags = parseVorbisTags((VorbisCommentTag) tag);
-      } else if (tag instanceof FlacTag) {
-        tags = parseVorbisTags(((FlacTag) tag).getVorbisCommentTag());
+      if (tag instanceof VorbisCommentTag || tag instanceof FlacTag) {
+        tags = parseTags(tag);
+      } else if (tag instanceof Mp4Tag) {
+        tags = parseMp4Tags(tag);
       } else {
         tags = parseId3Tags(tag, song.data);
       }
@@ -81,7 +82,7 @@ public class ReplayGainTagExtractor {
     return tags;
   }
 
-  private static Map<String, Float> parseVorbisTags(VorbisCommentTag tag) {
+  private static Map<String, Float> parseTags(Tag tag) {
     Map<String, Float> tags = new HashMap<>();
 
     if (tag.hasField(REPLAYGAIN_TRACK_GAIN)) {
@@ -89,6 +90,21 @@ public class ReplayGainTagExtractor {
     }
     if (tag.hasField(REPLAYGAIN_ALBUM_GAIN)) {
       tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst(REPLAYGAIN_ALBUM_GAIN)));
+    }
+
+    return tags;
+  }
+
+  private static Map<String, Float> parseMp4Tags(Tag tag) {
+    Map<String, Float> tags = parseTags(tag);
+
+    final String ITUNES_PREFIX = "----:com.apple.iTunes:";
+    if (!tags.containsKey(REPLAYGAIN_TRACK_GAIN) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_TRACK_GAIN)) {
+      tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_TRACK_GAIN)));
+    }
+
+    if (!tags.containsKey(REPLAYGAIN_ALBUM_GAIN) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_ALBUM_GAIN)) {
+      tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_ALBUM_GAIN)));
     }
 
     return tags;
