@@ -354,9 +354,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
             sortOrderMenu.add(0, R.id.action_album_sort_order_artist, 2, R.string.sort_order_artist)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_ARTIST));
             sortOrderMenu.add(0, R.id.action_album_sort_order_year, 3, R.string.sort_order_year)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_YEAR));
+                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE));
             sortOrderMenu.add(0, R.id.action_album_sort_order_date_added, 4, R.string.sort_order_date_added)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED));
+                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE));
         } else if (fragment instanceof ArtistsFragment) {
             sortOrderMenu.add(0, R.id.action_artist_sort_order_asc, 0, R.string.sort_order_a_z)
                     .setChecked(currentSortOrder.equals(SortOrder.ArtistSortOrder.ARTIST_A_Z));
@@ -372,9 +372,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
             sortOrderMenu.add(0, R.id.action_song_sort_order_album, 3, R.string.sort_order_album)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_ALBUM));
             sortOrderMenu.add(0, R.id.action_song_sort_order_year, 4, R.string.sort_order_year)
-                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_YEAR));
+                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_YEAR_REVERSE));
             sortOrderMenu.add(0, R.id.action_song_sort_order_date_added, 5, R.string.sort_order_date_added)
-                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED));
+                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE));
         }
 
         sortOrderMenu.setGroupCheckable(0, true, true);
@@ -394,10 +394,10 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     sortOrder = SortOrder.AlbumSortOrder.ALBUM_ARTIST;
                     break;
                 case R.id.action_album_sort_order_year:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR;
+                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE;
                     break;
                 case R.id.action_album_sort_order_date_added:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED;
+                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE;
                     break;
             }
         } else if (fragment instanceof ArtistsFragment) {
@@ -424,10 +424,10 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     sortOrder = SortOrder.SongSortOrder.SONG_ALBUM;
                     break;
                 case R.id.action_song_sort_order_year:
-                    sortOrder = SortOrder.SongSortOrder.SONG_YEAR;
+                    sortOrder = SortOrder.SongSortOrder.SONG_YEAR_REVERSE;
                     break;
                 case R.id.action_song_sort_order_date_added:
-                    sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED;
+                    sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE;
                     break;
             }
         }

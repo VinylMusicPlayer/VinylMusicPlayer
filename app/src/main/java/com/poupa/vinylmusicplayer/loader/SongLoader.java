@@ -84,9 +84,9 @@ public class SongLoader {
                 return ComparatorUtil.chain(byArtist, byAlbum);
             case SortOrder.SongSortOrder.SONG_ALBUM:
                 return ComparatorUtil.chain(byAlbum, byArtist);
-            case SortOrder.SongSortOrder.SONG_YEAR:
+            case SortOrder.SongSortOrder.SONG_YEAR_REVERSE:
                 return ComparatorUtil.chain(byYearDesc, byArtist);
-            case SortOrder.SongSortOrder.SONG_DATE_ADDED:
+            case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
                 return ComparatorUtil.chain(byDateAddedDesc, byArtist);
 
             case SortOrder.SongSortOrder.SONG_A_Z:

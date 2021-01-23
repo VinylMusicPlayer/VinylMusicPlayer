@@ -61,7 +61,7 @@ class MemCache {
         // TODO Find a way to delay this sort operation if addSong is being called in batch
         for (Long artistId : albums.keySet()) {
             Artist artist = artistsById.get(artistId);
-            Collections.sort(artist.albums, (a1, a2) -> a1.getYear() - a2.getYear());
+            Collections.sort(artist.albums, (a1, a2) -> a2.getYear() - a1.getYear());
         }
         for (Album album : albums.values()) {
             Collections.sort(album.songs,

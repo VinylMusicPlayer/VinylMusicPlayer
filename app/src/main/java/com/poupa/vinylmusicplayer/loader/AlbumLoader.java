@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.loader;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -9,7 +7,6 @@ import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
 import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Album;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -72,18 +69,18 @@ public class AlbumLoader {
         Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 a1.getArtistName(),
                 a2.getArtistName());
-        Comparator<Album> byYear = (a1, a2) -> a1.getYear() - a2.getYear();
-        Comparator<Album> byDateAdded = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
+        Comparator<Album> byYearDesc = (a1, a2) -> a2.getYear() - a1.getYear();
+        Comparator<Album> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateAdded(), a1.getDateAdded());
 
         switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
             case SortOrder.AlbumSortOrder.ALBUM_Z_A:
                 return ComparatorUtil.chain(ComparatorUtil.reverse(byAlbumName), ComparatorUtil.reverse(byArtistName));
             case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
                 return ComparatorUtil.chain(byArtistName, byAlbumName);
-            case SortOrder.AlbumSortOrder.ALBUM_YEAR:
-                return ComparatorUtil.chain(byYear, byAlbumName);
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED:
-                return ComparatorUtil.chain(ComparatorUtil.reverse(byDateAdded), byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
+                return ComparatorUtil.chain(byYearDesc, byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
+                return ComparatorUtil.chain(byDateAddedDesc, byAlbumName);
 
             case SortOrder.AlbumSortOrder.ALBUM_A_Z:
             default:
