@@ -63,7 +63,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
                 }
             } else {
                 // None pending, we are at the end of the batch
-                if (progressBar.isShownOrQueued()) {
+                if (progressBar != null && progressBar.isShownOrQueued()) {
                     progressBar.dismiss();
                 }
 

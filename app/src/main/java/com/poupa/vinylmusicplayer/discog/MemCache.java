@@ -35,7 +35,6 @@ class MemCache {
 
     public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
-    private boolean invalid_artist = false;
 
     public synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbumById(song);
@@ -164,13 +163,9 @@ class MemCache {
         }
 
         // Since the MediaStore artistId is disregarded, correct the link on the Song object
-        try {
-            song.artistNames.get(0);
-        } catch (IndexOutOfBoundsException ignored) {
-            invalid_artist = true;
-        }
-        final Artist mainArtist = getOrCreateArtist.apply(invalid_artist ? "Unknown Artist" : song.artistNames.get(0));
+        Artist mainArtist = getOrCreateArtist.apply(song.artistNames.get(0));
         song.artistId = mainArtist.getId();
+
         return artists;
     }
 

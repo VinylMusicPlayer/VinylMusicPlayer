@@ -18,7 +18,7 @@ import java.util.Objects;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
-    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, Arrays.asList(""));
+    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, new ArrayList<>(Arrays.asList("")));
 
     public final long id;
 

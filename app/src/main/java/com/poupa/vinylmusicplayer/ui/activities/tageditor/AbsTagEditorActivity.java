@@ -391,7 +391,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         final List<String> values = MultiValuesTagUtil.tagEditorSplit(entry.getValue());
                                         for (final String value : values) {
                                             tag.addField(entry.getKey(), value);
-                                            Log.println(0, "TAG", value);
                                         }
                                     }
                                     else {
