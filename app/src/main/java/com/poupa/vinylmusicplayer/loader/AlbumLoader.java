@@ -72,18 +72,18 @@ public class AlbumLoader {
         Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 getArtistName.apply(a1),
                 getArtistName.apply(a2));
-        Comparator<Album> byYear = (a1, a2) -> a1.getYear() - a2.getYear();
-        Comparator<Album> byDateAdded = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
+        Comparator<Album> byYearDesc = (a1, a2) -> a2.getYear() - a1.getYear();
+        Comparator<Album> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateAdded(), a1.getDateAdded());
 
         switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
             case SortOrder.AlbumSortOrder.ALBUM_Z_A:
                 return ComparatorUtil.chain(ComparatorUtil.reverse(byAlbumName), ComparatorUtil.reverse(byArtistName));
             case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
                 return ComparatorUtil.chain(byArtistName, byAlbumName);
-            case SortOrder.AlbumSortOrder.ALBUM_YEAR:
-                return ComparatorUtil.chain(byYear, byAlbumName);
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED:
-                return ComparatorUtil.chain(ComparatorUtil.reverse(byDateAdded), byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
+                return ComparatorUtil.chain(byYearDesc, byAlbumName);
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
+                return ComparatorUtil.chain(byDateAddedDesc, byAlbumName);
 
             case SortOrder.AlbumSortOrder.ALBUM_A_Z:
             default:
