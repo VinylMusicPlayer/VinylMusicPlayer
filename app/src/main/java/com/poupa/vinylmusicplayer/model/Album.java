@@ -51,7 +51,9 @@ public class Album implements Parcelable {
     private Artist getArtist() {
         // Try getting the album artist
         final Song song = safeGetFirstSong();
-        final String name = song.albumArtistNames.get(0);
+        boolean invalid_artist = false;
+        try{song.albumArtistNames.get(0);} catch (IndexOutOfBoundsException ignored){ invalid_artist = true;}
+        final String name = invalid_artist ? "Unknown Artist" : song.albumArtistNames.get(0);
 
         if (!MusicUtil.isArtistNameUnknown(name)) {
             final Artist artist = Discography.getInstance().getArtistByName(name);

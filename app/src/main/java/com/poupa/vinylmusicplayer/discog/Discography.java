@@ -312,6 +312,7 @@ public class Discography implements MusicServiceEventListener {
             Function<FieldKey, String> safeGetTag = (tag) -> {
                 try {return tags.getFirst(tag).trim();}
                 catch (KeyNotFoundException ignored) {return "";}
+                catch (UnsupportedOperationException ignored){ return "";}
             };
             Function<FieldKey, Integer> safeGetTagAsInteger = (tag) -> {
                 try {return Integer.parseInt(safeGetTag.apply(tag));}
