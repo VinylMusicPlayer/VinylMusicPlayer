@@ -89,9 +89,12 @@ class MemCache {
             // ---- Check the Artist/Album link
             for (Long artistId : orphanArtists) {
                 Artist artist = artistsById.get(artistId);
-                Album album = impactedAlbumsByArtist.get(artistId);
 
+                Album album = impactedAlbumsByArtist.get(artistId);
                 impactedAlbumsByArtist.remove(artistId);
+
+                if (artist == null) continue;
+
                 artist.albums.remove(album);
                 if (artist.albums.isEmpty()) {
                     artistsById.remove(artist.id);
