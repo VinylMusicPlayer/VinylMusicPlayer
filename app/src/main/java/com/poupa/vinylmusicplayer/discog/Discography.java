@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -167,6 +168,12 @@ public class Discography implements MusicServiceEventListener {
                 fullAlbum.songs.add(song);
             }
         }
+        // Maintain sorted album after merge
+        Collections.sort(fullAlbum.songs,
+                (s1, s2) -> (s1.discNumber != s2.discNumber)
+                        ? (s1.discNumber - s2.discNumber)
+                        : (s1.trackNumber - s2.trackNumber)
+        );
         return fullAlbum;
     }
 
