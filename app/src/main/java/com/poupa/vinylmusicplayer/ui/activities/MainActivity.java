@@ -97,6 +97,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
         // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
         final Discography discog = Discography.getInstance();
+        discog.addChangedListener(this::onMediaStoreChanged);
         discog.startService(this);
         addMusicServiceEventListener(discog);
     }
@@ -369,6 +370,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void reload() {}
 
     public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();

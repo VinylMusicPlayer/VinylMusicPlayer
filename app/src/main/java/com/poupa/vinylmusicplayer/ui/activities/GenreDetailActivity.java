@@ -21,7 +21,9 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.GenreLoader;
@@ -60,6 +62,8 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
+
+    private final WeakMethodReference<GenreDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, GenreDetailActivity::reload);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,12 +159,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         }
     }
 
-    @Override
-    public void onMediaStoreChanged() {
-        super.onMediaStoreChanged();
-        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
-    }
-
     private void checkIsEmpty() {
         empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE
@@ -199,6 +197,11 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     public void onLoaderReset(@NonNull Loader<ArrayList<Song>> loader) {
         if (adapter != null)
             adapter.swapDataSet(new ArrayList<>());
+    }
+
+    @Override
+    protected void reload() {
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     private static class AsyncGenreSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {

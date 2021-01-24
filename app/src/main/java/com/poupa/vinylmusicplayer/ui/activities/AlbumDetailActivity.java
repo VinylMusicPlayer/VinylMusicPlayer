@@ -32,10 +32,12 @@ import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
@@ -115,6 +117,8 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     private Spanned wiki;
     private MaterialDialog wikiDialog;
     private LastFMRestClient lastFMRestClient;
+
+    private final WeakMethodReference<AlbumDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, AlbumDetailActivity::reload);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +246,8 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
         });
     }
 
-    private void reload() {
+    @Override
+    protected void reload() {
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, getIntent().getExtras(), this);
     }
 
@@ -400,12 +405,6 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
             recyclerView.stopScroll();
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onMediaStoreChanged() {
-        super.onMediaStoreChanged();
-        reload();
     }
 
     @Override
