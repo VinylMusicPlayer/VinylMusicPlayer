@@ -57,8 +57,6 @@ public class Discography implements MusicServiceEventListener {
     public Discography() {
         database = new DB();
         cache = new MemCache();
-
-        fetchAllSongs();
     }
 
     // TODO This is not a singleton and should not be declared as such
@@ -70,7 +68,13 @@ public class Discography implements MusicServiceEventListener {
     public void startService(@NonNull final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
-        triggerSyncWithMediaStore(false);
+
+        // TODO This is called by MainActivity.onCreate, while the view is not initialized --> snackbar not visible
+        final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+        SnackbarUtil.showProgress(message);
+
+        fetchAllSongs(); // TODO Is this necessary, given that we call triggerSync right after?
+        triggerSyncWithMediaStore(false, () -> {SnackbarUtil.dismiss();});
     }
 
     public void stopService() {
@@ -241,7 +245,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void triggerSyncWithMediaStore(boolean reset) {
+    public void triggerSyncWithMediaStore(boolean reset, @Nullable Runnable postExecutor) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -249,6 +253,9 @@ public class Discography implements MusicServiceEventListener {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
+                if (postExecutor != null) {
+                    postExecutor.run();
+                }
                 return true;
             }
         }.execute();
@@ -297,7 +304,7 @@ public class Discography implements MusicServiceEventListener {
 
     @Override
     public void onMediaStoreChanged() {
-        triggerSyncWithMediaStore(false);
+        triggerSyncWithMediaStore(false, null);
     }
 
     public void addChangedListener(Runnable listener) {
@@ -394,8 +401,10 @@ public class Discography implements MusicServiceEventListener {
 
     private void fetchAllSongs() {
         Collection<Song> songs = database.fetchAllSongs();
+        try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
         for (Song song : songs) {
             addSongImpl(song, true);
+            try {Thread.sleep(500);} catch (InterruptedException ignored) {}
         }
     }
 }

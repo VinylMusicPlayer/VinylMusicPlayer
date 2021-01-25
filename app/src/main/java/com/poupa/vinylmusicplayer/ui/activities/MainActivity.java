@@ -25,10 +25,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.SnackbarUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -183,8 +185,12 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }, 200);
                     break;
                 case R.id.action_reset_discography:
-                    // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
-                    Discography.getInstance().triggerSyncWithMediaStore(true);
+                    final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                    SnackbarUtil.showProgress(message);
+                    Discography.getInstance().triggerSyncWithMediaStore(
+                            true,
+                            () -> {SnackbarUtil.dismiss();}
+                    );
                     break;
                 case R.id.nav_settings:
                     new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);

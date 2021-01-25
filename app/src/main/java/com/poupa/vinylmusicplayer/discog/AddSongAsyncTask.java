@@ -1,14 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.os.AsyncTask;
-import android.os.Build;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-
-import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -21,9 +14,6 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     private static int pendingCount;
     private static int currentBatchCount;
 
-    private static Snackbar progressBar;
-    private final static Discography discography = Discography.getInstance();
-
     @Override
     protected void onPreExecute() {
         ++pendingCount;
@@ -33,7 +23,7 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     protected Boolean doInBackground(Song... songs) {
         boolean effectiveAdd = false;
         for (Song song : songs) {
-            effectiveAdd = discography.addSongImpl(song, false);
+            effectiveAdd = Discography.getInstance().addSongImpl(song, false);
         }
         return effectiveAdd;
     }
@@ -47,57 +37,21 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
 
         try {
             if (pendingCount > 0 && currentBatchCount > 0) {
-                final CharSequence message = buildMessage(R.string.scanning_x_songs_in_progress, currentBatchCount);
-
-                if (progressBar == null) {
-                    progressBar = Snackbar.make(
-                            discography.mainActivity.getSnackBarContainer(),
-                            message,
-                            Snackbar.LENGTH_INDEFINITE);
-                    progressBar.show();
-                } else {
-                    progressBar.setText(message);
-                    if (!progressBar.isShownOrQueued()) {
-                        progressBar.show();
-                    }
-                }
+                final String message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                        currentBatchCount);
+                SnackbarUtil.showProgress(message);
             } else {
                 // None pending, we are at the end of the batch
-                if (progressBar != null && progressBar.isShownOrQueued()) {
-                    progressBar.dismiss();
-                }
+                final String message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                        currentBatchCount);
+                SnackbarUtil.showResult(message);
 
-                if (currentBatchCount > 0) {
-                    final CharSequence message = buildMessage(R.string.scanning_x_songs_finished, currentBatchCount);
-                    Snackbar.make(
-                            discography.mainActivity.getSnackBarContainer(),
-                            message,
-                            Snackbar.LENGTH_LONG).show();
-
-                    currentBatchCount = 0;
-                }
+                currentBatchCount = 0;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @NonNull
-    private static CharSequence buildMessage(@StringRes int resId, int count) {
-        final String message = String.format(
-                App.getInstance().getApplicationContext().getString(resId),
-                count);
-
-        SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            messageWithIcon.append(
-                    " ",
-                    new ImageSpan(App.getInstance().getApplicationContext(), Discography.ICON),
-                    0);
-            messageWithIcon.append(" "); // some extra space before the text message
-        }
-        messageWithIcon.append(message);
-
-        return messageWithIcon;
     }
 }
