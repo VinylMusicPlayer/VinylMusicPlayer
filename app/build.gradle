@@ -49,14 +49,14 @@ android {
         circleci {
             dimension "default"
 
-            applicationIdSuffix ".ci"
-            versionNameSuffix ' CI'
-            signingConfig signingConfigs.circleci
-
             String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
             String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
             String buildTime = new Date().format('yyMMdd-HHmm')
             String buildId = gitBranch + "_" + gitSha1 + "_" + buildTime
+
+            applicationIdSuffix ".ci"
+            versionNameSuffix "-" + buildId + " CI"
+            signingConfig signingConfigs.circleci
             archivesBaseName = 'vinyl_' + buildId
         }
     }
