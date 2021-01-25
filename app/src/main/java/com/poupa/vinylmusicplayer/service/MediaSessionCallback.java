@@ -59,13 +59,13 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         final String category = AutoMediaIDHelper.extractCategory(mediaId);
         switch (category) {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                Album album = AlbumLoader.getAlbum(context, itemId);
+                Album album = AlbumLoader.getAlbum(itemId);
                 songs.addAll(album.songs);
                 openQueue(songs, 0, true);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
-                Artist artist = ArtistLoader.getArtist(context, itemId);
+                Artist artist = ArtistLoader.getArtist(itemId);
                 songs.addAll(artist.getSongs());
                 openQueue(songs, 0, true);
                 break;

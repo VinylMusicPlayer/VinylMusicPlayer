@@ -2,13 +2,14 @@ package com.poupa.vinylmusicplayer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -39,26 +40,30 @@ public class Album implements Parcelable {
     }
 
     public long getArtistId() {
-        return safeGetFirstSong().artistId;
+        return getArtist().id;
     }
 
     public String getArtistName() {
-        String name = safeGetFirstSong().albumArtistName;
-        if (TextUtils.isEmpty(name)) {
-            name = safeGetFirstSong().artistName;
-        }
-        if (MusicUtil.isArtistNameUnknown(name)) {
-            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
-        }
-        return name;
+        return getArtist().name;
     }
 
-    public String getAlbumArtistName() {
-        String name = safeGetFirstSong().albumArtistName;
-        if (MusicUtil.isArtistNameUnknown(name)) {
-            return Artist.UNKNOWN_ARTIST_DISPLAY_NAME;
+    @NonNull
+    private Artist getArtist() {
+        final Song song = safeGetFirstSong();
+
+        // Try getting the album artist
+        final String name = song.albumArtistNames.get(0);
+        if (!MusicUtil.isArtistNameUnknown(name)) {
+            final Artist artist = Discography.getInstance().getArtistByName(name);
+            if (artist != null) return artist;
         }
-        return name;
+
+        // Fallback: use the first song's first artist
+        final Artist artist = Discography.getInstance().getArtist(song.artistId);
+        if (artist != null) return artist;
+
+        // Give up
+        return Artist.EMPTY;
     }
 
     public int getYear() {
@@ -85,7 +90,7 @@ public class Album implements Parcelable {
 
         Album that = (Album) o;
 
-        return songs != null ? songs.equals(that.songs) : that.songs == null;
+        return Objects.equals(songs, that.songs);
 
     }
 

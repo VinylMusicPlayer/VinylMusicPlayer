@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.loader;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -24,7 +22,7 @@ public class AlbumLoader {
     private final static Discography discography = Discography.getInstance();
 
     @NonNull
-    public static ArrayList<Album> getAllAlbums(@NonNull final Context context) {
+    public static ArrayList<Album> getAllAlbums() {
         synchronized (discography) {
             ArrayList<Album> albums = new ArrayList<>(discography.getAllAlbums());
             Collections.sort(albums, getSortOrder());
@@ -33,7 +31,7 @@ public class AlbumLoader {
     }
 
     @NonNull
-    public static ArrayList<Album> getAlbums(@NonNull final Context context, String query) {
+    public static ArrayList<Album> getAlbums(String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         synchronized (discography) {
@@ -50,7 +48,7 @@ public class AlbumLoader {
     }
 
     @NonNull
-    public static Album getAlbum(@NonNull final Context context, long albumId) {
+    public static Album getAlbum(long albumId) {
         synchronized (discography) {
             Album album = discography.getAlbum(albumId);
             if (album != null) {
@@ -63,15 +61,14 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        Function<Album, String> getArtistName = (a) -> a.safeGetFirstSong().artistName;
         Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
 
         Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 getAlbumName.apply(a1),
                 getAlbumName.apply(a2));
         Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
-                getArtistName.apply(a1),
-                getArtistName.apply(a2));
+                a1.getArtistName(),
+                a2.getArtistName());
         Comparator<Album> byYearDesc = (a1, a2) -> a2.getYear() - a1.getYear();
         Comparator<Album> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateAdded(), a1.getDateAdded());
 

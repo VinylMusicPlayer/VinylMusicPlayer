@@ -64,6 +64,10 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
         trackNumber.addTextChangedListener(this);
         discNumber.addTextChangedListener(this);
         lyrics.addTextChangedListener(this);
+
+        // Dont wrap text if line too long, make it scrollable
+        // https://stackoverflow.com/questions/5146207/disable-word-wrap-in-an-android-multi-line-textview
+        artist.setHorizontallyScrolling(true);
     }
 
     private void fillViewsWithFileTags() {

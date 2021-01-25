@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -52,7 +53,7 @@ public class SongLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, @NonNull final String query) {
+    public static ArrayList<Song> getSongs(@NonNull final String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         synchronized (discography) {
@@ -71,7 +72,7 @@ public class SongLoader {
     @NonNull
     private static Comparator<Song> getSortOrder() {
         Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
-        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.artistName, a2.artistName);
+        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(MultiValuesTagUtil.infoString(a1.artistNames), MultiValuesTagUtil.infoString(a2.artistNames));
         Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
         Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
         Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
@@ -121,9 +122,9 @@ public class SongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        final String artistName = cursor.getString(11);
+        final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(11));
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
 
         Discography discog = Discography.getInstance();
         return discog.getOrAddSong(song);

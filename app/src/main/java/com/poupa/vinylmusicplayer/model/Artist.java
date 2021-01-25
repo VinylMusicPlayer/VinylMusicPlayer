@@ -4,11 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -58,11 +57,6 @@ public class Artist implements Parcelable {
         return songs;
     }
 
-    @NonNull
-    public Album safeGetFirstAlbum() {
-        return albums.isEmpty() ? new Album() : albums.get(0);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,13 +64,18 @@ public class Artist implements Parcelable {
 
         Artist artist = (Artist) o;
 
-        return albums != null ? albums.equals(artist.albums) : artist.albums == null;
-
+        if (id != artist.id) return false;
+        if (!TextUtils.equals(name, artist.name)) return false;
+        return Objects.equals(albums, artist.albums);
     }
 
     @Override
     public int hashCode() {
-        return albums != null ? albums.hashCode() : 0;
+        int result = (int)id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (albums != null ? albums.hashCode() : 0);
+
+        return result;
     }
 
     @Override
@@ -85,7 +84,6 @@ public class Artist implements Parcelable {
                 "albums=" + albums +
                 '}';
     }
-
 
     @Override
     public int describeContents() {

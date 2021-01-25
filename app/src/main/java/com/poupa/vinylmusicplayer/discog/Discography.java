@@ -28,10 +28,16 @@ import org.jaudiotagger.tag.reference.GenreTypes;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -78,7 +84,14 @@ public class Discography implements MusicServiceEventListener {
     public Song getOrAddSong(@NonNull  final Song song) {
         Song discogSong = getSong(song.id);
         if (discogSong != Song.EMPTY_SONG) {
-            if (song.data.equals(discogSong.data) && song.dateAdded == discogSong.dateAdded && song.dateModified == discogSong.dateModified) {
+            BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
+                if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
+                if (incomingSong.dateModified != cachedSong.dateModified) return true;
+                if (!incomingSong.data.equals(cachedSong.data)) return true;
+                return false;
+            };
+
+            if (!isMetadataObsolete.test(song, discogSong)) {
                 return discogSong;
             } else {
                 removeSongById(song.id);
@@ -112,6 +125,13 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    @Nullable
+    public Artist getArtistByName(String artistName) {
+        synchronized (cache) {
+            return cache.artistsByName.get(artistName);
+        }
+    }
+
     @NonNull
     public Collection<Artist> getAllArtists() {
         synchronized (cache) {
@@ -122,15 +142,39 @@ public class Discography implements MusicServiceEventListener {
     @Nullable
     public Album getAlbum(long albumId) {
         synchronized (cache) {
-            return cache.albumsById.get(albumId);
+            Map<Long, MemCache.AlbumSlice> albumsByArtist = cache.albumsByAlbumIdAndArtistId.get(albumId);
+            if (albumsByArtist == null) return null;
+            return mergeFullAlbum(albumsByArtist.values());
         }
     }
 
     @NonNull
     public Collection<Album> getAllAlbums() {
         synchronized (cache) {
-            return cache.albumsById.values();
+            ArrayList<Album> fullAlbums = new ArrayList<>();
+            for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
+                fullAlbums.add(mergeFullAlbum(albumsByArtist.values()));
+            }
+            return fullAlbums;
         }
+    }
+
+    @NonNull
+    private Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
+        Album fullAlbum = new Album();
+        for (Album fragment : albumParts) {
+            for (Song song : fragment.songs) {
+                if (fullAlbum.songs.contains(song)) continue;
+                fullAlbum.songs.add(song);
+            }
+        }
+        // Maintain sorted album after merge
+        Collections.sort(fullAlbum.songs,
+                (s1, s2) -> (s1.discNumber != s2.discNumber)
+                        ? (s1.discNumber - s2.discNumber)
+                        : (s1.trackNumber - s2.trackNumber)
+        );
+        return fullAlbum;
     }
 
     @NonNull
@@ -147,7 +191,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void addSong(@NonNull Song song) {
+    private void addSong(@NonNull Song song) {
         new AddSongAsyncTask().execute(song);
     }
 
@@ -162,8 +206,15 @@ public class Discography implements MusicServiceEventListener {
                 extractTags(song);
             }
 
-            // Unicode normalization
-            song.artistName = StringUtil.unicodeNormalize(song.artistName);
+            Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
+                List<String> normalized = new ArrayList<>();
+                for (String name : names) {
+                    normalized.add(StringUtil.unicodeNormalize(name));
+                }
+                names.clear(); names.addAll(normalized);
+            };
+            normNames.accept(song.albumArtistNames);
+            normNames.accept(song.artistNames);
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
             song.title = StringUtil.unicodeNormalize(song.title);
             song.genre = StringUtil.unicodeNormalize(song.genre);
@@ -280,15 +331,20 @@ public class Discography implements MusicServiceEventListener {
             Function<FieldKey, String> safeGetTag = (tag) -> {
                 try {return tags.getFirst(tag).trim();}
                 catch (KeyNotFoundException ignored) {return "";}
+                catch (UnsupportedOperationException ignored){ return "";}
             };
             Function<FieldKey, Integer> safeGetTagAsInteger = (tag) -> {
                 try {return Integer.parseInt(safeGetTag.apply(tag));}
                 catch (NumberFormatException ignored) {return 0;}
             };
+            Function<FieldKey, List<String>> safeGetTagAsList = (tag) -> {
+                try {return tags.getAll(tag);}
+                catch (KeyNotFoundException ignored) {return new ArrayList<>(Arrays.asList(""));}
+            };
 
             song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistName = safeGetTag.apply(FieldKey.ARTIST);
-            song.albumArtistName = safeGetTag.apply(FieldKey.ALBUM_ARTIST);
+            song.artistNames  = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ARTIST));
+            song.albumArtistNames = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ALBUM_ARTIST));
             song.title = safeGetTag.apply(FieldKey.TITLE);
             if (song.title.isEmpty()) {
                 // fallback to use the file name
@@ -322,7 +378,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void removeSongById(long songId) {
+    private void removeSongById(long songId) {
         cache.removeSongById(songId);
         database.removeSongById(songId);
 

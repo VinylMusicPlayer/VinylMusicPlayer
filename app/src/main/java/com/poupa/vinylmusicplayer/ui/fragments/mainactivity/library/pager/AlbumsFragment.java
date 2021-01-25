@@ -138,7 +138,7 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
 
         @Override
         public ArrayList<Album> loadInBackground() {
-            return AlbumLoader.getAllAlbums(getContext());
+            return AlbumLoader.getAllAlbums();
         }
     }
 }

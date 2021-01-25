@@ -19,7 +19,7 @@ import java.util.Collection;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     public DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -31,6 +31,7 @@ class DB extends SQLiteOpenHelper {
                 "CREATE TABLE IF NOT EXISTS " + SongColumns.NAME + " ("
                         + SongColumns.ID + " LONG NOT NULL, "
                         + SongColumns.ALBUM_ID + " LONG, "
+                        + SongColumns.ALBUM_ARTIST_NAME +  " TEXT, "
                         + SongColumns.ALBUM_NAME +  " TEXT, "
                         + SongColumns.ARTIST_ID + " LONG, "
                         + SongColumns.ARTIST_NAME + " TEXT, "
@@ -66,9 +67,10 @@ class DB extends SQLiteOpenHelper {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
             values.put(SongColumns.ALBUM_ID, song.albumId);
+            values.put(SongColumns.ALBUM_ARTIST_NAME, MultiValuesTagUtil.merge(song.albumArtistNames));
             values.put(SongColumns.ALBUM_NAME, song.albumName);
             values.put(SongColumns.ARTIST_ID, song.artistId);
-            values.put(SongColumns.ARTIST_NAME, song.artistName);
+            values.put(SongColumns.ARTIST_NAME, MultiValuesTagUtil.merge(song.artistNames));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
@@ -117,6 +119,7 @@ class DB extends SQLiteOpenHelper {
                 new String[]{
                         SongColumns.ID,
                         SongColumns.ALBUM_ID,
+                        SongColumns.ALBUM_ARTIST_NAME,
                         SongColumns.ALBUM_NAME,
                         SongColumns.ARTIST_ID,
                         SongColumns.ARTIST_NAME,
@@ -146,9 +149,10 @@ class DB extends SQLiteOpenHelper {
                 int columnIndex = -1;
                 final long id = cursor.getLong(++columnIndex);
                 final long albumId = cursor.getLong(++columnIndex);
+                final String albumArtistNames = cursor.getString(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
                 final long artistId = cursor.getLong(++columnIndex);
-                final String artistName = cursor.getString(++columnIndex);
+                final String artistNames = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
                 final long dateModified = cursor.getLong(++columnIndex);
@@ -173,10 +177,11 @@ class DB extends SQLiteOpenHelper {
                         albumId,
                         albumName,
                         artistId,
-                        artistName);
+                        MultiValuesTagUtil.split(artistNames));
                 song.discNumber = discNumber;
-                song.setReplayGainValues(replayGainTrack, replayGainAlbum);
+                song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
                 song.genre = genre;
+                song.setReplayGainValues(replayGainTrack, replayGainAlbum);
 
                 songs.add(song);
             } while (cursor.moveToNext());
@@ -189,6 +194,7 @@ class DB extends SQLiteOpenHelper {
 
         String ID = "id";
         String ALBUM_ID = "album_id";
+        String ALBUM_ARTIST_NAME = "album_artist_name";
         String ALBUM_NAME = "album_name";
         String ARTIST_ID = "artist_id";
         String ARTIST_NAME = "artist_name";

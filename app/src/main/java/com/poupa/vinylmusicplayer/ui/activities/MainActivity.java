@@ -47,7 +47,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,6 +95,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             showChangelog();
         }
 
+        // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
         final Discography discog = Discography.getInstance();
         discog.addChangedListener(this::onMediaStoreChanged);
         discog.startService(this);
@@ -180,6 +180,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }, 200);
                     break;
                 case R.id.action_reset_discography:
+                    // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
                     Discography.getInstance().triggerSyncWithMediaStore(true);
                     break;
                 case R.id.nav_settings:
@@ -295,14 +296,14 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             final long id = parseIdFromIntent(intent, "albumId", "album");
             if (id >= 0) {
                 int position = intent.getIntExtra("position", 0);
-                MusicPlayerRemote.openQueue(AlbumLoader.getAlbum(this, id).songs, position, true);
+                MusicPlayerRemote.openQueue(AlbumLoader.getAlbum(id).songs, position, true);
                 handled = true;
             }
         } else if (MediaStore.Audio.Artists.CONTENT_TYPE.equals(mimeType)) {
             final long id = parseIdFromIntent(intent, "artistId", "artist");
             if (id >= 0) {
                 int position = intent.getIntExtra("position", 0);
-                MusicPlayerRemote.openQueue(ArtistLoader.getArtist(this, id).getSongs(), position, true);
+                MusicPlayerRemote.openQueue(ArtistLoader.getArtist(id).getSongs(), position, true);
                 handled = true;
             }
         }

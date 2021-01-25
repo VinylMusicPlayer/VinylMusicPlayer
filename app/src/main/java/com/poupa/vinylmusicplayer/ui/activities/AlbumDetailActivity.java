@@ -440,7 +440,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
         titleTextView.setText(album.getTitle());
         artistTextView.setText(album.getArtistName());
         songCountTextView.setText(MusicUtil.getSongCountString(this, album.getSongCount()));
-        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(this, album.songs)));
+        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(album.songs)));
         albumYearTextView.setText(MusicUtil.getYearString(album.getYear()));
 
         adapter.swapDataSet(album.songs);
@@ -477,7 +477,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @Override
         public Album loadInBackground() {
-            return AlbumLoader.getAlbum(getContext(), albumId);
+            return AlbumLoader.getAlbum(albumId);
         }
     }
 }

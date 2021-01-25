@@ -8,10 +8,12 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistSongLoader {
     private final static Discography discography = Discography.getInstance();
@@ -45,28 +47,13 @@ public class PlaylistSongLoader {
         final long albumId = cursor.getLong(8);
         final String albumName = cursor.getString(9);
         final long artistId = cursor.getLong(10);
-        final String artistName = cursor.getString(11);
+        final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(11));
         final int idInPlaylist = cursor.getInt(12);
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistName);
-
+        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
         song = discography.getOrAddSong(song);
 
-        PlaylistSong playlistSong = new PlaylistSong(
-                id,
-                song.title,
-                song.trackNumber,
-                song.year,
-                song.duration,
-                data,
-                dateAdded,
-                dateModified,
-                song.albumId,
-                song.albumName,
-                song.artistId,
-                song.artistName,
-                playlistId,
-                idInPlaylist);
+        PlaylistSong playlistSong = new PlaylistSong(song, playlistId, idInPlaylist);
         return playlistSong;
     }
 
@@ -88,7 +75,9 @@ public class PlaylistSongLoader {
                             AudioColumns.ARTIST_ID,// 10
                             AudioColumns.ARTIST,// 11
                             MediaStore.Audio.Playlists.Members._ID // 12
-                    }, SongLoader.BASE_SELECTION, null,
+                    },
+                    SongLoader.BASE_SELECTION,
+                    null,
                     MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
             return null;

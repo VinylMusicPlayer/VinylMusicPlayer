@@ -1,8 +1,5 @@
 package com.poupa.vinylmusicplayer.loader;
 
-import android.content.Context;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.helper.SortOrder;
@@ -15,7 +12,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -25,7 +21,7 @@ public class ArtistLoader {
     private final static Discography discography = Discography.getInstance();
 
     @NonNull
-    public static ArrayList<Artist> getAllArtists(@NonNull final Context context) {
+    public static ArrayList<Artist> getAllArtists() {
         synchronized (discography) {
             ArrayList<Artist> artists = new ArrayList<>(discography.getAllArtists());
             Collections.sort(artists, getSortOrder());
@@ -34,7 +30,7 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static ArrayList<Artist> getArtists(@NonNull final Context context, String query) {
+    public static ArrayList<Artist> getArtists(String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         synchronized (discography) {
@@ -51,7 +47,7 @@ public class ArtistLoader {
     }
 
     @NonNull
-    public static Artist getArtist(@NonNull final Context context, long artistId) {
+    public static Artist getArtist(long artistId) {
         synchronized (discography) {
             Artist artist = discography.getArtist(artistId);
             if (artist != null) {

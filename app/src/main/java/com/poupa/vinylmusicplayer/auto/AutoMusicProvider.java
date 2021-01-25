@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
@@ -128,7 +129,7 @@ public class AutoMusicProvider {
                 Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
                 topTracksData.appendPath(String.valueOf(s.id))
                         .appendPath(s.title)
-                        .appendPath(s.artistName)
+                        .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
                         .appendPath(String.valueOf(s.albumId));
                 queueList.putIfAbsent(i, topTracksData.build());
             }
@@ -180,7 +181,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(s.artistName)
+                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByHistory.putIfAbsent(i, topTracksData.build());
         }
@@ -197,7 +198,7 @@ public class AutoMusicProvider {
             Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
             topTracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
-                    .appendPath(s.artistName)
+                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
             newMusicListByTopTracks.putIfAbsent(i, topTracksData.build());
         }
@@ -223,7 +224,7 @@ public class AutoMusicProvider {
     private synchronized void buildListsByAlbum() {
         ConcurrentMap<Integer, Uri> newMusicListByAlbum = new ConcurrentSkipListMap<>();
 
-        final List<Album> albums = AlbumLoader.getAllAlbums(mContext);
+        final List<Album> albums = AlbumLoader.getAllAlbums();
         for (int i = 0; i < albums.size(); i++) {
             final Album a = albums.get(i);
             Uri.Builder albumData = Uri.parse(BASE_URI).buildUpon();
@@ -240,7 +241,7 @@ public class AutoMusicProvider {
     private synchronized void buildListsByArtist() {
         ConcurrentMap<Integer, Uri> newMusicListByArtist = new ConcurrentSkipListMap<>();
 
-        final List<Artist> artists = ArtistLoader.getAllArtists(mContext);
+        final List<Artist> artists = ArtistLoader.getAllArtists();
         for (int i = 0; i < artists.size(); i++) {
             final Artist a = artists.get(i);
             Uri.Builder artistData = Uri.parse(BASE_URI).buildUpon();

@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.afollestad.materialcab.MaterialCab;
-import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -28,6 +25,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
@@ -86,7 +84,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         }
 
         songTitle.setText(song.title);
-        songInfo.setText(song.albumName);
+        songInfo.setText(MusicUtil.getSongInfoString(song));
 
         // TODO This album art loading can be factorized with the decorate() helper function
         if (!MusicPlayerRemote.isPlaying(song)) {

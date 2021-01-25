@@ -10,6 +10,7 @@ import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -31,12 +32,7 @@ public class Playlist implements Parcelable {
     @NonNull
     public String getInfoString(@NonNull Context context) {
         int songCount = getSongs(context).size();
-        String songCountString = MusicUtil.getSongCountString(context, songCount);
-
-        return MusicUtil.buildInfoString(
-                songCountString,
-                ""
-        );
+        return MusicUtil.getSongCountString(context, songCount);
     }
 
     @Override
