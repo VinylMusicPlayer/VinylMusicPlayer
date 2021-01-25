@@ -334,6 +334,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onDestroy() {
         unregisterReceiver(widgetIntentReceiver);
+        unregisterReceiver(updateFavoriteReceiver);
         if (becomingNoisyReceiverRegistered) {
             unregisterReceiver(becomingNoisyReceiver);
             becomingNoisyReceiverRegistered = false;
