@@ -57,8 +57,6 @@ public class Discography implements MusicServiceEventListener {
     public Discography() {
         database = new DB();
         cache = new MemCache();
-
-        fetchAllSongs();
     }
 
     // TODO This is not a singleton and should not be declared as such
@@ -242,7 +240,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void triggerSyncWithMediaStore(boolean reset) {
+    public void triggerSyncWithMediaStore(boolean reset, @Nullable Runnable postExecutor) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -303,7 +301,7 @@ public class Discography implements MusicServiceEventListener {
 
     @Override
     public void onMediaStoreChanged() {
-        triggerSyncWithMediaStore(false);
+        triggerSyncWithMediaStore(false, null);
     }
 
     public void addChangedListener(Runnable listener) {
@@ -400,8 +398,10 @@ public class Discography implements MusicServiceEventListener {
 
     private void fetchAllSongs() {
         Collection<Song> songs = database.fetchAllSongs();
+        try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
         for (Song song : songs) {
             addSongImpl(song, true);
+            try {Thread.sleep(500);} catch (InterruptedException ignored) {}
         }
     }
 }
