@@ -122,6 +122,7 @@ public class SongDetailDialog extends DialogFragment {
             } else {
                 // fallback
                 fileName.setText(makeTextWithTitle(context, R.string.label_file_name, song.title));
+                filePath.setText(makeTextWithTitle(context, R.string.label_file_path, song.data));
                 trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));
             }
         }
