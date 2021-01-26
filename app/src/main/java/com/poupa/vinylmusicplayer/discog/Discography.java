@@ -271,6 +271,13 @@ public class Discography implements MusicServiceEventListener {
                     removeSongById(songId);
                 }
             }
+
+            // Clean zombies track (still indexed by MediaStore without any backing file)
+            for (Song song : allSongs) {
+                if (song.data.isEmpty()) {
+                    removeSongById(song.id);
+                }
+            }
         }
     }
 
