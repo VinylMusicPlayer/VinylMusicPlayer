@@ -25,6 +25,7 @@ public class PlaylistSongLoader {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                // TODO Rely on Discog instead, to benefit from the zombie elimination
                 songs.add(getPlaylistSongFromCursorImpl(cursor, playlistId));
             } while (cursor.moveToNext());
         }

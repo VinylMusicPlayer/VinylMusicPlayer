@@ -48,6 +48,7 @@ public class SongLoader {
 
     @NonNull
     public static ArrayList<Song> getAllSongs(@NonNull Context context) {
+        // TODO Use Discog.getAllSongs instead, to benefit from the zombie elimination
         Cursor cursor = makeSongCursor(context, null, null);
         return getSongs(cursor);
     }
