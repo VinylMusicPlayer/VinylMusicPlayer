@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author SC (soncaokim)
@@ -273,8 +274,9 @@ public class Discography implements MusicServiceEventListener {
             }
 
             // Clean zombies track (still indexed by MediaStore without any backing file)
+            Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
             for (Song song : allSongs) {
-                if (song.data.isEmpty()) {
+                if (isZombie.test(song)) {
                     removeSongById(song.id);
                 }
             }
