@@ -33,6 +33,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SearchQueryHelper;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
@@ -73,6 +74,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     private boolean blockRequestPermissions;
     private boolean scanning;
 
+    private final WeakMethodReference<MainActivity> onDiscographyChanged = new WeakMethodReference<>(this, MainActivity::reload);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +100,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
         // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
         final Discography discog = Discography.getInstance();
-        discog.addChangedListener(this::onMediaStoreChanged);
+        discog.addChangedListener(onDiscographyChanged);
         discog.startService(this);
         addMusicServiceEventListener(discog);
     }
@@ -372,7 +375,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     }
 
     @Override
-    protected void reload() {}
+    protected void reload() {
+        // TODO Propagate reload to fragments?
+    }
 
     public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();
