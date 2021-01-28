@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.discog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,12 +69,7 @@ public class Discography implements MusicServiceEventListener {
         this.mainActivity = mainActivity;
         this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
 
-        // TODO This is called by MainActivity.onCreate, while the view is not initialized --> snackbar not visible
-        final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-        SnackbarUtil.showProgress(message);
-
-        fetchAllSongs(); // TODO Is this necessary, given that we call triggerSync right after?
-        triggerSyncWithMediaStore(false, () -> {SnackbarUtil.dismiss();});
+        triggerLoadMediaStore();
     }
 
     public void stopService() {
@@ -246,7 +240,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void triggerSyncWithMediaStore(boolean reset, @Nullable Runnable postExecutor) {
+    public void triggerSyncWithMediaStore(boolean reset) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -254,16 +248,12 @@ public class Discography implements MusicServiceEventListener {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
-                if (postExecutor != null) {
-                    postExecutor.run();
-                }
                 return true;
             }
         }.execute();
     }
 
     private void syncWithMediaStore() {
-        final long startTime = System.currentTimeMillis();
         final Context context = App.getInstance().getApplicationContext();
 
         // By querying via SongLoader, any newly added ones will be added to the cache
@@ -281,7 +271,6 @@ public class Discography implements MusicServiceEventListener {
                 removeSongById(songId);
             }
         }
-        Log.w("PERF", "syncWithMediaStore cost " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
@@ -307,7 +296,7 @@ public class Discography implements MusicServiceEventListener {
 
     @Override
     public void onMediaStoreChanged() {
-        triggerSyncWithMediaStore(false, null);
+        triggerSyncWithMediaStore(false);
     }
 
     public void addChangedListener(Runnable listener) {
@@ -402,12 +391,29 @@ public class Discography implements MusicServiceEventListener {
         cache.clear();
     }
 
+    private void triggerLoadMediaStore() {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                SnackbarUtil.showProgress(message);
+
+                Discography.this.fetchAllSongs();
+                Discography.this.syncWithMediaStore();
+
+                message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                        Discography.this.getAllSongs().size());
+                SnackbarUtil.showResult(message);
+                return true;
+            }
+        }.execute();
+    }
+
     private void fetchAllSongs() {
-        final long startTime = System.currentTimeMillis();
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSongImpl(song, true);
         }
-        Log.w("PERF", "fetchAllSongs cost " + (System.currentTimeMillis() - startTime) + " ms");
     }
 }

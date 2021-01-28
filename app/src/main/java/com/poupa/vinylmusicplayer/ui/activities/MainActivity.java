@@ -185,12 +185,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }, 200);
                     break;
                 case R.id.action_reset_discography:
-                    final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                    SnackbarUtil.showProgress(message);
-                    Discography.getInstance().triggerSyncWithMediaStore(
-                            true,
-                            () -> {SnackbarUtil.dismiss();}
-                    );
+                    Discography.getInstance().triggerSyncWithMediaStore(true);
                     break;
                 case R.id.nav_settings:
                     new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);

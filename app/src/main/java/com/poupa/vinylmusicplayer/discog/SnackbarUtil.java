@@ -52,7 +52,7 @@ public class SnackbarUtil {
         progressBar = Snackbar.make(
                 Discography.getInstance().mainActivity.getSnackBarContainer(),
                 buildMessageWithIcon(message),
-                Snackbar.LENGTH_SHORT);
+                Snackbar.LENGTH_LONG);
         progressBar.show();
     }
 
