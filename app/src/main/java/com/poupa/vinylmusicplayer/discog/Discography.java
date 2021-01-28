@@ -81,7 +81,7 @@ public class Discography implements MusicServiceEventListener {
     public void stopService() {}
 
     @NonNull
-    public Song getOrAddSong(@NonNull  final Song song) {
+    public Song getOrAddSong(@NonNull final Song song) {
         Song discogSong = getSong(song.id);
         if (discogSong != Song.EMPTY_SONG) {
             BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
@@ -266,10 +266,9 @@ public class Discography implements MusicServiceEventListener {
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
             Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
-            if (cacheSongsId.removeAll(allSongIds)) {
-                for (long songId : cacheSongsId) {
-                    removeSongById(songId);
-                }
+            cacheSongsId.removeAll(allSongIds);
+            for (long songId : cacheSongsId) {
+                removeSongById(songId);
             }
         }
     }
