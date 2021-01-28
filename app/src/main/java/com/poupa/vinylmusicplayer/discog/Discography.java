@@ -240,7 +240,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void triggerSyncWithMediaStore(boolean reset, @Nullable Runnable postExecutor) {
+    public void triggerSyncWithMediaStore(boolean reset) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -301,7 +301,7 @@ public class Discography implements MusicServiceEventListener {
 
     @Override
     public void onMediaStoreChanged() {
-        triggerSyncWithMediaStore(false, null);
+        triggerSyncWithMediaStore(false);
     }
 
     public void addChangedListener(Runnable listener) {
@@ -394,6 +394,25 @@ public class Discography implements MusicServiceEventListener {
     private void clear() {
         database.clear();
         cache.clear();
+    }
+
+    private void triggerLoadMediaStore() {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                SnackbarUtil.showProgress(message);
+
+                Discography.this.fetchAllSongs();
+                Discography.this.syncWithMediaStore();
+
+                message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                        Discography.this.getAllSongs().size());
+                SnackbarUtil.showResult(message);
+                return true;
+            }
+        }.execute();
     }
 
     private void fetchAllSongs() {
