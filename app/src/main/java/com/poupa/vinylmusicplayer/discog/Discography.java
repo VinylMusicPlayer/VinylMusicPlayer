@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.discog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -262,6 +263,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void syncWithMediaStore() {
+        final long startTime = System.currentTimeMillis();
         final Context context = App.getInstance().getApplicationContext();
 
         // By querying via SongLoader, any newly added ones will be added to the cache
@@ -279,6 +281,7 @@ public class Discography implements MusicServiceEventListener {
                 removeSongById(songId);
             }
         }
+        Log.w("PERF", "syncWithMediaStore cost " + (System.currentTimeMillis() - startTime) + " ms");
     }
 
     @Override
@@ -400,11 +403,11 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void fetchAllSongs() {
+        final long startTime = System.currentTimeMillis();
         Collection<Song> songs = database.fetchAllSongs();
-        try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
         for (Song song : songs) {
             addSongImpl(song, true);
-            try {Thread.sleep(500);} catch (InterruptedException ignored) {}
         }
+        Log.w("PERF", "fetchAllSongs cost " + (System.currentTimeMillis() - startTime) + " ms");
     }
 }
