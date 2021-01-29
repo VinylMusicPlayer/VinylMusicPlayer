@@ -57,6 +57,8 @@ public class Discography implements MusicServiceEventListener {
     public Discography() {
         database = new DB();
         cache = new MemCache();
+
+        fetchAllSongs();
     }
 
     // TODO This is not a singleton and should not be declared as such
