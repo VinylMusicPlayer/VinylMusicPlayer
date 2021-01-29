@@ -57,7 +57,7 @@ public class SnackbarUtil {
     }
 
     public static void dismiss() {
-        if (progressBar.isShownOrQueued()) {
+        if ((progressBar != null) && progressBar.isShownOrQueued()) {
             progressBar.dismiss();
         }
         progressBar = null;
