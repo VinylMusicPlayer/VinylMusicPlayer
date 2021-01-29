@@ -53,11 +53,6 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
     }
 
     @Override
-    public void onMediaStoreChanged() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     public Loader<ArrayList<Playlist>> onCreateLoader(int id, Bundle args) {
         return new AsyncPlaylistLoader(getActivity());
     }
@@ -94,5 +89,9 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
         public ArrayList<Playlist> loadInBackground() {
             return getAllPlaylists(getContext());
         }
+    }
+
+    public void reload() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }

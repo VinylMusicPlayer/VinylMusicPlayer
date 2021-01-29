@@ -68,11 +68,6 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
     }
 
     @Override
-    public void onMediaStoreChanged() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     public void onPlayingMetaChanged() {
         super.onPlayingMetaChanged();
 
@@ -96,11 +91,6 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
     @Override
     protected void saveSortOrder(String sortOrder) {
         PreferenceUtil.getInstance().setSongSortOrder(sortOrder);
-    }
-
-    @Override
-    protected void setSortOrder(String sortOrder) {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -169,5 +159,10 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
         public ArrayList<Song> loadInBackground() {
             return SongLoader.getAllSongs(getContext());
         }
+    }
+
+    @Override
+    public void reload() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }

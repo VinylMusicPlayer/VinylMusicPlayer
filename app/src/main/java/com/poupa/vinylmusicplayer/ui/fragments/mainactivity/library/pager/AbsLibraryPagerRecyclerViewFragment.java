@@ -138,4 +138,11 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         getLibraryFragment().removeOnAppBarOffsetChangedListener(this);
         unbinder.unbind();
     }
+
+    @Override
+    public void onMediaStoreChanged() {
+        reload();
+    }
+
+    public abstract void reload();
 }

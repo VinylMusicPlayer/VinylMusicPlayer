@@ -46,11 +46,6 @@ public class GenresFragment extends AbsLibraryPagerRecyclerViewFragment<GenreAda
     }
 
     @Override
-    public void onMediaStoreChanged() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     @NonNull
     public Loader<ArrayList<Genre>> onCreateLoader(int id, Bundle args) {
         return new GenresFragment.AsyncGenreLoader(getActivity());
@@ -75,5 +70,10 @@ public class GenresFragment extends AbsLibraryPagerRecyclerViewFragment<GenreAda
         public ArrayList<Genre> loadInBackground() {
             return GenreLoader.getAllGenres(getContext());
         }
+    }
+
+    @Override
+    public void reload() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }

@@ -57,11 +57,6 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     }
 
     @Override
-    public void onMediaStoreChanged() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     protected String loadSortOrder() {
         return PreferenceUtil.getInstance().getArtistSortOrder();
     }
@@ -69,11 +64,6 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     @Override
     protected void saveSortOrder(String sortOrder) {
         PreferenceUtil.getInstance().setArtistSortOrder(sortOrder);
-    }
-
-    @Override
-    protected void setSortOrder(String sortOrder) {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -117,18 +107,15 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
         getAdapter().notifyDataSetChanged();
     }
 
-
     @Override
     public Loader<ArrayList<Artist>> onCreateLoader(int id, Bundle args) {
         return new AsyncArtistLoader(getActivity());
     }
 
-
     @Override
     public void onLoadFinished(Loader<ArrayList<Artist>> loader, ArrayList<Artist> data) {
         getAdapter().swapDataSet(data);
     }
-
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Artist>> loader) {
@@ -144,5 +131,10 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
         public ArrayList<Artist> loadInBackground() {
             return ArtistLoader.getAllArtists();
         }
+    }
+
+    @Override
+    public void reload() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }
