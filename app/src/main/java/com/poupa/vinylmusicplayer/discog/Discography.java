@@ -57,6 +57,8 @@ public class Discography implements MusicServiceEventListener {
     public Discography() {
         database = new DB();
         cache = new MemCache();
+
+        fetchAllSongs();
     }
 
     // TODO This is not a singleton and should not be declared as such
@@ -69,7 +71,7 @@ public class Discography implements MusicServiceEventListener {
         this.mainActivity = mainActivity;
         this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
 
-        triggerLoadMediaStore();
+        triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
@@ -244,10 +246,15 @@ public class Discography implements MusicServiceEventListener {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                SnackbarUtil.showProgress(message);
+
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
+
+                SnackbarUtil.dismiss();
                 return true;
             }
         }.execute();
@@ -389,22 +396,6 @@ public class Discography implements MusicServiceEventListener {
     private void clear() {
         database.clear();
         cache.clear();
-    }
-
-    private void triggerLoadMediaStore() {
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                SnackbarUtil.showProgress(message);
-
-                Discography.this.fetchAllSongs();
-                Discography.this.syncWithMediaStore();
-
-                SnackbarUtil.dismiss();
-                return true;
-            }
-        }.execute();
     }
 
     private void fetchAllSongs() {
