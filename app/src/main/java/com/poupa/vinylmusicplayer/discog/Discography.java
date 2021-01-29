@@ -401,10 +401,7 @@ public class Discography implements MusicServiceEventListener {
                 Discography.this.fetchAllSongs();
                 Discography.this.syncWithMediaStore();
 
-                message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        Discography.this.getAllSongs().size());
-                SnackbarUtil.showResult(message);
+                SnackbarUtil.dismiss();
                 return true;
             }
         }.execute();

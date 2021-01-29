@@ -100,7 +100,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             showChangelog();
         }
 
-        // TODO Show snackbar announcing long operation - refact AddSongAsyncTask to reuse the facility
         final Discography discog = Discography.getInstance();
         discog.addChangedListener(onDiscographyChanged);
         discog.startService(this);
