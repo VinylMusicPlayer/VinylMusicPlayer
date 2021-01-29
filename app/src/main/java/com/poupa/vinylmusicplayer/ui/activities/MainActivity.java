@@ -25,17 +25,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.SnackbarUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SearchQueryHelper;
-import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
@@ -76,8 +73,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     private boolean blockRequestPermissions;
     private boolean scanning;
 
-    private final WeakMethodReference<MainActivity> onDiscographyChanged = new WeakMethodReference<>(this, MainActivity::reload);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +96,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         }
 
         final Discography discog = Discography.getInstance();
-        discog.addChangedListener(onDiscographyChanged);
         discog.startService(this);
         addMusicServiceEventListener(discog);
     }
@@ -376,7 +370,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     @Override
     protected void reload() {
-        // TODO Propagate reload to fragments?
     }
 
     public interface MainActivityFragmentCallbacks {
