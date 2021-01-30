@@ -214,7 +214,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @Override
         public ArrayList<Song> loadInBackground() {
-            return GenreLoader.getSongs(getContext(), genre.id);
+            return GenreLoader.getSongs(genre.id);
         }
     }
 }
