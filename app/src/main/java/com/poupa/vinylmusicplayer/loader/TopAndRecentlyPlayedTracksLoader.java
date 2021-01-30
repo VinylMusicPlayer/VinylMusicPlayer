@@ -20,7 +20,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -34,9 +33,14 @@ public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
+
         try (Cursor cursor = HistoryStore.getInstance(context).queryRecentIds(cutoff)) {
-            ArrayList<Long> songIds = getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
-            return getSongsFromIdsAndCleanupHistory(context, songIds);
+            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
+
+            return SongLoader.getSongsFromIdsAndCleanupOrphans(
+                    songIds,
+                    (x) -> HistoryStore.getInstance(context).removeSongIds(x)
+            );
         }
     }
 
@@ -47,7 +51,7 @@ public class TopAndRecentlyPlayedTracksLoader {
 
         // Collect not played songs
         try (Cursor cursor = historyStore.queryRecentIds(0)) {
-            ArrayList<Long> playedSongIds = getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
+            ArrayList<Long> playedSongIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
             for (Song song : Discography.getInstance().getAllSongs()) {
                 if (!playedSongIds.contains(song.id)) {
                     songIds.add(song.id);
@@ -58,53 +62,25 @@ public class TopAndRecentlyPlayedTracksLoader {
         // Collect not recently played songs
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
         try (Cursor cursor = historyStore.queryRecentIds(-1 * cutoff)) {
-            ArrayList<Long> notRecentSongIds = getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
+            ArrayList<Long> notRecentSongIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
             songIds.addAll(notRecentSongIds);
         }
 
-        return getSongsFromIdsAndCleanupHistory(context, songIds);
+        return SongLoader.getSongsFromIdsAndCleanupOrphans(
+                songIds,
+                (x) -> HistoryStore.getInstance(context).removeSongIds(x)
+        );
     }
 
     @NonNull
     public static ArrayList<Song> getTopTracks(@NonNull Context context) {
         final int NUMBER_OF_TOP_TRACKS = 100;
+
         try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
-            ArrayList<Long> songIds = getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
-            return getSongsFromIdsAndCleanupHistory(context, songIds);
+            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
+
+            return SongLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
         }
     }
 
-    @NonNull
-    private static ArrayList<Long> getIdsFromCursor(@Nullable Cursor cursor, @NonNull final String columnName) {
-        ArrayList<Long> ids = new ArrayList<>();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int idColumn = cursor.getColumnIndex(columnName);
-            ids.add(cursor.getLong(idColumn));
-            while (cursor.moveToNext()) {
-                ids.add(cursor.getLong(idColumn));
-            }
-        }
-
-        return ids;
-    }
-
-    @NonNull
-    private static ArrayList<Song> getSongsFromIdsAndCleanupHistory(@NonNull Context context, @NonNull ArrayList<Long> songIds) {
-        Discography discography = Discography.getInstance();
-        ArrayList<Long> orphanSongIds = new ArrayList<>();
-
-        ArrayList<Song> songs = new ArrayList<>();
-        for (Long id : songIds) {
-            Song song = discography.getSong(id);
-            if (song.id == Song.EMPTY_SONG.id) {
-                orphanSongIds.add(id);
-            } else {
-                songs.add(song);
-            }
-        }
-
-        HistoryStore.getInstance(context).removeSongIds(orphanSongIds);
-        return songs;
-    }
 }

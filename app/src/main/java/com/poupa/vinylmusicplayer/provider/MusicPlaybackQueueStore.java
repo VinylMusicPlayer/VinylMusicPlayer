@@ -166,6 +166,8 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues(4);
 
                     values.put(BaseColumns._ID, song.id);
+                    // TODO No need to save the songs here-under
+                    //      Keep it for now for backward compat (in the case of rollback)
                     values.put(AudioColumns.TITLE, song.title);
                     values.put(AudioColumns.TRACK, song.trackNumber);
                     values.put(AudioColumns.YEAR, song.year);
@@ -201,8 +203,11 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
     @NonNull
     private ArrayList<Song> getQueue(@NonNull final String tableName) {
-        Cursor cursor = getReadableDatabase().query(tableName, null,
-                null, null, null, null, null);
-        return SongLoader.getSongs(cursor);
+        try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID},
+                null, null, null, null, null)) {
+            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, BaseColumns._ID);
+
+            return SongLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+        }
     }
 }

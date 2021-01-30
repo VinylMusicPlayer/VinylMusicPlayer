@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -97,7 +98,42 @@ public class SongLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@Nullable final Cursor cursor) {
+    public static ArrayList<Long> getIdsFromCursor(@Nullable Cursor cursor, @NonNull final String columnName) {
+        ArrayList<Long> ids = new ArrayList<>();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int idColumn = cursor.getColumnIndex(columnName);
+            do {
+                ids.add(cursor.getLong(idColumn));
+            } while (cursor.moveToNext());
+        }
+
+        return ids;
+    }
+
+    @NonNull
+    public static ArrayList<Song> getSongsFromIdsAndCleanupOrphans(@NonNull ArrayList<Long> songIds, @Nullable Consumer<ArrayList<Long>> orphanIdsCleaner) {
+        Discography discography = Discography.getInstance();
+        ArrayList<Long> orphanSongIds = new ArrayList<>();
+
+        ArrayList<Song> songs = new ArrayList<>();
+        for (Long id : songIds) {
+            Song song = discography.getSong(id);
+            if (song.id == Song.EMPTY_SONG.id) {
+                orphanSongIds.add(id);
+            } else {
+                songs.add(song);
+            }
+        }
+
+        if (orphanIdsCleaner != null) {
+            orphanIdsCleaner.accept(orphanSongIds);
+        }
+        return songs;
+    }
+
+    @NonNull
+    private static ArrayList<Song> getSongs(@Nullable final Cursor cursor) {
         ArrayList<Song> songs = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
