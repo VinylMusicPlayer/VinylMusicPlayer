@@ -77,7 +77,7 @@ public class SongLoader {
     }
 
     @NonNull
-    private static Comparator<Song> getSortOrder() {
+    public static Comparator<Song> getSortOrder() {
         switch (PreferenceUtil.getInstance().getSongSortOrder()) {
             case SortOrder.SongSortOrder.SONG_Z_A:
                 return ComparatorUtil.chain(ComparatorUtil.reverse(BY_TITLE), ComparatorUtil.reverse(BY_ARTIST));

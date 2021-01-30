@@ -7,86 +7,57 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.discog.StringUtil;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
+ * @author SC (soncaokim)
  */
 public class SearchQueryHelper {
-    private static final String TITLE_SELECTION = "lower(" + MediaStore.Audio.AudioColumns.TITLE + ") = ?";
-    private static final String ALBUM_SELECTION = "lower(" + MediaStore.Audio.AudioColumns.ALBUM + ") = ?";
-    private static final String ARTIST_SELECTION = "lower(" + MediaStore.Audio.AudioColumns.ARTIST + ") = ?";
-    private static final String AND = " AND ";
-
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, @NonNull final Bundle extras) {
-        final String query = extras.getString(SearchManager.QUERY, null);
-        final String artistName = extras.getString(MediaStore.EXTRA_MEDIA_ARTIST, null);
-        final String albumName = extras.getString(MediaStore.EXTRA_MEDIA_ALBUM, null);
-        final String titleName = extras.getString(MediaStore.EXTRA_MEDIA_TITLE, null);
+    public static ArrayList<Song> getSongs(@NonNull final Bundle extras) {
+        Function<String, String> normalize = (s) -> StringUtil.stripAccent(s).toLowerCase();
 
-        ArrayList<Song> songs = new ArrayList<>();
+        final String query = normalize.apply(extras.getString(SearchManager.QUERY, ""));
+        final String artistName = normalize.apply(extras.getString(MediaStore.EXTRA_MEDIA_ARTIST, ""));
+        final String albumName = normalize.apply(extras.getString(MediaStore.EXTRA_MEDIA_ALBUM, ""));
+        final String title = normalize.apply(extras.getString(MediaStore.EXTRA_MEDIA_TITLE, ""));
 
-        if (artistName != null && albumName != null && titleName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ARTIST_SELECTION + AND + ALBUM_SELECTION + AND + TITLE_SELECTION, new String[]{artistName.toLowerCase().trim(), albumName.toLowerCase().trim(), titleName.toLowerCase().trim()}));
-        }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
+        Predicate<Song> isMatchingArtist = (s) -> {
+            BiPredicate<String, List<String>> isXinY = (x, y) -> {
+                if (x.isEmpty()) return false;
 
-        if (artistName != null && titleName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ARTIST_SELECTION + AND + TITLE_SELECTION, new String[]{artistName.toLowerCase().trim(), titleName.toLowerCase().trim()}));
-        }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
+                for (String yIterator : y) {
+                    if (normalize.apply(yIterator).contains(x)) return true;
+                }
+                return false;
+            };
+            return isXinY.test(artistName, s.albumArtistNames) || isXinY.test(artistName, s.artistNames);
+        };
+        Predicate<Song> isMatchingAlbum = (s) -> (!albumName.isEmpty() && normalize.apply(s.albumName).contains(albumName));
+        Predicate<Song> isMatchingTitle = (s) -> (!title.isEmpty() && normalize.apply(s.title).contains(title));
+        Predicate<Song> isMatchingQuery= (s) -> (!query.isEmpty() && normalize.apply(s.title).contains(query));
 
-        if (albumName != null && titleName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ALBUM_SELECTION + AND + TITLE_SELECTION, new String[]{albumName.toLowerCase().trim(), titleName.toLowerCase().trim()}));
-        }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
+        ArrayList<Song> matchingSongs = new ArrayList<>();
+        Collection<Song> allSongs = Discography.getInstance().getAllSongs();
 
-        if (artistName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ARTIST_SELECTION, new String[]{artistName.toLowerCase().trim()}));
+        for (Song song : allSongs) {
+            if (isMatchingTitle.test(song) || isMatchingAlbum.test(song) || isMatchingArtist.test(song) || isMatchingQuery.test(song)) {
+                matchingSongs.add(song);
+            }
         }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        if (albumName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ALBUM_SELECTION, new String[]{albumName.toLowerCase().trim()}));
-        }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        if (titleName != null) {
-            songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, TITLE_SELECTION, new String[]{titleName.toLowerCase().trim()}));
-        }
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ARTIST_SELECTION, new String[]{query.toLowerCase().trim()}));
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, ALBUM_SELECTION, new String[]{query.toLowerCase().trim()}));
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        songs = SongLoader.getSongs(SongLoader.makeSongCursor(context, TITLE_SELECTION, new String[]{query.toLowerCase().trim()}));
-        if (!songs.isEmpty()) {
-            return songs;
-        }
-
-        return SongLoader.getSongs(query);
+        Collections.sort(matchingSongs, SongLoader.getSortOrder());
+        return matchingSongs;
     }
 }
