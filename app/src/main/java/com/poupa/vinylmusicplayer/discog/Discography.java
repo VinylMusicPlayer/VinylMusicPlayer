@@ -170,11 +170,7 @@ public class Discography implements MusicServiceEventListener {
             }
         }
         // Maintain sorted album after merge
-        Collections.sort(fullAlbum.songs,
-                (s1, s2) -> (s1.discNumber != s2.discNumber)
-                        ? (s1.discNumber - s2.discNumber)
-                        : (s1.trackNumber - s2.trackNumber)
-        );
+        Collections.sort(fullAlbum.songs, SongLoader.BY_DISC_TRACK);
         return fullAlbum;
     }
 

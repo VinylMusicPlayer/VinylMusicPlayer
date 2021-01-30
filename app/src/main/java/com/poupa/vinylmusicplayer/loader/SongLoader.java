@@ -28,6 +28,17 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class SongLoader {
+    public static final Comparator<Song> BY_TITLE = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.title, s2.title);
+    public static final Comparator<Song> BY_ARTIST = (s1, s2) -> StringUtil.compareIgnoreAccent(MultiValuesTagUtil.infoString(s1.artistNames), MultiValuesTagUtil.infoString(s2.artistNames));
+    public static final Comparator<Song> BY_ALBUM = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.albumName, s2.albumName);
+    public static final Comparator<Song> BY_YEAR_DESC = (s1, s2) -> s2.year - s1.year;
+    public static final Comparator<Song> BY_DATE_ADDED_DESC = (s1, s2) -> ComparatorUtil.compareLongInts(s2.dateAdded, s1.dateAdded);
+    public static final Comparator<Song> BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
+            ? (s1.discNumber - s2.discNumber)
+            : (s1.trackNumber - s2.trackNumber);
+
+    private final static Discography discography = Discography.getInstance();
+
     protected static final String BASE_SELECTION = AudioColumns.IS_MUSIC + "=1" + " AND " + AudioColumns.TITLE + " != ''";
     protected static final String[] BASE_PROJECTION = new String[]{
             BaseColumns._ID,// 0
@@ -67,27 +78,21 @@ public class SongLoader {
 
     @NonNull
     private static Comparator<Song> getSortOrder() {
-        Comparator<Song> byTitle = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.title, a2.title);
-        Comparator<Song> byArtist = (a1, a2) -> StringUtil.compareIgnoreAccent(MultiValuesTagUtil.infoString(a1.artistNames), MultiValuesTagUtil.infoString(a2.artistNames));
-        Comparator<Song> byAlbum = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.albumName, a2.albumName);
-        Comparator<Song> byYearDesc = (a1, a2) -> a2.year - a1.year;
-        Comparator<Song> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.dateAdded, a1.dateAdded);
-
         switch (PreferenceUtil.getInstance().getSongSortOrder()) {
             case SortOrder.SongSortOrder.SONG_Z_A:
-                return ComparatorUtil.chain(ComparatorUtil.reverse(byTitle), ComparatorUtil.reverse(byArtist));
+                return ComparatorUtil.chain(ComparatorUtil.reverse(BY_TITLE), ComparatorUtil.reverse(BY_ARTIST));
             case SortOrder.SongSortOrder.SONG_ARTIST:
-                return ComparatorUtil.chain(byArtist, byAlbum);
+                return ComparatorUtil.chain(BY_ARTIST, BY_ALBUM);
             case SortOrder.SongSortOrder.SONG_ALBUM:
-                return ComparatorUtil.chain(byAlbum, byArtist);
+                return ComparatorUtil.chain(BY_ALBUM, BY_ARTIST);
             case SortOrder.SongSortOrder.SONG_YEAR_REVERSE:
-                return ComparatorUtil.chain(byYearDesc, byArtist);
+                return ComparatorUtil.chain(BY_YEAR_DESC, BY_ARTIST);
             case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
-                return ComparatorUtil.chain(byDateAddedDesc, byArtist);
+                return ComparatorUtil.chain(BY_DATE_ADDED_DESC, BY_ARTIST);
 
             case SortOrder.SongSortOrder.SONG_A_Z:
             default:
-                return ComparatorUtil.chain(byTitle, byArtist);
+                return ComparatorUtil.chain(BY_TITLE, BY_ARTIST);
         }
     }
 

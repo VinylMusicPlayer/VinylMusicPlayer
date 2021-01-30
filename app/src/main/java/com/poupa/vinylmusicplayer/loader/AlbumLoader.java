@@ -12,13 +12,23 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  * @author SC (soncaokim)
  */
 public class AlbumLoader {
+    public final static Comparator<Album> BY_ALBUM_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
+            a1.safeGetFirstSong().albumName,
+            a2.safeGetFirstSong().albumName);
+    public final static Comparator<Album> BY_ARTIST_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
+            a1.getArtistName(),
+            a2.getArtistName());
+    public final static Comparator<Album> BY_YEAR_DESC = (a1, a2) -> a2.getYear() - a1.getYear();
+    public final static Comparator<Album> BY_DATE_ADDED_DESC = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateAdded(), a1.getDateAdded());
+
+    private final static Discography discography = Discography.getInstance();
+
     @NonNull
     public static ArrayList<Album> getAllAlbums() {
         ArrayList<Album> albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
@@ -53,30 +63,19 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        Function<Album, String> getAlbumName = (a) -> a.safeGetFirstSong().albumName;
-
-        Comparator<Album> byAlbumName = (a1, a2) -> StringUtil.compareIgnoreAccent(
-                getAlbumName.apply(a1),
-                getAlbumName.apply(a2));
-        Comparator<Album> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(
-                a1.getArtistName(),
-                a2.getArtistName());
-        Comparator<Album> byYearDesc = (a1, a2) -> a2.getYear() - a1.getYear();
-        Comparator<Album> byDateAddedDesc = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateAdded(), a1.getDateAdded());
-
         switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
             case SortOrder.AlbumSortOrder.ALBUM_Z_A:
-                return ComparatorUtil.chain(ComparatorUtil.reverse(byAlbumName), ComparatorUtil.reverse(byArtistName));
+                return ComparatorUtil.chain(ComparatorUtil.reverse(BY_ALBUM_NAME), ComparatorUtil.reverse(BY_ARTIST_NAME));
             case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
-                return ComparatorUtil.chain(byArtistName, byAlbumName);
+                return ComparatorUtil.chain(BY_ARTIST_NAME, BY_ALBUM_NAME);
             case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
-                return ComparatorUtil.chain(byYearDesc, byAlbumName);
+                return ComparatorUtil.chain(BY_YEAR_DESC, BY_ALBUM_NAME);
             case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
-                return ComparatorUtil.chain(byDateAddedDesc, byAlbumName);
+                return ComparatorUtil.chain(BY_DATE_ADDED_DESC, BY_ALBUM_NAME);
 
             case SortOrder.AlbumSortOrder.ALBUM_A_Z:
             default:
-                return ComparatorUtil.chain(byAlbumName, byArtistName);
+                return ComparatorUtil.chain(BY_ALBUM_NAME, BY_ARTIST_NAME);
         }
     }
 }

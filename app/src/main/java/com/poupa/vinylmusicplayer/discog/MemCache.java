@@ -2,6 +2,8 @@ package com.poupa.vinylmusicplayer.discog;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.loader.AlbumLoader;
+import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -59,14 +61,10 @@ class MemCache {
         for (Long artistId : albums.keySet()) {
             Artist artist = artistsById.get(artistId);
             if (artist == null) continue;
-            Collections.sort(artist.albums, (a1, a2) -> a2.getYear() - a1.getYear());
+            Collections.sort(artist.albums, AlbumLoader.BY_YEAR_DESC);
         }
         for (Album album : albums.values()) {
-            Collections.sort(album.songs,
-                    (s1, s2) -> (s1.discNumber != s2.discNumber)
-                            ? (s1.discNumber - s2.discNumber)
-                            : (s1.trackNumber - s2.trackNumber)
-            );
+            Collections.sort(album.songs, SongLoader.BY_DISC_TRACK);
         }
     }
 
