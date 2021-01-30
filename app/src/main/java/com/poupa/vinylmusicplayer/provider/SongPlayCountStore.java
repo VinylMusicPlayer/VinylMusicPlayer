@@ -40,27 +40,27 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
 
     // interpolator curve applied for measuring the curve
     @NonNull
-    private static Interpolator sInterpolator = new AccelerateInterpolator(1.5f);
+    private static final Interpolator sInterpolator = new AccelerateInterpolator(1.5f);
 
     // how many weeks worth of playback to track
     private static final int NUM_WEEKS = 52;
 
     // how high to multiply the interpolation curve
     @SuppressWarnings("FieldCanBeLocal")
-    private static int INTERPOLATOR_HEIGHT = 50;
+    private static final int INTERPOLATOR_HEIGHT = 50;
 
     // how high the base value is. The ratio of the Height to Base is what really matters
     @SuppressWarnings("FieldCanBeLocal")
-    private static int INTERPOLATOR_BASE = 25;
+    private static final int INTERPOLATOR_BASE = 25;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private static int ONE_WEEK_IN_MS = 1000 * 60 * 60 * 24 * 7;
+    private static final int ONE_WEEK_IN_MS = 1000 * 60 * 60 * 24 * 7;
 
     @NonNull
-    private static String WHERE_ID_EQUALS = SongPlayCountColumns.ID + "=?";
+    private static final String WHERE_ID_EQUALS = SongPlayCountColumns.ID + "=?";
 
     // number of weeks since epoch time
-    private int mNumberOfWeeksSinceEpoch;
+    private final int mNumberOfWeeksSinceEpoch;
 
     // used to track if we've walked through the db and updated all the rows
     private boolean mDatabaseUpdated;
@@ -323,14 +323,6 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
     }
 
     /**
-     * @param songId The song Id to remove.
-     */
-    public void removeItem(final long songId) {
-        final SQLiteDatabase database = getWritableDatabase();
-        deleteEntry(database, String.valueOf(songId));
-    }
-
-    /**
      * Deletes the entry
      *
      * @param database database to use
@@ -399,11 +391,8 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
         String NAME = "song_play_count";
 
         String ID = "song_id";
-
         String WEEK_PLAY_COUNT = "week";
-
         String LAST_UPDATED_WEEK_INDEX = "week_index";
-
         String PLAY_COUNT_SCORE = "play_count_score";
     }
 }
