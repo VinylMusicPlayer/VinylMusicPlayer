@@ -111,6 +111,21 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
+    public Song getSongByPath(@NonNull final String path) {
+        synchronized (cache) {
+            Song matchingSong = Song.EMPTY_SONG;
+
+            for (Song song : cache.songsById.values()) {
+                if (song.data.equals(path)) {
+                    matchingSong = song;
+                    break;
+                }
+            }
+            return matchingSong;
+        }
+    }
+
+    @NonNull
     public Collection<Song> getAllSongs() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
