@@ -50,9 +50,7 @@ public class SearchQueryHelper {
         Predicate<Song> isMatchingQuery= (s) -> (!query.isEmpty() && normalize.apply(s.title).contains(query));
 
         ArrayList<Song> matchingSongs = new ArrayList<>();
-        Collection<Song> allSongs = Discography.getInstance().getAllSongs();
-
-        for (Song song : allSongs) {
+        for (Song song : Discography.getInstance().getAllSongs()) {
             if (isMatchingTitle.test(song) || isMatchingAlbum.test(song) || isMatchingArtist.test(song) || isMatchingQuery.test(song)) {
                 matchingSongs.add(song);
             }

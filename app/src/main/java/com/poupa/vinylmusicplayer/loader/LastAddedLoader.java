@@ -14,11 +14,10 @@ public class LastAddedLoader {
 
     @NonNull
     public static ArrayList<Song> getLastAddedSongs() {
-        Collection<Song> songs = Discography.getInstance().getAllSongs();
         long cutoff = PreferenceUtil.getInstance().getLastAddedCutoffTimeSecs();
 
         ArrayList<Song> lastAddedSongs = new ArrayList<>();
-        for (Song song : songs) {
+        for (Song song : Discography.getInstance().getAllSongs()) {
             if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
         }
 
