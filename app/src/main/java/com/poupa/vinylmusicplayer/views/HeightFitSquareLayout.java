@@ -35,9 +35,4 @@ public class HeightFitSquareLayout extends FrameLayout {
         //noinspection SuspiciousNameCombination
         super.onMeasure(forceSquare ? heightMeasureSpec : widthMeasureSpec, heightMeasureSpec);
     }
-
-    public void forceSquare(boolean forceSquare) {
-        this.forceSquare = forceSquare;
-        requestLayout();
-    }
 }

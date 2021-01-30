@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.loader;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;

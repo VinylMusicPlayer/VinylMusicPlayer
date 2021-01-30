@@ -881,10 +881,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void playSongs(ArrayList<Song> songs, int shuffleMode) {
         if (songs != null && !songs.isEmpty()) {
             if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                int startPosition = 0;
-                if (!songs.isEmpty()) {
-                    startPosition = new Random().nextInt(songs.size());
-                }
+                int startPosition = new Random().nextInt(songs.size());
                 openQueue(songs, startPosition, false);
                 setShuffleMode(shuffleMode);
             } else {

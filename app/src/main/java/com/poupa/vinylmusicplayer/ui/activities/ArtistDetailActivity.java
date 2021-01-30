@@ -134,8 +134,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
         }
     };
 
-    private final WeakMethodReference<ArtistDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, ArtistDetailActivity::reload);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

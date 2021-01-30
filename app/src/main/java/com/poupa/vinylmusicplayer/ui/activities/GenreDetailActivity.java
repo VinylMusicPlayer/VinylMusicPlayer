@@ -63,8 +63,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     private RecyclerView.Adapter wrappedAdapter;
 
-    private final WeakMethodReference<GenreDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, GenreDetailActivity::reload);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

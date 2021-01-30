@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.R;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -162,18 +161,6 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
         return mHistory.size() != 0;
     }
 
-    public int historySize() {
-        return mHistory.size();
-    }
-
-    public void clearHistory() {
-        mHistory.clear();
-    }
-
-    public void reverseHistory() {
-        Collections.reverse(mHistory);
-    }
-
     public void addCrumb(@NonNull Crumb crumb, boolean refreshLayout) {
         LinearLayout view = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.bread_crumb, this, false);
         view.setTag(mCrumbs.size());
@@ -202,14 +189,6 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
         View child = mChildFrame.getChildAt(mActive);
         if (child != null)
             smoothScrollTo(child.getLeft(), 0);
-    }
-
-    public Crumb findCrumb(@NonNull File forDir) {
-        for (int i = 0; i < mCrumbs.size(); i++) {
-            if (mCrumbs.get(i).getFile().equals(forDir))
-                return mCrumbs.get(i);
-        }
-        return null;
     }
 
     public void clearCrumbs() {
@@ -276,11 +255,6 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
 
     public boolean trim(File file) {
         return trim(file.getPath(), file.isDirectory());
-    }
-
-    void updateIndices() {
-        for (int i = 0; i < mChildFrame.getChildCount(); i++)
-            mChildFrame.getChildAt(i).setTag(i);
     }
 
     public void setActiveOrAdd(@NonNull Crumb crumb, boolean forceRecreate) {

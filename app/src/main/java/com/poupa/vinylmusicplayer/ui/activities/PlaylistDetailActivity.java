@@ -73,8 +73,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private RecyclerView.Adapter wrappedAdapter;
     private RecyclerViewDragDropManager recyclerViewDragDropManager;
 
-    private final WeakMethodReference<PlaylistDetailActivity> onDiscographyChanged = new WeakMethodReference<>(this, PlaylistDetailActivity::reload);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

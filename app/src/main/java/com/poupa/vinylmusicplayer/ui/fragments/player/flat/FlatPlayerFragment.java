@@ -366,11 +366,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     }
 
     @Override
-    public void onFavoriteToggled() {
-        toggleFavorite(MusicPlayerRemote.getCurrentSong());
-    }
-
-    @Override
     public void onToolbarToggled() {
         toggleToolbar(toolbarContainer);
     }

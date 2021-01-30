@@ -7,8 +7,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Display;
@@ -17,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -68,40 +65,7 @@ public class Util {
         }
     }
 
-    public static boolean isTablet(@NonNull final Resources resources) {
-        return resources.getConfiguration().smallestScreenWidthDp >= 600;
-    }
-
     public static boolean isLandscape(@NonNull final Resources resources) {
         return resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-    }
-
-    public static int resolveDimensionPixelSize(@NonNull Context context, @AttrRes int dimenAttr) {
-        TypedArray a = context.obtainStyledAttributes(new int[]{dimenAttr});
-        int dimensionPixelSize = a.getDimensionPixelSize(0, 0);
-        a.recycle();
-        return dimensionPixelSize;
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public static boolean isRTL(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Configuration config = context.getResources().getConfiguration();
-            return config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-        } else return false;
-    }
-
-    public static boolean isAllowedToDownloadMetadata(final Context context) {
-        switch (PreferenceUtil.getInstance().autoDownloadImagesPolicy()) {
-            case "always":
-                return true;
-            case "only_wifi":
-                final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
-                return netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI && netInfo.isConnectedOrConnecting();
-            case "never":
-            default:
-                return false;
-        }
     }
 }
