@@ -18,6 +18,11 @@ import java.util.Comparator;
  * @author SC (soncaokim)
  */
 public class ArtistLoader {
+    public final static Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
+    public final static Comparator<Artist> BY_ARTIST_DESC = ComparatorUtil.reverse(BY_ARTIST);
+
+    private final static Discography discography = Discography.getInstance();
+
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
         ArrayList<Artist> artists = new ArrayList<>(Discography.getInstance().getAllArtists());
@@ -52,15 +57,13 @@ public class ArtistLoader {
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        Comparator<Artist> byArtistName = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
-
         switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
             case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                return ComparatorUtil.reverse(byArtistName);
+                return BY_ARTIST_DESC;
 
             case SortOrder.ArtistSortOrder.ARTIST_A_Z:
             default:
-                return byArtistName;
+                return BY_ARTIST;
         }
     }
 }
