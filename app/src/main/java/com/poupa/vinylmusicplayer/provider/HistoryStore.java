@@ -147,7 +147,6 @@ public class HistoryStore extends SQLiteOpenHelper {
         String NAME = "recent_history";
 
         String ID = "song_id";
-
         String TIME_PLAYED = "time_played";
     }
 }
