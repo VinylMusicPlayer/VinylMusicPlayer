@@ -114,7 +114,8 @@ public class Discography implements MusicServiceEventListener {
     @NonNull
     public Collection<Song> getAllSongs() {
         synchronized (cache) {
-            return cache.songsById.values();
+            // Make a copy here, to avoid error while the caller is iterating on the result
+            return new ArrayList<>(cache.songsById.values());
         }
     }
 
@@ -135,7 +136,8 @@ public class Discography implements MusicServiceEventListener {
     @NonNull
     public Collection<Artist> getAllArtists() {
         synchronized (cache) {
-            return cache.artistsById.values();
+            // Make a copy here, to avoid error while the caller is iterating on the result
+            return new ArrayList<>(cache.artistsById.values());
         }
     }
 
@@ -180,7 +182,8 @@ public class Discography implements MusicServiceEventListener {
     @NonNull
     public Collection<Genre> getAllGenres() {
         synchronized (cache) {
-            return cache.genresByName.values();
+            // Make a copy here, to avoid error while the caller is iterating on the result
+            return new ArrayList<>(cache.genresByName.values());
         }
     }
 
