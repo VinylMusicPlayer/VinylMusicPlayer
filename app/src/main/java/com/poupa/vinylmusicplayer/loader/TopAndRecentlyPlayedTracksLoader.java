@@ -28,6 +28,8 @@ import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
@@ -52,7 +54,10 @@ public class TopAndRecentlyPlayedTracksLoader {
         // Collect not played songs
         try (Cursor cursor = historyStore.queryRecentIds(0)) {
             ArrayList<Long> playedSongIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
-            for (Song song : Discography.getInstance().getAllSongs()) {
+            ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
+            Collections.sort(allSongs, SongLoader.BY_DATE_ADDED);
+
+            for (Song song : allSongs) {
                 if (!playedSongIds.contains(song.id)) {
                     songIds.add(song.id);
                 }
