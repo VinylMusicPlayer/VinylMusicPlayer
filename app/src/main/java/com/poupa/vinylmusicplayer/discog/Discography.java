@@ -362,31 +362,10 @@ public class Discography implements MusicServiceEventListener {
         cache.clear();
     }
 
-    private void triggerLoadMediaStore() {
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                SnackbarUtil.showProgress(message);
-
-                Discography.this.fetchAllSongs();
-                Discography.this.syncWithMediaStore();
-
-                message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        Discography.this.getAllSongs().size());
-                SnackbarUtil.showResult(message);
-                return true;
-            }
-        }.execute();
-    }
-
     private void fetchAllSongs() {
         Collection<Song> songs = database.fetchAllSongs();
-        try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
         for (Song song : songs) {
             addSongImpl(song, true);
-            try {Thread.sleep(500);} catch (InterruptedException ignored) {}
         }
     }
 }
