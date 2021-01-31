@@ -18,7 +18,7 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;

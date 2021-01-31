@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;

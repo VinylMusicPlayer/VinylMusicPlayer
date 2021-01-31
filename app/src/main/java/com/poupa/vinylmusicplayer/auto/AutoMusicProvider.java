@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;

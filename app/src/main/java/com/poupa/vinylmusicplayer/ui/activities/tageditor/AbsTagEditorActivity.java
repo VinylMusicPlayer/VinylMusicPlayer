@@ -32,7 +32,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.TintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;

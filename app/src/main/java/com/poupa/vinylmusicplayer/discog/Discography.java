@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.tags.TagExtractor;
+import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;

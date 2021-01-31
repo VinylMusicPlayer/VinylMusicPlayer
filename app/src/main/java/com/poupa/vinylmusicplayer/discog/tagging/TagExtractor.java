@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.discog.tags;
+package com.poupa.vinylmusicplayer.discog.tagging;
 
 import androidx.annotation.NonNull;
 
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * @author SC (soncaokim)

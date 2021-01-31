@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 

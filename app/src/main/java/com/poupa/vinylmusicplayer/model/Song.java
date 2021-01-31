@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
