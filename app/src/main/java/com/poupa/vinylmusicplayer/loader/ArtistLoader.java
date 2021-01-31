@@ -18,43 +18,35 @@ import java.util.Comparator;
  * @author SC (soncaokim)
  */
 public class ArtistLoader {
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
-        synchronized (discography) {
-            ArrayList<Artist> artists = new ArrayList<>(discography.getAllArtists());
-            Collections.sort(artists, getSortOrder());
-            return artists;
-        }
+        ArrayList<Artist> artists = new ArrayList<>(Discography.getInstance().getAllArtists());
+        Collections.sort(artists, getSortOrder());
+        return artists;
     }
 
     @NonNull
     public static ArrayList<Artist> getArtists(String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
-        synchronized (discography) {
-            ArrayList<Artist> artists = new ArrayList<>();
-            for (Artist artist : discography.getAllArtists()) {
-                final String strippedArtist = StringUtil.stripAccent(artist.getName().toLowerCase());
-                if (strippedArtist.contains(strippedQuery)) {
-                    artists.add(artist);
-                }
+        ArrayList<Artist> artists = new ArrayList<>();
+        for (Artist artist : Discography.getInstance().getAllArtists()) {
+            final String strippedArtist = StringUtil.stripAccent(artist.getName().toLowerCase());
+            if (strippedArtist.contains(strippedQuery)) {
+                artists.add(artist);
             }
-            Collections.sort(artists, getSortOrder());
-            return artists;
         }
+        Collections.sort(artists, getSortOrder());
+        return artists;
     }
 
     @NonNull
     public static Artist getArtist(long artistId) {
-        synchronized (discography) {
-            Artist artist = discography.getArtist(artistId);
-            if (artist != null) {
-                return artist;
-            } else {
-                return Artist.EMPTY;
-            }
+        Artist artist = Discography.getInstance().getArtist(artistId);
+        if (artist != null) {
+            return artist;
+        } else {
+            return  Artist.EMPTY;
         }
     }
 

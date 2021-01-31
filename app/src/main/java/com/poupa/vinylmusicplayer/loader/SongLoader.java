@@ -28,8 +28,6 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class SongLoader {
-    private final static Discography discography = Discography.getInstance();
-
     protected static final String BASE_SELECTION = AudioColumns.IS_MUSIC + "=1" + " AND " + AudioColumns.TITLE + " != ''";
     protected static final String[] BASE_PROJECTION = new String[]{
             BaseColumns._ID,// 0
@@ -56,17 +54,15 @@ public class SongLoader {
     public static ArrayList<Song> getSongs(@NonNull final String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
-        synchronized (discography) {
-            ArrayList<Song> songs = new ArrayList<>();
-            for (Song song : discography.getAllSongs()) {
-                final String strippedTitle = StringUtil.stripAccent(song.title.toLowerCase());
-                if (strippedTitle.contains(strippedQuery)) {
-                    songs.add(song);
-                }
+        ArrayList<Song> songs = new ArrayList<>();
+        for (Song song : Discography.getInstance().getAllSongs()) {
+            final String strippedTitle = StringUtil.stripAccent(song.title.toLowerCase());
+            if (strippedTitle.contains(strippedQuery)) {
+                songs.add(song);
             }
-            Collections.sort(songs, getSortOrder());
-            return songs;
         }
+        Collections.sort(songs, getSortOrder());
+        return songs;
     }
 
     @NonNull

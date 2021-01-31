@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistSongLoader {
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, final long playlistId) {
         ArrayList<Song> songs = new ArrayList<>();
@@ -51,7 +49,7 @@ public class PlaylistSongLoader {
         final int idInPlaylist = cursor.getInt(12);
 
         Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
-        song = discography.getOrAddSong(song);
+        song = Discography.getInstance().getOrAddSong(song);
 
         PlaylistSong playlistSong = new PlaylistSong(song, playlistId, idInPlaylist);
         return playlistSong;
