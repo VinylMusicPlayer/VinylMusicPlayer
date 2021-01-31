@@ -32,8 +32,8 @@ public class Song implements Parcelable {
     public int discNumber = 0;
     public final long duration;
     public String genre = "";
-    private float replayGainAlbum = Float.NaN;
-    private float replayGainTrack = Float.NaN;
+    public float replayGainAlbum = 0;
+    public float replayGainTrack = 0;
     public String title;
     public int trackNumber;
     public int year;
@@ -73,27 +73,6 @@ public class Song implements Parcelable {
         this.title = song.title;
         this.trackNumber = song.trackNumber;
         this.year = song.year;
-    }
-
-    public void setReplayGainValues(float track, float album) {
-        replayGainTrack = track;
-        replayGainAlbum = album;
-    }
-
-    public float getReplayGainTrack() {
-        // Since the extraction of RG tags incurs I/O, only extract the replay gain values if needed
-        if (Float.isNaN(replayGainTrack)) {
-            ReplayGainTagExtractor.setReplayGainValues(this);
-        }
-        return replayGainTrack;
-    }
-
-    public float getReplayGainAlbum() {
-        // Since the extraction of RG tags incurs I/O, only extract the replay gain values if needed
-        if (Float.isNaN(replayGainAlbum)) {
-            ReplayGainTagExtractor.setReplayGainValues(this);
-        }
-        return replayGainAlbum;
     }
 
     @Override

@@ -77,8 +77,8 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
             values.put(SongColumns.DISC_NUMBER, song.discNumber);
             values.put(SongColumns.GENRE, song.genre);
-            values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
-            values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
+            values.put(SongColumns.REPLAYGAIN_ALBUM, song.replayGainAlbum);
+            values.put(SongColumns.REPLAYGAIN_TRACK, song.replayGainTrack);
             values.put(SongColumns.TRACK_DURATION, song.duration);
             values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
             values.put(SongColumns.TRACK_TITLE, song.title);
@@ -182,7 +182,8 @@ class DB extends SQLiteOpenHelper {
                 song.discNumber = discNumber;
                 song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
                 song.genre = genre;
-                song.setReplayGainValues(replayGainTrack, replayGainAlbum);
+                song.replayGainTrack = replayGainTrack;
+                song.replayGainAlbum = replayGainAlbum;
 
                 songs.add(song);
             } while (cursor.moveToNext());
