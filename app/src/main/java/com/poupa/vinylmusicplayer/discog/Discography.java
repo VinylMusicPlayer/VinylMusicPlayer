@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.discog;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -20,6 +19,7 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.tag.reference.GenreTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -264,22 +264,19 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void syncWithMediaStore() {
-        final Context context = App.getInstance().getApplicationContext();
-
-        // By querying via SongLoader, any newly added ones will be added to the cache
-        ArrayList<Song> allSongs = MediaStoreBridge.getAllSongs(context);
-        final HashSet<Long> allSongIds = new HashSet<>();
-        for (Song song : allSongs) {
-            allSongIds.add(song.id);
+        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(App.getInstance().getApplicationContext());
+        final HashSet<Long> importedSongIds = new HashSet<>();
+        for (Song song : alienSongs) {
+            // TODO Apply filters here: blacklist, zombie, etc
+            Song matchedSong = getOrAddSong(song);
+            importedSongIds.add(matchedSong.id);
         }
 
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
             Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
-            cacheSongsId.removeAll(allSongIds);
-            for (long songId : cacheSongsId) {
-                removeSongById(songId);
-            }
+            cacheSongsId.removeAll(importedSongIds);
+            removeSongById(cacheSongsId.toArray(new Long[0]));
         }
     }
 
@@ -333,26 +330,28 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void removeSongByPath(@NonNull final String path) {
+    public void removeSongByPath(@NotNull String... paths) {
         synchronized (cache) {
-            Song matchingSong = null;
-
-            for (Song song : cache.songsById.values()) {
-                if (song.data.equals(path)) {
-                    matchingSong = song;
-                    break;
+            ArrayList<Long> matchingSongIds = new ArrayList<>();
+            for (String path : paths) {
+                for (Song song : cache.songsById.values()) {
+                    if (song.data.equals(path)) {
+                        matchingSongIds.add(song.id);
+                        break;
+                    }
                 }
             }
-            if (matchingSong != null) {
-                removeSongById(matchingSong.id);
-            }
+            removeSongById(matchingSongIds.toArray(new Long[0]));
         }
     }
 
-    private void removeSongById(long songId) {
-        cache.removeSongById(songId);
-        database.removeSongById(songId);
+    private void removeSongById(@NotNull Long... songIds) {
+        if (songIds.length == 0) return;
 
+        for (long songId : songIds) {
+            cache.removeSongById(songId);
+            database.removeSongById(songId);
+        }
         notifyDiscographyChanged();
     }
 

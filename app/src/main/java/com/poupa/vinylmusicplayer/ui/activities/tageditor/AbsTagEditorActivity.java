@@ -468,9 +468,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             if (toBeScanned == null) {
                 return;
             }
-            for (final String path : toBeScanned) {
-                Discography.getInstance().removeSongByPath(path);
-            }
+            Discography.getInstance().removeSongByPath(toBeScanned);
 
             Activity activity = this.activity.get();
             if (activity != null) {

@@ -74,10 +74,7 @@ public class MediaStoreBridge {
         final long artistId = cursor.getLong(10);
         final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(11));
 
-        Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
-
-        Discography discog = Discography.getInstance();
-        return discog.getOrAddSong(song);
+        return new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
     }
 
     @Nullable
@@ -112,6 +109,7 @@ public class MediaStoreBridge {
         return newSelection.toString();
     }
 
+    @Nullable
     private static String[] addBlacklistSelectionValues(@NonNull final List<String> paths) {
         if (paths.isEmpty()) {
             return null;

@@ -20,7 +20,9 @@ import java.util.Comparator;
  */
 public class SongLoader {
     public static final Comparator<Song> BY_TITLE = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.title, s2.title);
-    public static final Comparator<Song> BY_ARTIST = (s1, s2) -> StringUtil.compareIgnoreAccent(MultiValuesTagUtil.infoString(s1.artistNames), MultiValuesTagUtil.infoString(s2.artistNames));
+    public static final Comparator<Song> BY_ARTIST = (s1, s2) -> StringUtil.compareIgnoreAccent(
+            MultiValuesTagUtil.infoString(s1.artistNames),
+            MultiValuesTagUtil.infoString(s2.artistNames));
     public static final Comparator<Song> BY_ALBUM = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.albumName, s2.albumName);
     public static final Comparator<Song> BY_YEAR_DESC = (s1, s2) -> s2.year - s1.year;
     public static final Comparator<Song> BY_DATE_ADDED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded);
