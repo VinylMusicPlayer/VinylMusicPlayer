@@ -36,18 +36,22 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
         }
 
         try {
+            SnackbarUtil snackbar = Discography.getInstance().snackbar;
             if (pendingCount > 0 && currentBatchCount > 0) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                        currentBatchCount);
-                SnackbarUtil.showProgress(message);
+                if (snackbar != null) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                            currentBatchCount);
+                    snackbar.showProgress(message);
+                }
             } else {
                 // None pending, we are at the end of the batch
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        currentBatchCount);
-                SnackbarUtil.showResult(message);
-
+                if (snackbar != null) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                            currentBatchCount);
+                    snackbar.showResult(message);
+                }
                 currentBatchCount = 0;
             }
         } catch (Exception e) {

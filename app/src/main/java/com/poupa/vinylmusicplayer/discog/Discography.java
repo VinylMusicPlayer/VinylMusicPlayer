@@ -42,7 +42,7 @@ public class Discography implements MusicServiceEventListener {
     private final DB database;
     private final MemCache cache;
 
-    public MainActivity mainActivity = null;
+    public SnackbarUtil snackbar = null;
     private Handler mainActivityTaskQueue = null;
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -60,15 +60,15 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void startService(@NonNull final MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-        this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+        mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
-        this.mainActivity = null;
-        this.mainActivityTaskQueue = null;
+        snackbar = null;
+        mainActivityTaskQueue = null;
     }
 
     @NonNull
@@ -249,15 +249,17 @@ public class Discography implements MusicServiceEventListener {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                SnackbarUtil.showProgress(message);
+                if (snackbar != null) {
+                    String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                    snackbar.showProgress(message);
+                }
 
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
 
-                SnackbarUtil.dismiss();
+                if (snackbar != null) { snackbar.dismiss();}
                 return true;
             }
         }.execute();

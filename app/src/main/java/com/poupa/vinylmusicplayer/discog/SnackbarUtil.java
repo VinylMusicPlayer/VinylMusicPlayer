@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.discog;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -14,7 +15,12 @@ import com.poupa.vinylmusicplayer.App;
  */
 
 public class SnackbarUtil {
-    private static Snackbar progressBar = null;
+    private Snackbar progressBar = null;
+    private View viewContainer;
+
+    public SnackbarUtil(View view) {
+        viewContainer = view;
+    }
 
     @NonNull
     private static CharSequence buildMessageWithIcon(@NonNull final CharSequence message) {
@@ -31,10 +37,10 @@ public class SnackbarUtil {
         return messageWithIcon;
     }
 
-    public static void showProgress(@NonNull final CharSequence message) {
+    public void showProgress(@NonNull final CharSequence message) {
         if (progressBar == null) {
             progressBar = Snackbar.make(
-                    Discography.getInstance().mainActivity.getSnackBarContainer(),
+                    viewContainer,
                     buildMessageWithIcon(message),
                     Snackbar.LENGTH_INDEFINITE);
             progressBar.show();
@@ -46,17 +52,17 @@ public class SnackbarUtil {
         }
     }
 
-    static void showResult(@NonNull final CharSequence message) {
+    void showResult(@NonNull final CharSequence message) {
         dismiss();
 
         progressBar = Snackbar.make(
-                Discography.getInstance().mainActivity.getSnackBarContainer(),
+                viewContainer,
                 buildMessageWithIcon(message),
                 Snackbar.LENGTH_LONG);
         progressBar.show();
     }
 
-    public static void dismiss() {
+    public void dismiss() {
         if ((progressBar != null) && progressBar.isShownOrQueued()) {
             progressBar.dismiss();
         }
