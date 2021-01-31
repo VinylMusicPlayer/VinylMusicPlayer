@@ -302,7 +302,9 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void removeChangedListener(Runnable listener) {
-        mainActivityTaskQueue.removeCallbacks(listener);
+        if (mainActivityTaskQueue != null) {
+            mainActivityTaskQueue.removeCallbacks(listener);
+        }
         changedListeners.remove(listener);
     }
 
