@@ -19,7 +19,6 @@ import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,8 +57,9 @@ public class SongLoader {
 
     @NonNull
     public static ArrayList<Song> getAllSongs(@NonNull Context context) {
-        Cursor cursor = makeSongCursor(context, null, null);
-        return getSongs(cursor);
+        try (Cursor cursor = makeSongCursor(context)) {
+            return getSongs(cursor);
+        }
     }
 
     @NonNull
@@ -168,18 +168,7 @@ public class SongLoader {
     }
 
     @Nullable
-    public static Cursor makeSongCursor(@NonNull final Context context, @Nullable final String selection, final String[] selectionValues) {
-        return makeSongCursor(context, selection, selectionValues, PreferenceUtil.getInstance().getSongSortOrder());
-    }
-
-    @Nullable
-    public static Cursor makeSongCursor(@NonNull final Context context, @Nullable String selection, String[] selectionValues, final String sortOrder) {
-        if (selection != null && !selection.trim().equals("")) {
-            selection = BASE_SELECTION + " AND " + selection;
-        } else {
-            selection = BASE_SELECTION;
-        }
-
+    private static Cursor makeSongCursor(@NonNull final Context context) {
         // Blacklist
         // Note: There is a SQLite limit on the number of ?argument.
         // Being 999, it is unlikely that we reach that limit for the number of black-listed paths
@@ -188,21 +177,21 @@ public class SongLoader {
             return context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     BASE_PROJECTION,
-                    generateBlacklistSelection(selection, paths.size()),
-                    addBlacklistSelectionValues(selectionValues, paths),
-                    sortOrder
+                    generateBlacklistSelection(paths.size()),
+                    addBlacklistSelectionValues(paths),
+                    PreferenceUtil.getInstance().getSongSortOrder()
             );
         } catch (SecurityException ignored) {
             return null;
         }
     }
 
-    private static String generateBlacklistSelection(String selection, int pathCount) {
+    private static String generateBlacklistSelection(int pathCount) {
         if (pathCount <= 0) {
-            return selection;
+            return BASE_SELECTION;
         }
 
-        StringBuilder newSelection = new StringBuilder(selection != null && !selection.trim().equals("") ? selection + " AND " : "");
+        StringBuilder newSelection = new StringBuilder(BASE_SELECTION + " AND ");
         newSelection.append(AudioColumns.DATA + " NOT LIKE ?");
         for (int i = 1; i < pathCount; i++) {
             newSelection.append(" AND " + AudioColumns.DATA + " NOT LIKE ?");
@@ -210,19 +199,13 @@ public class SongLoader {
         return newSelection.toString();
     }
 
-    private static String[] addBlacklistSelectionValues(String[] selectionValues, @NonNull final List<String> paths) {
+    private static String[] addBlacklistSelectionValues(@NonNull final List<String> paths) {
         if (paths.isEmpty()) {
-            return selectionValues;
+            return null;
         }
 
         ArrayList<String> newSelectionValues;
-        if (selectionValues == null) {
-            newSelectionValues = new ArrayList<>(paths.size());
-        }
-        else {
-            newSelectionValues = new ArrayList<>(selectionValues.length + paths.size());
-            newSelectionValues.addAll(Arrays.asList(selectionValues));
-        }
+        newSelectionValues = new ArrayList<>(paths.size());
 
         for (int i = 0; i < paths.size(); i++) {
             newSelectionValues.add(paths.get(i) + "%");
