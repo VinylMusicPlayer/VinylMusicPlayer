@@ -166,7 +166,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues(4);
 
                     values.put(BaseColumns._ID, song.id);
-                    // TODO No need to save the songs here-under
+                    // TODO No need to save the song metadata here-under
                     //      Keep it for now for backward compat (in the case of rollback)
                     values.put(AudioColumns.TITLE, song.title);
                     values.put(AudioColumns.TRACK, song.trackNumber);
