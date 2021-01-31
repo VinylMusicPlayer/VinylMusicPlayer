@@ -126,7 +126,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Song> getAllSongs() {
+    public ArrayList<Song> getAllSongs() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.songsById.values());

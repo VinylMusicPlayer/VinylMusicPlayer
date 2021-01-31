@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.ShuffleButtonSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -157,7 +157,7 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
 
         @Override
         public ArrayList<Song> loadInBackground() {
-            return SongLoader.getAllSongs(getContext());
+            return Discography.getInstance().getAllSongs();
         }
     }
 
