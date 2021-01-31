@@ -42,7 +42,7 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.auto.AutoMusicProvider;
-import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.BlurTransformation;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;

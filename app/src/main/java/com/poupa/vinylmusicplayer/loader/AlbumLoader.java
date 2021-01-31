@@ -3,8 +3,8 @@ package com.poupa.vinylmusicplayer.loader;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.ComparatorUtil;
-import com.poupa.vinylmusicplayer.discog.StringUtil;
+import com.poupa.vinylmusicplayer.util.ComparatorUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;

@@ -6,8 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
+import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

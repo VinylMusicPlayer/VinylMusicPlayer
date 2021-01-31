@@ -1,19 +1,17 @@
 package com.poupa.vinylmusicplayer.helper;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.StringUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;

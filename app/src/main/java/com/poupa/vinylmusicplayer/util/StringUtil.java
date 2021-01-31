@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.discog;
+package com.poupa.vinylmusicplayer.util;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
     private static final Collator collator = Collator.getInstance();
-    private static Pattern accentStripRegex = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private static final Pattern accentStripRegex = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
     public static int compareIgnoreAccent(@Nullable final String s1, @Nullable final String s2) {
         // Null-proof comparison
