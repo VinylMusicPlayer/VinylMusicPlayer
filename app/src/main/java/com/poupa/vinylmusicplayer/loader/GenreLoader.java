@@ -14,7 +14,7 @@ import java.util.Collections;
 public class GenreLoader {
     @NonNull
     public static ArrayList<Genre> getAllGenres() {
-        ArrayList<Genre> genres = new ArrayList<>(Discography.getInstance().getAllGenres());
+        ArrayList<Genre> genres = Discography.getInstance().getAllGenres();
         Collections.sort(genres, (g1, g2) -> StringUtil.compareIgnoreAccent(g1.name, g2.name));
         return genres;
     }

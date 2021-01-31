@@ -35,7 +35,7 @@ public class AlbumLoader {
 
     @NonNull
     public static ArrayList<Album> getAllAlbums() {
-        ArrayList<Album> albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
+        ArrayList<Album> albums = Discography.getInstance().getAllAlbums();
         Collections.sort(albums, getSortOrder());
         return albums;
     }

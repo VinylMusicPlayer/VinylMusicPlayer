@@ -172,22 +172,20 @@ class MemCache {
     @NonNull
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbumById(@NonNull final Song song) {
         Set<Artist> artists = getOrCreateArtistByName(song);
-        Map<Long, AlbumSlice> albumsByArtist = new HashMap<>();
-
-        Map<Long, AlbumSlice> existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
-        if (existingAlbumsByArtist == null) {
-            albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
-            existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        if (albumsByArtist == null) {
+            albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
+            albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         }
         // attach to the artists if needed
         for (Artist artist : artists) {
-            if (!existingAlbumsByArtist.containsKey(artist.id)) {
+            if (!albumsByArtist.containsKey(artist.id)) {
                 AlbumSlice album = new AlbumSlice();
-                existingAlbumsByArtist.put(artist.id, album);
+                albumsByArtist.put(artist.id, album);
                 artist.albums.add(album);
             }
 
-            albumsByArtist.put(artist.id, existingAlbumsByArtist.get(artist.id));
+            albumsByArtist.put(artist.id, albumsByArtist.get(artist.id));
         }
         return albumsByArtist;
     }

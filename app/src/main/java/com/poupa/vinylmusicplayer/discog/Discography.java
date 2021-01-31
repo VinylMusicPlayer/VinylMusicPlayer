@@ -140,7 +140,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Artist> getAllArtists() {
+    public ArrayList<Artist> getAllArtists() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.artistsById.values());
@@ -157,7 +157,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Album> getAllAlbums() {
+    public ArrayList<Album> getAllAlbums() {
         synchronized (cache) {
             ArrayList<Album> fullAlbums = new ArrayList<>();
             for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
@@ -168,7 +168,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    private Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
+    private static Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
         Album fullAlbum = new Album();
         for (Album fragment : albumParts) {
             for (Song song : fragment.songs) {
@@ -182,7 +182,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Genre> getAllGenres() {
+    public ArrayList<Genre> getAllGenres() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.genresByName.values());

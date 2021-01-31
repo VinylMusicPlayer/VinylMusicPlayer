@@ -23,7 +23,7 @@ public class ArtistLoader {
 
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
-        ArrayList<Artist> artists = new ArrayList<>(Discography.getInstance().getAllArtists());
+        ArrayList<Artist> artists = Discography.getInstance().getAllArtists();
         Collections.sort(artists, getSortOrder());
         return artists;
     }
