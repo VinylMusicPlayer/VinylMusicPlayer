@@ -19,43 +19,35 @@ import java.util.function.Function;
  * @author SC (soncaokim)
  */
 public class AlbumLoader {
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Album> getAllAlbums() {
-        synchronized (discography) {
-            ArrayList<Album> albums = new ArrayList<>(discography.getAllAlbums());
-            Collections.sort(albums, getSortOrder());
-            return albums;
-        }
+        ArrayList<Album> albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
+        Collections.sort(albums, getSortOrder());
+        return albums;
     }
 
     @NonNull
     public static ArrayList<Album> getAlbums(String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
-        synchronized (discography) {
-            ArrayList<Album> albums = new ArrayList<>();
-            for (Album album : discography.getAllAlbums()) {
-                final String strippedAlbum = StringUtil.stripAccent(album.getTitle().toLowerCase());
-                if (strippedAlbum.contains(strippedQuery)) {
-                    albums.add(album);
-                }
+        ArrayList<Album> albums = new ArrayList<>();
+        for (Album album : Discography.getInstance().getAllAlbums()) {
+            final String strippedAlbum = StringUtil.stripAccent(album.getTitle().toLowerCase());
+            if (strippedAlbum.contains(strippedQuery)) {
+                albums.add(album);
             }
-            Collections.sort(albums, getSortOrder());
-            return albums;
         }
+        Collections.sort(albums, getSortOrder());
+        return albums;
     }
 
     @NonNull
     public static Album getAlbum(long albumId) {
-        synchronized (discography) {
-            Album album = discography.getAlbum(albumId);
-            if (album != null) {
-                return album;
-            } else {
-                return new Album();
-            }
+        Album album = Discography.getInstance().getAlbum(albumId);
+        if (album != null) {
+            return album;
+        } else {
+            return new Album();
         }
     }
 

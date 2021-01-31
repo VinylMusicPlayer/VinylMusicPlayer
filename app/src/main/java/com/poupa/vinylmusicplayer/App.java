@@ -7,6 +7,7 @@ import androidx.multidex.MultiDexApplication;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
+import com.poupa.vinylmusicplayer.discog.Discography;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -17,6 +18,8 @@ public class App extends MultiDexApplication {
     private static App app;
 
     private static Context context;
+
+    private static Discography discography = null;
 
     @Override
     public void onCreate() {
@@ -37,6 +40,9 @@ public class App extends MultiDexApplication {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             new DynamicShortcutManager(this).initDynamicShortcuts();
         }
+
+        // setup discography
+        discography = new Discography();
     }
 
     public static App getInstance() {
@@ -45,6 +51,10 @@ public class App extends MultiDexApplication {
 
     public static Context getStaticContext() {
         return context;
+    }
+
+    public static Discography getDiscography() {
+        return discography;
     }
 
     @Override

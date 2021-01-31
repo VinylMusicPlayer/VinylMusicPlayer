@@ -47,15 +47,12 @@ import java.util.function.Function;
 public class Discography implements MusicServiceEventListener {
     public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
-    @Nullable
-    private static Discography sInstance = null;
-
-    private DB database;
+    private final DB database;
     private final MemCache cache;
 
-    public MainActivity mainActivity;
-    private Handler mainActivityTaskQueue;
-    private Collection<Runnable> changedListeners = new LinkedList<>();
+    public MainActivity mainActivity = null;
+    private Handler mainActivityTaskQueue = null;
+    private final Collection<Runnable> changedListeners = new LinkedList<>();
 
     public Discography() {
         database = new DB();
@@ -64,12 +61,10 @@ public class Discography implements MusicServiceEventListener {
         fetchAllSongs();
     }
 
-    @NonNull
-    public static synchronized Discography getInstance() {
-        if (sInstance == null) {
-            sInstance = new Discography();
-        }
-        return sInstance;
+    // TODO This is not a singleton and should not be declared as such
+    @Nullable
+    public static Discography getInstance() {
+        return App.getDiscography();
     }
 
     public void startService(@NonNull final MainActivity mainActivity) {
@@ -78,7 +73,10 @@ public class Discography implements MusicServiceEventListener {
         triggerSyncWithMediaStore(false);
     }
 
-    public void stopService() {}
+    public void stopService() {
+        this.mainActivity = null;
+        this.mainActivityTaskQueue = null;
+    }
 
     @NonNull
     public Song getOrAddSong(@NonNull final Song song) {
