@@ -25,25 +25,20 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
+import com.poupa.vinylmusicplayer.provider.StoreLoader;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
+        HistoryStore historyStore = HistoryStore.getInstance(context);
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
 
-        try (Cursor cursor = HistoryStore.getInstance(context).queryRecentIds(cutoff)) {
-            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
-
-            return SongLoader.getSongsFromIdsAndCleanupOrphans(
-                    songIds,
-                    (x) -> HistoryStore.getInstance(context).removeSongIds(x)
-            );
-        }
+        ArrayList<Long> songIds = historyStore.getRecentIds(cutoff);
+        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
@@ -52,29 +47,22 @@ public class TopAndRecentlyPlayedTracksLoader {
         ArrayList<Long> songIds = new ArrayList<>();
 
         // Collect not played songs
-        try (Cursor cursor = historyStore.queryRecentIds(0)) {
-            ArrayList<Long> playedSongIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
-            ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
-            Collections.sort(allSongs, SongLoader.BY_DATE_ADDED);
+        ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
+        ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
+        Collections.sort(allSongs, SongLoader.BY_DATE_ADDED);
 
-            for (Song song : allSongs) {
-                if (!playedSongIds.contains(song.id)) {
-                    songIds.add(song.id);
-                }
+        for (Song song : allSongs) {
+            if (!playedSongIds.contains(song.id)) {
+                songIds.add(song.id);
             }
         }
 
         // Collect not recently played songs
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
-        try (Cursor cursor = historyStore.queryRecentIds(-1 * cutoff)) {
-            ArrayList<Long> notRecentSongIds = SongLoader.getIdsFromCursor(cursor, HistoryStore.RecentStoreColumns.ID);
-            songIds.addAll(notRecentSongIds);
-        }
+        ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
+        songIds.addAll(notRecentSongIds);
 
-        return SongLoader.getSongsFromIdsAndCleanupOrphans(
-                songIds,
-                (x) -> HistoryStore.getInstance(context).removeSongIds(x)
-        );
+        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
@@ -82,9 +70,9 @@ public class TopAndRecentlyPlayedTracksLoader {
         final int NUMBER_OF_TOP_TRACKS = 100;
 
         try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
-            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
+            ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
 
-            return SongLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
         }
     }
 

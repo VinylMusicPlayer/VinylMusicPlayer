@@ -267,7 +267,7 @@ public class Discography implements MusicServiceEventListener {
         final Context context = App.getInstance().getApplicationContext();
 
         // By querying via SongLoader, any newly added ones will be added to the cache
-        ArrayList<Song> allSongs = SongLoader.getAllSongs(context);
+        ArrayList<Song> allSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> allSongIds = new HashSet<>();
         for (Song song : allSongs) {
             allSongIds.add(song.id);

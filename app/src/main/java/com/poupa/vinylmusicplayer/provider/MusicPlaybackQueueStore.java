@@ -27,7 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
@@ -205,9 +204,9 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     private ArrayList<Song> getQueue(@NonNull final String tableName) {
         try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID},
                 null, null, null, null, null)) {
-            ArrayList<Long> songIds = SongLoader.getIdsFromCursor(cursor, BaseColumns._ID);
+            ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
-            return SongLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
         }
     }
 }

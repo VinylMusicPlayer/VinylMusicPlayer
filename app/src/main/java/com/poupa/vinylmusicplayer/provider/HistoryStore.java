@@ -128,7 +128,14 @@ public class HistoryStore extends SQLiteOpenHelper {
         return containsId;
     }
 
-    public Cursor queryRecentIds(long cutoff) {
+    @NonNull
+    public ArrayList<Long> getRecentIds(long cutoff) {
+        try (Cursor cursor = queryRecentIds(cutoff)) {
+            return StoreLoader.getIdsFromCursor(cursor, RecentStoreColumns.ID);
+        }
+    }
+
+    private Cursor queryRecentIds(long cutoff) {
         final boolean noCutoffTime = (cutoff == 0);
         final boolean reverseOrder = (cutoff < 0);
         if (reverseOrder) cutoff = -cutoff;

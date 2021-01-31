@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 
@@ -74,7 +75,7 @@ public class PlaylistSongLoader {
                             AudioColumns.ARTIST,// 11
                             MediaStore.Audio.Playlists.Members._ID // 12
                     },
-                    SongLoader.BASE_SELECTION,
+                    MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''",
                     null,
                     MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
