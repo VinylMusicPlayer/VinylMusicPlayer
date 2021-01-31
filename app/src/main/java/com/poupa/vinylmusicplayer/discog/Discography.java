@@ -9,8 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.tags.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.discog.tags.ReplayGainTagExtractor;
+import com.poupa.vinylmusicplayer.discog.tags.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -20,17 +19,9 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
-import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
-import java.io.File;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * @author SC (soncaokim)
@@ -218,7 +208,7 @@ public class Discography implements MusicServiceEventListener {
             }
 
             if (!cacheOnly) {
-                extractTags(song);
+                TagExtractor.extractTags(song);
             }
 
             Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
@@ -340,46 +330,6 @@ public class Discography implements MusicServiceEventListener {
                 mainActivityTaskQueue.removeCallbacks(listener);
                 mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
             }
-        }
-    }
-
-    private void extractTags(@NonNull Song song) {
-        try {
-            // Override with metadata extracted from the file ourselves
-            AudioFile file = AudioFileIO.read(new File(song.data));
-            Tag tags = file.getTagOrCreateAndSetDefault();
-
-            Function<FieldKey, String> safeGetTag = (tag) -> {
-                try {return tags.getFirst(tag).trim();}
-                catch (KeyNotFoundException ignored) {return "";}
-                catch (UnsupportedOperationException ignored){ return "";}
-            };
-            Function<FieldKey, Integer> safeGetTagAsInteger = (tag) -> {
-                try {return Integer.parseInt(safeGetTag.apply(tag));}
-                catch (NumberFormatException ignored) {return 0;}
-            };
-            Function<FieldKey, List<String>> safeGetTagAsList = (tag) -> {
-                try {return tags.getAll(tag);}
-                catch (KeyNotFoundException ignored) {return new ArrayList<>(Arrays.asList(""));}
-            };
-
-            song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistNames  = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ARTIST));
-            song.albumArtistNames = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ALBUM_ARTIST));
-            song.title = safeGetTag.apply(FieldKey.TITLE);
-            if (song.title.isEmpty()) {
-                // fallback to use the file name
-                song.title = file.getFile().getName();
-            }
-
-            song.genre = safeGetTag.apply(FieldKey.GENRE);
-            song.discNumber = safeGetTagAsInteger.apply(FieldKey.DISC_NO);
-            song.trackNumber = safeGetTagAsInteger.apply(FieldKey.TRACK);
-            song.year = safeGetTagAsInteger.apply(FieldKey.YEAR);
-
-            ReplayGainTagExtractor.setReplayGainValues(song);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
