@@ -35,7 +35,7 @@ public class PlaylistSongLoader {
         final long id = cursor.getLong(0);
         final int idInPlaylist = cursor.getInt(1);
 
-        Song song = discography.getSong(id);
+        Song song = Discography.getInstance().getSong(id);
         PlaylistSong playlistSong = new PlaylistSong(song, playlistId, idInPlaylist);
         return playlistSong;
     }

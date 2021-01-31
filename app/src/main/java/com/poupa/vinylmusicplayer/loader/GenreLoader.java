@@ -13,21 +13,21 @@ import java.util.Collections;
 
 public class GenreLoader {
     @NonNull
-    public static ArrayList<Genre> getAllGenres(@NonNull final Context context) {
+    public static ArrayList<Genre> getAllGenres() {
         ArrayList<Genre> genres = new ArrayList<>(Discography.getInstance().getAllGenres());
         Collections.sort(genres, (g1, g2) -> StringUtil.compareIgnoreAccent(g1.name, g2.name));
         return genres;
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(@NonNull final Context context, final long genreId) {
+    public static ArrayList<Song> getSongs(final long genreId) {
         Collection<Song> genreSongs = Discography.getInstance().getSongsForGenre(genreId);
         if (genreSongs == null) {
             return new ArrayList<>();
         }
         else {
             ArrayList<Song> songs = new ArrayList<>(genreSongs);
-            Collections.sort(songs, (s1, s2) -> StringUtil.compareIgnoreAccent(s1.title, s2.title));
+            Collections.sort(songs, SongLoader.BY_TITLE);
             return songs;
         }
     }

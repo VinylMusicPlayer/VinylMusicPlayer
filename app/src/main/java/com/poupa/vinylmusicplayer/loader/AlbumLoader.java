@@ -33,8 +33,6 @@ public class AlbumLoader {
     public final static Comparator<Album> BY_DATE_ADDED_DESC = ComparatorUtil.chain(_BY_DATE_ADDED_DESC, _BY_ALBUM_NAME);
     public final static Comparator<Album> BY_YEAR_DESC = ComparatorUtil.chain(_BY_YEAR_DESC, _BY_ALBUM_NAME);
 
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Album> getAllAlbums() {
         ArrayList<Album> albums = new ArrayList<>(Discography.getInstance().getAllAlbums());

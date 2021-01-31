@@ -31,8 +31,6 @@ public class SongLoader {
             ? (s1.discNumber - s2.discNumber)
             : (s1.trackNumber - s2.trackNumber);
 
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Song> getSongs(@NonNull final String query) {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());

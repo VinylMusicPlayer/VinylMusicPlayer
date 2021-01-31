@@ -21,8 +21,6 @@ public class ArtistLoader {
     public final static Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
     public final static Comparator<Artist> BY_ARTIST_DESC = ComparatorUtil.reverse(BY_ARTIST);
 
-    private final static Discography discography = Discography.getInstance();
-
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
         ArrayList<Artist> artists = new ArrayList<>(Discography.getInstance().getAllArtists());
