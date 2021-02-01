@@ -23,21 +23,21 @@ import java.util.function.Function;
  */
 
 class MemCache {
-    public Map<Long, Song> songsById = new HashMap<>();
+    Map<Long, Song> songsById = new HashMap<>();
 
-    public Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Long, Artist> artistsById = new HashMap<>();
+    Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<Long, Artist> artistsById = new HashMap<>();
 
     // internal implementation class, to make explicit that we are dealing with slices of album, not the full one
     static class AlbumSlice extends Album {
     }
 
-    public Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
+    Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
 
-    public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
-    public synchronized void addSong(@NonNull final Song song) {
+    synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbumById(song);
 //        TODO // Merge album by name - MediaStore may index album of same name with different IDs
 //        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
@@ -68,7 +68,7 @@ class MemCache {
         }
     }
 
-    public synchronized void removeSongById(long songId) {
+    synchronized void removeSongById(long songId) {
         Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
@@ -122,7 +122,7 @@ class MemCache {
         }
     }
 
-    public synchronized void clear() {
+    synchronized void clear() {
         songsById.clear();
 
         artistsByName.clear();
