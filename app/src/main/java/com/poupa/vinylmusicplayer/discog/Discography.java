@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -78,8 +79,7 @@ public class Discography implements MusicServiceEventListener {
             BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                 if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
                 if (incomingSong.dateModified != cachedSong.dateModified) return true;
-                if (!incomingSong.data.equals(cachedSong.data)) return true;
-                return false;
+                return (!incomingSong.data.equals(cachedSong.data));
             };
 
             if (!isMetadataObsolete.test(song, discogSong)) {
@@ -245,22 +245,31 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    @SuppressLint("StaticFieldLeak") // This task last seconds, much shorter than the lifespan of outer class Discography
     public void triggerSyncWithMediaStore(boolean reset) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(Void... params) {
+            protected void onPreExecute() {
                 if (snackbar != null) {
                     String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
                     snackbar.showProgress(message);
                 }
+            }
 
+            @Override
+            protected Boolean doInBackground(Void... params) {
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
-
-                if (snackbar != null) { snackbar.dismiss();}
                 return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (snackbar != null) {
+                    snackbar.dismiss();
+                }
             }
         }.execute();
     }
