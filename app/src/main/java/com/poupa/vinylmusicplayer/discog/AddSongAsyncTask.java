@@ -10,7 +10,7 @@ import com.poupa.vinylmusicplayer.model.Song;
  * @author SC (soncaokim)
  */
 
-class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
+class AddSongAsyncTask extends AsyncTask<Song, Void, Integer> {
     private static int pendingCount;
     private static int currentBatchCount;
 
@@ -20,20 +20,20 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Song... songs) {
-        boolean effectiveAdd = false;
+    protected Integer doInBackground(Song... songs) {
+        int effectiveAdd = 0;
         for (Song song : songs) {
-            effectiveAdd = Discography.getInstance().addSongImpl(song, false);
+            if (Discography.getInstance().addSongImpl(song, false)) {
+                ++effectiveAdd;
+            }
         }
         return effectiveAdd;
     }
 
     @Override
-    protected void onPostExecute(Boolean result) {
+    protected void onPostExecute(Integer result) {
         --pendingCount;
-        if (result) {
-            ++currentBatchCount;
-        }
+        currentBatchCount += result;
 
         try {
             SnackbarUtil snackbar = Discography.getInstance().snackbar;
