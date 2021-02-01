@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 public class Discography implements MusicServiceEventListener {
     public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
+    // TODO wrap this inside the MemCache class
     private final DB database;
     private final MemCache cache;
 
@@ -55,7 +56,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     // TODO This is not a singleton and should not be declared as such
-    @Nullable
+    @NonNull
     public static Discography getInstance() {
         return App.getDiscography();
     }
@@ -74,6 +75,7 @@ public class Discography implements MusicServiceEventListener {
 
     @NonNull
     public Song getOrAddSong(@NonNull final Song song) {
+        // TODO synchronized(cache) to avoid race condition along get/remove/add
         Song discogSong = getSong(song.id);
         if (discogSong != Song.EMPTY_SONG) {
             BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {

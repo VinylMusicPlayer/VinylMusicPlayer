@@ -64,6 +64,7 @@ public class BlacklistStore extends SQLiteOpenHelper {
 
     public void addPath(File file) {
         addPathImpl(file);
+        // TODO Notify Discog instead
         notifyMediaStoreChanged();
     }
 
@@ -116,6 +117,7 @@ public class BlacklistStore extends SQLiteOpenHelper {
                 BlacklistStoreColumns.PATH + "=?",
                 new String[]{path});
 
+        // TODO Notify Discog instead
         notifyMediaStoreChanged();
     }
 
@@ -123,6 +125,7 @@ public class BlacklistStore extends SQLiteOpenHelper {
         final SQLiteDatabase database = getWritableDatabase();
         database.delete(BlacklistStoreColumns.NAME, null, null);
 
+        // TODO Notify Discog instead
         notifyMediaStoreChanged();
     }
 

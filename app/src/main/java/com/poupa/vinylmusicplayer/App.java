@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer;
 import android.content.Context;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -53,6 +54,7 @@ public class App extends MultiDexApplication {
         return context;
     }
 
+    @NonNull
     public static Discography getDiscography() {
         return discography;
     }

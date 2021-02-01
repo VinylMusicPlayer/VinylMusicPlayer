@@ -29,6 +29,7 @@ public final class FileUtil {
     private FileUtil() {
     }
 
+    // TODO Rename to matchFilesWithDiscog
     @NonNull
     public static ArrayList<Song> matchFilesWithMediaStore(@Nullable List<File> files) {
         ArrayList<Song> songs = new ArrayList<>();
