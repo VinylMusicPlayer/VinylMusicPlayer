@@ -151,7 +151,9 @@ public abstract class AbsLibraryPagerRecyclerViewCustomGridSizeFragment<A extend
 
     protected abstract void saveSortOrder(String sortOrder);
 
-    protected abstract void setSortOrder(String sortOrder);
+    protected void setSortOrder(String sortOrder) {
+        reload();
+    }
 
     protected int getMaxGridSizeForList() {
         if (isLandscape()) {

@@ -16,6 +16,8 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
@@ -41,6 +43,8 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
     private A adapter;
     private LM layoutManager;
 
+    private final WeakMethodReference<AbsLibraryPagerRecyclerViewFragment> onDiscographyChanged = new WeakMethodReference<>(this, AbsLibraryPagerRecyclerViewFragment::reload);
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(getLayoutRes(), container, false);
@@ -53,6 +57,7 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         super.onViewCreated(view, savedInstanceState);
 
         getLibraryFragment().addOnAppBarOffsetChangedListener(this);
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
 
         initLayoutManager();
         initAdapter();
@@ -136,6 +141,14 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
     public void onDestroyView() {
         super.onDestroyView();
         getLibraryFragment().removeOnAppBarOffsetChangedListener(this);
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
         unbinder.unbind();
     }
+
+    @Override
+    public void onMediaStoreChanged() {
+        reload();
+    }
+
+    public abstract void reload();
 }

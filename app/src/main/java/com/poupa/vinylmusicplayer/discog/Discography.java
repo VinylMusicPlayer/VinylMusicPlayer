@@ -70,6 +70,7 @@ public class Discography implements MusicServiceEventListener {
     public void startService(@NonNull final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+
         triggerSyncWithMediaStore(false);
     }
 
@@ -245,10 +246,15 @@ public class Discography implements MusicServiceEventListener {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                SnackbarUtil.showProgress(message);
+
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
+
+                SnackbarUtil.dismiss();
                 return true;
             }
         }.execute();

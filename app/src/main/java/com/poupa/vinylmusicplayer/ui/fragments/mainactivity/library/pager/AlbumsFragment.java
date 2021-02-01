@@ -66,11 +66,6 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
     }
 
     @Override
-    protected void setSortOrder(String sortOrder) {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     public boolean loadUsePalette() {
         return PreferenceUtil.getInstance().albumColoredFooters();
     }
@@ -112,11 +107,6 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
     }
 
     @Override
-    public void onMediaStoreChanged() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
     public Loader<ArrayList<Album>> onCreateLoader(int id, Bundle args) {
         return new AsyncAlbumLoader(getActivity());
     }
@@ -140,5 +130,10 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
         public ArrayList<Album> loadInBackground() {
             return AlbumLoader.getAllAlbums();
         }
+    }
+
+    @Override
+    public void reload() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }
