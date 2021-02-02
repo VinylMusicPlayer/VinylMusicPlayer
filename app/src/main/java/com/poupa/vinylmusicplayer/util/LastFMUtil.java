@@ -26,6 +26,7 @@ public class LastFMUtil {
                 try {
                     size = ImageSize.valueOf(attribute.toUpperCase(Locale.ENGLISH));
                 } catch (final IllegalArgumentException e) {
+                    e.printStackTrace();
                     // if they suddenly again introduce a new image size
                 }
             }

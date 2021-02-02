@@ -81,7 +81,7 @@ public class Discography implements MusicServiceEventListener {
     public Song getOrAddSong(@NonNull final Song song) {
         // TODO synchronized(cache) to avoid race condition along get/remove/add
         Song discogSong = getSong(song.id);
-        if (discogSong != Song.EMPTY_SONG) {
+        if (!discogSong.equals(Song.EMPTY_SONG)) {
             BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                 if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
                 if (incomingSong.dateModified != cachedSong.dateModified) return true;

@@ -169,6 +169,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer.start();
             return true;
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -203,6 +204,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer.pause();
             return true;
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -228,6 +230,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         try {
             return mCurrentMediaPlayer.getDuration();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return -1;
         }
     }
@@ -245,6 +248,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         try {
             return mCurrentMediaPlayer.getCurrentPosition();
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return -1;
         }
     }
@@ -261,6 +265,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer.seekTo(whereto);
             return whereto;
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return -1;
         }
     }
@@ -270,6 +275,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer.setVolume(vol, vol);
             return true;
         } catch (IllegalStateException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -285,6 +291,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer.setAudioSessionId(sessionId);
             return true;
         } catch (@NonNull IllegalArgumentException | IllegalStateException e) {
+            e.printStackTrace();
             return false;
         }
     }

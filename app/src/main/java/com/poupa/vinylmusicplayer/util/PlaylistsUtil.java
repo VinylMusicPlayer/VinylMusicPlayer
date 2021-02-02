@@ -74,6 +74,7 @@ public class PlaylistsUtil {
                     cursor.close();
                 }
             } catch (SecurityException ignored) {
+                ignored.printStackTrace();
             }
         }
         if (id == -1) {
@@ -98,6 +99,7 @@ public class PlaylistsUtil {
             // Necessary because somehow the MediaStoreObserver doesn't work for playlists
             context.getContentResolver().notifyChange(EXTERNAL_CONTENT_URI, null);
         } catch (SecurityException ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -173,6 +175,7 @@ public class PlaylistsUtil {
             // Necessary because somehow the MediaStoreObserver doesn't work for playlists
             context.getContentResolver().notifyChange(uri, null);
         } catch (SecurityException ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -193,6 +196,7 @@ public class PlaylistsUtil {
             // Necessary because somehow the MediaStoreObserver is not notified when adding a playlist
             context.getContentResolver().notifyChange(uri, null);
         } catch (SecurityException ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -212,6 +216,7 @@ public class PlaylistsUtil {
                 }
                 return count > 0;
             } catch (SecurityException ignored) {
+                ignored.printStackTrace();
             }
         }
         return false;
@@ -242,6 +247,7 @@ public class PlaylistsUtil {
             context.getContentResolver().notifyChange(playlistUri, null);
             context.getContentResolver().notifyChange(EXTERNAL_CONTENT_URI, null);
         } catch (SecurityException ignored) {
+            ignored.printStackTrace();
         }
     }
 
@@ -263,6 +269,7 @@ public class PlaylistsUtil {
                 }
             }
         } catch (SecurityException ignored) {
+            ignored.printStackTrace();
         }
         return "";
     }

@@ -478,6 +478,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 applyReplayGain();
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }
@@ -496,6 +497,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 this.nextPosition = nextPosition;
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }
@@ -986,6 +988,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 throttledSeekHandler.notifySeek();
                 return newPosition;
             } catch (Exception e) {
+                e.printStackTrace();
                 return -1;
             }
         }

@@ -301,6 +301,7 @@ public class MusicUtil {
                     cursor.close();
                 }
             } catch (SecurityException ignored) {
+                ignored.printStackTrace();
             }
         }
 

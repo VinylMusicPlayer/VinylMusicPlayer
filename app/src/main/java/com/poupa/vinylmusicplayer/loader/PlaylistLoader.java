@@ -86,6 +86,7 @@ public class PlaylistLoader {
                             PlaylistsColumns.NAME
                     }, selection, values, MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
+            e.printStackTrace();
             return null;
         }
     }

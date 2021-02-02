@@ -300,7 +300,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             final long id = parseIdFromIntent(intent, "artistId", "artist");
             if (id >= 0) {
                 // TODO ArtistId might be not usable if it's sent by another app
-                //      Discography (used by ArtsitLoader) has an internal ID
+                //      Discography (used by ArtistLoader) has an internal ID
                 int position = intent.getIntExtra("position", 0);
                 MusicPlayerRemote.openQueue(ArtistLoader.getArtist(id).getSongs(), position, true);
                 handled = true;
