@@ -22,6 +22,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 import org.jaudiotagger.tag.reference.GenreTypes;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author SC (soncaokim)
@@ -277,10 +279,15 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void syncWithMediaStore() {
+        // zombies are tracks that are removed but still indexed by MediaStore
+        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
+
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(App.getInstance().getApplicationContext());
         final HashSet<Long> importedSongIds = new HashSet<>();
         for (Song song : alienSongs) {
-            // TODO Apply filters here: blacklist, zombie, etc
+            if (isZombie.test(song)) continue;
+            // TODO Apply blacklist here
+
             Song matchedSong = getOrAddSong(song);
             importedSongIds.add(matchedSong.id);
         }
