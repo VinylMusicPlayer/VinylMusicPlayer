@@ -292,7 +292,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         } else if (MediaStore.Audio.Albums.CONTENT_TYPE.equals(mimeType)) {
             final long id = parseIdFromIntent(intent, "albumId", "album");
             if (id >= 0) {
-                // TODO Check if the albumId is usable (ie. if discog has decided to use an internal one?
                 int position = intent.getIntExtra("position", 0);
                 MusicPlayerRemote.openQueue(AlbumLoader.getAlbum(id).songs, position, true);
                 handled = true;
@@ -300,7 +299,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         } else if (MediaStore.Audio.Artists.CONTENT_TYPE.equals(mimeType)) {
             final long id = parseIdFromIntent(intent, "artistId", "artist");
             if (id >= 0) {
-                // TODO Check if the artistId is usable (ie. if discog has decided to use an internal one?
+                // TODO ArtistId might be not usable if it's sent by another app
+                //      Discography (used by ArtsitLoader) has an internal ID
                 int position = intent.getIntExtra("position", 0);
                 MusicPlayerRemote.openQueue(ArtistLoader.getArtist(id).getSongs(), position, true);
                 handled = true;
