@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -79,48 +78,16 @@ public class MediaStoreBridge {
 
     @Nullable
     private static Cursor makeSongCursor(@NonNull final Context context) {
-        // Blacklist
-        // Note: There is a SQLite limit on the number of ?argument.
-        // Being 999, it is unlikely that we reach that limit for the number of black-listed paths
-        final ArrayList<String> paths = BlacklistStore.getInstance(context).getPaths();
         try {
             return context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     BASE_PROJECTION,
-                    generateBlacklistSelection(paths.size()),
-                    addBlacklistSelectionValues(paths),
+                    BASE_SELECTION,
+                    null,
                     PreferenceUtil.getInstance().getSongSortOrder()
             );
         } catch (SecurityException ignored) {
             return null;
         }
-    }
-
-    private static String generateBlacklistSelection(int pathCount) {
-        if (pathCount <= 0) {
-            return BASE_SELECTION;
-        }
-
-        StringBuilder newSelection = new StringBuilder(BASE_SELECTION + " AND ");
-        newSelection.append(MediaStore.Audio.AudioColumns.DATA + " NOT LIKE ?");
-        for (int i = 1; i < pathCount; i++) {
-            newSelection.append(" AND " + MediaStore.Audio.AudioColumns.DATA + " NOT LIKE ?");
-        }
-        return newSelection.toString();
-    }
-
-    @Nullable
-    private static String[] addBlacklistSelectionValues(@NonNull final List<String> paths) {
-        if (paths.isEmpty()) {
-            return null;
-        }
-
-        ArrayList<String> newSelectionValues;
-        newSelectionValues = new ArrayList<>(paths.size());
-
-        for (int i = 0; i < paths.size(); i++) {
-            newSelectionValues.add(paths.get(i) + "%");
-        }
-        return newSelectionValues.toArray(new String[0]);
     }
 }

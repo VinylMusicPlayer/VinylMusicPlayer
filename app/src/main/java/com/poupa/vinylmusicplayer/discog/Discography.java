@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -16,6 +17,7 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
@@ -279,14 +281,25 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void syncWithMediaStore() {
+        Context context = App.getInstance().getApplicationContext();
+
         // zombies are tracks that are removed but still indexed by MediaStore
         Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
-        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(App.getInstance().getApplicationContext());
+        // Blacklist
+        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
+        Predicate<Song> isBlackListed = (s) -> {
+            for (String path : blackListedPaths) {
+                if (s.data.startsWith(path)) return true;
+            }
+            return false;
+        };
+
+        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
         for (Song song : alienSongs) {
+            if (isBlackListed.test(song)) continue;
             if (isZombie.test(song)) continue;
-            // TODO Apply blacklist here
 
             Song matchedSong = getOrAddSong(song);
             importedSongIds.add(matchedSong.id);
