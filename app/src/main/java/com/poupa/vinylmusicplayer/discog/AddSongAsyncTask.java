@@ -10,7 +10,7 @@ import com.poupa.vinylmusicplayer.model.Song;
  * @author SC (soncaokim)
  */
 
-class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
+class AddSongAsyncTask extends AsyncTask<Song, Void, Integer> {
     private static int pendingCount;
     private static int currentBatchCount;
 
@@ -20,34 +20,38 @@ class AddSongAsyncTask extends AsyncTask<Song, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Song... songs) {
-        boolean effectiveAdd = false;
+    protected Integer doInBackground(Song... songs) {
+        int effectiveAdd = 0;
         for (Song song : songs) {
-            effectiveAdd = Discography.getInstance().addSongImpl(song, false);
+            if (Discography.getInstance().addSongImpl(song, false)) {
+                ++effectiveAdd;
+            }
         }
         return effectiveAdd;
     }
 
     @Override
-    protected void onPostExecute(Boolean result) {
+    protected void onPostExecute(Integer result) {
         --pendingCount;
-        if (result) {
-            ++currentBatchCount;
-        }
+        currentBatchCount += result;
 
         try {
+            SnackbarUtil snackbar = Discography.getInstance().snackbar;
             if (pendingCount > 0 && currentBatchCount > 0) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                        currentBatchCount);
-                SnackbarUtil.showProgress(message);
+                if (snackbar != null) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                            currentBatchCount);
+                    snackbar.showProgress(message);
+                }
             } else {
                 // None pending, we are at the end of the batch
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        currentBatchCount);
-                SnackbarUtil.showResult(message);
-
+                if (snackbar != null) {
+                    final String message = String.format(
+                            App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                            currentBatchCount);
+                    snackbar.showResult(message);
+                }
                 currentBatchCount = 0;
             }
         } catch (Exception e) {

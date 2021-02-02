@@ -260,8 +260,6 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
     public interface Callbacks {
         void onColorChanged(int color);
 
-        void onFavoriteToggled();
-
         void onToolbarToggled();
     }
 }

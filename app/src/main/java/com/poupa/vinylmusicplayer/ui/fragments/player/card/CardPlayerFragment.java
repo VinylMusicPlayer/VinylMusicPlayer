@@ -124,12 +124,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         // for some reason the xml attribute doesn't get applied here.
         playingQueueCard.setCardBackgroundColor(ATHUtil.resolveColor(getActivity(), R.attr.cardBackgroundColor));
-
-        //Allows the list items to draw out of bounds when swiping, but also makes the listview
-        //float above everything else. Disabling for now.
-
-//        playingQueueCard.setClipToOutline(false);
-//        disableClipOnParents(recyclerView);
     }
 
     @Override
@@ -242,22 +236,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                 return true;
         }
         return super.onMenuItemClick(item);
-    }
-
-    public void disableClipOnParents(View v) {
-
-
-        if (v.getParent() == null) {
-            return;
-        }
-
-        if (v instanceof ViewGroup) {
-            ((ViewGroup) v).setClipChildren(false);
-        }
-
-        if (v.getParent() instanceof View) {
-            disableClipOnParents((View) v.getParent());
-        }
     }
 
     private void updateIsFavorite() {
@@ -390,11 +368,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         animateColorChange(color);
         playbackControlsFragment.setDark(ColorUtil.isColorLight(color));
         getCallbacks().onPaletteColorChanged();
-    }
-
-    @Override
-    public void onFavoriteToggled() {
-        toggleFavorite(MusicPlayerRemote.getCurrentSong());
     }
 
     @Override

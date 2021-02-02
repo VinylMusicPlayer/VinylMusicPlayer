@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.discog;
+package com.poupa.vinylmusicplayer.discog.tagging;
 
 import androidx.annotation.NonNull;
 

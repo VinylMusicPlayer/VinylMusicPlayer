@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
     private static final int VERSION = 6;
 
-    public DB() {
+    DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
     }
 
@@ -62,7 +63,7 @@ class DB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public synchronized void addSong(@NonNull Song song) {
+    synchronized void addSong(@NonNull Song song) {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             final ContentValues values = new ContentValues();
             values.put(SongColumns.ID, song.id);
@@ -76,8 +77,8 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
             values.put(SongColumns.DISC_NUMBER, song.discNumber);
             values.put(SongColumns.GENRE, song.genre);
-            values.put(SongColumns.REPLAYGAIN_ALBUM, song.getReplayGainAlbum());
-            values.put(SongColumns.REPLAYGAIN_TRACK, song.getReplayGainTrack());
+            values.put(SongColumns.REPLAYGAIN_ALBUM, song.replayGainAlbum);
+            values.put(SongColumns.REPLAYGAIN_TRACK, song.replayGainTrack);
             values.put(SongColumns.TRACK_DURATION, song.duration);
             values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
             values.put(SongColumns.TRACK_TITLE, song.title);
@@ -89,7 +90,7 @@ class DB extends SQLiteOpenHelper {
         }
     }
 
-    public synchronized void clear() {
+    synchronized void clear() {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(SongColumns.NAME, null, null);
         } catch (Exception e) {
@@ -97,7 +98,7 @@ class DB extends SQLiteOpenHelper {
         }
     }
 
-    public synchronized void removeSongById(long songId) {
+    synchronized void removeSongById(long songId) {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(
                     SongColumns.NAME,
@@ -111,7 +112,7 @@ class DB extends SQLiteOpenHelper {
     }
 
     @NonNull
-    public synchronized Collection<Song> fetchAllSongs() {
+    synchronized Collection<Song> fetchAllSongs() {
         ArrayList<Song> songs = new ArrayList<>();
         final SQLiteDatabase database = getReadableDatabase();
 
@@ -181,7 +182,8 @@ class DB extends SQLiteOpenHelper {
                 song.discNumber = discNumber;
                 song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
                 song.genre = genre;
-                song.setReplayGainValues(replayGainTrack, replayGainAlbum);
+                song.replayGainTrack = replayGainTrack;
+                song.replayGainAlbum = replayGainAlbum;
 
                 songs.add(song);
             } while (cursor.moveToNext());

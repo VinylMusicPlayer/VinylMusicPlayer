@@ -14,7 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,13 +22,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.WeakHashMap;
 
@@ -417,25 +418,27 @@ public class MusicPlayerRemote {
 
     public static void playFromUri(Uri uri) {
         if (musicService != null) {
-            ArrayList<Song> songs = null;
+            Song song = Song.EMPTY_SONG;
+
+            // Get by id
             if (uri.getScheme() != null && uri.getAuthority() != null) {
+                String songId = null;
                 if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-                    String songId = null;
                     if (uri.getAuthority().equals("com.android.providers.media.documents")) {
                         songId = getSongIdFromMediaProvider(uri);
                     } else if (uri.getAuthority().equals("media")) {
                         songId = uri.getLastPathSegment();
                     }
-                    if (songId != null) {
-                        songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                                musicService,
-                                MediaStore.Audio.AudioColumns._ID + "=?",
-                                new String[]{songId}
-                        ));
-                    }
+                }
+                if (!TextUtils.isEmpty(songId)) {
+                    try {
+                        song = Discography.getInstance().getSong(Integer.parseInt(songId));
+                    } catch (NumberFormatException ignored) {}
                 }
             }
-            if (songs == null) {
+
+            // Get by path
+            if (song.equals(Song.EMPTY_SONG)) {
                 File songFile = null;
                 if (uri.getAuthority() != null && uri.getAuthority().equals("com.android.externalstorage.documents")) {
                     songFile = new File(Environment.getExternalStorageDirectory(), uri.getPath().split(":", 2)[1]);
@@ -449,17 +452,14 @@ public class MusicPlayerRemote {
                     songFile = new File(uri.getPath());
                 }
                 if (songFile != null) {
-                    songs = SongLoader.getSongs(SongLoader.makeSongCursor(
-                            musicService,
-                            MediaStore.Audio.AudioColumns.DATA + "=?",
-                            new String[]{songFile.getAbsolutePath()}
-                    ));
+                    song = Discography.getInstance().getSongByPath(songFile.getAbsolutePath());
                 }
             }
-            if (songs != null && !songs.isEmpty()) {
-                openQueue(songs, 0, true);
+
+            if (!song.equals(Song.EMPTY_SONG)) {
+                openQueue(new ArrayList<Song>(Arrays.asList(song)), 0, true);
             } else {
-                //TODO the file is not listed in the media store
+                Log.e(TAG, "No song found for URI: " + uri);
             }
         }
     }
@@ -491,9 +491,5 @@ public class MusicPlayerRemote {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private static String getSongIdFromMediaProvider(Uri uri) {
         return DocumentsContract.getDocumentId(uri).split(":")[1];
-    }
-
-    public static boolean isServiceConnected() {
-        return musicService != null;
     }
 }

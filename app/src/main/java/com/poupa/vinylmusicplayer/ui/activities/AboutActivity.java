@@ -36,7 +36,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     private static String WEBSITE = "https://adrien.poupa.fr/";
 
-    private static String GOOGLE_PLUS_COMMUNITY = "https://plus.google.com/u/0/communities/106227738496107108513";
     private static String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
 
     private static String KABOUZEID_GOOGLE_PLUS = "https://google.com/+KarimAbouZeid23697";

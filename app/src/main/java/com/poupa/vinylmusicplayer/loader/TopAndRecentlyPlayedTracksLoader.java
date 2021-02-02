@@ -18,165 +18,62 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.MergeCursor;
-import android.provider.BaseColumns;
-import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
+import com.poupa.vinylmusicplayer.provider.StoreLoader;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TopAndRecentlyPlayedTracksLoader {
-    public static final int NUMBER_OF_TOP_TRACKS = 100;
-
     @NonNull
     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
-        return SongLoader.getSongs(makeRecentTracksCursorAndClearUpDatabase(context));
+        HistoryStore historyStore = HistoryStore.getInstance(context);
+        final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
+
+        ArrayList<Long> songIds = historyStore.getRecentIds(cutoff);
+        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
     public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
-        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{
-                makeNotPlayedTracksCursorAndClearUpDatabase(context),
-                makeNotRecentTracksCursorAndClearUpDatabase(context)
-        });
-        return SongLoader.getSongs(mergeCursor);
+        HistoryStore historyStore = HistoryStore.getInstance(context);
+        ArrayList<Long> songIds = new ArrayList<>();
+
+        // Collect not played songs
+        ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
+        ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
+        Collections.sort(allSongs, SongLoader.BY_DATE_ADDED);
+
+        for (Song song : allSongs) {
+            if (!playedSongIds.contains(song.id)) {
+                songIds.add(song.id);
+            }
+        }
+
+        // Collect not recently played songs
+        final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
+        ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
+        songIds.addAll(notRecentSongIds);
+
+        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
     public static ArrayList<Song> getTopTracks(@NonNull Context context) {
-        return SongLoader.getSongs(makeTopTracksCursorAndClearUpDatabase(context));
-    }
+        final int NUMBER_OF_TOP_TRACKS = 100;
 
-    @Nullable
-    public static Cursor makeRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
-        return makeRecentTracksCursorAndClearUpDatabaseImpl(context, false, false);
-    }
+        try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
+            ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
 
-     @Nullable
-    private static Cursor makeNotPlayedTracksCursorAndClearUpDatabase(@NonNull final Context context) {
-         String selection = null;
-         Cursor playedSongs = makeRecentTracksCursorAndClearUpDatabaseImpl(context, true, false);
-
-         if (playedSongs != null && playedSongs.moveToFirst()) {
-             StringBuilder playedSongExclusion = new StringBuilder();
-             playedSongExclusion.append(BaseColumns._ID);
-             playedSongExclusion.append(" NOT IN (");
-
-             final int columnIndex = playedSongs.getColumnIndex(BaseColumns._ID);
-             playedSongExclusion.append(playedSongs.getLong(columnIndex));
-
-             while (playedSongs.moveToNext()) {
-                 playedSongExclusion.append(",");
-                 playedSongExclusion.append(playedSongs.getLong(columnIndex));
-             }
-
-             playedSongExclusion.append(")");
-             selection = playedSongExclusion.toString();
-         }
-
-         return SongLoader.makeSongCursor(
-                 context,
-                 selection,
-                 null,
-                 MediaStore.Audio.Media.DATE_ADDED + " ASC");
-    }
-
-     @Nullable
-    public static Cursor makeNotRecentTracksCursorAndClearUpDatabase(@NonNull final Context context) {
-        return makeRecentTracksCursorAndClearUpDatabaseImpl(context, false, true);
-    }
-
-    private static void cleanupDatabase(@NonNull final Context context, @Nullable final SortedLongCursor cursor) {
-        if (cursor != null) {
-            HistoryStore.getInstance(context).removeSongIds(cursor.getMissingIds());
+            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
         }
     }
 
-    @Nullable
-    private static Cursor makeRecentTracksCursorAndClearUpDatabaseImpl(@NonNull final Context context, boolean ignoreCutoffTime, boolean reverseOrder) {
-        SortedLongCursor retCursor = makeRecentTracksCursorImpl(context, ignoreCutoffTime, reverseOrder);
-        cleanupDatabase(context, retCursor);
-
-        return retCursor;
-    }
-
-    @Nullable
-    public static Cursor makeTopTracksCursorAndClearUpDatabase(@NonNull final Context context) {
-        SortedLongCursor retCursor = makeTopTracksCursorImpl(context);
-        cleanupDatabase(context, retCursor);
-
-        return retCursor;
-    }
-
-    @Nullable
-    private static SortedLongCursor makeRecentTracksCursorImpl(@NonNull final Context context, boolean ignoreCutoffTime, boolean reverseOrder) {
-        final long cutoff = (ignoreCutoffTime ? 0 : PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis());
-        Cursor songs = HistoryStore.getInstance(context).queryRecentIds(cutoff * (reverseOrder ? -1 : 1));
-
-        try {
-            return makeSortedCursor(context, songs,
-                    songs.getColumnIndex(HistoryStore.RecentStoreColumns.ID));
-        } finally {
-            if (songs != null) {
-                songs.close();
-            }
-        }
-    }
-
-    @Nullable
-    private static SortedLongCursor makeTopTracksCursorImpl(@NonNull final Context context) {
-        Cursor songs = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS);
-
-        try {
-            return makeSortedCursor(context, songs,
-                    songs.getColumnIndex(SongPlayCountStore.SongPlayCountColumns.ID));
-        } finally {
-            if (songs != null) {
-                songs.close();
-            }
-        }
-    }
-
-    @Nullable
-    private static SortedLongCursor makeSortedCursor(@NonNull final Context context, @Nullable final Cursor cursor, final int idColumn) {
-        if (cursor != null && cursor.moveToFirst()) {
-            // create the list of ids to select against
-            StringBuilder selection = new StringBuilder();
-            selection.append(BaseColumns._ID);
-            selection.append(" IN (");
-
-            // this tracks the order of the ids
-            long[] order = new long[cursor.getCount()];
-
-            long id = cursor.getLong(idColumn);
-            selection.append(id);
-            order[cursor.getPosition()] = id;
-
-            while (cursor.moveToNext()) {
-                selection.append(",");
-
-                id = cursor.getLong(idColumn);
-                order[cursor.getPosition()] = id;
-                selection.append(id);
-            }
-
-            selection.append(")");
-
-            // get a list of songs with the data given the selection statement
-            Cursor songCursor = SongLoader.makeSongCursor(context, selection.toString(), null);
-            if (songCursor != null) {
-                // now return the wrapped cursor to handle sorting given order
-                return new SortedLongCursor(songCursor, order, BaseColumns._ID);
-            }
-        }
-
-        return null;
-    }
 }

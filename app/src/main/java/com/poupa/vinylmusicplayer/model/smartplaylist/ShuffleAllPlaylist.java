@@ -6,7 +6,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class ShuffleAllPlaylist extends AbsSmartPlaylist {
     @NonNull
     @Override
     public ArrayList<Song> getSongs(@NonNull Context context) {
-        return SongLoader.getAllSongs(context);
+        return Discography.getInstance().getAllSongs();
     }
 
     @Override

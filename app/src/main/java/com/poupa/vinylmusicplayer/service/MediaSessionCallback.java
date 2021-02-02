@@ -9,11 +9,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -96,7 +96,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE:
-                ArrayList<Song> allSongs = SongLoader.getAllSongs(context);
+                ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
                 ShuffleHelper.makeShuffleList(allSongs, -1);
                 openQueue(allSongs, 0, true);
                 break;

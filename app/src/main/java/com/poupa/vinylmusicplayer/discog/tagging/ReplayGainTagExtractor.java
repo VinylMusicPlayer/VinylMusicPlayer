@@ -1,4 +1,6 @@
-package com.poupa.vinylmusicplayer.loader;
+package com.poupa.vinylmusicplayer.discog.tagging;
+
+import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Song;
 
@@ -21,7 +23,7 @@ public class ReplayGainTagExtractor {
   private static final String REPLAYGAIN_TRACK_GAIN = "REPLAYGAIN_TRACK_GAIN";
   private static final String REPLAYGAIN_ALBUM_GAIN = "REPLAYGAIN_ALBUM_GAIN";
 
-  public static void setReplayGainValues(Song song) {
+  static void setReplayGainValues(@NonNull Song song) {
     float rgTrack = 0.0f;
     float rgAlbum = 0.0f;
 
@@ -50,7 +52,9 @@ public class ReplayGainTagExtractor {
         rgAlbum = tags.get(REPLAYGAIN_ALBUM_GAIN);
       }
     }
-    song.setReplayGainValues(rgTrack, rgAlbum);
+
+    song.replayGainTrack = rgTrack;
+    song.replayGainAlbum = rgAlbum;
   }
 
   private static Map<String, Float> parseId3Tags(Tag tag, String path) throws Exception {

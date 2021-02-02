@@ -141,12 +141,6 @@ public final class PreferenceUtil {
         return getThemeResFromPrefValue(mPreferences.getString(GENERAL_THEME, "light"));
     }
 
-    public void setGeneralTheme(String theme) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(GENERAL_THEME, theme);
-        editor.apply();
-    }
-
     @StyleRes
     public static int getThemeResFromPrefValue(String themePrefValue) {
         switch (themePrefValue) {

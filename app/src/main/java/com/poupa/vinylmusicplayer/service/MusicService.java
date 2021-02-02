@@ -42,7 +42,7 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.auto.AutoMusicProvider;
-import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.BlurTransformation;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
@@ -881,10 +881,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void playSongs(ArrayList<Song> songs, int shuffleMode) {
         if (songs != null && !songs.isEmpty()) {
             if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                int startPosition = 0;
-                if (!songs.isEmpty()) {
-                    startPosition = new Random().nextInt(songs.size());
-                }
+                int startPosition = new Random().nextInt(songs.size());
                 openQueue(songs, startPosition, false);
                 setShuffleMode(shuffleMode);
             } else {
@@ -902,8 +899,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             Song song = getCurrentSong();
 
             float adjust = 0f;
-            float rgTrack = song.getReplayGainTrack();
-            float rgAlbum = song.getReplayGainAlbum();
+            float rgTrack = song.replayGainTrack;
+            float rgAlbum = song.replayGainAlbum;
 
             if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
                 adjust = (rgTrack != 0 ? rgTrack : adjust);

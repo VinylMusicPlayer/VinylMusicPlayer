@@ -549,7 +549,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 if (isCancelled() || context == null || checkCallbackReference() == null)
                     return null;
 
-                return FileUtil.matchFilesWithMediaStore(context, files);
+                return FileUtil.matchFilesWithMediaStore(files);
             } catch (Exception e) {
                 e.printStackTrace();
                 cancel(false);

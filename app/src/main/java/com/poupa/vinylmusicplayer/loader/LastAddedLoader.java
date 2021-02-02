@@ -1,30 +1,27 @@
 package com.poupa.vinylmusicplayer.loader;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.provider.MediaStore;
-
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class LastAddedLoader {
 
     @NonNull
-    public static ArrayList<Song> getLastAddedSongs(@NonNull Context context) {
-        return SongLoader.getSongs(makeLastAddedCursor(context));
-    }
-
-    public static Cursor makeLastAddedCursor(@NonNull final Context context) {
+    public static ArrayList<Song> getLastAddedSongs() {
         long cutoff = PreferenceUtil.getInstance().getLastAddedCutoffTimeSecs();
 
-        return SongLoader.makeSongCursor(
-                context,
-                MediaStore.Audio.Media.DATE_ADDED + ">?",
-                new String[]{String.valueOf(cutoff)},
-                MediaStore.Audio.Media.DATE_ADDED + " DESC");
+        ArrayList<Song> lastAddedSongs = new ArrayList<>();
+        for (Song song : Discography.getInstance().getAllSongs()) {
+            if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
+        }
+
+        Collections.sort(lastAddedSongs, SongLoader.BY_DATE_ADDED_DESC);
+        return lastAddedSongs;
     }
 }

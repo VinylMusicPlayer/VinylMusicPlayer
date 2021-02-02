@@ -26,8 +26,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.discog.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
@@ -166,6 +165,8 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     ContentValues values = new ContentValues(4);
 
                     values.put(BaseColumns._ID, song.id);
+                    // TODO No need to save the song metadata here-under
+                    //      Keep it for now for backward compat (in the case of rollback)
                     values.put(AudioColumns.TITLE, song.title);
                     values.put(AudioColumns.TRACK, song.trackNumber);
                     values.put(AudioColumns.YEAR, song.year);
@@ -201,8 +202,11 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
     @NonNull
     private ArrayList<Song> getQueue(@NonNull final String tableName) {
-        Cursor cursor = getReadableDatabase().query(tableName, null,
-                null, null, null, null, null);
-        return SongLoader.getSongs(cursor);
+        try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID},
+                null, null, null, null, null)) {
+            ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
+
+            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+        }
     }
 }

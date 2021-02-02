@@ -5,8 +5,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 
 public class PlaylistSong extends Song {
-    public static final PlaylistSong EMPTY_PLAYLIST_SONG = new PlaylistSong(Song.EMPTY_SONG, -1, -1);
-
     public final long playlistId;
     public final long idInPlayList;
 
@@ -26,7 +24,6 @@ public class PlaylistSong extends Song {
 
         if (playlistId != that.playlistId) return false;
         return idInPlayList == that.idInPlayList;
-
     }
 
     @Override
@@ -45,7 +42,6 @@ public class PlaylistSong extends Song {
                 ", idInPlayList=" + idInPlayList +
                 '}';
     }
-
 
     @Override
     public int describeContents() {

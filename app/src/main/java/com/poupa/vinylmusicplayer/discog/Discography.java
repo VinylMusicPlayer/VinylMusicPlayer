@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -9,26 +10,22 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
-import com.poupa.vinylmusicplayer.loader.ReplayGainTagExtractor;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
-import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.reference.GenreTypes;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author SC (soncaokim)
@@ -47,10 +44,11 @@ import java.util.function.Function;
 public class Discography implements MusicServiceEventListener {
     public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
+    // TODO wrap this inside the MemCache class
     private final DB database;
     private final MemCache cache;
 
-    public MainActivity mainActivity = null;
+    public SnackbarUtil snackbar = null;
     private Handler mainActivityTaskQueue = null;
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -62,32 +60,32 @@ public class Discography implements MusicServiceEventListener {
     }
 
     // TODO This is not a singleton and should not be declared as such
-    @Nullable
+    @NonNull
     public static Discography getInstance() {
         return App.getDiscography();
     }
 
     public void startService(@NonNull final MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-        this.mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+        mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
-        this.mainActivity = null;
-        this.mainActivityTaskQueue = null;
+        snackbar = null;
+        mainActivityTaskQueue = null;
     }
 
     @NonNull
     public Song getOrAddSong(@NonNull final Song song) {
+        // TODO synchronized(cache) to avoid race condition along get/remove/add
         Song discogSong = getSong(song.id);
         if (discogSong != Song.EMPTY_SONG) {
             BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                 if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
                 if (incomingSong.dateModified != cachedSong.dateModified) return true;
-                if (!incomingSong.data.equals(cachedSong.data)) return true;
-                return false;
+                return (!incomingSong.data.equals(cachedSong.data));
             };
 
             if (!isMetadataObsolete.test(song, discogSong)) {
@@ -111,7 +109,22 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Song> getAllSongs() {
+    public Song getSongByPath(@NonNull final String path) {
+        synchronized (cache) {
+            Song matchingSong = Song.EMPTY_SONG;
+
+            for (Song song : cache.songsById.values()) {
+                if (song.data.equals(path)) {
+                    matchingSong = song;
+                    break;
+                }
+            }
+            return matchingSong;
+        }
+    }
+
+    @NonNull
+    public ArrayList<Song> getAllSongs() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.songsById.values());
@@ -133,7 +146,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Artist> getAllArtists() {
+    public ArrayList<Artist> getAllArtists() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.artistsById.values());
@@ -150,7 +163,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Collection<Album> getAllAlbums() {
+    public ArrayList<Album> getAllAlbums() {
         synchronized (cache) {
             ArrayList<Album> fullAlbums = new ArrayList<>();
             for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
@@ -161,7 +174,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    private Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
+    private static Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
         Album fullAlbum = new Album();
         for (Album fragment : albumParts) {
             for (Song song : fragment.songs) {
@@ -170,16 +183,12 @@ public class Discography implements MusicServiceEventListener {
             }
         }
         // Maintain sorted album after merge
-        Collections.sort(fullAlbum.songs,
-                (s1, s2) -> (s1.discNumber != s2.discNumber)
-                        ? (s1.discNumber - s2.discNumber)
-                        : (s1.trackNumber - s2.trackNumber)
-        );
+        Collections.sort(fullAlbum.songs, SongLoader.BY_DISC_TRACK);
         return fullAlbum;
     }
 
     @NonNull
-    public Collection<Genre> getAllGenres() {
+    public ArrayList<Genre> getAllGenres() {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             return new ArrayList<>(cache.genresByName.values());
@@ -205,7 +214,7 @@ public class Discography implements MusicServiceEventListener {
             }
 
             if (!cacheOnly) {
-                extractTags(song);
+                TagExtractor.extractTags(song);
             }
 
             Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
@@ -242,41 +251,65 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    @SuppressLint("StaticFieldLeak") // This task last seconds, much shorter than the lifespan of outer class Discography
     public void triggerSyncWithMediaStore(boolean reset) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(Void... params) {
-                String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                SnackbarUtil.showProgress(message);
+            protected void onPreExecute() {
+                if (snackbar != null) {
+                    String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+                    snackbar.showProgress(message);
+                }
+            }
 
+            @Override
+            protected Boolean doInBackground(Void... params) {
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
-
-                SnackbarUtil.dismiss();
                 return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if (snackbar != null) {
+                    snackbar.dismiss();
+                }
             }
         }.execute();
     }
 
     private void syncWithMediaStore() {
-        final Context context = App.getInstance().getApplicationContext();
+        Context context = App.getInstance().getApplicationContext();
 
-        // By querying via SongLoader, any newly added ones will be added to the cache
-        ArrayList<Song> allSongs = SongLoader.getAllSongs(context);
-        final HashSet<Long> allSongIds = new HashSet<>();
-        for (Song song : allSongs) {
-            allSongIds.add(song.id);
+        // zombies are tracks that are removed but still indexed by MediaStore
+        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
+
+        // Blacklist
+        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
+        Predicate<Song> isBlackListed = (s) -> {
+            for (String path : blackListedPaths) {
+                if (s.data.startsWith(path)) return true;
+            }
+            return false;
+        };
+
+        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
+        final HashSet<Long> importedSongIds = new HashSet<>();
+        for (Song song : alienSongs) {
+            if (isBlackListed.test(song)) continue;
+            if (isZombie.test(song)) continue;
+
+            Song matchedSong = getOrAddSong(song);
+            importedSongIds.add(matchedSong.id);
         }
 
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
             Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
-            cacheSongsId.removeAll(allSongIds);
-            for (long songId : cacheSongsId) {
-                removeSongById(songId);
-            }
+            cacheSongsId.removeAll(importedSongIds);
+            removeSongById(cacheSongsId.toArray(new Long[0]));
         }
     }
 
@@ -330,66 +363,28 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void extractTags(@NonNull Song song) {
-        try {
-            // Override with metadata extracted from the file ourselves
-            AudioFile file = AudioFileIO.read(new File(song.data));
-            Tag tags = file.getTagOrCreateAndSetDefault();
-
-            Function<FieldKey, String> safeGetTag = (tag) -> {
-                try {return tags.getFirst(tag).trim();}
-                catch (KeyNotFoundException ignored) {return "";}
-                catch (UnsupportedOperationException ignored){ return "";}
-            };
-            Function<FieldKey, Integer> safeGetTagAsInteger = (tag) -> {
-                try {return Integer.parseInt(safeGetTag.apply(tag));}
-                catch (NumberFormatException ignored) {return 0;}
-            };
-            Function<FieldKey, List<String>> safeGetTagAsList = (tag) -> {
-                try {return tags.getAll(tag);}
-                catch (KeyNotFoundException ignored) {return new ArrayList<>(Arrays.asList(""));}
-            };
-
-            song.albumName = safeGetTag.apply(FieldKey.ALBUM);
-            song.artistNames  = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ARTIST));
-            song.albumArtistNames = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(FieldKey.ALBUM_ARTIST));
-            song.title = safeGetTag.apply(FieldKey.TITLE);
-            if (song.title.isEmpty()) {
-                // fallback to use the file name
-                song.title = file.getFile().getName();
-            }
-
-            song.genre = safeGetTag.apply(FieldKey.GENRE);
-            song.discNumber = safeGetTagAsInteger.apply(FieldKey.DISC_NO);
-            song.trackNumber = safeGetTagAsInteger.apply(FieldKey.TRACK);
-            song.year = safeGetTagAsInteger.apply(FieldKey.YEAR);
-
-            ReplayGainTagExtractor.setReplayGainValues(song);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeSongByPath(@NonNull final String path) {
+    public void removeSongByPath(@NotNull String... paths) {
         synchronized (cache) {
-            Song matchingSong = null;
-
-            for (Song song : cache.songsById.values()) {
-                if (song.data.equals(path)) {
-                    matchingSong = song;
-                    break;
+            ArrayList<Long> matchingSongIds = new ArrayList<>();
+            for (String path : paths) {
+                for (Song song : cache.songsById.values()) {
+                    if (song.data.equals(path)) {
+                        matchingSongIds.add(song.id);
+                        break;
+                    }
                 }
             }
-            if (matchingSong != null) {
-                removeSongById(matchingSong.id);
-            }
+            removeSongById(matchingSongIds.toArray(new Long[0]));
         }
     }
 
-    private void removeSongById(long songId) {
-        cache.removeSongById(songId);
-        database.removeSongById(songId);
+    private void removeSongById(@NotNull Long... songIds) {
+        if (songIds.length == 0) return;
 
+        for (long songId : songIds) {
+            cache.removeSongById(songId);
+            database.removeSongById(songId);
+        }
         notifyDiscographyChanged();
     }
 

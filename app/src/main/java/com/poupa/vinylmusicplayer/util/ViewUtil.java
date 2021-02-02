@@ -4,13 +4,7 @@ import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -58,19 +52,6 @@ public class ViewUtil {
         return animator;
     }
 
-    public static Drawable createSelectorDrawable(Context context, @ColorInt int color) {
-        final StateListDrawable baseSelector = new StateListDrawable();
-        baseSelector.addState(new int[]{android.R.attr.state_activated}, new ColorDrawable(color));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return new RippleDrawable(ColorStateList.valueOf(color), baseSelector, new ColorDrawable(Color.WHITE));
-        }
-
-        baseSelector.addState(new int[]{}, new ColorDrawable(Color.TRANSPARENT));
-        baseSelector.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(color));
-        return baseSelector;
-    }
-
     public static boolean hitTest(View v, int x, int y) {
         final int tx = (int) (v.getTranslationX() + 0.5f);
         final int ty = (int) (v.getTranslationY() + 0.5f);
@@ -92,10 +73,5 @@ public class ViewUtil {
     public static float convertDpToPixel(float dp, Resources resources) {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * metrics.density;
-    }
-
-    public static float convertPixelsToDp(float px, Resources resources) {
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        return px / metrics.density;
     }
 }

@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.discog;
+package com.poupa.vinylmusicplayer.util;
 
 import java.util.Comparator;
 

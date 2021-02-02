@@ -101,8 +101,8 @@ public class SongDetailDialog extends DialogFragment {
                     bitRate.setText(makeTextWithTitle(context, R.string.label_bit_rate, audioHeader.getBitRate() + " kb/s"));
                     samplingRate.setText(makeTextWithTitle(context, R.string.label_sampling_rate, audioHeader.getSampleRate() + " Hz"));
 
-                    float rgTrack = song.getReplayGainTrack();
-                    float rgAlbum = song.getReplayGainAlbum();
+                    float rgTrack = song.replayGainTrack;
+                    float rgAlbum = song.replayGainAlbum;
                     String replayGainValues = "";
                     if (rgTrack != 0.0) {
                         replayGainValues += String.format("%s: %.2f dB ", context.getString(R.string.song), rgTrack);

@@ -2,6 +2,8 @@ package com.poupa.vinylmusicplayer.discog;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.loader.AlbumLoader;
+import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -21,21 +23,21 @@ import java.util.function.Function;
  */
 
 class MemCache {
-    public Map<Long, Song> songsById = new HashMap<>();
+    Map<Long, Song> songsById = new HashMap<>();
 
-    public Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Long, Artist> artistsById = new HashMap<>();
+    Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<Long, Artist> artistsById = new HashMap<>();
 
     // internal implementation class, to make explicit that we are dealing with slices of album, not the full one
     static class AlbumSlice extends Album {
     }
 
-    public Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
+    Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
 
-    public Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
-    public synchronized void addSong(@NonNull final Song song) {
+    synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbumById(song);
 //        TODO // Merge album by name - MediaStore may index album of same name with different IDs
 //        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
@@ -59,18 +61,14 @@ class MemCache {
         for (Long artistId : albums.keySet()) {
             Artist artist = artistsById.get(artistId);
             if (artist == null) continue;
-            Collections.sort(artist.albums, (a1, a2) -> a2.getYear() - a1.getYear());
+            Collections.sort(artist.albums, AlbumLoader.BY_YEAR_DESC);
         }
         for (Album album : albums.values()) {
-            Collections.sort(album.songs,
-                    (s1, s2) -> (s1.discNumber != s2.discNumber)
-                            ? (s1.discNumber - s2.discNumber)
-                            : (s1.trackNumber - s2.trackNumber)
-            );
+            Collections.sort(album.songs, SongLoader.BY_DISC_TRACK);
         }
     }
 
-    public synchronized void removeSongById(long songId) {
+    synchronized void removeSongById(long songId) {
         Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
@@ -124,7 +122,7 @@ class MemCache {
         }
     }
 
-    public synchronized void clear() {
+    synchronized void clear() {
         songsById.clear();
 
         artistsByName.clear();
@@ -174,22 +172,20 @@ class MemCache {
     @NonNull
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbumById(@NonNull final Song song) {
         Set<Artist> artists = getOrCreateArtistByName(song);
-        Map<Long, AlbumSlice> albumsByArtist = new HashMap<>();
-
-        Map<Long, AlbumSlice> existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
-        if (existingAlbumsByArtist == null) {
-            albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
-            existingAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+        if (albumsByArtist == null) {
+            albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
+            albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         }
         // attach to the artists if needed
         for (Artist artist : artists) {
-            if (!existingAlbumsByArtist.containsKey(artist.id)) {
+            if (!albumsByArtist.containsKey(artist.id)) {
                 AlbumSlice album = new AlbumSlice();
-                existingAlbumsByArtist.put(artist.id, album);
+                albumsByArtist.put(artist.id, album);
                 artist.albums.add(album);
             }
 
-            albumsByArtist.put(artist.id, existingAlbumsByArtist.get(artist.id));
+            albumsByArtist.put(artist.id, albumsByArtist.get(artist.id));
         }
         return albumsByArtist;
     }

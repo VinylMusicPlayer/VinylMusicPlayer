@@ -36,7 +36,7 @@ public class LastAddedPlaylist extends AbsSmartPlaylist {
     @NonNull
     @Override
     public ArrayList<Song> getSongs(@NonNull Context context) {
-        return LastAddedLoader.getLastAddedSongs(context);
+        return LastAddedLoader.getLastAddedSongs();
     }
 
     @Override

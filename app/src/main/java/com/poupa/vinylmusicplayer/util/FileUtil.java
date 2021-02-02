@@ -1,15 +1,11 @@
 package com.poupa.vinylmusicplayer.util;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.loader.SongLoader;
-import com.poupa.vinylmusicplayer.loader.SortedCursor;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.io.BufferedReader;
@@ -34,47 +30,16 @@ public final class FileUtil {
     }
 
     @NonNull
-    public static ArrayList<Song> matchFilesWithMediaStore(@NonNull Context context, @Nullable List<File> files) {
-        return SongLoader.getSongs(makeSongCursor(context, files));
-    }
-
-    @Nullable
-    public static SortedCursor makeSongCursor(@NonNull final Context context, @Nullable final List<File> files) {
-        String selection = null;
-        String[] paths = null;
-
-        if (files != null) {
-            paths = toPathArray(files);
-
-            if (files.size() > 0 && files.size() < 999) { // 999 is the max amount Androids SQL implementation can handle.
-                selection = MediaStore.Audio.AudioColumns.DATA + " IN (" + makePlaceholders(files.size()) + ")";
+    public static ArrayList<Song> matchFilesWithMediaStore(@Nullable List<File> files) {
+        ArrayList<Song> songs = new ArrayList<>();
+        for (File file : files) {
+            String path = safeGetCanonicalPath(file);
+            Song song = Discography.getInstance().getSongByPath(path);
+            if (!song.equals(Song.EMPTY_SONG)) {
+                songs.add(song);
             }
         }
-
-        Cursor songCursor = SongLoader.makeSongCursor(context, selection, selection == null ? null : paths);
-
-        return songCursor == null ? null : new SortedCursor(songCursor, paths, MediaStore.Audio.AudioColumns.DATA);
-    }
-
-    private static String makePlaceholders(int len) {
-        StringBuilder sb = new StringBuilder(len * 2 - 1);
-        sb.append("?");
-        for (int i = 1; i < len; i++) {
-            sb.append(",?");
-        }
-        return sb.toString();
-    }
-
-    @Nullable
-    private static String[] toPathArray(@Nullable List<File> files) {
-        if (files != null) {
-            String[] paths = new String[files.size()];
-            for (int i = 0; i < files.size(); i++) {
-                paths[i] = safeGetCanonicalPath(files.get(i));
-            }
-            return paths;
-        }
-        return null;
+        return songs;
     }
 
     @NonNull
