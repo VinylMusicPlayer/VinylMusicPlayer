@@ -356,7 +356,7 @@ public class Discography implements MusicServiceEventListener {
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
         if (mainActivityTaskQueue != null) {
             // Post as much 1 event per a coalescence period
-            final long COALESCENCE_DELAY = 500;
+            final long COALESCENCE_DELAY = 50;
             for (Runnable listener : changedListeners) {
                 mainActivityTaskQueue.removeCallbacks(listener);
                 mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
