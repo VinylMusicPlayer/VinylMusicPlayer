@@ -1,13 +1,16 @@
 package com.poupa.vinylmusicplayer.model.smartplaylist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
+import com.poupa.vinylmusicplayer.service.MusicService;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -26,7 +29,10 @@ public abstract class AbsSmartPlaylist extends AbsCustomPlaylist {
         this.iconRes = R.drawable.ic_queue_music_white_24dp;
     }
 
-    public abstract void clear(Context context);
+    public void clear(@NonNull Context context) {
+        // Nofity app of clear event, so that the smart playlists are refreshed
+        if (isClearable()) context.sendBroadcast(new Intent(MusicService.META_CHANGED));
+    }
 
     public boolean isClearable() {
         return true;

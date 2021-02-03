@@ -40,10 +40,6 @@ public class LastAddedPlaylist extends AbsSmartPlaylist {
     }
 
     @Override
-    public void clear(@NonNull Context context) {
-    }
-
-    @Override
     public boolean isClearable() {
         return false;
     }

@@ -43,8 +43,8 @@ public class HistoryPlaylist extends AbsSmartPlaylist {
     @Override
     public void clear(@NonNull Context context) {
         HistoryStore.getInstance(context).clear();
+        super.clear(context);
     }
-
 
     @Override
     public int describeContents() {

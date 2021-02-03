@@ -30,8 +30,8 @@ public class MyTopTracksPlaylist extends AbsSmartPlaylist {
     @Override
     public void clear(@NonNull Context context) {
         SongPlayCountStore.getInstance(context).clear();
+        super.clear(context);
     }
-
 
     @Override
     public int describeContents() {

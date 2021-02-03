@@ -44,7 +44,6 @@ public class ClearSmartPlaylistDialog extends DialogFragment {
                         return;
                     }
                     playlist.clear(getActivity());
-                    // TODO Nofity app of clear event
                 })
                 .build();
     }
