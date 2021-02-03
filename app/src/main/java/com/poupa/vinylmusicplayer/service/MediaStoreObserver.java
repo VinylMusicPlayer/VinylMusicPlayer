@@ -24,6 +24,8 @@ public class MediaStoreObserver extends ContentObserver implements Runnable {
         mHandler.postDelayed(this, REFRESH_DELAY);
     }
 
+    // TODO Implement onChange(boolean selfChange, Uri uri) for a finer handling
+
     @Override
     public void run() {
         // actually call refresh when the delayed callback fires
