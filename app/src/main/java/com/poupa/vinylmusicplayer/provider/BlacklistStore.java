@@ -127,7 +127,6 @@ public class BlacklistStore extends SQLiteOpenHelper {
     }
 
     private void notifyMediaStoreChanged() {
-        // TODO Indicate that the blacklist has changed, to have a finer event processing
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 

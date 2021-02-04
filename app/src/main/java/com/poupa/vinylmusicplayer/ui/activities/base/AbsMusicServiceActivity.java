@@ -197,7 +197,6 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
                         activity.onShuffleModeChanged();
                         break;
                     case MusicService.MEDIA_STORE_CHANGED:
-                        // TODO Propagate any extra infos from the intent
                         activity.onMediaStoreChanged();
                         break;
                 }

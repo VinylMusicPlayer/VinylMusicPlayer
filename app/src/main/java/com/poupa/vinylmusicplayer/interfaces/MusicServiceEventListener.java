@@ -18,6 +18,5 @@ public interface MusicServiceEventListener {
 
     void onShuffleModeChanged();
 
-    // TODO Accept extra intent argument(s)
     void onMediaStoreChanged();
 }

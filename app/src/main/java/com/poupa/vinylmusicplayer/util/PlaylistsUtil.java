@@ -33,32 +33,7 @@ import static android.provider.MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
  */
 public class PlaylistsUtil {
     private static void notifyChange(@NonNull final Context context, @NonNull Uri uri) {
-        Runnable notifyViaBroadcast = () -> {
-            Intent playlistNotification = new Intent(MusicService.MEDIA_STORE_CHANGED);
-            // TODO Deviant use of INTENT_EXTRA_PLAYLIST
-            // playlistNotification.putExtra(MusicService.INTENT_EXTRA_PLAYLIST, uri);
-            context.sendBroadcast(playlistNotification);
-        };
-
-        Runnable notifyViaContentProvider = () -> {
-            // TODO The following is not working - investigate why
-            // From the doc:
-            //      Starting in {@link android.os.Build.VERSION_CODES#O}, all content
-            //      notifications must be backed by a valid {@link ContentProvider}.
-            //
-            //      @param observer The observer that originated the change, may be
-            //      <code>null</null>. The observer that originated the change
-            //      will only receive the notification if it has requested to
-            //      receive self-change notifications by implementing
-            //      {@link ContentObserver#deliverSelfNotifications()} to return true.
-            context.getContentResolver().notifyChange(uri, null);
-        };
-
-        Runnable notifyInApp = () -> {
-            // TODO Directly plug to the app's MediaStoreObserver and alike, bypassing Intent and ContentProvider
-        };
-
-        notifyViaBroadcast.run();
+        context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final long playlistId) {
