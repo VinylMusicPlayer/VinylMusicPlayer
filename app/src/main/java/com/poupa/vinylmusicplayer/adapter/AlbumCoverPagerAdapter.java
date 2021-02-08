@@ -30,14 +30,17 @@ import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYP
  */
 public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
 
-    private ArrayList<Song> dataSet;
+    private final ArrayList<Song> dataSet;
 
     private AlbumCoverFragment.ColorReceiver currentColorReceiver;
     private int currentColorReceiverPosition = -1;
 
     public AlbumCoverPagerAdapter(FragmentManager fm, ArrayList<Song> dataSet) {
         super(fm);
-        this.dataSet = dataSet;
+        // Make a copy to avoid race condition
+        // i.e. the playing queue is modified, the UI code detects the change and crash
+        // before this class gets a chance to be notified
+        this.dataSet = new ArrayList<>(dataSet);
     }
 
     @Override
