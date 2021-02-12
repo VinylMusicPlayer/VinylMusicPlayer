@@ -91,6 +91,12 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
         }
     }
 
+    @Override
+    public void onPlayingMetaChanged() {
+        // Update the smart playlists (played, not played, etc)
+        reload();
+    }
+
     public void reload() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }

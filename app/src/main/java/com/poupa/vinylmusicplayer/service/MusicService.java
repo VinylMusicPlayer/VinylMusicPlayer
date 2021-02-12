@@ -235,7 +235,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         mPackageValidator = new PackageValidator(this, R.xml.allowed_media_browser_callers);
         mMusicProvider = new AutoMusicProvider(this);
 
-        sendBroadcast(new Intent("com.poupa.vinylmusicplayer.VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
+        sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
 
         mediaStoreObserver.onChange(true);
     }
@@ -346,7 +346,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         wakeLock.release();
 
-        sendBroadcast(new Intent("com.poupa.vinylmusicplayer.VINYL_MUSIC_PLAYER_MUSIC_SERVICE_DESTROYED"));
+        sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_DESTROYED"));
     }
 
     @Override
@@ -478,6 +478,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 applyReplayGain();
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }
@@ -496,6 +497,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 this.nextPosition = nextPosition;
                 return true;
             } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
         }
@@ -986,6 +988,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 throttledSeekHandler.notifySeek();
                 return newPosition;
             } catch (Exception e) {
+                e.printStackTrace();
                 return -1;
             }
         }

@@ -131,7 +131,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private void setUpToolbar() {
         toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTitle(null);
         titleTextView.setText(playlist.name);
@@ -140,7 +139,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     }
 
     private void setToolbarTitle(String title) {
-        //noinspection ConstantConditions
         getSupportActionBar().setTitle(title);
     }
 
@@ -204,6 +202,9 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
                 playlist = PlaylistLoader.getPlaylist(this, playlist.id);
                 setToolbarTitle(playlist.name);
             }
+
+            // Playlist changed (song added/removed)
+            reload();
         }
     }
 
@@ -260,18 +261,19 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     }
 
     @Override
+    @NonNull
     public Loader<ArrayList<Song>> onCreateLoader(int id, Bundle args) {
         return new AsyncPlaylistSongLoader(this, playlist);
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Song>> loader, ArrayList<Song> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Song>> loader, ArrayList<Song> data) {
         if (adapter != null)
             adapter.swapDataSet(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Song>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Song>> loader) {
         if (adapter != null)
             adapter.swapDataSet(new ArrayList<>());
     }

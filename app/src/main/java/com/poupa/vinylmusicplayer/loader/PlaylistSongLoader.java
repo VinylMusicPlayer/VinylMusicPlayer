@@ -21,7 +21,7 @@ public class PlaylistSongLoader {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     PlaylistSong song = getPlaylistSongFromCursorImpl(cursor, playlistId);
-                    if (song.id != Song.EMPTY_SONG.id) {
+                    if (!song.equals(Song.EMPTY_SONG)) {
                         songs.add(song);
                     }
                 } while (cursor.moveToNext());
@@ -53,6 +53,7 @@ public class PlaylistSongLoader {
                     null,
                     MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
+            e.printStackTrace();
             return null;
         }
     }

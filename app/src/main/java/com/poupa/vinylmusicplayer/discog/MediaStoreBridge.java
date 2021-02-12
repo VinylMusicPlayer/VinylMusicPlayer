@@ -86,7 +86,8 @@ public class MediaStoreBridge {
                     null,
                     PreferenceUtil.getInstance().getSongSortOrder()
             );
-        } catch (SecurityException ignored) {
+        } catch (SecurityException e) {
+            e.printStackTrace();
             return null;
         }
     }

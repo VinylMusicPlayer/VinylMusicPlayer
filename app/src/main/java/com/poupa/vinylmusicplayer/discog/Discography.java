@@ -79,25 +79,26 @@ public class Discography implements MusicServiceEventListener {
 
     @NonNull
     public Song getOrAddSong(@NonNull final Song song) {
-        // TODO synchronized(cache) to avoid race condition along get/remove/add
-        Song discogSong = getSong(song.id);
-        if (discogSong != Song.EMPTY_SONG) {
-            BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
-                if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
-                if (incomingSong.dateModified != cachedSong.dateModified) return true;
-                return (!incomingSong.data.equals(cachedSong.data));
-            };
+        synchronized (cache) {
+            Song discogSong = getSong(song.id);
+            if (!discogSong.equals(Song.EMPTY_SONG)) {
+                BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
+                    if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
+                    if (incomingSong.dateModified != cachedSong.dateModified) return true;
+                    return (!incomingSong.data.equals(cachedSong.data));
+                };
 
-            if (!isMetadataObsolete.test(song, discogSong)) {
-                return discogSong;
-            } else {
-                removeSongById(song.id);
+                if (!isMetadataObsolete.test(song, discogSong)) {
+                    return discogSong;
+                } else {
+                    removeSongById(song.id);
+                }
             }
+
+            addSong(song);
+
+            return song;
         }
-
-        addSong(song);
-
-        return song;
     }
 
     @NonNull
@@ -355,7 +356,7 @@ public class Discography implements MusicServiceEventListener {
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
         if (mainActivityTaskQueue != null) {
             // Post as much 1 event per a coalescence period
-            final long COALESCENCE_DELAY = 500;
+            final long COALESCENCE_DELAY = 50;
             for (Runnable listener : changedListeners) {
                 mainActivityTaskQueue.removeCallbacks(listener);
                 mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);

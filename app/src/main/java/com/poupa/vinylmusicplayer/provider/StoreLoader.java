@@ -38,7 +38,7 @@ public class StoreLoader {
         ArrayList<Song> songs = new ArrayList<>();
         for (Long id : songIds) {
             Song song = discography.getSong(id);
-            if (song.id == Song.EMPTY_SONG.id) {
+            if (song.equals(Song.EMPTY_SONG)) {
                 orphanSongIds.add(id);
             } else {
                 songs.add(song);
