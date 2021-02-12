@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2021-02-12
+### Added
+- Support for multiple artists per track
+- Extract album artist from ID3 tags and use that for album grouping/sorting
+- Given a song with album artist A and artist "A & B", only "A & B" is shown on artist tab.
+- Show album artist on top of album detail page if there is one, else fallback to first song's artist
+- Multi-disc track sorting
+- Support ReplayGain in MP4 files
+### Fixed
+- Unknown artist is shown as empty on artist tab
+- Performance optimization
+- Remove songs from detail activities after they are deleted
+- Fix sort order
+- Fix a crash after extended sleep
+- Fix crash due to iterating on a modified collection
+- Fix crash when a song is removed from queue
+
 ## [1.0.0] - 2020-10-15
 ### Added
 - Library handling with a local database, circumventing the MediaStore
