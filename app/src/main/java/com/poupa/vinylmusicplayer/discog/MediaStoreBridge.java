@@ -52,9 +52,6 @@ public class MediaStoreBridge {
                 songs.add(getSongFromCursorImpl(cursor));
             } while (cursor.moveToNext());
         }
-
-        if (cursor != null)
-            cursor.close();
         return songs;
     }
 
