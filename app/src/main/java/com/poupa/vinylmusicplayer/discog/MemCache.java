@@ -33,16 +33,13 @@ class MemCache {
     }
 
     Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
+    Map<String, Set<Long>> albumsByName = new HashMap<>();
 
     Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     synchronized void addSong(@NonNull final Song song) {
-        Map<Long, AlbumSlice> albums = getOrCreateAlbumById(song);
-//        TODO // Merge album by name - MediaStore may index album of same name with different IDs
-//        if (!album.songs.isEmpty() && (album.getId() != song.albumId)) {
-//            song.albumId = album.getId();
-//        }
+        Map<Long, AlbumSlice> albums = getOrCreateAlbum(song);
         for (Album album : albums.values()) {
             album.songs.add(song);
         }
@@ -100,6 +97,12 @@ class MemCache {
             }
             if (impactedAlbumsByArtist.isEmpty()) {
                 albumsByAlbumIdAndArtistId.remove(song.albumId);
+
+                Set<Long> albumsId = albumsByName.get(song.albumName);
+                albumsId.remove(song.albumId);
+                if (albumsId.isEmpty()) {
+                    albumsByName.remove(song.albumName);
+                }
             }
 
             // ---- Remove song from Genre cache
@@ -129,6 +132,7 @@ class MemCache {
         artistsById.clear();
 
         albumsByAlbumIdAndArtistId.clear();
+        albumsByName.clear();
 
         genresByName.clear();
         songsByGenreId.clear();
@@ -170,8 +174,22 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized Map<Long, AlbumSlice> getOrCreateAlbumById(@NonNull final Song song) {
+    private synchronized Map<Long, AlbumSlice> getOrCreateAlbum(@NonNull final Song song) {
         Set<Artist> artists = getOrCreateArtistByName(song);
+
+        // Try reusing an existing album with same name
+        Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
+        if (albumIdsSameName != null) {
+            for (long id : albumIdsSameName) {
+                AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(song.artistId);
+                if (byMainArtist != null) {
+                    song.albumId = byMainArtist.getId();
+                    break;
+                }
+            }
+        }
+
+        // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
@@ -182,6 +200,14 @@ class MemCache {
             if (!albumsByArtist.containsKey(artist.id)) {
                 AlbumSlice album = new AlbumSlice();
                 albumsByArtist.put(artist.id, album);
+
+                Set<Long> albumsId = albumsByName.get(song.albumName);
+                if (albumsId == null) {
+                    albumsByName.put(song.albumName, new HashSet<>());
+                    albumsId = albumsByName.get(song.albumName);
+                }
+                albumsId.add(song.albumId);
+
                 artist.albums.add(album);
             }
 
