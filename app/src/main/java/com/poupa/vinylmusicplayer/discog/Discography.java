@@ -67,7 +67,7 @@ public class Discography implements MusicServiceEventListener {
 
     public void startService(@NonNull final MainActivity mainActivity) {
         mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
-        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
+        snackbar = new SnackbarUtil(mainActivity);
 
         triggerSyncWithMediaStore(false);
     }
@@ -78,7 +78,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public Song getOrAddSong(@NonNull final Song song) {
+    private Song getOrAddSong(@NonNull final Song song) {
         synchronized (cache) {
             Song discogSong = getSong(song.id);
             if (!discogSong.equals(Song.EMPTY_SONG)) {
@@ -95,7 +95,7 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
 
-            addSong(song);
+            addSong(song, false);
 
             return song;
         }
@@ -121,6 +121,12 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
             return matchingSong;
+        }
+    }
+
+    private int getSongCount() {
+        synchronized (cache) {
+            return cache.songsById.size();
         }
     }
 
@@ -203,16 +209,10 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void addSong(@NonNull Song song) {
-        new AddSongAsyncTask().execute(song);
-    }
-
-    boolean addSongImpl(@NonNull Song song, boolean cacheOnly) {
+    void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
-            if (cache.songsById.containsKey(song.id)) {
-                return false;
-            }
+            if (cache.songsById.containsKey(song.id)) return;
 
             if (!cacheOnly) {
                 TagExtractor.extractTags(song);
@@ -295,6 +295,9 @@ public class Discography implements MusicServiceEventListener {
             return false;
         };
 
+        SnackbarUtil snackbar = Discography.getInstance().snackbar;
+        final int initialSongCount = getSongCount();
+
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
         for (Song song : alienSongs) {
@@ -303,6 +306,14 @@ public class Discography implements MusicServiceEventListener {
 
             Song matchedSong = getOrAddSong(song);
             importedSongIds.add(matchedSong.id);
+
+            int currentSongCount = getSongCount();
+            if ((snackbar != null) && (currentSongCount != initialSongCount)) {
+                final String message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                        currentSongCount - initialSongCount);
+                snackbar.showProgress(message);
+            }
         }
 
         synchronized (cache) {
@@ -310,6 +321,12 @@ public class Discography implements MusicServiceEventListener {
             Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
+        }
+        if (snackbar != null) {
+            final String message = String.format(
+                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                    getSongCount());
+            snackbar.showResult(message);
         }
     }
 
@@ -398,7 +415,7 @@ public class Discography implements MusicServiceEventListener {
 
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
-            addSongImpl(song, true);
+            addSong(song, true);
         }
 
         setStale(false);

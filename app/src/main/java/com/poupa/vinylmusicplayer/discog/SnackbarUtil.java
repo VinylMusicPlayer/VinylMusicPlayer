@@ -3,12 +3,12 @@ package com.poupa.vinylmusicplayer.discog;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 
 /**
  * @author SC (soncaokim)
@@ -16,10 +16,10 @@ import com.poupa.vinylmusicplayer.App;
 
 public class SnackbarUtil {
     private Snackbar progressBar = null;
-    private View viewContainer;
+    private final MainActivity mainActivity;
 
-    public SnackbarUtil(View view) {
-        viewContainer = view;
+    public SnackbarUtil(MainActivity activity) {
+        mainActivity = activity;
     }
 
     @NonNull
@@ -38,34 +38,29 @@ public class SnackbarUtil {
     }
 
     public void showProgress(@NonNull final CharSequence message) {
-        if (progressBar == null) {
-            progressBar = Snackbar.make(
-                    viewContainer,
-                    buildMessageWithIcon(message),
-                    Snackbar.LENGTH_INDEFINITE);
-            progressBar.show();
-        } else {
-            progressBar.setText(message);
-            if (!progressBar.isShownOrQueued()) {
+        mainActivity.runOnUiThread(() -> {
+            if (progressBar == null) {
+                progressBar = Snackbar.make(
+                        mainActivity.getSnackBarContainer(),
+                        buildMessageWithIcon(message),
+                        Snackbar.LENGTH_INDEFINITE);
                 progressBar.show();
+            } else {
+                progressBar.setText(message);
+                if (!progressBar.isShownOrQueued()) {
+                    progressBar.show();
+                }
             }
-        }
+        });
     }
 
     void showResult(@NonNull final CharSequence message) {
-        dismiss();
-
-        progressBar = Snackbar.make(
-                viewContainer,
-                buildMessageWithIcon(message),
-                Snackbar.LENGTH_LONG);
-        progressBar.show();
-    }
-
-    public void dismiss() {
-        if ((progressBar != null) && progressBar.isShownOrQueued()) {
-            progressBar.dismiss();
-        }
-        progressBar = null;
+        mainActivity.runOnUiThread(() -> {
+            progressBar = Snackbar.make(
+                    mainActivity.getSnackBarContainer(),
+                    buildMessageWithIcon(message),
+                    Snackbar.LENGTH_LONG);
+            progressBar.show();
+        });
     }
 }
