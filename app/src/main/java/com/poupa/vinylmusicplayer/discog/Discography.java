@@ -296,8 +296,12 @@ public class Discography implements MusicServiceEventListener {
         };
 
         SnackbarUtil snackbar = Discography.getInstance().snackbar;
+        if (snackbar != null) {
+            final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
+            snackbar.showProgress(message);
+        }
         final int initialSongCount = getSongCount();
-        final int statusStepping = 50;
+        final int statusStepping = 10;
 
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
@@ -309,7 +313,9 @@ public class Discography implements MusicServiceEventListener {
             importedSongIds.add(matchedSong.id);
 
             int currentSongCount = getSongCount();
-            if ((snackbar != null) && ((currentSongCount - initialSongCount) % statusStepping == 0)) {
+            if ((snackbar != null) && (currentSongCount != initialSongCount)
+                    && ((currentSongCount - initialSongCount) % statusStepping == 0))
+            {
                 final String message = String.format(
                         App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
                         currentSongCount - initialSongCount);
@@ -323,11 +329,16 @@ public class Discography implements MusicServiceEventListener {
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
         }
+        int currentSongCount = getSongCount();
         if (snackbar != null) {
-            final String message = String.format(
-                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                    getSongCount());
-            snackbar.showResult(message);
+            if (currentSongCount != initialSongCount) {
+                final String message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                        currentSongCount - initialSongCount);
+                snackbar.showResult(message);
+            } else {
+                snackbar.dismiss();
+            }
         }
     }
 

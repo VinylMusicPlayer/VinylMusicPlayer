@@ -63,4 +63,13 @@ public class SnackbarUtil {
             progressBar.show();
         });
     }
+
+    void dismiss() {
+        mainActivity.runOnUiThread(() -> {
+            if ((progressBar != null) && progressBar.isShownOrQueued()) {
+                progressBar.dismiss();
+            }
+            progressBar = null;
+        });
+    }
 }
