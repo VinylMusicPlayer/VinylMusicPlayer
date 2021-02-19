@@ -195,8 +195,10 @@ class MemCache {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
             albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         }
-        // attach to the artists if needed
+
+        Map<Long, AlbumSlice> result = new HashMap<>();
         for (Artist artist : artists) {
+            // Attach to the artists if needed
             if (!albumsByArtist.containsKey(artist.id)) {
                 AlbumSlice album = new AlbumSlice();
                 albumsByArtist.put(artist.id, album);
@@ -211,9 +213,11 @@ class MemCache {
                 artist.albums.add(album);
             }
 
-            albumsByArtist.put(artist.id, albumsByArtist.get(artist.id));
+            // Filter by concerned artists
+            result.put(artist.id, albumsByArtist.get(artist.id));
         }
-        return albumsByArtist;
+
+        return result;
     }
 
     @NonNull
