@@ -247,36 +247,35 @@ public class Discography implements MusicServiceEventListener {
             }
 
             notifyDiscographyChanged();
+        }
+    }
 
-            return true;
+    public void setStale(boolean value) {
+        synchronized (cache) {
+            cache.isStale = value;
+        }
+    }
+
+    public boolean isStale() {
+        synchronized (cache) {
+            return cache.isStale;
         }
     }
 
     @SuppressLint("StaticFieldLeak") // This task last seconds, much shorter than the lifespan of outer class Discography
     public void triggerSyncWithMediaStore(boolean reset) {
-        new AsyncTask<Void, Void, Boolean>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            protected void onPreExecute() {
-                if (snackbar != null) {
-                    String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                    snackbar.showProgress(message);
-                }
-            }
+            protected Void doInBackground(Void... params) {
+                Discography.this.setStale(true);
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
                 if (reset) {
                     Discography.this.clear();
                 }
                 Discography.this.syncWithMediaStore();
-                return true;
-            }
 
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (snackbar != null) {
-                    snackbar.dismiss();
-                }
+                Discography.this.setStale(false);
+                return null;
             }
         }.execute();
     }
@@ -395,9 +394,13 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void fetchAllSongs() {
+        setStale(true);
+
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSongImpl(song, true);
         }
+
+        setStale(false);
     }
 }
