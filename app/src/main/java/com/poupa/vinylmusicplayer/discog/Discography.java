@@ -297,6 +297,7 @@ public class Discography implements MusicServiceEventListener {
 
         SnackbarUtil snackbar = Discography.getInstance().snackbar;
         final int initialSongCount = getSongCount();
+        final int statusStepping = 50;
 
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
@@ -308,7 +309,7 @@ public class Discography implements MusicServiceEventListener {
             importedSongIds.add(matchedSong.id);
 
             int currentSongCount = getSongCount();
-            if ((snackbar != null) && (currentSongCount != initialSongCount)) {
+            if ((snackbar != null) && ((currentSongCount - initialSongCount) % statusStepping == 0)) {
                 final String message = String.format(
                         App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
                         currentSongCount - initialSongCount);
