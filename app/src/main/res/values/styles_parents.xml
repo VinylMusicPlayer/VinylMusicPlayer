@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.VinylMusicPlayer.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.VinylMusicPlayer.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
 
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
@@ -30,7 +30,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
-    <style name="Theme.VinylMusicPlayer.Base.Light" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.VinylMusicPlayer.Base.Light" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
 
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
