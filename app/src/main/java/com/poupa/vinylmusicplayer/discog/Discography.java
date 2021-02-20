@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -260,12 +261,17 @@ public class Discography implements MusicServiceEventListener {
 
     public void triggerSyncWithMediaStore(boolean reset) {
         if (isStale()) {
-            // Prevent reentrance - dont pile up multiple tasks
-            // TODO Post an resync event later
-            return;
-        }
+            // Prevent reentrance - delay to later
+            final long DELAY = 500;
+            final String COALESCENCE_TOKEN = "Discography::triggerSyncWithMediaStore";
 
-        (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+            mainActivityTaskQueue.removeCallbacksAndMessages(COALESCENCE_TOKEN);
+            mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
+
+            Toast.makeText(App.getStaticContext(), "Delayed: " + COALESCENCE_TOKEN, Toast.LENGTH_SHORT).show();
+        } else {
+            (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+        }
     }
 
     int syncWithMediaStore(Consumer<Integer> progressUpdater) {
