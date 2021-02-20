@@ -1,8 +1,8 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -262,13 +262,13 @@ public class Discography implements MusicServiceEventListener {
     public void triggerSyncWithMediaStore(boolean reset) {
         if (isStale()) {
             // Prevent reentrance - delay to later
-            final long DELAY = 500;
-            final String COALESCENCE_TOKEN = "Discography::triggerSyncWithMediaStore";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                final long DELAY = 500;
+                final String COALESCENCE_TOKEN = "Discography::triggerSyncWithMediaStore";
 
-            mainActivityTaskQueue.removeCallbacksAndMessages(COALESCENCE_TOKEN);
-            mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
-
-            Toast.makeText(App.getStaticContext(), "Delayed: " + COALESCENCE_TOKEN, Toast.LENGTH_SHORT).show();
+                mainActivityTaskQueue.removeCallbacksAndMessages(COALESCENCE_TOKEN);
+                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
+            } // else: too bad, just drop the operation. It is unlikely we get there anyway
         } else {
             (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
         }
