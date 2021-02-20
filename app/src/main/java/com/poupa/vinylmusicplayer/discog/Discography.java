@@ -1,15 +1,11 @@
 package com.poupa.vinylmusicplayer.discog;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
@@ -17,38 +13,30 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * @author SC (soncaokim)
  */
 
 public class Discography implements MusicServiceEventListener {
-    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
-
     // TODO wrap this inside the MemCache class
     private final DB database;
-    private final MemCache cache;
+    final MemCache cache;
 
-    public SnackbarUtil snackbar = null;
+    private SyncWithMediaStoreAsyncTask mediaStoreSyncTask = null;
     private Handler mainActivityTaskQueue = null;
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -67,18 +55,18 @@ public class Discography implements MusicServiceEventListener {
 
     public void startService(@NonNull final MainActivity mainActivity) {
         mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
-        snackbar = new SnackbarUtil(mainActivity);
+        mediaStoreSyncTask = new SyncWithMediaStoreAsyncTask(mainActivity);
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
-        snackbar = null;
+        mediaStoreSyncTask = null;
         mainActivityTaskQueue = null;
     }
 
     @NonNull
-    private Song getOrAddSong(@NonNull final Song song) {
+    Song getOrAddSong(@NonNull final Song song) {
         synchronized (cache) {
             Song discogSong = getSong(song.id);
             if (!discogSong.equals(Song.EMPTY_SONG)) {
@@ -124,7 +112,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private int getSongCount() {
+    int getSongCount() {
         synchronized (cache) {
             return cache.songsById.size();
         }
@@ -262,84 +250,8 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    @SuppressLint("StaticFieldLeak") // This task last seconds, much shorter than the lifespan of outer class Discography
     public void triggerSyncWithMediaStore(boolean reset) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                Discography.this.setStale(true);
-
-                if (reset) {
-                    Discography.this.clear();
-                }
-                Discography.this.syncWithMediaStore();
-
-                Discography.this.setStale(false);
-                return null;
-            }
-        }.execute();
-    }
-
-    private void syncWithMediaStore() {
-        Context context = App.getInstance().getApplicationContext();
-
-        // zombies are tracks that are removed but still indexed by MediaStore
-        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
-
-        // Blacklist
-        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
-        Predicate<Song> isBlackListed = (s) -> {
-            for (String path : blackListedPaths) {
-                if (s.data.startsWith(path)) return true;
-            }
-            return false;
-        };
-
-        SnackbarUtil snackbar = Discography.getInstance().snackbar;
-        if (snackbar != null) {
-            final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-            snackbar.showProgress(message);
-        }
-        final int initialSongCount = getSongCount();
-        final int statusStepping = 10;
-
-        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
-        final HashSet<Long> importedSongIds = new HashSet<>();
-        for (Song song : alienSongs) {
-            if (isBlackListed.test(song)) continue;
-            if (isZombie.test(song)) continue;
-
-            Song matchedSong = getOrAddSong(song);
-            importedSongIds.add(matchedSong.id);
-
-            int currentSongCount = getSongCount();
-            if ((snackbar != null) && (currentSongCount != initialSongCount)
-                    && ((currentSongCount - initialSongCount) % statusStepping == 0))
-            {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                        currentSongCount - initialSongCount);
-                snackbar.showProgress(message);
-            }
-        }
-
-        synchronized (cache) {
-            // Clean orphan songs (removed from MediaStore)
-            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
-            cacheSongsId.removeAll(importedSongIds);
-            removeSongById(cacheSongsId.toArray(new Long[0]));
-        }
-        int currentSongCount = getSongCount();
-        if (snackbar != null) {
-            if (currentSongCount != initialSongCount) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        currentSongCount - initialSongCount);
-                snackbar.showResult(message);
-            } else {
-                snackbar.dismiss();
-            }
-        }
+        mediaStoreSyncTask.execute(reset);
     }
 
     @Override
@@ -392,7 +304,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void removeSongByPath(@NotNull String... paths) {
+    public void removeSongByPath(@NonNull String... paths) {
         synchronized (cache) {
             ArrayList<Long> matchingSongIds = new ArrayList<>();
             for (String path : paths) {
@@ -407,7 +319,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void removeSongById(@NotNull Long... songIds) {
+    void removeSongById(@NonNull Long... songIds) {
         if (songIds.length == 0) return;
 
         for (long songId : songIds) {
@@ -417,7 +329,7 @@ public class Discography implements MusicServiceEventListener {
         notifyDiscographyChanged();
     }
 
-    private void clear() {
+    void clear() {
         database.clear();
         cache.clear();
     }

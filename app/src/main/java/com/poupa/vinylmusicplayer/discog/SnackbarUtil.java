@@ -3,23 +3,26 @@ package com.poupa.vinylmusicplayer.discog;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.R;
 
 /**
  * @author SC (soncaokim)
  */
 
 public class SnackbarUtil {
-    private Snackbar progressBar = null;
-    private final MainActivity mainActivity;
+    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
-    public SnackbarUtil(MainActivity activity) {
-        mainActivity = activity;
+    private Snackbar progressBar = null;
+    private final View viewContainer;
+
+    public SnackbarUtil(View view) {
+        viewContainer = view;
     }
 
     @NonNull
@@ -29,7 +32,7 @@ public class SnackbarUtil {
         SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
         messageWithIcon.append(
                 " ",
-                new ImageSpan(App.getInstance().getApplicationContext(), Discography.ICON),
+                new ImageSpan(App.getInstance().getApplicationContext(), ICON),
                 0);
         messageWithIcon.append(" "); // some extra space before the text message
         messageWithIcon.append(message);
@@ -38,38 +41,32 @@ public class SnackbarUtil {
     }
 
     public void showProgress(@NonNull final CharSequence message) {
-        mainActivity.runOnUiThread(() -> {
-            if (progressBar == null) {
-                progressBar = Snackbar.make(
-                        mainActivity.getSnackBarContainer(),
-                        buildMessageWithIcon(message),
-                        Snackbar.LENGTH_INDEFINITE);
+        if (progressBar == null) {
+            progressBar = Snackbar.make(
+                    viewContainer,
+                    buildMessageWithIcon(message),
+                    Snackbar.LENGTH_INDEFINITE);
+            progressBar.show();
+        } else {
+            progressBar.setText(message);
+            if (!progressBar.isShownOrQueued()) {
                 progressBar.show();
-            } else {
-                progressBar.setText(message);
-                if (!progressBar.isShownOrQueued()) {
-                    progressBar.show();
-                }
             }
-        });
+        }
     }
 
     void showResult(@NonNull final CharSequence message) {
-        mainActivity.runOnUiThread(() -> {
-            progressBar = Snackbar.make(
-                    mainActivity.getSnackBarContainer(),
-                    buildMessageWithIcon(message),
-                    Snackbar.LENGTH_LONG);
-            progressBar.show();
-        });
+        progressBar = Snackbar.make(
+                viewContainer,
+                buildMessageWithIcon(message),
+                Snackbar.LENGTH_LONG);
+        progressBar.show();
     }
 
     void dismiss() {
-        mainActivity.runOnUiThread(() -> {
-            if ((progressBar != null) && progressBar.isShownOrQueued()) {
-                progressBar.dismiss();
-            }
-            progressBar = null;
-        });
+        if ((progressBar != null) && progressBar.isShownOrQueued()) {
+            progressBar.dismiss();
+        }
+        progressBar = null;
     }
 }
