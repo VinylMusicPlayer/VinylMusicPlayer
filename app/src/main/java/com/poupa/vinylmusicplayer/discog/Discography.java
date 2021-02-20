@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.content.Context;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
@@ -13,19 +14,24 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.tag.reference.GenreTypes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author SC (soncaokim)
@@ -36,7 +42,7 @@ public class Discography implements MusicServiceEventListener {
     private final DB database;
     final MemCache cache;
 
-    private SyncWithMediaStoreAsyncTask mediaStoreSyncTask = null;
+    private MainActivity mainActivity = null;
     private Handler mainActivityTaskQueue = null;
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -54,14 +60,14 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void startService(@NonNull final MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
-        mediaStoreSyncTask = new SyncWithMediaStoreAsyncTask(mainActivity);
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
-        mediaStoreSyncTask = null;
+        mainActivity = null;
         mainActivityTaskQueue = null;
     }
 
@@ -251,7 +257,50 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void triggerSyncWithMediaStore(boolean reset) {
-        mediaStoreSyncTask.execute(reset);
+        if (isStale()) {
+            // Prevent reentrance - dont pile up multiple tasks
+            // TODO Post an resync event later
+            return;
+        }
+
+        (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+    }
+
+    int syncWithMediaStore(Consumer<Integer> progressUpdater) {
+        // Zombies are tracks that are removed but still indexed by MediaStore
+        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
+
+        // Blacklist
+        final Context context = App.getInstance().getApplicationContext();
+        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
+        Predicate<Song> isBlackListed = (s) -> {
+            for (String path : blackListedPaths) {
+                if (s.data.startsWith(path)) return true;
+            }
+            return false;
+        };
+
+        final int initialSongCount = getSongCount();
+        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
+        final HashSet<Long> importedSongIds = new HashSet<>();
+        for (Song song : alienSongs) {
+            if (isBlackListed.test(song)) continue;
+            if (isZombie.test(song)) continue;
+
+            Song matchedSong = getOrAddSong(song);
+            importedSongIds.add(matchedSong.id);
+
+            progressUpdater.accept(getSongCount() - initialSongCount);
+        }
+
+        // Clean orphan songs (removed from MediaStore)
+        synchronized (cache) {
+            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
+            cacheSongsId.removeAll(importedSongIds);
+            removeSongById(cacheSongsId.toArray(new Long[0]));
+        }
+
+        return (getSongCount() - initialSongCount);
     }
 
     @Override
