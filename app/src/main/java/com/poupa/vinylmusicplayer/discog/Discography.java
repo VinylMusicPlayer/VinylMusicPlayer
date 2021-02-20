@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public class Discography implements MusicServiceEventListener {
     // TODO wrap this inside the MemCache class
     private final DB database;
-    final MemCache cache;
+    private final MemCache cache;
 
     private MainActivity mainActivity = null;
     private Handler mainActivityTaskQueue = null;
@@ -69,6 +69,18 @@ public class Discography implements MusicServiceEventListener {
     public void stopService() {
         mainActivity = null;
         mainActivityTaskQueue = null;
+    }
+
+    public void setStale(boolean value) {
+        synchronized (cache) {
+            cache.isStale = value;
+        }
+    }
+
+    public boolean isStale() {
+        synchronized (cache) {
+            return cache.isStale;
+        }
     }
 
     @NonNull
@@ -118,7 +130,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    int getSongCount() {
+    private int getSongCount() {
         synchronized (cache) {
             return cache.songsById.size();
         }
@@ -203,10 +215,12 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    void addSong(@NonNull Song song, boolean cacheOnly) {
+    private void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
-            if (cache.songsById.containsKey(song.id)) return;
+            if (cache.songsById.containsKey(song.id)) {
+                return;
+            }
 
             if (!cacheOnly) {
                 TagExtractor.extractTags(song);
@@ -244,18 +258,6 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void setStale(boolean value) {
-        synchronized (cache) {
-            cache.isStale = value;
-        }
-    }
-
-    public boolean isStale() {
-        synchronized (cache) {
-            return cache.isStale;
-        }
-    }
-
     public void triggerSyncWithMediaStore(boolean reset) {
         if (isStale()) {
             // Prevent reentrance - dont pile up multiple tasks
@@ -267,11 +269,12 @@ public class Discography implements MusicServiceEventListener {
     }
 
     int syncWithMediaStore(Consumer<Integer> progressUpdater) {
+        final Context context = App.getInstance().getApplicationContext();
+
         // Zombies are tracks that are removed but still indexed by MediaStore
         Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
         // Blacklist
-        final Context context = App.getInstance().getApplicationContext();
         final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
         Predicate<Song> isBlackListed = (s) -> {
             for (String path : blackListedPaths) {
@@ -293,8 +296,8 @@ public class Discography implements MusicServiceEventListener {
             progressUpdater.accept(getSongCount() - initialSongCount);
         }
 
-        // Clean orphan songs (removed from MediaStore)
         synchronized (cache) {
+            // Clean orphan songs (removed from MediaStore)
             Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
@@ -368,7 +371,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    void removeSongById(@NonNull Long... songIds) {
+    private void removeSongById(@NonNull Long... songIds) {
         if (songIds.length == 0) return;
 
         for (long songId : songIds) {

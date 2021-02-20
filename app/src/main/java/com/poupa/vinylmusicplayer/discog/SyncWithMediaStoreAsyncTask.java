@@ -62,8 +62,3 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
         discography.setStale(false);
     }
 }
-
-
-
-
-

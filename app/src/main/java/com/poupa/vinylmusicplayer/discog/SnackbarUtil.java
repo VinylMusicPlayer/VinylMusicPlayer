@@ -56,6 +56,8 @@ public class SnackbarUtil {
     }
 
     void showResult(@NonNull final CharSequence message) {
+        dismiss();
+
         progressBar = Snackbar.make(
                 viewContainer,
                 buildMessageWithIcon(message),
