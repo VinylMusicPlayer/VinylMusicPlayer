@@ -40,11 +40,12 @@ public class SnackbarUtil {
         return messageWithIcon;
     }
 
-    public void showProgress(@NonNull final CharSequence message) {
+    public void showProgress(@NonNull final CharSequence text) {
+        final CharSequence message = buildMessageWithIcon(text);
         if (progressBar == null) {
             progressBar = Snackbar.make(
                     viewContainer,
-                    buildMessageWithIcon(message),
+                    message,
                     Snackbar.LENGTH_INDEFINITE);
             progressBar.show();
         } else {
