@@ -50,6 +50,16 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
 
     @Override
     protected void onPostExecute(Integer value) {
+        onTermination(value);
+    }
+    @Override
+    protected void onCancelled(Integer value) {
+        onTermination(value);
+    }
+
+    private void onTermination(Integer value) {
+        discography.setStale(false);
+
         if (value != 0) {
             final String message = String.format(
                     App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
@@ -58,7 +68,5 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
         } else {
             snackbar.dismiss();
         }
-
-        discography.setStale(false);
     }
 }
