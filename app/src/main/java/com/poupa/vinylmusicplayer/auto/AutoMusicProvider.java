@@ -297,46 +297,18 @@ public class AutoMusicProvider {
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY, resources.getString(R.string.history_label), R.drawable.ic_access_time_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED, resources.getString(R.string.not_recently_played), R.drawable.ic_watch_later_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS, resources.getString(R.string.top_tracks_label), R.drawable.ic_trending_up_white_24dp));
+
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, resources.getString(R.string.albums_label), R.drawable.ic_album_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST, resources.getString(R.string.artists_label), R.drawable.ic_people_white_24dp));
+
                 mediaItems.add(createPlayableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE, resources.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE, resources.getString(R.string.queue_label), R.drawable.ic_playlist_play_white_24dp));
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                for (final Uri uri : getLastAdded()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
-                }
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                for (final Uri uri : getHistory()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
-                }
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                for (final Uri uri : getNotRecentlyPlayed()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
-                }
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                for (final Uri uri : getTopTracks()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
-                }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
                 for (final Uri uri : getPlaylists()) {
                     mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), null));
-                }
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                for (final Uri uri : getAlbums()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
 
@@ -346,9 +318,33 @@ public class AutoMusicProvider {
                 }
                 break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
-                for (final Uri uri : getQueue()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
+            default:
+                Iterable<Uri> listing = null;
+                switch (mediaId) {
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
+                        listing = getLastAdded();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
+                        listing = getHistory();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
+                        listing = getNotRecentlyPlayed();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
+                        listing = getTopTracks();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
+                        listing = getAlbums();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
+                        listing = getQueue();
+                        break;
+                }
+                if (listing != null) {
+                    for (final Uri uri : listing) {
+                        final List<String> segments = uri.getPathSegments();
+                        mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                    }
                 }
                 break;
         }
