@@ -139,7 +139,12 @@ public class AutoMusicProvider {
 
         final MusicService service = mMusicService.get();
         if (service != null) {
-            final List<Song> songs = MusicPlaybackQueueStore.getInstance(service).getSavedOriginalPlayingQueue();
+            // TODO Why getting the queue from the saved storage and not directly from music service?
+            // final List<Song> songs = MusicPlaybackQueueStore.getInstance(service).getSavedOriginalPlayingQueue();
+
+            final int PLAYING_WINDOW_SIZE = 100;
+            final int position = service.getPosition();
+            final List<Song> songs = service.getPlayingQueue().subList(position, position + PLAYING_WINDOW_SIZE - 1);
             for (int i = 0; i < songs.size(); i++) {
                 final Song s = songs.get(i);
                 Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
