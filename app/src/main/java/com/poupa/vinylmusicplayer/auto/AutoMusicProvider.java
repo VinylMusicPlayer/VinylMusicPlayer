@@ -77,56 +77,56 @@ public class AutoMusicProvider {
         mMusicListByArtist = new ConcurrentSkipListMap<>();
     }
 
-    public Iterable<Uri> getLastAdded() {
+    private Iterable<Uri> getLastAdded() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByLastAdded.values();
     }
 
-    public Iterable<Uri> getHistory() {
+    private Iterable<Uri> getHistory() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByHistory.values();
     }
 
-    public Iterable<Uri> getNotRecentlyPlayed() {
+    private Iterable<Uri> getNotRecentlyPlayed() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByNotRecentlyPlayed.values();
     }
 
-    public Iterable<Uri> getTopTracks() {
+    private Iterable<Uri> getTopTracks() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByTopTracks.values();
     }
 
-    public Iterable<Uri> getPlaylists() {
+    private Iterable<Uri> getPlaylists() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByPlaylist.values();
     }
 
-    public Iterable<Uri> getAlbums() {
+    private Iterable<Uri> getAlbums() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByAlbum.values();
     }
 
-    public Iterable<Uri> getArtists() {
+    private Iterable<Uri> getArtists() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByArtist.values();
     }
 
-    public Iterable<Uri> getQueue() {
+    private Iterable<Uri> getQueue() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
