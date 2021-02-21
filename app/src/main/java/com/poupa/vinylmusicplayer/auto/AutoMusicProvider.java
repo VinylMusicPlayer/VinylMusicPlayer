@@ -15,6 +15,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
+import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -40,7 +41,7 @@ public class AutoMusicProvider {
 
     private static final String TAG = AutoMusicProvider.class.getName();
 
-    private static final String BASE_URI = "androidauto://phonograph";
+    private static final String BASE_URI = "androidauto://vinyl";
     private static final int PATH_SEGMENT_ID = 0;
     private static final int PATH_SEGMENT_TITLE = 1;
     private static final int PATH_SEGMENT_ARTIST = 2;
@@ -49,7 +50,9 @@ public class AutoMusicProvider {
     private final WeakReference<MusicService> mMusicService;
 
     // Categorized caches for music data
+    private ConcurrentMap<Integer, Uri> mMusicListByLastAdded;
     private ConcurrentMap<Integer, Uri> mMusicListByHistory;
+    private ConcurrentMap<Integer, Uri> mMusicListByNotRecentlyPlayed;
     private ConcurrentMap<Integer, Uri> mMusicListByTopTracks;
     private ConcurrentMap<Integer, Uri> mMusicListByPlaylist;
     private ConcurrentMap<Integer, Uri> mMusicListByAlbum;
@@ -64,7 +67,9 @@ public class AutoMusicProvider {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
 
+        mMusicListByLastAdded = new ConcurrentSkipListMap<>();
         mMusicListByHistory = new ConcurrentSkipListMap<>();
+        mMusicListByNotRecentlyPlayed = new ConcurrentSkipListMap<>();
         mMusicListByTopTracks = new ConcurrentSkipListMap<>();
         mMusicListByPlaylist = new ConcurrentSkipListMap<>();
         mMusicListByAlbum = new ConcurrentSkipListMap<>();
@@ -75,11 +80,25 @@ public class AutoMusicProvider {
                 mContext.getResources().getResourceEntryName(R.drawable.default_album_art));
     }
 
+    public Iterable<Uri> getLastAdded() {
+        if (mCurrentState != State.INITIALIZED) {
+            return Collections.emptyList();
+        }
+        return mMusicListByLastAdded.values();
+    }
+
     public Iterable<Uri> getHistory() {
         if (mCurrentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
         return mMusicListByHistory.values();
+    }
+
+    public Iterable<Uri> getNotRecentlyPlayed() {
+        if (mCurrentState != State.INITIALIZED) {
+            return Collections.emptyList();
+        }
+        return mMusicListByNotRecentlyPlayed.values();
     }
 
     public Iterable<Uri> getTopTracks() {
@@ -169,21 +188,56 @@ public class AutoMusicProvider {
         }.execute();
     }
 
+    // TODO Refactor these smart playlist ^C ^V
+    private synchronized void buildListsByLastAdded() {
+        ConcurrentMap<Integer, Uri> newMusicListByLastAdded = new ConcurrentSkipListMap<>();
+
+        final List<Song> songs = LastAddedLoader.getLastAddedSongs();
+        for (int i = 0; i < songs.size(); i++) {
+            final Song s = songs.get(i);
+            Uri.Builder tracksData = Uri.parse(BASE_URI).buildUpon();
+            tracksData.appendPath(String.valueOf(s.id))
+                    .appendPath(s.title)
+                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
+                    .appendPath(String.valueOf(s.albumId));
+            newMusicListByLastAdded.putIfAbsent(i, tracksData.build());
+        }
+
+        mMusicListByLastAdded = newMusicListByLastAdded;
+    }
+
     private synchronized void buildListsByHistory() {
         ConcurrentMap<Integer, Uri> newMusicListByHistory = new ConcurrentSkipListMap<>();
 
         final List<Song> songs = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
         for (int i = 0; i < songs.size(); i++) {
             final Song s = songs.get(i);
-            Uri.Builder topTracksData = Uri.parse(BASE_URI).buildUpon();
-            topTracksData.appendPath(String.valueOf(s.id))
+            Uri.Builder tracksData = Uri.parse(BASE_URI).buildUpon();
+            tracksData.appendPath(String.valueOf(s.id))
                     .appendPath(s.title)
                     .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
                     .appendPath(String.valueOf(s.albumId));
-            newMusicListByHistory.putIfAbsent(i, topTracksData.build());
+            newMusicListByHistory.putIfAbsent(i, tracksData.build());
         }
 
         mMusicListByHistory = newMusicListByHistory;
+    }
+
+    private synchronized void buildListsByNotRecentlyPlayed() {
+        ConcurrentMap<Integer, Uri> newMusicListByNotRecentlyPlayed = new ConcurrentSkipListMap<>();
+
+        final List<Song> songs = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
+        for (int i = 0; i < songs.size(); i++) {
+            final Song s = songs.get(i);
+            Uri.Builder tracksData = Uri.parse(BASE_URI).buildUpon();
+            tracksData.appendPath(String.valueOf(s.id))
+                    .appendPath(s.title)
+                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
+                    .appendPath(String.valueOf(s.albumId));
+            newMusicListByNotRecentlyPlayed.putIfAbsent(i, tracksData.build());
+        }
+
+        mMusicListByNotRecentlyPlayed = newMusicListByNotRecentlyPlayed;
     }
 
     private synchronized void buildListsByTopTracks() {
@@ -256,7 +310,9 @@ public class AutoMusicProvider {
             if (mCurrentState == State.NON_INITIALIZED) {
                 mCurrentState = State.INITIALIZING;
 
+                buildListsByLastAdded();
                 buildListsByHistory();
+                buildListsByNotRecentlyPlayed();
                 buildListsByTopTracks();
                 buildListsByPlaylist();
                 buildListsByAlbum();
@@ -281,8 +337,9 @@ public class AutoMusicProvider {
 
         switch (mediaId) {
             case AutoMediaIDHelper.MEDIA_ID_ROOT:
-                // TODO Add not recently played
+                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED, resources.getString(R.string.last_added), R.drawable.ic_library_add_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY, resources.getString(R.string.history_label), R.drawable.ic_access_time_white_24dp));
+                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED, resources.getString(R.string.not_recently_played), R.drawable.ic_watch_later_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS, resources.getString(R.string.top_tracks_label), R.drawable.ic_trending_up_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, resources.getString(R.string.albums_label), R.drawable.ic_album_white_24dp));
@@ -291,8 +348,20 @@ public class AutoMusicProvider {
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE, resources.getString(R.string.queue_label), R.drawable.ic_playlist_play_white_24dp));
                 break;
 
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
+                for (final Uri uri : getLastAdded()) {
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
+                }
+                break;
+
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
                 for (final Uri uri : getHistory()) {
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
+                }
+                break;
+
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
+                for (final Uri uri : getNotRecentlyPlayed()) {
                     mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), uri.getPathSegments().get(PATH_SEGMENT_ARTIST)));
                 }
                 break;
