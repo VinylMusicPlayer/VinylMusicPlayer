@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.media.MediaBrowserCompat;
@@ -22,7 +21,6 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 
@@ -38,9 +36,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * Created by Beesham Sarendranauth (Beesham)
  */
 public class AutoMusicProvider {
-
-    private static final String TAG = AutoMusicProvider.class.getName();
-
     private static final String BASE_URI = "androidauto://vinyl";
     private static final int PATH_SEGMENT_ID = 0;
     private static final int PATH_SEGMENT_TITLE = 1;
@@ -58,8 +53,6 @@ public class AutoMusicProvider {
     private ConcurrentMap<Integer, Uri> mMusicListByAlbum;
     private ConcurrentMap<Integer, Uri> mMusicListByArtist;
 
-    private final Uri defaultAlbumArtUri;
-
     private final Context mContext;
     private volatile State mCurrentState = State.NON_INITIALIZED;
 
@@ -74,10 +67,6 @@ public class AutoMusicProvider {
         mMusicListByPlaylist = new ConcurrentSkipListMap<>();
         mMusicListByAlbum = new ConcurrentSkipListMap<>();
         mMusicListByArtist = new ConcurrentSkipListMap<>();
-
-        defaultAlbumArtUri = Uri.parse("android.resource://" +
-                mContext.getPackageName() + "/drawable/" +
-                mContext.getResources().getResourceEntryName(R.drawable.default_album_art));
     }
 
     public Iterable<Uri> getLastAdded() {
@@ -349,7 +338,7 @@ public class AutoMusicProvider {
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, resources.getString(R.string.albums_label), R.drawable.ic_album_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST, resources.getString(R.string.artists_label), R.drawable.ic_people_white_24dp));
-                mediaItems.add(createPlayableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE, resources.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp, null));
+                mediaItems.add(createPlayableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE, resources.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE, resources.getString(R.string.queue_label), R.drawable.ic_playlist_play_white_24dp));
                 break;
 
@@ -418,12 +407,6 @@ public class AutoMusicProvider {
 
     private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, Uri musicSelection,
                                                                  String title, @Nullable String subtitle) {
-        return createPlayableMediaItem(mediaId, musicSelection, title, subtitle, null, null);
-    }
-
-    private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, Uri musicSelection,
-                                                                 String title, @Nullable String subtitle,
-                                                                 @Nullable Bitmap albumArt, @Nullable Resources resources) {
         MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder();
         builder.setMediaId(AutoMediaIDHelper.createMediaID(musicSelection.getPathSegments().get(PATH_SEGMENT_ID), mediaId))
                 .setTitle(title);
@@ -432,28 +415,15 @@ public class AutoMusicProvider {
             builder.setSubtitle(subtitle);
         }
 
-        if (resources != null) {
-            if (albumArt != null) {
-                builder.setIconBitmap(albumArt);
-            } else {
-                builder.setIconUri(defaultAlbumArtUri);
-            }
-        }
-
         return new MediaBrowserCompat.MediaItem(builder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }
 
-    private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, String title, int iconDrawableId,
-                                                                 @Nullable String subtitle) {
+    private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, String title, int iconDrawableId) {
         MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)
                 .setTitle(title)
                 .setIconBitmap(ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(mContext, iconDrawableId, ThemeStore.textColorSecondary(mContext))));
-
-        if (subtitle != null) {
-            builder.setSubtitle(subtitle);
-        }
 
         return new MediaBrowserCompat.MediaItem(builder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
