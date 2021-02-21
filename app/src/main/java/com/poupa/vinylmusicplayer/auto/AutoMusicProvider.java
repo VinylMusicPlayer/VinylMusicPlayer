@@ -46,7 +46,7 @@ public class AutoMusicProvider {
     private static final int PATH_SEGMENT_ARTIST = 2;
     private static final int PATH_SEGMENT_ALBUM_ID = 3;
 
-    private WeakReference<MusicService> mMusicService;
+    private final WeakReference<MusicService> mMusicService;
 
     // Categorized caches for music data
     private ConcurrentMap<Integer, Uri> mMusicListByHistory;
@@ -55,13 +55,14 @@ public class AutoMusicProvider {
     private ConcurrentMap<Integer, Uri> mMusicListByAlbum;
     private ConcurrentMap<Integer, Uri> mMusicListByArtist;
 
-    private Uri defaultAlbumArtUri;
+    private final Uri defaultAlbumArtUri;
 
-    private Context mContext;
+    private final Context mContext;
     private volatile State mCurrentState = State.NON_INITIALIZED;
 
-    public AutoMusicProvider(Context context) {
-        mContext = context;
+    public AutoMusicProvider(MusicService musicService) {
+        mContext = musicService;
+        mMusicService = new WeakReference<>(musicService);
 
         mMusicListByHistory = new ConcurrentSkipListMap<>();
         mMusicListByTopTracks = new ConcurrentSkipListMap<>();
@@ -72,10 +73,6 @@ public class AutoMusicProvider {
         defaultAlbumArtUri = Uri.parse("android.resource://" +
                 mContext.getPackageName() + "/drawable/" +
                 mContext.getResources().getResourceEntryName(R.drawable.default_album_art));
-    }
-
-    public void setMusicService(MusicService service) {
-        mMusicService = new WeakReference<>(service);
     }
 
     public Iterable<Uri> getHistory() {
@@ -284,6 +281,7 @@ public class AutoMusicProvider {
 
         switch (mediaId) {
             case AutoMediaIDHelper.MEDIA_ID_ROOT:
+                // TODO Add not recently played
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY, resources.getString(R.string.history_label), R.drawable.ic_access_time_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS, resources.getString(R.string.top_tracks_label), R.drawable.ic_trending_up_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
