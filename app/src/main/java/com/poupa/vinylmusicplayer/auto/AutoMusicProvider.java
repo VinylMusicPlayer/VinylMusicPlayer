@@ -46,11 +46,6 @@ public class AutoMusicProvider {
     private final WeakReference<MusicService> mMusicService;
 
     // Categorized caches for music data
-    private ConcurrentMap<Integer, Uri> mMusicListByLastAdded;
-    private ConcurrentMap<Integer, Uri> mMusicListByHistory;
-    private ConcurrentMap<Integer, Uri> mMusicListByNotRecentlyPlayed;
-    private ConcurrentMap<Integer, Uri> mMusicListByTopTracks;
-
     private ConcurrentMap<Integer, Uri> mMusicListByPlaylist;
     private ConcurrentMap<Integer, Uri> mMusicListByAlbum;
     private ConcurrentMap<Integer, Uri> mMusicListByArtist;
@@ -67,42 +62,9 @@ public class AutoMusicProvider {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
 
-        mMusicListByLastAdded = new ConcurrentSkipListMap<>();
-        mMusicListByHistory = new ConcurrentSkipListMap<>();
-        mMusicListByNotRecentlyPlayed = new ConcurrentSkipListMap<>();
-        mMusicListByTopTracks = new ConcurrentSkipListMap<>();
-
         mMusicListByPlaylist = new ConcurrentSkipListMap<>();
         mMusicListByAlbum = new ConcurrentSkipListMap<>();
         mMusicListByArtist = new ConcurrentSkipListMap<>();
-    }
-
-    private Iterable<Uri> getLastAdded() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByLastAdded.values();
-    }
-
-    private Iterable<Uri> getHistory() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByHistory.values();
-    }
-
-    private Iterable<Uri> getNotRecentlyPlayed() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByNotRecentlyPlayed.values();
-    }
-
-    private Iterable<Uri> getTopTracks() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByTopTracks.values();
     }
 
     private Iterable<Uri> getPlaylists() {
@@ -131,7 +93,6 @@ public class AutoMusicProvider {
             return Collections.emptyList();
         }
 
-        // Re-built every time since the queue updates often
         ConcurrentMap<Integer, Uri> queueList = new ConcurrentSkipListMap<>();
 
         final MusicService service = mMusicService.get();
@@ -192,6 +153,9 @@ public class AutoMusicProvider {
 
     private synchronized ConcurrentMap<Integer, Uri> buildListByLoader(Supplier<List<Song>> loader) {
         ConcurrentMap<Integer, Uri> result = new ConcurrentHashMap<>();
+        if (mCurrentState != State.INITIALIZED) {
+            return result;
+        }
 
         final List<Song> allSongs = loader.get();
         final int fromPosition = 0;
@@ -264,10 +228,8 @@ public class AutoMusicProvider {
             if (mCurrentState == State.NON_INITIALIZED) {
                 mCurrentState = State.INITIALIZING;
 
-                mMusicListByLastAdded = buildListByLoader(LastAddedLoader::getLastAddedSongs);
-                mMusicListByHistory = buildListByLoader(() -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext));
-                mMusicListByNotRecentlyPlayed = buildListByLoader(() -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext));
-                mMusicListByTopTracks = buildListByLoader(() -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext));
+                // Note: The smart playlists and the queue are not prebuilt and cached here,
+                // since their content may change frequently
 
                 buildListsByPlaylist();
                 buildListsByAlbum();
@@ -312,6 +274,13 @@ public class AutoMusicProvider {
                 }
                 break;
 
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
+                for (final Uri uri : getAlbums()) {
+                    final List<String> segments = uri.getPathSegments();
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                }
+                break;
+
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
                 for (final Uri uri : getArtists()) {
                     mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_ARTIST), null));
@@ -322,19 +291,24 @@ public class AutoMusicProvider {
                 Iterable<Uri> listing = null;
                 switch (mediaId) {
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                        listing = getLastAdded();
+                        listing = buildListByLoader(
+                                LastAddedLoader::getLastAddedSongs
+                        ).values();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                        listing = getHistory();
+                        listing = buildListByLoader(
+                                () -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext)
+                        ).values();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                        listing = getNotRecentlyPlayed();
+                        listing = buildListByLoader(
+                                () -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext)
+                        ).values();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                        listing = getTopTracks();
-                        break;
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                        listing = getAlbums();
+                        listing = buildListByLoader(
+                                () -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext)
+                        ).values();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                         listing = getQueue();
