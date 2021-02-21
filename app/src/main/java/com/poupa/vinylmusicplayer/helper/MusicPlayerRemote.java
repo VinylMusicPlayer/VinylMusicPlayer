@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -187,6 +188,8 @@ public class MusicPlayerRemote {
             if (!PreferenceUtil.getInstance().rememberShuffle()){
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
+        } else {
+            Toast.makeText(App.getStaticContext(), "openQueue: Cannot play" + (musicService == null ? " - music service is NULL" : ""), Toast.LENGTH_LONG).show();
         }
     }
 

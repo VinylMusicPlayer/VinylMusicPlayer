@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -53,9 +52,6 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
     @Override
     public void onPlayFromMediaId(String mediaId, Bundle extras) {
         super.onPlayFromMediaId(mediaId, extras);
-
-        // TODO Investigate why, if the media is playing, then we cannot trigger a new queue here
-        Toast.makeText(context, "onPlayFromMediaId: " + mediaId, Toast.LENGTH_LONG).show();
 
         final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
         final int itemId = musicId != null ? Integer.parseInt(musicId) : -1;
