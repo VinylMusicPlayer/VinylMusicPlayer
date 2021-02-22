@@ -23,6 +23,9 @@ import java.util.function.Function;
  */
 
 class MemCache {
+    // Indicate whether the cache can be considered as usable/reliable
+    boolean isStale = true;
+
     Map<Long, Song> songsById = new HashMap<>();
 
     Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);

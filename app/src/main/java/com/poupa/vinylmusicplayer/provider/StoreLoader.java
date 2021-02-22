@@ -36,10 +36,11 @@ public class StoreLoader {
         ArrayList<Long> orphanSongIds = new ArrayList<>();
 
         ArrayList<Song> songs = new ArrayList<>();
+        final boolean isStale = discography.isStale(); // Must capture this before the discog.getSong
         for (Long id : songIds) {
             Song song = discography.getSong(id);
             if (song.equals(Song.EMPTY_SONG)) {
-                orphanSongIds.add(id);
+                if (!isStale) {orphanSongIds.add(id);}
             } else {
                 songs.add(song);
             }

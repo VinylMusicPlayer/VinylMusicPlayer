@@ -1,15 +1,13 @@
 package com.poupa.vinylmusicplayer.discog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
@@ -22,7 +20,6 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,13 +39,11 @@ import java.util.function.Predicate;
  */
 
 public class Discography implements MusicServiceEventListener {
-    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
-
     // TODO wrap this inside the MemCache class
     private final DB database;
     private final MemCache cache;
 
-    public SnackbarUtil snackbar = null;
+    private MainActivity mainActivity = null;
     private Handler mainActivityTaskQueue = null;
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -66,19 +61,31 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void startService(@NonNull final MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
-        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
-        snackbar = null;
+        mainActivity = null;
         mainActivityTaskQueue = null;
     }
 
+    public void setStale(boolean value) {
+        synchronized (cache) {
+            cache.isStale = value;
+        }
+    }
+
+    public boolean isStale() {
+        synchronized (cache) {
+            return cache.isStale;
+        }
+    }
+
     @NonNull
-    public Song getOrAddSong(@NonNull final Song song) {
+    Song getOrAddSong(@NonNull final Song song) {
         synchronized (cache) {
             Song discogSong = getSong(song.id);
             if (!discogSong.equals(Song.EMPTY_SONG)) {
@@ -95,7 +102,7 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
 
-            addSong(song);
+            addSong(song, false);
 
             return song;
         }
@@ -121,6 +128,12 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
             return matchingSong;
+        }
+    }
+
+    private int getSongCount() {
+        synchronized (cache) {
+            return cache.songsById.size();
         }
     }
 
@@ -203,15 +216,11 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void addSong(@NonNull Song song) {
-        new AddSongAsyncTask().execute(song);
-    }
-
-    boolean addSongImpl(@NonNull Song song, boolean cacheOnly) {
+    private void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
             if (cache.songsById.containsKey(song.id)) {
-                return false;
+                return;
             }
 
             if (!cacheOnly) {
@@ -247,44 +256,28 @@ public class Discography implements MusicServiceEventListener {
             }
 
             notifyDiscographyChanged();
-
-            return true;
         }
     }
 
-    @SuppressLint("StaticFieldLeak") // This task last seconds, much shorter than the lifespan of outer class Discography
     public void triggerSyncWithMediaStore(boolean reset) {
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected void onPreExecute() {
-                if (snackbar != null) {
-                    String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-                    snackbar.showProgress(message);
-                }
-            }
+        if (isStale()) {
+            // Prevent reentrance - delay to later
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                final long DELAY = 500;
+                final String COALESCENCE_TOKEN = "Discography::triggerSyncWithMediaStore";
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                if (reset) {
-                    Discography.this.clear();
-                }
-                Discography.this.syncWithMediaStore();
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (snackbar != null) {
-                    snackbar.dismiss();
-                }
-            }
-        }.execute();
+                mainActivityTaskQueue.removeCallbacksAndMessages(COALESCENCE_TOKEN);
+                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
+            } // else: too bad, just drop the operation. It is unlikely we get there anyway
+        } else {
+            (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+        }
     }
 
-    private void syncWithMediaStore() {
-        Context context = App.getInstance().getApplicationContext();
+    int syncWithMediaStore(Consumer<Integer> progressUpdater) {
+        final Context context = App.getInstance().getApplicationContext();
 
-        // zombies are tracks that are removed but still indexed by MediaStore
+        // Zombies are tracks that are removed but still indexed by MediaStore
         Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
         // Blacklist
@@ -296,6 +289,7 @@ public class Discography implements MusicServiceEventListener {
             return false;
         };
 
+        final int initialSongCount = getSongCount();
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
         for (Song song : alienSongs) {
@@ -304,6 +298,8 @@ public class Discography implements MusicServiceEventListener {
 
             Song matchedSong = getOrAddSong(song);
             importedSongIds.add(matchedSong.id);
+
+            progressUpdater.accept(getSongCount() - initialSongCount);
         }
 
         synchronized (cache) {
@@ -312,6 +308,8 @@ public class Discography implements MusicServiceEventListener {
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
         }
+
+        return (getSongCount() - initialSongCount);
     }
 
     @Override
@@ -364,7 +362,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void removeSongByPath(@NotNull String... paths) {
+    public void removeSongByPath(@NonNull String... paths) {
         synchronized (cache) {
             ArrayList<Long> matchingSongIds = new ArrayList<>();
             for (String path : paths) {
@@ -379,7 +377,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void removeSongById(@NotNull Long... songIds) {
+    private void removeSongById(@NonNull Long... songIds) {
         if (songIds.length == 0) return;
 
         for (long songId : songIds) {
@@ -389,15 +387,19 @@ public class Discography implements MusicServiceEventListener {
         notifyDiscographyChanged();
     }
 
-    private void clear() {
+    void clear() {
         database.clear();
         cache.clear();
     }
 
     private void fetchAllSongs() {
+        setStale(true);
+
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
-            addSongImpl(song, true);
+            addSong(song, true);
         }
+
+        setStale(false);
     }
 }

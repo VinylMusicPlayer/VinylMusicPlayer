@@ -9,14 +9,17 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 
 /**
  * @author SC (soncaokim)
  */
 
 public class SnackbarUtil {
+    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
+
     private Snackbar progressBar = null;
-    private View viewContainer;
+    private final View viewContainer;
 
     public SnackbarUtil(View view) {
         viewContainer = view;
@@ -29,7 +32,7 @@ public class SnackbarUtil {
         SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
         messageWithIcon.append(
                 " ",
-                new ImageSpan(App.getInstance().getApplicationContext(), Discography.ICON),
+                new ImageSpan(App.getInstance().getApplicationContext(), ICON),
                 0);
         messageWithIcon.append(" "); // some extra space before the text message
         messageWithIcon.append(message);
@@ -37,11 +40,12 @@ public class SnackbarUtil {
         return messageWithIcon;
     }
 
-    public void showProgress(@NonNull final CharSequence message) {
+    public void showProgress(@NonNull final CharSequence text) {
+        final CharSequence message = buildMessageWithIcon(text);
         if (progressBar == null) {
             progressBar = Snackbar.make(
                     viewContainer,
-                    buildMessageWithIcon(message),
+                    message,
                     Snackbar.LENGTH_INDEFINITE);
             progressBar.show();
         } else {
@@ -62,7 +66,7 @@ public class SnackbarUtil {
         progressBar.show();
     }
 
-    public void dismiss() {
+    void dismiss() {
         if ((progressBar != null) && progressBar.isShownOrQueued()) {
             progressBar.dismiss();
         }
