@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -188,9 +187,10 @@ public class MusicPlayerRemote {
             if (!PreferenceUtil.getInstance().rememberShuffle()){
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
-        } else {
-            Toast.makeText(App.getStaticContext(), "openQueue: Cannot play" + (musicService == null ? " - music service is NULL" : ""), Toast.LENGTH_LONG).show();
         }
+        // else TODO We are stuck here, impossible to start a new queue.
+        //      This happens if the MusicService has been recycled (after extended time) or not started
+        //      To reproduce: Force close, then launch Auto and try starting a new playing queue
     }
 
     /**
