@@ -188,6 +188,9 @@ public class MusicPlayerRemote {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
         }
+        // else TODO We are stuck here, impossible to start a new queue.
+        //      This happens if the MusicService has been recycled (after extended time) or not started
+        //      To reproduce: Force close, then launch Auto and try starting a new playing queue
     }
 
     /**

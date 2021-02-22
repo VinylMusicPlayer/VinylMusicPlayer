@@ -880,21 +880,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void playSongs(ArrayList<Song> songs, int shuffleMode) {
-        if (songs != null && !songs.isEmpty()) {
-            if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                int startPosition = new Random().nextInt(songs.size());
-                openQueue(songs, startPosition, false);
-                setShuffleMode(shuffleMode);
-            } else {
-                openQueue(songs, 0, false);
-            }
-            play();
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void applyReplayGain() {
         byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
         if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {

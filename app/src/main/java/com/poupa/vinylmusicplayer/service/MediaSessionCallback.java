@@ -13,6 +13,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
+import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -53,7 +54,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         super.onPlayFromMediaId(mediaId, extras);
 
         final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
-        final int itemId = musicId != null ? Integer.valueOf(musicId) : -1;
+        final int itemId = musicId != null ? Integer.parseInt(musicId) : -1;
         final ArrayList<Song> songs = new ArrayList<>();
 
         final String category = AutoMediaIDHelper.extractCategory(mediaId);
@@ -76,12 +77,18 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 openQueue(songs, 0, true);
                 break;
 
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                 List<Song> tracks;
-                if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
+                if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
+                    tracks = LastAddedLoader.getLastAddedSongs();
+                } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
                     tracks = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context);
+                } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
+                    tracks = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context);
                 } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
                     tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
                 } else {
