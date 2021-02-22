@@ -26,9 +26,6 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.poupa.vinylmusicplayer.helper.MusicPlayerRemote.cycleRepeatMode;
-import static com.poupa.vinylmusicplayer.helper.MusicPlayerRemote.getCurrentSong;
-import static com.poupa.vinylmusicplayer.helper.MusicPlayerRemote.openQueue;
 import static com.poupa.vinylmusicplayer.service.MusicService.CYCLE_REPEAT;
 import static com.poupa.vinylmusicplayer.service.MusicService.TAG;
 import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
@@ -36,8 +33,8 @@ import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_SHUFFLE;
 
 public final class MediaSessionCallback extends MediaSessionCompat.Callback {
 
-    private Context context;
-    private MusicService musicService;
+    private final Context context;
+    private final MusicService musicService;
 
     MediaSessionCallback(MusicService musicService, Context context) {
         this.context = context;
@@ -62,19 +59,19 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
                 Album album = AlbumLoader.getAlbum(itemId);
                 songs.addAll(album.songs);
-                openQueue(songs, 0, true);
+                musicService.openQueue(songs, 0, true);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
                 Artist artist = ArtistLoader.getArtist(itemId);
                 songs.addAll(artist.getSongs());
-                openQueue(songs, 0, true);
+                musicService.openQueue(songs, 0, true);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
                 Playlist playlist = PlaylistLoader.getPlaylist(context, itemId);
                 songs.addAll(playlist.getSongs(context));
-                openQueue(songs, 0, true);
+                musicService.openQueue(songs, 0, true);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
@@ -99,13 +96,13 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 if (songIndex == -1) {
                     songIndex = 0;
                 }
-                openQueue(songs, songIndex, true);
+                musicService.openQueue(songs, songIndex, true);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE:
                 ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
                 ShuffleHelper.makeShuffleList(allSongs, -1);
-                openQueue(allSongs, 0, true);
+                musicService.openQueue(allSongs, 0, true);
                 break;
 
             default:
@@ -149,7 +146,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onCustomAction(@NonNull String action, Bundle extras) {
         switch (action) {
             case CYCLE_REPEAT:
-                cycleRepeatMode();
+                musicService.cycleRepeatMode();
                 musicService.updateMediaSessionPlaybackState();
                 break;
 
@@ -159,7 +156,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 break;
 
             case TOGGLE_FAVORITE:
-                MusicUtil.toggleFavorite(context, getCurrentSong());
+                MusicUtil.toggleFavorite(context, musicService.getCurrentSong());
                 musicService.updateMediaSessionPlaybackState();
                 break;
 
