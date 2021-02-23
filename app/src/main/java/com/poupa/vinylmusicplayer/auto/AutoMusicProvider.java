@@ -34,8 +34,6 @@ import java.util.function.Supplier;
 public class AutoMusicProvider {
     private static final String BASE_URI = "androidauto://vinyl";
     private static final int PATH_SEGMENT_ID = 0;
-    private static final int PATH_SEGMENT_TITLE = 1;
-    private static final int PATH_SEGMENT_ARTIST = 2;
 
     private final WeakReference<MusicService> mMusicService;
 
@@ -44,32 +42,12 @@ public class AutoMusicProvider {
     // This is a hack - for some reason the listing of big list takes forever
     // for Queue and Playlists, but not for Albums and Artist
     // so instead we deliver only a portion of it to Auto
-    // TODO Drop this hack, restore the async full load of different lists
+    // TODO Drop this hack, restore the full load of different lists
     private final int LISTING_SIZE_LIMIT = 1000;
 
     public AutoMusicProvider(MusicService musicService) {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
-    }
-
-    private synchronized List<Uri> buildListByLoader(Supplier<List<Song>> loader) {
-        List<Uri> result = new ArrayList<>();
-
-        final List<Song> allSongs = loader.get();
-        final int fromPosition = 0;
-        final int toPosition = Math.min(allSongs.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
-        final List<Song> songs = allSongs.subList(fromPosition, toPosition);
-
-        for (Song s : songs) {
-            Uri.Builder songData = Uri.parse(BASE_URI).buildUpon();
-            songData.appendPath(String.valueOf(s.id))
-                    .appendPath(s.title)
-                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
-                    .appendPath(String.valueOf(s.albumId));
-            result.add(songData.build());
-        }
-
-        return result;
     }
 
     public List<MediaBrowserCompat.MediaItem> getChildren(String mediaId, Resources resources) {
@@ -100,7 +78,7 @@ public class AutoMusicProvider {
                             .appendPath(String.valueOf(entry.id))
                             .appendPath(entry.name)
                             .build();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), null));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.name, null));
                 }
                 break;
 
@@ -111,8 +89,7 @@ public class AutoMusicProvider {
                             .appendPath(entry.getTitle())
                             .appendPath(entry.getArtistName())
                             .build();
-                    final List<String> segments = uri.getPathSegments();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.getTitle(), entry.getArtistName()));
                 }
                 break;
 
@@ -121,9 +98,8 @@ public class AutoMusicProvider {
                     Uri uri = Uri.parse(BASE_URI).buildUpon()
                             .appendPath(String.valueOf(entry.getId()))
                             .appendPath(entry.getName())
-                            .appendPath(entry.getName())
                             .build();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_ARTIST), null));
+                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.getName(), null));
                 }
                 break;
 
@@ -137,46 +113,49 @@ public class AutoMusicProvider {
                     final List<Song> songs = queue.subList(fromPosition, toPosition);
 
                     for (Song s : songs) {
+                        final String artists = MultiValuesTagUtil.infoString(s.artistNames);
                         Uri uri = Uri.parse(BASE_URI).buildUpon()
                                 .appendPath(String.valueOf(s.id))
                                 .appendPath(s.title)
-                                .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
-                                .appendPath(String.valueOf(s.albumId))
+                                .appendPath(artists)
                                 .build();
-                        final List<String> segments = uri.getPathSegments();
-                        mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                        mediaItems.add(createPlayableMediaItem(mediaId, uri, s.title, artists));
                     }
                 }
                 break;
 
             default:
-                Iterable<Uri> listing = null;
+                Supplier<List<Song>> loader = null;
                 switch (mediaId) {
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                        listing = buildListByLoader(
-                                LastAddedLoader::getLastAddedSongs
-                        );
+                        loader = LastAddedLoader::getLastAddedSongs;
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext)
-                        );
+                        loader = () -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext)
-                        );
+                        loader = () -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext)
-                        );
+                        loader = () -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
                         break;
                 }
-                if (listing != null) {
-                    for (final Uri uri : listing) {
+                if (loader != null) {
+                    final List<Song> allSongs = loader.get();
+                    final int fromPosition = 0;
+                    final int toPosition = Math.min(allSongs.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
+                    final List<Song> songs = allSongs.subList(fromPosition, toPosition);
+
+                    for (Song s : songs) {
+                        final String artists = MultiValuesTagUtil.infoString(s.artistNames);
+                        Uri uri = Uri.parse(BASE_URI).buildUpon()
+                                .appendPath(String.valueOf(s.id))
+                                .appendPath(s.title)
+                                .appendPath(artists)
+                                .appendPath(String.valueOf(s.albumId))
+                                .build();
                         final List<String> segments = uri.getPathSegments();
-                        mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                        mediaItems.add(createPlayableMediaItem(mediaId, uri, s.title, artists));
                     }
                 }
                 break;
