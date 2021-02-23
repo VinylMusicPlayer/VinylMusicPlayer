@@ -30,7 +30,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static List<String> splitIfNeeded(@NonNull final List<String> names) {
-        if (names.isEmpty()) {return new ArrayList<String>(Arrays.asList(""));}
+        if (names.isEmpty()) {return new ArrayList<>(Arrays.asList(""));}
 
         // If the argument has multiple elements, or empty, dont split further
         if (names.size() > 1) {return names;}
@@ -55,7 +55,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     private static List<String> splitImpl(@NonNull final String names, @NonNull final String separator) {
-        List<String> namesSplit = Arrays.asList(names.split(separator));
+        String[] namesSplit = names.split(separator);
         ArrayList<String> result = new ArrayList<>();
         for (String name : namesSplit) {
             result.add(name.trim());
