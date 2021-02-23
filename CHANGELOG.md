@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2021-02-23
+### Added
+- Merged album with same name/same artist
+### Fixed
+- Android Auto mode
+- Changelog popup not showing
+### Changed
+- Reduced overhead on the main thread during scan
+
 ## [1.1.0] - 2021-02-12
 ### Added
 - Support for multiple artists per track
