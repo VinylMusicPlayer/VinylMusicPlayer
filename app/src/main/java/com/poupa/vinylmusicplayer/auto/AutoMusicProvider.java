@@ -2,10 +2,10 @@ package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -32,9 +32,6 @@ import java.util.function.Supplier;
  * Created by Beesham Sarendranauth (Beesham)
  */
 public class AutoMusicProvider {
-    private static final String BASE_URI = "androidauto://vinyl";
-    private static final int PATH_SEGMENT_ID = 0;
-
     private final WeakReference<MusicService> mMusicService;
 
     private final Context mContext;
@@ -68,32 +65,19 @@ public class AutoMusicProvider {
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
                 for (Playlist entry : PlaylistLoader.getAllPlaylists(mContext)) {
-                    Uri uri = Uri.parse(BASE_URI).buildUpon()
-                            .appendPath(String.valueOf(entry.id))
-                            .appendPath(entry.name)
-                            .build();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.name, null));
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.id), entry.name, null));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
                 for (Album entry : AlbumLoader.getAllAlbums()) {
-                    Uri uri = Uri.parse(BASE_URI).buildUpon()
-                            .appendPath(String.valueOf(entry.getId()))
-                            .appendPath(entry.getTitle())
-                            .appendPath(entry.getArtistName())
-                            .build();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.getTitle(), entry.getArtistName()));
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getTitle(), entry.getArtistName()));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
                 for (Artist entry : ArtistLoader.getAllArtists()) {
-                    Uri uri = Uri.parse(BASE_URI).buildUpon()
-                            .appendPath(String.valueOf(entry.getId()))
-                            .appendPath(entry.getName())
-                            .build();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, entry.getName(), null));
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getName(), null));
                 }
                 break;
 
@@ -108,12 +92,7 @@ public class AutoMusicProvider {
 
                     for (Song s : songs) {
                         final String artists = MultiValuesTagUtil.infoString(s.artistNames);
-                        Uri uri = Uri.parse(BASE_URI).buildUpon()
-                                .appendPath(String.valueOf(s.id))
-                                .appendPath(s.title)
-                                .appendPath(artists)
-                                .build();
-                        mediaItems.add(createPlayableMediaItem(mediaId, uri, s.title, artists));
+                        mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
                     }
                 }
                 break;
@@ -135,21 +114,10 @@ public class AutoMusicProvider {
                         break;
                 }
                 if (loader != null) {
-                    final List<Song> allSongs = loader.get();
-                    final int fromPosition = 0;
-                    final int toPosition = allSongs.size() - 1;
-                    final List<Song> songs = allSongs.subList(fromPosition, toPosition);
-
+                    final List<Song> songs = loader.get();
                     for (Song s : songs) {
                         final String artists = MultiValuesTagUtil.infoString(s.artistNames);
-                        Uri uri = Uri.parse(BASE_URI).buildUpon()
-                                .appendPath(String.valueOf(s.id))
-                                .appendPath(s.title)
-                                .appendPath(artists)
-                                .appendPath(String.valueOf(s.albumId))
-                                .build();
-                        final List<String> segments = uri.getPathSegments();
-                        mediaItems.add(createPlayableMediaItem(mediaId, uri, s.title, artists));
+                        mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
                     }
                 }
                 break;
@@ -168,10 +136,10 @@ public class AutoMusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, Uri musicSelection,
+    private MediaBrowserCompat.MediaItem createPlayableMediaItem(@NonNull final String mediaId, @NonNull final String musicId,
                                                                  String title, @Nullable String subtitle) {
         MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder();
-        builder.setMediaId(AutoMediaIDHelper.createMediaID(musicSelection.getPathSegments().get(PATH_SEGMENT_ID), mediaId))
+        builder.setMediaId(AutoMediaIDHelper.createMediaID(musicId, mediaId))
                 .setTitle(title);
 
         if (subtitle != null) {
