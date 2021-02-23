@@ -26,7 +26,6 @@ import com.poupa.vinylmusicplayer.util.ImageUtil;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Created by Beesham Sarendranauth (Beesham)
@@ -98,23 +97,22 @@ public class AutoMusicProvider {
                 break;
 
             default:
-                Supplier<List<Song>> loader = null;
+                List<Song> songs = null;
                 switch (mediaId) {
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                        loader = LastAddedLoader::getLastAddedSongs;
+                        songs = LastAddedLoader.getLastAddedSongs();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                        loader = () -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
+                        songs = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                        loader = () -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
+                        songs = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                        loader = () -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
+                        songs = TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
                         break;
                 }
-                if (loader != null) {
-                    final List<Song> songs = loader.get();
+                if (songs != null) {
                     for (Song s : songs) {
                         final String artists = MultiValuesTagUtil.infoString(s.artistNames);
                         mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
