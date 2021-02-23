@@ -35,6 +35,12 @@ public class AutoMusicProvider {
 
     private final Context mContext;
 
+    // This is a hack - for some reason the listing of big list takes forever
+    // for Queue and Playlists, but not for Albums and Artist
+    // so instead we deliver only a portion of it to Auto
+    // TODO Drop this hack, restore the full load of different lists
+    private final int LISTING_SIZE_LIMIT = 1000;
+
     public AutoMusicProvider(MusicService musicService) {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
@@ -86,7 +92,7 @@ public class AutoMusicProvider {
                     // Only show the queue starting from the currently played song
                     final List<Song> queue = service.getPlayingQueue();
                     final int fromPosition = Math.max(0, service.getPosition());
-                    final int toPosition = queue.size() - 1;
+                    final int toPosition = Math.min(queue.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
                     final List<Song> songs = queue.subList(fromPosition, toPosition);
 
                     for (Song s : songs) {
@@ -113,7 +119,11 @@ public class AutoMusicProvider {
                         break;
                 }
                 if (songs != null) {
-                    for (Song s : songs) {
+                    final int fromPosition = 0;
+                    final int toPosition = Math.min(songs.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
+                    final List<Song> limitedSongs = songs.subList(fromPosition, toPosition);
+
+                    for (Song s : limitedSongs) {
                         final String artists = MultiValuesTagUtil.infoString(s.artistNames);
                         mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
                     }
