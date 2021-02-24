@@ -2,11 +2,10 @@ package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -26,224 +25,25 @@ import com.poupa.vinylmusicplayer.util.ImageUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.function.Supplier;
 
 /**
  * Created by Beesham Sarendranauth (Beesham)
  */
 public class AutoMusicProvider {
-    private static final String BASE_URI = "androidauto://vinyl";
-    private static final int PATH_SEGMENT_ID = 0;
-    private static final int PATH_SEGMENT_TITLE = 1;
-    private static final int PATH_SEGMENT_ARTIST = 2;
-    private static final int PATH_SEGMENT_ALBUM_ID = 3;
-
     private final WeakReference<MusicService> mMusicService;
 
-    // Categorized caches for music data
-    private ConcurrentMap<Integer, Uri> mMusicListByPlaylist;
-    private ConcurrentMap<Integer, Uri> mMusicListByAlbum;
-    private ConcurrentMap<Integer, Uri> mMusicListByArtist;
-
     private final Context mContext;
-    private volatile State mCurrentState = State.NON_INITIALIZED;
 
     // This is a hack - for some reason the listing of big list takes forever
     // for Queue and Playlists, but not for Albums and Artist
     // so instead we deliver only a portion of it to Auto
+    // TODO Drop this hack, restore the full load of different lists
     private final int LISTING_SIZE_LIMIT = 1000;
 
     public AutoMusicProvider(MusicService musicService) {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
-
-        mMusicListByPlaylist = new ConcurrentSkipListMap<>();
-        mMusicListByAlbum = new ConcurrentSkipListMap<>();
-        mMusicListByArtist = new ConcurrentSkipListMap<>();
-    }
-
-    private Iterable<Uri> getPlaylists() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByPlaylist.values();
-    }
-
-    private Iterable<Uri> getAlbums() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByAlbum.values();
-    }
-
-    private Iterable<Uri> getArtists() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-        return mMusicListByArtist.values();
-    }
-
-    private Iterable<Uri> getQueue() {
-        if (mCurrentState != State.INITIALIZED) {
-            return Collections.emptyList();
-        }
-
-        ConcurrentMap<Integer, Uri> queueList = new ConcurrentSkipListMap<>();
-
-        final MusicService service = mMusicService.get();
-        if (service != null) {
-            // Only show the queue starting from the currently played song
-            final List<Song> queue = service.getPlayingQueue();
-            final int fromPosition = Math.max(0, service.getPosition());
-            final int toPosition = Math.min(queue.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
-            final List<Song> songs = queue.subList(fromPosition, toPosition);
-
-            for (int i = 0; i < songs.size(); i++) {
-                final Song s = songs.get(i);
-                Uri.Builder songData = Uri.parse(BASE_URI).buildUpon();
-                songData.appendPath(String.valueOf(s.id))
-                        .appendPath(s.title)
-                        .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
-                        .appendPath(String.valueOf(s.albumId));
-                queueList.putIfAbsent(i, songData.build());
-            }
-        }
-
-        return queueList.values();
-    }
-
-    public boolean isInitialized() {
-        return mCurrentState == State.INITIALIZED;
-    }
-
-    /**
-     * Get the list of music tracks from a server and caches the track information
-     * for future reference, keying tracks by musicId
-     */
-    public void retrieveMediaAsync(final Callback callback) {
-        if (mCurrentState == State.INITIALIZED) {
-            if (callback != null) {
-                // Nothing to do, execute callback immediately
-                callback.onMusicCatalogReady(true);
-            }
-            return;
-        }
-
-        // Asynchronously load the music catalog in a separate thread
-        new AsyncTask<Void, Void, State>() {
-            @Override
-            protected State doInBackground(Void... params) {
-                retrieveMedia();
-                return mCurrentState;
-            }
-
-            @Override
-            protected void onPostExecute(State current) {
-                if (callback != null) {
-                    callback.onMusicCatalogReady(current == State.INITIALIZED);
-                }
-            }
-        }.execute();
-    }
-
-    private synchronized ConcurrentMap<Integer, Uri> buildListByLoader(Supplier<List<Song>> loader) {
-        ConcurrentMap<Integer, Uri> result = new ConcurrentHashMap<>();
-        if (mCurrentState != State.INITIALIZED) {
-            return result;
-        }
-
-        final List<Song> allSongs = loader.get();
-        final int fromPosition = 0;
-        final int toPosition = Math.min(allSongs.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
-        final List<Song> songs = allSongs.subList(fromPosition, toPosition);
-
-        for (int i = 0; i < songs.size(); i++) {
-            final Song s = songs.get(i);
-            Uri.Builder songData = Uri.parse(BASE_URI).buildUpon();
-            songData.appendPath(String.valueOf(s.id))
-                    .appendPath(s.title)
-                    .appendPath(MultiValuesTagUtil.infoString(s.artistNames))
-                    .appendPath(String.valueOf(s.albumId));
-            result.putIfAbsent(i, songData.build());
-        }
-
-        return result;
-    }
-
-    private synchronized void buildListsByPlaylist() {
-        ConcurrentMap<Integer, Uri> newMusicListByPlaylist = new ConcurrentSkipListMap<>();
-
-        final List<Playlist> playlists = PlaylistLoader.getAllPlaylists(mContext);
-        for (int i = 0; i < playlists.size(); i++) {
-            final Playlist p = playlists.get(i);
-            Uri.Builder playlistData = Uri.parse(BASE_URI).buildUpon();
-            playlistData.appendPath(String.valueOf(p.id))
-                    .appendPath(p.name);
-            newMusicListByPlaylist.putIfAbsent(i, playlistData.build());
-        }
-
-        mMusicListByPlaylist = newMusicListByPlaylist;
-    }
-
-    private synchronized void buildListsByAlbum() {
-        ConcurrentMap<Integer, Uri> newMusicListByAlbum = new ConcurrentSkipListMap<>();
-
-        final List<Album> albums = AlbumLoader.getAllAlbums();
-        for (int i = 0; i < albums.size(); i++) {
-            final Album a = albums.get(i);
-            Uri.Builder albumData = Uri.parse(BASE_URI).buildUpon();
-            albumData.appendPath(String.valueOf(a.getId()))
-                    .appendPath(a.getTitle())
-                    .appendPath(a.getArtistName())
-                    .appendPath(String.valueOf(a.getId()));
-            newMusicListByAlbum.putIfAbsent(i, albumData.build());
-        }
-
-        mMusicListByAlbum = newMusicListByAlbum;
-    }
-
-    private synchronized void buildListsByArtist() {
-        ConcurrentMap<Integer, Uri> newMusicListByArtist = new ConcurrentSkipListMap<>();
-
-        final List<Artist> artists = ArtistLoader.getAllArtists();
-        for (int i = 0; i < artists.size(); i++) {
-            final Artist a = artists.get(i);
-            Uri.Builder artistData = Uri.parse(BASE_URI).buildUpon();
-            artistData.appendPath(String.valueOf(a.getId()))
-                    .appendPath(a.getName())
-                    .appendPath(a.getName());
-            newMusicListByArtist.putIfAbsent(i, artistData.build());
-        }
-
-        mMusicListByArtist = newMusicListByArtist;
-    }
-
-    private synchronized void retrieveMedia() {
-        try {
-            if (mCurrentState == State.NON_INITIALIZED) {
-                mCurrentState = State.INITIALIZING;
-
-                // Note: The smart playlists and the queue are not prebuilt and cached here,
-                // since their content may change frequently
-
-                buildListsByPlaylist();
-                buildListsByAlbum();
-                buildListsByArtist();
-
-                mCurrentState = State.INITIALIZED;
-            }
-        } finally {
-            if (mCurrentState != State.INITIALIZED) {
-                // Something bad happened, so we reset state to NON_INITIALIZED to allow
-                // retries (eg if the network connection is temporary unavailable)
-                mCurrentState = State.NON_INITIALIZED;
-            }
-        }
     }
 
     public List<MediaBrowserCompat.MediaItem> getChildren(String mediaId, Resources resources) {
@@ -269,55 +69,63 @@ public class AutoMusicProvider {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
-                for (final Uri uri : getPlaylists()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_TITLE), null));
+                for (Playlist entry : PlaylistLoader.getAllPlaylists(mContext)) {
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.id), entry.name, null));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                for (final Uri uri : getAlbums()) {
-                    final List<String> segments = uri.getPathSegments();
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                for (Album entry : AlbumLoader.getAllAlbums()) {
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getTitle(), entry.getArtistName()));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
-                for (final Uri uri : getArtists()) {
-                    mediaItems.add(createPlayableMediaItem(mediaId, uri, uri.getPathSegments().get(PATH_SEGMENT_ARTIST), null));
+                for (Artist entry : ArtistLoader.getAllArtists()) {
+                    mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getName(), null));
+                }
+                break;
+
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
+                final MusicService service = mMusicService.get();
+                if (service != null) {
+                    // Only show the queue starting from the currently played song
+                    final List<Song> queue = service.getPlayingQueue();
+                    final int fromPosition = Math.max(0, service.getPosition());
+                    final int toPosition = Math.min(queue.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
+                    final List<Song> songs = queue.subList(fromPosition, toPosition);
+
+                    for (Song s : songs) {
+                        final String artists = MultiValuesTagUtil.infoString(s.artistNames);
+                        mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
+                    }
                 }
                 break;
 
             default:
-                Iterable<Uri> listing = null;
+                List<Song> songs = null;
                 switch (mediaId) {
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                        listing = buildListByLoader(
-                                LastAddedLoader::getLastAddedSongs
-                        ).values();
+                        songs = LastAddedLoader.getLastAddedSongs();
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext)
-                        ).values();
+                        songs = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext)
-                        ).values();
+                        songs = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
                         break;
                     case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                        listing = buildListByLoader(
-                                () -> TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext)
-                        ).values();
-                        break;
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
-                        listing = getQueue();
+                        songs = TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
                         break;
                 }
-                if (listing != null) {
-                    for (final Uri uri : listing) {
-                        final List<String> segments = uri.getPathSegments();
-                        mediaItems.add(createPlayableMediaItem(mediaId, uri, segments.get(PATH_SEGMENT_TITLE), segments.get(PATH_SEGMENT_ARTIST)));
+                if (songs != null) {
+                    final int fromPosition = 0;
+                    final int toPosition = Math.min(songs.size() - 1, fromPosition + LISTING_SIZE_LIMIT);
+                    final List<Song> limitedSongs = songs.subList(fromPosition, toPosition);
+
+                    for (Song s : limitedSongs) {
+                        final String artists = MultiValuesTagUtil.infoString(s.artistNames);
+                        mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(s.id), s.title, artists));
                     }
                 }
                 break;
@@ -336,10 +144,10 @@ public class AutoMusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    private MediaBrowserCompat.MediaItem createPlayableMediaItem(String mediaId, Uri musicSelection,
+    private MediaBrowserCompat.MediaItem createPlayableMediaItem(@NonNull final String mediaId, @NonNull final String musicId,
                                                                  String title, @Nullable String subtitle) {
         MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder();
-        builder.setMediaId(AutoMediaIDHelper.createMediaID(musicSelection.getPathSegments().get(PATH_SEGMENT_ID), mediaId))
+        builder.setMediaId(AutoMediaIDHelper.createMediaID(musicId, mediaId))
                 .setTitle(title);
 
         if (subtitle != null) {
@@ -358,13 +166,5 @@ public class AutoMusicProvider {
 
         return new MediaBrowserCompat.MediaItem(builder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
-    }
-
-    private enum State {
-        NON_INITIALIZED, INITIALIZING, INITIALIZED
-    }
-
-    public interface Callback {
-        void onMusicCatalogReady(boolean success);
     }
 }

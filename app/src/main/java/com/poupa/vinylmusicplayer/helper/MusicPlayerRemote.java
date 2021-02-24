@@ -188,9 +188,6 @@ public class MusicPlayerRemote {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
         }
-        // else TODO We are stuck here, impossible to start a new queue.
-        //      This happens if the MusicService has been recycled (after extended time) or not started
-        //      To reproduce: Force close, then launch Auto and try starting a new playing queue
     }
 
     /**
@@ -269,11 +266,10 @@ public class MusicPlayerRemote {
         return -1;
     }
 
-    public static int seekTo(int millis) {
+    public static void seekTo(int millis) {
         if (musicService != null) {
-            return musicService.seek(millis);
+            musicService.seek(millis);
         }
-        return -1;
     }
 
     public static int getRepeatMode() {
@@ -290,31 +286,25 @@ public class MusicPlayerRemote {
         return MusicService.SHUFFLE_MODE_NONE;
     }
 
-    public static boolean cycleRepeatMode() {
+    public static void cycleRepeatMode() {
         if (musicService != null) {
             musicService.cycleRepeatMode();
-            return true;
         }
-        return false;
     }
 
-    public static boolean toggleShuffleMode() {
+    public static void toggleShuffleMode() {
         if (musicService != null) {
             musicService.toggleShuffle();
-            return true;
         }
-        return false;
     }
 
-    public static boolean setShuffleMode(final int shuffleMode) {
+    public static void setShuffleMode(final int shuffleMode) {
         if (musicService != null) {
             musicService.setShuffleMode(shuffleMode);
-            return true;
         }
-        return false;
     }
 
-    public static boolean playNext(Song song) {
+    public static void playNext(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 musicService.addSong(getPosition() + 1, song);
@@ -324,12 +314,10 @@ public class MusicPlayerRemote {
                 openQueue(queue, 0, false);
             }
             Toast.makeText(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue), Toast.LENGTH_SHORT).show();
-            return true;
         }
-        return false;
     }
 
-    public static boolean playNext(@NonNull ArrayList<Song> songs) {
+    public static void playNext(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 musicService.addSongs(getPosition() + 1, songs);
@@ -338,12 +326,10 @@ public class MusicPlayerRemote {
             }
             final String toast = songs.size() == 1 ? musicService.getResources().getString(R.string.added_title_to_playing_queue) : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
             Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
-            return true;
         }
-        return false;
     }
 
-    public static boolean enqueue(Song song) {
+    public static void enqueue(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 musicService.addSong(song);
@@ -353,12 +339,10 @@ public class MusicPlayerRemote {
                 openQueue(queue, 0, false);
             }
             Toast.makeText(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue), Toast.LENGTH_SHORT).show();
-            return true;
         }
-        return false;
     }
 
-    public static boolean enqueue(@NonNull ArrayList<Song> songs) {
+    public static void enqueue(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 musicService.addSongs(songs);
@@ -367,49 +351,37 @@ public class MusicPlayerRemote {
             }
             final String toast = songs.size() == 1 ? musicService.getResources().getString(R.string.added_title_to_playing_queue) : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
             Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
-            return true;
         }
-        return false;
     }
 
-    public static boolean removeFromQueue(@NonNull Song song) {
+    public static void removeFromQueue(@NonNull Song song) {
         if (musicService != null) {
             musicService.removeSong(song);
-            return true;
         }
-        return false;
     }
 
-    public static boolean removeFromQueue(int position) {
+    public static void removeFromQueue(int position) {
         if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
             musicService.removeSong(position);
-            return true;
         }
-        return false;
     }
 
-    public static boolean moveSong(int from, int to) {
+    public static void moveSong(int from, int to) {
         if (musicService != null && from >= 0 && to >= 0 && from < getPlayingQueue().size() && to < getPlayingQueue().size()) {
             musicService.moveSong(from, to);
-            return true;
         }
-        return false;
     }
 
-    public static boolean addSong(int to, @NonNull Song song) {
+    public static void addSong(int to, @NonNull Song song) {
         if (musicService != null) {
             musicService.addSong(to,song);
-            return true;
         }
-        return false;
     }
 
-    public static boolean clearQueue() {
+    public static void clearQueue() {
         if (musicService != null) {
             musicService.clearQueue();
-            return true;
         }
-        return false;
     }
 
     public static int getAudioSessionId() {
