@@ -8,7 +8,6 @@ import android.support.v4.media.MediaDescriptionCompat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -159,10 +158,10 @@ public class AutoMusicProvider {
     }
 
     private MediaBrowserCompat.MediaItem createBrowsableMediaItem(String mediaId, String title, int iconDrawableId) {
-        MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder();
-        builder.setMediaId(mediaId)
+        MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder()
+                .setMediaId(mediaId)
                 .setTitle(title)
-                .setIconBitmap(ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(mContext, iconDrawableId, ThemeStore.textColorSecondary(mContext))));
+                .setIconBitmap(ImageUtil.createBitmap(ImageUtil.getVectorDrawable(mContext.getResources(), iconDrawableId, mContext.getTheme())));
 
         return new MediaBrowserCompat.MediaItem(builder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
@@ -170,8 +169,8 @@ public class AutoMusicProvider {
 
     private MediaBrowserCompat.MediaItem createPlayableMediaItem(@NonNull final String mediaId, @NonNull final String musicId,
                                                                  String title, @Nullable String subtitle) {
-        MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder();
-        builder.setMediaId(AutoMediaIDHelper.createMediaID(musicId, mediaId))
+        MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder()
+                .setMediaId(AutoMediaIDHelper.createMediaID(musicId, mediaId))
                 .setTitle(title);
 
         if (subtitle != null) {
@@ -186,7 +185,7 @@ public class AutoMusicProvider {
         MediaDescriptionCompat.Builder builder = new MediaDescriptionCompat.Builder()
                 .setMediaId(mediaId)
                 .setTitle(title)
-                .setIconBitmap(ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(mContext, iconDrawableId, ThemeStore.textColorSecondary(mContext))));
+                .setIconBitmap(ImageUtil.createBitmap(ImageUtil.getVectorDrawable(mContext.getResources(), iconDrawableId, mContext.getTheme())));
 
         return new MediaBrowserCompat.MediaItem(builder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
