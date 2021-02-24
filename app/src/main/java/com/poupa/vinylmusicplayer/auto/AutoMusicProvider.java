@@ -18,10 +18,12 @@ import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -55,21 +57,43 @@ public class AutoMusicProvider {
 
         switch (mediaId) {
             case AutoMediaIDHelper.MEDIA_ID_ROOT:
+                // Follow the same library order as the full app
+                ArrayList<CategoryInfo> categories = PreferenceUtil.getInstance().getLibraryCategoryInfos();
+                for (CategoryInfo categoryInfo : categories) {
+                    if (categoryInfo.visible) {
+                        switch (categoryInfo.category) {
+                            case ALBUMS:
+                                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, resources.getString(R.string.albums_label), R.drawable.ic_album_white_24dp));
+                                break;
+                            case ARTISTS:
+                                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST, resources.getString(R.string.artists_label), R.drawable.ic_people_white_24dp));
+                                break;
+                            case PLAYLISTS:
+                                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
+                                break;
+                            case SONGS:
+                                mediaItems.add(createPlayableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE, resources.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                // Other items
+                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE, resources.getString(R.string.queue_label), R.drawable.ic_playlist_play_white_24dp));
+                break;
+
+            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
+                // Smart playlists
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED, resources.getString(R.string.last_added), R.drawable.ic_library_add_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY, resources.getString(R.string.history_label), R.drawable.ic_access_time_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED, resources.getString(R.string.not_recently_played), R.drawable.ic_watch_later_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS, resources.getString(R.string.top_tracks_label), R.drawable.ic_trending_up_white_24dp));
 
-                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, resources.getString(R.string.playlists_label), R.drawable.ic_queue_music_white_24dp));
-                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, resources.getString(R.string.albums_label), R.drawable.ic_album_white_24dp));
-                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST, resources.getString(R.string.artists_label), R.drawable.ic_people_white_24dp));
-
-                mediaItems.add(createPlayableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE, resources.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp));
-                mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE, resources.getString(R.string.queue_label), R.drawable.ic_playlist_play_white_24dp));
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
+                // Static playlists
                 for (Playlist entry : PlaylistLoader.getAllPlaylists(mContext)) {
+                    // TODO Make this browsable
                     mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.id), entry.name, null));
                 }
                 break;
