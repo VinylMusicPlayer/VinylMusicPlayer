@@ -64,6 +64,7 @@ public class AutoMusicProvider {
         switch (mediaId) {
             case AutoMediaIDHelper.MEDIA_ID_ROOT:
                 // Follow the same library order as the full app
+                // TODO Provide hints to show these as tabs https://developer.android.com/training/cars/media#tabs-opt-in
                 ArrayList<CategoryInfo> categories = PreferenceUtil.getInstance().getLibraryCategoryInfos();
                 for (CategoryInfo categoryInfo : categories) {
                     if (categoryInfo.visible) {
@@ -91,6 +92,7 @@ public class AutoMusicProvider {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
+                // TODO Provide hints to show these as list
                 // Smart playlists
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED, resources.getString(R.string.last_added), R.drawable.ic_library_add_white_24dp));
                 mediaItems.add(createBrowsableMediaItem(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY, resources.getString(R.string.history_label), R.drawable.ic_access_time_white_24dp));
@@ -114,18 +116,21 @@ public class AutoMusicProvider {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
+                // TODO Provide hints to show these as either list or grid, according to the preference in full app
                 for (Album entry : AlbumLoader.getAllAlbums()) {
                     mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getTitle(), entry.getArtistName()));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
+                // TODO Provide hints to show these as either list or grid, according to the preference in full app
                 for (Artist entry : ArtistLoader.getAllArtists()) {
                     mediaItems.add(createPlayableMediaItem(mediaId, String.valueOf(entry.getId()), entry.getName(), null));
                 }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
+                // TODO Provide hints to show these as list
                 final MusicService service = mMusicService.get();
                 if (service != null) {
                     // Only show the queue starting from the currently played song
@@ -146,6 +151,7 @@ public class AutoMusicProvider {
     }
 
     private List<MediaBrowserCompat.MediaItem> getPlayListChildren(String mediaId) {
+        // TODO Provide hints to show these as list
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         List<Song> songs = null;
