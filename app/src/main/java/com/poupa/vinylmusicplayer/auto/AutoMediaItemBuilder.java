@@ -26,6 +26,7 @@ class AutoMediaItemBuilder {
     AutoMediaItemBuilder(@NonNull Context context, @NonNull String path, long id) {
         this(context, AutoMediaIDHelper.createMediaID(String.valueOf(id), path));
     }
+
     @NonNull
     AutoMediaItemBuilder title(@NonNull String title) {
         mBuilder.setTitle(title);
@@ -67,8 +68,14 @@ class AutoMediaItemBuilder {
     }
 
     @NonNull
-    AutoMediaItemBuilder flags(int value) {
-        mFlags = value;
+    AutoMediaItemBuilder asBrowsable() {
+        mFlags |= MediaBrowserCompat.MediaItem.FLAG_BROWSABLE;
+        return this;
+    }
+
+    @NonNull
+    AutoMediaItemBuilder asPlayable() {
+        mFlags |= MediaBrowserCompat.MediaItem.FLAG_PLAYABLE;
         return this;
     }
 

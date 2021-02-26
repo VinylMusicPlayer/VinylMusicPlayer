@@ -75,10 +75,6 @@ public class AutoMediaIDHelper {
         return null;
     }
 
-    public static boolean isBrowseable(@NonNull String mediaID) {
-        return !mediaID.contains(LEAF_SEPARATOR);
-    }
-
     private static boolean isValidCategory(String category) {
         return category == null ||
                 (!category.contains(CATEGORY_SEPARATOR) && !category.contains(LEAF_SEPARATOR));

@@ -137,10 +137,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public boolean pendingQuit = false;
 
-    private AppWidgetBig appWidgetBig = AppWidgetBig.getInstance();
-    private AppWidgetClassic appWidgetClassic = AppWidgetClassic.getInstance();
-    private AppWidgetSmall appWidgetSmall = AppWidgetSmall.getInstance();
-    private AppWidgetCard appWidgetCard = AppWidgetCard.getInstance();
+    private final AppWidgetBig appWidgetBig = AppWidgetBig.getInstance();
+    private final AppWidgetClassic appWidgetClassic = AppWidgetClassic.getInstance();
+    private final AppWidgetSmall appWidgetSmall = AppWidgetSmall.getInstance();
+    private final AppWidgetCard appWidgetCard = AppWidgetCard.getInstance();
 
     private Playback playback;
     private ArrayList<Song> playingQueue = new ArrayList<>();
@@ -153,7 +153,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private boolean pausedByTransientLossOfFocus;
     private PlayingNotification playingNotification;
     private AudioManager audioManager;
-    @SuppressWarnings("deprecation")
     private MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
     private PlaybackHandler playerHandler;
@@ -166,10 +165,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private QueueSaveHandler queueSaveHandler;
     private HandlerThread musicPlayerHandlerThread;
     private HandlerThread queueSaveHandlerThread;
-    private SongPlayCountHelper songPlayCountHelper = new SongPlayCountHelper();
+    private final SongPlayCountHelper songPlayCountHelper = new SongPlayCountHelper();
     private ThrottledSeekHandler throttledSeekHandler;
     private boolean becomingNoisyReceiverRegistered;
-    private IntentFilter becomingNoisyReceiverIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private final IntentFilter becomingNoisyReceiverIntentFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private final BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -256,8 +255,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         PendingIntent mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
         mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
         mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
-        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-                | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         mediaSession.setCallback(mMediaSessionCallback);
         mediaSession.setActive(true);
         mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
@@ -291,10 +288,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                             ArrayList<Song> playlistSongs = playlist.getSongs(getApplicationContext());
                             if (!playlistSongs.isEmpty()) {
                                 if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                                    int startPosition = 0;
-                                    if (!playlistSongs.isEmpty()) {
-                                        startPosition = new Random().nextInt(playlistSongs.size());
-                                    }
+                                    int startPosition = new Random().nextInt(playlistSongs.size());
                                     openQueue(playlistSongs, startPosition, true);
                                     setShuffleMode(shuffleMode);
                                 } else {
@@ -489,16 +483,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         playerHandler.obtainMessage(PREPARE_NEXT).sendToTarget();
     }
 
-    public boolean prepareNextImpl() {
+    public void prepareNextImpl() {
         synchronized (this) {
             try {
                 int nextPosition = getNextPosition(false);
                 playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
                 this.nextPosition = nextPosition;
-                return true;
             } catch (Exception e) {
                 e.printStackTrace();
-                return false;
             }
         }
     }
@@ -966,15 +958,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return duration;
     }
 
-    public int seek(int millis) {
+    public void seek(int millis) {
         synchronized (this) {
             try {
-                int newPosition = playback.seek(millis);
+                playback.seek(millis);
                 throttledSeekHandler.notifySeek();
-                return newPosition;
             } catch (Exception e) {
                 e.printStackTrace();
-                return -1;
             }
         }
     }
