@@ -18,8 +18,12 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.model.smartplaylist.HistoryPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.ShuffleAllPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
-import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -90,6 +94,7 @@ public class AutoMusicProvider {
                                 .path(path, s.id)
                                 .title(s.title)
                                 .subTitle(MusicUtil.getSongInfoString(s))
+                                .icon(MusicUtil.getMediaStoreAlbumCoverUri(s.albumId))
                                 .asPlayable()
                                 .build()
                         );
@@ -149,6 +154,7 @@ public class AutoMusicProvider {
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)
                                 .title(resources.getString(R.string.action_shuffle_all))
+                                .subTitle(new ShuffleAllPlaylist(mContext).getInfoString(mContext))
                                 .icon(R.drawable.ic_shuffle_white_24dp)
                                 .asPlayable()
                                 .build()
@@ -178,6 +184,7 @@ public class AutoMusicProvider {
         mediaItems.add(AutoMediaItem.with(mContext)
                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)
                 .title(resources.getString(R.string.last_added))
+                .subTitle(new LastAddedPlaylist(mContext).getInfoString(mContext))
                 .icon(R.drawable.ic_library_add_white_24dp)
                 .asBrowsable()
                 .build()
@@ -185,6 +192,7 @@ public class AutoMusicProvider {
         mediaItems.add(AutoMediaItem.with(mContext)
                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)
                 .title(resources.getString(R.string.history_label))
+                .subTitle(new HistoryPlaylist(mContext).getInfoString(mContext))
                 .icon(R.drawable.ic_access_time_white_24dp)
                 .asBrowsable()
                 .build()
@@ -192,6 +200,7 @@ public class AutoMusicProvider {
         mediaItems.add(AutoMediaItem.with(mContext)
                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)
                 .title(resources.getString(R.string.not_recently_played))
+                .subTitle(new NotRecentlyPlayedPlaylist(mContext).getInfoString(mContext))
                 .icon(R.drawable.ic_watch_later_white_24dp)
                 .asBrowsable()
                 .build()
@@ -199,6 +208,7 @@ public class AutoMusicProvider {
         mediaItems.add(AutoMediaItem.with(mContext)
                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)
                 .title(resources.getString(R.string.top_tracks_label))
+                .subTitle(new MyTopTracksPlaylist(mContext).getInfoString(mContext))
                 .icon(R.drawable.ic_trending_up_white_24dp)
                 .asBrowsable()
                 .build()
@@ -211,6 +221,7 @@ public class AutoMusicProvider {
             mediaItems.add(AutoMediaItem.with(mContext)
                     .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, entry.id)
                     .title(entry.name)
+                    .subTitle(entry.getInfoString(mContext))
                     .icon(MusicUtil.isFavoritePlaylist(mContext, entry)
                             ? R.drawable.ic_favorite_white_24dp
                             : R.drawable.ic_queue_music_white_24dp)
@@ -259,6 +270,7 @@ public class AutoMusicProvider {
                         .path(pathPrefix, s.id)
                         .title(s.title)
                         .subTitle(MusicUtil.getSongInfoString(s))
+                        .icon(MusicUtil.getMediaStoreAlbumCoverUri(s.albumId))
                         .asPlayable()
                         .build()
                 );
