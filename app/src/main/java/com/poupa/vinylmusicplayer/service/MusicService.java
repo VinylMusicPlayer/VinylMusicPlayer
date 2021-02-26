@@ -584,7 +584,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         if (PreferenceUtil.getInstance().albumArtOnLockscreen()) {
+            // TODO Auto displays a very small thumbnail on the now playing screen
             final Point screenSize = Util.getScreenSize(MusicService.this);
+
             GlideRequest request = GlideApp.with(MusicService.this)
                     .asBitmap()
                     .load(VinylGlideExtension.getSongModel(song))
@@ -1215,6 +1217,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT, null);
         }
 
+        // TODO Make use of the hints - https://developer.android.com/reference/androidx/media/utils/MediaConstants#constants_1
+        // BROWSER_ROOT_HINTS_KEY_MEDIA_ART_SIZE_PIXELS
+        // BROWSER_ROOT_HINTS_KEY_ROOT_CHILDREN_LIMIT
         return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_ROOT, null);
     }
 
