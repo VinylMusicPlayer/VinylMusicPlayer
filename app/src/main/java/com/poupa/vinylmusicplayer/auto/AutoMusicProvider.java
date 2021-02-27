@@ -24,7 +24,6 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.ShuffleAllPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
-import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -102,13 +101,13 @@ public class AutoMusicProvider {
                         );
                     }
                     if (songs.size() > limitedSongs.size()) {
-                        mediaItems.add(truncatedListIndicator(path));
+                        mediaItems.add(truncatedListIndicator(resources, path));
                     }
                 }
                 break;
 
             default: // We get to the case of (smart/dumb) playlists here
-                mediaItems.addAll(getSpecificPlaylistChildren(path));
+                mediaItems.addAll(getSpecificPlaylistChildren(resources, path));
                 break;
         }
 
@@ -242,7 +241,7 @@ public class AutoMusicProvider {
     }
 
     @NonNull
-    private List<MediaBrowserCompat.MediaItem> getSpecificPlaylistChildren(@NonNull String path) {
+    private List<MediaBrowserCompat.MediaItem> getSpecificPlaylistChildren(@NonNull Resources resources, @NonNull String path) {
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         List<Song> songs = null;
@@ -284,7 +283,7 @@ public class AutoMusicProvider {
                 );
             }
             if (songs.size() > limitedSongs.size()) {
-                mediaItems.add(truncatedListIndicator(pathPrefix));
+                mediaItems.add(truncatedListIndicator(resources, pathPrefix));
             }
         }
 
@@ -304,11 +303,11 @@ public class AutoMusicProvider {
     }
 
     @NonNull
-    private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull final String pathPrefix) {
+    private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull Resources resources, @NonNull final String pathPrefix) {
         return AutoMediaItem.with(mContext)
                 .path(pathPrefix, Song.EMPTY_SONG.id)
-                .title("Limited track listing")
-                .subTitle("Open app to see full list")
+                .title(resources.getString(R.string.auto_limited_listing_title))
+                .subTitle(resources.getString(R.string.auto_limited_listing_subtitle))
                 .build();
     }
 }
