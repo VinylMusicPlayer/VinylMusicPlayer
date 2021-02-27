@@ -89,8 +89,9 @@ public class AutoMusicProvider {
                 final MusicService service = mMusicService.get();
                 if (service != null) {
                     // Only show the queue starting from the currently played song
-                    final List<Song> songs = truncatedList(service.getPlayingQueue(), service.getPosition());
-                    for (Song s : songs) {
+                    final List<Song> songs = service.getPlayingQueue();
+                    final List<Song> limitedSongs = truncatedList(songs, service.getPosition());
+                    for (Song s : limitedSongs) {
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(path, s.id)
                                 .title(s.title)
@@ -99,6 +100,9 @@ public class AutoMusicProvider {
                                 .asPlayable()
                                 .build()
                         );
+                    }
+                    if (songs.size() > limitedSongs.size()) {
+                        mediaItems.add(truncatedListIndicator());
                     }
                 }
                 break;
@@ -279,6 +283,9 @@ public class AutoMusicProvider {
                         .build()
                 );
             }
+            if (songs.size() > limitedSongs.size()) {
+                mediaItems.add(truncatedListIndicator());
+            }
         }
 
         return mediaItems;
@@ -294,5 +301,13 @@ public class AutoMusicProvider {
         final int toPosition = Math.min(songs.size(), fromPosition + LISTING_SIZE_LIMIT);
 
         return songs.subList(fromPosition, toPosition);
+    }
+
+    @NonNull
+    private MediaBrowserCompat.MediaItem truncatedListIndicator() {
+        return AutoMediaItem.with(mContext)
+                .title("Limited track listing")
+                .subTitle("Open app to see full list")
+                .build();
     }
 }
