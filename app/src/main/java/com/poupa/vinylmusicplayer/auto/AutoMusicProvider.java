@@ -172,23 +172,10 @@ public class AutoMusicProvider {
 
     @NonNull
     private MediaBrowserCompat.MediaItem getQueueChild(@NonNull Resources resources) {
-        String subTitle = "";
-        final MusicService service = mMusicService.get();
-        if (service != null) {
-            final int position = service.getPosition();
-            final long duration = service.getQueueDurationMillis(position + 1);
-            final int length = service.getPlayingQueue().size();
-
-            subTitle = MusicUtil.buildInfoString(
-                    resources.getString(R.string.up_next),
-                    MusicUtil.getReadableDurationString(duration),
-                    (position + 1) + "/" + length
-            );
-        }
         return AutoMediaItem.with(mContext)
                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)
                 .title(resources.getString(R.string.queue_label))
-                .subTitle(subTitle)
+                .subTitle(mMusicService.get() != null ? mMusicService.get().getQueueInfoString() : "")
                 .icon(R.drawable.ic_playlist_play_white_24dp)
                 .asBrowsable()
                 .build();

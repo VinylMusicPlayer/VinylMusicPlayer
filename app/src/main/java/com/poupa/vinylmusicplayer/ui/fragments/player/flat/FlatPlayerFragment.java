@@ -184,7 +184,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     private void updateQueue() {
         playingQueueAdapter.swapDataSet(MusicPlayerRemote.getPlayingQueue(), MusicPlayerRemote.getPosition());
-        playerQueueSubHeader.setText(getUpNextAndQueueTime());
+        playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
         if (slidingUpPanelLayout == null || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             resetToCurrentPosition();
         }
@@ -192,7 +192,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     private void updateQueuePosition() {
         playingQueueAdapter.setCurrent(MusicPlayerRemote.getPosition());
-        playerQueueSubHeader.setText(getUpNextAndQueueTime());
+        playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
         if (slidingUpPanelLayout == null || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             resetToCurrentPosition();
         }

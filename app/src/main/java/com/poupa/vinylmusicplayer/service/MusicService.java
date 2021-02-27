@@ -1243,4 +1243,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public boolean isPausedByTransientLossOfFocus() {
         return pausedByTransientLossOfFocus;
     }
+
+    @NonNull
+    public String getQueueInfoString() {
+        final long duration = getQueueDurationMillis(position);
+
+        return MusicUtil.buildInfoString(
+                getResources().getString(R.string.up_next),
+                MusicUtil.getReadableDurationString(duration),
+                (position + 1) + "/" + playingQueue.size()
+        );
+    }
 }

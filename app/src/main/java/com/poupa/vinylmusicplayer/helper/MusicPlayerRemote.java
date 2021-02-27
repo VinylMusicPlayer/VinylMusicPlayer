@@ -391,6 +391,14 @@ public class MusicPlayerRemote {
         return -1;
     }
 
+    @NonNull
+    public static String getQueueInfoString() {
+        if (musicService != null) {
+            return musicService.getQueueInfoString();
+        }
+        return "";
+    }
+
     public static void playFromUri(Uri uri) {
         if (musicService != null) {
             Song song = Song.EMPTY_SONG;
@@ -438,6 +446,7 @@ public class MusicPlayerRemote {
             }
         }
     }
+
     @Nullable
     private static String getFilePathFromUri(Context context, Uri uri)
     {

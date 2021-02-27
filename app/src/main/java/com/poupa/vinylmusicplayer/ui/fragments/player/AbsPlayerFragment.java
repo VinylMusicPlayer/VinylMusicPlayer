@@ -209,18 +209,6 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
         }
     }
 
-    protected String getUpNextAndQueueTime() {
-        final long duration = MusicPlayerRemote.getQueueDurationMillis(MusicPlayerRemote.getPosition());
-        final int position = MusicPlayerRemote.getPosition() + 1;
-        final int length = MusicPlayerRemote.getQueueDurationSongs();
-
-        return MusicUtil.buildInfoString(
-            getResources().getString(R.string.up_next),
-            MusicUtil.getReadableDurationString(duration),
-            position + "/" + length
-        );
-    }
-
     protected boolean hasEqualizer() {
         final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
         PackageManager pm = getActivity().getPackageManager();
