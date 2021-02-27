@@ -102,7 +102,7 @@ public class AutoMusicProvider {
                         );
                     }
                     if (songs.size() > limitedSongs.size()) {
-                        mediaItems.add(truncatedListIndicator());
+                        mediaItems.add(truncatedListIndicator(path));
                     }
                 }
                 break;
@@ -284,7 +284,7 @@ public class AutoMusicProvider {
                 );
             }
             if (songs.size() > limitedSongs.size()) {
-                mediaItems.add(truncatedListIndicator());
+                mediaItems.add(truncatedListIndicator(pathPrefix));
             }
         }
 
@@ -304,8 +304,9 @@ public class AutoMusicProvider {
     }
 
     @NonNull
-    private MediaBrowserCompat.MediaItem truncatedListIndicator() {
+    private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull final String pathPrefix) {
         return AutoMediaItem.with(mContext)
+                .path(pathPrefix, Song.EMPTY_SONG.id)
                 .title("Limited track listing")
                 .subTitle("Open app to see full list")
                 .build();
