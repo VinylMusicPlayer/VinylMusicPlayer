@@ -73,12 +73,12 @@ public class AutoMusicProvider {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
+                // TODO Provide artist cover image - this requires exposing the custom images via a ContentProvider
                 for (Artist entry : ArtistLoader.getAllArtists()) {
                     mediaItems.add(AutoMediaItem.with(mContext)
                             .path(path, entry.getId())
                             .title(entry.getName())
                             .subTitle(MusicUtil.getArtistInfoString(mContext, entry))
-                            .icon(CustomArtistImageUtil.getFile(entry))
                             .asPlayable()
                             .build()
                     );
@@ -132,13 +132,11 @@ public class AutoMusicProvider {
                         );
                         break;
                     case ARTISTS:
-                        boolean artistGrid = PreferenceUtil.getInstance().getArtistGridSize(mContext) > 1;
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)
                                 .title(resources.getString(R.string.artists_label))
                                 .icon(R.drawable.ic_people_white_24dp)
                                 .asBrowsable()
-                                .gridLayout(artistGrid)
                                 .build()
                         );
                         break;

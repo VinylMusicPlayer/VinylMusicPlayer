@@ -58,18 +58,6 @@ class AutoMediaItem {
         }
 
         @NonNull
-        Builder icon(@NonNull File file) {
-            try {
-                // TODO Attention to IO overhead
-                Bitmap coverImage = BitmapFactory.decodeFile(file.getPath());
-                mBuilder.setIconBitmap(coverImage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return this;
-        }
-
-        @NonNull
         Builder icon(Uri uri) {
             mBuilder.setIconUri(uri);
             return this;
