@@ -2,7 +2,7 @@ package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -10,11 +10,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 
 import androidx.annotation.NonNull;
 
-import com.bumptech.glide.request.transition.Transition;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
-import com.poupa.vinylmusicplayer.util.Util;
 
 import java.io.File;
 
@@ -62,35 +58,14 @@ class AutoMediaItem {
         }
 
         @NonNull
-        Builder icon(File file) {
-            // TODO Disable for now, the artist cover image load is not working:
-//            try {
-//                final Point screenSize = Util.getScreenSize(mContext);
-//                GlideApp.with(mContext)
-//                        .asBitmap()
-//                        .load(file)
-//                        .into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
-//                            @Override
-//                            public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-//                                mBuilder.setIconBitmap(copy(resource));
-//                            }
-//
-//                            private Bitmap copy(Bitmap bitmap) {
-//                                Bitmap.Config config = bitmap.getConfig();
-//                                if (config == null) {
-//                                    config = Bitmap.Config.RGB_565;
-//                                }
-//                                try {
-//                                    return bitmap.copy(config, false);
-//                                } catch (OutOfMemoryError e) {
-//                                    e.printStackTrace();
-//                                    return null;
-//                                }
-//                            }
-//                        });
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+        Builder icon(@NonNull File file) {
+            try {
+                // TODO Attention to IO overhead
+                Bitmap coverImage = BitmapFactory.decodeFile(file.getCanonicalPath());
+                mBuilder.setIconBitmap(coverImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return this;
         }
 

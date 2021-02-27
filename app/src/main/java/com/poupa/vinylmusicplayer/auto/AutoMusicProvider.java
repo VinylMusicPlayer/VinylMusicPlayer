@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.ShuffleAllPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
+import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -77,7 +78,7 @@ public class AutoMusicProvider {
                             .path(path, entry.getId())
                             .title(entry.getName())
                             .subTitle(MusicUtil.getArtistInfoString(mContext, entry))
-                            // TODO Disable for now, the artist cover image load is not working: .icon(CustomArtistImageUtil.getFile(entry))
+                            .icon(CustomArtistImageUtil.getFile(entry))
                             .asPlayable()
                             .build()
                     );
@@ -131,7 +132,7 @@ public class AutoMusicProvider {
                         );
                         break;
                     case ARTISTS:
-                        boolean artistGrid = false; // TODO Disable for now, the artist cover image load is not working: PreferenceUtil.getInstance().getArtistGridSize(mContext) > 1;
+                        boolean artistGrid = PreferenceUtil.getInstance().getArtistGridSize(mContext) > 1;
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)
                                 .title(resources.getString(R.string.artists_label))
