@@ -76,7 +76,7 @@
     <string name="delete_playlist_x"><![CDATA[Voleu suprimir la llista de reproducció <b>%1$s</b>?]]></string>
     <string name="clear_playlist_x"><![CDATA[Voleu buidar la llista de reproducció <b>%1$s</b>? Aquesta acció no es pot desfer.]]></string>
     <string name="delete_x_playlists"><![CDATA[Voleu suprimir <b>%1$d</b> llistes de reproducció?]]></string>
-    <string name="delete_song_x"><![CDATA[Voleu suprimir la cançó <b>%1$</b>?]]></string>
+    <string name="delete_song_x"><![CDATA[Voleu suprimir la cançó <b>%1$s</b>?]]></string>
     <string name="delete_x_songs"><![CDATA[Voleu suprimir <b>%1$d</b> cançons?]]></string>
     <string name="remove_song_x_from_playlist"><![CDATA[Voleu suprimir la cançó <b>%1$s</b> de la llista de reproducció?]]></string>
     <string name="remove_x_songs_from_playlist"><![CDATA[Voleu suprimir <b>%1$d</b> cançons de la llista de reproducció?]]></string>
