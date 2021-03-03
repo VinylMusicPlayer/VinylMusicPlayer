@@ -58,9 +58,4 @@ public class App extends MultiDexApplication {
     public static Discography getDiscography() {
         return discography;
     }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
 }
