@@ -43,7 +43,6 @@
     <string name="genre">Műfaj</string>
     <string name="album_artist">Album előadó</string>
     <string name="year">Év</string>
-    <string name="track_hint">"Dal sorszáma az albumban"</string>
     <string name="lyrics">Dalszöveg</string>
     <string name="album_or_artist_empty">A cím vagy az előadó üres.</string>
     <string name="saving_changes">Változások mentése</string>
@@ -199,7 +198,6 @@
     <string name="maarten_corpel_summary">A Play Áruházas illusztrációért és az üres albumborítóért.</string>
     <string name="aleksandar_tesic_summary">A dizájnban való segítségért.</string>
     <string name="website">Weboldal</string>
-    <string name="loading_products">Termékek betöltése…</string>
     <string name="up_next">Lejátszási sor</string>
     <string name="pref_title_now_playing_screen_appearance">Megjelenés</string>
     <string name="intro_label">Bevezető</string>

@@ -41,7 +41,6 @@
     <string name="genre">Είδος</string>
     <string name="album_artist">Καλλιτέχνης Άλμπουμ</string>
     <string name="year">Έτος</string>
-    <string name="track_hint">"Κομμάτι (2 για κομμάτι 2 ή 3004 από CD3 κομμάτι 4)"</string>
     <string name="lyrics">Στίχοι</string>
     <string name="album_or_artist_empty">Το πεδίο \"Τίτλος\" ή \"Καλλιτέχνης\" είναι άδειο</string>
     <string name="saving_changes">"Γίνεται αποθήκευση αλλαγών… "</string>
@@ -182,7 +181,6 @@
     <string name="maarten_corpel_summary">Για την δημιουργία της εικονογράφησης του Play Store και του άδειου εξώφυλλου του άλμπουμ.</string>
     <string name="aleksandar_tesic_summary">Για την βοήθειά του στον σχεδιασμό.</string>
     <string name="website">Ιστοσελίδα</string>
-    <string name="loading_products">Φόρτωση προϊόντων…</string>
     <string name="up_next">Επόμενο</string>
     <string name="pref_title_now_playing_screen_appearance">Εμφάνιση</string>
     <string name="intro_label">Εισαγωγή</string>

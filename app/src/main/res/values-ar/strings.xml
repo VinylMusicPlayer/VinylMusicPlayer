@@ -37,7 +37,6 @@
     <string name="genre">النوع</string>
     <string name="album_artist">فنان الألبوم</string>
     <string name="year">السنة</string>
-    <string name="track_hint">"مقطع (2 للمقطع 2 أو 3004 لـCD3 للمقطع 4)"</string>
     <string name="album_or_artist_empty">حقل اسم الألبوم أو اسم الفنان فارغ</string>
     <string name="saving_changes">يتم حفظ التغييرات…</string>
     <string name="label_details">التفاصيل</string>
@@ -173,7 +172,6 @@
     <string name="maarten_corpel_summary">من أجل وضع توضيحات البرنامج المتواجدة على المتجر وأيضاً صورة الألبوم الإفتراضية</string>
     <string name="aleksandar_tesic_summary">لمساعدتي في تصميم البرنامج</string>
     <string name="website">الموقع</string>
-    <string name="loading_products">يتم تحميل المنتجات…</string>
     <string name="up_next">التالي</string>
     <string name="pref_title_now_playing_screen_appearance">المظهر</string>
     <string name="intro_label">المقدمة</string>

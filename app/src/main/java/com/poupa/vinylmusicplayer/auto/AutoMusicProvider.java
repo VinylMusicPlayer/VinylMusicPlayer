@@ -127,7 +127,7 @@ public class AutoMusicProvider {
                         boolean albumGrid = PreferenceUtil.getInstance().getAlbumGridSize(mContext) > 1;
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)
-                                .title(resources.getString(R.string.albums_label))
+                                .title(resources.getString(R.string.albums))
                                 .icon(R.drawable.ic_album_white_24dp)
                                 .asBrowsable()
                                 .gridLayout(albumGrid)
@@ -137,7 +137,7 @@ public class AutoMusicProvider {
                     case ARTISTS:
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)
-                                .title(resources.getString(R.string.artists_label))
+                                .title(resources.getString(R.string.artists))
                                 .icon(R.drawable.ic_people_white_24dp)
                                 .asBrowsable()
                                 .build()

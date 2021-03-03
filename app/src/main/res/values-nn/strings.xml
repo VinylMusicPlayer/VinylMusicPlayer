@@ -22,7 +22,6 @@
     <string name="genre">Genre</string>
     <string name="album_artist">Albumartist</string>
     <string name="year">År</string>
-    <string name="track_hint">"Spor (2 for spor 2 eller 3004 for CD3 spor 4)"</string>
     <string name="album_or_artist_empty">Tekstfeltet for albumtittel eller albumartist er tomt.</string>
     <string name="saving_changes">Lagrar endringar…</string>
     <string name="label_details">Detaljar</string>

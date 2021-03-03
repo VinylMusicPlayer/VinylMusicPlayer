@@ -44,7 +44,6 @@
     <string name="genre">Gen</string>
     <string name="album_artist">Artistul albumului</string>
     <string name="year">An</string>
-    <string name="track_hint">"Număr (2 pentru melodia a 2-a sau 3004 pentru CD3 melodia a 4-a)"</string>
     <string name="lyrics">Versuri</string>
     <string name="album_or_artist_empty">Titlul sau artistul lipseste.</string>
     <string name="saving_changes">Se salvează schimbările</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">Pentru ilustrația din magazinului Play și coperta albumului gol.</string>
     <string name="aleksandar_tesic_summary">Pentru ajutorul cu designul.</string>
     <string name="website">Site web</string>
-    <string name="loading_products">Încărcare produse…</string>
     <string name="up_next">Urmează</string>
     <string name="pref_title_now_playing_screen_appearance">Aspect</string>
     <string name="intro_label">Introducere</string>

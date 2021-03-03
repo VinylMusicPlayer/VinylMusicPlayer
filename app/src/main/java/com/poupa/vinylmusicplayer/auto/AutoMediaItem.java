@@ -1,8 +1,6 @@
 package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -11,8 +9,6 @@ import android.support.v4.media.MediaDescriptionCompat;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.util.ImageUtil;
-
-import java.io.File;
 
 /**
  * @author SC (soncaokim)

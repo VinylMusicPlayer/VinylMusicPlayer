@@ -45,7 +45,6 @@
     <string name="genre">類型</string>
     <string name="album_artist">專輯演出者</string>
     <string name="year">年代</string>
-    <string name="track_hint">"音軌（用2表示第2首歌或3004表示CD3的第4首歌）"</string>
     <string name="lyrics">歌詞</string>
     <string name="album_or_artist_empty">專輯名稱或演出者欄是空的</string>
     <string name="saving_changes">正在儲存變更…</string>
@@ -207,7 +206,6 @@
     <string name="maarten_corpel_summary">為沒有專輯封面的歌曲繪製圖片與製作 Play 商店上的插圖</string>
     <string name="aleksandar_tesic_summary">幫助我做 UI 設計</string>
     <string name="website">網站</string>
-    <string name="loading_products">正在載入</string>
     <string name="up_next">播放佇列：即將播放</string>
     <string name="pref_title_now_playing_screen_appearance">外觀</string>
     <string name="intro_label">程式介紹</string>

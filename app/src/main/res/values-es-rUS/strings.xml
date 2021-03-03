@@ -43,7 +43,6 @@
     <string name="genre">Género</string>
     <string name="album_artist">Artista del álbum</string>
     <string name="year">Año</string>
-    <string name="track_hint">"Pista (2 para pista 2 o 3004 para CD3 pista 4)"</string>
     <string name="lyrics">Letras</string>
     <string name="album_or_artist_empty">El título o artista está vacío.</string>
     <string name="saving_changes">Guardando cambios…</string>
@@ -200,7 +199,6 @@
     <string name="maarten_corpel_summary">Por la elaboración de la ilustración en Play Store y la portada de álbum por defecto.</string>
     <string name="aleksandar_tesic_summary">Por ayudarme con el diseño.</string>
     <string name="website">Sitio web</string>
-    <string name="loading_products">Cargando productos…</string>
     <string name="up_next">En seguida</string>
     <string name="pref_title_now_playing_screen_appearance">Apariencia</string>
     <string name="intro_label">Introducción</string>

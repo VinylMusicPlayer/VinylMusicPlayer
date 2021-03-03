@@ -43,7 +43,6 @@
     <string name="genre">Thể loại</string>
     <string name="album_artist">Album của Nghệ sĩ</string>
     <string name="year">Năm</string>
-    <string name="track_hint">"Số thứ tự (ghi 2 nếu là bài thứ 2 hoặc ghi 3004 nếu là CD 3, bài thứ 4)"</string>
     <string name="lyrics">Lời bài hát</string>
     <string name="album_or_artist_empty">Tiêu đề hoặc nghệ sĩ rỗng.</string>
     <string name="saving_changes">Đang lưu thay đổi</string>
@@ -199,7 +198,6 @@
     <string name="maarten_corpel_summary">Ảnh minh họa trên Play Store và ảnh bìa album rỗng.</string>
     <string name="aleksandar_tesic_summary">Vì đã giúp tôi thiết kế.</string>
     <string name="website">Trang web</string>
-    <string name="loading_products">Đang tải sản phẩm…</string>
     <string name="up_next">Tiếp theo</string>
     <string name="pref_title_now_playing_screen_appearance">Giao diện</string>
     <string name="intro_label">Giới thiệu</string>

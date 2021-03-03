@@ -45,7 +45,6 @@
     <string name="genre">Žánr</string>
     <string name="album_artist">Interpret alba</string>
     <string name="year">Rok</string>
-    <string name="track_hint">"Stopa (2 pro stopu 2; 3004 pro stopu 4 na CD3)"</string>
     <string name="lyrics">Text</string>
     <string name="album_or_artist_empty">Název alba nebo interpreta je prázdný.</string>
     <string name="saving_changes">Ukládání změn…</string>
@@ -212,7 +211,6 @@
     <string name="maarten_corpel_summary">"Za vytvoření ilustrace do Play Store a prázdného obalu alba. "</string>
     <string name="aleksandar_tesic_summary">"Za pomoc s designem. "</string>
     <string name="website">"Stránka "</string>
-    <string name="loading_products">"Načítání výrobků… "</string>
     <string name="up_next">"Další "</string>
     <string name="pref_title_now_playing_screen_appearance">Vzhled</string>
     <string name="intro_label">"Úvod "</string>

@@ -44,7 +44,6 @@
     <string name="genre">Genre</string>
     <string name="album_artist">Artiste de l\'album</string>
     <string name="year">Année</string>
-    <string name="track_hint">"Piste (2 pour piste 2 ou 3004 pour CD3 piste 4)"</string>
     <string name="lyrics">Paroles</string>
     <string name="album_or_artist_empty">Le champ \"titre\" ou \"artiste\" est vide.</string>
     <string name="saving_changes">Sauvegarde des modifications</string>
@@ -210,7 +209,6 @@
     <string name="maarten_corpel_summary">Pour avoir réalisé l\'illustration du Play Store ainsi que la pochette de l\'album vide.</string>
     <string name="aleksandar_tesic_summary">Pour m\'avoir aidé à la conception.</string>
     <string name="website">Site internet</string>
-    <string name="loading_products">Chargement des produits…</string>
     <string name="up_next">Suivant</string>
     <string name="pref_title_now_playing_screen_appearance">Apparence</string>
     <string name="intro_label">Introduction</string>

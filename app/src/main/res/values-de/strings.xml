@@ -46,7 +46,6 @@
     <string name="unknown_genre">Unbekanntes Genre</string>
     <string name="album_artist">Album Interpret</string>
     <string name="year">Jahr</string>
-    <string name="track_hint">"Track (2 für Track 2 oder 3004 für CD 3 Track 4)"</string>
     <string name="lyrics">Songtext</string>
     <string name="album_or_artist_empty">Der Titel oder der Interpret ist leer.</string>
     <string name="saving_changes">Speichere Änderungen…</string>
@@ -217,7 +216,6 @@
     <string name="maarten_corpel_summary">Für das Machen der Play Store Illustration und des leeren Album Covers.</string>
     <string name="aleksandar_tesic_summary">Für die Hilfe beim Design.</string>
     <string name="website">Website</string>
-    <string name="loading_products">Produkte werden geladen…</string>
     <string name="up_next">Als nächstes</string>
     <string name="pref_title_now_playing_screen_appearance">Aussehen</string>
     <string name="intro_label">Einführung</string>

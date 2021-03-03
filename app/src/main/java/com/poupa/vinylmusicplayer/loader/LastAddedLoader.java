@@ -7,7 +7,6 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 public class LastAddedLoader {

@@ -46,7 +46,6 @@
     <string name="unknown_genre">Gènere desconegut</string>
     <string name="album_artist">Artista de l\'àlbum</string>
     <string name="year">Any</string>
-    <string name="track_hint">Pista (2 per a la pista 2 o 3004 per al disc 3 pista 4)</string>
     <string name="lyrics">Lletra</string>
     <string name="album_or_artist_empty">El títol o l\'artista estan en blanc.</string>
     <string name="saving_changes">S\'estan desant els canvis</string>
@@ -222,7 +221,6 @@
     <string name="maarten_corpel_summary">Per la il·lustració de Play Store i la portada d\'àlbum buida.</string>
     <string name="aleksandar_tesic_summary">Per ajudar-me amb el disseny.</string>
     <string name="website">Lloc web.</string>
-    <string name="loading_products">Carregant productes…</string>
     <string name="up_next">Temps restant</string>
     <string name="pref_title_now_playing_screen_appearance">Aparença</string>
     <string name="intro_label">Introducció</string>

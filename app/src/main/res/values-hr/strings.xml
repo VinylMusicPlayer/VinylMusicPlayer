@@ -44,7 +44,6 @@
     <string name="genre">Žanr</string>
     <string name="album_artist">Izvođač albuma</string>
     <string name="year">Godina</string>
-    <string name="track_hint">"Redni broj (2 za pjesmu broj 2 ili 3004 za CD3 pjesmu broj 4)"</string>
     <string name="lyrics">Stihovi</string>
     <string name="album_or_artist_empty">Polje za naziv ili izvođača je prazno.</string>
     <string name="saving_changes">Spremanje promjena</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">Za izradu Play Store ilustracije i slike praznog omota albuma.</string>
     <string name="aleksandar_tesic_summary">Za pomoć u dizajnu.</string>
     <string name="website">Web-stranica</string>
-    <string name="loading_products">Učitavanje artikala…</string>
     <string name="up_next">Sljedeće na redu</string>
     <string name="pref_title_now_playing_screen_appearance">Izgled</string>
     <string name="intro_label">Uvod</string>
