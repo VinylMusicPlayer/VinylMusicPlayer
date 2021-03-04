@@ -13,6 +13,9 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -27,6 +30,8 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.triggertrap.seekarc.SeekArc;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -37,13 +42,14 @@ public class SleepTimerDialog extends DialogFragment {
     @BindView(R.id.seek_arc)
     SeekArc seekArc;
     @BindView(R.id.timer_display)
-    TextView timerDisplay;
+    EditText timerDisplay;
     @BindView(R.id.should_finish_last_song)
     CheckBox shouldFinishLastSong;
 
     private int seekArcProgress;
     private MaterialDialog materialDialog;
     private TimerUpdater timerUpdater;
+    private final AtomicBoolean changingText = new AtomicBoolean(false);
 
     @Override
     public void onDismiss(DialogInterface dialog) {
@@ -128,6 +134,34 @@ public class SleepTimerDialog extends DialogFragment {
         updateTimeDisplayTime();
         seekArc.setProgress(seekArcProgress);
 
+        timerDisplay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (changingText.get()) {
+                    return;
+                }
+                changingText.set(true);
+                String val = s.toString();
+                if (val.isEmpty()) {
+                    val = "1";
+                }
+                seekArc.setProgress(Integer.parseInt(val));
+                seekArcProgress = Integer.parseInt(val);
+                PreferenceUtil.getInstance().setLastSleepTimerValue(seekArcProgress);
+                changingText.set(false);
+            }
+        });
+
         seekArc.setOnSeekArcChangeListener(new SeekArc.OnSeekArcChangeListener() {
             @Override
             public void onProgressChanged(@NonNull SeekArc seekArc, int i, boolean b) {
@@ -136,7 +170,9 @@ public class SleepTimerDialog extends DialogFragment {
                     return;
                 }
                 seekArcProgress = i;
-                updateTimeDisplayTime();
+                if (!changingText.get()) {
+                    updateTimeDisplayTime();
+                }
             }
 
             @Override
@@ -154,7 +190,7 @@ public class SleepTimerDialog extends DialogFragment {
     }
 
     private void updateTimeDisplayTime() {
-        timerDisplay.setText(seekArcProgress + " min");
+        timerDisplay.setText(String.valueOf(seekArcProgress));
     }
 
     private PendingIntent makeTimerPendingIntent(int flag) {

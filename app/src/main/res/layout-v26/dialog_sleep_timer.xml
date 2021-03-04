@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:seekarc="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -22,15 +21,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
-
         <EditText
             android:id="@+id/timer_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:inputType="number"
             android:textAppearance="?android:textAppearanceLarge"
-            tools:ignore="Autofill" />
+            android:inputType="number"
+            android:importantForAutofill="no"
+            android:focusedByDefault="false" />
 
         <TextView
             android:id="@+id/unit_display_min"
@@ -38,18 +37,17 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/timer_display"
-            android:labelFor="@id/timer_display"
             android:text="@string/time_unit_min"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:textAppearance="?android:textAppearanceLarge"
+            android:labelFor="@id/timer_display" />
     </RelativeLayout>
-
+    
     <com.kabouzeid.appthemehelper.common.views.ATECheckBox
         android:id="@+id/should_finish_last_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:text="@string/finish_current_music_sleep_timer" />
 
 </FrameLayout>
