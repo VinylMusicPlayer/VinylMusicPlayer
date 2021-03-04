@@ -40,7 +40,7 @@
             android:layout_toEndOf="@id/timer_display"
             android:layout_toRightOf="@id/timer_display"
             android:labelFor="@id/timer_display"
-            android:text="@string/time_unit_min"
+            android:text="@string/time_unit_minutes"
             android:textAppearance="?android:textAppearanceLarge" />
     </RelativeLayout>
 
