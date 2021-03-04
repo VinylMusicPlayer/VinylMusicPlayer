@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:inputType="number"
             android:textAppearance="?android:textAppearanceLarge"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill,LabelFor" />
 
         <TextView
             android:id="@+id/unit_display_min"
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/timer_display"
+            android:layout_toRightOf="@id/timer_display"
             android:labelFor="@id/timer_display"
             android:text="@string/time_unit_min"
             android:textAppearance="?android:textAppearanceLarge" />
