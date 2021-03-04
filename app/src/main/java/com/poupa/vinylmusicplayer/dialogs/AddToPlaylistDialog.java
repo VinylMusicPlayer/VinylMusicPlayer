@@ -1,6 +1,8 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -58,9 +60,43 @@ public class AddToPlaylistDialog extends DialogFragment {
                         CreatePlaylistDialog.create(songs).show(getActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
                     } else {
                         materialDialog.dismiss();
-                        PlaylistsUtil.addToPlaylist(getActivity(), songs, playlists.get(i - 1).id, true);
+                        Context ctx = getActivity();
+                        if (hasDuplicates(playlists.get(i - 1).id, songs, ctx)) {
+                            new MaterialDialog.Builder(ctx)
+                                    .title(R.string.confirm_adding_duplicates)
+                                    .positiveText(R.string.yes).negativeText(R.string.no)
+                                    .onPositive((dialog, which) ->
+                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true)
+                                    ).onNegative((dialog, which) -> {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(ctx, playlists.get(i - 1).id, song.id));
+                                        } else {
+                                            for (Song song: new ArrayList<>(songs)) {
+                                                if (PlaylistsUtil.doesPlaylistContain(ctx, playlists.get(i - 1).id, song.id)) {
+                                                    songs.remove(song);
+                                                }
+                                            }
+                                        }
+                                        if (!songs.isEmpty()) {
+                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true);
+                                        }
+                                    }
+                            ).show();
+                        } else {
+                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true);
+                        }
                     }
                 })
                 .build();
+    }
+
+    private boolean hasDuplicates(long playlistId, ArrayList<Song> songs, Context ctx) {
+        for (Song song: songs) {
+            if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
