@@ -3,7 +3,9 @@ package com.poupa.vinylmusicplayer.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
+import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -108,6 +111,49 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
             default:
                 break;
         }
+
+        musicService.play();
+    }
+
+    /**
+     * Inspired by https://developer.android.com/guide/topics/media-apps/interacting-with-assistant
+     * @param query
+     * @param extras
+     */
+    @Override
+    public void onPlayFromSearch(String query, Bundle extras) {
+        final ArrayList<Song> songs = new ArrayList<>();
+
+        if (TextUtils.isEmpty(query)) {
+            songs.addAll(SongLoader.getAllSongs());
+        } else {
+            // Build a queue based on songs that match "query" or "extras" param
+            String mediaFocus = extras.getString(MediaStore.EXTRA_MEDIA_FOCUS);
+            if (TextUtils.equals(mediaFocus,
+                    MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE)) {
+                String artistQuery = extras.getString(MediaStore.EXTRA_MEDIA_ARTIST);
+                ArrayList<Artist> artists = ArtistLoader.getArtists(artistQuery);
+                if (artists.size() > 0) {
+                    Artist artist = artists.get(0);
+                    songs.addAll(artist.getSongs());
+                }
+            } else if (TextUtils.equals(mediaFocus,
+                    MediaStore.Audio.Albums.ENTRY_CONTENT_TYPE)) {
+                String albumQuery = extras.getString(MediaStore.EXTRA_MEDIA_ALBUM);
+                ArrayList<Album> albums = AlbumLoader.getAlbums(albumQuery);
+                if (albums.size() > 0) {
+                    Album album = albums.get(0);
+                    songs.addAll(album.songs);
+                }
+            }
+        }
+
+        // Search by title
+        if (songs.size() == 0) {
+            songs.addAll(SongLoader.getSongs(query));
+        }
+
+        musicService.openQueue(songs, 0, true);
 
         musicService.play();
     }

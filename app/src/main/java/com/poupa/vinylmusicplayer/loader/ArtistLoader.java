@@ -49,7 +49,7 @@ public class ArtistLoader {
         if (artist != null) {
             return artist;
         } else {
-            return  Artist.EMPTY;
+            return Artist.EMPTY;
         }
     }
 
