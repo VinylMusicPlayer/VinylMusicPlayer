@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.1.2] - 2021-03-11
+### Added
+- "Delete from device" choice menu in playlist view (both dumb and smart ones)
+### Fixed
+- Auto queue stuck
+- Finish Last Song checkbox position on sleep timer
+### Changed
+- When a song is added to queue, discard existing position (i.e. move the existing song in queue)
+
 ## [1.1.1] - 2021-02-23
 ### Added
 - Merged album with same name/same artist
