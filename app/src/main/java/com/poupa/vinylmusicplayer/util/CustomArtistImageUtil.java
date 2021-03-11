@@ -133,6 +133,7 @@ public class CustomArtistImageUtil {
         return String.format(Locale.US, "#%d#%s.jpeg", artist.getId(), artistName);
     }
 
+    @NonNull
     public static File getFile(Artist artist) {
         File dir = new File(App.getInstance().getFilesDir(), FOLDER_NAME);
         return new File(dir, getFileName(artist));

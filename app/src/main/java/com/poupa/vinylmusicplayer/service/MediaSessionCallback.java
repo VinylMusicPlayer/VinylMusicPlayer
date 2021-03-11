@@ -23,7 +23,6 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         super.onPlayFromMediaId(mediaId, extras);
 
         final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
-        final int itemId = musicId != null ? Integer.parseInt(musicId) : -1;
+        final long itemId = musicId != null ? Long.parseLong(musicId) : -1;
         final ArrayList<Song> songs = new ArrayList<>();
 
         final String category = AutoMediaIDHelper.extractCategory(mediaId);
@@ -92,7 +91,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
                     tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
                 } else {
-                    tracks = MusicPlaybackQueueStore.getInstance(context).getSavedOriginalPlayingQueue();
+                    tracks = musicService.getPlayingQueue();
                 }
                 songs.addAll(tracks);
                 int songIndex = MusicUtil.indexOfSongInList(tracks, itemId);
