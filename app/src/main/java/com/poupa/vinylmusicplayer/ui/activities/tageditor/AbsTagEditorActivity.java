@@ -445,7 +445,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 }
 
-                return paths.toArray(new String[paths.size()]);
+                return paths.toArray(new String[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

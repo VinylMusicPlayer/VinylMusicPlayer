@@ -29,6 +29,8 @@ import androidx.core.content.ContextCompat;
 
 import com.poupa.vinylmusicplayer.BuildConfig;
 
+import static com.poupa.vinylmusicplayer.service.MusicService.VINYL_MUSIC_PLAYER_PACKAGE_NAME;
+
 /**
  * Used to control headset playback.
  * Single press: pause/resume
@@ -190,7 +192,7 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
         if (mWakeLock == null) {
             Context appContext = context.getApplicationContext();
             PowerManager pm = (PowerManager) appContext.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Vinyl Music Player headset button");
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, VINYL_MUSIC_PLAYER_PACKAGE_NAME + ":HeadsetButton");
             mWakeLock.setReferenceCounted(false);
         }
         if (DEBUG) Log.v(TAG, "Acquiring wake lock and sending " + msg.what);

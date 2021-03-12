@@ -44,7 +44,6 @@
     <string name="genre">Gênero</string>
     <string name="album_artist">Artista do álbum</string>
     <string name="year">Ano</string>
-    <string name="track_hint">"Faixa (2 para à faixa 2 ou 3004 para a quarta faixa do CD3)"</string>
     <string name="lyrics">Letra</string>
     <string name="album_or_artist_empty">O título ou artista está vazio.</string>
     <string name="saving_changes">Salvando alterações</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">Por fazer a ilustração da Play Store e a imagem dos álbuns vazios.</string>
     <string name="aleksandar_tesic_summary">Por me ajudar com o design.</string>
     <string name="website">Site</string>
-    <string name="loading_products">Carregando produtos…</string>
     <string name="up_next">Próximo</string>
     <string name="pref_title_now_playing_screen_appearance">Aparência</string>
     <string name="intro_label">Introdução</string>

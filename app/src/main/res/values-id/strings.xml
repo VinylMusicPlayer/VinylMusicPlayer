@@ -40,7 +40,6 @@
     <string name="genre">Aliran</string>
     <string name="album_artist">Artis album</string>
     <string name="year">Tahun</string>
-    <string name="track_hint">"Trek (2 untuk trek ke-2 atau 3004 untuk CD3 trek ke-4)"</string>
     <string name="lyrics">Lirik</string>
     <string name="album_or_artist_empty">Judul atau artis kosong.</string>
     <string name="saving_changes">Menyimpan perubahan</string>
@@ -180,7 +179,6 @@
     <string name="maarten_corpel_summary">"Untuk pembuat ilustrasi Play Store dan sampul album yang kosong. "</string>
     <string name="aleksandar_tesic_summary">"Untuk yang membantu saya dengan desainnya. "</string>
     <string name="website">Situs</string>
-    <string name="loading_products">Memuat produk…</string>
     <string name="up_next">Berikutnya</string>
     <string name="pref_title_now_playing_screen_appearance">Tampilan</string>
     <string name="intro_label">Pengenalan</string>

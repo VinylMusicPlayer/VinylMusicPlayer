@@ -41,7 +41,6 @@
     <string name="genre">Жанр</string>
     <string name="album_artist">Изпълнител</string>
     <string name="year">Година</string>
-    <string name="track_hint">"Трак (2 за трак 2 или 3004 за CD3 трак 4)"</string>
     <string name="lyrics">Текст на песента</string>
     <string name="album_or_artist_empty">Заглавието или артистът са празни</string>
     <string name="saving_changes">Запазване на промените</string>
@@ -181,7 +180,6 @@
     <string name="maarten_corpel_summary">За направата на Play Store илюстрацията и обложката по подразбиране.</string>
     <string name="aleksandar_tesic_summary">За помощта относно дизайн</string>
     <string name="website">Уебсайт</string>
-    <string name="loading_products">Зареждане…</string>
     <string name="up_next">Следващи песни</string>
     <string name="pref_title_now_playing_screen_appearance">Изглед</string>
     <string name="intro_label">Въеведение</string>

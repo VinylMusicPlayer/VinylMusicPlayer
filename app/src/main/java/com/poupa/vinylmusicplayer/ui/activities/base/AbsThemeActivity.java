@@ -43,7 +43,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
      *
      * @param color the new statusbar color (will be shifted down on Lollipop and above)
      */
-    public static final void static_setStatusbarColor(final Activity pActivity, int color) {
+    public static void static_setStatusbarColor(final Activity pActivity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             final View statusBar = pActivity.getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
             if (statusBar != null) {

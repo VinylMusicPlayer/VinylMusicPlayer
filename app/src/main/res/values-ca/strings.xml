@@ -46,7 +46,6 @@
     <string name="unknown_genre">Gènere desconegut</string>
     <string name="album_artist">Artista de l\'àlbum</string>
     <string name="year">Any</string>
-    <string name="track_hint">Pista (2 per a la pista 2 o 3004 per al disc 3 pista 4)</string>
     <string name="lyrics">Lletra</string>
     <string name="album_or_artist_empty">El títol o l\'artista estan en blanc.</string>
     <string name="saving_changes">S\'estan desant els canvis</string>
@@ -76,7 +75,7 @@
     <string name="delete_playlist_x"><![CDATA[Voleu suprimir la llista de reproducció <b>%1$s</b>?]]></string>
     <string name="clear_playlist_x"><![CDATA[Voleu buidar la llista de reproducció <b>%1$s</b>? Aquesta acció no es pot desfer.]]></string>
     <string name="delete_x_playlists"><![CDATA[Voleu suprimir <b>%1$d</b> llistes de reproducció?]]></string>
-    <string name="delete_song_x"><![CDATA[Voleu suprimir la cançó <b>%1$</b>?]]></string>
+    <string name="delete_song_x"><![CDATA[Voleu suprimir la cançó <b>%1$s</b>?]]></string>
     <string name="delete_x_songs"><![CDATA[Voleu suprimir <b>%1$d</b> cançons?]]></string>
     <string name="remove_song_x_from_playlist"><![CDATA[Voleu suprimir la cançó <b>%1$s</b> de la llista de reproducció?]]></string>
     <string name="remove_x_songs_from_playlist"><![CDATA[Voleu suprimir <b>%1$d</b> cançons de la llista de reproducció?]]></string>
@@ -222,7 +221,6 @@
     <string name="maarten_corpel_summary">Per la il·lustració de Play Store i la portada d\'àlbum buida.</string>
     <string name="aleksandar_tesic_summary">Per ajudar-me amb el disseny.</string>
     <string name="website">Lloc web.</string>
-    <string name="loading_products">Carregant productes…</string>
     <string name="up_next">Temps restant</string>
     <string name="pref_title_now_playing_screen_appearance">Aparença</string>
     <string name="intro_label">Introducció</string>

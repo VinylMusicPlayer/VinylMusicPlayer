@@ -44,7 +44,6 @@
     <string name="genre">Genre</string>
     <string name="album_artist">Album artiest</string>
     <string name="year">Jaar</string>
-    <string name="track_hint">"Nummer (2 voor nr. 2, of 3004 voor CD3 nr. 4)"</string>
     <string name="lyrics">Songteksten</string>
     <string name="album_or_artist_empty">De titel of artiest is leeg.</string>
     <string name="saving_changes">Wijzigingen opslaan</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">Voor het maken van de Play Store illustratie en de lege album hoes.</string>
     <string name="aleksandar_tesic_summary">Voor de hulp met het design.</string>
     <string name="website">Website</string>
-    <string name="loading_products">Producten laden…</string>
     <string name="up_next">Als volgende</string>
     <string name="pref_title_now_playing_screen_appearance">Uiterlijk</string>
     <string name="intro_label">Introductie</string>

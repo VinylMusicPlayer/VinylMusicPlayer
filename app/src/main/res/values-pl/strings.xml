@@ -43,7 +43,6 @@
     <string name="genre">Gatunek</string>
     <string name="album_artist">Wykonawca albumu</string>
     <string name="year">Rok</string>
-    <string name="track_hint">"Numer utworu (2 dla utworu 2 lub 3004 dla CD3 utworu 4)"</string>
     <string name="lyrics">Tekst</string>
     <string name="album_or_artist_empty">Pole tytułu lub artysty jest puste</string>
     <string name="saving_changes">Zapisywanie zmian…</string>
@@ -200,7 +199,6 @@
     <string name="maarten_corpel_summary">Za zilustrowanie aplikacji w sklepie Google Play</string>
     <string name="aleksandar_tesic_summary">Za pomoc w pracach nad wyglądem wizualnym</string>
     <string name="website">Strona internetowa</string>
-    <string name="loading_products">Ładowanie produktów…</string>
     <string name="up_next">Za chwilę zagra</string>
     <string name="pref_title_now_playing_screen_appearance">Wygląd</string>
     <string name="intro_label">Wprowadzenie</string>

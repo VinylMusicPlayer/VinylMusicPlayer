@@ -44,7 +44,6 @@
     <string name="genre">Жанр</string>
     <string name="album_artist">Альбом исполнителя</string>
     <string name="year">Год</string>
-    <string name="track_hint">"Трек (2 для трека 2 или 3004 для трека 4 CD3)"</string>
     <string name="lyrics">Текст песни</string>
     <string name="album_or_artist_empty">Поля названия альбома или альбом исполнителя пусты</string>
     <string name="saving_changes">Сохранение изменений</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">За иллюстрации в Play Store и пустые обложки альбомов.</string>
     <string name="aleksandar_tesic_summary">За помощь с дизайном.</string>
     <string name="website">Вебсайт</string>
-    <string name="loading_products">Загрузка продуктов…</string>
     <string name="up_next">Далее</string>
     <string name="pref_title_now_playing_screen_appearance">Вид экрана воспроизведения</string>
     <string name="intro_label">Вступление</string>

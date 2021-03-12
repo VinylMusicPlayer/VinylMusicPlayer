@@ -44,7 +44,6 @@
     <string name="genre">סגנון</string>
     <string name="album_artist">אמן האלבום</string>
     <string name="year">שנה</string>
-    <string name="track_hint">"שיר (2 בשביל שיר 2 או 3004 בשביל דיסק 3 שיר 4)"</string>
     <string name="lyrics">מילים</string>
     <string name="album_or_artist_empty">הכותרת או האמן ריקים.</string>
     <string name="saving_changes">שומר שינויים</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">על יצירת האיור בחנות Play, ותמונת האלבום הריק.</string>
     <string name="aleksandar_tesic_summary">על העזרה עם העיצוב.</string>
     <string name="website">אתר</string>
-    <string name="loading_products">טוען מוצרים…</string>
     <string name="up_next">הבא בתור</string>
     <string name="pref_title_now_playing_screen_appearance">מראה</string>
     <string name="intro_label">מבוא</string>

@@ -38,7 +38,6 @@
     <string name="genre">Género</string>
     <string name="album_artist">Artista do álbum</string>
     <string name="year">Ano</string>
-    <string name="track_hint">"Faixa (2 para faixa 2 ou 3004 para CD3 faixa 4)"</string>
     <string name="album_or_artist_empty">O título do álbum ou o artista está vazio.</string>
     <string name="saving_changes">A gravar alterações</string>
     <string name="label_details">Detalhes</string>
@@ -174,7 +173,6 @@
     <string name="maarten_corpel_summary">Por fazer a ilustração na Play Store e pela capa de álbum vazia.</string>
     <string name="aleksandar_tesic_summary">Por me ajudar com o design.</string>
     <string name="website">Sítio da Internet</string>
-    <string name="loading_products">Carregando produtos…</string>
     <string name="up_next">A seguir</string>
     <string name="pref_title_now_playing_screen_appearance">Aparência</string>
     <string name="intro_label">Introdução</string>

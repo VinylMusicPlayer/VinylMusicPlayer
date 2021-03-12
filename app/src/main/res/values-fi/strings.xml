@@ -43,7 +43,6 @@
     <string name="genre">Tyylilaji</string>
     <string name="album_artist">Albumin artisti</string>
     <string name="year">Vuosi</string>
-    <string name="track_hint">"Raita(2 raidalle 2 tai 3004 CD3 raidalle 4)"</string>
     <string name="lyrics">Sanoitukset</string>
     <string name="album_or_artist_empty">Nimi- tai artistikenttä on tyhjä.</string>
     <string name="saving_changes">Tallennetaan muutokset…</string>
@@ -200,7 +199,6 @@
     <string name="maarten_corpel_summary">Play-kaupan kuvituksesta ja tyhjän albumin kannesta.</string>
     <string name="aleksandar_tesic_summary">Sovelluksen designin kanssa auttamisesta.</string>
     <string name="website">Verkkosivu</string>
-    <string name="loading_products">Ladataan tuotteita…</string>
     <string name="up_next">Seuraavaksi</string>
     <string name="pref_title_now_playing_screen_appearance">Ulkonäkö</string>
     <string name="intro_label">Esittely</string>

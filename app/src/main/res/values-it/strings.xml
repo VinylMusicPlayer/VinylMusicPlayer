@@ -44,7 +44,6 @@
     <string name="genre">Genere</string>
     <string name="album_artist">Artista dell\'album</string>
     <string name="year">Anno</string>
-    <string name="track_hint">"Traccia (2 per traccia 2, o 3004 per CD3 traccia 4)"</string>
     <string name="lyrics">Testi</string>
     <string name="album_or_artist_empty">Il titolo o l\'artista sono vuoti.</string>
     <string name="saving_changes">Salvando le modifiche</string>
@@ -206,7 +205,6 @@
     <string name="maarten_corpel_summary">Per aver realizzato l\'illustrazione nel Play Store e la copertina album vuota.</string>
     <string name="aleksandar_tesic_summary">Per avermi aiutato col design.</string>
     <string name="website">Sito web</string>
-    <string name="loading_products">Caricamento prezzi</string>
     <string name="up_next">A seguire</string>
     <string name="pref_title_now_playing_screen_appearance">Aspetto</string>
     <string name="intro_label">Introduzione</string>

@@ -38,7 +38,6 @@
     <string name="genre">Жанр</string>
     <string name="album_artist">Альбом виконавця</string>
     <string name="year">Рік</string>
-    <string name="track_hint">"Доріжка (2 для доріжки 2 або 3004 для CD3 доріжки 4)"</string>
     <string name="album_or_artist_empty">Назва або виконавець відсутні.</string>
     <string name="saving_changes">Збереження змін</string>
     <string name="label_details">Подробиці</string>
@@ -175,7 +174,6 @@
     <string name="maarten_corpel_summary">За ілюстрацію в Play Store та пусте зображення обкладинки альбому.</string>
     <string name="aleksandar_tesic_summary">За допомогу в дизайні.</string>
     <string name="website">Веб-сайт</string>
-    <string name="loading_products">Завантаження продуктів…</string>
     <string name="up_next">До наступного</string>
     <string name="intro_label">Знайомство</string>
     <string name="welcome_to_vinyl_music_player">"Вітаємо вас у Vinyl Music Player, красивому та легкому музичному програвачу на Android. "</string>

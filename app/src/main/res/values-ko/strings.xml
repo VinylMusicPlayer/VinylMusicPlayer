@@ -3,7 +3,7 @@
     <string name="what_do_you_want_to_share">무엇을 공유하고 싶으십니까?</string>
     <string name="currently_listening_to_x_by_x">%2$s 의 %1$s 듣는 중</string>
     <string name="the_audio_file">음원 파일</string>
-    <string name="x_has_been_set_as_ringtone">로 전화 벨소리를 설정하였습니다.</string>
+    <string name="x_has_been_set_as_ringtone">로 전화 벨소리를 설정하였습니다 %1$s.</string>
     <string name="action_set_as_ringtone">벨소리로 설정</string>
     <string name="action_share">공유</string>
     <string name="action_settings">"설정"</string>
@@ -43,7 +43,6 @@
     <string name="genre">장르</string>
     <string name="album_artist">앨범 아티스트</string>
     <string name="year">연도</string>
-    <string name="track_hint">"트랙 (트랙 2는 2, CD 3의 트랙 4는 3004로 입력)"</string>
     <string name="lyrics">가사</string>
     <string name="album_or_artist_empty">제목이나 아티스트 란이 비었습니다.</string>
     <string name="saving_changes">변경 사항 저장 중…</string>

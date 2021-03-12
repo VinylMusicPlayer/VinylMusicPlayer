@@ -64,19 +64,6 @@ public abstract class AbsBaseActivity extends AbsThemeActivity {
         // implemented by sub classes
     }
 
-    @Override
-    public boolean dispatchKeyEvent(@NonNull KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_MENU && event.getAction() == KeyEvent.ACTION_UP) {
-            showOverflowMenu();
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    protected void showOverflowMenu() {
-
-    }
-
     @Nullable
     protected String[] getPermissionsToRequest() {
         return null;
