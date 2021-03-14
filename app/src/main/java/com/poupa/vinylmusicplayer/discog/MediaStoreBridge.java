@@ -57,6 +57,7 @@ public class MediaStoreBridge {
 
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
+        // TODO Consider ignoring most of these columns, we do extract them ourselves already
         final long id = cursor.getLong(0);
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
