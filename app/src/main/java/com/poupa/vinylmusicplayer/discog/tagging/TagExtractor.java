@@ -55,7 +55,9 @@ public class TagExtractor {
             song.trackNumber = safeGetTagAsInteger.apply(tags, FieldKey.TRACK);
             song.year = safeGetTagAsInteger.apply(tags, FieldKey.YEAR);
 
-            ReplayGainTagExtractor.setReplayGainValues(song);
+            ReplayGainTagExtractor.ReplayGainValues rgValues = ReplayGainTagExtractor.setReplayGainValues(file);
+            song.replayGainAlbum = rgValues.album;
+            song.replayGainTrack = rgValues.track;
         } catch (Exception e) {
             e.printStackTrace();
         }
