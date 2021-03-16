@@ -252,20 +252,6 @@ public class MusicPlayerRemote {
         return -1;
     }
 
-    public static long getQueueDurationMillis(int position) {
-        if (musicService != null) {
-            return musicService.getQueueDurationMillis(position);
-        }
-        return -1;
-    }
-
-    public static int getQueueDurationSongs() {
-        if (musicService != null) {
-            return musicService.getPlayingQueue().size();
-        }
-        return -1;
-    }
-
     public static void seekTo(int millis) {
         if (musicService != null) {
             musicService.seek(millis);
