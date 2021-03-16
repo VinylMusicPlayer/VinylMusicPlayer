@@ -2,17 +2,13 @@ package com.poupa.vinylmusicplayer.discog.tagging;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.model.Song;
-
 import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
@@ -23,14 +19,12 @@ public class ReplayGainTagExtractor {
   private static final String REPLAYGAIN_TRACK_GAIN = "REPLAYGAIN_TRACK_GAIN";
   private static final String REPLAYGAIN_ALBUM_GAIN = "REPLAYGAIN_ALBUM_GAIN";
 
-  static void setReplayGainValues(@NonNull Song song) {
-    float rgTrack = 0.0f;
-    float rgAlbum = 0.0f;
+  public static class ReplayGainValues {float track = 0; float album = 0;}
 
+  static ReplayGainValues setReplayGainValues(@NonNull final AudioFile file) {
     Map<String, Float> tags = null;
 
     try {
-      AudioFile file = AudioFileIO.read(new File(song.data));
       Tag tag = file.getTag();
 
       if (tag instanceof VorbisCommentTag || tag instanceof FlacTag) {
@@ -38,26 +32,25 @@ public class ReplayGainTagExtractor {
       } else if (tag instanceof Mp4Tag) {
         tags = parseMp4Tags(tag);
       } else {
-        tags = parseId3Tags(tag, song.data);
+        tags = parseId3Tags(tag, file);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
 
+    ReplayGainValues result = new ReplayGainValues();
     if (tags != null && !tags.isEmpty()) {
       if (tags.containsKey(REPLAYGAIN_TRACK_GAIN)) {
-        rgTrack = tags.get(REPLAYGAIN_TRACK_GAIN);
+        result.track = tags.get(REPLAYGAIN_TRACK_GAIN);
       }
       if (tags.containsKey(REPLAYGAIN_ALBUM_GAIN)) {
-        rgAlbum = tags.get(REPLAYGAIN_ALBUM_GAIN);
+        result.album = tags.get(REPLAYGAIN_ALBUM_GAIN);
       }
     }
-
-    song.replayGainTrack = rgTrack;
-    song.replayGainAlbum = rgAlbum;
+    return result;
   }
 
-  private static Map<String, Float> parseId3Tags(Tag tag, String path) throws Exception {
+  private static Map<String, Float> parseId3Tags(Tag tag, @NonNull final AudioFile file) throws Exception {
     String id = null;
 
     if (tag.hasField("TXXX")) {
@@ -68,7 +61,7 @@ public class ReplayGainTagExtractor {
       id = "RVA2";
     }
 
-    if (id == null) return parseLameHeader(path);
+    if (id == null) return parseLameHeader(file);
 
     Map<String, Float> tags = new HashMap<>();
 
@@ -114,10 +107,10 @@ public class ReplayGainTagExtractor {
     return tags;
   }
 
-  private static Map<String, Float> parseLameHeader(String path) throws IOException {
+  private static Map<String, Float> parseLameHeader(@NonNull final AudioFile file) throws IOException {
     // Method taken from adrian-bl/bastp library
     Map<String, Float> tags = new HashMap<>();
-    RandomAccessFile s = new RandomAccessFile(path, "r");
+    RandomAccessFile s = new RandomAccessFile(file.getFile(), "r");
     byte[] chunk = new byte[12];
 
     s.seek(0x24);
