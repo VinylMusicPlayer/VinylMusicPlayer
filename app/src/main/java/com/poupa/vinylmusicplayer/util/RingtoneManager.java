@@ -34,9 +34,11 @@ public class RingtoneManager {
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
                 .onPositive((dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                    intent.setData(Uri.parse("package:" + context.getPackageName()));
-                    context.startActivity(intent);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.setData(Uri.parse("package:" + context.getPackageName()));
+                        context.startActivity(intent);
+                    }
                 })
                 .show();
     }
