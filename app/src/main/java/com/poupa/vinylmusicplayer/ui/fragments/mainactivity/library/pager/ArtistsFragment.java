@@ -108,17 +108,18 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     }
 
     @Override
+    @NonNull
     public Loader<ArrayList<Artist>> onCreateLoader(int id, Bundle args) {
         return new AsyncArtistLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<Artist>> loader, ArrayList<Artist> data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<Artist>> loader, ArrayList<Artist> data) {
         getAdapter().swapDataSet(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<Artist>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<Artist>> loader) {
         getAdapter().swapDataSet(new ArrayList<>());
     }
 

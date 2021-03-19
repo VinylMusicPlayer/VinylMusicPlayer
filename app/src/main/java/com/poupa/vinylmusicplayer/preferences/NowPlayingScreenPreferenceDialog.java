@@ -65,7 +65,7 @@ public class NowPlayingScreenPreferenceDialog extends DialogFragment implements 
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if (whichButtonClicked == DialogAction.POSITIVE) {
             PreferenceUtil.getInstance().setNowPlayingScreen(NowPlayingScreen.values()[viewPagerPosition]);

@@ -448,17 +448,18 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     @Override
+    @NonNull
     public Loader<Album> onCreateLoader(int id, Bundle args) {
         return new AsyncAlbumLoader(this, args.getLong(EXTRA_ALBUM_ID));
     }
 
     @Override
-    public void onLoadFinished(Loader<Album> loader, Album data) {
+    public void onLoadFinished(@NonNull Loader<Album> loader, Album data) {
         setAlbum(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Album> loader) {
+    public void onLoaderReset(@NonNull Loader<Album> loader) {
         this.album = new Album();
         adapter.swapDataSet(album.songs);
     }

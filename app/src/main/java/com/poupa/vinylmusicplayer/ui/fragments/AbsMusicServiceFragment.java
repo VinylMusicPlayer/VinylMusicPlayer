@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
@@ -17,7 +18,7 @@ public class AbsMusicServiceFragment extends Fragment implements MusicServiceEve
     private AbsMusicServiceActivity activity;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             activity = (AbsMusicServiceActivity) context;
@@ -33,7 +34,7 @@ public class AbsMusicServiceFragment extends Fragment implements MusicServiceEve
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         activity.addMusicServiceEventListener(this);
     }

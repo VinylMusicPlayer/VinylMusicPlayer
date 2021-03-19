@@ -8,6 +8,7 @@ import android.media.audiofx.AudioEffect;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -55,7 +56,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
     public LinearLayoutManager layoutManager;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callbacks = (Callbacks) context;

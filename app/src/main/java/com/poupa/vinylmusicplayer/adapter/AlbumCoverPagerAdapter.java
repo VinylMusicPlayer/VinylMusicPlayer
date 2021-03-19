@@ -55,7 +55,7 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
 
     @Override
     @NonNull
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         Object o = super.instantiateItem(container, position);
         if (currentColorReceiver != null && currentColorReceiverPosition == position) {
             receiveColor(currentColorReceiver, currentColorReceiverPosition);
