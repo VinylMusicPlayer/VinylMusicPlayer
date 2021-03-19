@@ -187,6 +187,7 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
      *
      * @return [PackageInfo] for the package name or null if it's not found.
      */
+    @Suppress("DEPRECATION")
     @SuppressLint("PackageManagerGetSignatures")
     private fun getPackageInfo(callingPackage: String): PackageInfo? =
             packageManager.getPackageInfo(callingPackage,
@@ -204,6 +205,7 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
     private fun getSignature(packageInfo: PackageInfo): String? {
         // Security best practices dictate that an app should be signed with exactly one (1)
         // signature. Because of this, if there are multiple signatures, reject it.
+        @Suppress("DEPRECATION")
         if (packageInfo.signatures == null || packageInfo.signatures.size != 1) {
             return null
         } else {
