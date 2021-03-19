@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.viewbinding.ViewBinding;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -22,6 +24,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivityAlbumTagEditorBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
@@ -40,21 +43,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AlbumTagEditorActivity extends AbsTagEditorActivity implements TextWatcher {
 
-    @BindView(R.id.title)
     EditText albumTitle;
-    @BindView(R.id.album_artist)
     EditText albumArtist;
-    @BindView(R.id.genre)
     EditText genre;
-    @BindView(R.id.year)
     EditText year;
 
     private Bitmap albumArtBitmap;
@@ -64,7 +61,6 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
 
         lastFMRestClient = new LastFMRestClient(this);
 
@@ -177,8 +173,22 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
     }
 
     @Override
-    protected int getContentViewLayout() {
-        return R.layout.activity_album_tag_editor;
+    @NonNull
+    protected ViewBinding getViewBinding() {
+        ActivityAlbumTagEditorBinding binding = ActivityAlbumTagEditorBinding.inflate(LayoutInflater.from(this));
+
+        albumTitle = binding.title;
+        albumArtist = binding.albumArtist;
+        genre = binding.genre;
+        year = binding.year;
+
+        fab = binding.playPauseFab;
+        observableScrollView = binding.observableScrollView;
+        toolbar = binding.toolbar;
+        image = binding.image;
+        header = binding.header;
+
+        return binding;
     }
 
     @NonNull
