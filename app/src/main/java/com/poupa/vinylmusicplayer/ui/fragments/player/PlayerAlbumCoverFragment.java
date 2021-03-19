@@ -16,8 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.AlbumCoverPagerAdapter;
+import com.poupa.vinylmusicplayer.databinding.FragmentPlayerAlbumCoverBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.misc.SimpleAnimatorListener;
@@ -27,10 +27,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
@@ -38,18 +34,11 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
 
     public static final int VISIBILITY_ANIM_DURATION = 300;
 
-    private Unbinder unbinder;
-
-    @BindView(R.id.player_album_cover_viewpager)
     ViewPager viewPager;
-    @BindView(R.id.player_favorite_icon)
     ImageView favoriteIcon;
 
-    @BindView(R.id.player_lyrics)
     FrameLayout lyricsLayout;
-    @BindView(R.id.player_lyrics_line1)
     TextView lyricsLine1;
-    @BindView(R.id.player_lyrics_line2)
     TextView lyricsLine2;
 
     private Callbacks callbacks;
@@ -60,9 +49,14 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_player_album_cover, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        FragmentPlayerAlbumCoverBinding binding = FragmentPlayerAlbumCoverBinding.inflate(inflater, container, false);
+        viewPager = binding.playerAlbumCoverViewpager;
+        favoriteIcon = binding.playerFavoriteIcon;
+        lyricsLayout = binding.playerLyrics;
+        lyricsLine1 = binding.playerLyricsLine1;
+        lyricsLine2 = binding.playerLyricsLine2;
+
+        return binding.getRoot();
     }
 
     @Override
@@ -95,7 +89,6 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         super.onDestroyView();
         viewPager.removeOnPageChangeListener(this);
         progressViewUpdateHelper.stop();
-        unbinder.unbind();
     }
 
     @Override

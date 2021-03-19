@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.ui.activities.base;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +15,7 @@ import androidx.annotation.LayoutRes;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
@@ -28,9 +28,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  *         <p/>
@@ -38,8 +35,6 @@ import butterknife.ButterKnife;
  *         {@link #wrapSlidingMusicPanel(int)} first and then return it in {@link #createContentView()}
  */
 public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivity implements SlidingUpPanelLayout.PanelSlideListener, CardPlayerFragment.Callbacks {
-
-    @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout slidingUpPanelLayout;
 
     private int navigationbarColor;
@@ -59,7 +54,6 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(createContentView());
-        ButterKnife.bind(this);
 
         currentNowPlayingScreen = PreferenceUtil.getInstance().getNowPlayingScreen();
         Fragment fragment; // must implement AbsPlayerFragment
@@ -228,11 +222,13 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     protected View wrapSlidingMusicPanel(@LayoutRes int resId) {
-        @SuppressLint("InflateParams")
-        View slidingMusicPanelLayout = getLayoutInflater().inflate(R.layout.sliding_music_panel_layout, null);
-        ViewGroup contentContainer = slidingMusicPanelLayout.findViewById(R.id.content_container);
+        SlidingMusicPanelLayoutBinding binding = SlidingMusicPanelLayoutBinding.inflate(getLayoutInflater());
+        slidingUpPanelLayout = binding.slidingLayout;
+
+        ViewGroup contentContainer = binding.contentContainer;
         getLayoutInflater().inflate(resId, contentContainer);
-        return slidingMusicPanelLayout;
+
+        return binding.getRoot();
     }
 
     @Override

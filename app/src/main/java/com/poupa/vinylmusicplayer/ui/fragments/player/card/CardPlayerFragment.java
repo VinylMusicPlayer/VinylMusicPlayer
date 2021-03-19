@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +34,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.FragmentCardPlayerBinding;
 import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -53,26 +53,12 @@ import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbumCoverFragment.Callbacks, SlidingUpPanelLayout.PanelSlideListener {
-
-    private Unbinder unbinder;
-
-    @Nullable
-    @BindView(R.id.toolbar_container)
     FrameLayout toolbarContainer;
-    @BindView(R.id.player_sliding_layout)
     SlidingUpPanelLayout slidingUpPanelLayout;
-    @BindView(R.id.player_recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.playing_queue_card)
     CardView playingQueueCard;
-    @BindView(R.id.color_background)
     View colorBackground;
-    @BindView(R.id.player_queue_sub_header)
     TextView playerQueueSubHeader;
 
     private int lastColor;
@@ -95,9 +81,16 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             impl = new PortraitImpl(this);
         }
 
-        View view = inflater.inflate(R.layout.fragment_card_player, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        FragmentCardPlayerBinding binding = FragmentCardPlayerBinding.inflate(inflater, container, false);
+        toolbar = binding.playerToolbar;
+        toolbarContainer = binding.toolbarContainer;
+        slidingUpPanelLayout = binding.playerSlidingLayout;
+        recyclerView = binding.playerRecyclerView;
+        playingQueueCard = binding.playingQueueCard;
+        colorBackground = binding.colorBackground;
+        playerQueueSubHeader = binding.playerQueueSubHeader;
+
+        return binding.getRoot();
     }
 
     @Override
@@ -139,7 +132,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
 
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override

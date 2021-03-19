@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,28 +14,18 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.FragmentMainActivityRecyclerViewBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView.Adapter, LM extends RecyclerView.LayoutManager> extends AbsLibraryPagerFragment implements OnOffsetChangedListener {
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.container)
     View container;
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @Nullable
-    @BindView(android.R.id.empty)
     TextView empty;
 
     private A adapter;
@@ -47,9 +35,12 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutRes(), container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        FragmentMainActivityRecyclerViewBinding binding = FragmentMainActivityRecyclerViewBinding.inflate(inflater, container, false);
+        this.container = binding.container;
+        recyclerView = binding.recyclerView;
+        empty = binding.empty;
+
+        return binding.getRoot();
     }
 
     @Override
@@ -127,11 +118,6 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         return R.string.empty;
     }
 
-    @LayoutRes
-    protected int getLayoutRes() {
-        return R.layout.fragment_main_activity_recycler_view;
-    }
-
     protected abstract LM createLayoutManager();
 
     @NonNull
@@ -142,7 +128,6 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         super.onDestroyView();
         getLibraryFragment().removeOnAppBarOffsetChangedListener(this);
         Discography.getInstance().removeChangedListener(onDiscographyChanged);
-        unbinder.unbind();
     }
 
     @Override

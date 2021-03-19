@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.FragmentAlbumCoverBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -18,10 +18,6 @@ import com.poupa.vinylmusicplayer.misc.CustomFragmentStatePagerAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
 
@@ -81,9 +77,6 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
     public static class AlbumCoverFragment extends Fragment {
         private static final String SONG_ARG = "song";
 
-        private Unbinder unbinder;
-
-        @BindView(R.id.player_image)
         ImageView albumCover;
 
         private boolean isColorReady;
@@ -108,9 +101,9 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
 
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.fragment_album_cover, container, false);
-            unbinder = ButterKnife.bind(this, view);
-            return view;
+            FragmentAlbumCoverBinding binding = FragmentAlbumCoverBinding.inflate(inflater, container, false);
+            albumCover = binding.playerImage;
+            return binding.getRoot();
         }
 
         @Override
@@ -123,7 +116,6 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
         @Override
         public void onDestroyView() {
             super.onDestroyView();
-            unbinder.unbind();
             colorReceiver = null;
         }
 
