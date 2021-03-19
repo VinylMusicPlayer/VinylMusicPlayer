@@ -230,7 +230,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void setUpSongsAdapter() {
-        adapter = new AlbumSongAdapter(this, getAlbum().songs, R.layout.item_list, false, this);
+        adapter = new AlbumSongAdapter(this, getAlbum().songs, false, this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

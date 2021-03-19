@@ -83,7 +83,6 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
                 ((AppCompatActivity) getActivity()),
                 MusicPlayerRemote.getPlayingQueue(),
                 MusicPlayerRemote.getPosition(),
-                R.layout.item_list,
                 false,
                 null);
         wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(playingQueueAdapter);

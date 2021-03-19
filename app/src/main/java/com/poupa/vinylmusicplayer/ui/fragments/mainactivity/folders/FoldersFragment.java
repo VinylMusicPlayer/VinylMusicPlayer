@@ -189,7 +189,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     private void setUpAdapter() {
-        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), R.layout.item_list, this, this);
+        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), this, this);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {

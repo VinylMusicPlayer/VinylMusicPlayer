@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,13 +47,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
     protected final AppCompatActivity activity;
     protected ArrayList<Playlist> dataSet;
-    protected int itemLayoutRes;
 
-    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @LayoutRes int itemLayoutRes, @Nullable CabHolder cabHolder) {
+    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_playlists_selection);
         this.activity = activity;
         this.dataSet = dataSet;
-        this.itemLayoutRes = itemLayoutRes;
         setHasStableIds(true);
     }
 
@@ -75,7 +72,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.item_list_single_row, parent, false);
         return createViewHolder(view, viewType);
     }
 

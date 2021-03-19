@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,15 +37,13 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
 
     private final AppCompatActivity activity;
     private List<File> dataSet;
-    private final int itemLayoutRes;
     @Nullable
     private final Callbacks callbacks;
 
-    public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles, @LayoutRes int itemLayoutRes, @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
+    public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles, @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = songFiles;
-        this.itemLayoutRes = itemLayoutRes;
         this.callbacks = callback;
         setHasStableIds(true);
     }
@@ -69,7 +66,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false));
+        return new ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_list, parent, false));
     }
 
     @Override

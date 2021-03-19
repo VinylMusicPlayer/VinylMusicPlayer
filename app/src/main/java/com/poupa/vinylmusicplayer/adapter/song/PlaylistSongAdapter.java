@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.adapter.song;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +22,8 @@ import java.util.ArrayList;
  */
 public class PlaylistSongAdapter extends AbsOffsetSongAdapter {
 
-    public PlaylistSongAdapter(AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
-        super(activity, dataSet, itemLayoutRes, usePalette, cabHolder, false);
+    public PlaylistSongAdapter(AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, boolean usePalette, @Nullable CabHolder cabHolder) {
+        super(activity, dataSet, usePalette, cabHolder, false);
         setMultiSelectMenuRes(R.menu.menu_cannot_delete_single_songs_playlist_songs_selection);
     }
 

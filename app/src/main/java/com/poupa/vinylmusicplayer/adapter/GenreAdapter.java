@@ -4,11 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -22,12 +22,10 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     @NonNull
     private final AppCompatActivity activity;
     private ArrayList<Genre> dataSet;
-    private int itemLayoutRes;
 
-    public GenreAdapter(@NonNull AppCompatActivity activity, ArrayList<Genre> dataSet, @LayoutRes int itemLayoutRes) {
+    public GenreAdapter(@NonNull AppCompatActivity activity, ArrayList<Genre> dataSet) {
         this.activity = activity;
         this.dataSet = dataSet;
-        this.itemLayoutRes = itemLayoutRes;
     }
 
     public ArrayList<Genre> getDataSet() {
@@ -47,7 +45,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false);
+        View view = LayoutInflater.from(activity).inflate(R.layout.item_list_no_image, parent, false);
         return new ViewHolder(view);
     }
 

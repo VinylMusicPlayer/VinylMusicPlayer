@@ -44,7 +44,7 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
     @Override
     protected PlaylistAdapter createAdapter() {
         ArrayList<Playlist> dataSet = getAdapter() == null ? new ArrayList<>() : getAdapter().getDataSet();
-        return new PlaylistAdapter(getLibraryFragment().getMainActivity(), dataSet, R.layout.item_list_single_row, getLibraryFragment());
+        return new PlaylistAdapter(getLibraryFragment().getMainActivity(), dataSet, getLibraryFragment());
     }
 
     @Override
