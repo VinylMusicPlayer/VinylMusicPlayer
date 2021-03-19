@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,13 +18,12 @@ import androidx.appcompat.widget.Toolbar;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.psdev.licensesdialog.LicensesDialog;
 
 /**
@@ -57,57 +57,65 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private static String ADRIAN_TWITTER = "https://twitter.com/froschgames";
     private static String ADRIAN_WEBSITE = "https://froschgames.com/";
 
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.app_version)
     TextView appVersion;
-    @BindView(R.id.changelog)
     LinearLayout changelog;
-    @BindView(R.id.intro)
     LinearLayout intro;
-    @BindView(R.id.licenses)
     LinearLayout licenses;
-    @BindView(R.id.write_an_email)
     LinearLayout writeAnEmail;
-    @BindView(R.id.fork_on_github)
     LinearLayout forkOnGitHub;
-    @BindView(R.id.visit_website)
     LinearLayout visitWebsite;
-    @BindView(R.id.report_bugs)
     LinearLayout reportBugs;
-    @BindView(R.id.rate_on_google_play)
     LinearLayout rateOnGooglePlay;
-    @BindView(R.id.kabouzeid_google_plus)
+
     AppCompatButton kabouzeidGooglePlus;
-    @BindView(R.id.kabouzeid_website)
     AppCompatButton kabouzeidWebsite;
-    @BindView(R.id.aidan_follestad_google_plus)
     AppCompatButton aidanFollestadGooglePlus;
-    @BindView(R.id.aidan_follestad_git_hub)
     AppCompatButton aidanFollestadGitHub;
-    @BindView(R.id.michael_cook_google_plus)
     AppCompatButton michaelCookGooglePlus;
-    @BindView(R.id.michael_cook_website)
     AppCompatButton michaelCookWebsite;
-    @BindView(R.id.maarten_corpel_google_plus)
     AppCompatButton maartenCorpelGooglePlus;
-    @BindView(R.id.aleksandar_tesic_google_plus)
     AppCompatButton aleksandarTesicGooglePlus;
-    @BindView(R.id.eugene_cheung_git_hub)
     AppCompatButton eugeneCheungGitHub;
-    @BindView(R.id.eugene_cheung_website)
     AppCompatButton eugeneCheungWebsite;
-    @BindView(R.id.adrian_twitter)
     AppCompatButton adrianTwitter;
-    @BindView(R.id.adrian_website)
     AppCompatButton adrianWebsite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+
+        ActivityAboutBinding binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+        toolbar = binding.toolbar;
+
+        appVersion = binding.content.cardAboutApp.appVersion;
+        changelog = binding.content.cardAboutApp.changelog;
+        intro = binding.content.cardAboutApp.intro;
+        licenses = binding.content.cardAboutApp.licenses;
+        forkOnGitHub = binding.content.cardAboutApp.forkOnGithub;
+
+        writeAnEmail = binding.content.cardAuthor.writeAnEmail;
+        visitWebsite = binding.content.cardAuthor.visitWebsite;
+
+        reportBugs = binding.content.cardSupportDevelopment.reportBugs;
+        rateOnGooglePlay = binding.content.cardSupportDevelopment.rateOnGooglePlay;
+
+        kabouzeidGooglePlus = binding.content.cardSpecialThanks.kabouzeidGooglePlus;
+        kabouzeidWebsite = binding.content.cardSpecialThanks.kabouzeidWebsite;
+        aidanFollestadGooglePlus = binding.content.cardSpecialThanks.aidanFollestadGooglePlus;
+        aidanFollestadGitHub = binding.content.cardSpecialThanks.aidanFollestadGitHub;
+        michaelCookGooglePlus = binding.content.cardSpecialThanks.michaelCookGooglePlus;
+        michaelCookWebsite = binding.content.cardSpecialThanks.michaelCookWebsite;
+        maartenCorpelGooglePlus = binding.content.cardSpecialThanks.maartenCorpelGooglePlus;
+        aleksandarTesicGooglePlus = binding.content.cardSpecialThanks.aleksandarTesicGooglePlus;
+        eugeneCheungGitHub = binding.content.cardSpecialThanks.eugeneCheungGitHub;
+        eugeneCheungWebsite = binding.content.cardSpecialThanks.eugeneCheungWebsite;
+        adrianTwitter = binding.content.cardSpecialThanks.adrianTwitter;
+        adrianWebsite = binding.content.cardSpecialThanks.adrianWebsite;
+
+        setContentView(binding.getRoot());
+
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
