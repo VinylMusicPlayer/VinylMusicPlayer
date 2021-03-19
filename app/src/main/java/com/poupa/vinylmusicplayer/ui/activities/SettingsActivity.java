@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -27,6 +28,7 @@ import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragment
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
+import com.poupa.vinylmusicplayer.databinding.ActivityPreferencesBinding;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
@@ -39,20 +41,19 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+
+        ActivityPreferencesBinding binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        toolbar = binding.toolbar;
+        setContentView(binding.getRoot());
+
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
