@@ -47,7 +47,7 @@
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:statusBarColor">@color/splash_background</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/splash_background</item>
     </style>
 
 </resources>

@@ -11,7 +11,6 @@ import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,7 +51,7 @@ public class SleepTimerDialog extends DialogFragment {
     private final AtomicBoolean changingText = new AtomicBoolean(false);
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         timerUpdater.cancel();
     }

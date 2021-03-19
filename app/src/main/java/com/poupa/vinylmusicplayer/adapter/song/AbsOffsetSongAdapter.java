@@ -35,7 +35,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     @NonNull
     @Override
-    public SongAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == OFFSET_ITEM) {
             View view = LayoutInflater.from(activity).inflate(R.layout.item_list_single_row, parent, false);
             return createViewHolder(view);

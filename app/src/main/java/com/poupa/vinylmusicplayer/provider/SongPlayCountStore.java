@@ -46,14 +46,11 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
     private static final int NUM_WEEKS = 52;
 
     // how high to multiply the interpolation curve
-    @SuppressWarnings("FieldCanBeLocal")
     private static final int INTERPOLATOR_HEIGHT = 50;
 
     // how high the base value is. The ratio of the Height to Base is what really matters
-    @SuppressWarnings("FieldCanBeLocal")
     private static final int INTERPOLATOR_BASE = 25;
 
-    @SuppressWarnings("FieldCanBeLocal")
     private static final int ONE_WEEK_IN_MS = 1000 * 60 * 60 * 24 * 7;
 
     @NonNull

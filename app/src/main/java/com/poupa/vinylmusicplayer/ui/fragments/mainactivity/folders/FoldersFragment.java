@@ -248,14 +248,14 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_folders, menu);
         ToolbarContentTintHelper.handleOnCreateOptionsMenu(getActivity(), toolbar, menu, ATHToolbarActivity.getToolbarBackgroundColor(toolbar));
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         ToolbarContentTintHelper.handleOnPrepareOptionsMenu(getActivity(), toolbar);
     }
@@ -473,6 +473,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     @Override
+    @NonNull
     public Loader<List<File>> onCreateLoader(int id, Bundle args) {
         return new AsyncFileLoader(this);
     }

@@ -60,7 +60,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
 

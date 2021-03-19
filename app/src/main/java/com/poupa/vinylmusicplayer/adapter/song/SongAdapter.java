@@ -66,7 +66,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView rV) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView rV) {
         super.onAttachedToRecyclerView(rV);
         recyclerView = rV;
     }

@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.util;
 
 import android.graphics.Canvas;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,19 +15,19 @@ public class SwipeAndDragHelper extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         return makeMovementFlags(dragFlags, 0);
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         contract.onViewMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
     }
 
     @Override
@@ -35,9 +36,9 @@ public class SwipeAndDragHelper extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c,
-                            RecyclerView recyclerView,
-                            RecyclerView.ViewHolder viewHolder,
+    public void onChildDraw(@NonNull Canvas c,
+                            @NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder,
                             float dX,
                             float dY,
                             int actionState,

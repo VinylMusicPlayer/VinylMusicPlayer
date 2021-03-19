@@ -54,32 +54,30 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
 
         @Override
         public void handleMessage(final Message msg) {
-            switch (msg.what) {
-                case MSG_HEADSET_DOUBLE_CLICK_TIMEOUT:
-                    final int clickCount = msg.arg1;
-                    final String command;
+            if (msg.what == MSG_HEADSET_DOUBLE_CLICK_TIMEOUT) {
+                final int clickCount = msg.arg1;
+                final String command;
 
-                    if (DEBUG) Log.v(TAG, "Handling headset click, count = " + clickCount);
-                    switch (clickCount) {
-                        case 1:
-                            command = MusicService.ACTION_TOGGLE_PAUSE;
-                            break;
-                        case 2:
-                            command = MusicService.ACTION_SKIP;
-                            break;
-                        case 3:
-                            command = MusicService.ACTION_REWIND;
-                            break;
-                        default:
-                            command = null;
-                            break;
-                    }
+                if (DEBUG) Log.v(TAG, "Handling headset click, count = " + clickCount);
+                switch (clickCount) {
+                    case 1:
+                        command = MusicService.ACTION_TOGGLE_PAUSE;
+                        break;
+                    case 2:
+                        command = MusicService.ACTION_SKIP;
+                        break;
+                    case 3:
+                        command = MusicService.ACTION_REWIND;
+                        break;
+                    default:
+                        command = null;
+                        break;
+                }
 
-                    if (command != null) {
-                        final Context context = (Context) msg.obj;
-                        startService(context, command);
-                    }
-                    break;
+                if (command != null) {
+                    final Context context = (Context) msg.obj;
+                    startService(context, command);
+                }
             }
             releaseWakeLockIfHandlerIdle();
         }

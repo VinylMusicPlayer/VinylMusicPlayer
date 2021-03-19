@@ -274,17 +274,14 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_CODE_SELECT_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    CustomArtistImageUtil.getInstance(this).setCustomArtistImage(artist, data.getData());
-                }
-                break;
-            default:
-                if (resultCode == RESULT_OK) {
-                    reload();
-                }
-                break;
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                CustomArtistImageUtil.getInstance(this).setCustomArtistImage(artist, data.getData());
+            }
+        } else {
+            if (resultCode == RESULT_OK) {
+                reload();
+            }
         }
     }
 
@@ -459,6 +456,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     }
 
     @Override
+    @NonNull
     public Loader<Artist> onCreateLoader(int id, Bundle args) {
         return new AsyncArtistDataLoader(this, args.getLong(EXTRA_ARTIST_ID));
     }
@@ -480,12 +478,12 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     }
 
     @Override
-    public void onLoadFinished(Loader<Artist> loader, Artist data) {
+    public void onLoadFinished(@NonNull Loader<Artist> loader, Artist data) {
         setArtist(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Artist> loader) {
+    public void onLoaderReset(@NonNull Loader<Artist> loader) {
         this.artist = Artist.EMPTY;
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);

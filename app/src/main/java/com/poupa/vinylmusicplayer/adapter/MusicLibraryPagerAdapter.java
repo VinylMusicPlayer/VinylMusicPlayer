@@ -96,6 +96,7 @@ public class MusicLibraryPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    @NonNull
     public Fragment getItem(final int position) {
         final Holder mCurrentHolder = mHolderList.get(position);
         return Fragment.instantiate(mContext,
@@ -103,7 +104,7 @@ public class MusicLibraryPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public void destroyItem(final ViewGroup container, final int position, final Object object) {
+    public void destroyItem(final @NonNull ViewGroup container, final int position, final @NonNull Object object) {
         super.destroyItem(container, position, object);
         final WeakReference<Fragment> mWeakFragment = mFragmentArray.get(position);
         if (mWeakFragment != null) {

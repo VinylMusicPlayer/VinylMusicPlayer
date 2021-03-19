@@ -188,7 +188,6 @@ public class PlaylistsUtil {
             selectionArgs[i] = String.valueOf(songs.get(i).idInPlayList);
         }
         String selection = MediaStore.Audio.Playlists.Members._ID + " in (";
-        //noinspection unused
         for (String selectionArg : selectionArgs) selection += "?, ";
         selection = selection.substring(0, selection.length() - 2) + ")";
 

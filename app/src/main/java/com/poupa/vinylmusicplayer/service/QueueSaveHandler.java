@@ -20,10 +20,8 @@ class QueueSaveHandler extends Handler {
     @Override
     public void handleMessage(@NonNull Message msg) {
         final MusicService service = mService.get();
-        switch (msg.what) {
-            case MusicService.SAVE_QUEUES:
-                service.saveQueuesImpl();
-                break;
+        if (msg.what == MusicService.SAVE_QUEUES) {
+            service.saveQueuesImpl();
         }
     }
 }
