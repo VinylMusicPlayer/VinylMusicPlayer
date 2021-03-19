@@ -233,10 +233,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
+        if (id == android.R.id.home) {
+            super.onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
