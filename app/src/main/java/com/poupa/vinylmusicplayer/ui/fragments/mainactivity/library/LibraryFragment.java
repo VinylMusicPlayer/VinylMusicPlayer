@@ -62,7 +62,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FragmentLibraryBinding binding = FragmentLibraryBinding.inflate(inflater, container, false);
         toolbar = binding.toolbar;
         tabs = binding.tabs;
