@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -37,15 +40,27 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     @Override
     public SongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == OFFSET_ITEM) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.item_list_single_row, parent, false);
-            return createViewHolder(view);
+            ItemListSingleRowBinding binding = ItemListSingleRowBinding.inflate(LayoutInflater.from(activity), parent, false);
+            return createViewHolder(binding);
         }
         return super.onCreateViewHolder(parent, viewType);
     }
 
+    @NonNull
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        return new AbsOffsetSongAdapter.ViewHolder(binding);
+    }
+
+    @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new AbsOffsetSongAdapter.ViewHolder(view);
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new AbsOffsetSongAdapter.ViewHolder(binding);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new AbsOffsetSongAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -83,9 +98,16 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     }
 
     public class ViewHolder extends SongAdapter.ViewHolder {
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding) {
+            super(binding);
+        }
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
         }
 
         @Override

@@ -12,6 +12,8 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHold
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
@@ -35,9 +37,16 @@ public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements
         this.onMoveItemListener = onMoveItemListener;
     }
 
+    @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new OrderablePlaylistSongAdapter.ViewHolder(view);
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new OrderablePlaylistSongAdapter.ViewHolder(binding);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new OrderablePlaylistSongAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -97,15 +106,17 @@ public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements
         @DraggableItemStateFlags
         private int mDragStateFlags;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            if (dragView != null) {
-                if (onMoveItemListener != null) {
-                    dragView.setVisibility(View.VISIBLE);
-                } else {
-                    dragView.setVisibility(View.GONE);
-                }
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+            if (onMoveItemListener != null) {
+                dragView.setVisibility(View.VISIBLE);
+            } else {
+                dragView.setVisibility(View.GONE);
             }
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
         }
 
         @Override

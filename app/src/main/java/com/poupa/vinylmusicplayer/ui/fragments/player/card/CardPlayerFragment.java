@@ -35,6 +35,7 @@ import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentCardPlayerBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -470,7 +471,8 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void init() {
-            currentSongViewHolder = new MediaEntryViewHolder(fragment.getView().findViewById(R.id.current_song));
+            ItemListBinding binding = ItemListBinding.bind(fragment.getView().findViewById(R.id.current_song));
+            currentSongViewHolder = new MediaEntryViewHolder(binding);
 
             currentSongViewHolder.separator.setVisibility(View.VISIBLE);
             currentSongViewHolder.shortSeparator.setVisibility(View.GONE);

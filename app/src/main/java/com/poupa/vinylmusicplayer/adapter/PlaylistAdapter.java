@@ -20,6 +20,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
@@ -72,12 +73,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(R.layout.item_list_single_row, parent, false);
-        return createViewHolder(view, viewType);
-    }
-
-    protected ViewHolder createViewHolder(View view, int viewType) {
-        return new ViewHolder(view, viewType);
+        ItemListSingleRowBinding binding = ItemListSingleRowBinding.inflate(LayoutInflater.from(activity), parent, false);
+        return new ViewHolder(binding, viewType);
     }
 
     protected String getPlaylistTitle(Playlist playlist) {
@@ -223,10 +220,10 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding, int itemViewType) {
+            super(binding);
 
-        public ViewHolder(@NonNull View itemView, int itemViewType) {
-            super(itemView);
-
+            View itemView = binding.getRoot();
             if (itemViewType == SMART_PLAYLIST) {
                 if (shortSeparator != null) {
                     shortSeparator.setVisibility(View.GONE);

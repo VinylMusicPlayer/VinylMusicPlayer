@@ -11,68 +11,176 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableSwipeableItemViewHolder;
-import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemGridCardHorizontalBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListNoImageBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
+import com.poupa.vinylmusicplayer.databinding.SubHeaderBinding;
 import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
     @Nullable
-    @BindView(R.id.song_view)
     public LinearLayout songView;
 
     @Nullable
-    @BindView(R.id.touch_intercept_framelayout)
     public FrameLayout dummyContainer;
 
     @Nullable
-    @BindView(R.id.image)
     public ImageView image;
 
     @Nullable
-    @BindView(R.id.image_text)
     public TextView imageText;
 
     @Nullable
-    @BindView(R.id.title)
     public TextView title;
 
     @Nullable
-    @BindView(R.id.title_scrollview)
     public TouchInterceptHorizontalScrollView titleScrollview;
 
     @Nullable
-    @BindView(R.id.text)
     public TextView text;
 
     @Nullable
-    @BindView(R.id.menu)
     public View menu;
 
     @Nullable
-    @BindView(R.id.separator)
     public View separator;
 
     @Nullable
-    @BindView(R.id.short_separator)
     public View shortSeparator;
 
     @Nullable
-    @BindView(R.id.drag_view)
     public View dragView;
 
     @Nullable
-    @BindView(R.id.palette_color_container)
     public View paletteColorContainer;
 
-    public MediaEntryViewHolder(View itemView) {
-        super(itemView);
-        ButterKnife.bind(this, itemView);
+    public MediaEntryViewHolder(@NonNull ItemListBinding binding) {
+        super(binding.getRoot());
 
+        songView = binding.songView;
+        dummyContainer = binding.touchInterceptFramelayout;
+        image = binding.image;
+        imageText = binding.imageText;
+        title = binding.title;
+        titleScrollview = binding.titleScrollview;
+        text = binding.text;
+        menu = binding.menu;
+        separator = binding.separator;
+        shortSeparator  = binding.shortSeparator;
+        dragView = binding.dragView;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull ItemGridBinding binding) {
+        super(binding.getRoot());
+
+        songView = null;
+        dummyContainer = binding.touchInterceptFramelayout;
+        image = binding.image;
+        imageText = null;
+        title = binding.title;
+        titleScrollview = binding.titleScrollview;
+        text = binding.text;
+        menu = null;
+        separator = null;
+        shortSeparator  = null;
+        dragView = null;
+        paletteColorContainer = binding.paletteColorContainer;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull ItemGridCardHorizontalBinding binding) {
+        super(binding.getRoot());
+
+        songView = null;
+        dummyContainer = binding.touchInterceptFramelayout;
+        image = binding.image;
+        imageText = null;
+        title = binding.title;
+        titleScrollview = binding.titleScrollview;
+        text = binding.text;
+        menu = null;
+        separator = null;
+        shortSeparator  = null;
+        dragView = null;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull SubHeaderBinding binding) {
+        super(binding.getRoot());
+
+        songView = null;
+        dummyContainer = null;
+        image = null;
+        imageText = null;
+        title = binding.title;
+        titleScrollview = null;
+        text = null;
+        menu = null;
+        separator = null;
+        shortSeparator  = null;
+        dragView = null;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        super(binding.getRoot());
+
+        songView = null;
+        dummyContainer = binding.touchInterceptFramelayout;
+        image = binding.image;
+        imageText = binding.imageText;
+        title = binding.title;
+        titleScrollview = binding.titleScrollview;
+        text = binding.text;
+        menu = binding.menu;
+        separator = binding.separator;
+        shortSeparator  = binding.shortSeparator;
+        dragView = binding.dragView;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull ItemListNoImageBinding binding) {
+        super(binding.getRoot());
+
+        songView = null;
+        dummyContainer = binding.touchInterceptFramelayout;
+        image = null;
+        imageText = null;
+        title = binding.title;
+        titleScrollview = binding.titleScrollview;
+        text = binding.text;
+        menu = binding.menu;
+        separator = binding.separator;
+        shortSeparator  = binding.shortSeparator;
+        dragView = binding.dragView;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
     }

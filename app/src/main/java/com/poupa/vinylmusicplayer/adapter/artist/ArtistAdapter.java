@@ -18,6 +18,8 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -77,12 +79,18 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false);
-        return createViewHolder(view);
-    }
-
-    protected ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        if (itemLayoutRes == R.layout.item_grid) {
+            ItemGridBinding binding = ItemGridBinding.inflate(inflater, parent, false);
+            return new ViewHolder(binding);
+        }
+        else if (itemLayoutRes == R.layout.item_list) {
+            ItemListBinding binding = ItemListBinding.inflate(inflater, parent, false);
+            return new ViewHolder(binding);
+        }
+        else {
+            throw new AssertionError("Unsupported artist layout=" + itemLayoutRes);
+        }
     }
 
     @Override
@@ -193,13 +201,15 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull final ItemListBinding binding) {
+            super(binding);
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
-            if (menu != null) {
-                menu.setVisibility(View.GONE);
-            }
+            menu.setVisibility(View.GONE);
+        }
+
+        public ViewHolder(@NonNull final ItemGridBinding binding) {
+            super(binding);
+            setImageTransitionName(activity.getString(R.string.transition_artist_image));
         }
 
         @Override

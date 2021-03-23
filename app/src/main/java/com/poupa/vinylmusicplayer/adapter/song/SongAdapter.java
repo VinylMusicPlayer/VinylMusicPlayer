@@ -18,6 +18,9 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
@@ -101,12 +104,28 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false);
-        return createViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        if (itemLayoutRes == R.layout.item_list) {
+            ItemListBinding binding = ItemListBinding.inflate(inflater, parent, false);
+            return createViewHolder(binding);
+        }
+        else if (itemLayoutRes == R.layout.item_grid) {
+            ItemGridBinding binding = ItemGridBinding.inflate(inflater, parent, false);
+            return createViewHolder(binding);
+        }
+        else {
+            throw new AssertionError("Unsupported song layout=" + itemLayoutRes);
+        }
     }
 
-    protected ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+    @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -206,13 +225,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     public class ViewHolder extends MediaEntryViewHolder {
         protected int DEFAULT_MENU_RES = SongMenuHelper.MENU_RES;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding) {
+            super(binding);
+
             setImageTransitionName(activity.getString(R.string.transition_album_art));
 
-            if (menu == null) {
-                return;
-            }
             menu.setOnTouchListener((v, ev) -> {
                 menu.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
@@ -233,6 +250,39 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                     return onSongMenuItemClick(item) || super.onMenuItemClick(item);
                 }
             });
+        }
+
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
+
+            menu.setOnTouchListener((v, ev) -> {
+                menu.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            });
+            menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
+                @Override
+                public Song getSong() {
+                    return ViewHolder.this.getSong();
+                }
+
+                @Override
+                public int getMenuRes() {
+                    return getSongMenuRes();
+                }
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return onSongMenuItemClick(item) || super.onMenuItemClick(item);
+                }
+            });
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
         }
 
         protected Song getSong() {

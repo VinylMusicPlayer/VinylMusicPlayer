@@ -19,6 +19,7 @@ import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.audiocover.AudioFileCover;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -66,7 +67,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_list, parent, false));
+        ItemListBinding binding = ItemListBinding.inflate(LayoutInflater.from(activity), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -164,9 +166,9 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
 
-        public ViewHolder(View itemView) {
-            super(itemView);
             if (menu != null && callbacks != null) {
                 menu.setOnClickListener(v -> {
                     int position = getAdapterPosition();
