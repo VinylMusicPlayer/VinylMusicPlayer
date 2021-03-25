@@ -246,18 +246,15 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     static class SwipedResultActionRemoveItem extends SwipeResultActionRemoveItem {
-        private PlayingQueueAdapter adapter;
-        private int position;
+        private final PlayingQueueAdapter adapter;
+        private final int position;
         private Song songToRemove;
-        private AppCompatActivity activity;
-        private boolean isPlaying;
-        private int songProgressMillis;
+        private final AppCompatActivity activity;
 
         public SwipedResultActionRemoveItem(PlayingQueueAdapter adapter, int position, AppCompatActivity activity) {
             this.adapter = adapter;
             this.position = position;
             this.activity = activity;
-            this.isPlaying = MusicPlayerRemote.isPlaying();
         }
 
         @Override

@@ -29,7 +29,6 @@ import de.psdev.licensesdialog.LicensesDialog;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class AboutActivity extends AbsBaseActivity implements View.OnClickListener {
 
     private static final String GITHUB = "https://github.com/AdrienPoupa/VinylMusicPlayer";

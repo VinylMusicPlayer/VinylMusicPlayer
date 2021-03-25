@@ -42,7 +42,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     private MiniPlayerFragment miniPlayerFragment;
 
     private ValueAnimator navigationBarColorAnimator;
-    private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+    private final ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
     private final WeakMethodReference<AbsSlidingMusicPanelActivity> onDiscographyChanged = new WeakMethodReference<>(this, AbsSlidingMusicPanelActivity::reload);
 
