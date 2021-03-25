@@ -21,6 +21,8 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -36,22 +38,15 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
 
     private static final int LOADER_ID = LoaderIds.GENRE_DETAIL_ACTIVITY;
 
     public static final String EXTRA_GENRE = "extra_genre";
 
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(android.R.id.empty)
     TextView empty;
-    @BindView(R.id.title)
     TextView titleTextView;
 
     private Genre genre;
@@ -65,7 +60,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
@@ -82,7 +76,18 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     @Override
     protected View createContentView() {
-        return wrapSlidingMusicPanel(R.layout.activity_genre_detail);
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityGenreDetailBinding binding = ActivityGenreDetailBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+
+        recyclerView = binding.recyclerView;
+        toolbar = binding.toolbar;
+        empty = binding.empty;
+        titleTextView = binding.title;
+
+        return slidingPanelBinding.getRoot();
     }
 
     private void setUpRecyclerView() {

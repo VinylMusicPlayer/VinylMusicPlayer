@@ -25,7 +25,9 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivityMainContentBinding;
 import com.poupa.vinylmusicplayer.databinding.ActivityMainDrawerLayoutBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -149,7 +151,13 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         drawerLayout = binding.drawerLayout;
 
         ViewGroup drawerContent = binding.drawerContentContainer;
-        drawerContent.addView(wrapSlidingMusicPanel(R.layout.activity_main_content));
+
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityMainContentBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+        drawerContent.addView(slidingPanelBinding.getRoot());
 
         return binding.getRoot();
     }

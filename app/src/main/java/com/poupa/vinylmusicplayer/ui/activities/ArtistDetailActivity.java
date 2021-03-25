@@ -31,6 +31,8 @@ import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.album.HorizontalAlbumAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivityArtistDetailBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
@@ -57,8 +59,6 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,30 +73,18 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
-    @BindView(R.id.list)
     ObservableListView songListView;
-    @BindView(R.id.image)
     ImageView artistImage;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.header)
     View headerView;
-    @BindView(R.id.header_overlay)
     View headerOverlay;
 
-    @BindView(R.id.duration_icon)
     ImageView durationIconImageView;
-    @BindView(R.id.song_count_icon)
     ImageView songCountIconImageView;
-    @BindView(R.id.album_count_icon)
     ImageView albumCountIconImageView;
-    @BindView(R.id.duration_text)
     TextView durationTextView;
-    @BindView(R.id.song_count_text)
     TextView songCountTextView;
-    @BindView(R.id.album_count_text)
     TextView albumCountTextView;
-    @BindView(R.id.title)
     TextView titleTextView;
 
     View songListHeader;
@@ -136,7 +124,6 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         lastFMRestClient = new LastFMRestClient(this);
         usePalette = PreferenceUtil.getInstance().albumArtistColoredFooters();
@@ -151,7 +138,27 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @Override
     protected View createContentView() {
-        return wrapSlidingMusicPanel(R.layout.activity_artist_detail);
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityArtistDetailBinding binding = ActivityArtistDetailBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+
+        songListView = binding.list;
+        artistImage = binding.image;
+        toolbar = binding.toolbar;
+        headerView = binding.header;
+        headerOverlay = binding.headerOverlay;
+
+        durationIconImageView = binding.durationIcon;
+        songCountIconImageView = binding.songCountIcon;
+        albumCountIconImageView = binding.albumCountIcon;
+        durationTextView = binding.durationText;
+        songCountTextView = binding.songCountText;
+        albumCountTextView = binding.albumCountText;
+        titleTextView = binding.title;
+
+        return slidingPanelBinding.getRoot();
     }
 
     private boolean usePalette;

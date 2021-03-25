@@ -5,13 +5,12 @@ import android.animation.ValueAnimator;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.PathInterpolator;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
-import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
@@ -30,9 +29,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
- *         <p/>
- *         Do not use {@link #setContentView(int)}. Instead wrap your layout with
- *         {@link #wrapSlidingMusicPanel(int)} first and then return it in {@link #createContentView()}
  */
 public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivity implements SlidingUpPanelLayout.PanelSlideListener, CardPlayerFragment.Callbacks {
     SlidingUpPanelLayout slidingUpPanelLayout;
@@ -221,14 +217,11 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         }
     }
 
-    protected View wrapSlidingMusicPanel(@LayoutRes int resId) {
+    @NonNull
+    protected SlidingMusicPanelLayoutBinding createSlidingMusicPanel() {
         SlidingMusicPanelLayoutBinding binding = SlidingMusicPanelLayoutBinding.inflate(getLayoutInflater());
         slidingUpPanelLayout = binding.slidingLayout;
-
-        ViewGroup contentContainer = binding.contentContainer;
-        getLayoutInflater().inflate(resId, contentContainer);
-
-        return binding.getRoot();
+        return binding;
     }
 
     @Override

@@ -26,6 +26,8 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.OrderablePlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -44,9 +46,6 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
 
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
@@ -54,13 +53,9 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @NonNull
     public static String EXTRA_PLAYLIST = "extra_playlist";
 
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(android.R.id.empty)
     TextView empty;
-    @BindView(R.id.title)
     TextView titleTextView;
 
     private Playlist playlist;
@@ -75,7 +70,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
@@ -92,7 +86,18 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @Override
     protected View createContentView() {
-        return wrapSlidingMusicPanel(R.layout.activity_playlist_detail);
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityPlaylistDetailBinding binding = ActivityPlaylistDetailBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+
+        recyclerView = binding.recyclerView;
+        toolbar = binding.toolbar;
+        empty = binding.empty;
+        titleTextView = binding.title;
+
+        return slidingPanelBinding.getRoot();
     }
 
     private void setUpRecyclerView() {
