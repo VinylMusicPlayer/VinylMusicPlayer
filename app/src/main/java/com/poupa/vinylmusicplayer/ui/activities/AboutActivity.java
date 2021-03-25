@@ -32,30 +32,30 @@ import de.psdev.licensesdialog.LicensesDialog;
 @SuppressWarnings("FieldCanBeLocal")
 public class AboutActivity extends AbsBaseActivity implements View.OnClickListener {
 
-    private static String GITHUB = "https://github.com/AdrienPoupa/VinylMusicPlayer";
+    private static final String GITHUB = "https://github.com/AdrienPoupa/VinylMusicPlayer";
 
-    private static String WEBSITE = "https://adrien.poupa.fr/";
+    private static final String WEBSITE = "https://adrien.poupa.fr/";
 
-    private static String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
+    private static final String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
 
-    private static String KABOUZEID_GOOGLE_PLUS = "https://google.com/+KarimAbouZeid23697";
-    private static String KABOUZEID_WEBSITE = "https://kabouzeid.com";
+    private static final String KABOUZEID_GOOGLE_PLUS = "https://google.com/+KarimAbouZeid23697";
+    private static final String KABOUZEID_WEBSITE = "https://kabouzeid.com";
 
-    private static String AIDAN_FOLLESTAD_GOOGLE_PLUS = "https://google.com/+AidanFollestad";
-    private static String AIDAN_FOLLESTAD_GITHUB = "https://github.com/afollestad";
+    private static final String AIDAN_FOLLESTAD_GOOGLE_PLUS = "https://google.com/+AidanFollestad";
+    private static final String AIDAN_FOLLESTAD_GITHUB = "https://github.com/afollestad";
 
-    private static String MICHAEL_COOK_GOOGLE_PLUS = "https://plus.google.com/102718493746376292361";
-    private static String MICHAEL_COOK_WEBSITE = "https://cookicons.co/";
+    private static final String MICHAEL_COOK_GOOGLE_PLUS = "https://plus.google.com/102718493746376292361";
+    private static final String MICHAEL_COOK_WEBSITE = "https://cookicons.co/";
 
-    private static String MAARTEN_CORPEL_GOOGLE_PLUS = "https://google.com/+MaartenCorpel";
+    private static final String MAARTEN_CORPEL_GOOGLE_PLUS = "https://google.com/+MaartenCorpel";
 
-    private static String ALEKSANDAR_TESIC_GOOGLE_PLUS = "https://google.com/+aleksandartešić";
+    private static final String ALEKSANDAR_TESIC_GOOGLE_PLUS = "https://google.com/+aleksandartešić";
 
-    private static String EUGENE_CHEUNG_GITHUB = "https://github.com/arkon";
-    private static String EUGENE_CHEUNG_WEBSITE = "https://echeung.me/";
+    private static final String EUGENE_CHEUNG_GITHUB = "https://github.com/arkon";
+    private static final String EUGENE_CHEUNG_WEBSITE = "https://echeung.me/";
 
-    private static String ADRIAN_TWITTER = "https://twitter.com/froschgames";
-    private static String ADRIAN_WEBSITE = "https://froschgames.com/";
+    private static final String ADRIAN_TWITTER = "https://twitter.com/froschgames";
+    private static final String ADRIAN_WEBSITE = "https://froschgames.com/";
 
     Toolbar toolbar;
     TextView appVersion;

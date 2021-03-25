@@ -229,34 +229,23 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
-
-            menu.setOnTouchListener((v, ev) -> {
-                menu.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            });
-            menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
-                @Override
-                public Song getSong() {
-                    return ViewHolder.this.getSong();
-                }
-
-                @Override
-                public int getMenuRes() {
-                    return getSongMenuRes();
-                }
-
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    return onSongMenuItemClick(item) || super.onMenuItemClick(item);
-                }
-            });
+            setupMenuHandlers();
         }
 
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
+            setupMenuHandlers();
+        }
 
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
+
+            setImageTransitionName(activity.getString(R.string.transition_album_art));
+        }
+
+        private void setupMenuHandlers() {
             menu.setOnTouchListener((v, ev) -> {
                 menu.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
@@ -277,12 +266,6 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                     return onSongMenuItemClick(item) || super.onMenuItemClick(item);
                 }
             });
-        }
-
-        public ViewHolder(@NonNull ItemGridBinding binding) {
-            super(binding);
-
-            setImageTransitionName(activity.getString(R.string.transition_album_art));
         }
 
         protected Song getSong() {

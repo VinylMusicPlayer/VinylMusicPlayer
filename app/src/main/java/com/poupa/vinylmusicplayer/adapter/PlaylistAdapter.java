@@ -143,33 +143,29 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
     @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Playlist> selection) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_delete_playlist:
-                for (int i = 0; i < selection.size(); i++) {
-                    Playlist playlist = selection.get(i);
-                    if (playlist instanceof AbsSmartPlaylist) {
-                        AbsSmartPlaylist absSmartPlaylist = (AbsSmartPlaylist) playlist;
-                        if (absSmartPlaylist.isClearable()) {
-                            ClearSmartPlaylistDialog.create(absSmartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_PLAYLIST_" + absSmartPlaylist.name);
-                        }
-                        selection.remove(playlist);
-                        i--;
+        if (R.id.action_delete_playlist == menuItem.getItemId()) {
+            for (int i = 0; i < selection.size(); i++) {
+                Playlist playlist = selection.get(i);
+                if (playlist instanceof AbsSmartPlaylist) {
+                    AbsSmartPlaylist absSmartPlaylist = (AbsSmartPlaylist) playlist;
+                    if (absSmartPlaylist.isClearable()) {
+                        ClearSmartPlaylistDialog.create(absSmartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_PLAYLIST_" + absSmartPlaylist.name);
                     }
+                    selection.remove(playlist);
+                    i--;
                 }
-                if (selection.size() > 0) {
-                    DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
-                }
-                break;
-            case R.id.action_save_playlist:
-                if (selection.size() == 1) {
-                    PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
-                } else {
-                    new SavePlaylistsAsyncTask(activity).execute(selection);
-                }
-                break;
-            default:
-                SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
-                break;
+            }
+            if (selection.size() > 0) {
+                DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
+            }
+        } else if (R.id.action_save_playlist == menuItem.getItemId()) {
+            if (selection.size() == 1) {
+                PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
+            } else {
+                new SavePlaylistsAsyncTask(activity).execute(selection);
+            }
+        } else {
+            SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
         }
     }
 
@@ -223,11 +219,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
         public ViewHolder(@NonNull ItemListSingleRowBinding binding, int itemViewType) {
             super(binding);
 
-            View itemView = binding.getRoot();
             if (itemViewType == SMART_PLAYLIST) {
                 if (shortSeparator != null) {
                     shortSeparator.setVisibility(View.GONE);
                 }
+                View itemView = binding.getRoot();
                 itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
@@ -261,10 +257,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
-                        popupMenu.setOnMenuItemClickListener(item -> {
-                            return PlaylistMenuHelper.handleMenuClick(
-                                activity, dataSet.get(getAdapterPosition()), item);
-                        });
+                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
+                            activity, dataSet.get(getAdapterPosition()), item));
                     }
                     popupMenu.show();
                 });

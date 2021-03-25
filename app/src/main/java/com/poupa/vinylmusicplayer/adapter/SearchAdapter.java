@@ -119,9 +119,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull SubHeaderBinding binding) {
             super(binding);
-
-            View itemView = binding.getRoot();
-            itemView.setOnLongClickListener(null);
+            binding.getRoot().setOnLongClickListener(null);
         }
 
         public ViewHolder(@NonNull ItemListBinding binding, int itemViewType) {

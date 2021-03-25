@@ -4,7 +4,6 @@ import android.os.Build;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,9 +22,6 @@ import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    @Nullable
-    public LinearLayout songView;
-
     @Nullable
     public FrameLayout dummyContainer;
 
@@ -62,7 +58,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull ItemListBinding binding) {
         super(binding.getRoot());
 
-        songView = binding.songView;
         dummyContainer = binding.touchInterceptFramelayout;
         image = binding.image;
         imageText = binding.imageText;
@@ -83,7 +78,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull ItemGridBinding binding) {
         super(binding.getRoot());
 
-        songView = null;
         dummyContainer = binding.touchInterceptFramelayout;
         image = binding.image;
         imageText = null;
@@ -104,7 +98,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull ItemGridCardHorizontalBinding binding) {
         super(binding.getRoot());
 
-        songView = null;
         dummyContainer = binding.touchInterceptFramelayout;
         image = binding.image;
         imageText = null;
@@ -125,7 +118,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull SubHeaderBinding binding) {
         super(binding.getRoot());
 
-        songView = null;
         dummyContainer = null;
         image = null;
         imageText = null;
@@ -146,7 +138,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull ItemListSingleRowBinding binding) {
         super(binding.getRoot());
 
-        songView = null;
         dummyContainer = binding.touchInterceptFramelayout;
         image = binding.image;
         imageText = binding.imageText;
@@ -167,7 +158,6 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public MediaEntryViewHolder(@NonNull ItemListNoImageBinding binding) {
         super(binding.getRoot());
 
-        songView = null;
         dummyContainer = binding.touchInterceptFramelayout;
         image = null;
         imageText = null;
