@@ -59,12 +59,6 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
-        <name>Butter Knife</name>
-        <url>https://github.com/JakeWharton/butterknife</url>
-        <copyright>Copyright 2013 Jake Wharton</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>Eleven</name>
         <url>https://github.com/CyanogenMod/android_packages_apps_Eleven</url>
         <copyright>Copyright (c) 2014, The CyanogenMod Project</copyright>
