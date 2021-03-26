@@ -22,8 +22,8 @@ public class GenresFragment extends AbsLibraryPagerRecyclerViewFragment<GenreAda
     private static final int LOADER_ID = LoaderIds.GENRES_FRAGMENT;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
