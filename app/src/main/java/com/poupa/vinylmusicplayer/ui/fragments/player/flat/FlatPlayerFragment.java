@@ -372,7 +372,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                 onPanelCollapsed(panel);
                 break;
             case ANCHORED:
-                //noinspection ConstantConditions
                 slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED); // this fixes a bug where the panel would get stuck for some reason
                 break;
         }
