@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.discog;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
@@ -17,14 +16,12 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
     @NonNull
     final Discography discography;
 
-    @Nullable
-    SnackbarUtil snackbar = null;
+    @NonNull
+    final SnackbarUtil snackbar;
 
-    SyncWithMediaStoreAsyncTask(@Nullable MainActivity mainActivity, @NonNull Discography discog) {
+    SyncWithMediaStoreAsyncTask(@NonNull MainActivity mainActivity, @NonNull Discography discog) {
         discography = discog;
-        if (mainActivity != null) {
-            snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
-        }
+        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
     }
 
     @Override
@@ -38,24 +35,20 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         discography.setStale(true);
-
-        if (snackbar != null) {
-            final String message = App.getInstance().getApplicationContext().getString(R.string.scanning_songs_started);
-            snackbar.showProgress(message);
-        }
+        startTimeMs = System.currentTimeMillis();
     }
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        if (snackbar == null) return;
+        if (isUIFeedbackNeeded()) {
+            int value = values[values.length - 1];
+            if (value == 0) return;
 
-        int value = values[values.length - 1];
-        if (value == 0) return;
-
-        final String message = String.format(
-                App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                Math.abs(value));
-        snackbar.showProgress(message);
+            final String message = String.format(
+                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
+                    Math.abs(value));
+            snackbar.showProgress(message);
+        }
     }
 
     @Override
@@ -69,15 +62,23 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
 
     private void onTermination(Integer value) {
         discography.setStale(false);
-        if (snackbar == null) return;
-
-        if (value != 0) {
-            final String message = String.format(
-                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                    Math.abs(value));
-            snackbar.showResult(message);
-        } else {
-            snackbar.dismiss();
+        if (isUIFeedbackNeeded()) {
+            if (value != 0) {
+                final String message = String.format(
+                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
+                        Math.abs(value));
+                snackbar.showResult(message);
+            } else {
+                snackbar.dismiss();
+            }
         }
+    }
+
+    long startTimeMs = 0;
+    private boolean isUIFeedbackNeeded() {
+        final long UI_VISIBLE_THRESHOLD_MS = 500;
+        final long now = System.currentTimeMillis();
+
+        return (now - startTimeMs > UI_VISIBLE_THRESHOLD_MS);
     }
 }
