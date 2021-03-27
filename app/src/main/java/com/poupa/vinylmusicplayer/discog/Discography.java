@@ -270,7 +270,10 @@ public class Discography implements MusicServiceEventListener {
                 mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
         } else {
-            (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+            (new SyncWithMediaStoreAsyncTask(
+                    reset ? mainActivity : null, // show UI feedback only on heavy (reset) operation
+                    this)
+            ).execute(reset);
         }
     }
 
