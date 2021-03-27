@@ -26,8 +26,8 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
     private static final int LOADER_ID = LoaderIds.ALBUMS_FRAGMENT;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
