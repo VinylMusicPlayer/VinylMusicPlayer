@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +20,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
@@ -48,13 +48,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
     protected final AppCompatActivity activity;
     protected ArrayList<Playlist> dataSet;
-    protected int itemLayoutRes;
 
-    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @LayoutRes int itemLayoutRes, @Nullable CabHolder cabHolder) {
+    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_playlists_selection);
         this.activity = activity;
         this.dataSet = dataSet;
-        this.itemLayoutRes = itemLayoutRes;
         setHasStableIds(true);
     }
 
@@ -75,12 +73,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(activity).inflate(itemLayoutRes, parent, false);
-        return createViewHolder(view, viewType);
-    }
-
-    protected ViewHolder createViewHolder(View view, int viewType) {
-        return new ViewHolder(view, viewType);
+        ItemListSingleRowBinding binding = ItemListSingleRowBinding.inflate(LayoutInflater.from(activity), parent, false);
+        return new ViewHolder(binding, viewType);
     }
 
     protected String getPlaylistTitle(Playlist playlist) {
@@ -149,33 +143,29 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
     @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Playlist> selection) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_delete_playlist:
-                for (int i = 0; i < selection.size(); i++) {
-                    Playlist playlist = selection.get(i);
-                    if (playlist instanceof AbsSmartPlaylist) {
-                        AbsSmartPlaylist absSmartPlaylist = (AbsSmartPlaylist) playlist;
-                        if (absSmartPlaylist.isClearable()) {
-                            ClearSmartPlaylistDialog.create(absSmartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_PLAYLIST_" + absSmartPlaylist.name);
-                        }
-                        selection.remove(playlist);
-                        i--;
+        if (R.id.action_delete_playlist == menuItem.getItemId()) {
+            for (int i = 0; i < selection.size(); i++) {
+                Playlist playlist = selection.get(i);
+                if (playlist instanceof AbsSmartPlaylist) {
+                    AbsSmartPlaylist absSmartPlaylist = (AbsSmartPlaylist) playlist;
+                    if (absSmartPlaylist.isClearable()) {
+                        ClearSmartPlaylistDialog.create(absSmartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_PLAYLIST_" + absSmartPlaylist.name);
                     }
+                    selection.remove(playlist);
+                    i--;
                 }
-                if (selection.size() > 0) {
-                    DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
-                }
-                break;
-            case R.id.action_save_playlist:
-                if (selection.size() == 1) {
-                    PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
-                } else {
-                    new SavePlaylistsAsyncTask(activity).execute(selection);
-                }
-                break;
-            default:
-                SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
-                break;
+            }
+            if (selection.size() > 0) {
+                DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
+            }
+        } else if (R.id.action_save_playlist == menuItem.getItemId()) {
+            if (selection.size() == 1) {
+                PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
+            } else {
+                new SavePlaylistsAsyncTask(activity).execute(selection);
+            }
+        } else {
+            SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
         }
     }
 
@@ -226,14 +216,14 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
-
-        public ViewHolder(@NonNull View itemView, int itemViewType) {
-            super(itemView);
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding, int itemViewType) {
+            super(binding);
 
             if (itemViewType == SMART_PLAYLIST) {
                 if (shortSeparator != null) {
                     shortSeparator.setVisibility(View.GONE);
                 }
+                View itemView = binding.getRoot();
                 itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
@@ -267,10 +257,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
-                        popupMenu.setOnMenuItemClickListener(item -> {
-                            return PlaylistMenuHelper.handleMenuClick(
-                                activity, dataSet.get(getAdapterPosition()), item);
-                        });
+                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
+                            activity, dataSet.get(getAdapterPosition()), item));
                     }
                     popupMenu.show();
                 });

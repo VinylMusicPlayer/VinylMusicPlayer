@@ -38,14 +38,11 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import butterknife.BindView;
-
 public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implements Toolbar.OnMenuItemClickListener, PaletteColorHolder {
 
     private Callbacks callbacks;
     private static boolean isToolbarShown = true;
 
-    @BindView(R.id.player_toolbar)
     protected Toolbar toolbar;
 
     public PlayingQueueAdapter playingQueueAdapter;
@@ -86,7 +83,6 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
                 ((AppCompatActivity) getActivity()),
                 MusicPlayerRemote.getPlayingQueue(),
                 MusicPlayerRemote.getPosition(),
-                R.layout.item_list,
                 false,
                 null);
         wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(playingQueueAdapter);

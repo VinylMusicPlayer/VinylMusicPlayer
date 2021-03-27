@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,6 +25,9 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivityMainContentBinding;
+import com.poupa.vinylmusicplayer.databinding.ActivityMainDrawerLayoutBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -48,9 +50,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -59,9 +58,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     private static final int LIBRARY = 0;
     private static final int FOLDERS = 1;
 
-    @BindView(R.id.navigation_view)
     NavigationView navigationView;
-    @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     @Nullable
@@ -77,7 +74,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             navigationView.setFitsSystemWindows(false); // for header to go below statusbar
@@ -150,11 +146,20 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     @Override
     protected View createContentView() {
-        @SuppressLint("InflateParams")
-        View contentView = getLayoutInflater().inflate(R.layout.activity_main_drawer_layout, null);
-        ViewGroup drawerContent = contentView.findViewById(R.id.drawer_content_container);
-        drawerContent.addView(wrapSlidingMusicPanel(R.layout.activity_main_content));
-        return contentView;
+        ActivityMainDrawerLayoutBinding binding = ActivityMainDrawerLayoutBinding.inflate(getLayoutInflater());
+        navigationView = binding.navigationView;
+        drawerLayout = binding.drawerLayout;
+
+        ViewGroup drawerContent = binding.drawerContentContainer;
+
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityMainContentBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+        drawerContent.addView(slidingPanelBinding.getRoot());
+
+        return binding.getRoot();
     }
 
     private void setUpNavigationView() {

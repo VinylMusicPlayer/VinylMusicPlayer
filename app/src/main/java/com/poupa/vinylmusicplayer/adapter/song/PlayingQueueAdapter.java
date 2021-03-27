@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +23,8 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.annotation.SwipeableItemResults;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -47,15 +48,22 @@ public class PlayingQueueAdapter extends SongAdapter
 
     private int current;
 
-    public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
-        super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
+    public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
+        super(activity, dataSet, R.layout.item_list, usePalette, cabHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
     }
 
+    @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new ViewHolder(view);
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -192,8 +200,12 @@ public class PlayingQueueAdapter extends SongAdapter
         @DraggableItemStateFlags
         private int mDragStateFlags;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
         }
 
         @Override
@@ -234,18 +246,15 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     static class SwipedResultActionRemoveItem extends SwipeResultActionRemoveItem {
-        private PlayingQueueAdapter adapter;
-        private int position;
+        private final PlayingQueueAdapter adapter;
+        private final int position;
         private Song songToRemove;
-        private AppCompatActivity activity;
-        private boolean isPlaying;
-        private int songProgressMillis;
+        private final AppCompatActivity activity;
 
         public SwipedResultActionRemoveItem(PlayingQueueAdapter adapter, int position, AppCompatActivity activity) {
             this.adapter = adapter;
             this.position = position;
             this.activity = activity;
-            this.isPlaying = MusicPlayerRemote.isPlaying();
         }
 
         @Override

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewbinding.ViewBinding;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -59,9 +60,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
@@ -71,16 +69,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     public static final String EXTRA_PALETTE = "extra_palette";
     private static final String TAG = AbsTagEditorActivity.class.getSimpleName();
     private static final int REQUEST_CODE_SELECT_IMAGE = 1000;
-    @BindView(R.id.play_pause_fab)
+
     FloatingActionButton fab;
-    @BindView(R.id.observableScrollView)
     ObservableScrollView observableScrollView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.image)
     ImageView image;
-    @BindView(R.id.header)
     LinearLayout header;
+
     private long id;
     private int headerVariableSpace;
     private int paletteColorPrimary;
@@ -109,8 +104,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getContentViewLayout());
-        ButterKnife.bind(this);
+        setContentView(getViewBinding().getRoot());
 
         getIntentExtras();
 
@@ -201,7 +195,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     }
 
-    protected abstract int getContentViewLayout();
+    protected abstract @NonNull ViewBinding getViewBinding();
 
     @NonNull
     protected abstract List<String> getSongPaths();

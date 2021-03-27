@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.adapter.song;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +10,8 @@ import androidx.core.util.Pair;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -23,14 +24,21 @@ import java.util.ArrayList;
  */
 public class PlaylistSongAdapter extends AbsOffsetSongAdapter {
 
-    public PlaylistSongAdapter(AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
-        super(activity, dataSet, itemLayoutRes, usePalette, cabHolder, false);
+    public PlaylistSongAdapter(AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, boolean usePalette, @Nullable CabHolder cabHolder) {
+        super(activity, dataSet, usePalette, cabHolder, false);
         setMultiSelectMenuRes(R.menu.menu_cannot_delete_single_songs_playlist_songs_selection);
     }
 
+    @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new PlaylistSongAdapter.ViewHolder(view);
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new PlaylistSongAdapter.ViewHolder(binding);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new PlaylistSongAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -68,8 +76,12 @@ public class PlaylistSongAdapter extends AbsOffsetSongAdapter {
     }
 
     public class ViewHolder extends AbsOffsetSongAdapter.ViewHolder {
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
         }
 
         @Override

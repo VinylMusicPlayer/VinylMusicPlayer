@@ -2,20 +2,19 @@ package com.poupa.vinylmusicplayer.ui.activities.base;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.PathInterpolator;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
-import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
@@ -28,18 +27,10 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
- *         <p/>
- *         Do not use {@link #setContentView(int)}. Instead wrap your layout with
- *         {@link #wrapSlidingMusicPanel(int)} first and then return it in {@link #createContentView()}
  */
 public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivity implements SlidingUpPanelLayout.PanelSlideListener, CardPlayerFragment.Callbacks {
-
-    @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout slidingUpPanelLayout;
 
     private int navigationbarColor;
@@ -51,7 +42,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     private MiniPlayerFragment miniPlayerFragment;
 
     private ValueAnimator navigationBarColorAnimator;
-    private ArgbEvaluator argbEvaluator = new ArgbEvaluator();
+    private final ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
     private final WeakMethodReference<AbsSlidingMusicPanelActivity> onDiscographyChanged = new WeakMethodReference<>(this, AbsSlidingMusicPanelActivity::reload);
 
@@ -59,7 +50,6 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(createContentView());
-        ButterKnife.bind(this);
 
         currentNowPlayingScreen = PreferenceUtil.getInstance().getNowPlayingScreen();
         Fragment fragment; // must implement AbsPlayerFragment
@@ -227,12 +217,11 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         }
     }
 
-    protected View wrapSlidingMusicPanel(@LayoutRes int resId) {
-        @SuppressLint("InflateParams")
-        View slidingMusicPanelLayout = getLayoutInflater().inflate(R.layout.sliding_music_panel_layout, null);
-        ViewGroup contentContainer = slidingMusicPanelLayout.findViewById(R.id.content_container);
-        getLayoutInflater().inflate(resId, contentContainer);
-        return slidingMusicPanelLayout;
+    @NonNull
+    protected SlidingMusicPanelLayoutBinding createSlidingMusicPanel() {
+        SlidingMusicPanelLayoutBinding binding = SlidingMusicPanelLayoutBinding.inflate(getLayoutInflater());
+        slidingUpPanelLayout = binding.slidingLayout;
+        return binding;
     }
 
     @Override

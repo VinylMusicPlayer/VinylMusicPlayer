@@ -4,13 +4,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.viewbinding.ViewBinding;
 
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 
 import org.jaudiotagger.tag.FieldKey;
@@ -20,32 +23,20 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class SongTagEditorActivity extends AbsTagEditorActivity implements TextWatcher {
 
-    @BindView(R.id.title1)
     EditText songTitle;
-    @BindView(R.id.title2)
     EditText albumTitle;
-    @BindView(R.id.artist)
     EditText artist;
-    @BindView(R.id.genre)
     EditText genre;
-    @BindView(R.id.year)
     EditText year;
-    @BindView(R.id.track_number)
     EditText trackNumber;
-    @BindView(R.id.disc_number)
     EditText discNumber;
-    @BindView(R.id.lyrics)
     EditText lyrics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
 
         setNoImageMode();
         setUpViews();
@@ -116,8 +107,26 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     }
 
     @Override
-    protected int getContentViewLayout() {
-        return R.layout.activity_song_tag_editor;
+    @NonNull
+    protected ViewBinding getViewBinding() {
+        ActivitySongTagEditorBinding binding = ActivitySongTagEditorBinding.inflate(LayoutInflater.from(this));
+
+        songTitle = binding.title1;
+        albumTitle = binding.title2;
+        artist = binding.artist;
+        genre = binding.genre;
+        year = binding.year;
+        trackNumber = binding.trackNumber;
+        discNumber = binding.discNumber;
+        lyrics = binding.lyrics;
+
+        fab = binding.playPauseFab;
+        observableScrollView = binding.observableScrollView;
+        toolbar = binding.toolbar;
+        image = binding.image;
+        header = binding.header;
+
+        return binding;
     }
 
     @NonNull

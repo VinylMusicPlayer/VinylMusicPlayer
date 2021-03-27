@@ -18,29 +18,21 @@ import androidx.annotation.Nullable;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.FragmentMiniPlayerBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.views.PlayPauseDrawable;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MiniPlayerFragment extends AbsMusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.mini_player_title)
     TextView miniPlayerTitle;
-    @BindView(R.id.mini_player_play_pause_button)
     ImageView miniPlayerPlayPauseButton;
-    @BindView(R.id.progress_bar)
     MaterialProgressBar progressBar;
 
     private PlayPauseDrawable miniPlayerPlayPauseDrawable;
@@ -56,13 +48,17 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mini_player, container, false);
+        FragmentMiniPlayerBinding binding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
+        miniPlayerTitle = binding.miniPlayerTitle;
+        miniPlayerPlayPauseButton = binding.miniPlayerPlayPauseButton;
+        progressBar = binding.progressBar;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this, view);
 
         view.setOnTouchListener(new FlingPlayBackController(getActivity()));
         setUpMiniPlayer();
@@ -71,7 +67,6 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     private void setUpMiniPlayer() {

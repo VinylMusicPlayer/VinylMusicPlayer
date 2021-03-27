@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.ui.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivitySearchBinding;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -32,19 +34,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class SearchActivity extends AbsMusicServiceActivity implements SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Object>> {
 
     public static final String QUERY = "query";
     private static final int LOADER_ID = LoaderIds.SEARCH_ACTIVITY;
 
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(android.R.id.empty)
     TextView empty;
 
     SearchView searchView;
@@ -55,9 +51,14 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+
+        ActivitySearchBinding binding = ActivitySearchBinding.inflate(LayoutInflater.from(this));
+        recyclerView = binding.recyclerView;
+        toolbar = binding.toolbar;
+        empty = binding.empty;
+        setContentView(binding.getRoot());
+
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();

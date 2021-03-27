@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.DialogSleepTimerBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -31,18 +34,12 @@ import com.triggertrap.seekarc.SeekArc;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class SleepTimerDialog extends DialogFragment {
-    @BindView(R.id.seek_arc)
     SeekArc seekArc;
-    @BindView(R.id.timer_display)
     EditText timerDisplay;
-    @BindView(R.id.should_finish_last_song)
     CheckBox shouldFinishLastSong;
 
     private int seekArcProgress;
@@ -59,8 +56,14 @@ public class SleepTimerDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Activity activity = getActivity();
+        DialogSleepTimerBinding binding = DialogSleepTimerBinding.inflate(LayoutInflater.from(activity));
+        seekArc = binding.seekArc;
+        timerDisplay = binding.timerDisplay;
+        shouldFinishLastSong = binding.shouldFinishLastSong;
+
         timerUpdater = new TimerUpdater();
-        materialDialog = new MaterialDialog.Builder(getActivity())
+        materialDialog = new MaterialDialog.Builder(activity)
                 .title(getActivity().getResources().getString(R.string.action_sleep_timer))
                 .positiveText(R.string.action_set)
                 .onPositive((dialog, which) -> {
@@ -104,14 +107,12 @@ public class SleepTimerDialog extends DialogFragment {
                         timerUpdater.start();
                     }
                 })
-                .customView(R.layout.dialog_sleep_timer, false)
+                .customView(binding.getRoot(), false)
                 .build();
 
         if (getActivity() == null || materialDialog.getCustomView() == null) {
             return materialDialog;
         }
-
-        ButterKnife.bind(this, materialDialog.getCustomView());
 
         boolean finishMusic = PreferenceUtil.getInstance().getSleepTimerFinishMusic();
         shouldFinishLastSong.setChecked(finishMusic);

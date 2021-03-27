@@ -19,6 +19,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.FragmentFlatPlayerPlaybackControlsBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
@@ -31,33 +32,18 @@ import com.poupa.vinylmusicplayer.views.PlayPauseDrawable;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.player_play_pause__button)
     ImageButton playPauseButton;
-    @BindView(R.id.player_prev_button)
     ImageButton prevButton;
-    @BindView(R.id.player_next_button)
     ImageButton nextButton;
-    @BindView(R.id.player_repeat_button)
     ImageButton repeatButton;
-    @BindView(R.id.player_shuffle_button)
     ImageButton shuffleButton;
 
-    @BindView(R.id.player_progress_slider)
     SeekBar progressSlider;
-    @BindView(R.id.player_song_total_time)
     TextView songTotalTime;
-    @BindView(R.id.player_song_current_progress)
     TextView songCurrentProgress;
 
     private PlayPauseDrawable playPauseDrawable;
@@ -79,13 +65,22 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_flat_player_playback_controls, container, false);
+        FragmentFlatPlayerPlaybackControlsBinding binding = FragmentFlatPlayerPlaybackControlsBinding.inflate(inflater, container, false);
+        playPauseButton = binding.playerPlayPauseButton;
+        prevButton = binding.playerPrevButton;
+        nextButton = binding.playerNextButton;
+        repeatButton = binding.playerRepeatButton;
+        shuffleButton = binding.playerShuffleButton;
+        progressSlider = binding.playerProgressSlider;
+        songTotalTime = binding.playerSongTotalTime;
+        songCurrentProgress = binding.playerSongCurrentProgress;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this, view);
         setUpMusicControllers();
         updateProgressTextColor();
     }
@@ -93,7 +88,6 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override

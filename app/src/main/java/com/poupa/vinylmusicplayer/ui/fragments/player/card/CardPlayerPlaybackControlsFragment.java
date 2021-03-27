@@ -18,6 +18,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.kabouzeid.appthemehelper.util.TintHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.FragmentCardPlayerPlaybackControlsBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
@@ -27,33 +28,18 @@ import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.views.PlayPauseDrawable;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.player_play_pause_fab)
     FloatingActionButton playPauseFab;
-    @BindView(R.id.player_prev_button)
     ImageButton prevButton;
-    @BindView(R.id.player_next_button)
     ImageButton nextButton;
-    @BindView(R.id.player_repeat_button)
     ImageButton repeatButton;
-    @BindView(R.id.player_shuffle_button)
     ImageButton shuffleButton;
 
-    @BindView(R.id.player_progress_slider)
     SeekBar progressSlider;
-    @BindView(R.id.player_song_total_time)
     TextView songTotalTime;
-    @BindView(R.id.player_song_current_progress)
     TextView songCurrentProgress;
 
     private PlayPauseDrawable playerFabPlayPauseDrawable;
@@ -71,13 +57,22 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_card_player_playback_controls, container, false);
+        FragmentCardPlayerPlaybackControlsBinding binding = FragmentCardPlayerPlaybackControlsBinding.inflate(inflater, container, false);
+        playPauseFab = binding.playerPlayPauseFab;
+        prevButton = binding.playerPrevButton;
+        nextButton = binding.playerNextButton;
+        repeatButton = binding.playerRepeatButton;
+        shuffleButton = binding.playerShuffleButton;
+        progressSlider = binding.playerProgressSlider;
+        songTotalTime = binding.playerSongTotalTime;
+        songCurrentProgress = binding.playerSongCurrentProgress;
+
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = ButterKnife.bind(this, view);
         setUpMusicControllers();
         updateProgressTextColor();
     }
@@ -85,7 +80,6 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override

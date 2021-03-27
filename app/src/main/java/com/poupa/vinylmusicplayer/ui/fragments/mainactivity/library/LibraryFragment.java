@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +27,7 @@ import com.kabouzeid.appthemehelper.util.TabLayoutUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.MusicLibraryPagerAdapter;
+import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -45,21 +45,10 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class LibraryFragment extends AbsMainActivityFragment implements CabHolder, MainActivity.MainActivityFragmentCallbacks, ViewPager.OnPageChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private Unbinder unbinder;
-
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tabs)
     TabLayout tabs;
-    @BindView(R.id.appbar)
     AppBarLayout appbar;
-    @BindView(R.id.pager)
     ViewPager pager;
 
     private MusicLibraryPagerAdapter pagerAdapter;
@@ -73,10 +62,14 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_library, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FragmentLibraryBinding binding = FragmentLibraryBinding.inflate(inflater, container, false);
+        toolbar = binding.toolbar;
+        tabs = binding.tabs;
+        appbar = binding.appbar;
+        pager = binding.pager;
+
+        return binding.getRoot();
     }
 
     @Override
@@ -84,7 +77,6 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         super.onDestroyView();
         pager.removeOnPageChangeListener(this);
-        unbinder.unbind();
     }
 
     @Override

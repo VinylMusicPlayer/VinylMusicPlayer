@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.databinding.SubHeaderBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -61,9 +63,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == HEADER)
-            return new ViewHolder(LayoutInflater.from(activity).inflate(R.layout.sub_header, parent, false), viewType);
-        return new ViewHolder(LayoutInflater.from(activity).inflate(R.layout.item_list, parent, false), viewType);
+        LayoutInflater inflater = LayoutInflater.from(activity);
+        if (viewType == HEADER) {
+            SubHeaderBinding binding = SubHeaderBinding.inflate(inflater, parent, false);
+            return new ViewHolder(binding);
+        }
+        ItemListBinding binding = ItemListBinding.inflate(inflater, parent, false);
+        return new ViewHolder(binding, viewType);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -111,18 +117,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
-        public ViewHolder(@NonNull View itemView, int itemViewType) {
-            super(itemView);
+        public ViewHolder(@NonNull SubHeaderBinding binding) {
+            super(binding);
+            binding.getRoot().setOnLongClickListener(null);
+        }
+
+        public ViewHolder(@NonNull ItemListBinding binding, int itemViewType) {
+            super(binding);
+
+            View itemView = binding.getRoot();
             itemView.setOnLongClickListener(null);
 
-            if (itemViewType != HEADER) {
-                itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
-                }
-                if (shortSeparator != null) {
-                    shortSeparator.setVisibility(View.GONE);
-                }
+            itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            }
+            if (shortSeparator != null) {
+                shortSeparator.setVisibility(View.GONE);
             }
 
             if (menu != null) {
@@ -146,13 +157,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 case ARTIST:
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
                     break;
-                 case SONG:
-                    break;
-                default:
-                    View container = itemView.findViewById(R.id.image_container);
-                    if (container != null) {
-                        container.setVisibility(View.GONE);
-                    }
+                case SONG:
                     break;
             }
         }

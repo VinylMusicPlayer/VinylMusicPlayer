@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.media.MediaScannerConnection;
@@ -35,6 +34,7 @@ import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SongFileAdapter;
+import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
@@ -62,10 +62,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class FoldersFragment extends AbsMainActivityFragment implements MainActivity.MainActivityFragmentCallbacks, CabHolder, BreadCrumbLayout.SelectionCallback, SongFileAdapter.Callbacks, AppBarLayout.OnOffsetChangedListener, LoaderManager.LoaderCallbacks<List<File>> {
 
     private static final int LOADER_ID = LoaderIds.FOLDERS_FRAGMENT;
@@ -73,21 +69,12 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     protected static final String PATH = "path";
     protected static final String CRUMBS = "crumbs";
 
-    private Unbinder unbinder;
-
-    @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.container)
     View container;
-    @BindView(android.R.id.empty)
     View empty;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.bread_crumbs)
     BreadCrumbLayout breadCrumbs;
-    @BindView(R.id.appbar)
     AppBarLayout appbar;
-    @BindView(R.id.recycler_view)
     FastScrollRecyclerView recyclerView;
 
     private SongFileAdapter adapter;
@@ -149,9 +136,16 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_folder, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        FragmentFolderBinding binding = FragmentFolderBinding.inflate(inflater, container, false);
+        coordinatorLayout = binding.coordinatorLayout;
+        this.container = binding.container;
+        empty = binding.empty;
+        toolbar = binding.toolbar;
+        breadCrumbs = binding.breadCrumbs;
+        appbar = binding.appbar;
+        recyclerView = binding.recyclerView;
+
+        return binding.getRoot();
     }
 
     @Override
@@ -195,7 +189,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     private void setUpAdapter() {
-        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), R.layout.item_list, this, this);
+        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), this, this);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -216,7 +210,6 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     @Override
     public void onDestroyView() {
         appbar.removeOnOffsetChangedListener(this);
-        unbinder.unbind();
         super.onDestroyView();
     }
 

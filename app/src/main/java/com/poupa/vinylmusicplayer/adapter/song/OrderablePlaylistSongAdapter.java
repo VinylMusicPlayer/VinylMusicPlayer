@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.adapter.song;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +12,8 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHold
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
@@ -28,17 +29,24 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements DraggableItemAdapter<OrderablePlaylistSongAdapter.ViewHolder> {
 
-    private OnMoveItemListener onMoveItemListener;
+    private final OnMoveItemListener onMoveItemListener;
 
-    public OrderablePlaylistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<PlaylistSong> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder, @Nullable OnMoveItemListener onMoveItemListener) {
-        super(activity, (ArrayList<Song>) (List) dataSet, itemLayoutRes, usePalette, cabHolder);
+    public OrderablePlaylistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<PlaylistSong> dataSet, boolean usePalette, @Nullable CabHolder cabHolder, @Nullable OnMoveItemListener onMoveItemListener) {
+        super(activity, (ArrayList<Song>) (List) dataSet, usePalette, cabHolder);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
         this.onMoveItemListener = onMoveItemListener;
     }
 
+    @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(View view) {
-        return new OrderablePlaylistSongAdapter.ViewHolder(view);
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+        return new OrderablePlaylistSongAdapter.ViewHolder(binding);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+        return new OrderablePlaylistSongAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -98,15 +106,17 @@ public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements
         @DraggableItemStateFlags
         private int mDragStateFlags;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            if (dragView != null) {
-                if (onMoveItemListener != null) {
-                    dragView.setVisibility(View.VISIBLE);
-                } else {
-                    dragView.setVisibility(View.GONE);
-                }
+        public ViewHolder(@NonNull ItemListBinding binding) {
+            super(binding);
+            if (onMoveItemListener != null) {
+                dragView.setVisibility(View.VISIBLE);
+            } else {
+                dragView.setVisibility(View.GONE);
             }
+        }
+
+        public ViewHolder(@NonNull ItemGridBinding binding) {
+            super(binding);
         }
 
         @Override

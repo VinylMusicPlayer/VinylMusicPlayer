@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -28,6 +29,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.TintHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.databinding.ActivityBugReportBinding;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.model.DeviceInfo;
@@ -44,9 +46,6 @@ import org.eclipse.egit.github.core.service.IssueService;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class BugReportActivity extends AbsThemeActivity {
 
@@ -67,34 +66,21 @@ public class BugReportActivity extends AbsThemeActivity {
 
     private DeviceInfo deviceInfo;
 
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.input_layout_title)
     TextInputLayout inputLayoutTitle;
-    @BindView(R.id.input_title)
     TextInputEditText inputTitle;
-    @BindView(R.id.input_layout_description)
     TextInputLayout inputLayoutDescription;
-    @BindView(R.id.input_description)
     TextInputEditText inputDescription;
-    @BindView(R.id.air_textDeviceInfo)
     TextView textDeviceInfo;
 
-    @BindView(R.id.input_layout_username)
     TextInputLayout inputLayoutUsername;
-    @BindView(R.id.input_username)
     TextInputEditText inputUsername;
-    @BindView(R.id.input_layout_password)
     TextInputLayout inputLayoutPassword;
-    @BindView(R.id.input_password)
     TextInputEditText inputPassword;
-    @BindView(R.id.option_use_account)
     RadioButton optionUseAccount;
-    @BindView(R.id.option_anonymous)
     RadioButton optionManual;
 
-    @BindView(R.id.button_send)
     FloatingActionButton sendFab;
 
     private static final String ISSUE_TRACKER_LINK = "https://github.com/AdrienPoupa/VinylMusicPlayer";
@@ -102,8 +88,24 @@ public class BugReportActivity extends AbsThemeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bug_report);
-        ButterKnife.bind(this);
+        ActivityBugReportBinding binding = ActivityBugReportBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+
+        toolbar = binding.toolbar;
+        sendFab = binding.buttonSend;
+
+        textDeviceInfo = binding.bugReportCardDeviceInfo.airTextDeviceInfo;
+
+        inputLayoutTitle = binding.bugReportCardReport.inputLayoutTitle;
+        inputTitle = binding.bugReportCardReport.inputTitle;
+        inputLayoutDescription = binding.bugReportCardReport.inputLayoutDescription;
+        inputDescription = binding.bugReportCardReport.inputDescription;
+        inputLayoutUsername = binding.bugReportCardReport.inputLayoutUsername;
+        inputUsername = binding.bugReportCardReport.inputUsername;
+        inputLayoutPassword = binding.bugReportCardReport.inputLayoutPassword;
+        inputPassword = binding.bugReportCardReport.inputPassword;
+        optionUseAccount = binding.bugReportCardReport.optionUseAccount;
+        optionManual = binding.bugReportCardReport.optionAnonymous;
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();

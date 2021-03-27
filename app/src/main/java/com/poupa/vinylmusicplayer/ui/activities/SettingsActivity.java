@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -27,6 +28,7 @@ import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragment
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
+import com.poupa.vinylmusicplayer.databinding.ActivityPreferencesBinding;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
@@ -39,20 +41,19 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+
+        ActivityPreferencesBinding binding = ActivityPreferencesBinding.inflate(LayoutInflater.from(this));
+        toolbar = binding.toolbar;
+        setContentView(binding.getRoot());
+
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
@@ -199,7 +200,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return true;
             });
 
-            final ATEColorPreference primaryColorPref = (ATEColorPreference) findPreference("primary_color");
+            final ATEColorPreference primaryColorPref = findPreference("primary_color");
             if (getActivity() != null) {
                 final int primaryColor = ThemeStore.primaryColor(getActivity());
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
@@ -214,7 +215,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final ATEColorPreference accentColorPref = (ATEColorPreference) findPreference("accent_color");
+            final ATEColorPreference accentColorPref = findPreference("accent_color");
             final int accentColor = ThemeStore.accentColor(getActivity());
             accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
             accentColorPref.setOnPreferenceClickListener(preference -> {
@@ -227,7 +228,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return true;
             });
 
-            TwoStatePreference colorNavBar = (TwoStatePreference) findPreference("should_color_navigation_bar");
+            TwoStatePreference colorNavBar = findPreference("should_color_navigation_bar");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 colorNavBar.setVisible(false);
             } else {
@@ -241,7 +242,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference classicNotification = (TwoStatePreference) findPreference("classic_notification");
+            final TwoStatePreference classicNotification = findPreference("classic_notification");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 classicNotification.setVisible(false);
             } else {
@@ -253,7 +254,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference coloredNotification = (TwoStatePreference) findPreference("colored_notification");
+            final TwoStatePreference coloredNotification = findPreference("colored_notification");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 coloredNotification.setEnabled(PreferenceUtil.getInstance().classicNotification());
             } else {
@@ -265,7 +266,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference colorAppShortcuts = (TwoStatePreference) findPreference("should_color_app_shortcuts");
+            final TwoStatePreference colorAppShortcuts = findPreference("should_color_app_shortcuts");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
                 colorAppShortcuts.setVisible(false);
             } else {
@@ -281,7 +282,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference transparentWidgets = (TwoStatePreference) findPreference("should_make_widget_background_transparent");
+            final TwoStatePreference transparentWidgets = findPreference("should_make_widget_background_transparent");
             transparentWidgets.setChecked(PreferenceUtil.getInstance().transparentBackgroundWidget());
             transparentWidgets.setOnPreferenceChangeListener((preference, newValue) -> {
                 // Save preference

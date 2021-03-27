@@ -26,6 +26,8 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.OrderablePlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -44,9 +46,6 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
 
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
@@ -54,13 +53,9 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @NonNull
     public static String EXTRA_PLAYLIST = "extra_playlist";
 
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(android.R.id.empty)
     TextView empty;
-    @BindView(R.id.title)
     TextView titleTextView;
 
     private Playlist playlist;
@@ -75,7 +70,6 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         setStatusbarColorAuto();
         setNavigationbarColorAuto();
@@ -92,19 +86,30 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @Override
     protected View createContentView() {
-        return wrapSlidingMusicPanel(R.layout.activity_playlist_detail);
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityPlaylistDetailBinding binding = ActivityPlaylistDetailBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+
+        recyclerView = binding.recyclerView;
+        toolbar = binding.toolbar;
+        empty = binding.empty;
+        titleTextView = binding.title;
+
+        return slidingPanelBinding.getRoot();
     }
 
     private void setUpRecyclerView() {
         ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if (playlist instanceof AbsCustomPlaylist) {
-            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), R.layout.item_list, false, this);
+            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, this);
             recyclerView.setAdapter(adapter);
         } else {
             recyclerViewDragDropManager = new RecyclerViewDragDropManager();
             final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
-            adapter = new OrderablePlaylistSongAdapter(this, new ArrayList<>(), R.layout.item_list, false, this, (fromPosition, toPosition) -> {
+            adapter = new OrderablePlaylistSongAdapter(this, new ArrayList<>(), false, this, (fromPosition, toPosition) -> {
                 if (PlaylistsUtil.moveItem(PlaylistDetailActivity.this, playlist.id, fromPosition, toPosition)) {
                     Song song = adapter.getDataSet().remove(fromPosition);
                     adapter.getDataSet().add(toPosition, song);

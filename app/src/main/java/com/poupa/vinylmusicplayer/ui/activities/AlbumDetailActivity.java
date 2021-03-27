@@ -29,6 +29,8 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
+import com.poupa.vinylmusicplayer.databinding.ActivityAlbumDetailBinding;
+import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
@@ -57,8 +59,6 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,34 +75,20 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     private Album album;
 
-    @BindView(R.id.list)
     ObservableRecyclerView recyclerView;
-    @BindView(R.id.image)
     ImageView albumArtImageView;
-    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.header)
     View headerView;
-    @BindView(R.id.header_overlay)
     View headerOverlay;
 
-    @BindView(R.id.artist_icon)
     ImageView artistIconImageView;
-    @BindView(R.id.duration_icon)
     ImageView durationIconImageView;
-    @BindView(R.id.song_count_icon)
     ImageView songCountIconImageView;
-    @BindView(R.id.album_year_icon)
     ImageView albumYearIconImageView;
-    @BindView(R.id.artist_text)
     TextView artistTextView;
-    @BindView(R.id.duration_text)
     TextView durationTextView;
-    @BindView(R.id.song_count_text)
     TextView songCountTextView;
-    @BindView(R.id.album_year_text)
     TextView albumYearTextView;
-    @BindView(R.id.title)
     TextView titleTextView;
 
     private AlbumSongAdapter adapter;
@@ -120,7 +106,6 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
-        ButterKnife.bind(this);
 
         lastFMRestClient = new LastFMRestClient(this);
 
@@ -133,7 +118,29 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     @Override
     protected View createContentView() {
-        return wrapSlidingMusicPanel(R.layout.activity_album_detail);
+        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        ActivityAlbumDetailBinding binding = ActivityAlbumDetailBinding.inflate(
+                getLayoutInflater(),
+                slidingPanelBinding.contentContainer,
+                true);
+
+        recyclerView = binding.list;
+        albumArtImageView = binding.image;
+        toolbar = binding.toolbar;
+        headerView = binding.header;
+        headerOverlay = binding.headerOverlay;
+
+        artistIconImageView = binding.artistIcon;
+        durationIconImageView = binding.durationIcon;
+        songCountIconImageView = binding.songCountIcon;
+        albumYearIconImageView = binding.albumYearIcon;
+        artistTextView = binding.artistText;
+        durationTextView = binding.durationText;
+        songCountTextView = binding.songCountText;
+        albumYearTextView = binding.albumYearText;
+        titleTextView = binding.title;
+
+        return slidingPanelBinding.getRoot();
     }
 
     private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
@@ -230,7 +237,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void setUpSongsAdapter() {
-        adapter = new AlbumSongAdapter(this, getAlbum().songs, R.layout.item_list, false, this);
+        adapter = new AlbumSongAdapter(this, getAlbum().songs, false, this);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.setAdapter(adapter);
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
