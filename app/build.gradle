@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -85,11 +84,11 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.core:core:1.3.2'
-    implementation 'androidx.fragment:fragment:1.3.0'
+    implementation 'androidx.fragment:fragment:1.3.2'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.media:media:1.2.1'
     implementation 'androidx.palette:palette:1.0.0'
@@ -112,7 +111,8 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.github.AdrienPoupa:jaudiotagger:2.2.3'
+    // TODO Change this to 2.2.5 or 2.2.6 when it's released
+    implementation 'org.bitbucket.ijabz:jaudiotagger:7b004a1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -128,5 +128,5 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
