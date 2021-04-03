@@ -36,7 +36,7 @@ public class TagExtractor {
         catch (NumberFormatException ignored) {return 0;}
     };
     private static final Func3Args<Tag, FieldKey, List<String>, List<String>> safeGetTagAsList = (tags, tag, defaultValue) -> {
-        try {return tags.getAll(tag);}
+        try {return MultiValuesTagUtil.splitIfNeeded(tags.getAll(tag));}
         catch (KeyNotFoundException ignored) {return defaultValue;}
     };
 
@@ -50,8 +50,8 @@ public class TagExtractor {
             }
 
             song.albumName = safeGetTag.apply(tags, FieldKey.ALBUM, song.albumName);
-            song.artistNames  = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames));
-            song.albumArtistNames = MultiValuesTagUtil.splitIfNeeded(safeGetTagAsList.apply(tags, FieldKey.ALBUM_ARTIST, song.albumArtistNames));
+            song.artistNames  = safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames);
+            song.albumArtistNames = safeGetTagAsList.apply(tags, FieldKey.ALBUM_ARTIST, song.albumArtistNames);
             song.title = safeGetTag.apply(tags, FieldKey.TITLE, song.title);
             if (song.title.isEmpty()) {
                 // fallback to use the file name
