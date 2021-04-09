@@ -469,7 +469,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private boolean openCurrent() {
         synchronized (this) {
             try {
-                applyReplayGain();
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1089,6 +1088,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 updateMediaSessionMetaData();
                 savePosition();
                 savePositionInTrack();
+                applyReplayGain();
+
                 final Song currentSong = getCurrentSong();
                 HistoryStore.getInstance(this).addSongId(currentSong.id);
                 if (songPlayCountHelper.shouldBumpPlayCount()) {
@@ -1151,11 +1152,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 sendChangeInternal(MusicService.META_CHANGED);
                 break;
             case PreferenceUtil.RG_SOURCE_MODE:
-                applyReplayGain();
-                break;
             case PreferenceUtil.RG_PREAMP_WITH_TAG:
-                applyReplayGain();
-                break;
             case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
                 applyReplayGain();
                 break;
