@@ -58,8 +58,6 @@ final class PlaybackHandler extends Handler {
                 break;
 
             case MusicService.TRACK_WENT_TO_NEXT:
-                if (checkFinishedSleepTimer(service)) {break;}
-
                 if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
                     service.pause();
                 } else {
@@ -70,7 +68,7 @@ final class PlaybackHandler extends Handler {
                 break;
 
             case MusicService.TRACK_ENDED:
-                if (checkFinishedSleepTimer(service)) {break;}
+                if (checkPendingQuit(service)) {break;}
 
                 if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
                     service.notifyChange(MusicService.PLAY_STATE_CHANGED);
@@ -138,7 +136,7 @@ final class PlaybackHandler extends Handler {
     }
 
     // if there is a timer finished, don't continue
-    private boolean checkFinishedSleepTimer(@NonNull final MusicService service) {
+    private boolean checkPendingQuit(@NonNull final MusicService service) {
         if (!service.pendingQuit) {return false;}
 
         service.notifyChange(MusicService.PLAY_STATE_CHANGED);
