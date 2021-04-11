@@ -584,7 +584,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         if (PreferenceUtil.getInstance().albumArtOnLockscreen()) {
-            // TODO Auto displays a very small thumbnail on the now playing screen
             final Point screenSize = Util.getScreenSize(MusicService.this);
 
             GlideRequest request = GlideApp.with(MusicService.this)
