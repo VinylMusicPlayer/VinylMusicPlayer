@@ -1083,6 +1083,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 songPlayCountHelper.notifyPlayStateChanged(isPlaying);
                 break;
             case FAVORITE_STATE_CHANGED:
+                updateNotification();
+                break;
             case META_CHANGED:
                 updateNotification();
                 updateMediaSessionMetaData();
