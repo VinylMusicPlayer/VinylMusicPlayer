@@ -1086,6 +1086,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             case META_CHANGED:
                 updateNotification();
                 updateMediaSessionMetaData();
+                updateMediaSessionPlaybackState();
+
                 savePosition();
                 savePositionInTrack();
                 final Song currentSong = getCurrentSong();
