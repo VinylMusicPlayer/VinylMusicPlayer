@@ -317,6 +317,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         break;
                     case ACTION_PENDING_QUIT:
                         pendingQuit = true;
+                        if (PreferenceUtil.getInstance().gaplessPlayback()) {
+                            playback.setNextDataSource(null);
+                        }
                         break;
                 }
             }

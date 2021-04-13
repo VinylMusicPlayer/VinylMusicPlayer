@@ -60,7 +60,6 @@ final class PlaybackHandler extends Handler {
             case MusicService.TRACK_WENT_TO_NEXT:
                 if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
                     service.pause();
-                    service.seek(0);
                 } else {
                     service.setPositionToNextPosition();
                     service.prepareNextImpl();
@@ -69,18 +68,10 @@ final class PlaybackHandler extends Handler {
                 break;
 
             case MusicService.TRACK_ENDED:
-                // if there is a timer finished, don't continue
-                if (service.pendingQuit ||
-                        service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
+                if (checkPendingQuit(service)) {break;}
+
+                if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
                     service.notifyChange(MusicService.PLAY_STATE_CHANGED);
-                    service.seek(0);
-                    if (service.pendingQuit) {
-                        service.pendingQuit = false;
-                        service.quit();
-                        break;
-                    }
-                    service.notifyChange(MusicService.PLAY_STATE_CHANGED);
-                    service.seek(0);
                 } else {
                     service.playNextSong(false);
                 }
@@ -142,5 +133,15 @@ final class PlaybackHandler extends Handler {
                 }
                 break;
         }
+    }
+
+    // if there is a timer finished, don't continue
+    private boolean checkPendingQuit(@NonNull final MusicService service) {
+        if (!service.pendingQuit) {return false;}
+
+        service.notifyChange(MusicService.PLAY_STATE_CHANGED);
+        service.pendingQuit = false;
+        service.quit();
+        return true;
     }
 }
