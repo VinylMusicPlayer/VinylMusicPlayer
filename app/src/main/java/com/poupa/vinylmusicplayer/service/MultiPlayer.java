@@ -26,7 +26,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
     private MediaPlayer mNextMediaPlayer;
 
-    private Context context;
+    private final Context context;
     @Nullable
     private Playback.PlaybackCallbacks callbacks;
 
@@ -270,13 +270,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         }
     }
 
-    public boolean setVolume(final float vol) {
+    private void setVolume(final float vol) {
         try {
             mCurrentMediaPlayer.setVolume(vol, vol);
-            return true;
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
