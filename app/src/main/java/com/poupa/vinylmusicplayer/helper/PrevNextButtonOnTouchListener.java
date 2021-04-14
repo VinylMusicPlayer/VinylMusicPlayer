@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
     private Handler handler = new Handler();
 
-    private int initialInterval;
-    private final int normalInterval;
+    private int skipTriggerInitialIntervalMillis = 1000;
+    private final int skipTriggerNormalIntervalMillis = 250;
     private final View.OnGenericMotionListener genericMotionListener;
     private View touchedView;
     private boolean wasHeld;
@@ -19,7 +19,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
         public void run() {
             if(touchedView.isEnabled()) {
                 wasHeld = true;
-                handler.postDelayed(this, normalInterval);
+                handler.postDelayed(this, skipTriggerNormalIntervalMillis);
                 genericMotionListener.onGenericMotion(touchedView, MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,0,0,0));
             } else {
                 // if the view was disabled by the clickListener, remove the callback
@@ -31,10 +31,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
         }
     };
 
-    public PrevNextButtonOnTouchListener(int initialInterval, int normalInterval,
-                                       View.OnGenericMotionListener genericMotionListener) {
-        this.initialInterval = initialInterval;
-        this.normalInterval = normalInterval;
+    public PrevNextButtonOnTouchListener(View.OnGenericMotionListener genericMotionListener) {
         this.genericMotionListener = genericMotionListener;
     }
 
@@ -43,7 +40,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 handler.removeCallbacks(handlerRunnable);
-                handler.postDelayed(handlerRunnable, initialInterval);
+                handler.postDelayed(handlerRunnable, skipTriggerInitialIntervalMillis);
                 touchedView = view;
                 touchedView.setPressed(true);
                 return true;
