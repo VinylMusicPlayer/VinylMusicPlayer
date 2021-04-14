@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
@@ -9,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -83,6 +83,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
         return playlist.name;
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Playlist playlist = dataSet.get(position);
@@ -93,13 +94,19 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             holder.title.setText(getPlaylistTitle(playlist));
         }
         if (holder.text != null) {
-            // TODO This operation is expensive -> Async load to avoid blocking the UI thread
-            //holder.text.setText(getPlaylistText(playlist));
+            // This operation lasts seconds
+            // long enough to block the UI thread, but short enough to accept the context leak in an async operation
+            new AsyncTask<Playlist, Void, String>() {
+                @Override
+                protected String doInBackground(Playlist... params) {
+                    return params[0].getInfoString(activity);
+                }
 
-            new LoadPlaylistInfoStringIntoTextView(
-                    App.getInstance().getApplicationContext(),
-                    holder.text
-            ).execute(playlist);
+                @Override
+                protected void onPostExecute(String info) {
+                    holder.text.setText(info);
+                }
+            }.execute(playlist);
         }
 
         if (holder.getAdapterPosition() == getItemCount() - 1) {
@@ -177,9 +184,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             super(context);
         }
 
-        @SafeVarargs
         @Override
-        protected final String doInBackground(ArrayList<Playlist>... params) {
+        protected String doInBackground(ArrayList<Playlist>... params) {
             int successes = 0;
             int failures = 0;
 
@@ -207,29 +213,6 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             if (context != null) {
                 Toast.makeText(context, string, Toast.LENGTH_LONG).show();
             }
-        }
-    }
-
-    private static class LoadPlaylistInfoStringIntoTextView extends AsyncTask<Playlist, Void, String> {
-        @NonNull
-        private final Context context;
-
-        @NonNull
-        private final TextView textView;
-
-        public LoadPlaylistInfoStringIntoTextView(@NonNull Context context, @NonNull TextView textView) {
-            this.context = context;
-            this.textView = textView;
-        }
-
-        @Override
-        protected String doInBackground(Playlist... params) {
-            return params[0].getInfoString(context);
-        }
-
-        @Override
-        protected void onPostExecute(String info) {
-            textView.setText(info);
         }
     }
 
