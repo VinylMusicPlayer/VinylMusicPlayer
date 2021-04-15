@@ -26,7 +26,12 @@ case "${CIRCLE_BRANCH}" in
 esac
 
 # Collect commits that describe this CI build (what are the branches, at which state)
-last_commits=""
+function git_describe()
+{
+    object="$1"
+    echo "<li><b>${object}</b> <pre>$(git show --summary --oneline ${object})</pre></li>"
+}
+last_commits="$(git_describe origin/${CIRCLE_BRANCH})"
 
 # Merge with feature branches, unless black-listed
 branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
@@ -49,7 +54,7 @@ for branch in ${branches}; do
 
     echo "Merge '${branch}' into '${CIRCLE_BRANCH}'..."
     git merge --no-edit "origin/${branch}" || exit 1
-    last_commits+="$(git show --summary --oneline origin/${branch})<br/>"
+    last_commits+="$(git_describe origin/${branch})"
     echo
 done
 
@@ -70,13 +75,18 @@ for alien_branch in ${alien_branches}; do
 
     echo "Merge alien '${alien_branch}' into '${CIRCLE_BRANCH}'..."
     git merge --no-edit "${alien_branch}" || exit 1
-    last_commits+="$(git show --summary --oneline ${alien_branch})<br/>"
+    last_commits+="$(git_describe ${alien_branch})"
     echo
 done
 
 # Patch the changelog
 changelog_html="app/src/main/assets/vinylmusicplayer-changelog.html"
-echo "" > ${changelog_html}
-echo "<html><body><pre>" >> ${changelog_html}
-echo "${last_commits}" >> ${changelog_html}
-echo "</pre></body></html>" >> ${changelog_html}
+{
+    echo "<html><body>
+        <p>Integration build, based on the following:</p>
+        <ol>
+            ${last_commits}
+        </ol>
+        <p>This change log is auto-generated using '$0'</p>
+        </body></html>"
+} > ${changelog_html}
