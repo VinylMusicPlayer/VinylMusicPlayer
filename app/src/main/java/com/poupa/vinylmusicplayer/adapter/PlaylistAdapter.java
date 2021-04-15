@@ -99,11 +99,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             new AsyncTask<Playlist, Void, String>() {
                 @Override
                 protected String doInBackground(Playlist... params) {
-                    final long startMs = System.currentTimeMillis();
-                    final String result = params[0].getInfoString(activity);
-                    final long endMs = System.currentTimeMillis();
-
-                    return String.format("%s (%d ms)", result, endMs - startMs);
+                    return params[0].getInfoString(activity);
                 }
 
                 @Override
