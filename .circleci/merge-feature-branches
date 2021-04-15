@@ -29,7 +29,7 @@ esac
 function git_describe()
 {
     object="$1"
-    echo "<li><b>${object}</b> <pre>$(git show --summary --oneline ${object})</pre></li>"
+    echo "<li><b>${object}</b><br/><code>$(git show --summary --oneline ${object})</code></li>"
 }
 last_commits="$(git_describe origin/${CIRCLE_BRANCH})"
 
@@ -83,10 +83,10 @@ done
 changelog_html="app/src/main/assets/vinylmusicplayer-changelog.html"
 {
     echo "<html><body>
-        <p>Integration build, based on the following:</p>
-        <ol>
+        <p>Integration build from branch <code>${CIRCLE_BRANCH}</code>, with merges from the following:</p>
+        <ul>
             ${last_commits}
-        </ol>
-        <p>This change log is auto-generated using '$0'</p>
+        </ul>
+        <p>This change log is auto-generated using <code>$0</code></p>
         </body></html>"
 } > ${changelog_html}
