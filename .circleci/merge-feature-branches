@@ -13,7 +13,7 @@ function git_init()
 
 case "${CIRCLE_BRANCH}" in
     cont-integ)
-        echo "Branch ${CIRCLE_BRANCH} detected"
+        echo "Branch '${CIRCLE_BRANCH}' detected"
         git_init
         git fetch origin
         git rebase origin/master || exit 1
@@ -28,7 +28,7 @@ esac
 function is_blacklisted()
 {
     local branch=$1
-    local blacklist="discog-v2 slow-ui"
+    local blacklist=""
 
     for bl in ${blacklist}; do
         [ "${branch}" = "${bl}" ] && return 0
@@ -41,9 +41,9 @@ branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
 for branch in ${branches}; do
     [ "${branch}" = "${CIRCLE_BRANCH}" ] && continue
 
-    is_blacklisted ${branch} && continue
+    is_blacklisted "${branch}" && continue
 
-    echo "Merge ${branch} into ${CIRCLE_BRANCH}..."
-    git merge --no-edit origin/${branch} || exit 1
+    echo "Merge '${branch}' into '${CIRCLE_BRANCH}'..."
+    git merge --no-edit "origin/${branch}" || exit 1
     echo
 done
