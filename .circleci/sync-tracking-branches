@@ -12,7 +12,7 @@ function sync()
   git push --force-with-lease || exit 1
 }
 
-sync master upstream/master || exit 1
+#sync master upstream/master || exit 1
 sync cont-integ master || exit 1
 
 echo done

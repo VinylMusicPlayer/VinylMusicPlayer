@@ -13,16 +13,28 @@ function git_init()
 
 case "${CIRCLE_BRANCH}" in
     cont-integ)
-        echo "Branch ${CIRCLE_BRANCH} detected"
+        echo "Branch '${CIRCLE_BRANCH}' detected"
         git_init
         git fetch origin
         git rebase origin/master || exit 1
+        echo
         ;;
 
     *)
         exit 0 # nothing to do
         ;;
 esac
+
+# Collect commits that describe this CI build (what are the branches, at which state)
+function git_describe()
+{
+    object="$1"
+    echo "<li><b>${object}</b><br/><code>$(git show --summary --oneline ${object})</code></li>"
+}
+last_commits="$(git_describe origin/${CIRCLE_BRANCH})"
+
+# Merge with feature branches, unless black-listed
+branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
 
 function is_blacklisted()
 {
@@ -35,13 +47,45 @@ function is_blacklisted()
     return 1
 }
 
-# Merge with feature branches, unless black-listed
-branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
 for branch in ${branches}; do
     [ "${branch}" = "${CIRCLE_BRANCH}" ] && continue
 
-    is_blacklisted ${branch} && continue
+    is_blacklisted "${branch}" && continue
 
-    echo "Merge ${branch} into ${CIRCLE_BRANCH}..."
-    git merge --no-edit origin/${branch} || exit 1
+    echo "Merge '${branch}' into '${CIRCLE_BRANCH}'..."
+    git merge --no-edit "origin/${branch}" || exit 1
+    last_commits+="$(git_describe origin/${branch})"
+    echo
 done
+
+# Merge with white-listed remotes (pull requests etc)
+# Space separated list, each following the login/repo/branch format
+alien_branches="
+    Octoton/VinylMusicPlayer/round-ui
+"
+for alien_branch in ${alien_branches}; do
+    user=$(echo "${alien_branch}" | cut -d/ -f1)
+    repo=$(echo "${alien_branch}" | cut -d/ -f2)
+    branch=$(echo "${alien_branch}" | cut -d/ -f3-)
+
+    echo "Add alien '${user}/${repo}'..."
+    git remote add "${user}/${repo}" "git@github.com:${user}/${repo}.git" || exit 1
+    git remote update "${user}/${repo}" || exit 1
+
+    echo "Merge alien '${alien_branch}' into '${CIRCLE_BRANCH}'..."
+    git merge --no-edit "${alien_branch}" || exit 1
+    last_commits+="$(git_describe ${alien_branch})"
+    echo
+done
+
+# Patch the changelog
+changelog_html="app/src/main/assets/vinylmusicplayer-changelog.html"
+{
+    echo "<html><body>
+        <p>Integration build from branch <code>${CIRCLE_BRANCH}</code>, with merges from the following:</p>
+        <ul>
+            ${last_commits}
+        </ul>
+        <p>This change log is auto-generated using <code>$0</code></p>
+        </body></html>"
+} > ${changelog_html}
