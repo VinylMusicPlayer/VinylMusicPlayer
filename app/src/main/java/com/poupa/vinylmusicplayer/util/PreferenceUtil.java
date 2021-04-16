@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.util;
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
 
 import com.google.gson.Gson;
@@ -23,6 +24,8 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class PreferenceUtil {
     public static final String GENERAL_THEME = "general_theme";
@@ -59,8 +62,11 @@ public final class PreferenceUtil {
     public static final String AUDIO_DUCKING = "audio_ducking";
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
-    public static final String LAST_ADDED_CUTOFF = "last_added_interval";
-    public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    @Deprecated public static final String LAST_ADDED_CUTOFF = "last_added_interval";
+    public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
+    @Deprecated public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
+    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
     public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
     public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
@@ -105,6 +111,7 @@ public final class PreferenceUtil {
 
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+        migratePreferencesIfNeeded();
     }
 
     public static PreferenceUtil getInstance() {
@@ -112,6 +119,12 @@ public final class PreferenceUtil {
             sInstance = new PreferenceUtil();
         }
         return sInstance;
+    }
+
+    private void migratePreferencesIfNeeded() {
+        migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
+        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
+        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
@@ -278,84 +291,139 @@ public final class PreferenceUtil {
     }
 
     public void setSongSortOrder(final String sortOrder) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(SONG_SORT_ORDER, sortOrder);
-        editor.apply();
+        mPreferences.edit()
+                .putString(SONG_SORT_ORDER, sortOrder)
+                .apply();
+    }
+
+    private void migrateCutoffV1AsV2(@NonNull final String cutoffV1, @NonNull final String cutoffV2) {
+        if (mPreferences.contains(cutoffV2)) {return;}
+
+        String migratedValue;
+        switch (mPreferences.getString(cutoffV1, "")) {
+            case "today":
+                migratedValue = "1d";
+                break;
+            case "this_week":
+                migratedValue = "1w";
+                break;
+            case "past_seven_days":
+                migratedValue = "7d";
+                break;
+            case "past_three_months":
+                migratedValue = "3m";
+                break;
+            case "this_year":
+                migratedValue = "1y";
+                break;
+            case "this_month":
+            default:
+                migratedValue = "1m";
+                break;
+        }
+        mPreferences.edit()
+                .putString(cutoffV2, migratedValue)
+                .apply();
     }
 
     // The last added cutoff time is compared against the Android media store timestamps, which is seconds based.
     public long getLastAddedCutoffTimeSecs() {
-        return getCutoffTimeMillis(LAST_ADDED_CUTOFF) / 1000;
+        return getCutoffTimeMillisV2(LAST_ADDED_CUTOFF_V2) / 1000;
+    }
+
+    // The not recently played cutoff time is compared against the internal (private) database timestamps, which is milliseconds based.
+    public long getNotRecentlyPlayedCutoffTimeMillis() {
+        return getCutoffTimeMillisV2(NOT_RECENTLY_PLAYED_CUTOFF_V2);
     }
 
     // The recently played cutoff time is compared against the internal (private) database timestamps, which is milliseconds based.
     public long getRecentlyPlayedCutoffTimeMillis() {
-        return getCutoffTimeMillis(RECENTLY_PLAYED_CUTOFF);
+        return getCutoffTimeMillisV2(RECENTLY_PLAYED_CUTOFF_V2);
     }
 
-    private long getCutoffTimeMillis(final String cutoff) {
+    private long getCutoffTimeMillisV2(@NonNull final String cutoff) {
         final CalendarUtil calendarUtil = new CalendarUtil();
-        long interval;
+        long interval = 0;
+        final String value = mPreferences.getString(cutoff, null);
 
-        switch (mPreferences.getString(cutoff, "")) {
-            case "today":
-                interval = calendarUtil.getElapsedToday();
-                break;
+        final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
+        final Matcher matcher = pattern.matcher(value);
+        if (matcher.find()) {
+            final int count = Integer.parseInt(matcher.group(1));
 
-            case "this_week":
-                interval = calendarUtil.getElapsedWeek();
-                break;
+            if (count == 0) {
+                return 0;
+            } // Disabled
 
-             case "past_seven_days":
-                interval = calendarUtil.getElapsedDays(7);
-                break;
-
-            case "past_three_months":
-                interval = calendarUtil.getElapsedMonths(3);
-                break;
-
-            case "this_year":
-                interval = calendarUtil.getElapsedYear();
-                break;
-
-            case "this_month":
-            default:
-                interval = calendarUtil.getElapsedMonth();
-                break;
+            final String unit = matcher.group(2);
+            switch (unit) {
+                case "d":
+                    interval = calendarUtil.getElapsedDays(count);
+                    break;
+                case "w":
+                    interval = calendarUtil.getElapsedWeeks(count);
+                    break;
+                case "m":
+                    interval = calendarUtil.getElapsedMonths(count);
+                    break;
+                case "y":
+                    interval = calendarUtil.getElapsedYears(count);
+                    break;
+            }
+            return (System.currentTimeMillis() - interval);
         }
-
-        return (System.currentTimeMillis() - interval);
+        throw new IllegalArgumentException("Cannot process: " + value);
     }
 
-    public String getLastAddedCutoffText(Context context) {
-        return getCutoffText(LAST_ADDED_CUTOFF, context);
+    @NonNull
+    public String getLastAddedCutoffText(@NonNull Context context) {
+        return getCutoffTextV2(LAST_ADDED_CUTOFF_V2, context);
     }
 
+    @NonNull
     public String getRecentlyPlayedCutoffText(Context context) {
-        return getCutoffText(RECENTLY_PLAYED_CUTOFF, context);
+        return getCutoffTextV2(RECENTLY_PLAYED_CUTOFF_V2, context);
     }
 
-    private String getCutoffText(final String cutoff, Context context) {
-        switch (mPreferences.getString(cutoff, "")) {
-            case "today":
-                return context.getString(R.string.today);
+    @NonNull
+    public String getNotRecentlyPlayedCutoffText(Context context) {
+        return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
+    }
 
-            case "this_week":
-                return context.getString(R.string.this_week);
+    @NonNull
+    private String getCutoffTextV2(@NonNull final String cutoff, Context context) {
+        final String value = mPreferences.getString(cutoff, null);
 
-             case "past_seven_days":
-                 return context.getString(R.string.past_seven_days);
+        final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
+        final Matcher matcher = pattern.matcher(value);
+        if (matcher.find()) {
+            final int count = Integer.parseInt(matcher.group(1));
 
-            case "past_three_months":
-                return context.getString(R.string.past_three_months);
+            if (count == 0) {
+                return context.getString(R.string.pref_playlist_disabled);
+            }
 
-            case "this_year":
-                return context.getString(R.string.this_year);
-
-            case "this_month":
-            default:
-                return context.getString(R.string.this_month);
+            final String unit = matcher.group(2);
+            switch (unit) {
+                case "d":
+                    return count <= 1
+                            ? context.getString(R.string.today)
+                            : context.getString(R.string.past_X_days, count);
+                case "w":
+                    return count <= 1
+                            ? context.getString(R.string.this_week)
+                            : context.getString(R.string.past_X_weeks, count);
+                case "m":
+                    return count <= 1
+                            ? context.getString(R.string.this_month)
+                            : context.getString(R.string.past_X_months, count);
+                case "y":
+                    return count <= 1
+                            ? context.getString(R.string.this_year)
+                            : context.getString(R.string.past_X_years, count);
+            }
         }
+        throw new IllegalArgumentException("Cannot process: " + value);
     }
 
     public int getLastSleepTimerValue() {
