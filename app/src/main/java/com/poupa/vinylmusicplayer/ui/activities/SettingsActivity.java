@@ -74,17 +74,15 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        switch (dialog.getTitle()) {
-            case R.string.primary_color:
-                ThemeStore.editTheme(this)
-                        .primaryColor(selectedColor)
-                        .commit();
-                break;
-            case R.string.accent_color:
-                ThemeStore.editTheme(this)
-                        .accentColor(selectedColor)
-                        .commit();
-                break;
+        final int title = dialog.getTitle();
+        if (title == R.string.primary_color) {
+            ThemeStore.editTheme(this)
+                    .primaryColor(selectedColor)
+                    .commit();
+        } else if (title == R.string.accent_color) {
+            ThemeStore.editTheme(this)
+                    .accentColor(selectedColor)
+                    .commit();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
