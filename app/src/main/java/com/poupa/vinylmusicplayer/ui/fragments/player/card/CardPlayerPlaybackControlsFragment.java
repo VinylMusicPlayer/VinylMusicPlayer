@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
@@ -22,6 +23,7 @@ import com.poupa.vinylmusicplayer.databinding.FragmentCardPlayerPlaybackControls
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
+import com.poupa.vinylmusicplayer.helper.PrevNextButtonOnTouchListener;
 import com.poupa.vinylmusicplayer.misc.SimpleOnSeekbarChangeListener;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
@@ -48,6 +50,7 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     private int lastDisabledPlaybackControlsColor;
 
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
+    private final int PLAYBACK_SKIP_AMOUNT_MILLI = 3500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -166,8 +169,28 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     private void setUpPrevNext() {
         updatePrevNextColor();
-        nextButton.setOnClickListener(v -> MusicPlayerRemote.playNextSong());
-        prevButton.setOnClickListener(v -> MusicPlayerRemote.back());
+        nextButton.setOnTouchListener(new PrevNextButtonOnTouchListener((view, motionEvent) -> {
+            switch(motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    MusicPlayerRemote.seekTo(MusicPlayerRemote.getSongProgressMillis() + PLAYBACK_SKIP_AMOUNT_MILLI);
+                    return true;
+                case MotionEvent.ACTION_CANCEL:
+                    MusicPlayerRemote.playNextSong();
+                    return true;
+            }
+            return false;
+        }));
+        prevButton.setOnTouchListener(new PrevNextButtonOnTouchListener((view, motionEvent) -> {
+            switch(motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    MusicPlayerRemote.seekTo(MusicPlayerRemote.getSongProgressMillis() - PLAYBACK_SKIP_AMOUNT_MILLI);
+                    return true;
+                case MotionEvent.ACTION_CANCEL:
+                    MusicPlayerRemote.back();
+                    return true;
+            }
+            return false;
+        }));
     }
 
     private void updateProgressTextColor() {
