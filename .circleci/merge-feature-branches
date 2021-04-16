@@ -61,7 +61,6 @@ done
 # Merge with white-listed remotes (pull requests etc)
 # Space separated list, each following the login/repo/branch format
 alien_branches="
-    AnshSancheti/VinylMusicPlayer/84-FFRW
     Octoton/VinylMusicPlayer/round-ui
 "
 for alien_branch in ${alien_branches}; do
