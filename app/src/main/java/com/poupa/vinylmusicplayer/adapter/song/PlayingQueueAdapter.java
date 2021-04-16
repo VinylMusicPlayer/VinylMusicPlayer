@@ -323,11 +323,11 @@ public class PlayingQueueAdapter extends SongAdapter
 
     }
 
-    public void setSongToRemove (@NonNull Song song){
+    private void setSongToRemove (@NonNull Song song){
         songToRemove = song;
     }
 
-    public Song getSongToRemove(){
+    private Song getSongToRemove(){
         return songToRemove;
     }
 }

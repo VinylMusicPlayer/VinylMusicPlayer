@@ -760,13 +760,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void removeSong(@NonNull Song song) {
-        for (int i = 0; i < playingQueue.size(); i++) {
+        for (int i = playingQueue.size() - 1; i >= 0; i--) {
             if (playingQueue.get(i).id == song.id) {
                 playingQueue.remove(i);
                 rePosition(i);
             }
         }
-        for (int i = 0; i < originalPlayingQueue.size(); i++) {
+        for (int i = playingQueue.size() - 1; i >= 0; i--) {
             if (originalPlayingQueue.get(i).id == song.id) {
                 originalPlayingQueue.remove(i);
             }

@@ -60,36 +60,38 @@ public class AddToPlaylistDialog extends DialogFragment {
                     } else {
                         materialDialog.dismiss();
                         Context ctx = getActivity();
-                        if (hasDuplicates(playlists.get(i - 1).id, songs, ctx)) {
+                        final long playlistId = playlists.get(i - 1).id;
+
+                        if (hasDuplicates(playlistId, songs, ctx)) {
                             new MaterialDialog.Builder(ctx)
                                     .title(R.string.confirm_adding_duplicates)
                                     .positiveText(R.string.yes).negativeText(R.string.no)
                                     .onPositive((dialog, which) ->
-                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true)
+                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlistId, true)
                                     ).onNegative((dialog, which) -> {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(ctx, playlists.get(i - 1).id, song.id));
+                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id));
                                         } else {
                                             for (Song song: new ArrayList<>(songs)) {
-                                                if (PlaylistsUtil.doesPlaylistContain(ctx, playlists.get(i - 1).id, song.id)) {
+                                                if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
                                                     songs.remove(song);
                                                 }
                                             }
                                         }
                                         if (!songs.isEmpty()) {
-                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true);
+                                            PlaylistsUtil.addToPlaylist(ctx, songs, playlistId, true);
                                         }
                                     }
                             ).show();
                         } else {
-                            PlaylistsUtil.addToPlaylist(ctx, songs, playlists.get(i - 1).id, true);
+                            PlaylistsUtil.addToPlaylist(ctx, songs, playlistId, true);
                         }
                     }
                 })
                 .build();
     }
 
-    private boolean hasDuplicates(long playlistId, ArrayList<Song> songs, Context ctx) {
+    private static boolean hasDuplicates(long playlistId, ArrayList<Song> songs, Context ctx) {
         for (Song song: songs) {
             if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
                 return true;
