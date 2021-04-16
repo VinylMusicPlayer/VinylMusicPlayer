@@ -18,6 +18,7 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.HistoryPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -76,10 +77,19 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
         private static ArrayList<Playlist> getAllPlaylists(Context context) {
             ArrayList<Playlist> playlists = new ArrayList<>();
 
-            playlists.add(new LastAddedPlaylist(context));
-            playlists.add(new HistoryPlaylist(context));
-            playlists.add(new NotRecentlyPlayedPlaylist(context));
-            playlists.add(new MyTopTracksPlaylist(context));
+            PreferenceUtil prefs = PreferenceUtil.getInstance();
+            if (prefs.getLastAddedCutoffTimeSecs() > 0) {
+                playlists.add(new LastAddedPlaylist(context));
+            }
+            if (prefs.getRecentlyPlayedCutoffTimeMillis() > 0) {
+                playlists.add(new HistoryPlaylist(context));
+            }
+            if (prefs.getNotRecentlyPlayedCutoffTimeMillis() > 0) {
+                playlists.add(new NotRecentlyPlayedPlaylist(context));
+            }
+            if (prefs.maintainTopTrackPlaylist()) {
+                playlists.add(new MyTopTracksPlaylist(context));
+            }
 
             playlists.addAll(PlaylistLoader.getAllPlaylists(context));
 

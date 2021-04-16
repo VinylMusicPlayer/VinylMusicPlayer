@@ -188,38 +188,47 @@ public class AutoMusicProvider {
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         // Smart playlists
-        mediaItems.add(AutoMediaItem.with(mContext)
-                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)
-                .title(resources.getString(R.string.last_added))
-                .subTitle(new LastAddedPlaylist(mContext).getInfoString(mContext))
-                .icon(R.drawable.ic_library_add_white_24dp)
-                .asBrowsable()
-                .build()
-        );
-        mediaItems.add(AutoMediaItem.with(mContext)
-                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)
-                .title(resources.getString(R.string.history_label))
-                .subTitle(new HistoryPlaylist(mContext).getInfoString(mContext))
-                .icon(R.drawable.ic_access_time_white_24dp)
-                .asBrowsable()
-                .build()
-        );
-        mediaItems.add(AutoMediaItem.with(mContext)
-                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)
-                .title(resources.getString(R.string.not_recently_played))
-                .subTitle(new NotRecentlyPlayedPlaylist(mContext).getInfoString(mContext))
-                .icon(R.drawable.ic_watch_later_white_24dp)
-                .asBrowsable()
-                .build()
-        );
-        mediaItems.add(AutoMediaItem.with(mContext)
-                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)
-                .title(resources.getString(R.string.top_tracks_label))
-                .subTitle(new MyTopTracksPlaylist(mContext).getInfoString(mContext))
-                .icon(R.drawable.ic_trending_up_white_24dp)
-                .asBrowsable()
-                .build()
-        );
+        PreferenceUtil prefs = PreferenceUtil.getInstance();
+        if (prefs.getLastAddedCutoffTimeSecs() > 0) {
+            mediaItems.add(AutoMediaItem.with(mContext)
+                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)
+                    .title(resources.getString(R.string.last_added))
+                    .subTitle(new LastAddedPlaylist(mContext).getInfoString(mContext))
+                    .icon(R.drawable.ic_library_add_white_24dp)
+                    .asBrowsable()
+                    .build()
+            );
+        }
+        if (prefs.getRecentlyPlayedCutoffTimeMillis() > 0) {
+            mediaItems.add(AutoMediaItem.with(mContext)
+                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)
+                    .title(resources.getString(R.string.history_label))
+                    .subTitle(new HistoryPlaylist(mContext).getInfoString(mContext))
+                    .icon(R.drawable.ic_access_time_white_24dp)
+                    .asBrowsable()
+                    .build()
+            );
+        }
+        if (prefs.getNotRecentlyPlayedCutoffTimeMillis() > 0) {
+            mediaItems.add(AutoMediaItem.with(mContext)
+                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)
+                    .title(resources.getString(R.string.not_recently_played))
+                    .subTitle(new NotRecentlyPlayedPlaylist(mContext).getInfoString(mContext))
+                    .icon(R.drawable.ic_watch_later_white_24dp)
+                    .asBrowsable()
+                    .build()
+            );
+        }
+        if (prefs.maintainTopTrackPlaylist()) {
+            mediaItems.add(AutoMediaItem.with(mContext)
+                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)
+                    .title(resources.getString(R.string.top_tracks_label))
+                    .subTitle(new MyTopTracksPlaylist(mContext).getInfoString(mContext))
+                    .icon(R.drawable.ic_trending_up_white_24dp)
+                    .asBrowsable()
+                    .build()
+            );
+        }
 
         // Static playlists
         for (Playlist entry : PlaylistLoader.getAllPlaylists(mContext)) {

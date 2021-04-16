@@ -70,8 +70,10 @@ public class TopAndRecentlyPlayedTracksLoader {
 
     @NonNull
     public static ArrayList<Song> getTopTracks(@NonNull Context context) {
-        final int NUMBER_OF_TOP_TRACKS = 100;
+        final boolean enabled = PreferenceUtil.getInstance().maintainTopTrackPlaylist();
+        if (!enabled) {return new ArrayList<>();}
 
+        final int NUMBER_OF_TOP_TRACKS = 100;
         try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
 

@@ -67,6 +67,7 @@ public final class PreferenceUtil {
     @Deprecated public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
     public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
+    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
     public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
     public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
@@ -601,9 +602,14 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SHOW_SONG_NUMBER, false);
     }
 
-    public final boolean maintainSkippedSongsPlaylist() {
+    public boolean maintainTopTrackPlaylist() {
+        return mPreferences.getBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, true);
+    }
+
+    public boolean maintainSkippedSongsPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
     }
+
     public void setInitializedBlacklist() {
         mPreferences.edit()
                 .putBoolean(INITIALIZED_BLACKLIST, true)

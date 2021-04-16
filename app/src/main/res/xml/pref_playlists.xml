@@ -36,9 +36,16 @@
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             app:iconSpaceReserved="false"
             android:defaultValue="false"
+            android:key="maintain_top_tracks_playlist"
+            android:summary="@string/pref_summary_maintain_top_tracks_playlist"
+            android:title="@string/my_top_tracks" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
             android:key="maintain_skipped_songs_playlist"
             android:summary="@string/pref_summary_maintain_skipped_songs_playlist"
-            android:title="@string/pref_title_maintain_skipped_songs_playlist" />
+            android:title="@string/skipped_songs" />
 
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
