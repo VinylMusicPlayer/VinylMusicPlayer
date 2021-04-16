@@ -57,6 +57,16 @@ public class CalendarUtil {
         return elapsed;
     }
 
+    public long getElapsedWeeks(int numWeeks) {
+        // Today + this week
+        long elapsed = getElapsedWeek();
+
+        // The other full weeks
+        elapsed += (numWeeks - 1) * 7 * MS_PER_DAY;
+
+        return elapsed;
+    }
+
     /**
      * Returns the time elapsed so far this month in milliseconds.
      *
@@ -111,6 +121,16 @@ public class CalendarUtil {
 
             month--;
         }
+
+        return elapsed;
+    }
+
+    public long getElapsedYears(int numYears) {
+        // This year
+        long elapsed = getElapsedYear();
+
+        // The other full years
+        elapsed += (numYears - 1) * 365 * MS_PER_DAY;
 
         return elapsed;
     }
