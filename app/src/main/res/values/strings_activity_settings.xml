@@ -25,27 +25,35 @@
     </string-array>
 
     <string-array name="pref_playlists_time_interval_titles">
-        <item>@string/today</item>
-        <item>@string/this_week</item>
-        <item>@string/past_seven_days</item>
-        <item>@string/this_month</item>
-        <item>@string/past_30_days</item>
-        <item>@string/past_three_months</item>
-        <item>@string/past_100_days</item>
-        <item>@string/this_year</item>
         <item>@string/pref_playlist_disabled</item>
+
+        <item>@string/today</item>
+        <item>@string/past_seven_days</item>
+        <item>@string/past_30_days</item>
+        <item>@string/past_100_days</item>
+
+        <item>@string/this_week</item>
+
+        <item>@string/this_month</item>
+        <item>@string/past_three_months</item>
+
+        <item>@string/this_year</item>
     </string-array>
 
     <string-array name="pref_playlists_time_interval_values">
-        <item>1d</item>
-        <item>1w</item>
-        <item>7d</item>
-        <item>1m</item>
-        <item>30d</item>
-        <item>3m</item>
-        <item>100d</item>
-        <item>1y</item>
         <item>0d</item> <!-- disabled -->
+
+        <item>1d</item>
+        <item>7d</item>
+        <item>30d</item>
+        <item>100d</item>
+
+        <item>1w</item>
+
+        <item>1m</item>
+        <item>3m</item>
+
+        <item>1y</item>
     </string-array>
 
     <string-array name="pref_audio_replaygain_source_mode_titles">
