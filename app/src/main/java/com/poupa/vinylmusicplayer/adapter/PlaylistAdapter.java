@@ -1,7 +1,9 @@
 package com.poupa.vinylmusicplayer.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -81,11 +83,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
         return playlist.name;
     }
 
-    protected String getPlaylistText(Playlist playlist) {
-        Context context = App.getInstance().getApplicationContext();
-        return playlist.getInfoString(context);
-    }
-
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Playlist playlist = dataSet.get(position);
@@ -96,7 +94,19 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             holder.title.setText(getPlaylistTitle(playlist));
         }
         if (holder.text != null) {
-            holder.text.setText(getPlaylistText(playlist));
+            // This operation lasts seconds
+            // long enough to block the UI thread, but short enough to accept the context leak in an async operation
+            new AsyncTask<Playlist, Void, String>() {
+                @Override
+                protected String doInBackground(Playlist... params) {
+                    return params[0].getInfoString(activity);
+                }
+
+                @Override
+                protected void onPostExecute(String info) {
+                    holder.text.setText(info);
+                }
+            }.execute(playlist);
         }
 
         if (holder.getAdapterPosition() == getItemCount() - 1) {

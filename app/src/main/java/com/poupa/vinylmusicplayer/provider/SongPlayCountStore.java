@@ -274,6 +274,9 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
      * @return the top tracks
      */
     public Cursor getTopPlayedResults(int numResults) {
+        // TODO This operation is very expensive
+        //      With few months on the play history, this takes several seconds during startup
+
         updateResults();
 
         final SQLiteDatabase database = getReadableDatabase();
