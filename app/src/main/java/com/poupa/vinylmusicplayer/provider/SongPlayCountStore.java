@@ -59,16 +59,13 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
     // number of weeks since epoch time
     private final int mNumberOfWeeksSinceEpoch;
 
-    // used to track if we've walked through the db and updated all the rows
-    private boolean mDatabaseUpdated;
-
     public SongPlayCountStore(final Context context) {
         super(context, DATABASE_NAME, null, VERSION);
 
         long msSinceEpoch = System.currentTimeMillis();
         mNumberOfWeeksSinceEpoch = (int) (msSinceEpoch / ONE_WEEK_IN_MS);
 
-        mDatabaseUpdated = false;
+        updateResults();
     }
 
     @Override
@@ -274,9 +271,6 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
      * @return the top tracks
      */
     public Cursor getTopPlayedResults(int numResults) {
-        // TODO This operation is very expensive
-        //      With few months on the play history, this takes several seconds during startup
-
         updateResults();
 
         final SQLiteDatabase database = getReadableDatabase();
@@ -290,9 +284,8 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
      * accurate list of the top played results
      */
     private synchronized void updateResults() {
-        if (mDatabaseUpdated) {
-            return;
-        }
+        // TODO This operation is very expensive
+        //      With few months on the play history, this takes several seconds during startup
 
         final SQLiteDatabase database = getWritableDatabase();
 
@@ -317,7 +310,6 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
             cursor.close();
         }
 
-        mDatabaseUpdated = true;
         database.setTransactionSuccessful();
         database.endTransaction();
     }

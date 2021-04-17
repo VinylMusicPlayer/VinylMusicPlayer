@@ -1098,7 +1098,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
                 final Song currentSong = getCurrentSong();
                 HistoryStore.getInstance(this).addSongId(currentSong.id);
-                if (songPlayCountHelper.shouldBumpPlayCount()) {
+                if (PreferenceUtil.getInstance().maintainTopTrackPlaylist() && songPlayCountHelper.shouldBumpPlayCount()) {
                     SongPlayCountStore.getInstance(this).bumpPlayCount(songPlayCountHelper.getSong().id);
                 }
                 songPlayCountHelper.notifySongChanged(currentSong);
