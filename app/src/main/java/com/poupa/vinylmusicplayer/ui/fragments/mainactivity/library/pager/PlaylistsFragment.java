@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,13 +26,19 @@ import java.util.ArrayList;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<PlaylistAdapter, LinearLayoutManager> implements LoaderManager.LoaderCallbacks<ArrayList<Playlist>> {
+public class PlaylistsFragment
+        extends AbsLibraryPagerRecyclerViewFragment<PlaylistAdapter, LinearLayoutManager>
+        implements LoaderManager.LoaderCallbacks<ArrayList<Playlist>>,
+                SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int LOADER_ID = LoaderIds.PLAYLISTS_FRAGMENT;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
+
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
@@ -110,5 +117,17 @@ public class PlaylistsFragment extends AbsLibraryPagerRecyclerViewFragment<Playl
 
     public void reload() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
+            case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
+            case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
+            case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
+                reload();
+                break;
+        }
     }
 }
