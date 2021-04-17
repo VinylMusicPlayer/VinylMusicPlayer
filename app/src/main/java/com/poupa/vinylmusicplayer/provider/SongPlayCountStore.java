@@ -268,8 +268,6 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
      * @return the top tracks
      */
     public Cursor getTopPlayedResults(int numResults) {
-        updateResults();
-
         final SQLiteDatabase database = getReadableDatabase();
         return database.query(SongPlayCountColumns.NAME, new String[]{SongPlayCountColumns.ID},
                 null, null, null, null, SongPlayCountColumns.PLAY_COUNT_SCORE + " DESC",
@@ -281,9 +279,6 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
      * accurate list of the top played results
      */
     private synchronized void updateResults() {
-        // TODO This operation is very expensive
-        //      With few months on the play history, this takes several seconds during startup
-
         final SQLiteDatabase database = getWritableDatabase();
 
         database.beginTransaction();
