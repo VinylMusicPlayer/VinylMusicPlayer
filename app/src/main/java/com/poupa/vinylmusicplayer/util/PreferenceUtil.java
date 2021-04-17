@@ -96,7 +96,8 @@ public final class PreferenceUtil {
 
     private static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
-    public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
+    @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
+    public static final String RG_SOURCE_MODE_v2 = "replaygain_source_mode";
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
@@ -123,6 +124,12 @@ public final class PreferenceUtil {
     }
 
     private void migratePreferencesIfNeeded() {
+        if (!mPreferences.contains(RG_SOURCE_MODE_v2)) {
+            mPreferences.edit()
+                    .putString(RG_SOURCE_MODE_v2, mPreferences.getString(RG_SOURCE_MODE, "none"))
+                    .apply();
+        }
+
         migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
         migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
         migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
