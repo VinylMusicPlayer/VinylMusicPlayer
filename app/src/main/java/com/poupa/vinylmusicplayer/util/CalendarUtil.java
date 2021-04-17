@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.util;
 
+import androidx.annotation.IntRange;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -10,7 +12,7 @@ public class CalendarUtil {
     private static final long MS_PER_MINUTE = 60 * 1000;
     private static final long MS_PER_DAY = 24 * 60 * MS_PER_MINUTE;
 
-    private Calendar calendar;
+    private final Calendar calendar;
 
     public CalendarUtil() {
         this.calendar = Calendar.getInstance();
@@ -33,9 +35,9 @@ public class CalendarUtil {
      *
      * @return Time elapsed since N days in milliseconds.
      */
-    public long getElapsedDays(int numDays) {
+    public long getElapsedDays(@IntRange(from=1) int numDays) {
         long elapsed = getElapsedToday();
-        elapsed += numDays * MS_PER_DAY;
+        elapsed += (numDays - 1) * MS_PER_DAY;
 
         return elapsed;
     }
@@ -57,7 +59,7 @@ public class CalendarUtil {
         return elapsed;
     }
 
-    public long getElapsedWeeks(int numWeeks) {
+    public long getElapsedWeeks(@IntRange(from=1) int numWeeks) {
         // Today + this week
         long elapsed = getElapsedWeek();
 
@@ -84,7 +86,7 @@ public class CalendarUtil {
      * @param numMonths Additional number of months prior to the current month to calculate.
      * @return Time elapsed this month and the last numMonths months in milliseconds.
      */
-    public long getElapsedMonths(int numMonths) {
+    public long getElapsedMonths(@IntRange(from=1) int numMonths) {
         // Today + rest of this month
         long elapsed = getElapsedMonth();
 
@@ -125,7 +127,7 @@ public class CalendarUtil {
         return elapsed;
     }
 
-    public long getElapsedYears(int numYears) {
+    public long getElapsedYears(@IntRange(from=1) int numYears) {
         // This year
         long elapsed = getElapsedYear();
 
@@ -143,7 +145,7 @@ public class CalendarUtil {
      * @return The days in that month/year.
      */
     private int getDaysInMonth(int year, int month) {
-        final Calendar monthCal = new GregorianCalendar(calendar.get(Calendar.YEAR), month, 1);
+        final Calendar monthCal = new GregorianCalendar(year, month, 1);
         return monthCal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 }
