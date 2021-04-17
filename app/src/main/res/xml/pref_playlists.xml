@@ -35,7 +35,7 @@
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="maintain_top_tracks_playlist"
             android:summary="@string/pref_summary_maintain_top_tracks_playlist"
             android:title="@string/my_top_tracks" />
