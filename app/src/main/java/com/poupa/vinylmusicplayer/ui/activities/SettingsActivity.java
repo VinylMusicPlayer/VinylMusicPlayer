@@ -332,7 +332,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                         findPreference("colored_notification").setEnabled(sharedPreferences.getBoolean(key, false));
                     }
                     break;
-                case PreferenceUtil.RG_SOURCE_MODE:
+                case PreferenceUtil.RG_SOURCE_MODE_V2:
                     Preference pref = findPreference("replaygain_preamp");
                     if (!sharedPreferences.getString(key, "none").equals("none")) {
                         pref.setEnabled(true);

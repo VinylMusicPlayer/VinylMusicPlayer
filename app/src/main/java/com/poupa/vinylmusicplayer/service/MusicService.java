@@ -1157,7 +1157,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
                 sendChangeInternal(MusicService.META_CHANGED);
                 break;
-            case PreferenceUtil.RG_SOURCE_MODE:
+            case PreferenceUtil.RG_SOURCE_MODE_V2:
             case PreferenceUtil.RG_PREAMP_WITH_TAG:
             case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
                 applyReplayGain();

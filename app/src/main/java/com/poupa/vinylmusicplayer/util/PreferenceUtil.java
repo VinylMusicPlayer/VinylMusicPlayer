@@ -667,7 +667,7 @@ public final class PreferenceUtil {
     public byte getReplayGainSourceMode() {
         byte sourceMode = RG_SOURCE_MODE_NONE;
 
-        switch (mPreferences.getString(RG_SOURCE_MODE, "none")) {
+        switch (mPreferences.getString(RG_SOURCE_MODE_V2, "none")) {
             case "track":
                 sourceMode = RG_SOURCE_MODE_TRACK;
                 break;
