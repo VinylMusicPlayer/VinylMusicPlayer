@@ -97,7 +97,7 @@ public final class PreferenceUtil {
     private static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
     @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
-    public static final String RG_SOURCE_MODE_v2 = "replaygain_source_mode";
+    public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
@@ -124,9 +124,9 @@ public final class PreferenceUtil {
     }
 
     private void migratePreferencesIfNeeded() {
-        if (!mPreferences.contains(RG_SOURCE_MODE_v2)) {
+        if (!mPreferences.contains(RG_SOURCE_MODE_V2)) {
             mPreferences.edit()
-                    .putString(RG_SOURCE_MODE_v2, mPreferences.getString(RG_SOURCE_MODE, "none"))
+                    .putString(RG_SOURCE_MODE_V2, mPreferences.getString(RG_SOURCE_MODE, "none"))
                     .apply();
         }
 
@@ -350,36 +350,31 @@ public final class PreferenceUtil {
 
     private long getCutoffTimeMillisV2(@NonNull final String cutoff) {
         final CalendarUtil calendarUtil = new CalendarUtil();
-        long interval = 0;
-        final String value = mPreferences.getString(cutoff, null);
+        long interval = System.currentTimeMillis();
+        final long defaultValue = interval - calendarUtil.getElapsedMonths(1);
 
+        final String value = mPreferences.getString(cutoff, "");
         final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
         final Matcher matcher = pattern.matcher(value);
         if (matcher.find()) {
             final int count = Integer.parseInt(matcher.group(1));
-
-            if (count == 0) {
-                return 0;
-            } // Disabled
-
             final String unit = matcher.group(2);
-            switch (unit) {
-                case "d":
-                    interval = calendarUtil.getElapsedDays(count);
-                    break;
-                case "w":
-                    interval = calendarUtil.getElapsedWeeks(count);
-                    break;
-                case "m":
-                    interval = calendarUtil.getElapsedMonths(count);
-                    break;
-                case "y":
-                    interval = calendarUtil.getElapsedYears(count);
-                    break;
+
+            if (count == 0) {return 0;} // Disabled
+            else if (count < 0 || unit == null) {
+                return defaultValue;
+            } else {
+                switch (unit) {
+                    case "d": return interval - calendarUtil.getElapsedDays(count);
+                    case "w": return interval - calendarUtil.getElapsedWeeks(count);
+                    case "m": return interval - calendarUtil.getElapsedMonths(count);
+                    case "y": return interval - calendarUtil.getElapsedYears(count);
+                    default: return defaultValue;
+                }
             }
-            return (System.currentTimeMillis() - interval);
+        } else {
+            return defaultValue;
         }
-        throw new IllegalArgumentException("Cannot process: " + value);
     }
 
     @NonNull
@@ -399,38 +394,43 @@ public final class PreferenceUtil {
 
     @NonNull
     private String getCutoffTextV2(@NonNull final String cutoff, Context context) {
-        final String value = mPreferences.getString(cutoff, null);
+        final String defaultValue = context.getString(R.string.this_month);
 
+        final String value = mPreferences.getString(cutoff, "");
         final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
         final Matcher matcher = pattern.matcher(value);
         if (matcher.find()) {
             final int count = Integer.parseInt(matcher.group(1));
-
-            if (count == 0) {
-                return context.getString(R.string.pref_playlist_disabled);
-            }
-
             final String unit = matcher.group(2);
-            switch (unit) {
-                case "d":
-                    return count <= 1
+
+            if (count == 0) {return "Disabled";}
+            else if (count < 0 || unit == null) {
+                return defaultValue;
+            } else {
+                switch (unit) {
+                    case "d":
+                        return count == 1
                             ? context.getString(R.string.today)
                             : context.getString(R.string.past_X_days, count);
-                case "w":
-                    return count <= 1
+                    case "w":
+                        return count == 1
                             ? context.getString(R.string.this_week)
                             : context.getString(R.string.past_X_weeks, count);
-                case "m":
-                    return count <= 1
+                    case "m":
+                        return count == 1
                             ? context.getString(R.string.this_month)
                             : context.getString(R.string.past_X_months, count);
-                case "y":
-                    return count <= 1
-                            ? context.getString(R.string.this_year)
-                            : context.getString(R.string.past_X_years, count);
+                    case "y":
+                        return count == 1
+                                ? context.getString(R.string.this_year)
+                                : context.getString(R.string.past_X_years, count);
+                    default:
+                        return defaultValue;
+                }
             }
+        } else {
+            return defaultValue;
         }
-        throw new IllegalArgumentException("Cannot process: " + value);
     }
 
     public int getLastSleepTimerValue() {
