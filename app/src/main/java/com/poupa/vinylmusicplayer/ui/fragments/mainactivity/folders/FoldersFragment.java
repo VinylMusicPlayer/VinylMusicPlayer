@@ -123,9 +123,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         outState.putParcelable(CRUMBS, breadCrumbs.getStateWrapper());
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void restoreBreadcrumb(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             setCrumb(new BreadCrumbLayout.Crumb(FileUtil.safeGetCanonicalFile((File) getArguments().getSerializable(PATH))), true);
         } else {
@@ -144,6 +142,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         breadCrumbs = binding.breadCrumbs;
         appbar = binding.appbar;
         recyclerView = binding.recyclerView;
+
+        restoreBreadcrumb(savedInstanceState);
 
         return binding.getRoot();
     }
