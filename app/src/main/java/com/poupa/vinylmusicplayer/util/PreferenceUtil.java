@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class PreferenceUtil {
+    // TODO Use string resources for this, avoid duplicating inside UI code
     public static final String GENERAL_THEME = "general_theme";
     public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     public static final String LAST_PAGE = "last_start_page";
