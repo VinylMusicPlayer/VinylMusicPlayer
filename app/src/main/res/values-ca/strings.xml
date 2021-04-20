@@ -133,7 +133,6 @@
     <string name="pref_title_audio_ducking">Baixa el volum en perdre el focus</string>
     <string name="pref_title_recently_played_interval">Interval de la llista de reproduîdes recentment</string>
     <string name="pref_title_last_added_interval">Interval de la llista d\'afegides recentment</string>
-    <string name="pref_title_maintain_skipped_songs_playlist">Cançons omeses</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Conserva una llista de cançons omeses durant la reproducció</string>
     <string name="pref_title_synchronized_lyrics_show">Mostra la lletra sincronitzada</string>
     <string name="pref_title_animate_playing_song_icon">Anima la icona de la cançó reproduïda</string>
