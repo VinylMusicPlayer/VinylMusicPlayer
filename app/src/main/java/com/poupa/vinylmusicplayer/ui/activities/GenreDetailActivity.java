@@ -125,14 +125,13 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_shuffle_genre:
-                MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        final int id = item.getItemId();
+        if (id == R.id.action_shuffle_genre) {
+            MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
+            return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

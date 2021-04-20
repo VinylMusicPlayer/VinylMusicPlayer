@@ -234,17 +234,16 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
             }
         }
 
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_shuffle_all:
-                MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
-                return true;
-            case R.id.action_new_playlist:
-                CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");
-                return true;
-            case R.id.action_search:
-                startActivity(new Intent(getActivity(), SearchActivity.class));
-                return true;
+        final int id = item.getItemId();
+        if (id == R.id.action_shuffle_all) {
+            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
+            return true;
+        } else if (id == R.id.action_new_playlist) {
+            CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");
+            return true;
+        } else if (id == R.id.action_search) {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -299,31 +298,23 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     private boolean handleGridSizeMenuItem(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull MenuItem item) {
         int gridSize = 0;
-        switch (item.getItemId()) {
-            case R.id.action_grid_size_1:
-                gridSize = 1;
-                break;
-            case R.id.action_grid_size_2:
-                gridSize = 2;
-                break;
-            case R.id.action_grid_size_3:
-                gridSize = 3;
-                break;
-            case R.id.action_grid_size_4:
-                gridSize = 4;
-                break;
-            case R.id.action_grid_size_5:
-                gridSize = 5;
-                break;
-            case R.id.action_grid_size_6:
-                gridSize = 6;
-                break;
-            case R.id.action_grid_size_7:
-                gridSize = 7;
-                break;
-            case R.id.action_grid_size_8:
-                gridSize = 8;
-                break;
+        final int itemId = item.getItemId();
+        if (itemId == R.id.action_grid_size_1) {
+            gridSize = 1;
+        } else if (itemId == R.id.action_grid_size_2) {
+            gridSize = 2;
+        } else if (itemId == R.id.action_grid_size_3) {
+            gridSize = 3;
+        } else if (itemId == R.id.action_grid_size_4) {
+            gridSize = 4;
+        } else if (itemId == R.id.action_grid_size_5) {
+            gridSize = 5;
+        } else if (itemId == R.id.action_grid_size_6) {
+            gridSize = 6;
+        } else if (itemId == R.id.action_grid_size_7) {
+            gridSize = 7;
+        } else if (itemId == R.id.action_grid_size_8) {
+            gridSize = 8;
         }
         if (gridSize > 0) {
             item.setChecked(true);
@@ -374,53 +365,38 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     private boolean handleSortOrderMenuItem(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull MenuItem item) {
         String sortOrder = null;
+        final int itemId = item.getItemId();
         if (fragment instanceof AlbumsFragment) {
-            switch (item.getItemId()) {
-                case R.id.action_album_sort_order_asc:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_A_Z;
-                    break;
-                case R.id.action_album_sort_order_desc:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_Z_A;
-                    break;
-                case R.id.action_album_sort_order_artist:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_ARTIST;
-                    break;
-                case R.id.action_album_sort_order_year:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE;
-                    break;
-                case R.id.action_album_sort_order_date_added:
-                    sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE;
-                    break;
+            if (itemId == R.id.action_album_sort_order_asc) {
+                sortOrder = SortOrder.AlbumSortOrder.ALBUM_A_Z;
+            } else if (itemId == R.id.action_album_sort_order_desc) {
+                sortOrder = SortOrder.AlbumSortOrder.ALBUM_Z_A;
+            } else if (itemId == R.id.action_album_sort_order_artist) {
+                sortOrder = SortOrder.AlbumSortOrder.ALBUM_ARTIST;
+            } else if (itemId == R.id.action_album_sort_order_year) {
+                sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE;
+            } else if (itemId == R.id.action_album_sort_order_date_added) {
+                sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE;
             }
         } else if (fragment instanceof ArtistsFragment) {
-            switch (item.getItemId()) {
-                case R.id.action_artist_sort_order_asc:
-                    sortOrder = SortOrder.ArtistSortOrder.ARTIST_A_Z;
-                    break;
-                case R.id.action_artist_sort_order_desc:
-                    sortOrder = SortOrder.ArtistSortOrder.ARTIST_Z_A;
-                    break;
+            if (itemId == R.id.action_artist_sort_order_asc) {
+                sortOrder = SortOrder.ArtistSortOrder.ARTIST_A_Z;
+            } else if (itemId == R.id.action_artist_sort_order_desc) {
+                sortOrder = SortOrder.ArtistSortOrder.ARTIST_Z_A;
             }
         } else if (fragment instanceof SongsFragment) {
-            switch (item.getItemId()) {
-                case R.id.action_song_sort_order_asc:
-                    sortOrder = SortOrder.SongSortOrder.SONG_A_Z;
-                    break;
-                case R.id.action_song_sort_order_desc:
-                    sortOrder = SortOrder.SongSortOrder.SONG_Z_A;
-                    break;
-                case R.id.action_song_sort_order_artist:
-                    sortOrder = SortOrder.SongSortOrder.SONG_ARTIST;
-                    break;
-                case R.id.action_song_sort_order_album:
-                    sortOrder = SortOrder.SongSortOrder.SONG_ALBUM;
-                    break;
-                case R.id.action_song_sort_order_year:
-                    sortOrder = SortOrder.SongSortOrder.SONG_YEAR_REVERSE;
-                    break;
-                case R.id.action_song_sort_order_date_added:
-                    sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE;
-                    break;
+            if (itemId == R.id.action_song_sort_order_asc) {
+                sortOrder = SortOrder.SongSortOrder.SONG_A_Z;
+            } else if (itemId == R.id.action_song_sort_order_desc) {
+                sortOrder = SortOrder.SongSortOrder.SONG_Z_A;
+            } else if (itemId == R.id.action_song_sort_order_artist) {
+                sortOrder = SortOrder.SongSortOrder.SONG_ARTIST;
+            } else if (itemId == R.id.action_song_sort_order_album) {
+                sortOrder = SortOrder.SongSortOrder.SONG_ALBUM;
+            } else if (itemId == R.id.action_song_sort_order_year) {
+                sortOrder = SortOrder.SongSortOrder.SONG_YEAR_REVERSE;
+            } else if (itemId == R.id.action_song_sort_order_date_added) {
+                sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE;
             }
         }
 
