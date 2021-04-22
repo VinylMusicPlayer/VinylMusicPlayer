@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,6 +36,8 @@ import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
@@ -151,6 +154,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return LibraryPreferenceDialog.newInstance();
             } else if (preference instanceof PreAmpPreference) {
                 return PreAmpPreferenceDialog.newInstance();
+            } else if (preference instanceof SmartPlaylistPreference) {
+                return SmartPlaylistPreferenceDialog.newInstance(preference);
             }
             return super.onCreatePreferenceDialog(preference);
         }
@@ -309,6 +314,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
 
             updateNowPlayingScreenSummary();
+            updatePlaylistsSummary();
         }
 
         private boolean hasEqualizer() {
@@ -342,11 +348,28 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                         pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                     }
                     break;
+                case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
+                case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
+                case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
+                    updatePlaylistsSummary();
+                    break;
             }
         }
 
         private void updateNowPlayingScreenSummary() {
             findPreference("now_playing_screen_id").setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
+        }
+
+        private void updatePlaylistsSummary() {
+            final Context context = getContext();
+            final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance();
+
+            findPreference(PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getRecentlyPlayedCutoffText(context));
+            findPreference(PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getNotRecentlyPlayedCutoffText(context));
+            findPreference(PreferenceUtil.LAST_ADDED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getLastAddedCutoffText(context));
         }
     }
 }

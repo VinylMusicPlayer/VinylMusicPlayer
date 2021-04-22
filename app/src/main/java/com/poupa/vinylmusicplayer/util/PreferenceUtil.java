@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -23,6 +24,7 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -349,10 +351,10 @@ public final class PreferenceUtil {
         return getCutoffTimeMillisV2(RECENTLY_PLAYED_CUTOFF_V2);
     }
 
-    private long getCutoffTimeMillisV2(@NonNull final String cutoff) {
-        final CalendarUtil calendarUtil = new CalendarUtil();
-        long interval = System.currentTimeMillis();
-        final long defaultValue = interval - calendarUtil.getElapsedMonths(1);
+    @NonNull
+    public Pair<Integer, ChronoUnit> getCutoffTimeV2(@NonNull final String cutoff) {
+        final Pair<Integer, ChronoUnit> disabledValue = new Pair<>(0, ChronoUnit.DAYS);
+        final Pair<Integer, ChronoUnit> defaultValue = new Pair<>(1, ChronoUnit.MONTHS);
 
         final String value = mPreferences.getString(cutoff, "");
         final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
@@ -361,21 +363,66 @@ public final class PreferenceUtil {
             final int count = Integer.parseInt(matcher.group(1));
             final String unit = matcher.group(2);
 
-            if (count == 0) {return 0;} // Disabled
-            else if (count < 0 || unit == null) {
-                return defaultValue;
-            } else {
+            if (count == 0) {return disabledValue;}
+            else if (count < 0 || unit == null) {return defaultValue;}
+            else {
                 switch (unit) {
-                    case "d": return interval - calendarUtil.getElapsedDays(count);
-                    case "w": return interval - calendarUtil.getElapsedWeeks(count);
-                    case "m": return interval - calendarUtil.getElapsedMonths(count);
-                    case "y": return interval - calendarUtil.getElapsedYears(count);
+                    case "d": return new Pair<>(count, ChronoUnit.DAYS);
+                    case "w": return new Pair<>(count, ChronoUnit.WEEKS);
+                    case "m": return new Pair<>(count, ChronoUnit.MONTHS);
+                    case "y": return new Pair<>(count, ChronoUnit.YEARS);
                     default: return defaultValue;
                 }
             }
         } else {
             return defaultValue;
         }
+    }
+
+    private long getCutoffTimeMillisV2(@NonNull final String cutoff) {
+        final Pair<Integer, ChronoUnit> value = getCutoffTimeV2(cutoff);
+        if (value.first <= 0) {return 0;} // Disabled
+
+        final CalendarUtil calendarUtil = new CalendarUtil();
+        long interval = System.currentTimeMillis();
+
+        if (value.second == ChronoUnit.DAYS) {
+            return interval - calendarUtil.getElapsedDays(value.first);
+        } else if (value.second == ChronoUnit.WEEKS) {
+            return interval - calendarUtil.getElapsedWeeks(value.first);
+        } else if (value.second == ChronoUnit.MONTHS) {
+            return interval - calendarUtil.getElapsedMonths(value.first);
+        } else if (value.second == ChronoUnit.YEARS) {
+            return interval - calendarUtil.getElapsedYears(value.first);
+        }
+
+        return 0; // Disabled
+    }
+
+    @NonNull
+    private String getCutoffTextV2(@NonNull final String cutoff, Context context) {
+        final Pair<Integer, ChronoUnit> value = getCutoffTimeV2(cutoff);
+        if (value.first <= 0) {return context.getString(R.string.pref_playlist_disabled);}
+
+        if (value.second == ChronoUnit.DAYS) {
+            return value.first == 1
+                    ? context.getString(R.string.today)
+                    : context.getString(R.string.past_X_days, value.first);
+        } else if (value.second == ChronoUnit.WEEKS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_week)
+                    : context.getString(R.string.past_X_weeks, value.first);
+        } else if (value.second == ChronoUnit.MONTHS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_month)
+                    : context.getString(R.string.past_X_months, value.first);
+        } else if (value.second == ChronoUnit.YEARS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_year)
+                    : context.getString(R.string.past_X_years, value.first);
+        }
+
+        return context.getString(R.string.pref_playlist_disabled);
     }
 
     @NonNull
@@ -391,47 +438,6 @@ public final class PreferenceUtil {
     @NonNull
     public String getNotRecentlyPlayedCutoffText(Context context) {
         return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
-    }
-
-    @NonNull
-    private String getCutoffTextV2(@NonNull final String cutoff, Context context) {
-        final String defaultValue = context.getString(R.string.this_month);
-
-        final String value = mPreferences.getString(cutoff, "");
-        final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
-        final Matcher matcher = pattern.matcher(value);
-        if (matcher.find()) {
-            final int count = Integer.parseInt(matcher.group(1));
-            final String unit = matcher.group(2);
-
-            if (count == 0) {return "Disabled";}
-            else if (count < 0 || unit == null) {
-                return defaultValue;
-            } else {
-                switch (unit) {
-                    case "d":
-                        return count == 1
-                            ? context.getString(R.string.today)
-                            : context.getString(R.string.past_X_days, count);
-                    case "w":
-                        return count == 1
-                            ? context.getString(R.string.this_week)
-                            : context.getString(R.string.past_X_weeks, count);
-                    case "m":
-                        return count == 1
-                            ? context.getString(R.string.this_month)
-                            : context.getString(R.string.past_X_months, count);
-                    case "y":
-                        return count == 1
-                                ? context.getString(R.string.this_year)
-                                : context.getString(R.string.past_X_years, count);
-                    default:
-                        return defaultValue;
-                }
-            }
-        } else {
-            return defaultValue;
-        }
     }
 
     public int getLastSleepTimerValue() {

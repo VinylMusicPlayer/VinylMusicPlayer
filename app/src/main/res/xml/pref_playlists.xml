@@ -3,35 +3,23 @@
 
     <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_playlists">
 
-        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
             app:iconSpaceReserved="false"
+            android:key="last_added_interval_v2"
             android:defaultValue="1m"
-            android:entries="@array/pref_playlists_time_interval_titles"
-            android:entryValues="@array/pref_playlists_time_interval_values"
+            android:title="@string/pref_title_last_added_interval" />
+
+        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
+            app:iconSpaceReserved="false"
             android:key="recently_played_interval_v2"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
+            android:defaultValue="1m"
             android:title="@string/pref_title_recently_played_interval" />
 
-        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
             app:iconSpaceReserved="false"
-            android:defaultValue="1m"
-            android:entries="@array/pref_playlists_time_interval_titles"
-            android:entryValues="@array/pref_playlists_time_interval_values"
             android:key="not_recently_played_interval_v2"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/pref_title_not_recently_played_interval" />
-
-        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
-             app:iconSpaceReserved="false"
             android:defaultValue="1m"
-            android:entries="@array/pref_playlists_time_interval_titles"
-            android:entryValues="@array/pref_playlists_time_interval_values"
-            android:key="last_added_interval_v2"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/pref_title_last_added_interval" />
+            android:title="@string/pref_title_not_recently_played_interval" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             app:iconSpaceReserved="false"
