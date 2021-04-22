@@ -619,6 +619,68 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
+    public void updateMediaSessionLyric(String line) {
+        final Song song = getCurrentSong();
+
+        if (song.id == -1) {
+            mediaSession.setMetadata(null);
+            return;
+        }
+
+        List<String> splitlist = chineseSplitFunction(line,20);
+
+        // set Artist, Title and Album to lyrics
+        final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, splitlist.size()>0 ? splitlist.get(0):MultiValuesTagUtil.infoString(song.artistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, splitlist.size()>1 ? splitlist.get(1):song.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, splitlist.size()>2 ? splitlist.get(2):song.albumName)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoString(song.albumArtistNames))
+                .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, getPosition() + 1)
+                .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year)
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getPlayingQueue().size());
+        }
+
+        mediaSession.setMetadata(metaData.build());
+
+    }
+
+
+    // Split string based on length and support wide character
+    public static List<String> chineseSplitFunction(String src, int bytes){
+        try {
+            if(src == null){
+                return null;
+            }
+            List<String> splitList = new ArrayList<String>();
+            src=src.trim();
+            int startIndex = 0;    // start of string
+            int endIndex;
+            while(startIndex < src.length()){
+                // At the end, need to compare with src.length(), in order not to cause index out of range.
+                endIndex = Math.min((startIndex + bytes), src.length());
+                String subString = src.substring(startIndex,endIndex);
+                // If string length is bigger than bytes, means wide character are in the string
+                // In GBK encoding, chinese character took 2 bytes, and in UTF-8, it took 3 bytes.
+                while (subString.getBytes("GBK").length > bytes) {
+                    --endIndex;
+                    subString = src.substring(startIndex,endIndex);
+                }
+                splitList.add(subString);
+                startIndex = endIndex;
+            }
+            return splitList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
     private static Bitmap copy(Bitmap bitmap) {
         Bitmap.Config config = bitmap.getConfig();
         if (config == null) {

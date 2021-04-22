@@ -247,6 +247,9 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
             lyricsLine2.setAlpha(0f);
             lyricsLine2.setTranslationY(h);
             lyricsLine2.animate().alpha(1f).translationY(0f).setDuration(PlayerAlbumCoverFragment.VISIBILITY_ANIM_DURATION);
+            if (PreferenceUtil.getInstance().bluetoothLyricsShow()) {
+                MusicPlayerRemote.updateLyric(line);
+            }
         }
     }
 

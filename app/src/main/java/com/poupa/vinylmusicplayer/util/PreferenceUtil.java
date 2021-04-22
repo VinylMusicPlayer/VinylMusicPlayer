@@ -80,6 +80,7 @@ public final class PreferenceUtil {
     public static final String START_DIRECTORY = "start_directory";
 
     public static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
+    public static final String BLUETOOTH_LYRICS_SHOW= "bluetooth_lyrics_show";
     public static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
     public static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
 
@@ -528,6 +529,9 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SYNCHRONIZED_LYRICS_SHOW, true);
     }
 
+    public final boolean bluetoothLyricsShow() {
+        return mPreferences.getBoolean(BLUETOOTH_LYRICS_SHOW, false);
+    }
     public final boolean animatePlayingSongIcon() {
         return mPreferences.getBoolean(ANIMATE_PLAYING_SONG_ICON, false);
     }
