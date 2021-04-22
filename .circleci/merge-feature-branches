@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#set -x
-
 [ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
 [ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
 
@@ -39,7 +37,10 @@ branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
 function is_blacklisted()
 {
     local branch=$1
-    local blacklist=""
+    # Space separated list of branch names
+    local blacklist="
+        internal-playlists
+    "
 
     for bl in ${blacklist}; do
         [ "${branch}" = "${bl}" ] && return 0
@@ -59,10 +60,9 @@ for branch in ${branches}; do
 done
 
 # Merge with white-listed remotes (pull requests etc)
-# Space separated list, each following the login/repo/branch format
-alien_branches="
-    Octoton/VinylMusicPlayer/round-ui
-"
+# Space separated list, each following the 'login/repo/branch' format
+alien_branches=""
+
 for alien_branch in ${alien_branches}; do
     user=$(echo "${alien_branch}" | cut -d/ -f1)
     repo=$(echo "${alien_branch}" | cut -d/ -f2)
