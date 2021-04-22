@@ -102,7 +102,7 @@
     <string name="today">Hôm nay</string>
     <string name="this_week">Tuần này</string>
     <string name="this_month">Tháng này</string>
-    <string name="past_three_months">3 tháng qua</string>
+    <string name="past_X_months">%d tháng qua</string>
     <string name="this_year">Năm nay</string>
     <string name="equalizer">Bộ lọc âm thanh</string>
     <string name="pref_header_colors">Màu sắc</string>

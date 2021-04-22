@@ -103,7 +103,7 @@
     <string name="today">今日</string>
     <string name="this_week">今週</string>
     <string name="this_month">今月</string>
-    <string name="past_three_months">過去3か月</string>
+    <string name="past_X_months">過去%dか月</string>
     <string name="this_year">今年</string>
     <string name="equalizer">イコライザー</string>
     <string name="pref_header_colors">配色設定</string>

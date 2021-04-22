@@ -104,9 +104,9 @@
     <string name="today">Aujourd\'hui</string>
     <string name="this_week">Cette semaine</string>
     <string name="this_month">Ce mois-ci</string>
-    <string name="past_three_months">Les 3 derniers mois</string>
-    <string name="past_seven_days">Les 7 derniers jours</string>
     <string name="this_year">Cette année</string>
+    <string name="past_X_months">Les %d derniers mois</string>
+    <string name="past_X_days">Les %d derniers jours</string>
     <string name="equalizer">Égaliseur</string>
     <string name="pref_header_colors">Couleurs</string>
     <string name="pref_header_now_playing_screen">Lecture en cours</string>

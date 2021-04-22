@@ -111,18 +111,12 @@
     <string name="never">Never</string>
     <string name="today">Today</string>
     <string name="this_week">This week</string>
-    <string name="past_seven_days">Past 7 days</string>
-    <!-- {@deprecated Temporary, waiting for a flexible time span dialog.} -->
-    <string name="past_30_days">Past 30 days</string>
-    <!-- {@deprecated Temporary, waiting for a flexible time span dialog.} -->
-    <string name="past_100_days">Past 100 days</string>
+    <string name="this_month">This month</string>
+    <string name="this_year">This year</string>
     <string name="past_X_days">Past %d days</string>
     <string name="past_X_weeks">Past %d weeks</string>
     <string name="past_X_months">Past %d months</string>
     <string name="past_X_years">Past %d years</string>
-    <string name="this_month">This month</string>
-    <string name="past_three_months">Past 3 months</string>
-    <string name="this_year">This year</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>

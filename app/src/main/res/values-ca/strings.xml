@@ -106,10 +106,10 @@
     <string name="never">Mai</string>
     <string name="today">Avui</string>
     <string name="this_week">Aquesta setmana</string>
-    <string name="past_seven_days">Últims 7 dies</string>
     <string name="this_month">Aquest mes</string>
-    <string name="past_three_months">Últims 3 mesos</string>
     <string name="this_year">Aquest any</string>
+    <string name="past_X_days">Últims %d dies</string>
+    <string name="past_X_months">Últims %d mesos</string>
     <string name="equalizer">Equalitzador</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Reproducció actual</string>

@@ -106,8 +106,8 @@
     <string name="today">Dnes</string>
     <string name="this_week">Tento týden</string>
     <string name="this_month">Tento měsíc</string>
-    <string name="past_three_months">Poslední 3 měsíce</string>
     <string name="this_year">Tento rok</string>
+    <string name="past_X_months">Poslední %d měsíce</string>
     <string name="equalizer">Ekvalizér</string>
     <string name="pref_header_colors">Barvy</string>
     <string name="pref_header_now_playing_screen">Přehrávač</string>

@@ -106,7 +106,7 @@
     <string name="today">Bugün</string>
     <string name="this_week">Bu hafta</string>
     <string name="this_month">Bu ay</string>
-    <string name="past_three_months">Son 3 ay</string>
+    <string name="past_X_months">Son %d ay</string>
     <string name="this_year">Bu yıl</string>
     <string name="equalizer">Ekolayzer</string>
     <string name="pref_header_colors">Renkler</string>
