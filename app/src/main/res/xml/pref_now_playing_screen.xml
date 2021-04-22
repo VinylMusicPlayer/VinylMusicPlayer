@@ -19,6 +19,13 @@
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             app:iconSpaceReserved="false"
             android:defaultValue="false"
+            android:key="bluetooth_lyrics_show"
+            android:summary="@string/pref_summary_bluetooth_lyrics_show"
+            android:title="@string/pref_title_bluetooth_lyrics_show" />
+
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
             android:key="animate_playing_song_icon"
             android:summary="@string/pref_summary_animate_playing_song_icon"
             android:title="@string/pref_title_animate_playing_song_icon" />

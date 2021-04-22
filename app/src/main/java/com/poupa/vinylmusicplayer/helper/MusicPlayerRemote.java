@@ -462,4 +462,9 @@ public class MusicPlayerRemote {
     private static String getSongIdFromMediaProvider(Uri uri) {
         return DocumentsContract.getDocumentId(uri).split(":")[1];
     }
+
+    public static void updateLyric(String line) {
+
+        musicService.updateMediaSessionLyric(line);
+    }
 }
