@@ -62,6 +62,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.ArrayList;
@@ -627,7 +628,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             return;
         }
 
-        List<String> splitlist = chineseSplitFunction(line,20);
+        List<String> splitlist = StringUtil.wideCharacterSplit(line,20);
 
         // set Artist, Title and Album to lyrics
         final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
@@ -645,39 +646,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         mediaSession.setMetadata(metaData.build());
-
-    }
-
-
-    // Split string based on length and support wide character
-    public static List<String> chineseSplitFunction(String src, int bytes){
-        try {
-            if(src == null){
-                return null;
-            }
-            List<String> splitList = new ArrayList<String>();
-            src=src.trim();
-            int startIndex = 0;    // start of string
-            int endIndex;
-            while(startIndex < src.length()){
-                // At the end, need to compare with src.length(), in order not to cause index out of range.
-                endIndex = Math.min((startIndex + bytes), src.length());
-                String subString = src.substring(startIndex,endIndex);
-                // If string length is bigger than bytes, means wide character are in the string
-                // In GBK encoding, chinese character took 2 bytes, and in UTF-8, it took 3 bytes.
-                while (subString.getBytes("GBK").length > bytes) {
-                    --endIndex;
-                    subString = src.substring(startIndex,endIndex);
-                }
-                splitList.add(subString);
-                startIndex = endIndex;
-            }
-            return splitList;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
 
     }
 
