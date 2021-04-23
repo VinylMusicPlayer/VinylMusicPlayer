@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
@@ -77,15 +78,20 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         }
 
         // ---- Build the dialog
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        layout.setGravity(Gravity.CENTER);
+        LinearLayout outerLayout = new LinearLayout(context);
+        outerLayout.setOrientation(LinearLayout.VERTICAL);
+        outerLayout.setGravity(Gravity.CENTER);
+
+        LinearLayout innerUpperLayout = new LinearLayout(context);
+        innerUpperLayout.setOrientation(LinearLayout.HORIZONTAL);
+        innerUpperLayout.setGravity(Gravity.CENTER);
+        outerLayout.addView(innerUpperLayout);
 
         final NumberPicker valueInput = new NumberPicker(context);
-        valueInput.setMinValue(0);
+        valueInput.setMinValue(1);
         valueInput.setMaxValue(100);
         valueInput.setValue(prefValue.first);
-        layout.addView(valueInput);
+        innerUpperLayout.addView(valueInput);
 
         int unitPosition = -1;
         for (int i=0; i<POSSIBLE_TIME_UNITS.length; ++i) {
@@ -96,29 +102,47 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         }
         final NumberPicker unitInput = new NumberPicker(context);
         unitInput.setMinValue(0);
-        unitInput.setMaxValue(POSSIBLE_TIME_UNITS.length - 1);
+        unitInput.setMaxValue(POSSIBLE_TIME_UNIT_LONG_NAMES.length - 1);
         unitInput.setDisplayedValues(POSSIBLE_TIME_UNIT_LONG_NAMES);
         unitInput.setValue(unitPosition);
-        layout.addView(unitInput);
+        innerUpperLayout.addView(unitInput);
+
+        LinearLayout innerLowerLayout = new LinearLayout(context);
+        innerLowerLayout.setOrientation(LinearLayout.HORIZONTAL);
+        innerLowerLayout.setGravity(Gravity.CENTER);
+        outerLayout.addView(innerLowerLayout);
+
+        CheckBox isDisabledCheckbox = new CheckBox(context);
+        isDisabledCheckbox.setText(R.string.pref_playlist_disabled);
+        isDisabledCheckbox.setChecked(prefValue.first == 0);
+        isDisabledCheckbox.setOnCheckedChangeListener((checkBox, isChecked) -> {
+            unitInput.setEnabled(!isChecked);
+            valueInput.setEnabled(!isChecked);
+        });
+        innerLowerLayout.addView(isDisabledCheckbox);
 
         return new MaterialDialog.Builder(context)
                 .title(prefName)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
-                .customView(layout, false)
+                .customView(outerLayout, false)
                 .autoDismiss(false)
                 .onPositive((materialDialog, dialogAction) -> {
                     @SuppressLint("DefaultLocale")
-                    final String newPrefValue = String.format("%d%s",
-                            valueInput.getValue(),
-                            POSSIBLE_TIME_UNIT_SHORT_NAMES[unitInput.getValue()]
-                    );
+                    final String newPrefValue = isDisabledCheckbox.isChecked()
+                            ? "0d"
+                            : String.format("%d%s",
+                                    valueInput.getValue(),
+                                    POSSIBLE_TIME_UNIT_SHORT_NAMES[unitInput.getValue()]
+                            );
                     PreferenceManager.getDefaultSharedPreferences(context)
                             .edit()
                             .putString(preferenceKey, newPrefValue)
                             .apply();
-                    // TODO If the playlist was enabled and now disabled, show a toast
-                    //      hinting the user that it can be enabled back in Settings
+
+                    // TODO If the playlist was enabled and now disabled, and this dialog is called
+                    //      outside the Setting activity,
+                    //      show a toast hinting the user that it can be enabled back in Settings
 
                     dismiss();
                 })
