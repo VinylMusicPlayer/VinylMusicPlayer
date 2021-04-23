@@ -17,6 +17,8 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.util.FileUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import org.jaudiotagger.tag.reference.GenreTypes;
@@ -280,12 +282,20 @@ public class Discography implements MusicServiceEventListener {
         // Zombies are tracks that are removed but still indexed by MediaStore
         Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
-        // Blacklist
+        // Blacklist and Whitelist
         final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
+        final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
+        final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
         Predicate<Song> isBlackListed = (s) -> {
             for (String path : blackListedPaths) {
                 if (s.data.startsWith(path)) return true;
             }
+
+            // Whitelist
+            if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
+                if (!s.data.startsWith(startPath)) return true;
+            }
+
             return false;
         };
 

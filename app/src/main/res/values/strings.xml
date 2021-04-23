@@ -360,5 +360,7 @@
     <string name="pref_title_show_song_number">Show song track number</string>
     <string name="auto_limited_listing_title">Limited listing while driving</string>
     <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
+    <string name="whitelist">Whitelist</string>
+    <string name="pref_summary_whitelist">Only scan content below start folder.</string>
 
 </resources>
