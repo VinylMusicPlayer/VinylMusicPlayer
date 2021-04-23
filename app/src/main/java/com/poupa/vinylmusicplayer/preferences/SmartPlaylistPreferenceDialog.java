@@ -13,7 +13,6 @@ import android.widget.NumberPicker;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
-import androidx.preference.Preference;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
@@ -25,13 +24,15 @@ import java.time.temporal.ChronoUnit;
  * @author SC (soncaokim)
  */
 public class SmartPlaylistPreferenceDialog extends DialogFragment {
-    public static SmartPlaylistPreferenceDialog newInstance(@NonNull Preference preference) {
+    @NonNull
+    public static SmartPlaylistPreferenceDialog newInstance(@NonNull String preference) {
         return new SmartPlaylistPreferenceDialog(preference);
     }
 
-    @NonNull Preference preference;
-    public SmartPlaylistPreferenceDialog(@NonNull Preference preference) {
-        this.preference = preference;
+    @NonNull private final String preferenceKey;
+
+    public SmartPlaylistPreferenceDialog(@NonNull String preference) {
+        preferenceKey = preference;
     }
 
     final static ChronoUnit[] POSSIBLE_TIME_UNITS = {
@@ -61,10 +62,9 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         final Resources resources = context.getResources();
 
         // ---- Retrieve the stored value
-        final String prefKey = preference.getKey();
         String prefName = "";
-        Pair<Integer, ChronoUnit> prefValue = PreferenceUtil.getInstance().getCutoffTimeV2(prefKey);
-        switch (prefKey) {
+        Pair<Integer, ChronoUnit> prefValue = PreferenceUtil.getInstance().getCutoffTimeV2(preferenceKey);
+        switch (preferenceKey) {
             case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
                 prefName = resources.getString(R.string.pref_title_last_added_interval);
                 break;
@@ -115,8 +115,10 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
                     );
                     PreferenceManager.getDefaultSharedPreferences(context)
                             .edit()
-                            .putString(prefKey, newPrefValue)
+                            .putString(preferenceKey, newPrefValue)
                             .apply();
+                    // TODO If the playlist was enabled and now disabled, show a toast
+                    //      hinting the user that it can be enabled back in Settings
 
                     dismiss();
                 })

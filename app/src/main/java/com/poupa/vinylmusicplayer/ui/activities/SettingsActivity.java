@@ -155,7 +155,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             } else if (preference instanceof PreAmpPreference) {
                 return PreAmpPreferenceDialog.newInstance();
             } else if (preference instanceof SmartPlaylistPreference) {
-                return SmartPlaylistPreferenceDialog.newInstance(preference);
+                return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             }
             return super.onCreatePreferenceDialog(preference);
         }
