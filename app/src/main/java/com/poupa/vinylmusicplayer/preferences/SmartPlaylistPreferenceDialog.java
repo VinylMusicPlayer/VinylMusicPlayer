@@ -104,6 +104,7 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         return new MaterialDialog.Builder(context)
                 .title(prefName)
                 .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
                 .customView(layout, false)
                 .autoDismiss(false)
                 .onPositive((materialDialog, dialogAction) -> {
@@ -119,6 +120,7 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
 
                     dismiss();
                 })
+                .onNegative((materialDialog, dialogAction) -> dismiss())
                 .build();
     }
 }
