@@ -117,6 +117,9 @@
     <string name="past_X_weeks">Past %d weeks</string>
     <string name="past_X_months">Past %d months</string>
     <string name="past_X_years">Past %d years</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>

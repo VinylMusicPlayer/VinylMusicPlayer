@@ -36,24 +36,24 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         preferenceKey = preference;
     }
 
-    final static ChronoUnit[] POSSIBLE_TIME_UNITS = {
-            ChronoUnit.DAYS,
-            ChronoUnit.WEEKS,
-            ChronoUnit.MONTHS,
-            ChronoUnit.YEARS
-    };
-    final static String[] POSSIBLE_TIME_UNIT_SHORT_NAMES = {
-            "d",
-            "w",
-            "m",
-            "y"
-    };
-    final static String[] POSSIBLE_TIME_UNIT_LONG_NAMES = {
-            // TODO Localizable?
-            ChronoUnit.DAYS.name(),
-            ChronoUnit.WEEKS.name(),
-            ChronoUnit.MONTHS.name(),
-            ChronoUnit.YEARS.name()
+    class TimeUnit {
+        final @NonNull ChronoUnit unit;
+        final @NonNull String preferencePostfix;
+        final int stringResourceId;
+
+        TimeUnit(final @NonNull ChronoUnit unit,
+                final @NonNull String preferencePostfix,
+                final int stringResourceId) {
+            this.unit = unit;
+            this.preferencePostfix = preferencePostfix;
+            this.stringResourceId = stringResourceId;
+        }
+    }
+    final TimeUnit[] POSSIBLE_TIME_UNITS = {
+            new TimeUnit(ChronoUnit.DAYS, "d", R.string.day),
+            new TimeUnit(ChronoUnit.WEEKS, "w", R.string.week),
+            new TimeUnit(ChronoUnit.MONTHS, "m", R.string.month),
+            new TimeUnit(ChronoUnit.YEARS, "y", R.string.year)
     };
 
     @NonNull
@@ -94,16 +94,17 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         innerUpperLayout.addView(valueInput);
 
         int unitPosition = -1;
+        String[] unitDisplayedValues = new String[POSSIBLE_TIME_UNITS.length];
         for (int i=0; i<POSSIBLE_TIME_UNITS.length; ++i) {
-            if (prefValue.second == POSSIBLE_TIME_UNITS[i]) {
+            unitDisplayedValues[i] = resources.getString(POSSIBLE_TIME_UNITS[i].stringResourceId);
+            if (prefValue.second == POSSIBLE_TIME_UNITS[i].unit) {
                 unitPosition = i;
-                break;
             }
         }
         final NumberPicker unitInput = new NumberPicker(context);
         unitInput.setMinValue(0);
-        unitInput.setMaxValue(POSSIBLE_TIME_UNIT_LONG_NAMES.length - 1);
-        unitInput.setDisplayedValues(POSSIBLE_TIME_UNIT_LONG_NAMES);
+        unitInput.setMaxValue(POSSIBLE_TIME_UNITS.length - 1);
+        unitInput.setDisplayedValues(unitDisplayedValues);
         unitInput.setValue(unitPosition);
         innerUpperLayout.addView(unitInput);
 
@@ -133,7 +134,7 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
                             ? "0d"
                             : String.format("%d%s",
                                     valueInput.getValue(),
-                                    POSSIBLE_TIME_UNIT_SHORT_NAMES[unitInput.getValue()]
+                                    POSSIBLE_TIME_UNITS[unitInput.getValue()].preferencePostfix
                             );
                     PreferenceManager.getDefaultSharedPreferences(context)
                             .edit()
