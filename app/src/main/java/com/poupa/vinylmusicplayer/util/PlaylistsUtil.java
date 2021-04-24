@@ -183,7 +183,7 @@ public class PlaylistsUtil {
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<PlaylistSong> songs) {
         final long playlistId = songs.get(0).playlistId;
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, playlistId);
-        String selectionArgs[] = new String[songs.size()];
+        String[] selectionArgs = new String[songs.size()];
         for (int i = 0; i < selectionArgs.length; i++) {
             selectionArgs[i] = String.valueOf(songs.get(i).idInPlayList);
         }
