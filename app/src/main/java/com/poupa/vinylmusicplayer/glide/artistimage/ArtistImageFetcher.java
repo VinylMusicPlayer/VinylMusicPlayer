@@ -70,17 +70,19 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
 
                         try {
                             DeezerResponse deezerResponse = response.body();
-                            List<Data> data = deezerResponse.getData();
-                            if (data != null && data.size() > 0) {
-                                String url = data.get(0).getPictureMedium();
+                            if (deezerResponse != null) {
+                                List<Data> data = deezerResponse.getData();
+                                if (!data.isEmpty()) {
+                                    String url = data.get(0).getPictureMedium();
 
-                                // Fragile way to detect a place holder image returned from Deezer:
-                                // ex: "https://e-cdns-images.dzcdn.net/images/artist//250x250-000000-80-0-0.jpg"
-                                // the double slash implies no artist identified
-                                final boolean placeholderUrl = url.contains("/images/artist//");
-                                if (!placeholderUrl) {
-                                    streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
-                                    streamFetcher.loadData(priority, callback);
+                                    // Fragile way to detect a place holder image returned from Deezer:
+                                    // ex: "https://e-cdns-images.dzcdn.net/images/artist//250x250-000000-80-0-0.jpg"
+                                    // the double slash implies no artist identified
+                                    final boolean placeholderUrl = url.contains("/images/artist//");
+                                    if (!placeholderUrl) {
+                                        streamFetcher = new OkHttpStreamFetcher(okhttp, new GlideUrl(url));
+                                        streamFetcher.loadData(priority, callback);
+                                    }
                                 }
                             }
                         } catch (Exception e) {

@@ -106,7 +106,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
             @Override
             public void onResponse(@NonNull Call<LastFmAlbum> call, @NonNull Response<LastFmAlbum> response) {
                 LastFmAlbum lastFmAlbum = response.body();
-                if (lastFmAlbum.getAlbum() != null) {
+                if (lastFmAlbum != null && lastFmAlbum.getAlbum() != null) {
                     String url = LastFMUtil.getLargestAlbumImageUrl(lastFmAlbum.getAlbum().getImage());
                     if (!TextUtils.isEmpty(url) && url.trim().length() > 0) {
                         GlideApp.with(AlbumTagEditorActivity.this)

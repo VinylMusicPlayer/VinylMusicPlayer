@@ -517,6 +517,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        if (intent == null) {return;}
+
         switch (requestCode) {
             case REQUEST_CODE_SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {
