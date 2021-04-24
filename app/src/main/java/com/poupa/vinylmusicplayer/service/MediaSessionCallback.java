@@ -116,8 +116,6 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     /**
      * Inspired by https://developer.android.com/guide/topics/media-apps/interacting-with-assistant
-     * @param query
-     * @param extras
      */
     @Override
     public void onPlayFromSearch(String query, Bundle extras) {

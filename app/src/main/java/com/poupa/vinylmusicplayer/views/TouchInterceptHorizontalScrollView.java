@@ -101,8 +101,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
     /**
      * Intercept the touch event here, we arrive here since this is a HorizontalScrollView
      * Force onTouchEvent to be fired
-     * @param e
-     * @return
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
@@ -112,8 +110,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
 
     /**
      * Handle touch events
-     * @param e
-     * @return
      */
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -186,8 +182,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
          * Tapping the scrollview
          * Here we go back all the way up to the framelayout that contains the song,
          * and we click manually to play it
-         * @param e
-         * @return
          */
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
@@ -202,7 +196,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
 
         /**
          * Pass back long presses (adding to playlist, etc)
-         * @param e
          */
         @Override
         public void onLongPress(MotionEvent e) {
@@ -215,11 +208,6 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
 
         /**
          * Scrolling the scrollview
-         * @param e1
-         * @param e2
-         * @param distanceX
-         * @param distanceY
-         * @return
          */
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
