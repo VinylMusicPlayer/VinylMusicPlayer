@@ -15,4 +15,4 @@ function sync()
 #sync master upstream/master || exit 1
 sync cont-integ master || exit 1
 
-echo done
+echo "done"
