@@ -67,8 +67,8 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     private CardPlayerPlaybackControlsFragment playbackControlsFragment;
     private PlayerAlbumCoverFragment playerAlbumCoverFragment;
 
-    private AsyncTask updateIsFavoriteTask;
-    private AsyncTask updateLyricsAsyncTask;
+    private AsyncTask<Song, Void, Boolean> updateIsFavoriteTask;
+    private AsyncTask<Void, Void, Lyrics> updateLyricsAsyncTask;
 
     private Lyrics lyrics;
 
