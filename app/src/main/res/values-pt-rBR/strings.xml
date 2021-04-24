@@ -187,17 +187,13 @@
     <string name="permissions_denied">Permissões negadas.</string>
     <string name="permission_external_storage_denied">Permissão para acessar armazenamento externo negado.</string>
     <string name="support_development">Apoiar o desenvolvimento</string>
-    <string name="thank_you">Obrigado!</string>
     <string name="version">Versão</string>
     <string name="author">Autor</string>
     <string name="write_an_email">Escreva um email</string>
-    <string name="follow_on_twitter">Seguir no Twitter</string>
     <string name="fork_on_github">Fazer um Fork no GitHub</string>
     <string name="visit_website">Visitar site</string>
     <string name="report_bugs">Reportar bugs</string>
     <string name="report_bugs_summary">Reportar bugs ou pedir por novas funções.</string>
-    <string name="translate">Traduzir</string>
-    <string name="translate_summary">Ajude a traduzir o Vinyl Music Player para sua língua nativa.</string>
     <string name="rate_on_google_play">Nota</string>
     <string name="rate_on_google_play_summary">Dê uma nota positiva no Google Play se você gosta do Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">Pelo mecanismo de temas e algumas outras coisas ótimas.</string>

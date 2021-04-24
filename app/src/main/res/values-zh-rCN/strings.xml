@@ -180,17 +180,13 @@
     <string name="permissions_denied">未能获取权限。</string>
     <string name="permission_external_storage_denied">访问外部存储权限被拒绝。</string>
     <string name="support_development">支持开发者</string>
-    <string name="thank_you">非常感谢您！</string>
     <string name="version">版本</string>
     <string name="author">作者</string>
     <string name="write_an_email">撰写邮件</string>
-    <string name="follow_on_twitter">在 Twitter 上关注</string>
     <string name="fork_on_github">创建 GitHub 分支</string>
     <string name="visit_website">访问网站</string>
     <string name="report_bugs">提交 bug</string>
     <string name="report_bugs_summary">提交 bug 或申请添加新功能</string>
-    <string name="translate">翻译</string>
-    <string name="translate_summary">帮助翻译 Vinyl Music Player 。</string>
     <string name="rate_on_google_play">评分</string>
     <string name="rate_on_google_play_summary">如果喜欢 Vinyl Music Player 请在 Play Store 中留下您的好评。</string>
     <string name="aidan_follestad_summary">主题引擎以及其他一些优秀功能。</string>

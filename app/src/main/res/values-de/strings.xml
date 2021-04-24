@@ -197,17 +197,13 @@
     <string name="permissions_denied">Berechtigungen verweigert.</string>
     <string name="permission_external_storage_denied">Die Berechtigung für den Zugriff auf den externen Speicher wurde verweigert.</string>
     <string name="support_development">Unterstütze die Entwicklung</string>
-    <string name="thank_you">Vielen Dank!</string>
     <string name="version">Version</string>
     <string name="author">Autor</string>
     <string name="write_an_email">Eine E-Mail schreiben</string>
-    <string name="follow_on_twitter">Auf Twitter folgen</string>
     <string name="fork_on_github">Auf GitHub forken</string>
     <string name="visit_website">Website besuchen</string>
     <string name="report_bugs">Fehler melden</string>
     <string name="report_bugs_summary">Melde Fehler oder schlage neue Features vor.</string>
-    <string name="translate">Übersetzen</string>
-    <string name="translate_summary">Helfe dabei, Vinyl Music Player in deine Sprache zu übersetzen.</string>
     <string name="rate_on_google_play">Bewerten</string>
     <string name="rate_on_google_play_summary">Hinterlasse eine positive Bewertung auf Google Play, falls dir Vinyl Music Player gefällt.</string>
     <string name="aidan_follestad_summary">Für die Theme Engine und andere tolle Sachen.</string>
@@ -308,7 +304,6 @@
     <string name="saf_error_uri">Kann SAF URI nicht lesen</string>
     <string name="saf_write_failed">Schreiben der Datei fehlgeschlagen: %s</string>
     <string name="saf_delete_failed">Löschen der Datei fehlgeschlagen: %s</string>
-    <string name="saf_pick_sdcard">Zugriff auf die SD-Karte erforderlich. Bitte das Stammverzeichnis der SD-Karte auswählen</string>
     <string name="saf_pick_file">Dateizugriff erforderlich. Wähle %s aus</string>
     <!-- SAF guide -->
     <string name="saf_guide_slide1_title">%s benötigt Zugriff auf die SD-Karte</string>
@@ -319,8 +314,6 @@
     <string name="saf_guide_slide3_title">Tippe auf \'Auswählen\' am unteren Bildschirmrand</string>
     <string name="saf_guide_slide3_description">Öffne keine Unterordner</string>
     <!-- Android Auto -->
-    <string name="albums_label">Alben</string>
-    <string name="artists_label">Interpreten</string>
     <string name="playlists_label">Wiedergabelisten</string>
     <string name="history_label">Verlauf</string>
     <string name="top_tracks_label">Lieblingstitel</string>

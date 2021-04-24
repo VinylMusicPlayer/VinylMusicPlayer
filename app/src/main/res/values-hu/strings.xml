@@ -180,17 +180,13 @@
     <string name="permissions_denied">Jogosultságok megtagadva.</string>
     <string name="permission_external_storage_denied">Hozzáférés megtagadva a külső tárhelyhez.</string>
     <string name="support_development">Fejlesztés támogatás</string>
-    <string name="thank_you">Köszönöm!</string>
     <string name="version">Verzió</string>
     <string name="author">Készítő</string>
     <string name="write_an_email">Írjon e-mailt</string>
-    <string name="follow_on_twitter">Twitter</string>
     <string name="fork_on_github">Villog a GitHubon</string>
     <string name="visit_website">Látogassa meg a honlapot</string>
     <string name="report_bugs">Hibajelentés</string>
     <string name="report_bugs_summary">Problémák jelentése, új funkciók kérése.</string>
-    <string name="translate">Fordítás</string>
-    <string name="translate_summary">Segítsen lefordítani a Vinyl Music Player-ot a saját nyelvére.</string>
     <string name="rate_on_google_play">Értékelés</string>
     <string name="rate_on_google_play_summary">Értékelje a Google Play-en a Vinyl Music Player-ot, ha tetszik önnek!</string>
     <string name="aidan_follestad_summary">A téma motorért, és egyéb remek dolgok miatt.</string>

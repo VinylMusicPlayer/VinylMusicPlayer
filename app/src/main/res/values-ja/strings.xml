@@ -181,17 +181,13 @@
     <string name="permissions_denied">権限が拒否されました</string>
     <string name="permission_external_storage_denied">内部ストレージへのアクセス権限が拒否されました</string>
     <string name="support_development">開発を支援</string>
-    <string name="thank_you">ありがとう！</string>
     <string name="version">バージョン</string>
     <string name="author">製作者</string>
     <string name="write_an_email">Eメールを書く</string>
-    <string name="follow_on_twitter">Twitterをフォロー</string>
     <string name="fork_on_github">GitHubでフォーク</string>
     <string name="visit_website">ウェブサイトを開く</string>
     <string name="report_bugs">バグを報告</string>
     <string name="report_bugs_summary">パグの報告または新機能のリクエスト</string>
-    <string name="translate">翻訳</string>
-    <string name="translate_summary">Vinyl Music Playerをあなたのネイティブ言語に対応させましょう。</string>
     <string name="rate_on_google_play">評価</string>
     <string name="rate_on_google_play_summary">Vinyl Music Playerを気に入っていただけましたか？Google Playに高評価をお願いします。</string>
     <string name="aidan_follestad_summary">テーマエンジンやその他のグレートな働き。</string>

@@ -187,17 +187,13 @@
     <string name="permissions_denied">"В разрешениях отказано "</string>
     <string name="permission_external_storage_denied">В разрешении на доступ к внешнему хранилищу отказано.</string>
     <string name="support_development">Поддержать разработку</string>
-    <string name="thank_you">Спасибо!</string>
     <string name="version">Версия</string>
     <string name="author">Автор</string>
     <string name="write_an_email">Написать на электронную почту</string>
-    <string name="follow_on_twitter">Следить в Twitter</string>
     <string name="fork_on_github">Ветвление на GitHub</string>
     <string name="visit_website">Посетить сайт</string>
     <string name="report_bugs">Отправить отчет об ошибке</string>
     <string name="report_bugs_summary">Отправить отчет об ошибке или попросить новые функции.</string>
-    <string name="translate">Перевести</string>
-    <string name="translate_summary">Перевести на свой язык</string>
     <string name="rate_on_google_play">Оценить</string>
     <string name="rate_on_google_play_summary">Если Вам понравилось приложение, оставьте положительный отзыв в Google Play.</string>
     <string name="aidan_follestad_summary">За движок тем и другой клёвый функционал.</string>

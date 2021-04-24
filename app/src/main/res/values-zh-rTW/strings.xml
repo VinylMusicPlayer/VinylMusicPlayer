@@ -188,17 +188,13 @@
     <string name="permissions_denied">存取被拒</string>
     <string name="permission_external_storage_denied">無法取得存取外部儲存空間的權限。</string>
     <string name="support_development">支援開發</string>
-    <string name="thank_you">感謝您！</string>
     <string name="version">版本</string>
     <string name="author">作者</string>
     <string name="write_an_email">寫 email 給我們</string>
-    <string name="follow_on_twitter">在 Twitter 上追蹤我們</string>
     <string name="fork_on_github">造訪 GitHub</string>
     <string name="visit_website">造訪網站</string>
     <string name="report_bugs">回報程式錯誤</string>
     <string name="report_bugs_summary">建議新功能或回報問題</string>
-    <string name="translate">翻譯</string>
-    <string name="translate_summary">幫助我們將這款 App 翻譯成您的語言</string>
     <string name="rate_on_google_play">評分</string>
     <string name="rate_on_google_play_summary">如果您喜歡 Vinyl Music Player，在 Play商店給個好評吧 ！</string>
     <string name="aidan_follestad_summary">製作主題引擎及其他超棒的東西</string>
