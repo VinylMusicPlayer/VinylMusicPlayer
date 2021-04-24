@@ -36,7 +36,7 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         preferenceKey = preference;
     }
 
-    class TimeUnit {
+    static class TimeUnit {
         final @NonNull ChronoUnit unit;
         final @NonNull String preferencePostfix;
         final int stringResourceId;
