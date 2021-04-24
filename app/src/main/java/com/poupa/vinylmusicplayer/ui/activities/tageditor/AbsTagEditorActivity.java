@@ -331,7 +331,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     private static class WriteTagsAsyncTask extends DialogAsyncTask<WriteTagsAsyncTask.LoadingInfo, Integer, String[]> {
-        private WeakReference<Activity> activity;
+        private final WeakReference<Activity> activity;
 
         public WriteTagsAsyncTask(Activity activity) {
             super(activity);
@@ -490,7 +490,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             @Nullable
             public final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
-            private ArtworkInfo artworkInfo;
+            private final ArtworkInfo artworkInfo;
 
             private LoadingInfo(Collection<String> filePaths, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
                 this.filePaths = filePaths;

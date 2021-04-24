@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class CategoryInfoAdapter extends RecyclerView.Adapter<CategoryInfoAdapter.ViewHolder> implements SwipeAndDragHelper.ActionCompletionContract {
     private ArrayList<CategoryInfo> categoryInfos;
-    private ItemTouchHelper touchHelper;
+    private final ItemTouchHelper touchHelper;
 
     public CategoryInfoAdapter(ArrayList<CategoryInfo> categoryInfos) {
         this.categoryInfos = categoryInfos;

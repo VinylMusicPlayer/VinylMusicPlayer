@@ -4,8 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 
 public class WeakMethodReference<T> implements Runnable {
-    private WeakReference<T> weakReference;
-    private Consumer<T> consumer;
+    private final WeakReference<T> weakReference;
+    private final Consumer<T> consumer;
 
     public WeakMethodReference(T containingObject, Consumer<T> consumer) {
         weakReference = new WeakReference<>(containingObject);

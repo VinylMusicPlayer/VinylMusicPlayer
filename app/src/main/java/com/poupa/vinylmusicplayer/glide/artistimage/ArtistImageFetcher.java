@@ -28,12 +28,12 @@ import retrofit2.Response;
  */
 public class ArtistImageFetcher implements DataFetcher<InputStream> {
     public static final String TAG = ArtistImageFetcher.class.getSimpleName();
-    private Context context;
+    private final Context context;
     private final DeezerApiService deezerRestClient;
     private final ArtistImage model;
     private volatile boolean isCancelled;
     private Call<DeezerResponse> call;
-    private OkHttpClient okhttp;
+    private final OkHttpClient okhttp;
     private OkHttpStreamFetcher streamFetcher;
 
     ArtistImageFetcher(Context context, DeezerApiService deezerRestClient, OkHttpClient okhttp, ArtistImage model) {

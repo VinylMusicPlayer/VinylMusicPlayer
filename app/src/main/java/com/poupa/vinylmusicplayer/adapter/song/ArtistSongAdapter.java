@@ -40,7 +40,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
     private final CabHolder cabHolder;
     private MaterialCab cab;
     private ArrayList<Song> dataSet;
-    private ArrayList<Song> checked;
+    private final ArrayList<Song> checked;
 
     private int color;
 

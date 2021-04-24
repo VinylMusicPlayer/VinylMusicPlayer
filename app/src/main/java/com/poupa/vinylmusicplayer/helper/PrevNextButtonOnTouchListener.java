@@ -5,20 +5,21 @@ import android.view.View;
 import android.os.Handler;
 
 public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
-    private int skipTriggerInitialIntervalMillis = 1000;
-    private final int skipTriggerNormalIntervalMillis = 250;
+    private static final int SKIP_TRIGGER_INITIAL_INTERVAL_MILLIS = 1000;
+    private static final int SKIP_TRIGGER_NORMAL_INTERVAL_MILLIS = 250;
+
     private final View.OnGenericMotionListener genericMotionListener;
     private View touchedView;
     private boolean wasHeld;
 
-    private Runnable handlerRunnable = new Runnable() {
+    private final Runnable handlerRunnable = new Runnable() {
         @Override
         public void run() {
             if(touchedView.isEnabled()) {
                 wasHeld = true;
-                handler.postDelayed(this, skipTriggerNormalIntervalMillis);
+                handler.postDelayed(this, SKIP_TRIGGER_NORMAL_INTERVAL_MILLIS);
                 genericMotionListener.onGenericMotion(touchedView, MotionEvent.obtain(0,0,MotionEvent.ACTION_DOWN,0,0,0));
             } else {
                 // if the view was disabled by the clickListener, remove the callback
@@ -39,7 +40,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
         switch(motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 handler.removeCallbacks(handlerRunnable);
-                handler.postDelayed(handlerRunnable, skipTriggerInitialIntervalMillis);
+                handler.postDelayed(handlerRunnable, SKIP_TRIGGER_INITIAL_INTERVAL_MILLIS);
                 touchedView = view;
                 touchedView.setPressed(true);
                 return true;

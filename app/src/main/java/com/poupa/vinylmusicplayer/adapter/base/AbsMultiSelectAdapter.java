@@ -24,7 +24,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     @Nullable
     private final CabHolder cabHolder;
     private MaterialCab cab;
-    private ArrayList<I> checked;
+    private final ArrayList<I> checked;
     private int menuRes;
     private final Context context;
 

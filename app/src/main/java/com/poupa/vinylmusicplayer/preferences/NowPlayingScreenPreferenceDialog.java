@@ -89,7 +89,7 @@ public class NowPlayingScreenPreferenceDialog extends DialogFragment implements 
 
     private static class NowPlayingScreenAdapter extends PagerAdapter {
 
-        private Context context;
+        private final Context context;
 
         public NowPlayingScreenAdapter(Context context) {
             this.context = context;

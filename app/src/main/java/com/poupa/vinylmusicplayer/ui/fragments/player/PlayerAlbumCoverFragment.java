@@ -64,7 +64,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         super.onViewCreated(view, savedInstanceState);
         viewPager.addOnPageChangeListener(this);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            final GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     if (callbacks != null) {
@@ -125,7 +125,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         }
     }
 
-    private AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver colorReceiver = new AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver() {
+    private final AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver colorReceiver = new AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver() {
         @Override
         public void onColorReady(int color, int requestCode) {
             if (currentPosition == requestCode) {

@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public abstract class WeakContextAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
-    private WeakReference<Context> contextWeakReference;
+    private final WeakReference<Context> contextWeakReference;
 
     public WeakContextAsyncTask(Context context) {
         contextWeakReference = new WeakReference<>(context);

@@ -7,8 +7,8 @@ import static com.poupa.vinylmusicplayer.service.MusicService.PLAY_STATE_CHANGED
 public class ThrottledSeekHandler implements Runnable {
     // milliseconds to throttle before calling run() to aggregate events
     private static final long THROTTLE = 100;
-    private MusicService mMusicService;
-    private Handler mHandler;
+    private final MusicService mMusicService;
+    private final Handler mHandler;
 
     public ThrottledSeekHandler(MusicService musicService, Handler handler) {
         mHandler = handler;
