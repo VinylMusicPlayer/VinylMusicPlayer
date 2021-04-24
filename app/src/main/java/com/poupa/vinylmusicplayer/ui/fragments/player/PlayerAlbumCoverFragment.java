@@ -145,8 +145,8 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         favoriteIcon.setScaleX(0f);
         favoriteIcon.setScaleY(0f);
         favoriteIcon.setVisibility(View.VISIBLE);
-        favoriteIcon.setPivotX(favoriteIcon.getWidth() / 2);
-        favoriteIcon.setPivotY(favoriteIcon.getHeight() / 2);
+        favoriteIcon.setPivotX(favoriteIcon.getWidth() / 2.0f);
+        favoriteIcon.setPivotY(favoriteIcon.getHeight() / 2.0f);
 
         favoriteIcon.animate()
                 .setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME / 2)

@@ -145,8 +145,8 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
         playPauseFab.setOnClickListener(new PlayPauseButtonOnClickHandler());
         playPauseFab.post(() -> {
             if (playPauseFab != null) {
-                playPauseFab.setPivotX(playPauseFab.getWidth() / 2);
-                playPauseFab.setPivotY(playPauseFab.getHeight() / 2);
+                playPauseFab.setPivotX(playPauseFab.getWidth() / 2.0f);
+                playPauseFab.setPivotY(playPauseFab.getHeight() / 2.0f);
             }
         });
     }

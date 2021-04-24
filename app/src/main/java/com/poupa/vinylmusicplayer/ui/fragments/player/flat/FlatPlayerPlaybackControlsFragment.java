@@ -147,8 +147,8 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
         playPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
         playPauseButton.post(() -> {
             if (playPauseButton != null) {
-                playPauseButton.setPivotX(playPauseButton.getWidth() / 2);
-                playPauseButton.setPivotY(playPauseButton.getHeight() / 2);
+                playPauseButton.setPivotX(playPauseButton.getWidth() / 2.0f);
+                playPauseButton.setPivotY(playPauseButton.getHeight() / 2.0f);
             }
         });
     }

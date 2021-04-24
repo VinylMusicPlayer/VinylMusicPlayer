@@ -91,7 +91,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 alpha = 1;
             }
             toolbar.setBackgroundColor(ColorUtil.withAlpha(paletteColorPrimary, alpha));
-            image.setTranslationY(scrollY / 2);
+            image.setTranslationY(scrollY / 2.0f);
         }
     };
     private List<String> songPaths;
