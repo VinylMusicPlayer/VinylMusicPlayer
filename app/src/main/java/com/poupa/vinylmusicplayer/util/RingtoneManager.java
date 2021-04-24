@@ -27,14 +27,14 @@ public class RingtoneManager {
         return false;
     }
 
-    public static MaterialDialog showDialog(Context context) {
-        return new MaterialDialog.Builder(context)
+    public static void showDialog(Context context) {
+        new MaterialDialog.Builder(context)
                 .title(R.string.dialog_ringtone_title)
                 .content(R.string.dialog_ringtone_message)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
                 .onPositive((dialog, which) -> {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
