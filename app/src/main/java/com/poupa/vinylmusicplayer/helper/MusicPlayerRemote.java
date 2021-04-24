@@ -426,7 +426,7 @@ public class MusicPlayerRemote {
             }
 
             if (!song.equals(Song.EMPTY_SONG)) {
-                openQueue(new ArrayList<Song>(Arrays.asList(song)), 0, true);
+                openQueue(new ArrayList<>(Arrays.asList(song)), 0, true);
             } else {
                 Log.e(TAG, "No song found for URI: " + uri);
             }

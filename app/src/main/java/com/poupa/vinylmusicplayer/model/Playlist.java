@@ -10,6 +10,7 @@ import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -42,7 +43,7 @@ public class Playlist implements Parcelable {
         Playlist playlist = (Playlist) o;
 
         if (id != playlist.id) return false;
-        return name != null ? name.equals(playlist.name) : playlist.name == null;
+        return Objects.equals(name, playlist.name);
 
     }
 
