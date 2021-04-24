@@ -26,6 +26,7 @@ import com.poupa.vinylmusicplayer.ui.activities.PlaylistDetailActivity;
  */
 public class NavigationUtil {
 
+    @SafeVarargs
     public static void goToArtist(@NonNull final Activity activity, final long artistId, @Nullable Pair<View, String>... sharedElements) {
         final Intent intent = new Intent(activity, ArtistDetailActivity.class);
         intent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, artistId);
@@ -37,6 +38,7 @@ public class NavigationUtil {
         }
     }
 
+    @SafeVarargs
     public static void goToAlbum(@NonNull final Activity activity, final long albumId, @Nullable Pair<View, String>... sharedElements) {
         final Intent intent = new Intent(activity, AlbumDetailActivity.class);
         intent.putExtra(AlbumDetailActivity.EXTRA_ALBUM_ID, albumId);
