@@ -82,16 +82,22 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                 List<Song> tracks;
-                if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
-                    tracks = LastAddedLoader.getLastAddedSongs();
-                } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
-                    tracks = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context);
-                } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
-                    tracks = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context);
-                } else if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
-                    tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
-                } else {
-                    tracks = musicService.getPlayingQueue();
+                switch (category) {
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
+                        tracks = LastAddedLoader.getLastAddedSongs();
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
+                        tracks = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context);
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
+                        tracks = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context);
+                        break;
+                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
+                        tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
+                        break;
+                    default:
+                        tracks = musicService.getPlayingQueue();
+                        break;
                 }
                 songs.addAll(tracks);
                 int songIndex = MusicUtil.indexOfSongInList(tracks, itemId);
