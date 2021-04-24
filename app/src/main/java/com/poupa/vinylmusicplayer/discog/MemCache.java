@@ -26,20 +26,20 @@ class MemCache {
     // Indicate whether the cache can be considered as usable/reliable
     boolean isStale = true;
 
-    Map<Long, Song> songsById = new HashMap<>();
+    final Map<Long, Song> songsById = new HashMap<>();
 
-    Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<Long, Artist> artistsById = new HashMap<>();
+    final Map<String, Artist> artistsByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    final Map<Long, Artist> artistsById = new HashMap<>();
 
     // internal implementation class, to make explicit that we are dealing with slices of album, not the full one
     static class AlbumSlice extends Album {
     }
 
-    Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
-    Map<String, Set<Long>> albumsByName = new HashMap<>();
+    final Map<Long, Map<Long, AlbumSlice>> albumsByAlbumIdAndArtistId = new HashMap<>();
+    final Map<String, Set<Long>> albumsByName = new HashMap<>();
 
-    Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    final Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    final Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
     synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbum(song);

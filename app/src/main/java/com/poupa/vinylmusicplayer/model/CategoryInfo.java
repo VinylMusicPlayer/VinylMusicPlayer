@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.poupa.vinylmusicplayer.R;
 
 public class CategoryInfo implements Parcelable {
-    public Category category;
+    public final Category category;
     public boolean visible;
 
     public CategoryInfo(Category category, boolean visible) {

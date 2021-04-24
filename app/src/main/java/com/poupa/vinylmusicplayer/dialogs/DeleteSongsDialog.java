@@ -197,7 +197,7 @@ public class DeleteSongsDialog extends DialogFragment {
         }
 
         public static class LoadingInfo {
-            public boolean isIntent;
+            public final boolean isIntent;
 
             public List<Song> songs;
             public List<Uri> safUris;

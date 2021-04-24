@@ -105,7 +105,7 @@ public class MusicPlayerRemote {
     }
 
     public static final class ServiceToken {
-        public ContextWrapper mWrappedContext;
+        public final ContextWrapper mWrappedContext;
 
         public ServiceToken(final ContextWrapper context) {
             mWrappedContext = context;

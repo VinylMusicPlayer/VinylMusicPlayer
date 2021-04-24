@@ -32,7 +32,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
 
     private FolderCallback callback;
 
-    String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     private String[] getContentsArray() {
         if (parentContents == null) {

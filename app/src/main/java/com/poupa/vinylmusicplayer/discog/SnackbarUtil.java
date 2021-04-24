@@ -16,7 +16,7 @@ import com.poupa.vinylmusicplayer.R;
  */
 
 public class SnackbarUtil {
-    public static int ICON = R.drawable.ic_bookmark_music_white_24dp;
+    public static final int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
     private Snackbar progressBar = null;
     private final View viewContainer;

@@ -47,7 +47,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     protected final AppCompatActivity activity;
     protected ArrayList<Album> dataSet;
 
-    protected int itemLayoutRes;
+    protected final int itemLayoutRes;
 
     protected boolean usePalette;
 

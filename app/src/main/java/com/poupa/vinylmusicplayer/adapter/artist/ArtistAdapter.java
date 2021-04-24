@@ -44,7 +44,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     protected final AppCompatActivity activity;
     protected ArrayList<Artist> dataSet;
 
-    protected int itemLayoutRes;
+    protected final int itemLayoutRes;
 
     protected boolean usePalette = false;
 

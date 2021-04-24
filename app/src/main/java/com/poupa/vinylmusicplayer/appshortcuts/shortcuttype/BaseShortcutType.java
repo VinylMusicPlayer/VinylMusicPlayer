@@ -17,7 +17,7 @@ public abstract class BaseShortcutType {
 
     static final String ID_PREFIX = "com.poupa.vinylmusicplayer.appshortcuts.id.";
 
-    Context context;
+    final Context context;
 
     public BaseShortcutType(Context context) {
         this.context = context;

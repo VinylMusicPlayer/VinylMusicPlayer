@@ -23,37 +23,37 @@ import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
  */
 public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
     @Nullable
-    public FrameLayout dummyContainer;
+    public final FrameLayout dummyContainer;
 
     @Nullable
-    public ImageView image;
+    public final ImageView image;
 
     @Nullable
-    public TextView imageText;
+    public final TextView imageText;
 
     @Nullable
-    public TextView title;
+    public final TextView title;
 
     @Nullable
-    public TouchInterceptHorizontalScrollView titleScrollview;
+    public final TouchInterceptHorizontalScrollView titleScrollview;
 
     @Nullable
-    public TextView text;
+    public final TextView text;
 
     @Nullable
-    public View menu;
+    public final View menu;
 
     @Nullable
-    public View separator;
+    public final View separator;
 
     @Nullable
-    public View shortSeparator;
+    public final View shortSeparator;
 
     @Nullable
-    public View dragView;
+    public final View dragView;
 
     @Nullable
-    public View paletteColorContainer;
+    public final View paletteColorContainer;
 
     public MediaEntryViewHolder(@NonNull ItemListBinding binding) {
         super(binding.getRoot());

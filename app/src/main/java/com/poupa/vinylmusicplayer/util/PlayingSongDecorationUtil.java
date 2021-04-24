@@ -32,7 +32,7 @@ public class PlayingSongDecorationUtil {
 
     public static final int sIconPlaying = R.drawable.ic_notification;
 
-    public static Animation sIconAnimation;
+    public static final Animation sIconAnimation;
     static {
         sIconAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         sIconAnimation.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
