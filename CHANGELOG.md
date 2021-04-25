@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-04-25
+### Added
+- Add "delete from device" choice menu in playlist view (both dumb and smart ones)
+- ID3v1 tag support
+- Added fast forward and rewind by holding next and previous song buttons
+### Fixed
+- Optimized library rescan and startup
+- Fixed Replay Gain not applied if gapless is enabled 
+- Fixed sleep timer not applied if gapless enabled
+- Fixed Notification progress slider
+### Changed
+- Updated Android Auto UI
+- Skip to the next track when the currently playing one has an error
+- Smart Playlists: lots of improvements
+
 ## [1.1.2] - 2021-03-11
 ### Added
 - "Delete from device" choice menu in playlist view (both dumb and smart ones)
