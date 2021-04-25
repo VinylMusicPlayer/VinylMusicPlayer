@@ -104,7 +104,7 @@
     <string name="today">Astăzi</string>
     <string name="this_week">Săptămâna aceasta</string>
     <string name="this_month">Luna aceasta</string>
-    <string name="past_three_months">Ultimele 3 luni</string>
+    <string name="past_X_months">Ultimele %d luni</string>
     <string name="this_year">Anul acesta</string>
     <string name="equalizer">Egalizator</string>
     <string name="pref_header_colors">Culori</string>

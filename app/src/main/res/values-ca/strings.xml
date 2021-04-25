@@ -106,10 +106,10 @@
     <string name="never">Mai</string>
     <string name="today">Avui</string>
     <string name="this_week">Aquesta setmana</string>
-    <string name="past_seven_days">Últims 7 dies</string>
     <string name="this_month">Aquest mes</string>
-    <string name="past_three_months">Últims 3 mesos</string>
     <string name="this_year">Aquest any</string>
+    <string name="past_X_days">Últims %d dies</string>
+    <string name="past_X_months">Últims %d mesos</string>
     <string name="equalizer">Equalitzador</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Reproducció actual</string>
@@ -133,7 +133,6 @@
     <string name="pref_title_audio_ducking">Baixa el volum en perdre el focus</string>
     <string name="pref_title_recently_played_interval">Interval de la llista de reproduîdes recentment</string>
     <string name="pref_title_last_added_interval">Interval de la llista d\'afegides recentment</string>
-    <string name="pref_title_maintain_skipped_songs_playlist">Cançons omeses</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Conserva una llista de cançons omeses durant la reproducció</string>
     <string name="pref_title_synchronized_lyrics_show">Mostra la lletra sincronitzada</string>
     <string name="pref_title_animate_playing_song_icon">Anima la icona de la cançó reproduïda</string>

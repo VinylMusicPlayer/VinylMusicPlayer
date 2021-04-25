@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
@@ -25,12 +26,18 @@ public class NotRecentlyPlayedPlaylist extends AbsSmartPlaylist {
     @NonNull
     @Override
     public String getInfoString(@NonNull Context context) {
-        String cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffText(context);
+        String cutoff = PreferenceUtil.getInstance().getNotRecentlyPlayedCutoffText(context);
 
         return MusicUtil.buildInfoString(
                 cutoff,
                 super.getInfoString(context)
         );
+    }
+
+    @Nullable
+    @Override
+    public String getPlaylistPreference() {
+        return PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2;
     }
 
     @NonNull

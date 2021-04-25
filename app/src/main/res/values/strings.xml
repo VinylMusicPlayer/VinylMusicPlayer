@@ -111,10 +111,15 @@
     <string name="never">Never</string>
     <string name="today">Today</string>
     <string name="this_week">This week</string>
-    <string name="past_seven_days">Past 7 days</string>
     <string name="this_month">This month</string>
-    <string name="past_three_months">Past 3 months</string>
     <string name="this_year">This year</string>
+    <string name="past_X_days">Past %d days</string>
+    <string name="past_X_weeks">Past %d weeks</string>
+    <string name="past_X_months">Past %d months</string>
+    <string name="past_X_years">Past %d years</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>
@@ -137,8 +142,9 @@
     <string name="pref_title_gapless_playback">Gapless playback</string>
     <string name="pref_title_audio_ducking">Reduce volume on focus loss</string>
     <string name="pref_title_recently_played_interval">Recently played playlist interval</string>
+    <string name="pref_title_not_recently_played_interval">Not recently played playlist interval</string>
     <string name="pref_title_last_added_interval">Last added playlist interval</string>
-    <string name="pref_title_maintain_skipped_songs_playlist">Skipped songs</string>
+    <string name="pref_summary_maintain_top_tracks_playlist">Maintain a playlist of top tracks</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of song skipped during playback</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
     <string name="pref_title_animate_playing_song_icon">Animate playing song icon</string>
@@ -328,6 +334,7 @@
     <string name="pref_title_rg_preamp">ReplayGain preamp</string>
     <string name="pref_summary_rg_preamp">Set preamp when ReplayGain is enabled</string>
     <string name="pref_rg_disabled">Disabled</string>
+    <string name="pref_playlist_disabled">Disabled</string>
     <string name="error_no_app_for_intent">No application is available to open this page.</string>
     <string name="confirm_adding_duplicates">Add tracks already in selected playlist?</string>
     <string name="yes">Yes</string>

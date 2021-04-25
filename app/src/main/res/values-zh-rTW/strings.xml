@@ -105,7 +105,7 @@
     <string name="today">今日</string>
     <string name="this_week">本周</string>
     <string name="this_month">這個月</string>
-    <string name="past_three_months">過去 3 個月</string>
+    <string name="past_X_months">過去 %d 個月</string>
     <string name="this_year">今年</string>
     <string name="equalizer">等化器</string>
     <string name="pref_header_colors">色彩</string>

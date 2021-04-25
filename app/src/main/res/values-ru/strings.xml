@@ -104,7 +104,7 @@
     <string name="today">Сегодня</string>
     <string name="this_week">Эта неделя</string>
     <string name="this_month">Этот месяц</string>
-    <string name="past_three_months">Последние 3 месяца</string>
+    <string name="past_X_months">Последние %d месяца</string>
     <string name="this_year">Этот год</string>
     <string name="equalizer">Эквалайзер</string>
     <string name="pref_header_colors">Цвета</string>

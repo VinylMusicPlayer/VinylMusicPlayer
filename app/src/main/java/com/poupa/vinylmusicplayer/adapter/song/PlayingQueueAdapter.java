@@ -248,7 +248,6 @@ public class PlayingQueueAdapter extends SongAdapter
     static class SwipedResultActionRemoveItem extends SwipeResultActionRemoveItem {
         private final PlayingQueueAdapter adapter;
         private final int position;
-        private Song songToRemove;
         private final AppCompatActivity activity;
 
         public SwipedResultActionRemoveItem(PlayingQueueAdapter adapter, int position, AppCompatActivity activity) {
@@ -263,7 +262,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
         @Override
         protected void onSlideAnimationEnd() {
-            songToRemove = adapter.dataSet.get(position);
+            Song songToRemove = adapter.dataSet.get(position);
             boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);

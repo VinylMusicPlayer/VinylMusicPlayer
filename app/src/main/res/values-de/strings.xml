@@ -106,10 +106,10 @@
     <string name="never">Niemals</string>
     <string name="today">Heute</string>
     <string name="this_week">Diese Woche</string>
-    <string name="past_seven_days">Letzte 7 Tage</string>
     <string name="this_month">Diesen Monat</string>
-    <string name="past_three_months">Letzte 3 Monate</string>
     <string name="this_year">Dieses Jahr</string>
+    <string name="past_X_days">Letzte %d Tage</string>
+    <string name="past_X_months">Letzte %d Monate</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_header_colors">Farben</string>
     <string name="pref_header_now_playing_screen">Aktuelle Wiedergabe</string>

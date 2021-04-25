@@ -103,7 +103,7 @@
     <string name="today">Hoy</string>
     <string name="this_week">Esta semana</string>
     <string name="this_month">Este mes</string>
-    <string name="past_three_months">Últimos 3 meses</string>
+    <string name="past_X_months">Últimos %d meses</string>
     <string name="this_year">Este año</string>
     <string name="equalizer">Ecualizador</string>
     <string name="pref_header_colors">Colores</string>

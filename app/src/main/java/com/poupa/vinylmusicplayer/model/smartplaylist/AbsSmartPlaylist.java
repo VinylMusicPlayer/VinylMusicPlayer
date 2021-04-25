@@ -8,7 +8,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
@@ -24,11 +23,6 @@ public abstract class AbsSmartPlaylist extends AbsCustomPlaylist {
         this.iconRes = iconRes;
     }
 
-    public AbsSmartPlaylist() {
-        super();
-        this.iconRes = R.drawable.ic_queue_music_white_24dp;
-    }
-
     public void clear(@NonNull Context context) {
         // Nofity app of clear event, so that the smart playlists are refreshed
         if (isClearable()) context.sendBroadcast(new Intent(MusicService.META_CHANGED));
@@ -37,6 +31,9 @@ public abstract class AbsSmartPlaylist extends AbsCustomPlaylist {
     public boolean isClearable() {
         return true;
     }
+
+    @Nullable
+    public String getPlaylistPreference() {return null;}
 
     @Override
     public int hashCode() {

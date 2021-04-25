@@ -103,7 +103,7 @@
     <string name="today">Dzisiaj</string>
     <string name="this_week">Ten tydzień</string>
     <string name="this_month">Ten miesiąc</string>
-    <string name="past_three_months">Ostatnie 3 miesiące</string>
+    <string name="past_X_months">Ostatnie %d miesiące</string>
     <string name="this_year">Ten rok</string>
     <string name="equalizer">Korektor</string>
     <string name="pref_header_colors">Kolory</string>
@@ -262,7 +262,7 @@
     <string name="genres">Gatunki</string>
     <string name="unknown_genre">Nieznany gatunek</string>
     <string name="select_all_title">Zaznacz wszystkie</string>
-    <string name="past_seven_days">Ostatnie 7 dni</string>
+    <string name="past_X_days">Ostatnie %d dni</string>
     <string name="pref_header_library">Biblioteka</string>
     <string name="pref_title_widget_background_transparent">Przezroczyste tło widżetu</string>
     <string name="pref_title_recently_played_interval">Interwał ostatnio odtwarzanych</string>

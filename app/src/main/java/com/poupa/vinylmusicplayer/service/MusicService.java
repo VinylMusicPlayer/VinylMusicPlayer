@@ -1098,7 +1098,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
                 final Song currentSong = getCurrentSong();
                 HistoryStore.getInstance(this).addSongId(currentSong.id);
-                if (songPlayCountHelper.shouldBumpPlayCount()) {
+                if (PreferenceUtil.getInstance().maintainTopTrackPlaylist() && songPlayCountHelper.shouldBumpPlayCount()) {
                     SongPlayCountStore.getInstance(this).bumpPlayCount(songPlayCountHelper.getSong().id);
                 }
                 songPlayCountHelper.notifySongChanged(currentSong);
@@ -1157,7 +1157,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
                 sendChangeInternal(MusicService.META_CHANGED);
                 break;
-            case PreferenceUtil.RG_SOURCE_MODE:
+            case PreferenceUtil.RG_SOURCE_MODE_V2:
             case PreferenceUtil.RG_PREAMP_WITH_TAG:
             case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
                 applyReplayGain();

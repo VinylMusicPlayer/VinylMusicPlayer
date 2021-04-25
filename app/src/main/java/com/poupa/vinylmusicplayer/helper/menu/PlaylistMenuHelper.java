@@ -24,28 +24,28 @@ import java.io.IOException;
  */
 public class PlaylistMenuHelper {
     public static boolean handleMenuClick(@NonNull AppCompatActivity activity, @NonNull final Playlist playlist, @NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_play:
-                MusicPlayerRemote.openQueue(playlist.getSongs(activity), 0, true);
-                return true;
-            case R.id.action_play_next:
-                MusicPlayerRemote.playNext(playlist.getSongs(activity));
-                return true;
-            case R.id.action_add_to_current_playing:
-                MusicPlayerRemote.enqueue(playlist.getSongs(activity));
-                return true;
-            case R.id.action_add_to_playlist:
-                AddToPlaylistDialog.create(playlist.getSongs(activity)).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");
-                return true;
-            case R.id.action_rename_playlist:
-                RenamePlaylistDialog.create(playlist.id).show(activity.getSupportFragmentManager(), "RENAME_PLAYLIST");
-                return true;
-            case R.id.action_delete_playlist:
-                DeletePlaylistDialog.create(playlist).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
-                return true;
-            case R.id.action_save_playlist:
-                new SavePlaylistAsyncTask(activity).execute(playlist);
-                return true;
+        final int itemId = item.getItemId();
+        if (itemId == R.id.action_play) {
+            MusicPlayerRemote.openQueue(playlist.getSongs(activity), 0, true);
+            return true;
+        } else if (itemId == R.id.action_play_next) {
+            MusicPlayerRemote.playNext(playlist.getSongs(activity));
+            return true;
+        } else if (itemId == R.id.action_add_to_current_playing) {
+            MusicPlayerRemote.enqueue(playlist.getSongs(activity));
+            return true;
+        } else if (itemId == R.id.action_add_to_playlist) {
+            AddToPlaylistDialog.create(playlist.getSongs(activity)).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");
+            return true;
+        } else if (itemId == R.id.action_rename_playlist) {
+            RenamePlaylistDialog.create(playlist.id).show(activity.getSupportFragmentManager(), "RENAME_PLAYLIST");
+            return true;
+        } else if (itemId == R.id.action_delete_playlist) {
+            DeletePlaylistDialog.create(playlist).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
+            return true;
+        } else if (itemId == R.id.action_save_playlist) {
+            new SavePlaylistAsyncTask(activity).execute(playlist);
+            return true;
         }
         return false;
     }
