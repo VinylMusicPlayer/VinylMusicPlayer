@@ -282,27 +282,31 @@ public class Discography implements MusicServiceEventListener {
         // Zombies are tracks that are removed but still indexed by MediaStore
         Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
-        // Blacklist and Whitelist
-        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
+        // Whitelist
         final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
         final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
+        Predicate<Song> isNotWhiteListed = (s) -> {
+            if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
+                if (!s.data.startsWith(startPath)) return true;
+            }
+            return false;
+        };
+
+        // Blacklist
+        final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
         Predicate<Song> isBlackListed = (s) -> {
             for (String path : blackListedPaths) {
                 if (s.data.startsWith(path)) return true;
             }
-
-            // Whitelist
-            if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
-                if (!s.data.startsWith(startPath)) return true;
-            }
-
             return false;
         };
+
 
         final int initialSongCount = getSongCount();
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final HashSet<Long> importedSongIds = new HashSet<>();
         for (Song song : alienSongs) {
+            if (isNotWhiteListed.test(song)) continue;
             if (isBlackListed.test(song)) continue;
             if (isZombie.test(song)) continue;
 
