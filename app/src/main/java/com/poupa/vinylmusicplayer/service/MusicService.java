@@ -1163,9 +1163,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
                 applyReplayGain();
                 break;
-            case PreferenceUtil.WHITELIST_ENABLED:
-                App.getInstance().getApplicationContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
-                break;
         }
     }
 

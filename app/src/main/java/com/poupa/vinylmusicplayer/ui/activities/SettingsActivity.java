@@ -26,6 +26,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragmentCompat;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
 import com.poupa.vinylmusicplayer.databinding.ActivityPreferencesBinding;
@@ -37,6 +38,7 @@ import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -343,6 +345,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                         pref.setEnabled(false);
                         pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                     }
+                    break;
+                case PreferenceUtil.WHITELIST_ENABLED:
+                    getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
                     break;
             }
         }
