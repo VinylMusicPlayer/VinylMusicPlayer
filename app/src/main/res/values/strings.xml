@@ -361,6 +361,6 @@
     <string name="auto_limited_listing_title">Limited listing while driving</string>
     <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
     <string name="whitelist">Whitelist</string>
-    <string name="pref_summary_whitelist">Only show content below start folder.</string>
+    <string name="pref_summary_whitelist">Only show content below start folder: </string>
 
 </resources>
