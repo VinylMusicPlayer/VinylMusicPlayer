@@ -103,7 +103,7 @@
     <string name="today">1 päivä</string>
     <string name="this_week">1 viikko</string>
     <string name="this_month">1 kuukausi</string>
-    <string name="past_three_months">3 kuukautta</string>
+    <string name="past_X_months">%d kuukautta</string>
     <string name="this_year">1 vuosi</string>
     <string name="equalizer">Taajuuskorjain</string>
     <string name="pref_header_colors">Värit</string>

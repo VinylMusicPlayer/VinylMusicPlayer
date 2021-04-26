@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,6 +36,8 @@ import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -78,17 +81,15 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
-        switch (dialog.getTitle()) {
-            case R.string.primary_color:
-                ThemeStore.editTheme(this)
-                        .primaryColor(selectedColor)
-                        .commit();
-                break;
-            case R.string.accent_color:
-                ThemeStore.editTheme(this)
-                        .accentColor(selectedColor)
-                        .commit();
-                break;
+        final int title = dialog.getTitle();
+        if (title == R.string.primary_color) {
+            ThemeStore.editTheme(this)
+                    .primaryColor(selectedColor)
+                    .commit();
+        } else if (title == R.string.accent_color) {
+            ThemeStore.editTheme(this)
+                    .accentColor(selectedColor)
+                    .commit();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
@@ -163,6 +164,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return LibraryPreferenceDialog.newInstance();
             } else if (preference instanceof PreAmpPreference) {
                 return PreAmpPreferenceDialog.newInstance();
+            } else if (preference instanceof SmartPlaylistPreference) {
+                return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             }
             return super.onCreatePreferenceDialog(preference);
         }
@@ -182,7 +185,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         }
 
         private void invalidateSettings() {
-            final Preference generalTheme = findPreference("general_theme");
+            final Preference generalTheme = findPreference(PreferenceUtil.GENERAL_THEME);
             setSummary(generalTheme);
             generalTheme.setOnPreferenceChangeListener((preference, o) -> {
                 String themeName = (String) o;
@@ -203,7 +206,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return true;
             });
 
-            final Preference autoDownloadImagesPolicy = findPreference("auto_download_images_policy");
+            final Preference autoDownloadImagesPolicy = findPreference(PreferenceUtil.AUTO_DOWNLOAD_IMAGES_POLICY);
             setSummary(autoDownloadImagesPolicy);
             autoDownloadImagesPolicy.setOnPreferenceChangeListener((preference, o) -> {
                 setSummary(autoDownloadImagesPolicy, o);
@@ -252,7 +255,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference classicNotification = findPreference("classic_notification");
+            final TwoStatePreference classicNotification = findPreference(PreferenceUtil.CLASSIC_NOTIFICATION);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 classicNotification.setVisible(false);
             } else {
@@ -264,7 +267,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference coloredNotification = findPreference("colored_notification");
+            final TwoStatePreference coloredNotification = findPreference(PreferenceUtil.COLORED_NOTIFICATION);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 coloredNotification.setEnabled(PreferenceUtil.getInstance().classicNotification());
             } else {
@@ -321,6 +324,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
 
             updateNowPlayingScreenSummary();
+            updatePlaylistsSummary();
         }
 
         private boolean hasEqualizer() {
@@ -344,7 +348,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                         findPreference("colored_notification").setEnabled(sharedPreferences.getBoolean(key, false));
                     }
                     break;
-                case PreferenceUtil.RG_SOURCE_MODE:
+                case PreferenceUtil.RG_SOURCE_MODE_V2:
                     Preference pref = findPreference("replaygain_preamp");
                     if (!sharedPreferences.getString(key, "none").equals("none")) {
                         pref.setEnabled(true);
@@ -357,11 +361,28 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 case PreferenceUtil.WHITELIST_ENABLED:
                     getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
                     break;
+                case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
+                case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
+                case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
+                    updatePlaylistsSummary();
+                    break;
             }
         }
 
         private void updateNowPlayingScreenSummary() {
-            findPreference("now_playing_screen_id").setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
+            findPreference(PreferenceUtil.NOW_PLAYING_SCREEN_ID).setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
+        }
+
+        private void updatePlaylistsSummary() {
+            final Context context = getContext();
+            final PreferenceUtil preferenceUtil = PreferenceUtil.getInstance();
+
+            findPreference(PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getRecentlyPlayedCutoffText(context));
+            findPreference(PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getNotRecentlyPlayedCutoffText(context));
+            findPreference(PreferenceUtil.LAST_ADDED_CUTOFF_V2)
+                    .setSummary(preferenceUtil.getLastAddedCutoffText(context));
         }
     }
 }

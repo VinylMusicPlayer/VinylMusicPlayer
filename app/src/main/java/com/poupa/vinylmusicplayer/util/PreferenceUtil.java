@@ -1,6 +1,6 @@
 package com.poupa.vinylmusicplayer.util;
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -8,7 +8,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.StyleRes;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -22,9 +24,13 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class PreferenceUtil {
+    // TODO Use string resources for this, avoid duplicating inside UI code
     public static final String GENERAL_THEME = "general_theme";
     public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     public static final String LAST_PAGE = "last_start_page";
@@ -59,8 +65,12 @@ public final class PreferenceUtil {
     public static final String AUDIO_DUCKING = "audio_ducking";
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
-    public static final String LAST_ADDED_CUTOFF = "last_added_interval";
-    public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    @Deprecated public static final String LAST_ADDED_CUTOFF = "last_added_interval";
+    public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
+    @Deprecated public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
+    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
+    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
     public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
     public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
@@ -90,7 +100,8 @@ public final class PreferenceUtil {
 
     private static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
-    public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
+    @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
+    public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
@@ -106,6 +117,7 @@ public final class PreferenceUtil {
 
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+        migratePreferencesIfNeeded();
     }
 
     public static PreferenceUtil getInstance() {
@@ -113,6 +125,18 @@ public final class PreferenceUtil {
             sInstance = new PreferenceUtil();
         }
         return sInstance;
+    }
+
+    private void migratePreferencesIfNeeded() {
+        if (!mPreferences.contains(RG_SOURCE_MODE_V2)) {
+            mPreferences.edit()
+                    .putString(RG_SOURCE_MODE_V2, mPreferences.getString(RG_SOURCE_MODE, "none"))
+                    .apply();
+        }
+
+        migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
+        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
+        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
@@ -187,11 +211,10 @@ public final class PreferenceUtil {
         return NowPlayingScreen.CARD;
     }
 
-    @SuppressLint("CommitPrefEdits")
     public void setNowPlayingScreen(NowPlayingScreen nowPlayingScreen) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(NOW_PLAYING_SCREEN_ID, nowPlayingScreen.id);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(NOW_PLAYING_SCREEN_ID, nowPlayingScreen.id)
+                .apply();
     }
 
     public final boolean coloredNotification() {
@@ -203,21 +226,21 @@ public final class PreferenceUtil {
     }
 
     public void setColoredNotification(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(COLORED_NOTIFICATION, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(COLORED_NOTIFICATION, value)
+                .apply();
     }
 
     public void setClassicNotification(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(CLASSIC_NOTIFICATION, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(CLASSIC_NOTIFICATION, value)
+                .apply();
     }
 
     public void setColoredAppShortcuts(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(COLORED_APP_SHORTCUTS, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(COLORED_APP_SHORTCUTS, value)
+                .apply();
     }
 
     public final boolean coloredAppShortcuts() {
@@ -225,9 +248,9 @@ public final class PreferenceUtil {
     }
 
     public void setTransparentBackgroundWidget(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value)
+                .apply();
     }
 
     public final boolean transparentBackgroundWidget() {
@@ -259,9 +282,9 @@ public final class PreferenceUtil {
     }
 
     public void setArtistSortOrder(final String sortOrder) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(ARTIST_SORT_ORDER, sortOrder);
-        editor.apply();
+        mPreferences.edit()
+                .putString(ARTIST_SORT_ORDER, sortOrder)
+                .apply();
     }
 
     public final String getAlbumSortOrder() {
@@ -269,9 +292,9 @@ public final class PreferenceUtil {
     }
 
     public void setAlbumSortOrder(final String sortOrder) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(ALBUM_SORT_ORDER, sortOrder);
-        editor.apply();
+        mPreferences.edit()
+                .putString(ALBUM_SORT_ORDER, sortOrder)
+                .apply();
     }
 
     public final String getSongSortOrder() {
@@ -279,84 +302,143 @@ public final class PreferenceUtil {
     }
 
     public void setSongSortOrder(final String sortOrder) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(SONG_SORT_ORDER, sortOrder);
-        editor.apply();
+        mPreferences.edit()
+                .putString(SONG_SORT_ORDER, sortOrder)
+                .apply();
+    }
+
+    private void migrateCutoffV1AsV2(@NonNull final String cutoffV1, @NonNull final String cutoffV2) {
+        if (mPreferences.contains(cutoffV2)) {return;}
+
+        String migratedValue;
+        switch (mPreferences.getString(cutoffV1, "")) {
+            case "today":
+                migratedValue = "1d";
+                break;
+            case "this_week":
+                migratedValue = "1w";
+                break;
+            case "past_seven_days":
+                migratedValue = "7d";
+                break;
+            case "past_three_months":
+                migratedValue = "3m";
+                break;
+            case "this_year":
+                migratedValue = "1y";
+                break;
+            case "this_month":
+            default:
+                migratedValue = "1m";
+                break;
+        }
+        mPreferences.edit()
+                .putString(cutoffV2, migratedValue)
+                .apply();
     }
 
     // The last added cutoff time is compared against the Android media store timestamps, which is seconds based.
     public long getLastAddedCutoffTimeSecs() {
-        return getCutoffTimeMillis(LAST_ADDED_CUTOFF) / 1000;
+        return getCutoffTimeMillisV2(LAST_ADDED_CUTOFF_V2) / 1000;
+    }
+
+    // The not recently played cutoff time is compared against the internal (private) database timestamps, which is milliseconds based.
+    public long getNotRecentlyPlayedCutoffTimeMillis() {
+        return getCutoffTimeMillisV2(NOT_RECENTLY_PLAYED_CUTOFF_V2);
     }
 
     // The recently played cutoff time is compared against the internal (private) database timestamps, which is milliseconds based.
     public long getRecentlyPlayedCutoffTimeMillis() {
-        return getCutoffTimeMillis(RECENTLY_PLAYED_CUTOFF);
+        return getCutoffTimeMillisV2(RECENTLY_PLAYED_CUTOFF_V2);
     }
 
-    private long getCutoffTimeMillis(final String cutoff) {
+    @NonNull
+    public Pair<Integer, ChronoUnit> getCutoffTimeV2(@NonNull final String cutoff) {
+        final Pair<Integer, ChronoUnit> disabledValue = new Pair<>(0, ChronoUnit.DAYS);
+        final Pair<Integer, ChronoUnit> defaultValue = new Pair<>(1, ChronoUnit.MONTHS);
+
+        final String value = mPreferences.getString(cutoff, "");
+        final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
+        final Matcher matcher = pattern.matcher(value);
+        if (matcher.find()) {
+            final int count = Integer.parseInt(matcher.group(1));
+            final String unit = matcher.group(2);
+
+            if (count == 0) {return disabledValue;}
+            else if (count < 0 || unit == null) {return defaultValue;}
+            else {
+                switch (unit) {
+                    case "d": return new Pair<>(count, ChronoUnit.DAYS);
+                    case "w": return new Pair<>(count, ChronoUnit.WEEKS);
+                    case "m": return new Pair<>(count, ChronoUnit.MONTHS);
+                    case "y": return new Pair<>(count, ChronoUnit.YEARS);
+                    default: return defaultValue;
+                }
+            }
+        } else {
+            return defaultValue;
+        }
+    }
+
+    private long getCutoffTimeMillisV2(@NonNull final String cutoff) {
+        final Pair<Integer, ChronoUnit> value = getCutoffTimeV2(cutoff);
+        if (value.first <= 0) {return 0;} // Disabled
+
         final CalendarUtil calendarUtil = new CalendarUtil();
-        long interval;
+        long interval = System.currentTimeMillis();
 
-        switch (mPreferences.getString(cutoff, "")) {
-            case "today":
-                interval = calendarUtil.getElapsedToday();
-                break;
-
-            case "this_week":
-                interval = calendarUtil.getElapsedWeek();
-                break;
-
-             case "past_seven_days":
-                interval = calendarUtil.getElapsedDays(7);
-                break;
-
-            case "past_three_months":
-                interval = calendarUtil.getElapsedMonths(3);
-                break;
-
-            case "this_year":
-                interval = calendarUtil.getElapsedYear();
-                break;
-
-            case "this_month":
-            default:
-                interval = calendarUtil.getElapsedMonth();
-                break;
+        if (value.second == ChronoUnit.DAYS) {
+            return interval - calendarUtil.getElapsedDays(value.first);
+        } else if (value.second == ChronoUnit.WEEKS) {
+            return interval - calendarUtil.getElapsedWeeks(value.first);
+        } else if (value.second == ChronoUnit.MONTHS) {
+            return interval - calendarUtil.getElapsedMonths(value.first);
+        } else if (value.second == ChronoUnit.YEARS) {
+            return interval - calendarUtil.getElapsedYears(value.first);
         }
 
-        return (System.currentTimeMillis() - interval);
+        return 0; // Disabled
     }
 
-    public String getLastAddedCutoffText(Context context) {
-        return getCutoffText(LAST_ADDED_CUTOFF, context);
+    @NonNull
+    private String getCutoffTextV2(@NonNull final String cutoff, Context context) {
+        final Pair<Integer, ChronoUnit> value = getCutoffTimeV2(cutoff);
+        if (value.first <= 0) {return context.getString(R.string.pref_playlist_disabled);}
+
+        if (value.second == ChronoUnit.DAYS) {
+            return value.first == 1
+                    ? context.getString(R.string.today)
+                    : context.getString(R.string.past_X_days, value.first);
+        } else if (value.second == ChronoUnit.WEEKS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_week)
+                    : context.getString(R.string.past_X_weeks, value.first);
+        } else if (value.second == ChronoUnit.MONTHS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_month)
+                    : context.getString(R.string.past_X_months, value.first);
+        } else if (value.second == ChronoUnit.YEARS) {
+            return value.first == 1
+                    ? context.getString(R.string.this_year)
+                    : context.getString(R.string.past_X_years, value.first);
+        }
+
+        return context.getString(R.string.pref_playlist_disabled);
     }
 
+    @NonNull
+    public String getLastAddedCutoffText(@NonNull Context context) {
+        return getCutoffTextV2(LAST_ADDED_CUTOFF_V2, context);
+    }
+
+    @NonNull
     public String getRecentlyPlayedCutoffText(Context context) {
-        return getCutoffText(RECENTLY_PLAYED_CUTOFF, context);
+        return getCutoffTextV2(RECENTLY_PLAYED_CUTOFF_V2, context);
     }
 
-    private String getCutoffText(final String cutoff, Context context) {
-        switch (mPreferences.getString(cutoff, "")) {
-            case "today":
-                return context.getString(R.string.today);
-
-            case "this_week":
-                return context.getString(R.string.this_week);
-
-             case "past_seven_days":
-                 return context.getString(R.string.past_seven_days);
-
-            case "past_three_months":
-                return context.getString(R.string.past_three_months);
-
-            case "this_year":
-                return context.getString(R.string.this_year);
-
-            case "this_month":
-            default:
-                return context.getString(R.string.this_month);
-        }
+    @NonNull
+    public String getNotRecentlyPlayedCutoffText(Context context) {
+        return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
     }
 
     public int getLastSleepTimerValue() {
@@ -364,9 +446,9 @@ public final class PreferenceUtil {
     }
 
     public void setLastSleepTimerValue(final int value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(LAST_SLEEP_TIMER_VALUE, value);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(LAST_SLEEP_TIMER_VALUE, value)
+                .apply();
     }
 
     public long getNextSleepTimerElapsedRealTime() {
@@ -374,9 +456,9 @@ public final class PreferenceUtil {
     }
 
     public void setNextSleepTimerElapsedRealtime(final long value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putLong(NEXT_SLEEP_TIMER_ELAPSED_REALTIME, value);
-        editor.apply();
+        mPreferences.edit()
+                .putLong(NEXT_SLEEP_TIMER_ELAPSED_REALTIME, value)
+                .apply();
     }
 
     public boolean getSleepTimerFinishMusic() {
@@ -384,15 +466,15 @@ public final class PreferenceUtil {
     }
 
     public void setSleepTimerFinishMusic(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(SLEEP_TIMER_FINISH_SONG, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(SLEEP_TIMER_FINISH_SONG, value)
+                .apply();
     }
 
     public void setAlbumGridSize(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(ALBUM_GRID_SIZE, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(ALBUM_GRID_SIZE, gridSize)
+                .apply();
     }
 
     public final int getAlbumGridSize(Context context) {
@@ -400,9 +482,9 @@ public final class PreferenceUtil {
     }
 
     public void setSongGridSize(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(SONG_GRID_SIZE, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(SONG_GRID_SIZE, gridSize)
+                .apply();
     }
 
     public final int getSongGridSize(Context context) {
@@ -410,9 +492,9 @@ public final class PreferenceUtil {
     }
 
     public void setArtistGridSize(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(ARTIST_GRID_SIZE, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(ARTIST_GRID_SIZE, gridSize)
+                .apply();
     }
 
     public final int getArtistGridSize(Context context) {
@@ -420,9 +502,9 @@ public final class PreferenceUtil {
     }
 
     public void setAlbumGridSizeLand(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(ALBUM_GRID_SIZE_LAND, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(ALBUM_GRID_SIZE_LAND, gridSize)
+                .apply();
     }
 
     public final int getAlbumGridSizeLand(Context context) {
@@ -430,9 +512,9 @@ public final class PreferenceUtil {
     }
 
     public void setSongGridSizeLand(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(SONG_GRID_SIZE_LAND, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(SONG_GRID_SIZE_LAND, gridSize)
+                .apply();
     }
 
     public final int getSongGridSizeLand(Context context) {
@@ -440,9 +522,9 @@ public final class PreferenceUtil {
     }
 
     public void setArtistGridSizeLand(final int gridSize) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(ARTIST_GRID_SIZE_LAND, gridSize);
-        editor.apply();
+        mPreferences.edit()
+                .putInt(ARTIST_GRID_SIZE_LAND, gridSize)
+                .apply();
     }
 
     public final int getArtistGridSizeLand(Context context) {
@@ -450,9 +532,9 @@ public final class PreferenceUtil {
     }
 
     public void setAlbumColoredFooters(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(ALBUM_COLORED_FOOTERS, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(ALBUM_COLORED_FOOTERS, value)
+                .apply();
     }
 
     public final boolean albumColoredFooters() {
@@ -460,9 +542,9 @@ public final class PreferenceUtil {
     }
 
     public void setAlbumArtistColoredFooters(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(ALBUM_ARTIST_COLORED_FOOTERS, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(ALBUM_ARTIST_COLORED_FOOTERS, value)
+                .apply();
     }
 
     public final boolean albumArtistColoredFooters() {
@@ -470,9 +552,9 @@ public final class PreferenceUtil {
     }
 
     public void setSongColoredFooters(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(SONG_COLORED_FOOTERS, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(SONG_COLORED_FOOTERS, value)
+                .apply();
     }
 
     public final boolean songColoredFooters() {
@@ -480,9 +562,9 @@ public final class PreferenceUtil {
     }
 
     public void setArtistColoredFooters(final boolean value) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(ARTIST_COLORED_FOOTERS, value);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(ARTIST_COLORED_FOOTERS, value)
+                .apply();
     }
 
     public final boolean artistColoredFooters() {
@@ -497,10 +579,8 @@ public final class PreferenceUtil {
         return mPreferences.getInt(LAST_CHANGELOG_VERSION, -1);
     }
 
-    @SuppressLint("CommitPrefEdits")
     public void setIntroShown() {
-        // don't use apply here
-        mPreferences.edit().putBoolean(INTRO_SHOWN, true).commit();
+        mPreferences.edit().putBoolean(INTRO_SHOWN, true).apply();
     }
 
     public final boolean introShown() {
@@ -520,9 +600,9 @@ public final class PreferenceUtil {
     }
 
     public void setStartDirectory(File file) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(START_DIRECTORY, FileUtil.safeGetCanonicalPath(file));
-        editor.apply();
+        mPreferences.edit()
+                .putString(START_DIRECTORY, FileUtil.safeGetCanonicalPath(file))
+                .apply();
     }
 
     public final boolean synchronizedLyricsShow() {
@@ -537,13 +617,18 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SHOW_SONG_NUMBER, false);
     }
 
-    public final boolean maintainSkippedSongsPlaylist() {
+    public boolean maintainTopTrackPlaylist() {
+        return mPreferences.getBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, true);
+    }
+
+    public boolean maintainSkippedSongsPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
     }
+
     public void setInitializedBlacklist() {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putBoolean(INITIALIZED_BLACKLIST, true);
-        editor.apply();
+        mPreferences.edit()
+                .putBoolean(INITIALIZED_BLACKLIST, true)
+                .apply();
     }
 
     public final boolean initializedBlacklist() {
@@ -559,9 +644,9 @@ public final class PreferenceUtil {
         Type collectionType = new TypeToken<ArrayList<CategoryInfo>>() {
         }.getType();
 
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType));
-        editor.apply();
+        mPreferences.edit()
+                .putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType))
+                .apply();
     }
 
     public ArrayList<CategoryInfo> getLibraryCategoryInfos() {
@@ -594,7 +679,7 @@ public final class PreferenceUtil {
     public byte getReplayGainSourceMode() {
         byte sourceMode = RG_SOURCE_MODE_NONE;
 
-        switch (mPreferences.getString(RG_SOURCE_MODE, "none")) {
+        switch (mPreferences.getString(RG_SOURCE_MODE_V2, "none")) {
             case "track":
                 sourceMode = RG_SOURCE_MODE_TRACK;
                 break;
@@ -615,10 +700,10 @@ public final class PreferenceUtil {
     }
 
     public void setReplayGainPreamp(float with, float without) {
-        final SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putFloat(RG_PREAMP_WITH_TAG, with);
-        editor.putFloat(RG_PREAMP_WITHOUT_TAG, without);
-        editor.apply();
+        mPreferences.edit()
+                .putFloat(RG_PREAMP_WITH_TAG, with)
+                .putFloat(RG_PREAMP_WITHOUT_TAG, without)
+                .apply();
     }
 
     public final String getSAFSDCardUri() {
@@ -626,6 +711,8 @@ public final class PreferenceUtil {
     }
 
     public final void setSAFSDCardUri(Uri uri) {
-        mPreferences.edit().putString(SAF_SDCARD_URI, uri.toString()).apply();
+        mPreferences.edit()
+                .putString(SAF_SDCARD_URI, uri.toString())
+                .apply();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
@@ -31,6 +32,12 @@ public class LastAddedPlaylist extends AbsSmartPlaylist {
                 cutoff,
                 super.getInfoString(context)
         );
+    }
+
+    @Nullable
+    @Override
+    public String getPlaylistPreference() {
+        return PreferenceUtil.LAST_ADDED_CUTOFF_V2;
     }
 
     @NonNull

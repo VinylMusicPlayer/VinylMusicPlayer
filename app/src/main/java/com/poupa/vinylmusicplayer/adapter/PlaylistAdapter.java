@@ -32,6 +32,7 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
@@ -256,9 +257,21 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                         if (!smartPlaylist.isClearable()) {
                             popupMenu.getMenu().findItem(R.id.action_clear_playlist).setVisible(false);
                         }
+                        final String prefKey = smartPlaylist.getPlaylistPreference();
+                        if (prefKey == null) {
+                            popupMenu.getMenu().findItem(R.id.action_playlist_settings).setVisible(false);
+                        }
                         popupMenu.setOnMenuItemClickListener(item -> {
                             if (item.getItemId() == R.id.action_clear_playlist) {
                                 ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
+                                return true;
+                            }
+                            else if (item.getItemId() == R.id.action_playlist_settings) {
+                                if (prefKey != null) {
+                                    SmartPlaylistPreferenceDialog
+                                            .newInstance(prefKey)
+                                            .show(activity.getSupportFragmentManager(), "SETTINGS_SMART_PLAYLIST_" + smartPlaylist.name);
+                                }
                                 return true;
                             }
                             return PlaylistMenuHelper.handleMenuClick(

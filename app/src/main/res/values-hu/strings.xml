@@ -102,7 +102,7 @@
     <string name="today">Ma</string>
     <string name="this_week">Ezen a héten</string>
     <string name="this_month">Ebben a hónapban</string>
-    <string name="past_three_months">Az utóbbi 3 hónapban</string>
+    <string name="past_X_months">Az utóbbi %d hónapban</string>
     <string name="this_year">Ebben az évben</string>
     <string name="equalizer">Hangszínszabályzó</string>
     <string name="pref_header_colors">Színek</string>

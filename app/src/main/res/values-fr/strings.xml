@@ -104,9 +104,9 @@
     <string name="today">Aujourd\'hui</string>
     <string name="this_week">Cette semaine</string>
     <string name="this_month">Ce mois-ci</string>
-    <string name="past_three_months">Les 3 derniers mois</string>
-    <string name="past_seven_days">Les 7 derniers jours</string>
     <string name="this_year">Cette année</string>
+    <string name="past_X_months">Les %d derniers mois</string>
+    <string name="past_X_days">Les %d derniers jours</string>
     <string name="equalizer">Égaliseur</string>
     <string name="pref_header_colors">Couleurs</string>
     <string name="pref_header_now_playing_screen">Lecture en cours</string>
@@ -129,7 +129,6 @@
     <string name="pref_title_audio_ducking">Réduire le volume lorsque le focus est interrompu</string>
     <string name="pref_title_last_added_interval">Intervalle de la playlist \"Derniers ajouts\"</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Crée une playlist des titres ignorés pendant la lecture</string>
-    <string name="pref_title_maintain_skipped_songs_playlist">Titres ignorés</string>
     <string name="skipped_songs">Titres ignorés</string>
     <string name="pref_title_synchronized_lyrics_show">Afficher les paroles synchronisées</string>
     <string name="pref_title_remember_last_tab">Se souvenir de la dernière fenêtre</string>

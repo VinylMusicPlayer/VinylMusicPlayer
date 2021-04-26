@@ -34,15 +34,19 @@ import java.util.Collections;
 public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
     public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
-        HistoryStore historyStore = HistoryStore.getInstance(context);
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
+        if (cutoff == 0) {return new ArrayList<>();}
 
+        HistoryStore historyStore = HistoryStore.getInstance(context);
         ArrayList<Long> songIds = historyStore.getRecentIds(cutoff);
         return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
     public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
+        final long cutoff = PreferenceUtil.getInstance().getNotRecentlyPlayedCutoffTimeMillis();
+        if (cutoff == 0) {return new ArrayList<>();}
+
         HistoryStore historyStore = HistoryStore.getInstance(context);
         ArrayList<Long> songIds = new ArrayList<>();
 
@@ -58,7 +62,6 @@ public class TopAndRecentlyPlayedTracksLoader {
         }
 
         // Collect not recently played songs
-        final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
         ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
         songIds.addAll(notRecentSongIds);
 
@@ -67,8 +70,10 @@ public class TopAndRecentlyPlayedTracksLoader {
 
     @NonNull
     public static ArrayList<Song> getTopTracks(@NonNull Context context) {
-        final int NUMBER_OF_TOP_TRACKS = 100;
+        final boolean enabled = PreferenceUtil.getInstance().maintainTopTrackPlaylist();
+        if (!enabled) {return new ArrayList<>();}
 
+        final int NUMBER_OF_TOP_TRACKS = 100;
         try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
 

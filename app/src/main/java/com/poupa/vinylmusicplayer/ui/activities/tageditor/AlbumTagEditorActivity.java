@@ -104,7 +104,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
         }
         lastFMRestClient.getApiService().getAlbumInfo(albumTitleStr, albumArtistNameStr, null).enqueue(new Callback<LastFmAlbum>() {
             @Override
-            public void onResponse(Call<LastFmAlbum> call, Response<LastFmAlbum> response) {
+            public void onResponse(@NonNull Call<LastFmAlbum> call, @NonNull Response<LastFmAlbum> response) {
                 LastFmAlbum lastFmAlbum = response.body();
                 if (lastFmAlbum.getAlbum() != null) {
                     String url = LastFMUtil.getLargestAlbumImageUrl(lastFmAlbum.getAlbum().getImage());
@@ -138,7 +138,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
             }
 
             @Override
-            public void onFailure(Call<LastFmAlbum> call, Throwable t) {
+            public void onFailure(@NonNull Call<LastFmAlbum> call, @NonNull Throwable t) {
                 toastLoadingFailed();
             }
 

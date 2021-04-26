@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.helper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Handler;
-import android.view.View.OnClickListener;
 
 public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
     private Handler handler = new Handler();

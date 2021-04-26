@@ -104,7 +104,7 @@
     <string name="today">Danas</string>
     <string name="this_week">Ovaj tjedan</string>
     <string name="this_month">Ovaj mjesec</string>
-    <string name="past_three_months">Prošla 3 mjeseca</string>
+    <string name="past_X_months">Prošla %d mjeseca</string>
     <string name="this_year">Ova godina</string>
     <string name="equalizer">Ekvalizator</string>
     <string name="pref_header_colors">Boje</string>

@@ -337,61 +337,60 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         final ArrayList<Song> songs = songAdapter.getDataSet();
-        switch (id) {
-            case R.id.action_sleep_timer:
-                new SleepTimerDialog().show(getSupportFragmentManager(), "SET_SLEEP_TIMER");
-                return true;
-            case R.id.action_equalizer:
-                NavigationUtil.openEqualizer(this);
-                return true;
-            case R.id.action_shuffle_artist:
-                MusicPlayerRemote.openAndShuffleQueue(songs, true);
-                return true;
-            case R.id.action_play_next:
-                MusicPlayerRemote.playNext(songs);
-                return true;
-            case R.id.action_add_to_current_playing:
-                MusicPlayerRemote.enqueue(songs);
-                return true;
-            case R.id.action_add_to_playlist:
-                AddToPlaylistDialog.create(songs).show(getSupportFragmentManager(), "ADD_PLAYLIST");
-                return true;
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
-            case R.id.action_biography:
-                if (biographyDialog == null) {
-                    biographyDialog = new MaterialDialog.Builder(this)
-                            .title(artist.getName())
-                            .positiveText(android.R.string.ok)
-                            .build();
-                }
-                if (PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) { // wiki should've been already downloaded
-                    if (biography != null) {
-                        biographyDialog.setContent(biography);
-                        biographyDialog.show();
-                    } else {
-                        Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
-                    }
-                } else { // force download
+        if (id == R.id.action_sleep_timer) {
+            new SleepTimerDialog().show(getSupportFragmentManager(), "SET_SLEEP_TIMER");
+            return true;
+        } else if (id == R.id.action_equalizer) {
+            NavigationUtil.openEqualizer(this);
+            return true;
+        } else if (id == R.id.action_shuffle_artist) {
+            MusicPlayerRemote.openAndShuffleQueue(songs, true);
+            return true;
+        } else if (id == R.id.action_play_next) {
+            MusicPlayerRemote.playNext(songs);
+            return true;
+        } else if (id == R.id.action_add_to_current_playing) {
+            MusicPlayerRemote.enqueue(songs);
+            return true;
+        } else if (id == R.id.action_add_to_playlist) {
+            AddToPlaylistDialog.create(songs).show(getSupportFragmentManager(), "ADD_PLAYLIST");
+            return true;
+        } else if (id == android.R.id.home) {
+            super.onBackPressed();
+            return true;
+        } else if (id == R.id.action_biography) {
+            if (biographyDialog == null) {
+                biographyDialog = new MaterialDialog.Builder(this)
+                        .title(artist.getName())
+                        .positiveText(android.R.string.ok)
+                        .build();
+            }
+            if (PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) { // wiki should've been already downloaded
+                if (biography != null) {
+                    biographyDialog.setContent(biography);
                     biographyDialog.show();
-                    loadBiography();
+                } else {
+                    Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
                 }
-                return true;
-            case R.id.action_set_artist_image:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_from_local_storage)), REQUEST_CODE_SELECT_IMAGE);
-                return true;
-            case R.id.action_reset_artist_image:
-                Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.updating), Toast.LENGTH_SHORT).show();
-                CustomArtistImageUtil.getInstance(ArtistDetailActivity.this).resetCustomArtistImage(artist);
-                forceDownload = true;
-                return true;
-            case R.id.action_colored_footers:
-                item.setChecked(!item.isChecked());
-                setUsePalette(item.isChecked());
-                return true;
+            } else { // force download
+                biographyDialog.show();
+                loadBiography();
+            }
+            return true;
+        } else if (id == R.id.action_set_artist_image) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_from_local_storage)), REQUEST_CODE_SELECT_IMAGE);
+            return true;
+        } else if (id == R.id.action_reset_artist_image) {
+            Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.updating), Toast.LENGTH_SHORT).show();
+            CustomArtistImageUtil.getInstance(ArtistDetailActivity.this).resetCustomArtistImage(artist);
+            forceDownload = true;
+            return true;
+        } else if (id == R.id.action_colored_footers) {
+            item.setChecked(!item.isChecked());
+            setUsePalette(item.isChecked());
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -32,9 +32,7 @@ public abstract class WrappedAsyncTaskLoader<D> extends AsyncTaskLoader<D> {
         if (!isReset()) {
             this.mData = data;
             super.deliverResult(data);
-        } else {
-            // An asynchronous query came in while the loader is stopped
-        }
+        } // else : An asynchronous query came in while the loader is stopped
     }
 
     /**

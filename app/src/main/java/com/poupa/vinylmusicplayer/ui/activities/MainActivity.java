@@ -169,28 +169,22 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
-            switch (menuItem.getItemId()) {
-                case R.id.nav_library:
-                    new Handler().postDelayed(() -> setMusicChooser(LIBRARY), 200);
-                    break;
-                case R.id.nav_folders:
-                    new Handler().postDelayed(() -> setMusicChooser(FOLDERS), 200);
-                    break;
-                case R.id.action_scan:
-                    new Handler().postDelayed(() -> {
-                        ScanMediaFolderChooserDialog dialog = ScanMediaFolderChooserDialog.create();
-                        dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
-                    }, 200);
-                    break;
-                case R.id.action_reset_discography:
-                    Discography.getInstance().triggerSyncWithMediaStore(true);
-                    break;
-                case R.id.nav_settings:
-                    new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);
-                    break;
-                case R.id.nav_about:
-                    new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, AboutActivity.class)), 200);
-                    break;
+            final int itemId = menuItem.getItemId();
+            if (itemId == R.id.nav_library) {
+                new Handler().postDelayed(() -> setMusicChooser(LIBRARY), 200);
+            } else if (itemId == R.id.nav_folders) {
+                new Handler().postDelayed(() -> setMusicChooser(FOLDERS), 200);
+            } else if (itemId == R.id.action_scan) {
+                new Handler().postDelayed(() -> {
+                    ScanMediaFolderChooserDialog dialog = ScanMediaFolderChooserDialog.create();
+                    dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
+                }, 200);
+            } else if (itemId == R.id.action_reset_discography) {
+                Discography.getInstance().triggerSyncWithMediaStore(true);
+            } else if (itemId == R.id.nav_settings) {
+                new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);
+            } else if (itemId == R.id.nav_about) {
+                new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, AboutActivity.class)), 200);
             }
             return true;
         });
