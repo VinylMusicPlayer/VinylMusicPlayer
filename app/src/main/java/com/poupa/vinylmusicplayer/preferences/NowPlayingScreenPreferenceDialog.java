@@ -39,6 +39,7 @@ public class NowPlayingScreenPreferenceDialog extends DialogFragment implements 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // TODO Use viewbinding
         @SuppressLint("InflateParams") View view = LayoutInflater.from(getContext()).inflate(R.layout.preference_dialog_now_playing_screen, null);
         ViewPager viewPager = view.findViewById(R.id.now_playing_screen_view_pager);
         viewPager.setAdapter(new NowPlayingScreenAdapter(getContext()));

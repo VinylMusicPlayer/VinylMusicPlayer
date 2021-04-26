@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -41,40 +41,39 @@ public class MusicPlayerRemote {
 
     public static final String TAG = MusicPlayerRemote.class.getSimpleName();
 
+    // TODO Reduce the visibility of this member (should not be exposed outside)
     @Nullable
     public static MusicService musicService;
 
-    private static final WeakHashMap<Context, ServiceBinder> mConnectionMap = new WeakHashMap<>();
+    private static final WeakHashMap<Activity, ServiceBinder> mConnectionMap = new WeakHashMap<>();
 
-    public static ServiceToken bindToService(@NonNull final Context context,
+    public static Activity bindToService(@NonNull final Activity activity,
                                              final ServiceConnection callback) {
-        Activity realActivity = ((Activity) context).getParent();
+        Activity realActivity = activity.getParent();
         if (realActivity == null) {
-            realActivity = (Activity) context;
+            realActivity = activity;
         }
 
-        final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
-        contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
+        realActivity.startService(new Intent(realActivity, MusicService.class));
 
         final ServiceBinder binder = new ServiceBinder(callback);
 
-        if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, Context.BIND_AUTO_CREATE)) {
-            mConnectionMap.put(contextWrapper, binder);
-            return new ServiceToken(contextWrapper);
+        if (realActivity.bindService(new Intent().setClass(realActivity, MusicService.class), binder, Context.BIND_AUTO_CREATE)) {
+            mConnectionMap.put(realActivity, binder);
+            return realActivity;
         }
         return null;
     }
 
-    public static void unbindFromService(@Nullable final ServiceToken token) {
-        if (token == null) {
+    public static void unbindFromService(@Nullable final Activity activity) {
+        if (activity == null) {
             return;
         }
-        final ContextWrapper mContextWrapper = token.mWrappedContext;
-        final ServiceBinder mBinder = mConnectionMap.remove(mContextWrapper);
+        final ServiceBinder mBinder = mConnectionMap.remove(activity);
         if (mBinder == null) {
             return;
         }
-        mContextWrapper.unbindService(mBinder);
+        activity.unbindService(mBinder);
         if (mConnectionMap.isEmpty()) {
             if (!musicService.isPlaying()) {
                 musicService.quit();
@@ -83,7 +82,11 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static final class ServiceBinder implements ServiceConnection {
+    /**
+     * This class intercepts the ServiceConnection callbacks to do reference housekeeping
+     * before forwarding the event to the original callback recipient
+     */
+    static final class ServiceBinder implements ServiceConnection {
         private final ServiceConnection mCallback;
 
         public ServiceBinder(final ServiceConnection callback) {
@@ -105,14 +108,6 @@ public class MusicPlayerRemote {
                 mCallback.onServiceDisconnected(className);
             }
             musicService = null;
-        }
-    }
-
-    public static final class ServiceToken {
-        public final ContextWrapper mWrappedContext;
-
-        public ServiceToken(final ContextWrapper context) {
-            mWrappedContext = context;
         }
     }
 

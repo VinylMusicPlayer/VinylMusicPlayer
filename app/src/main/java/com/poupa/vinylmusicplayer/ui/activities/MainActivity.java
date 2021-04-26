@@ -91,6 +91,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             showChangelog();
         }
 
+        // TODO do this non UI code only during a fresh start, i.e not if savedInstanceState == null. Combine with onRestoreInstanceState as well
         final Discography discog = Discography.getInstance();
         discog.startService(this);
         addMusicServiceEventListener(discog);

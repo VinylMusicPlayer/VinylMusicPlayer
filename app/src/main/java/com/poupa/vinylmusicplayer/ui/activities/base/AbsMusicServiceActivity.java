@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.activities.base;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,14 +30,17 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
     private final ArrayList<MusicServiceEventListener> mMusicServiceEventListeners = new ArrayList<>();
 
-    private MusicPlayerRemote.ServiceToken serviceToken;
+    private Activity boundActivity;
+
+    // TODO Merge this with the boolean right after
     private MusicStateReceiver musicStateReceiver;
     private boolean receiverRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceToken = MusicPlayerRemote.bindToService(this, new ServiceConnection() {
+        // TODO Do this non UI code only on fresh start, ie when savedInstanceState == null.Combine with onRestoreInstanceState as well
+        boundActivity = MusicPlayerRemote.bindToService(this, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 AbsMusicServiceActivity.this.onServiceConnected();
@@ -47,33 +52,55 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             }
         });
 
+        // TODO For debug only
+        if (boundActivity == null) {
+            final String message = "Bind failed to MusicService from " + this.getComponentName();
+            Log.e("extended-sleep", message);
+        } else {
+            final String message = "Bind success to MusicService from " + this.getComponentName();
+            Log.w("extended-sleep", message);
+        }
+
         setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MusicPlayerRemote.unbindFromService(serviceToken);
+
+        // TODO For debug only
+        if (boundActivity == null) {
+            final String message = "Unbind failed to MusicService from " + this.getComponentName();
+            Log.e("extended-sleep", message);
+        } else {
+            MusicPlayerRemote.unbindFromService(boundActivity);
+
+            final String message = "Unbind success to MusicService from " + this.getComponentName();
+            Log.w("extended-sleep", message);
+        }
+
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);
             receiverRegistered = false;
         }
     }
 
-    public void addMusicServiceEventListener(final MusicServiceEventListener listener) {
-        if (listener != null) {
-            mMusicServiceEventListeners.add(listener);
-        }
+    public void addMusicServiceEventListener(@NonNull final MusicServiceEventListener listener) {
+        mMusicServiceEventListeners.add(listener);
     }
 
-    public void removeMusicServiceEventListener(final MusicServiceEventListener listener) {
-        if (listener != null) {
-            mMusicServiceEventListeners.remove(listener);
-        }
+    public void removeMusicServiceEventListener(@NonNull final MusicServiceEventListener listener) {
+        mMusicServiceEventListeners.remove(listener);
     }
 
     @Override
     public void onServiceConnected() {
+        {
+            // TODO For debug only
+            final String message = "Connected to MusicService from " + this.getComponentName();
+            Log.w("extended-sleep", message);
+        }
+
         if (!receiverRegistered) {
             musicStateReceiver = new MusicStateReceiver(this);
 
@@ -89,80 +116,76 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             registerReceiver(musicStateReceiver, filter);
 
             receiverRegistered = true;
+        } else {
+            // TODO For debug only
+            final String message = "Connected to MusicService but intent receiver not reinstalled";
+            Log.e("extended-sleep", message);
         }
 
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onServiceConnected();
-            }
+            listener.onServiceConnected();
         }
     }
 
     @Override
     public void onServiceDisconnected() {
+        // TODO For debug only
+        final String message = "Disconnected to MusicService from " + this.getComponentName();
+        Log.w("extended-sleep", message);
+
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);
             receiverRegistered = false;
         }
 
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onServiceDisconnected();
-            }
+            listener.onServiceDisconnected();
         }
     }
 
     @Override
     public void onPlayingMetaChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onPlayingMetaChanged();
-            }
+            listener.onPlayingMetaChanged();
         }
     }
 
     @Override
     public void onQueueChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onQueueChanged();
-            }
+            listener.onQueueChanged();
         }
     }
 
     @Override
     public void onPlayStateChanged() {
+        // TODO For debug only
+        final String message = "Received onPlayStateChanged from MusicService on " + this.getComponentName();
+        Log.w("extended-sleep", message);
+
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onPlayStateChanged();
-            }
+            listener.onPlayStateChanged();
         }
     }
 
     @Override
     public void onMediaStoreChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onMediaStoreChanged();
-            }
+            listener.onMediaStoreChanged();
         }
     }
 
     @Override
     public void onRepeatModeChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onRepeatModeChanged();
-            }
+            listener.onRepeatModeChanged();
         }
     }
 
     @Override
     public void onShuffleModeChanged() {
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
-            if (listener != null) {
-                listener.onShuffleModeChanged();
-            }
+            listener.onShuffleModeChanged();
         }
     }
 
@@ -178,6 +201,11 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         public void onReceive(final Context context, @NonNull final Intent intent) {
             final String action = intent.getAction();
             AbsMusicServiceActivity activity = reference.get();
+            {
+                // TODO For debug only
+                final String message = "Received event '%s' from MusicService, about to propagate '%s'";
+                Log.w("extended-sleep", String.format(message, action, activity));
+            }
             if (activity != null) {
                 switch (action) {
                     case MusicService.FAVORITE_STATE_CHANGED:

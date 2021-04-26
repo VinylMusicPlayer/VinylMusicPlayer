@@ -96,6 +96,7 @@ public class SleepTimerDialog extends DialogFragment {
                         Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.sleep_timer_canceled), Toast.LENGTH_SHORT).show();
                     }
 
+                    // TODO Dont rely on this naked pointer from MusicService
                     MusicService musicService = MusicPlayerRemote.musicService;
                     if (musicService != null && musicService.pendingQuit) {
                         musicService.pendingQuit = false;

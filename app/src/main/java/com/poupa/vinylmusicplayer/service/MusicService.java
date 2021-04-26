@@ -28,6 +28,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -326,6 +327,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
 
+        // TODO Should return START_STICKY instead?
         return START_NOT_STICKY;
     }
 
@@ -1075,6 +1077,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private void sendChangeInternal(final String what) {
         sendBroadcast(new Intent(what));
+        {
+            // TODO For debug only
+            final String message = "Broadcasted from MusicService: " + what;
+            Log.w("extended-sleep", message);
+        }
+
         appWidgetBig.notifyChange(this, what);
         appWidgetClassic.notifyChange(this, what);
         appWidgetSmall.notifyChange(this, what);

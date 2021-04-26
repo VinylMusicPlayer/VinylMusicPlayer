@@ -63,6 +63,7 @@ public class Discography implements MusicServiceEventListener {
         return App.getDiscography();
     }
 
+    // TODO This is not (yet) a service and should not pretend as such
     public void startService(@NonNull final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());

@@ -85,6 +85,7 @@
                 <data android:mimeType="vnd.android.cursor.dir/artists" />
             </intent-filter>
             <intent-filter>
+                <!-- TODO CyanogenMod no more -->
                 <action android:name="com.cyanogenmod.eleven.AUDIO_PLAYER" />
 
                 <category android:name="android.intent.category.DEFAULT" />
