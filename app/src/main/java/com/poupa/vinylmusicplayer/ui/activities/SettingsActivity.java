@@ -149,7 +149,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
             final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
             final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
-            findPreference("whitelist_enabled").setSummary(strSummaryWhitelist+startPath);
+            findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
 
         }
 
