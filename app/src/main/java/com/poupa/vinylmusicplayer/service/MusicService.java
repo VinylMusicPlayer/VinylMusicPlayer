@@ -623,7 +623,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void updateMediaSessionLyric(String line) {
         final Song song = getCurrentSong();
 
-        if (song.id == -1) {
+        if (song.id == Song.EMPTY_SONG.id) {
             mediaSession.setMetadata(null);
             return;
         }
