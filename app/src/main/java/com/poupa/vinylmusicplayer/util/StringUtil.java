@@ -50,6 +50,12 @@ public class StringUtil {
         List<String> splitList = new ArrayList<String>();
         src = src.trim();
 
+        // If the line is less than bytes, there is no need to split
+        if (src.getBytes(Charset.forName("GBK")).length <= bytes) {
+            splitList.add(src);
+            return splitList;
+        }
+
         // Firstly try to split the lyric by space
         String[] separated = src.split("\\s+");
         if (separated.length<4) {
@@ -60,9 +66,7 @@ public class StringUtil {
                 }
             }
             if (canReturn) {
-                for (String s: separated) {
-                    splitList.add(s);
-                }
+                for (String s: separated) splitList.add(s);
                 return splitList;
             }
         }
