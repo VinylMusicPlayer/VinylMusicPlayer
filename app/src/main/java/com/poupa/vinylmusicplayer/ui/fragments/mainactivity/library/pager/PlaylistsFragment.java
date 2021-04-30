@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
@@ -116,7 +117,17 @@ public class PlaylistsFragment
     }
 
     public void reload() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        try {
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
+        } catch (IllegalStateException e) {
+            Toast.makeText(getContext(), "Cannot reload playlists: " + e.getMessage(), Toast.LENGTH_LONG)
+                    .show();
+
+            // TODO Why do we get here sometime?
+            // E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+            // E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
+            // E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
+        }
     }
 
     @Override
