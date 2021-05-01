@@ -33,6 +33,7 @@ public class PlaylistsFragment
                 SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int LOADER_ID = LoaderIds.PLAYLISTS_FRAGMENT;
+    private boolean reloadNeeded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,16 @@ public class PlaylistsFragment
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (reloadNeeded) {
+            reload();
+            Toast.makeText(getContext(), "Reloaded playlists", Toast.LENGTH_LONG).show();
+        }
     }
 
     @NonNull
@@ -117,17 +128,7 @@ public class PlaylistsFragment
     }
 
     public void reload() {
-        try {
-            LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
-        } catch (IllegalStateException e) {
-            Toast.makeText(getContext(), "Cannot reload playlists: " + e.getMessage(), Toast.LENGTH_LONG)
-                    .show();
-
-            // TODO Why do we get here sometime?
-            // E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-            // E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
-            // E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
-        }
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -137,7 +138,13 @@ public class PlaylistsFragment
             case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
             case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
             case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
-                reload();
+                // TODO Probably race condition here, where the notification is delivered before
+                //      the fragment is in an usable state (what does usable mean...?)
+                //      E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+                //      E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
+                //      E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
+                //      -> circumvent by delaying the reload
+                reloadNeeded = true;
                 break;
         }
     }
