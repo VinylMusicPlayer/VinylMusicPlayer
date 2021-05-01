@@ -3,7 +3,7 @@ package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
@@ -33,7 +33,6 @@ public class PlaylistsFragment
                 SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int LOADER_ID = LoaderIds.PLAYLISTS_FRAGMENT;
-    private boolean reloadNeeded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,16 +41,6 @@ public class PlaylistsFragment
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (reloadNeeded) {
-            reload();
-            Toast.makeText(getContext(), "Reloaded playlists", Toast.LENGTH_LONG).show();
-        }
     }
 
     @NonNull
@@ -139,12 +128,12 @@ public class PlaylistsFragment
             case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
             case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
                 // TODO Probably race condition here, where the notification is delivered before
-                //      the fragment is in an usable state (what does usable mean...?)
+                //      the fragment is ready (what does ready mean ...?)
                 //      E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
                 //      E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
                 //      E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
                 //      -> circumvent by delaying the reload
-                reloadNeeded = true;
+                new Handler().postDelayed(this::reload, 100);
                 break;
         }
     }
