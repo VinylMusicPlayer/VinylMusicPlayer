@@ -43,6 +43,12 @@ public class PlaylistsFragment
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
+    @Override
+    public void onDestroy() {
+        PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
+        super.onDestroy();
+    }
+
     @NonNull
     @Override
     protected LinearLayoutManager createLayoutManager() {
@@ -127,12 +133,12 @@ public class PlaylistsFragment
             case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
             case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
             case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
-                // TODO Probably race condition here, where the notification is delivered before
-                //      the fragment is ready (what does ready mean ...?)
-                //      E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-                //      E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
-                //      E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
-                //      -> circumvent by delaying the reload
+                // This event can be called when the fragment is is detached mode
+                // In such situation, cannot call the reload (i.e. crash)
+                //     E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+                //     E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
+                //     E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
+                // -> circumvent by delaying the reload
                 new Handler().postDelayed(this::reload, 100);
                 break;
         }
