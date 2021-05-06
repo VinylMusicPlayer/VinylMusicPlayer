@@ -47,6 +47,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     }
 
     @NonNull
+    @Override
     protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
         return new AbsOffsetSongAdapter.ViewHolder(binding);
     }

@@ -119,6 +119,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     }
 
     @NonNull
+    protected ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        return new ViewHolder(binding);
+    }
+
+    @NonNull
     protected ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
         return new ViewHolder(binding);
     }

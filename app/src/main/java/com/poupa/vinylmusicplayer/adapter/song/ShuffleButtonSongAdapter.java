@@ -12,6 +12,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -25,6 +26,12 @@ public class ShuffleButtonSongAdapter extends AbsOffsetSongAdapter {
 
     public ShuffleButtonSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
+    }
+
+    @NonNull
+    @Override
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        return new ShuffleButtonSongAdapter.ViewHolder(binding);
     }
 
     @NonNull
@@ -72,6 +79,9 @@ public class ShuffleButtonSongAdapter extends AbsOffsetSongAdapter {
     }
 
     public class ViewHolder extends AbsOffsetSongAdapter.ViewHolder {
+        public ViewHolder(@NonNull ItemListSingleRowBinding binding) {
+            super(binding);
+        }
 
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);
