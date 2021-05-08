@@ -1,8 +1,8 @@
 package com.poupa.vinylmusicplayer.util;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -167,11 +167,18 @@ public final class PreferenceUtil {
 
     @StyleRes
     public static int getThemeResFromPrefValue(String themePrefValue) {
+        final int uiMode = App.getInstance().getResources().getConfiguration().uiMode;
+        final boolean nightMode = (uiMode & Configuration.UI_MODE_NIGHT_YES) != 0;
+
         switch (themePrefValue) {
             case "dark":
                 return R.style.Theme_VinylMusicPlayer;
             case "black":
                 return R.style.Theme_VinylMusicPlayer_Black;
+            case "auto_light_dark":
+                return nightMode ? R.style.Theme_VinylMusicPlayer : R.style.Theme_VinylMusicPlayer_Light;
+            case "auto_light_black":
+                return nightMode ? R.style.Theme_VinylMusicPlayer_Black : R.style.Theme_VinylMusicPlayer_Light;
             case "light":
             default:
                 return R.style.Theme_VinylMusicPlayer_Light;
