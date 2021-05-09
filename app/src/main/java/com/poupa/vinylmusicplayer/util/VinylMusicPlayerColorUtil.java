@@ -1,8 +1,12 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.os.Build;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.palette.graphics.Palette;
 
@@ -66,5 +70,26 @@ public class VinylMusicPlayerColorUtil {
             backgroundColor = ColorUtil.darkenColor(backgroundColor);
         }
         return backgroundColor;
+    }
+
+    public static boolean isSystemThemeSupported() {
+        // Inspired from https://stackoverflow.com/questions/55787035/is-there-an-api-to-detect-which-theme-the-os-is-using-dark-or-light-or-other
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+            // OS theme not supported
+            return false;
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            // Not clear, might depend on wallpaper hinting
+            return true;
+        } else {
+            // Supported, use Configuration.uiMode
+            return true;
+        }
+    }
+
+    public static int getSystemNightMode(@NonNull final Context context) {
+        if (VinylMusicPlayerColorUtil.isSystemThemeSupported()) {
+            return context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        }
+        return Configuration.UI_MODE_NIGHT_UNDEFINED;
     }
 }

@@ -32,6 +32,12 @@ import java.util.regex.Pattern;
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
     public static final String GENERAL_THEME = "general_theme";
+    public static final String GENERAL_THEME_LIGHT = "light";
+    public static final String GENERAL_THEME_DARK = "dark";
+    public static final String GENERAL_THEME_BLACK = "black";
+    public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
+    public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
+
     public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     public static final String LAST_PAGE = "last_start_page";
     public static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
@@ -162,24 +168,23 @@ public final class PreferenceUtil {
 
     @StyleRes
     public int getGeneralTheme() {
-        return getThemeResFromPrefValue(mPreferences.getString(GENERAL_THEME, "light"));
+        return getThemeResFromPrefValue(mPreferences.getString(GENERAL_THEME, GENERAL_THEME_LIGHT));
     }
 
     @StyleRes
     public static int getThemeResFromPrefValue(String themePrefValue) {
-        final int uiMode = App.getInstance().getResources().getConfiguration().uiMode;
-        final boolean nightMode = (uiMode & Configuration.UI_MODE_NIGHT_YES) != 0;
+        final boolean isNightMode = (VinylMusicPlayerColorUtil.getSystemNightMode(App.getStaticContext()) == Configuration.UI_MODE_NIGHT_YES);
 
         switch (themePrefValue) {
-            case "dark":
+            case GENERAL_THEME_DARK:
                 return R.style.Theme_VinylMusicPlayer;
-            case "black":
+            case GENERAL_THEME_BLACK:
                 return R.style.Theme_VinylMusicPlayer_Black;
-            case "auto_light_dark":
-                return nightMode ? R.style.Theme_VinylMusicPlayer : R.style.Theme_VinylMusicPlayer_Light;
-            case "auto_light_black":
-                return nightMode ? R.style.Theme_VinylMusicPlayer_Black : R.style.Theme_VinylMusicPlayer_Light;
-            case "light":
+            case GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK:
+                return isNightMode ? R.style.Theme_VinylMusicPlayer : R.style.Theme_VinylMusicPlayer_Light;
+            case GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK:
+                return isNightMode ? R.style.Theme_VinylMusicPlayer_Black : R.style.Theme_VinylMusicPlayer_Light;
+            case GENERAL_THEME_LIGHT:
             default:
                 return R.style.Theme_VinylMusicPlayer_Light;
         }
