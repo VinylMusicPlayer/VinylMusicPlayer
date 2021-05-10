@@ -41,6 +41,7 @@ import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
@@ -187,16 +188,20 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 ArrayList<CharSequence> values = new ArrayList<>(Arrays.asList(listPref.getEntryValues()));
 
                 values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK);
-                entries.add(String.format(
-                        getContext().getString(R.string.follow_system_theme_name_X_or_Y),
-                        getContext().getString(R.string.light_theme_name),
-                        getContext().getString(R.string.dark_theme_name)));
+                entries.add(String.format("%s\n%s",
+                        getContext().getString(R.string.follow_system_theme_name),
+                        MusicUtil.buildInfoString(
+                                getContext().getString(R.string.light_theme_name),
+                                getContext().getString(R.string.dark_theme_name)
+                        )));
 
                 values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK);
-                entries.add(String.format(
-                        getContext().getString(R.string.follow_system_theme_name_X_or_Y),
-                        getContext().getString(R.string.light_theme_name),
-                        getContext().getString(R.string.black_theme_name)));
+                entries.add(String.format("%s\n%s",
+                        getContext().getString(R.string.follow_system_theme_name),
+                        MusicUtil.buildInfoString(
+                                getContext().getString(R.string.light_theme_name),
+                                getContext().getString(R.string.black_theme_name)
+                        )));
 
                 listPref.setEntries(entries.toArray(new CharSequence[0]));
                 listPref.setEntryValues(values.toArray(new CharSequence[0]));
