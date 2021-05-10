@@ -181,50 +181,54 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
         private void invalidateSettings() {
             final Preference generalTheme = findPreference(PreferenceUtil.GENERAL_THEME);
-            if (VinylMusicPlayerColorUtil.isSystemThemeSupported()) {
-                // Extend the list, to add choices to follow system theme
-                ListPreference listPref = (ListPreference) generalTheme;
-                ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(listPref.getEntries()));
-                ArrayList<CharSequence> values = new ArrayList<>(Arrays.asList(listPref.getEntryValues()));
+            if (generalTheme != null) {
+                final Context context = getContext();
+                if (context != null && VinylMusicPlayerColorUtil.isSystemThemeSupported()) {
+                    // Extend the list, to add choices to follow system theme
+                    ListPreference listPref = (ListPreference) generalTheme;
+                    ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(listPref.getEntries()));
+                    ArrayList<CharSequence> values = new ArrayList<>(Arrays.asList(listPref.getEntryValues()));
 
-                values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK);
-                entries.add(String.format("%s\n%s",
-                        getContext().getString(R.string.follow_system_theme_name),
-                        MusicUtil.buildInfoString(
-                                getContext().getString(R.string.light_theme_name),
-                                getContext().getString(R.string.dark_theme_name)
-                        )));
+                    values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK);
+                    entries.add(String.format("%s\n%s",
+                            context.getString(R.string.follow_system_theme_name),
+                            MusicUtil.buildInfoString(
+                                    context.getString(R.string.light_theme_name),
+                                    context.getString(R.string.dark_theme_name)
+                            )));
 
-                values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK);
-                entries.add(String.format("%s\n%s",
-                        getContext().getString(R.string.follow_system_theme_name),
-                        MusicUtil.buildInfoString(
-                                getContext().getString(R.string.light_theme_name),
-                                getContext().getString(R.string.black_theme_name)
-                        )));
+                    values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK);
+                    entries.add(String.format("%s\n%s",
+                            context.getString(R.string.follow_system_theme_name),
+                            MusicUtil.buildInfoString(
+                                    context.getString(R.string.light_theme_name),
+                                    context.getString(R.string.black_theme_name)
+                            )));
 
-                listPref.setEntries(entries.toArray(new CharSequence[0]));
-                listPref.setEntryValues(values.toArray(new CharSequence[0]));
+                    listPref.setEntries(entries.toArray(new CharSequence[0]));
+                    listPref.setEntryValues(values.toArray(new CharSequence[0]));
+                }
+
+                setSummary(generalTheme);
+                generalTheme.setOnPreferenceChangeListener((preference, o) -> {
+                    String themeName = (String) o;
+
+                    setSummary(generalTheme, o);
+
+                    if (getActivity() != null) {
+                        ThemeStore.markChanged(getActivity());
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                        // Set the new theme so that updateAppShortcuts can pull it
+                        getActivity().setTheme(PreferenceUtil.getThemeResFromPrefValue(themeName));
+                        new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
+                    }
+
+                    getActivity().recreate();
+                    return true;
+                });
             }
-            setSummary(generalTheme);
-            generalTheme.setOnPreferenceChangeListener((preference, o) -> {
-                String themeName = (String) o;
-
-                setSummary(generalTheme, o);
-
-                if (getActivity() != null) {
-                    ThemeStore.markChanged(getActivity());
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                    // Set the new theme so that updateAppShortcuts can pull it
-                    getActivity().setTheme(PreferenceUtil.getThemeResFromPrefValue(themeName));
-                    new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
-                }
-
-                getActivity().recreate();
-                return true;
-            });
 
             final Preference autoDownloadImagesPolicy = findPreference(PreferenceUtil.AUTO_DOWNLOAD_IMAGES_POLICY);
             setSummary(autoDownloadImagesPolicy);
