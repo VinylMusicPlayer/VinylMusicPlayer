@@ -196,6 +196,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onCreate() {
+        // TODO Debug only
+        final String message = "MusicService.onCreate";
+        Log.w("extended-sleep", message);
+
         super.onCreate();
         final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
@@ -266,6 +270,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent != null) {
+            // TODO Debug only
+            final String message = "MusicService.onStartCommand " + intent.getAction();
+            Log.w("extended-sleep", message);
+
             if (intent.getAction() != null) {
                 restoreQueuesAndPositionIfNecessary();
                 String action = intent.getAction();
@@ -333,6 +341,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onDestroy() {
+        // TODO Debug only
+        final String message = "MusicService.onDestroy";
+        Log.w("extended-sleep", message);
+
         unregisterReceiver(widgetIntentReceiver);
         unregisterReceiver(updateFavoriteReceiver);
         if (becomingNoisyReceiverRegistered) {
@@ -355,6 +367,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (intent != null && "android.media.browse.MediaBrowserService".equals(intent.getAction())) {
             return super.onBind(intent);
         }
+
+        // TODO Debug only
+        final String message = "MusicService.onBind";
+        Log.w("extended-sleep", message);
 
         return musicBind;
     }
@@ -428,13 +444,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private void releaseResources() {
         playerHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= 18) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             musicPlayerHandlerThread.quitSafely();
         } else {
             musicPlayerHandlerThread.quit();
         }
         queueSaveHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= 18) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             queueSaveHandlerThread.quitSafely();
         } else {
             queueSaveHandlerThread.quit();
@@ -1076,6 +1092,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void sendChangeInternal(final String what) {
+        // TODO Consider switching to LocalBroadcastManager
         sendBroadcast(new Intent(what));
         {
             // TODO For debug only

@@ -114,6 +114,10 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             filter.addAction(MusicService.FAVORITE_STATE_CHANGED);
 
             registerReceiver(musicStateReceiver, filter);
+            // TODO Context-registered receivers receive broadcasts as long as their registering context is valid.
+            // For an example, if you register within an Activity context, you receive broadcasts as
+            // long as the activity is not destroyed. If you register with the Application context,
+            // you receive broadcasts as long as the app is running.
 
             receiverRegistered = true;
         } else {
@@ -130,6 +134,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
     @Override
     public void onServiceDisconnected() {
         // TODO For debug only
+        // TODO This is not called!!!
         final String message = "Disconnected to MusicService from " + this.getComponentName();
         Log.w("extended-sleep", message);
 
