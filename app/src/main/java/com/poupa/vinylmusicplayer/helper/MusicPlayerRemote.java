@@ -75,6 +75,9 @@ public class MusicPlayerRemote {
         }
         mContextWrapper.unbindService(mBinder);
         if (mConnectionMap.isEmpty()) {
+            if (!musicService.isPlaying()) {
+                musicService.quit();
+            }
             musicService = null;
         }
     }
