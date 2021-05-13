@@ -1220,9 +1220,19 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT, null);
         }
 
-        // TODO Make use of the hints - https://developer.android.com/reference/androidx/media/utils/MediaConstants#constants_1
-        // BROWSER_ROOT_HINTS_KEY_MEDIA_ART_SIZE_PIXELS
-        // BROWSER_ROOT_HINTS_KEY_ROOT_CHILDREN_LIMIT
+        // System UI query (Android 11+)
+        // By returning null, we explicitly dont want to support content discovery/suggestions
+        if ((rootHints != null) && (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q)) {
+            if (rootHints.getBoolean(BrowserRoot.EXTRA_RECENT)) {
+                return null;
+            } else if (rootHints.getBoolean(BrowserRoot.EXTRA_SUGGESTED)) {
+                return null;
+            } else if (rootHints.getBoolean(BrowserRoot.EXTRA_OFFLINE)) {
+                return null;
+            }
+        }
+
+        // TODO Limit to Android Auto
         return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_ROOT, null);
     }
 
