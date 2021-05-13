@@ -1216,8 +1216,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
         // Check origin to ensure we're not allowing any arbitrary app to browse app contents
         if (!mPackageValidator.isKnownCaller(clientPackageName, clientUid)) {
-            // Request from an untrusted package: return an empty browser root
-            return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT, null);
+            return null;
         }
 
         // System UI query (Android 11+)
@@ -1238,11 +1237,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onLoadChildren(@NonNull final String parentId, @NonNull final Result<List<MediaBrowserCompat.MediaItem>> result) {
-        if (AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT.equals(parentId)) {
-            result.sendResult(new ArrayList<>());
-        } else {
-            result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
-        }
+        result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
     }
 
     public Playback getPlayback() {

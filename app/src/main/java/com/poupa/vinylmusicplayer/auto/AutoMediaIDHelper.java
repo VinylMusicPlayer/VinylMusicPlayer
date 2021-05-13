@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 public class AutoMediaIDHelper {
 
     // Media IDs used on browseable items of MediaBrowser
-    public static final String MEDIA_ID_EMPTY_ROOT = "__EMPTY_ROOT__";
     public static final String MEDIA_ID_ROOT = "__ROOT__";
     public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";  // TODO
     public static final String MEDIA_ID_MUSICS_BY_LAST_ADDED = "__BY_LAST_ADDED__";
