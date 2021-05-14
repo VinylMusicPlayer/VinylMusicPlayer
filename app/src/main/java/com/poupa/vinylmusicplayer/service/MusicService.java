@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Predicate;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.bumptech.glide.request.transition.Transition;
@@ -1220,15 +1221,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         // System UI query (Android 11+)
-        // By returning null, we explicitly dont want to support content discovery/suggestions
-        if ((rootHints != null) && (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q)) {
-            if (rootHints.getBoolean(BrowserRoot.EXTRA_RECENT)) {
-                return null;
-            } else if (rootHints.getBoolean(BrowserRoot.EXTRA_SUGGESTED)) {
-                return null;
-            } else if (rootHints.getBoolean(BrowserRoot.EXTRA_OFFLINE)) {
-                return null;
-            }
+        Predicate<Bundle> isSystemMediaQuery = (hints) -> {
+            if (hints == null) {return false;}
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {return false;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_RECENT)) {return true;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_SUGGESTED)) {return true;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_OFFLINE)) {return true;}
+            return false;
+        };
+        if (isSystemMediaQuery.test(rootHints)) {
+            // By returning null, we explicitly disable support for content discovery/suggestions
+            return null;
         }
 
         // TODO Limit to Android Auto
