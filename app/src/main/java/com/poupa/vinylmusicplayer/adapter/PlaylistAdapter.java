@@ -32,6 +32,7 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -116,7 +117,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             }
         } else {
             if (holder.shortSeparator != null && !(dataSet.get(position) instanceof AbsSmartPlaylist)) {
-                holder.shortSeparator.setVisibility(View.VISIBLE);
+                holder.shortSeparator.setVisibility(ThemeStyleUtil.getInstance().getShortSeparatorVisibilityState());
             }
         }
 
@@ -235,11 +236,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     shortSeparator.setVisibility(View.GONE);
                 }
                 View itemView = binding.getRoot();
-                itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
-                imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
-                }
+		imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));	
+                ThemeStyleUtil.getInstance().setPlaylistCardItemStyle(itemView, activity);
             }
 
             if (image != null) {

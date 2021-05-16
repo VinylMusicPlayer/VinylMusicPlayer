@@ -339,4 +339,7 @@
     <string name="reset_discography">Réanalyser la bibliothèque</string>
     <string name="track_number">Numéro de piste</string>
     <string name="disc_number">Numéro de disque</string>
+    <string name="rounded_theme_style_name">Arrondi</string>
+    <string name="classic_theme_style_name">Classique</string>
+    <string name="pref_title_theme_style">Thème style</string>
 </resources>

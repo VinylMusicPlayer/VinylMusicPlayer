@@ -104,6 +104,10 @@ public final class PreferenceUtil {
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
+    public static final String THEME_STYLE = "theme_style";
+    public static final int CLASSIC_THEME = 1;
+    public static final int ROUNDED_THEME = 2;
+
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
@@ -669,6 +673,26 @@ public final class PreferenceUtil {
         defaultCategoryInfos.add(new CategoryInfo(CategoryInfo.Category.GENRES, true));
         defaultCategoryInfos.add(new CategoryInfo(CategoryInfo.Category.PLAYLISTS, true));
         return defaultCategoryInfos;
+    }
+
+    public final int getThemeStyle() {
+        return getThemeStyleFromPrefValue(mPreferences.getString(THEME_STYLE, "classic"));
+    }
+
+    public static int getThemeStyleFromPrefValue(String themeStylePrefValue) {
+        int theme;
+
+        switch (themeStylePrefValue) {
+            case "rounded":
+                theme = ROUNDED_THEME;
+                break;
+            case "classic":
+            default:
+                theme = CLASSIC_THEME;
+                break;
+        }
+
+        return theme;
     }
 
     public byte getReplayGainSourceMode() {

@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter;
 
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.SubHeaderBinding;
+import com.poupa.vinylmusicplayer.databinding.SubHeaderMaterialBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -22,7 +22,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.ui.activities.AlbumDetailActivity;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
@@ -66,8 +66,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(activity);
         if (viewType == HEADER) {
-            SubHeaderBinding binding = SubHeaderBinding.inflate(inflater, parent, false);
-            return new ViewHolder(binding);
+            return ThemeStyleUtil.getInstance().HeaderViewHolder(this, inflater, parent, false);
         }
         ItemListBinding binding = ItemListBinding.inflate(inflater, parent, false);
         return new ViewHolder(binding, viewType);
@@ -103,11 +102,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 final Song song = (Song) dataSet.get(position);
                 holder.title.setText(song.title);
                 holder.text.setText(MusicUtil.getSongInfoString(song));
+                GlideApp.with(activity)
+                        .asBitmap()
+                        .load(VinylGlideExtension.getSongModel(song))
+                        .transition(VinylGlideExtension.getDefaultTransition())
+                        .songOptions(song)
+                        .into(holder.image);
 
-                PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, false);
+                PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, ThemeStyleUtil.getInstance().showSongAlbumArt());
                 break;
             default:
-                holder.title.setText(dataSet.get(position).toString());
+                ThemeStyleUtil.getInstance().setHeaderText(holder, activity, dataSet.get(position).toString());
                 break;
         }
     }
@@ -123,16 +128,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             binding.getRoot().setOnLongClickListener(null);
         }
 
+        public ViewHolder(@NonNull SubHeaderMaterialBinding binding) {
+            super(binding);
+            binding.getRoot().setOnLongClickListener(null);
+        }
+
         public ViewHolder(@NonNull ItemListBinding binding, int itemViewType) {
             super(binding);
 
             View itemView = binding.getRoot();
             itemView.setOnLongClickListener(null);
 
-            itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
-            }
+            ThemeStyleUtil.getInstance().setSearchCardItemStyle(itemView, activity);
+
             if (shortSeparator != null) {
                 shortSeparator.setVisibility(View.GONE);
             }
