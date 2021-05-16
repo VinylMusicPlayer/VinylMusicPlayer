@@ -62,4 +62,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="app_widget_card_buttons_width">128dp</dimen>
     <dimen name="app_widget_card_radius">2dp</dimen>
 
+    <dimen name="album_corner_radius">8dp</dimen>
+    <dimen name="artist_corner_radius">80dp</dimen>
+
 </resources>

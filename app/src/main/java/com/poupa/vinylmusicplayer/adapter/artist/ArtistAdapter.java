@@ -204,12 +204,14 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
         public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
+            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.artist_corner_radius));
             menu.setVisibility(View.GONE);
         }
 
         public ViewHolder(@NonNull final ItemGridBinding binding) {
             super(binding);
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
+            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
         }
 
         @Override

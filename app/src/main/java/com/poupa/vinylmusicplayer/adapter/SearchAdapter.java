@@ -22,6 +22,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.AlbumDetailActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
@@ -153,11 +154,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             switch (itemViewType) {
                 case ALBUM:
                     setImageTransitionName(activity.getString(R.string.transition_album_art));
+                    imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
                     break;
                 case ARTIST:
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
+                    imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.artist_corner_radius));
                     break;
                 case SONG:
+                    imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
                     break;
             }
         }

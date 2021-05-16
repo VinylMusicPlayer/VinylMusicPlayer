@@ -76,6 +76,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     private Album album;
 
     ObservableRecyclerView recyclerView;
+    com.google.android.material.card.MaterialCardView albumBorderTheme;
     ImageView albumArtImageView;
     Toolbar toolbar;
     View headerView;
@@ -125,6 +126,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
                 true);
 
         recyclerView = binding.list;
+        albumBorderTheme = binding.imageBorderTheme;
         albumArtImageView = binding.image;
         toolbar = binding.toolbar;
         headerView = binding.header;
@@ -155,7 +157,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
             // Translate name text
             headerView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
             headerOverlay.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            albumArtImageView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
+            albumBorderTheme.setTranslationY(Math.max(-scrollY, -headerViewHeight));
         }
     };
 
@@ -187,6 +189,8 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
                         setColors(color);
                     }
                 });
+
+        albumBorderTheme.setRadius(AlbumDetailActivity.this.getResources().getDimension(R.dimen.album_corner_radius));
     }
 
     private void setColors(int color) {

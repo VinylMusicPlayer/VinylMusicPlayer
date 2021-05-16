@@ -74,6 +74,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
     ObservableListView songListView;
+    com.google.android.material.card.MaterialCardView artistBorderTheme;
     ImageView artistImage;
     Toolbar toolbar;
     View headerView;
@@ -116,7 +117,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
             // Translate name text
             headerView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
             headerOverlay.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            artistImage.setTranslationY(Math.max(-scrollY, -headerViewHeight));
+            artistBorderTheme.setTranslationY(Math.max(-scrollY, -headerViewHeight));
         }
     };
 
@@ -145,6 +146,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                 true);
 
         songListView = binding.list;
+        artistBorderTheme = binding.imageBorderTheme;
         artistImage = binding.image;
         toolbar = binding.toolbar;
         headerView = binding.header;
@@ -276,6 +278,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                     }
                 });
         forceDownload = false;
+        artistBorderTheme.setRadius(ArtistDetailActivity.this.getResources().getDimension(R.dimen.album_corner_radius));
     }
 
     @Override

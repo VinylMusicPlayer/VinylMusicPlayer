@@ -236,6 +236,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
+            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
             setupMenuHandlers();
         }
 
@@ -243,6 +244,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
+            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
         }
 
         private void setupMenuHandlers() {

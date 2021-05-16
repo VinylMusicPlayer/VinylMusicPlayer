@@ -479,6 +479,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             currentSongViewHolder.image.setScaleType(ImageView.ScaleType.CENTER);
             currentSongViewHolder.image.setColorFilter(ATHUtil.resolveColor(fragment.getActivity(), R.attr.iconColor, ThemeStore.textColorSecondary(fragment.getActivity())), PorterDuff.Mode.SRC_IN);
             currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.sIconPlaying);
+            currentSongViewHolder.imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(fragment.getActivity(), R.attr.cardBackgroundColor));
             currentSongViewHolder.itemView.setOnClickListener(v -> {
                 // toggle the panel
                 if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {

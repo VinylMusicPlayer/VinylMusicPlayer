@@ -77,6 +77,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         final TextView songTitle = convertView.findViewById(R.id.title);
         final TextView songInfo = convertView.findViewById(R.id.text);
         final ImageView albumArt = convertView.findViewById(R.id.image);
+        final com.google.android.material.card.MaterialCardView imageBorderTheme = convertView.findViewById(R.id.imageBorderTheme);
         final View shortSeparator = convertView.findViewById(R.id.short_separator);
 
         if (shortSeparator != null) {
@@ -100,6 +101,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             albumArt.setTransitionName(activity.getString(R.string.transition_album_art));
         }
+        imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
 
         final ImageView overflowButton = convertView.findViewById(R.id.menu);
         overflowButton.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {

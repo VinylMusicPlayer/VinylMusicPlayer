@@ -236,6 +236,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                 }
                 View itemView = binding.getRoot();
                 itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+                imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
                 }

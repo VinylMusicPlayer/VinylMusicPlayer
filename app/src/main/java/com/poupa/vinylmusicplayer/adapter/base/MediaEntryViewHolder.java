@@ -26,6 +26,9 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     public FrameLayout dummyContainer;
 
     @Nullable
+    public com.google.android.material.card.MaterialCardView imageBorderTheme;
+
+    @Nullable
     public ImageView image;
 
     @Nullable
@@ -59,6 +62,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = binding.imageText;
         title = binding.title;
@@ -79,6 +83,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = null;
         title = binding.title;
@@ -99,6 +104,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = null;
         image = binding.image;
         imageText = null;
         title = binding.title;
@@ -119,6 +125,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = null;
+        imageBorderTheme = null;
         image = null;
         imageText = null;
         title = binding.title;
@@ -139,6 +146,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = binding.imageText;
         title = binding.title;
@@ -159,6 +167,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = null;
         image = null;
         imageText = null;
         title = binding.title;
