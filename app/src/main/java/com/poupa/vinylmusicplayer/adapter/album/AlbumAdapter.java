@@ -227,15 +227,19 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
+
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+
             setImageTransitionName(activity.getString(R.string.transition_album_art));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
             menu.setVisibility(View.GONE);
         }
 
         public ViewHolder(@NonNull final ItemGridBinding binding) {
             super(binding);
             setImageTransitionName(activity.getString(R.string.transition_album_art));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
         }
 
         public ViewHolder(@NonNull final ItemGridCardHorizontalBinding binding) {

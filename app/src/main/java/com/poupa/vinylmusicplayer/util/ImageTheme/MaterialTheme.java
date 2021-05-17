@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.util.ImageTheme;
 
+import android.app.Activity;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
@@ -20,6 +22,21 @@ class MaterialTheme implements ThemeStyle {
 
     public boolean showSongAlbumArt() {
         return true;
+    }
+
+    public float getAlbumRadiusImage(Activity activity) {
+        return activity.getResources().getDimension(R.dimen.album_corner_radius);
+    }
+
+    public float getArtistRadiusImage(Activity activity) {
+        return activity.getResources().getDimension(R.dimen.artist_corner_radius);
+    }
+
+    public void setHeightListItem(View itemView, float density) {
+        int padding_in_dp = 64;  // 64 dps
+        int padding_in_px = (int) (padding_in_dp * density + 0.5f);
+
+        itemView.getLayoutParams().height = padding_in_px;
     }
 
     public void setHeaderPadding(RecyclerView recyclerView, float density) {
@@ -42,6 +59,12 @@ class MaterialTheme implements ThemeStyle {
 
     public void setPlaylistCardItemStyle(View itemView, AppCompatActivity activity) {
         itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+    }
+
+    public void setDragView(AppCompatImageView dragView) {
+        ((AppCompatImageView)dragView).setImageResource(R.drawable.ic_drag_vertical_material_white_24dp);
+        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) dragView.getLayoutParams();
+        p.leftMargin = 0;
     }
 
     public SearchAdapter.ViewHolder HeaderViewHolder(SearchAdapter adapter, LayoutInflater inflater, @NonNull ViewGroup parent, boolean attachToParent) {

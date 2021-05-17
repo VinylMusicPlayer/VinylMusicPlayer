@@ -236,7 +236,6 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     shortSeparator.setVisibility(View.GONE);
                 }
                 View itemView = binding.getRoot();
-		imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));	
                 ThemeStyleUtil.getInstance().setPlaylistCardItemStyle(itemView, activity);
             }
 

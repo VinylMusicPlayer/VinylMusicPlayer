@@ -234,8 +234,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);
 
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+
             setImageTransitionName(activity.getString(R.string.transition_album_art));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
             setupMenuHandlers();
         }
 
@@ -243,7 +246,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
         }
 
         private void setupMenuHandlers() {

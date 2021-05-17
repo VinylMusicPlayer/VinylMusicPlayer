@@ -106,7 +106,8 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             albumArt.setTransitionName(activity.getString(R.string.transition_album_art));
         }
-        imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
+        ThemeStyleUtil.getInstance().setHeightListItem(convertView, activity.getResources().getDisplayMetrics().density);
+        imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
 
         final ImageView overflowButton = convertView.findViewById(R.id.menu);
         overflowButton.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {

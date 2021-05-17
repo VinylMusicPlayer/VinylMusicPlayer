@@ -49,7 +49,7 @@
                     android:layout_gravity="center"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="?android:windowBackground"
+                    app:cardBackgroundColor="@color/transparent"
                     android:scaleType="centerCrop"
                     tools:ignore="ContentDescription" >
 

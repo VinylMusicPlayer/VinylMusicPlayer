@@ -51,6 +51,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -278,7 +279,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                     }
                 });
         forceDownload = false;
-        artistBorderTheme.setRadius(ArtistDetailActivity.this.getResources().getDimension(R.dimen.album_corner_radius));
+        artistBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(ArtistDetailActivity.this));
     }
 
     @Override

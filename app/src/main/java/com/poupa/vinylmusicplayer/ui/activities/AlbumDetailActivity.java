@@ -51,6 +51,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AlbumTagEditorActivity;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -190,7 +191,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
                     }
                 });
 
-        albumBorderTheme.setRadius(AlbumDetailActivity.this.getResources().getDimension(R.dimen.album_corner_radius));
+        albumBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(AlbumDetailActivity.this));
     }
 
     private void setColors(int color) {

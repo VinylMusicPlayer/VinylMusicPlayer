@@ -184,7 +184,6 @@ public class PlayingQueueAdapter extends SongAdapter
     @Override
     public void onSetSwipeBackground(ViewHolder holder, int i, int i1) {
         holder.itemView.setBackgroundColor(getBackgroundColor(activity));
-        holder.imageBorderTheme.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
         holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
     }
 

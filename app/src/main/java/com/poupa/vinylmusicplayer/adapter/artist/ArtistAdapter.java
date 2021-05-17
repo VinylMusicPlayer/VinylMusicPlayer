@@ -204,15 +204,19 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
+
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.artist_corner_radius));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getArtistRadiusImage(activity));
             menu.setVisibility(View.GONE);
         }
 
         public ViewHolder(@NonNull final ItemGridBinding binding) {
             super(binding);
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
-            imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
         }
 
         @Override

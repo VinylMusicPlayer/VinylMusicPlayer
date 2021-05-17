@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -139,6 +140,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             View itemView = binding.getRoot();
             itemView.setOnLongClickListener(null);
 
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
             ThemeStyleUtil.getInstance().setSearchCardItemStyle(itemView, activity);
 
             if (shortSeparator != null) {
@@ -153,6 +155,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                         public Song getSong() {
                             return (Song) dataSet.get(getAdapterPosition());
                         }
+
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            return onSongMenuItemClick(item, getSong().albumId) || super.onMenuItemClick(item);
+                        }
                     });
                 } else {
                     menu.setVisibility(View.GONE);
@@ -161,17 +168,26 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
             switch (itemViewType) {
                 case ALBUM:
+                case SONG:
                     setImageTransitionName(activity.getString(R.string.transition_album_art));
-                    imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.album_corner_radius));
+                    imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
                     break;
                 case ARTIST:
                     setImageTransitionName(activity.getString(R.string.transition_artist_image));
-                    imageBorderTheme.setRadius(activity.getResources().getDimension(R.dimen.artist_corner_radius));
-                    break;
-                case SONG:
-                    imageBorderTheme.setCardBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+                    imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getArtistRadiusImage(activity));
                     break;
             }
+        }
+
+        protected boolean onSongMenuItemClick(MenuItem item, long albumId) {
+            if ((image != null) && (image.getVisibility() == View.VISIBLE) && (item.getItemId() == R.id.action_go_to_album)) {
+                Pair[] albumPairs = new Pair[]{
+                        Pair.create(image, activity.getResources().getString(R.string.transition_album_art))
+                };
+                NavigationUtil.goToAlbum(activity, albumId, albumPairs);
+                return true;
+            }
+            return false;
         }
 
         @Override

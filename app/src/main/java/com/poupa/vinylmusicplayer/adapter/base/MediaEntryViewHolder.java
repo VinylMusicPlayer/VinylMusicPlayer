@@ -105,7 +105,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
-        imageBorderTheme = null;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = null;
         title = binding.title;
