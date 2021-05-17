@@ -70,7 +70,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
         // TODO For debug only
         final String message = String.format(
-                "AbsMusicServiceActivity@%s.onDestroy activity=%s receiverRegistered=%s",
+                "AbsMusicServiceActivity@%s.onDestroy activity=@%s receiverRegistered=%s",
                 Integer.toHexString(System.identityHashCode(this)),
                 Integer.toHexString(System.identityHashCode(boundActivity)),
                 receiverRegistered
@@ -93,14 +93,15 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
     @Override
     public void onServiceConnected() {
-        // TODO For debug only
-        final String message = String.format(
-                "AbsMusicServiceActivity@%s.onServiceConnected receiverRegistered=%s",
-                Integer.toHexString(System.identityHashCode(this)),
-                receiverRegistered
-        );
-        Log.w("extended-sleep", message);
-
+        {
+            // TODO For debug only
+            final String message = String.format(
+                    "AbsMusicServiceActivity@%s.onServiceConnected receiverRegistered=%s",
+                    Integer.toHexString(System.identityHashCode(this)),
+                    receiverRegistered
+            );
+            Log.w("extended-sleep", message);
+        }
         if (!receiverRegistered) {
             musicStateReceiver = new MusicStateReceiver(this);
 
@@ -130,14 +131,15 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
     @Override
     public void onServiceDisconnected() {
         // TODO This is not called!!!
-        // TODO For debug only
-        final String message = String.format(
-                "AbsMusicServiceActivity@%s.onServiceDisconnected receiverRegisteredd=%s",
-                Integer.toHexString(System.identityHashCode(this)),
-                receiverRegistered
-        );
-        Log.w("extended-sleep", message);
-
+        {
+            // TODO For debug only
+            final String message = String.format(
+                    "AbsMusicServiceActivity@%s.onServiceDisconnected receiverRegisteredd=%s",
+                    Integer.toHexString(System.identityHashCode(this)),
+                    receiverRegistered
+            );
+            Log.w("extended-sleep", message);
+        }
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);
             receiverRegistered = false;
@@ -205,7 +207,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
             // TODO For debug only
             final String message = String.format(
-                    "AbsMusicServiceActivity@%s.onReceive context=%s action=%s destinationActivity=%s@%s",
+                    "AbsMusicServiceActivity@%s.onReceive context=@%s action=%s destinationActivity=%s@%s",
                     Integer.toHexString(System.identityHashCode(this)),
                     Integer.toHexString(System.identityHashCode(context)),
                     action,

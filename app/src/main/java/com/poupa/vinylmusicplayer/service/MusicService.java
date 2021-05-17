@@ -1112,7 +1112,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         // TODO For debug only
         final String message = String.format(
-                "MusicService@%s.sendChangeInternal @%s",
+                "MusicService@%s.sendChangeInternal %s",
                 Integer.toHexString(System.identityHashCode(this)),
                 what
         );
