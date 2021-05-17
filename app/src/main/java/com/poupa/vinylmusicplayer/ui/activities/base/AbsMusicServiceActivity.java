@@ -53,13 +53,12 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         });
 
         // TODO For debug only
-        if (boundActivity == null) {
-            final String message = "Bind failed to MusicService from " + this.getComponentName();
-            Log.e("extended-sleep", message);
-        } else {
-            final String message = "Bind success to MusicService from " + this.getComponentName();
-            Log.w("extended-sleep", message);
-        }
+        final String message = String.format(
+                "AbsMusicServiceActivity@%s.onCreate: %s",
+                Integer.toHexString(System.identityHashCode(this)),
+                Integer.toHexString(System.identityHashCode(boundActivity))
+        );
+        Log.w("extended-sleep", message);
 
         setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied));
     }
@@ -69,15 +68,14 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         super.onDestroy();
 
         // TODO For debug only
-        if (boundActivity == null) {
-            final String message = "Unbind failed to MusicService from " + this.getComponentName();
-            Log.e("extended-sleep", message);
-        } else {
-            MusicPlayerRemote.unbindFromService(boundActivity);
+        final String message = String.format(
+                "AbsMusicServiceActivity@%s.onDestroy: %s",
+                Integer.toHexString(System.identityHashCode(this)),
+                Integer.toHexString(System.identityHashCode(boundActivity))
+        );
+        Log.w("extended-sleep", message);
 
-            final String message = "Unbind success to MusicService from " + this.getComponentName();
-            Log.w("extended-sleep", message);
-        }
+        MusicPlayerRemote.unbindFromService(boundActivity);
 
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);
@@ -95,11 +93,13 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
     @Override
     public void onServiceConnected() {
-        {
-            // TODO For debug only
-            final String message = "Connected to MusicService from " + this.getComponentName();
-            Log.w("extended-sleep", message);
-        }
+        // TODO For debug only
+        final String message = String.format(
+                "AbsMusicServiceActivity@%s.onServiceConnected: already registered=%s",
+                Integer.toHexString(System.identityHashCode(this)),
+                receiverRegistered
+        );
+        Log.w("extended-sleep", message);
 
         if (!receiverRegistered) {
             musicStateReceiver = new MusicStateReceiver(this);
@@ -120,10 +120,6 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             // you receive broadcasts as long as the app is running.
 
             receiverRegistered = true;
-        } else {
-            // TODO For debug only
-            final String message = "Connected to MusicService but intent receiver not reinstalled";
-            Log.e("extended-sleep", message);
         }
 
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
@@ -133,10 +129,13 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
     @Override
     public void onServiceDisconnected() {
-        // TODO For debug only
         // TODO This is not called!!!
-        final String message = "Disconnected to MusicService from " + this.getComponentName();
-        Log.w("extended-sleep", message);
+        // TODO For debug only
+        final String message = String.format(
+                "AbsMusicServiceActivity@%s.onServiceDisconnected: already registered=%s",
+                Integer.toHexString(System.identityHashCode(this)),
+                receiverRegistered
+        );
 
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);
@@ -164,10 +163,6 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
     @Override
     public void onPlayStateChanged() {
-        // TODO For debug only
-        final String message = "Received onPlayStateChanged from MusicService on " + this.getComponentName();
-        Log.w("extended-sleep", message);
-
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {
             listener.onPlayStateChanged();
         }
@@ -206,11 +201,15 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         public void onReceive(final Context context, @NonNull final Intent intent) {
             final String action = intent.getAction();
             AbsMusicServiceActivity activity = reference.get();
-            {
-                // TODO For debug only
-                final String message = "Received event '%s' from MusicService, about to propagate '%s'";
-                Log.w("extended-sleep", String.format(message, action, activity));
-            }
+
+            // TODO For debug only
+            final String message = String.format(
+                    "AbsMusicServiceActivity@%s.onReceive: context=%s action=%s destinationActivity=%s@%s",
+                    Integer.toHexString(System.identityHashCode(context)),
+                    action,
+                    activity,
+                    Integer.toHexString(System.identityHashCode(activity))
+            );
             if (activity != null) {
                 switch (action) {
                     case MusicService.FAVORITE_STATE_CHANGED:

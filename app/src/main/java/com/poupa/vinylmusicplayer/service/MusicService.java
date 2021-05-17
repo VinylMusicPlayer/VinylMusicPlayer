@@ -197,7 +197,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onCreate() {
         // TODO Debug only
-        final String message = "MusicService.onCreate";
+        final String message = String.format(
+                "MusicService@%s.onCreate",
+                Integer.toHexString(System.identityHashCode(this))
+        );
         Log.w("extended-sleep", message);
 
         super.onCreate();
@@ -271,7 +274,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent != null) {
             // TODO Debug only
-            final String message = "MusicService.onStartCommand " + intent.getAction();
+            final String message = String.format(
+                    "MusicService@%s.onStartCommand %s",
+                    Integer.toHexString(System.identityHashCode(this)),
+                    intent.getAction()
+            );
             Log.w("extended-sleep", message);
 
             if (intent.getAction() != null) {
@@ -342,7 +349,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onDestroy() {
         // TODO Debug only
-        final String message = "MusicService.onDestroy";
+        final String message = String.format(
+                "MusicService@%s.onDestroy",
+                Integer.toHexString(System.identityHashCode(this))
+        );
         Log.w("extended-sleep", message);
 
         unregisterReceiver(widgetIntentReceiver);
@@ -369,9 +379,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         // TODO Debug only
-        final String message = "MusicService.onBind";
+        final String message = String.format(
+                "MusicService@%s.onBind returned=@%s",
+                Integer.toHexString(System.identityHashCode(this)),
+                Integer.toHexString(System.identityHashCode(((MusicBinder) musicBind).getService()))
+        );
         Log.w("extended-sleep", message);
 
+        // TODO Do we need to refresh and return a new MusicBinder object?
         return musicBind;
     }
 
@@ -1094,11 +1109,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private void sendChangeInternal(final String what) {
         // TODO Consider switching to LocalBroadcastManager
         sendBroadcast(new Intent(what));
-        {
-            // TODO For debug only
-            final String message = "Broadcasted from MusicService: " + what;
-            Log.w("extended-sleep", message);
-        }
+
+        // TODO For debug only
+        final String message = String.format(
+                "MusicService@%s.sendChangeInternal @%s",
+                Integer.toHexString(System.identityHashCode(this)),
+                what
+        );
+        Log.w("extended-sleep", message);
 
         appWidgetBig.notifyChange(this, what);
         appWidgetClassic.notifyChange(this, what);

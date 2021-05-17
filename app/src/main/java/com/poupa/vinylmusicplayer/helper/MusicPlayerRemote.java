@@ -71,6 +71,14 @@ public class MusicPlayerRemote {
         }
         final ServiceBinder mBinder = mConnectionMap.remove(activity);
         if (mBinder == null) {
+            // TODO For debug only
+            final String message = String.format(
+                    "MusicPlayerRemote.unbindFromService: Unknown activity=%s@%s",
+                    activity,
+                    Integer.toHexString(System.identityHashCode(activity))
+            );
+            Log.e("extended-sleep", message);
+
             return;
         }
         activity.unbindService(mBinder);
