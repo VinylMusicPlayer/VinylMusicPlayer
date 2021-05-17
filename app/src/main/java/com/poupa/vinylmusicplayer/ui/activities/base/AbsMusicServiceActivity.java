@@ -205,6 +205,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             // TODO For debug only
             final String message = String.format(
                     "AbsMusicServiceActivity@%s.onReceive: context=%s action=%s destinationActivity=%s@%s",
+                    Integer.toHexString(System.identityHashCode(this)),
                     Integer.toHexString(System.identityHashCode(context)),
                     action,
                     activity,
