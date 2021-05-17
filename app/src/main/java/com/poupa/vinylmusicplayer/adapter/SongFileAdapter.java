@@ -170,6 +170,10 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);
 
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+
             if (menu != null && callbacks != null) {
                 menu.setOnClickListener(v -> {
                     int position = getAdapterPosition();
