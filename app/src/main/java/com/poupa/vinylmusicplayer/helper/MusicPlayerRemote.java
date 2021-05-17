@@ -73,7 +73,7 @@ public class MusicPlayerRemote {
         if (mBinder == null) {
             // TODO For debug only
             final String message = String.format(
-                    "MusicPlayerRemote.unbindFromService: Unknown activity=%s@%s",
+                    "MusicPlayerRemote.unbindFromService Unknown activity=%s@%s",
                     activity,
                     Integer.toHexString(System.identityHashCode(activity))
             );
