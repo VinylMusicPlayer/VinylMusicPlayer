@@ -114,12 +114,22 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             filter.addAction(MusicService.MEDIA_STORE_CHANGED);
             filter.addAction(MusicService.FAVORITE_STATE_CHANGED);
 
-            registerReceiver(musicStateReceiver, filter);
             // TODO Context-registered receivers receive broadcasts as long as their registering context is valid.
             // For an example, if you register within an Activity context, you receive broadcasts as
             // long as the activity is not destroyed. If you register with the Application context,
             // you receive broadcasts as long as the app is running.
+            if (boundActivity != null) {
+                boundActivity.registerReceiver(musicStateReceiver, filter);
+            } else {
+                // TODO For debug only
+                final String message = String.format(
+                        "AbsMusicServiceActivity@%s.onServiceConnected FALLBACK ",
+                        Integer.toHexString(System.identityHashCode(this))
+                );
+                Log.e("extended-sleep", message);
 
+                registerReceiver(musicStateReceiver, filter);
+            }
             receiverRegistered = true;
         }
 
@@ -141,7 +151,18 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             Log.w("extended-sleep", message);
         }
         if (receiverRegistered) {
-            unregisterReceiver(musicStateReceiver);
+            if (boundActivity != null) {
+                boundActivity.unregisterReceiver(musicStateReceiver);
+            } else {
+                // TODO For debug only
+                final String message = String.format(
+                        "AbsMusicServiceActivity@%s.onServiceDisconnected FALLBACK ",
+                        Integer.toHexString(System.identityHashCode(this))
+                );
+                Log.e("extended-sleep", message);
+
+                unregisterReceiver(musicStateReceiver);
+            }
             receiverRegistered = false;
         }
 
