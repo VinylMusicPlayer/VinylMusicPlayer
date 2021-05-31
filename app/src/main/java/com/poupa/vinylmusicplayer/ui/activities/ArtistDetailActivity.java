@@ -231,7 +231,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                     @Override
                     public void onResponse(@NonNull Call<LastFmArtist> call, @NonNull Response<LastFmArtist> response) {
                         final LastFmArtist lastFmArtist = response.body();
-                        if (lastFmArtist != null && lastFmArtist.getArtist() != null) {
+                        if (lastFmArtist != null && lastFmArtist.getArtist() != null && lastFmArtist.getArtist().getBio() != null) {
                             final String bioContent = lastFmArtist.getArtist().getBio().getContent();
                             if (bioContent != null && !bioContent.trim().isEmpty()) {
                                 biography = Html.fromHtml(bioContent);
