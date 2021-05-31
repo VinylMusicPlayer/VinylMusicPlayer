@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Predicate;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.bumptech.glide.request.transition.Transition;
@@ -759,7 +760,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void removeSong(@NonNull Song song) {
+    private void removeSongImpl(@NonNull Song song) {
         for (int i = playingQueue.size() - 1; i >= 0; i--) {
             if (playingQueue.get(i).id == song.id) {
                 playingQueue.remove(i);
@@ -770,6 +771,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (originalPlayingQueue.get(i).id == song.id) {
                 originalPlayingQueue.remove(i);
             }
+        }
+    }
+
+    public void removeSong(@NonNull Song song) {
+        removeSongImpl(song);
+        notifyChange(QUEUE_CHANGED);
+    }
+
+    public void removeSongs(@NonNull List<Song> songs) {
+        for (Song song : songs) {
+            removeSongImpl(song);
         }
         notifyChange(QUEUE_CHANGED);
     }
@@ -1216,23 +1228,30 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
         // Check origin to ensure we're not allowing any arbitrary app to browse app contents
         if (!mPackageValidator.isKnownCaller(clientPackageName, clientUid)) {
-            // Request from an untrusted package: return an empty browser root
-            return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT, null);
+            return null;
         }
 
-        // TODO Make use of the hints - https://developer.android.com/reference/androidx/media/utils/MediaConstants#constants_1
-        // BROWSER_ROOT_HINTS_KEY_MEDIA_ART_SIZE_PIXELS
-        // BROWSER_ROOT_HINTS_KEY_ROOT_CHILDREN_LIMIT
+        // System UI query (Android 11+)
+        Predicate<Bundle> isSystemMediaQuery = (hints) -> {
+            if (hints == null) {return false;}
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {return false;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_RECENT)) {return true;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_SUGGESTED)) {return true;}
+            if (hints.getBoolean(BrowserRoot.EXTRA_OFFLINE)) {return true;}
+            return false;
+        };
+        if (isSystemMediaQuery.test(rootHints)) {
+            // By returning null, we explicitly disable support for content discovery/suggestions
+            return null;
+        }
+
+        // TODO Limit to Android Auto
         return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_ROOT, null);
     }
 
     @Override
     public void onLoadChildren(@NonNull final String parentId, @NonNull final Result<List<MediaBrowserCompat.MediaItem>> result) {
-        if (AutoMediaIDHelper.MEDIA_ID_EMPTY_ROOT.equals(parentId)) {
-            result.sendResult(new ArrayList<>());
-        } else {
-            result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
-        }
+        result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
     }
 
     public Playback getPlayback() {

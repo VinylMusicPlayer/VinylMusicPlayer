@@ -30,6 +30,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.WeakHashMap;
 
@@ -75,6 +76,9 @@ public class MusicPlayerRemote {
         }
         mContextWrapper.unbindService(mBinder);
         if (mConnectionMap.isEmpty()) {
+            if (!musicService.isPlaying()) {
+                musicService.quit();
+            }
             musicService = null;
         }
     }
@@ -343,6 +347,12 @@ public class MusicPlayerRemote {
     public static void removeFromQueue(@NonNull Song song) {
         if (musicService != null) {
             musicService.removeSong(song);
+        }
+    }
+
+    public static void removeFromQueue(@NonNull List<Song> songs) {
+        if (musicService != null) {
+            musicService.removeSongs(songs);
         }
     }
 

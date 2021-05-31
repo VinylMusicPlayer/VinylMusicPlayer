@@ -6,7 +6,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -235,74 +234,36 @@ public class MusicUtil {
     }
 
     public static void deleteTracks(@NonNull final Activity activity, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris, @Nullable final Runnable callback) {
-        final String[] projection = new String[]{
-                BaseColumns._ID, MediaStore.MediaColumns.DATA
-        };
-
-        // Split the query into multiple batches, and merge the resulting cursors
-        int batchStart;
-        int batchEnd = 0;
-        final int batchSize = 1000000 / 10; // 10^6 being the SQLite limit on the query length in bytes, 10 being the max number of digits in an int, used to store the track ID
         final int songCount = songs.size();
-
         final Discography discography = Discography.getInstance();
 
-        while (batchEnd < songCount)
-        {
-            batchStart = batchEnd;
+        try {
+            // Step 1: Remove selected tracks from the current playlist
+            MusicPlayerRemote.removeFromQueue(songs);
 
+            // Step 2: Remove selected tracks from the database
             final StringBuilder selection = new StringBuilder();
             selection.append(BaseColumns._ID + " IN (");
-
-            for (int i = 0; (i < batchSize - 1) && (batchEnd < songCount - 1); i++, batchEnd++) {
-                selection.append(songs.get(batchEnd).id);
+            for (int i = 0; i < songCount - 1; i++) {
+                selection.append(songs.get(i).id);
                 selection.append(",");
             }
             // The last element of a batch
-            selection.append(songs.get(batchEnd).id);
-            batchEnd++;
+            selection.append(songs.get(songCount - 1).id);
             selection.append(")");
 
-            try {
-                final Cursor cursor = activity.getContentResolver().query(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(),
-                        null, null);
-                // TODO: At this point, there is no guarantee that the size of the cursor is the same as the size of the selection string.
-                // Despite that, the Step 3 assumes that the safUris elements are tracking closely the content of the cursor.
+            activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    selection.toString(), null);
 
-                if (cursor != null) {
-                    // Step 1: Remove selected tracks from the current playlist, as well
-                    // as from the album art cache
-                    cursor.moveToFirst();
-                    while (!cursor.isAfterLast()) {
-                        final long id = cursor.getLong(0);
-                        final Song song = discography.getSong(id);
-                        MusicPlayerRemote.removeFromQueue(song);
-                        cursor.moveToNext();
-                    }
-
-                    // Step 2: Remove selected tracks from the database
-                    activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                            selection.toString(), null);
-
-                    // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                        cursor.moveToFirst();
-                        int i = batchStart;
-                        while (!cursor.isAfterLast()) {
-                            final String name = cursor.getString(1);
-                            final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                            SAFUtil.delete(activity, name, safUri);
-                            i++;
-                            cursor.moveToNext();
-                        }
-                    }
-
-                    cursor.close();
+            // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                for (int i = 0; i < songCount; i++) {
+                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                    SAFUtil.delete(activity, songs.get(i).data, safUri);
                 }
-            } catch (SecurityException ignored) {
-                ignored.printStackTrace();
             }
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
 
         activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
@@ -362,7 +323,7 @@ public class MusicUtil {
     }
 
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
-        if (TextUtils.isEmpty(name)) return true;
+        if ((name == null) || (name.length() == 0)) return true;
         if (name.equals(defaultDisplayName)) return true;
         name = name.trim().toLowerCase();
         return (name.equals("unknown") || name.equals("<unknown>"));
@@ -370,7 +331,7 @@ public class MusicUtil {
 
     @NonNull
     public static String getSectionName(@Nullable String musicMediaTitle) {
-        if (TextUtils.isEmpty(musicMediaTitle)) return "";
+        if ((musicMediaTitle == null) || (musicMediaTitle.length() == 0)) return "";
         musicMediaTitle = musicMediaTitle.trim().toLowerCase();
         if (musicMediaTitle.startsWith("the ")) {
             musicMediaTitle = musicMediaTitle.substring(4);
@@ -398,7 +359,7 @@ public class MusicUtil {
 
         try {
             lyrics = AudioFileIO.read(file).getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
-        } catch (Exception e) {
+        } catch (@NonNull Exception | NoSuchMethodError e) {
             e.printStackTrace();
         }
 

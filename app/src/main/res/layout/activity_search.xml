@@ -14,11 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--
+            clip and overlay are used so that scrollbar or recyclerView are not separated from top bar if there top padding (depend on the theme
+         -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+            android:scrollbarTrackVertical="@drawable/scrollbar_vertical_track"
+            android:scrollbarSize="8dp"
+            android:scrollbars="vertical"
+            android:clipToPadding = "false"
+            android:scrollbarStyle="outsideOverlay" />
 
         <TextView
             android:id="@android:id/empty"

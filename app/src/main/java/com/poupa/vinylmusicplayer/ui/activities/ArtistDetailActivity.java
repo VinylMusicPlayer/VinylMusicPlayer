@@ -51,6 +51,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -74,6 +75,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
     ObservableListView songListView;
+    com.google.android.material.card.MaterialCardView artistBorderTheme;
     ImageView artistImage;
     Toolbar toolbar;
     View headerView;
@@ -116,7 +118,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
             // Translate name text
             headerView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
             headerOverlay.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            artistImage.setTranslationY(Math.max(-scrollY, -headerViewHeight));
+            artistBorderTheme.setTranslationY(Math.max(-scrollY, -headerViewHeight));
         }
     };
 
@@ -145,6 +147,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                 true);
 
         songListView = binding.list;
+        artistBorderTheme = binding.imageBorderTheme;
         artistImage = binding.image;
         toolbar = binding.toolbar;
         headerView = binding.header;
@@ -231,7 +234,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                     @Override
                     public void onResponse(@NonNull Call<LastFmArtist> call, @NonNull Response<LastFmArtist> response) {
                         final LastFmArtist lastFmArtist = response.body();
-                        if (lastFmArtist != null && lastFmArtist.getArtist() != null) {
+                        if (lastFmArtist != null && lastFmArtist.getArtist() != null && lastFmArtist.getArtist().getBio() != null) {
                             final String bioContent = lastFmArtist.getArtist().getBio().getContent();
                             if (bioContent != null && !bioContent.trim().isEmpty()) {
                                 biography = Html.fromHtml(bioContent);
@@ -276,6 +279,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                     }
                 });
         forceDownload = false;
+        artistBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(ArtistDetailActivity.this));
     }
 
     @Override

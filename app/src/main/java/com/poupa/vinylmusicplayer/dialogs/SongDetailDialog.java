@@ -114,7 +114,7 @@ public class SongDetailDialog extends DialogFragment {
                         replayGainValues = context.getString(R.string.none);
                     }
                     replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
-                } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
+                } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | NoSuchMethodError e) {
                     Log.e(TAG, "error while reading the song file", e);
                     // fallback
                     trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));

@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,13 +44,11 @@ import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -229,6 +230,16 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+
+            final Preference themeStyle = findPreference("theme_style");
+            themeStyle.setOnPreferenceChangeListener((preference, o) -> {
+                ThemeStyleUtil.updateInstance(PreferenceUtil.getThemeStyleFromPrefValue((String) o));
+                if (getActivity() != null) {
+                    ThemeStore.markChanged(getActivity());
+                }
+
+                return true;
+            });
 
             final Preference autoDownloadImagesPolicy = findPreference(PreferenceUtil.AUTO_DOWNLOAD_IMAGES_POLICY);
             setSummary(autoDownloadImagesPolicy);

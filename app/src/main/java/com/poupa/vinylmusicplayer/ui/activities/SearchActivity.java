@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,8 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +24,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivitySearchBinding;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -65,6 +69,14 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
         setTaskDescriptionColorAuto();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ThemeStyleUtil.getInstance().setHeaderPadding(recyclerView, getResources().getDisplayMetrics().density);
+
+        //change scrollbar color to follow secondary color
+        Drawable unwrappedDrawable = AppCompatResources.getDrawable(this, R.drawable.scrollbar_vertical_thumb);
+        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+        DrawableCompat.setTint(wrappedDrawable, ThemeStore.accentColor(this));
+
         adapter = new SearchAdapter(this, Collections.emptyList());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

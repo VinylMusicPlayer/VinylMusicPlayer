@@ -182,15 +182,34 @@
 
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/image"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imageBorderTheme"
             android:layout_width="@dimen/detail_header_image_height"
             android:layout_height="@dimen/detail_header_image_height"
             android:layout_margin="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_artist_image"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
             android:transitionName="@string/transition_artist_image"
-            tools:ignore="ContentDescription,UnusedAttribute" />
+            tools:ignore="ContentDescription,UnusedAttribute" >
+
+            <com.poupa.vinylmusicplayer.views.WidthFitSquareLayout
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_artist_image"
+                    tools:ignore="ContentDescription" />
+
+        </com.poupa.vinylmusicplayer.views.WidthFitSquareLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
 
         <View
             android:id="@+id/header_overlay"
