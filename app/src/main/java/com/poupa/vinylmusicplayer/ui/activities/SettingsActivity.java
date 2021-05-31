@@ -43,6 +43,7 @@ import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -197,6 +198,16 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+
+            final Preference themeStyle = findPreference("theme_style");
+            themeStyle.setOnPreferenceChangeListener((preference, o) -> {
+                ThemeStyleUtil.updateInstance(PreferenceUtil.getThemeStyleFromPrefValue((String) o));
+                if (getActivity() != null) {
+                    ThemeStore.markChanged(getActivity());
+                }
+
+                return true;
+            });
 
             final Preference autoDownloadImagesPolicy = findPreference(PreferenceUtil.AUTO_DOWNLOAD_IMAGES_POLICY);
             if (autoDownloadImagesPolicy != null) {

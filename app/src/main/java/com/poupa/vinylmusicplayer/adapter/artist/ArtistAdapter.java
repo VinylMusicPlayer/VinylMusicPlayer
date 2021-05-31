@@ -28,6 +28,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -106,7 +107,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
             }
         } else {
             if (holder.shortSeparator != null) {
-                holder.shortSeparator.setVisibility(View.VISIBLE);
+                holder.shortSeparator.setVisibility(ThemeStyleUtil.getInstance().getShortSeparatorVisibilityState());
             }
         }
 
@@ -203,13 +204,19 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
+
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getArtistRadiusImage(activity));
             menu.setVisibility(View.GONE);
         }
 
         public ViewHolder(@NonNull final ItemGridBinding binding) {
             super(binding);
             setImageTransitionName(activity.getString(R.string.transition_artist_image));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
         }
 
         @Override

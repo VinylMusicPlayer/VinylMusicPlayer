@@ -334,6 +334,9 @@
     <string name="confirm_adding_duplicates">Add tracks already in selected playlist?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="classic_theme_style_name">Classic</string>
+    <string name="pref_title_theme_style">Theme style</string>
+    <string name="rounded_theme_style_name">Rounded</string>
     <!-- SAF -->
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>

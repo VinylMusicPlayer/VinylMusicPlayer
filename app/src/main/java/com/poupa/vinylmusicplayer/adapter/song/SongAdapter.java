@@ -28,6 +28,7 @@ import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
@@ -140,13 +141,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         boolean isChecked = isChecked(song);
         holder.itemView.setActivated(isChecked);
 
-        if (holder.getAdapterPosition() == getItemCount() - 1) {
-            if (holder.shortSeparator != null) {
+        if (holder.shortSeparator != null) {
+            if (holder.getAdapterPosition() == getItemCount() - 1) {
                 holder.shortSeparator.setVisibility(View.GONE);
-            }
-        } else {
-            if (holder.shortSeparator != null) {
-                holder.shortSeparator.setVisibility(View.VISIBLE);
+            } else {
+                holder.shortSeparator.setVisibility(ThemeStyleUtil.getInstance().getShortSeparatorVisibilityState());
             }
         }
 
@@ -240,6 +239,10 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);
 
+            View itemView = binding.getRoot();
+            ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+
             setImageTransitionName(activity.getString(R.string.transition_album_art));
             setupMenuHandlers();
         }
@@ -248,6 +251,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             super(binding);
 
             setImageTransitionName(activity.getString(R.string.transition_album_art));
+            imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
         }
 
         private void setupMenuHandlers() {

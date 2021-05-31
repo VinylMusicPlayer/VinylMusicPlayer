@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListNoImageBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.databinding.SubHeaderBinding;
+import com.poupa.vinylmusicplayer.databinding.SubHeaderMaterialBinding;
 import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
 
 /**
@@ -24,6 +25,9 @@ import com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView;
 public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHolder implements View.OnClickListener, View.OnLongClickListener {
     @Nullable
     public final FrameLayout dummyContainer;
+
+    @Nullable
+    public com.google.android.material.card.MaterialCardView imageBorderTheme;
 
     @Nullable
     public final ImageView image;
@@ -59,6 +63,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = binding.imageText;
         title = binding.title;
@@ -79,6 +84,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = null;
         title = binding.title;
@@ -99,6 +105,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = null;
         title = binding.title;
@@ -116,6 +123,27 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
     }
 
     public MediaEntryViewHolder(@NonNull SubHeaderBinding binding) {
+        super(binding.getRoot());
+
+        dummyContainer = null;
+        imageBorderTheme = null;
+        image = null;
+        imageText = null;
+        title = binding.title;
+        titleScrollview = null;
+        text = null;
+        menu = null;
+        separator = null;
+        shortSeparator  = null;
+        dragView = null;
+        paletteColorContainer = null;
+
+        final View itemView = binding.getRoot();
+        itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
+    }
+
+    public MediaEntryViewHolder(@NonNull SubHeaderMaterialBinding binding) {
         super(binding.getRoot());
 
         dummyContainer = null;
@@ -139,6 +167,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = binding.imageBorderTheme;
         image = binding.image;
         imageText = binding.imageText;
         title = binding.title;
@@ -159,6 +188,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         super(binding.getRoot());
 
         dummyContainer = binding.touchInterceptFramelayout;
+        imageBorderTheme = null;
         image = null;
         imageText = null;
         title = binding.title;

@@ -38,13 +38,24 @@
             android:paddingRight="0dp"
             android:paddingStart="16dp">
 
-            <ImageView
-                android:id="@+id/image"
+            <!-- ?cardBackgroundColor" -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageBorderTheme"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/transparent"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription" >
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/image_text"

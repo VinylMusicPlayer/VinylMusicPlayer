@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
@@ -18,6 +19,7 @@ import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -110,6 +112,8 @@ public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements
             super(binding);
             if (onMoveItemListener != null) {
                 dragView.setVisibility(View.VISIBLE);
+
+                ThemeStyleUtil.getInstance().setDragView((AppCompatImageView)dragView);
             } else {
                 dragView.setVisibility(View.GONE);
             }
