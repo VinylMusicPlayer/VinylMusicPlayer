@@ -18,6 +18,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.HorizontalAdapterHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
     @Override
     protected void loadAlbumCover(Album album, final ViewHolder holder) {
         if (holder.image == null) return;
+
+        holder.imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
 
         GlideApp.with(activity)
                 .asBitmapPalette()

@@ -12,6 +12,16 @@
         <item>black</item>
     </string-array>
 
+    <string-array name="pref_theme_style_list_titles">
+        <item>@string/classic_theme_style_name</item>
+        <item>@string/rounded_theme_style_name</item>
+    </string-array>
+
+    <string-array name="pref_theme_style_list_values">
+        <item>classic</item>
+        <item>rounded</item>
+    </string-array>
+
     <string-array name="pref_auto_download_images_titles">
         <item>@string/always</item>
         <item>@string/only_on_wifi</item>
