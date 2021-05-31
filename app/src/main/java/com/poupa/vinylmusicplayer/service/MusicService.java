@@ -759,7 +759,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void removeSong(@NonNull Song song) {
+    private void removeSongImpl(@NonNull Song song) {
         for (int i = playingQueue.size() - 1; i >= 0; i--) {
             if (playingQueue.get(i).id == song.id) {
                 playingQueue.remove(i);
@@ -770,6 +770,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (originalPlayingQueue.get(i).id == song.id) {
                 originalPlayingQueue.remove(i);
             }
+        }
+    }
+
+    public void removeSong(@NonNull Song song) {
+        removeSongImpl(song);
+        notifyChange(QUEUE_CHANGED);
+    }
+
+    public void removeSongs(@NonNull List<Song> songs) {
+        for (Song song : songs) {
+            removeSongImpl(song);
         }
         notifyChange(QUEUE_CHANGED);
     }
