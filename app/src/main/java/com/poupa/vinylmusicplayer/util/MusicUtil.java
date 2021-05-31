@@ -359,7 +359,7 @@ public class MusicUtil {
 
         try {
             lyrics = AudioFileIO.read(file).getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
-        } catch (Exception e) {
+        } catch (@NonNull Exception | NoSuchMethodError e) {
             e.printStackTrace();
         }
 
