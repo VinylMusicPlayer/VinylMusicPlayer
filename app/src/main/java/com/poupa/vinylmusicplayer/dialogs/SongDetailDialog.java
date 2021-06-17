@@ -21,13 +21,9 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.TagException;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
@@ -114,7 +110,7 @@ public class SongDetailDialog extends DialogFragment {
                         replayGainValues = context.getString(R.string.none);
                     }
                     replayGain.setText(makeTextWithTitle(context, R.string.label_replay_gain, replayGainValues));
-                } catch (@NonNull CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException | NoSuchMethodError e) {
+                } catch (@NonNull Exception | NoSuchMethodError  e) {
                     Log.e(TAG, "error while reading the song file", e);
                     // fallback
                     trackLength.setText(makeTextWithTitle(context, R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration)));
