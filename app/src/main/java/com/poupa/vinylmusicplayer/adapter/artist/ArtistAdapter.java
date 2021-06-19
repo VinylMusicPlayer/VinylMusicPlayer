@@ -34,7 +34,9 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -195,6 +197,12 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
             case SortOrder.ArtistSortOrder.ARTIST_A_Z:
             case SortOrder.ArtistSortOrder.ARTIST_Z_A:
                 sectionName = dataSet.get(position).getName();
+                break;
+
+            case SortOrder.ArtistSortOrder.ARTIST_DATE_MODIFIED_REVERSE:
+                Date date = new Date(1000 * dataSet.get(position).getDateModified());
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
+                sectionName = dateFormat.format(date);
                 break;
         }
 

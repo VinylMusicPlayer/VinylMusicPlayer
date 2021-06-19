@@ -20,6 +20,7 @@ import java.util.Comparator;
 public class ArtistLoader {
     public final static Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
     public final static Comparator<Artist> BY_ARTIST_DESC = ComparatorUtil.reverse(BY_ARTIST);
+    public final static Comparator<Artist> BY_DATE_MODIFIED_DESC = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateModified(), a1.getDateModified());
 
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
@@ -56,6 +57,9 @@ public class ArtistLoader {
     @NonNull
     private static Comparator<Artist> getSortOrder() {
         switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
+            case SortOrder.ArtistSortOrder.ARTIST_DATE_MODIFIED_REVERSE:
+                return BY_DATE_MODIFIED_DESC;
+
             case SortOrder.ArtistSortOrder.ARTIST_Z_A:
                 return BY_ARTIST_DESC;
 
