@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -23,6 +24,7 @@ import com.poupa.vinylmusicplayer.databinding.FragmentFlatPlayerPlaybackControls
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
+import com.poupa.vinylmusicplayer.helper.PrevNextButtonOnTouchListener;
 import com.poupa.vinylmusicplayer.misc.SimpleOnSeekbarChangeListener;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
@@ -171,8 +173,8 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     private void setUpPrevNext() {
         updatePrevNextColor();
-        nextButton.setOnClickListener(v -> MusicPlayerRemote.playNextSong());
-        prevButton.setOnClickListener(v -> MusicPlayerRemote.back());
+        nextButton.setOnTouchListener(new PrevNextButtonOnTouchListener(PrevNextButtonOnTouchListener.DIRECTION_NEXT));
+        prevButton.setOnTouchListener(new PrevNextButtonOnTouchListener(PrevNextButtonOnTouchListener.DIRECTION_PREVIOUS));
     }
 
     private void updateProgressTextColor() {
