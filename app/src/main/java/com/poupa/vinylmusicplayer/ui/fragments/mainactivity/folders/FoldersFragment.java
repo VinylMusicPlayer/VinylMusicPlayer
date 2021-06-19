@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,6 +45,7 @@ import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.util.FileUtil;
@@ -389,6 +391,12 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 } else if (itemId == R.id.action_set_as_start_directory) {
                     PreferenceUtil.getInstance().setStartDirectory(file);
                     Toast.makeText(getActivity(), String.format(getString(R.string.new_start_directory), file.getPath()), Toast.LENGTH_SHORT).show();
+                    
+                    // Rescan if whitelist enabled
+                    if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
+                        getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
+                    }  
+                  
                     return true;
                 } else if (itemId == R.id.action_scan) {
                     if (((MainActivity) getActivity()).isNotScanning()) {

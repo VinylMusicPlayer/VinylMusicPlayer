@@ -100,6 +100,7 @@ public final class PreferenceUtil {
     public static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
 
     public static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
+    public static final String WHITELIST_ENABLED = "whitelist_enabled";
 
     public static final String LIBRARY_CATEGORIES = "library_categories";
 
@@ -648,6 +649,10 @@ public final class PreferenceUtil {
 
     public final boolean initializedBlacklist() {
         return mPreferences.getBoolean(INITIALIZED_BLACKLIST, false);
+    }
+
+    public final boolean getWhitelistEnabled() {
+        return mPreferences.getBoolean(WHITELIST_ENABLED, false);
     }
 
     public void setLibraryCategoryInfos(ArrayList<CategoryInfo> categories) {
