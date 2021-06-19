@@ -40,10 +40,14 @@ import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+
+import java.io.File;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -141,7 +145,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_lockscreen);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
-            addPreferencesFromResource(R.xml.pref_blacklist);
+
+            // set summary for whitelist, in order to indicate start directory
+            final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
+            final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
+            final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
+            findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
+
         }
 
         @Nullable
@@ -358,6 +368,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                         pref.setEnabled(false);
                         pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                     }
+                    break;
+                case PreferenceUtil.WHITELIST_ENABLED:
+                    getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
                     break;
                 case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
                 case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
