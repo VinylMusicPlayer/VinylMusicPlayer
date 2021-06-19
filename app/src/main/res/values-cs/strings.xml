@@ -276,11 +276,11 @@
     <string name="pref_summary_library_categories">Nastavit viditelnost a řazení kategorií knihovny.</string>
     <string name="you_have_to_select_at_least_one_category">Musíte vybrat nejméně jednu kategorii.</string>
     <string name="action_sort_order">Způsob řazení</string>
-    <string name="sort_order_a_z">Vzestupně</string>
-    <string name="sort_order_z_a">Sestupně</string>
+    <string name="sort_order_name">Vzestupně</string>
+    <string name="sort_order_name_reverse">Sestupně</string>
     <string name="sort_order_artist">Umělec</string>
     <string name="sort_order_album">Album</string>
-    <string name="sort_order_year">Rok</string>
+    <string name="sort_order_year_reverse">Rok</string>
     <string name="action_scan_directory">Skenovat adresář</string>
     <string name="scan_media">Skenovat média</string>
     <string name="none">Žádný</string>

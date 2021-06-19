@@ -330,33 +330,33 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         sortOrderMenu.clear();
 
         if (fragment instanceof AlbumsFragment) {
-            sortOrderMenu.add(0, R.id.action_album_sort_order_asc, 0, R.string.sort_order_a_z)
+            sortOrderMenu.add(0, R.id.action_album_sort_order_name, 0, R.string.sort_order_name)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_A_Z));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_desc, 1, R.string.sort_order_z_a)
+            sortOrderMenu.add(0, R.id.action_album_sort_order_name_reverse, 1, R.string.sort_order_name_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_Z_A));
             sortOrderMenu.add(0, R.id.action_album_sort_order_artist, 2, R.string.sort_order_artist)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_ARTIST));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_year, 3, R.string.sort_order_year)
+            sortOrderMenu.add(0, R.id.action_album_sort_order_year_reverse, 3, R.string.sort_order_year_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_date_added, 4, R.string.sort_order_date_added)
+            sortOrderMenu.add(0, R.id.action_album_sort_order_date_added_reverse, 4, R.string.sort_order_date_added_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE));
         } else if (fragment instanceof ArtistsFragment) {
-            sortOrderMenu.add(0, R.id.action_artist_sort_order_asc, 0, R.string.sort_order_a_z)
+            sortOrderMenu.add(0, R.id.action_artist_sort_order_name, 0, R.string.sort_order_name)
                     .setChecked(currentSortOrder.equals(SortOrder.ArtistSortOrder.ARTIST_A_Z));
-            sortOrderMenu.add(0, R.id.action_artist_sort_order_desc, 1, R.string.sort_order_z_a)
+            sortOrderMenu.add(0, R.id.action_artist_sort_order_name_reverse, 1, R.string.sort_order_name_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.ArtistSortOrder.ARTIST_Z_A));
         } else if (fragment instanceof SongsFragment) {
-            sortOrderMenu.add(0, R.id.action_song_sort_order_asc, 0, R.string.sort_order_a_z)
+            sortOrderMenu.add(0, R.id.action_song_sort_order_name, 0, R.string.sort_order_name)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_A_Z));
-            sortOrderMenu.add(0, R.id.action_song_sort_order_desc, 1, R.string.sort_order_z_a)
+            sortOrderMenu.add(0, R.id.action_song_sort_order_name_reverse, 1, R.string.sort_order_name_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_Z_A));
             sortOrderMenu.add(0, R.id.action_song_sort_order_artist, 2, R.string.sort_order_artist)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_ARTIST));
             sortOrderMenu.add(0, R.id.action_song_sort_order_album, 3, R.string.sort_order_album)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_ALBUM));
-            sortOrderMenu.add(0, R.id.action_song_sort_order_year, 4, R.string.sort_order_year)
+            sortOrderMenu.add(0, R.id.action_song_sort_order_year_reverse, 4, R.string.sort_order_year_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_YEAR_REVERSE));
-            sortOrderMenu.add(0, R.id.action_song_sort_order_date_added, 5, R.string.sort_order_date_added)
+            sortOrderMenu.add(0, R.id.action_song_sort_order_date_added_reverse, 5, R.string.sort_order_date_added_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE));
         }
 
@@ -367,35 +367,35 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         String sortOrder = null;
         final int itemId = item.getItemId();
         if (fragment instanceof AlbumsFragment) {
-            if (itemId == R.id.action_album_sort_order_asc) {
+            if (itemId == R.id.action_album_sort_order_name) {
                 sortOrder = SortOrder.AlbumSortOrder.ALBUM_A_Z;
-            } else if (itemId == R.id.action_album_sort_order_desc) {
+            } else if (itemId == R.id.action_album_sort_order_name_reverse) {
                 sortOrder = SortOrder.AlbumSortOrder.ALBUM_Z_A;
             } else if (itemId == R.id.action_album_sort_order_artist) {
                 sortOrder = SortOrder.AlbumSortOrder.ALBUM_ARTIST;
-            } else if (itemId == R.id.action_album_sort_order_year) {
+            } else if (itemId == R.id.action_album_sort_order_year_reverse) {
                 sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE;
-            } else if (itemId == R.id.action_album_sort_order_date_added) {
+            } else if (itemId == R.id.action_album_sort_order_date_added_reverse) {
                 sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE;
             }
         } else if (fragment instanceof ArtistsFragment) {
-            if (itemId == R.id.action_artist_sort_order_asc) {
+            if (itemId == R.id.action_artist_sort_order_name) {
                 sortOrder = SortOrder.ArtistSortOrder.ARTIST_A_Z;
-            } else if (itemId == R.id.action_artist_sort_order_desc) {
+            } else if (itemId == R.id.action_artist_sort_order_name_reverse) {
                 sortOrder = SortOrder.ArtistSortOrder.ARTIST_Z_A;
             }
         } else if (fragment instanceof SongsFragment) {
-            if (itemId == R.id.action_song_sort_order_asc) {
+            if (itemId == R.id.action_song_sort_order_name) {
                 sortOrder = SortOrder.SongSortOrder.SONG_A_Z;
-            } else if (itemId == R.id.action_song_sort_order_desc) {
+            } else if (itemId == R.id.action_song_sort_order_name_reverse) {
                 sortOrder = SortOrder.SongSortOrder.SONG_Z_A;
             } else if (itemId == R.id.action_song_sort_order_artist) {
                 sortOrder = SortOrder.SongSortOrder.SONG_ARTIST;
             } else if (itemId == R.id.action_song_sort_order_album) {
                 sortOrder = SortOrder.SongSortOrder.SONG_ALBUM;
-            } else if (itemId == R.id.action_song_sort_order_year) {
+            } else if (itemId == R.id.action_song_sort_order_year_reverse) {
                 sortOrder = SortOrder.SongSortOrder.SONG_YEAR_REVERSE;
-            } else if (itemId == R.id.action_song_sort_order_date_added) {
+            } else if (itemId == R.id.action_song_sort_order_date_added_reverse) {
                 sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE;
             }
         }

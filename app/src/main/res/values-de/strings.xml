@@ -286,12 +286,12 @@
     <string name="pref_summary_library_categories">Anzeige und Anordnung der einzelnen Kategorien festlegen.</string>
     <string name="you_have_to_select_at_least_one_category">Mindestens eine Kategorie muss ausgewählt sein.</string>
     <string name="action_sort_order">Sortierreihenfolge</string>
-    <string name="sort_order_a_z">Aufsteigend</string>
-    <string name="sort_order_z_a">Absteigend</string>
+    <string name="sort_order_name">Aufsteigend</string>
+    <string name="sort_order_name_reverse">Absteigend</string>
     <string name="sort_order_artist">Interpret</string>
     <string name="sort_order_album">Album</string>
-    <string name="sort_order_year">Jahr</string>
-    <string name="sort_order_date_added">Datum hinzugefügt</string>
+    <string name="sort_order_year_reverse">Jahr</string>
+    <string name="sort_order_date_added_reverse">Datum hinzugefügt</string>
     <string name="finish_current_music_sleep_timer">Letzten Titel zu Ende spielen</string>
     <string name="action_scan_directory">Ordner scannen</string>
     <string name="scan_media">Medien Scannen</string>
