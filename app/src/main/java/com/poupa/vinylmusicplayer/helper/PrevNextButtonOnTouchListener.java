@@ -10,9 +10,14 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
     private static final int SKIP_TRIGGER_INITIAL_INTERVAL_MILLIS = 1000;
     private static final int SKIP_TRIGGER_NORMAL_INTERVAL_MILLIS = 250;
 
+    private final int PLAYBACK_SKIP_AMOUNT_MILLI = 3500;
+
     private final View.OnGenericMotionListener genericMotionListener;
     private View touchedView;
     private boolean wasHeld;
+
+    public static final int DIRECTION_NEXT = 1;
+    public static final int DIRECTION_PREVIOUS = 2;
 
     private final Runnable handlerRunnable = new Runnable() {
         @Override
@@ -31,8 +36,30 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
         }
     };
 
-    public PrevNextButtonOnTouchListener(View.OnGenericMotionListener genericMotionListener) {
-        this.genericMotionListener = genericMotionListener;
+    public PrevNextButtonOnTouchListener(int direction) {
+        this.genericMotionListener = //genericMotionListener;
+                (view, motionEvent) -> {
+                    switch(motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            int seek = MusicPlayerRemote.getSongProgressMillis();
+                            if (direction ==  DIRECTION_NEXT) {
+                                seek += PLAYBACK_SKIP_AMOUNT_MILLI;
+                            } else if (direction ==  DIRECTION_PREVIOUS) {
+                                seek -= PLAYBACK_SKIP_AMOUNT_MILLI;
+                            }
+
+                            MusicPlayerRemote.seekTo(seek);
+                            return true;
+                        case MotionEvent.ACTION_CANCEL:
+                            if (direction ==  DIRECTION_NEXT) {
+                                MusicPlayerRemote.playNextSong();
+                            } else if (direction ==  DIRECTION_PREVIOUS) {
+                                MusicPlayerRemote.back();
+                            }
+                            return true;
+                    }
+                    return false;
+                };
     }
 
     @Override
@@ -43,6 +70,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
                 handler.postDelayed(handlerRunnable, SKIP_TRIGGER_INITIAL_INTERVAL_MILLIS);
                 touchedView = view;
                 touchedView.setPressed(true);
+
                 return true;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -53,6 +81,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
                 touchedView.setPressed(false);
                 touchedView = null;
                 wasHeld = false;
+
                 return true;
         }
         return false;

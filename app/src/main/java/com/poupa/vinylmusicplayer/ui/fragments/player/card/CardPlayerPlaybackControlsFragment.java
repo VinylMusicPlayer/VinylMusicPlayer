@@ -50,7 +50,6 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     private int lastDisabledPlaybackControlsColor;
 
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
-    private final int PLAYBACK_SKIP_AMOUNT_MILLI = 3500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,28 +168,8 @@ public class CardPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
 
     private void setUpPrevNext() {
         updatePrevNextColor();
-        nextButton.setOnTouchListener(new PrevNextButtonOnTouchListener((view, motionEvent) -> {
-            switch(motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    MusicPlayerRemote.seekTo(MusicPlayerRemote.getSongProgressMillis() + PLAYBACK_SKIP_AMOUNT_MILLI);
-                    return true;
-                case MotionEvent.ACTION_CANCEL:
-                    MusicPlayerRemote.playNextSong();
-                    return true;
-            }
-            return false;
-        }));
-        prevButton.setOnTouchListener(new PrevNextButtonOnTouchListener((view, motionEvent) -> {
-            switch(motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    MusicPlayerRemote.seekTo(MusicPlayerRemote.getSongProgressMillis() - PLAYBACK_SKIP_AMOUNT_MILLI);
-                    return true;
-                case MotionEvent.ACTION_CANCEL:
-                    MusicPlayerRemote.back();
-                    return true;
-            }
-            return false;
-        }));
+        nextButton.setOnTouchListener(new PrevNextButtonOnTouchListener(PrevNextButtonOnTouchListener.DIRECTION_NEXT));
+        prevButton.setOnTouchListener(new PrevNextButtonOnTouchListener(PrevNextButtonOnTouchListener.DIRECTION_PREVIOUS));
     }
 
     private void updateProgressTextColor() {
