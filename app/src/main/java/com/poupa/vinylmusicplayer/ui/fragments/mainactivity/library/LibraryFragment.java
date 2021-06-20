@@ -362,6 +362,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_YEAR_REVERSE));
             sortOrderMenu.add(0, R.id.action_song_sort_order_date_added_reverse, 5, R.string.sort_order_date_added_reverse)
                     .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE));
+            sortOrderMenu.add(0, R.id.action_song_sort_order_date_modified_reverse, 5, R.string.sort_order_date_modified_reverse)
+                    .setChecked(currentSortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_MODIFIED_REVERSE));
         }
 
         sortOrderMenu.setGroupCheckable(0, true, true);
@@ -405,6 +407,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                 sortOrder = SortOrder.SongSortOrder.SONG_YEAR_REVERSE;
             } else if (itemId == R.id.action_song_sort_order_date_added_reverse) {
                 sortOrder = SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE;
+            } else if (itemId == R.id.action_song_sort_order_date_modified_reverse) {
+                sortOrder = SortOrder.SongSortOrder.SONG_DATE_MODIFIED_REVERSE;
             }
         }
 

@@ -18,6 +18,7 @@
     <item name="action_song_sort_order_album" type="id" />
     <item name="action_song_sort_order_year_reverse" type="id" />
     <item name="action_song_sort_order_date_added_reverse" type="id" />
+    <item name="action_song_sort_order_date_modified_reverse" type="id" />
 
     <item name="action_multi_select_adapter_check_all" type="id" />
 </resources>

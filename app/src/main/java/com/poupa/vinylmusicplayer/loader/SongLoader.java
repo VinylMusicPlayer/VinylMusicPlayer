@@ -27,6 +27,8 @@ public class SongLoader {
     public static final Comparator<Song> BY_YEAR_DESC = (s1, s2) -> s2.year - s1.year;
     public static final Comparator<Song> BY_DATE_ADDED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
+    public static final Comparator<Song> BY_DATE_MODIFIED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateModified, s2.dateModified);
+    public static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
     public static final Comparator<Song> BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
             ? (s1.discNumber - s2.discNumber)
             : (s1.trackNumber - s2.trackNumber);
@@ -66,6 +68,8 @@ public class SongLoader {
                 return ComparatorUtil.chain(BY_YEAR_DESC, BY_ARTIST);
             case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
                 return ComparatorUtil.chain(BY_DATE_ADDED_DESC, BY_ARTIST);
+            case SortOrder.SongSortOrder.SONG_DATE_MODIFIED_REVERSE:
+                return ComparatorUtil.chain(BY_DATE_MODIFIED_DESC, BY_ARTIST);
 
             case SortOrder.SongSortOrder.SONG_A_Z:
             default:

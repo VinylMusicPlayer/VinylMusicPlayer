@@ -36,7 +36,7 @@ public final class SortOrder {
         /* Artist sort order Z-A */
         String ARTIST_Z_A = ARTIST_A_Z + " DESC";
 
-        String ARTIST_DATE_MODIFIED_REVERSE = "date-modified-reverse";
+        String ARTIST_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
     }
 
     /**
@@ -59,7 +59,7 @@ public final class SortOrder {
         /* Album date added */
         String ALBUM_DATE_ADDED_REVERSE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
 
-        String ALBUM_DATE_MODIFIED_REVERSE = "date-modified-reverse";
+        String ALBUM_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
     }
 
     /**
@@ -83,5 +83,7 @@ public final class SortOrder {
 
         /* Song sort order date */
         String SONG_DATE_ADDED_REVERSE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
+
+        String SONG_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
     }
 }

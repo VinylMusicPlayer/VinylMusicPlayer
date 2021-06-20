@@ -203,7 +203,8 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
         }
 
         @Nullable String sectionName = null;
-        switch (PreferenceUtil.getInstance().getSongSortOrder()) {
+        final String sortOrder = PreferenceUtil.getInstance().getSongSortOrder();
+        switch (sortOrder) {
             case SortOrder.SongSortOrder.SONG_A_Z:
             case SortOrder.SongSortOrder.SONG_Z_A:
                 sectionName = dataSet.get(position).title;
@@ -215,9 +216,15 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
                 sectionName = MultiValuesTagUtil.infoString(dataSet.get(position).artistNames);
                 break;
             case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
-                Date date = new Date(1000 * dataSet.get(position).dateAdded);
+            case SortOrder.SongSortOrder.SONG_DATE_MODIFIED_REVERSE:
+                long date;
+                if (sortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE)) {
+                    date = dataSet.get(position).dateAdded;
+                } else {
+                    date = dataSet.get(position).dateModified;
+                }
                 DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(date);
+                sectionName = dateFormat.format(new Date(1000 * date));
                 break;
             case SortOrder.SongSortOrder.SONG_YEAR_REVERSE:
                 return MusicUtil.getYearString(dataSet.get(position).year);

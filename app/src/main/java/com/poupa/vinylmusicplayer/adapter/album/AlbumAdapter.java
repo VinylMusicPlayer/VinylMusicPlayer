@@ -204,7 +204,8 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @Override
     public String getSectionName(int position) {
         @Nullable String sectionName = null;
-        switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
+        final String sortOrder = PreferenceUtil.getInstance().getAlbumSortOrder();
+        switch (sortOrder) {
             case SortOrder.AlbumSortOrder.ALBUM_A_Z:
             case SortOrder.AlbumSortOrder.ALBUM_Z_A:
                 sectionName = dataSet.get(position).getTitle();
@@ -215,9 +216,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
             case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
                 return MusicUtil.getYearString(dataSet.get(position).getYear());
             case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
-                Date date = new Date(1000 * dataSet.get(position).getDateAdded());
+            case SortOrder.AlbumSortOrder.ALBUM_DATE_MODIFIED_REVERSE:
+                long date;
+                if (sortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE)) {
+                    date = dataSet.get(position).getDateAdded();
+                } else {
+                    date = dataSet.get(position).getDateModified();
+                }
                 DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(date);
+                sectionName = dateFormat.format(new Date(1000 * date));
                 break;
         }
 
