@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2021-06-24
+## Added
+- Whitelist
+- Switch theme based on OS setting
+- Ability to fast forward miss in fragment flat and rewind by holding next and previous song buttons
+## Fixed
+- "Shuffle All" button will now start a new playback
+- Crash when reading MP3 tags on Nougat
+
 ## [1.2.0] - 2021-04-25
 ### Added
 - Add "delete from device" choice menu in playlist view (both dumb and smart ones)
