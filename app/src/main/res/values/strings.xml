@@ -106,6 +106,7 @@
     <string name="light_theme_name">Light</string>
     <string name="dark_theme_name">Dark</string>
     <string name="black_theme_name">Black (AMOLED)</string>
+    <string name="follow_system_theme_name">Follow system theme</string>
     <string name="always">Always</string>
     <string name="only_on_wifi">Only on Wi-Fi</string>
     <string name="never">Never</string>
@@ -362,5 +363,7 @@
     <string name="pref_title_show_song_number">Show song track number</string>
     <string name="auto_limited_listing_title">Limited listing while driving</string>
     <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
+    <string name="whitelist">Whitelist</string>
+    <string name="pref_summary_whitelist">Only show content below start folder: </string>
 
 </resources>

@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.util.Util;
  */
 
 public abstract class AbsThemeActivity extends ATHToolbarActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());

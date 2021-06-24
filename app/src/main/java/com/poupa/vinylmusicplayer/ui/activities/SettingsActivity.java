@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,10 +43,16 @@ import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
+
+import java.io.File;
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -141,7 +150,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_lockscreen);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
-            addPreferencesFromResource(R.xml.pref_blacklist);
+
+            // set summary for whitelist, in order to indicate start directory
+            final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
+            final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
+            final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
+            findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
+
         }
 
         @Nullable
@@ -178,6 +193,33 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         private void invalidateSettings() {
             final Preference generalTheme = findPreference(PreferenceUtil.GENERAL_THEME);
             if (generalTheme != null) {
+                final Context context = getContext();
+                if (context != null && VinylMusicPlayerColorUtil.isSystemThemeSupported()) {
+                    // Extend the list, to add choices to follow system theme
+                    ListPreference listPref = (ListPreference) generalTheme;
+                    ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(listPref.getEntries()));
+                    ArrayList<CharSequence> values = new ArrayList<>(Arrays.asList(listPref.getEntryValues()));
+
+                    values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK);
+                    entries.add(String.format("%s\n%s",
+                            context.getString(R.string.follow_system_theme_name),
+                            MusicUtil.buildInfoString(
+                                    context.getString(R.string.light_theme_name),
+                                    context.getString(R.string.dark_theme_name)
+                            )));
+
+                    values.add(PreferenceUtil.GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK);
+                    entries.add(String.format("%s\n%s",
+                            context.getString(R.string.follow_system_theme_name),
+                            MusicUtil.buildInfoString(
+                                    context.getString(R.string.light_theme_name),
+                                    context.getString(R.string.black_theme_name)
+                            )));
+
+                    listPref.setEntries(entries.toArray(new CharSequence[0]));
+                    listPref.setEntryValues(values.toArray(new CharSequence[0]));
+                }
+
                 setSummary(generalTheme);
                 generalTheme.setOnPreferenceChangeListener((preference, o) -> {
                     String themeName = (String) o;
@@ -379,6 +421,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                             pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                         }
                     }
+                    break;
+                case PreferenceUtil.WHITELIST_ENABLED:
+                    getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
                     break;
                 case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
                 case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
