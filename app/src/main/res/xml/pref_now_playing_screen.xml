@@ -30,6 +30,13 @@
             android:summary="@string/pref_summary_show_song_number"
             android:title="@string/pref_title_show_song_number" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="allow_random_album_shuffling"
+            android:summary="@string/pref_summary_allow_random_album"
+            android:title="@string/pref_title_allow_random_album" />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

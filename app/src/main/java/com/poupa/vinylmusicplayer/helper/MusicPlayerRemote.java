@@ -116,6 +116,12 @@ public class MusicPlayerRemote {
         }
     }
 
+    public static void shuffleRandomAlbum() {
+        if (musicService != null) {
+            musicService.refreshManuallyRandomAlbumIfPossible(true);
+        }
+    }
+
     /**
      * Async
      */
@@ -190,6 +196,8 @@ public class MusicPlayerRemote {
             musicService.openQueue(queue, startPosition, startPlaying);
             if (!PreferenceUtil.getInstance().rememberShuffle()){
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
+            } else if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM) {
+                setShuffleMode(MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM);
             }
         }
     }

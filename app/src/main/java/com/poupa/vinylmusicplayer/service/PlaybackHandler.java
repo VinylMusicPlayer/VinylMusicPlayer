@@ -7,9 +7,14 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.loader.AlbumLoader;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 final class PlaybackHandler extends Handler {
     @NonNull
@@ -19,6 +24,47 @@ final class PlaybackHandler extends Handler {
     public PlaybackHandler(final MusicService service, @NonNull final Looper looper) {
         super(looper);
         mService = new WeakReference<>(service);
+    }
+
+    private boolean accessNextAlbum(MusicService service, int nextPosition) {
+        if (nextPosition >= 0 && nextPosition < service.getPlayingQueue().size()) {
+            Song song = service.getPlayingQueue().get(nextPosition);
+
+            if (song.id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID && song.albumId != NextRandomAlbum.EMPTY_NEXT_RANDOM_ALBUM_ID) {
+                Song previousSong = service.getPlayingQueue().get(nextPosition - 1);
+                NextRandomAlbum.getInstance().commit(previousSong.albumId);
+
+                Album album = AlbumLoader.getAlbum(song.albumId);
+
+                ArrayList<Song> songs = album.songs;
+
+                service.clearQueue();
+                service.openQueue(songs,0,true);
+
+                service.setShuffleMode(MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM);
+
+                service.notifyChange(MusicService.QUEUE_CHANGED);
+
+                return true;
+            } else if (song.id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID) {
+                stopPlaying(service);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean stopPlaying(MusicService service) {
+        service.notifyChange(MusicService.PLAY_STATE_CHANGED);
+        service.seek(0);
+        if (service.pendingQuit) {
+            service.pendingQuit = false;
+            service.quit();
+            return true;
+        }
+        service.notifyChange(MusicService.PLAY_STATE_CHANGED);
+        service.seek(0);
+        return false;
     }
 
     @Override
@@ -70,11 +116,18 @@ final class PlaybackHandler extends Handler {
             case MusicService.TRACK_ENDED:
                 if (checkPendingQuit(service)) {break;}
 
-                if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
-                    service.notifyChange(MusicService.PLAY_STATE_CHANGED);
-                } else {
-                    service.playNextSong(false);
+		boolean shuffleModeAlbum = false;
+                if (service.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM) {
+                    shuffleModeAlbum = accessNextAlbum(service, service.getNextPosition(false));
                 }
+
+		if (!shuffleModeAlbum) {
+                    if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
+                        service.notifyChange(MusicService.PLAY_STATE_CHANGED);
+                    } else {
+                        service.playNextSong(false);
+                    }
+		}
                 sendEmptyMessage(MusicService.RELEASE_WAKELOCK);
                 break;
 
@@ -83,7 +136,14 @@ final class PlaybackHandler extends Handler {
                 break;
 
             case MusicService.PLAY_SONG:
-                service.playSongAtImpl(msg.arg1);
+                shuffleModeAlbum = false;
+                if (service.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM) {
+                    shuffleModeAlbum = accessNextAlbum(service, msg.arg1);
+                }
+
+                if (!shuffleModeAlbum) {
+                    service.playSongAtImpl(msg.arg1);
+                }
                 break;
 
             case MusicService.SET_POSITION:

@@ -23,6 +23,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -95,7 +96,7 @@ public class MusicUtil {
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
-                PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
+                PreferenceUtil.getInstance().showSongNumber() && (song.id != NextRandomAlbum.RANDOM_ALBUM_SONG_ID) ? MusicUtil.getTrackNumberInfoString(song) : null,
                 MultiValuesTagUtil.infoString(song.artistNames),
                 song.albumName
         );

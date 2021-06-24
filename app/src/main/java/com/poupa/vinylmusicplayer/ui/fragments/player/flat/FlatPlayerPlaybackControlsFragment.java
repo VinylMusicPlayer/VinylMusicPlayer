@@ -196,10 +196,19 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     }
 
     private void updateShuffleState() {
-        if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
-            shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
-        } else {
-            shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+        switch (MusicPlayerRemote.getShuffleMode()) {
+            case MusicService.SHUFFLE_MODE_SHUFFLE:
+                shuffleButton.setImageResource(R.drawable.ic_shuffle_white_24dp);
+                shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+                break;
+            case MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM:
+                shuffleButton.setImageResource(R.drawable.ic_shuffle_album_white_24dp);
+                shuffleButton.setColorFilter(lastPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+                break;
+            default:
+                shuffleButton.setImageResource(R.drawable.ic_shuffle_white_24dp);
+                shuffleButton.setColorFilter(lastDisabledPlaybackControlsColor, PorterDuff.Mode.SRC_IN);
+                break;
         }
     }
 

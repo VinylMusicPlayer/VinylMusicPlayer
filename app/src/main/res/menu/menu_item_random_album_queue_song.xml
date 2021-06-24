@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_go_to_album"
+        android:title="@string/action_go_to_album"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_go_to_artist"
+        android:title="@string/action_go_to_artist"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_shuffle_genre_album"
+        android:title="@string/shuffle_album_genre"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_shuffle_artist_album"
+        android:title="@string/shuffle_album_artist"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_shuffle_random_album"
+        android:title="@string/shuffle_album"
+        app:showAsAction="never" />
+</menu>

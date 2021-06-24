@@ -335,4 +335,17 @@
     <string name="rounded_theme_style_name">Arrondi</string>
     <string name="classic_theme_style_name">Classique</string>
     <string name="pref_title_theme_style">Thème style</string>
+    <string name="pref_summary_allow_random_album">A la fin de la liste de lecture, un nouvel album va être chargé aléatoire</string>
+    <string name="pref_title_allow_random_album">Album aléatoire en fin de file de lecture</string>
+    <string name="next_album">Album suivant :</string>
+    <string name="no_album_found">Rien de trouvé</string>
+    <string name="shuffle_album">Recharger album aléatoirement</string>
+    <string name="shuffle_album_genre">Recharger album dans le même genre</string>
+    <string name="shuffle_album_artist">Recharger album avec le même artist</string>
+    <string name="error_random_album_only_one_album">Aucun autre album n\'est disponible</string>
+    <string name="error_random_album_only_two_album">Seul un album possible via cette action</string>
+    <string name="error_random_album_no_new_found">Aucun autre album trouvé via ce critère</string>
+    <string name="error_random_album_repeat_mode">Répetition impossible en mode album aléatoire</string>
+    <string name="error_random_album_search_history">Vous avez chercher tous les albums possible dans cette catégorie</string>
+
 </resources>

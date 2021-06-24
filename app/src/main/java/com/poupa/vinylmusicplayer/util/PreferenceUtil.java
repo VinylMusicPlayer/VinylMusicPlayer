@@ -97,6 +97,7 @@ public final class PreferenceUtil {
     public static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
     public static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
     public static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
+    public static final String ALLOW_RANDOM_ALBUM = "allow_random_album_shuffling";
 
     public static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
     public static final String WHITELIST_ENABLED = "whitelist_enabled";
@@ -638,6 +639,10 @@ public final class PreferenceUtil {
 
     public boolean maintainSkippedSongsPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
+    }
+
+    public final boolean allowRandomAlbum() {
+        return mPreferences.getBoolean(ALLOW_RANDOM_ALBUM, false);
     }
 
     public void setInitializedBlacklist() {
