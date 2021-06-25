@@ -109,7 +109,7 @@ public class MusicPlayerRemote {
     }
 
     public static final class ServiceToken {
-        public ContextWrapper mWrappedContext;
+        public final ContextWrapper mWrappedContext;
 
         public ServiceToken(final ContextWrapper context) {
             mWrappedContext = context;
@@ -436,7 +436,7 @@ public class MusicPlayerRemote {
             }
 
             if (!song.equals(Song.EMPTY_SONG)) {
-                openQueue(new ArrayList<Song>(Arrays.asList(song)), 0, true);
+                openQueue(new ArrayList<>(Arrays.asList(song)), 0, true);
             } else {
                 Log.e(TAG, "No song found for URI: " + uri);
             }

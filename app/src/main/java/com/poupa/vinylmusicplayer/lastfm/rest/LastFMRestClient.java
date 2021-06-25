@@ -24,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LastFMRestClient {
     public static final String BASE_URL = "https://ws.audioscrobbler.com/2.0/";
 
-    private LastFMService apiService;
+    private final LastFMService apiService;
 
     public LastFMRestClient(@NonNull Context context) {
         this(createDefaultOkHttpClientBuilder(context).build());

@@ -51,7 +51,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
 
     @NonNull
-    public static String EXTRA_PLAYLIST = "extra_playlist";
+    public static final String EXTRA_PLAYLIST = "extra_playlist";
 
     RecyclerView recyclerView;
     Toolbar toolbar;

@@ -164,15 +164,11 @@
     <string name="permissions_denied">Достъпът е отказан.</string>
     <string name="permission_external_storage_denied">Достъпът до външното място за съхранение е отказан.</string>
     <string name="support_development">Подкрепете развитието</string>
-    <string name="thank_you">Благодаря Ви!</string>
     <string name="version">Версия</string>
     <string name="author">Автор</string>
-    <string name="follow_on_twitter">Последвай в Twitter</string>
     <string name="visit_website">Посети уебсайт</string>
     <string name="report_bugs">Съобщи за бъгове</string>
     <string name="report_bugs_summary">Съобщи за бъгове или предложи нови идеи</string>
-    <string name="translate">Преведи</string>
-    <string name="translate_summary">Преведете Vinyl Music Player на вашият роден език.</string>
     <string name="rate_on_google_play">Оцени</string>
     <string name="rate_on_google_play_summary">Оставете позитивна оценка в Гугъл Плей ако харесвате Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">За темата и други страхотни неща.</string>

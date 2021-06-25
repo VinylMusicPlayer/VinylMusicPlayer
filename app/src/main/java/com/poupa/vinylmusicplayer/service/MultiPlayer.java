@@ -164,13 +164,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
      * Starts or resumes playback.
      */
     @Override
-    public boolean start() {
+    public void start() {
         try {
             mCurrentMediaPlayer.start();
-            return true;
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -199,13 +197,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
      * Pauses playback. Call start() to resume.
      */
     @Override
-    public boolean pause() {
+    public void pause() {
         try {
             mCurrentMediaPlayer.pause();
-            return true;
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -257,16 +253,13 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
      * Gets the current playback position.
      *
      * @param whereto The offset in milliseconds from the start to seek to
-     * @return The offset in milliseconds from the start to seek to
      */
     @Override
-    public int seek(final int whereto) {
+    public void seek(final int whereto) {
         try {
             mCurrentMediaPlayer.seekTo(whereto);
-            return whereto;
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            return -1;
         }
     }
 

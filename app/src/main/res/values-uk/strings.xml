@@ -158,15 +158,11 @@
     <string name="permissions_denied">У доступі відмовлено.</string>
     <string name="permission_external_storage_denied">Дозвіл на доступ до зовнішньої пам\'яті відмовлено.</string>
     <string name="support_development">Підтримати розробника</string>
-    <string name="thank_you">Щиро дякую!</string>
     <string name="version">Версія</string>
     <string name="author">Автор</string>
-    <string name="follow_on_twitter">Слідкувати у Твіттері</string>
     <string name="visit_website">Відвідати веб-сайт</string>
     <string name="report_bugs">Повідомити про помилку</string>
     <string name="report_bugs_summary">Повідомити про помилку чи попросити нові функції.</string>
-    <string name="translate">Перекласти</string>
-    <string name="translate_summary">Допоможіть перекласти Vinyl Music Player на свою рідну мову.</string>
     <string name="rate_on_google_play">Оцінити</string>
     <string name="rate_on_google_play_summary">Залиште позитивний відгук у Google Play, якщо вам подобається Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">За рушій тем та усілякі круті штуки.</string>

@@ -24,6 +24,9 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivitySearchBinding;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -227,19 +230,19 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
             if (!TextUtils.isEmpty(query)) {
                 final String normalizedQuery = StringUtil.unicodeNormalize(query.trim());
 
-                List songs = SongLoader.getSongs(normalizedQuery);
+                List<Song> songs = SongLoader.getSongs(normalizedQuery);
                 if (!songs.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.songs));
                     results.addAll(songs);
                 }
 
-                List artists = ArtistLoader.getArtists(normalizedQuery);
+                List<Artist> artists = ArtistLoader.getArtists(normalizedQuery);
                 if (!artists.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.artists));
                     results.addAll(artists);
                 }
 
-                List albums = AlbumLoader.getAlbums(normalizedQuery);
+                List<Album> albums = AlbumLoader.getAlbums(normalizedQuery);
                 if (!albums.isEmpty()) {
                     results.add(getContext().getResources().getString(R.string.albums));
                     results.addAll(albums);

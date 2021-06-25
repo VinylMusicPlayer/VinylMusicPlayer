@@ -75,7 +75,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
 
         if (holder.getItemViewType() == HISTORY) {
-            setAlpha(holder, 0.5f);
+            setAlpha(holder);
         }
     }
 
@@ -100,7 +100,8 @@ public class PlayingQueueAdapter extends SongAdapter
         notifyDataSetChanged();
     }
 
-    protected void setAlpha(SongAdapter.ViewHolder holder, float alpha) {
+    protected void setAlpha(SongAdapter.ViewHolder holder) {
+        final float alpha = 0.5f;
         if (holder.image != null) {
             holder.image.setAlpha(alpha);
         }

@@ -201,17 +201,13 @@
     <string name="permissions_denied">Permisos denegats</string>
     <string name="permission_external_storage_denied">S\'ha denegat el permís per accedir a l\'emmagatzematge extern.</string>
     <string name="support_development">Dona suport al desenvolupament</string>
-    <string name="thank_you">Gràcies!</string>
     <string name="version">Versió</string>
     <string name="author">Autor</string>
     <string name="write_an_email">Escriu un correu</string>
-    <string name="follow_on_twitter">Segueix a Twitter</string>
     <string name="fork_on_github">Bifurca a GitHub</string>
     <string name="visit_website">Visita el lloc web</string>
     <string name="report_bugs">Informa d\'un problema</string>
     <string name="report_bugs_summary">Informa d\'un problema o demana noves funcionalitats.</string>
-    <string name="translate">Tradueix</string>
-    <string name="translate_summary">Ajudeu a traduïr el reproductor de música Vinyl a la teva llengua.</string>
     <string name="rate_on_google_play">Puntua</string>
     <string name="rate_on_google_play_summary">Deixeu una puntuació positiva a Google Play si us agrada el reproductor de música Vinyl.</string>
     <string name="aidan_follestad_summary">Pel motor de temes i altres coses fantàstiques.</string>
@@ -314,7 +310,6 @@
     <string name="saf_error_uri">No s\'ha pogut obtenir l\'URI SAF.</string>
     <string name="saf_write_failed">No s\'ha pogut escriure el fitxer: %s</string>
     <string name="saf_delete_failed">No s\'ha pogut suprimir el fitxer: %s</string>
-    <string name="saf_pick_sdcard">És necessari l\'accés a la targeta SD. Seleccioneu el directori arrel de la targeta SD.</string>
     <string name="saf_pick_file">És necessari l\'accés al fitxer. Seleccioneu %s</string>
     <!-- SAF guide -->
     <string name="saf_guide_slide1_title">%s necessita accés a la targeta SD</string>
@@ -325,8 +320,6 @@
     <string name="saf_guide_slide3_title">Toqueu el botó \"Selecciona\" a la part inferior de la pantalla</string>
     <string name="saf_guide_slide3_description">No obriu cap subdirectori</string>
     <!-- Android Auto -->
-    <string name="albums_label">Àlbums</string>
-    <string name="artists_label">Artistes</string>
     <string name="playlists_label">Llistes de reproducció</string>
     <string name="history_label">Historial de reproducció</string>
     <string name="top_tracks_label">Més reproduïdes</string>

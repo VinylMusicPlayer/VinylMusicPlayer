@@ -73,7 +73,7 @@ public class SongMenuHelper {
     }
 
     public static abstract class OnClickSongMenu implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-        private AppCompatActivity activity;
+        private final AppCompatActivity activity;
 
         public OnClickSongMenu(@NonNull AppCompatActivity activity) {
             this.activity = activity;

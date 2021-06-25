@@ -187,17 +187,13 @@
     <string name="permissions_denied">Machtiging geweigerd.</string>
     <string name="permission_external_storage_denied">Toegang tot externe opslag geweigerd.</string>
     <string name="support_development">Ondersteun ontwikkeling</string>
-    <string name="thank_you">Dankjewel!</string>
     <string name="version">Versie</string>
     <string name="author">Auteur</string>
     <string name="write_an_email">Schrijf een email</string>
-    <string name="follow_on_twitter">Volgen op Twitter</string>
     <string name="fork_on_github">Fork op GitHub</string>
     <string name="visit_website">Bezoek website</string>
     <string name="report_bugs">Rapporteer bugs</string>
     <string name="report_bugs_summary">Rapporteer bugs of verzoek nieuwe functies.</string>
-    <string name="translate">Vertalen</string>
-    <string name="translate_summary">Help Vinyl Music Player te vertalen naar jouw moedertaal.</string>
     <string name="rate_on_google_play">Beoordelen</string>
     <string name="rate_on_google_play_summary">Laat een positieve beoordeling achter op Google Play als je Vinyl Music Player leuk vindt.</string>
     <string name="aidan_follestad_summary">Voor de themamogelijkheden en andere goede functies.</string>

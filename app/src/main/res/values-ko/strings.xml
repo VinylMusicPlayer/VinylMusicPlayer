@@ -175,9 +175,7 @@
     <string name="permissions_denied">권한이 거부되었습니다.</string>
     <string name="permission_external_storage_denied">외장 메모리 접근 권한이 거부되었습니다.</string>
     <string name="support_development">개발 지원</string>
-    <string name="thank_you">감사합니다!</string>
     <string name="version">버전</string>
-    <string name="translate">번역</string>
     <string name="intro_label">소개</string>
     <string name="welcome_to_vinyl_music_player">"Android를 위한 아름답고 가벼운 음악 플레이어인 Vinyl Music Player에 오신 것을 환영합니다."</string>
     <string name="folders">폴더</string>

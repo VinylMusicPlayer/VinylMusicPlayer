@@ -77,8 +77,8 @@ public class PlaylistsUtil {
                 if (cursor != null) {
                     cursor.close();
                 }
-            } catch (SecurityException ignored) {
-                ignored.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
             }
         }
         if (id == -1) {
@@ -101,8 +101,8 @@ public class PlaylistsUtil {
         try {
             context.getContentResolver().delete(EXTERNAL_CONTENT_URI, selection.toString(), null);
             notifyChange(context, EXTERNAL_CONTENT_URI);
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -145,8 +145,8 @@ public class PlaylistsUtil {
                 Toast.makeText(context, context.getResources().getString(
                         R.string.inserted_x_songs_into_playlist_x, numInserted, getNameForPlaylist(context, playlistId)), Toast.LENGTH_SHORT).show();
             }
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -175,15 +175,15 @@ public class PlaylistsUtil {
         try {
             context.getContentResolver().delete(uri, selection, selectionArgs);
             notifyChange(context, uri);
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<PlaylistSong> songs) {
         final long playlistId = songs.get(0).playlistId;
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, playlistId);
-        String selectionArgs[] = new String[songs.size()];
+        String[] selectionArgs = new String[songs.size()];
         for (int i = 0; i < selectionArgs.length; i++) {
             selectionArgs[i] = String.valueOf(songs.get(i).idInPlayList);
         }
@@ -194,8 +194,8 @@ public class PlaylistsUtil {
         try {
             context.getContentResolver().delete(uri, selection, selectionArgs);
             notifyChange(context, uri);
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -214,8 +214,8 @@ public class PlaylistsUtil {
                     c.close();
                 }
                 return count > 0;
-            } catch (SecurityException ignored) {
-                ignored.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
             }
         }
         return false;
@@ -242,8 +242,8 @@ public class PlaylistsUtil {
             );
 
             notifyChange(context, playlistUri);
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 
@@ -264,8 +264,8 @@ public class PlaylistsUtil {
                     cursor.close();
                 }
             }
-        } catch (SecurityException ignored) {
-            ignored.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
         return "";
     }

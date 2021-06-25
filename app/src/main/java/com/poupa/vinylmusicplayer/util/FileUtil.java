@@ -30,7 +30,7 @@ public final class FileUtil {
     }
 
     @NonNull
-    public static ArrayList<Song> matchFilesWithMediaStore(@Nullable List<File> files) {
+    public static ArrayList<Song> matchFilesWithMediaStore(@NonNull List<File> files) {
         ArrayList<Song> songs = new ArrayList<>();
         for (File file : files) {
             String path = safeGetCanonicalPath(file);

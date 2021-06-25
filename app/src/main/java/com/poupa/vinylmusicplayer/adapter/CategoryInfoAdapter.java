@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class CategoryInfoAdapter extends RecyclerView.Adapter<CategoryInfoAdapter.ViewHolder> implements SwipeAndDragHelper.ActionCompletionContract {
     private ArrayList<CategoryInfo> categoryInfos;
-    private ItemTouchHelper touchHelper;
+    private final ItemTouchHelper touchHelper;
 
     public CategoryInfoAdapter(ArrayList<CategoryInfo> categoryInfos) {
         this.categoryInfos = categoryInfos;
@@ -98,9 +98,9 @@ public class CategoryInfoAdapter extends RecyclerView.Adapter<CategoryInfoAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public CheckBox checkBox;
-        public TextView title;
-        public View dragView;
+        public final CheckBox checkBox;
+        public final TextView title;
+        public final View dragView;
 
         public ViewHolder(View view) {
             super(view);

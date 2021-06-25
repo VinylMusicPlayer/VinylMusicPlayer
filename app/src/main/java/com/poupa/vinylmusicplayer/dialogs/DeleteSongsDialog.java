@@ -130,8 +130,8 @@ public class DeleteSongsDialog extends DialogFragment {
     }
 
     private static class DeleteSongsAsyncTask extends DialogAsyncTask<DeleteSongsAsyncTask.LoadingInfo, Integer, Void> {
-        private WeakReference<DeleteSongsDialog> dialog;
-        private WeakReference<FragmentActivity> activity;
+        private final WeakReference<DeleteSongsDialog> dialog;
+        private final WeakReference<FragmentActivity> activity;
 
         public DeleteSongsAsyncTask(DeleteSongsDialog dialog) {
             super(dialog.getActivity());
@@ -197,7 +197,7 @@ public class DeleteSongsDialog extends DialogFragment {
         }
 
         public static class LoadingInfo {
-            public boolean isIntent;
+            public final boolean isIntent;
 
             public List<Song> songs;
             public List<Uri> safUris;

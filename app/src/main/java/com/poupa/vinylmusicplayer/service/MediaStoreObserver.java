@@ -6,8 +6,8 @@ import android.os.Handler;
 public class MediaStoreObserver extends ContentObserver implements Runnable {
     // milliseconds to delay before calling refresh to aggregate events
     private static final long REFRESH_DELAY = 500;
-    private Handler mHandler;
-    private MusicService mMusicService;
+    private final Handler mHandler;
+    private final MusicService mMusicService;
 
     public MediaStoreObserver(MusicService musicService, Handler handler) {
         super(handler);

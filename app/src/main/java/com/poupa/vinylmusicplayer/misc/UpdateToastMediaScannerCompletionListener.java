@@ -22,7 +22,7 @@ public class UpdateToastMediaScannerCompletionListener implements MediaScannerCo
     private final String scannedFiles;
     private final String couldNotScanFiles;
 
-    private Toast toast;
+    private final Toast toast;
     private final WeakReference<Activity> activityWeakReference;
 
     @SuppressLint("ShowToast")

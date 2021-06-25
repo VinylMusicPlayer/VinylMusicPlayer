@@ -186,8 +186,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             super(context);
         }
 
+        @SafeVarargs
         @Override
-        protected String doInBackground(ArrayList<Playlist>... params) {
+        protected final String doInBackground(ArrayList<Playlist>... params) {
             int successes = 0;
             int failures = 0;
 

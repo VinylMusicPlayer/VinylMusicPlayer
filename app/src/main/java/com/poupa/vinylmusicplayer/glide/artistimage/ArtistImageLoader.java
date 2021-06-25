@@ -24,9 +24,9 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
     // we need these very low values to make sure our artist image loading calls doesn't block the image loading queue
     private static final int TIMEOUT = 500;
 
-    private Context context;
-    private DeezerApiService deezerClient;
-    private OkHttpClient okhttp;
+    private final Context context;
+    private final DeezerApiService deezerClient;
+    private final OkHttpClient okhttp;
 
     public ArtistImageLoader(Context context, DeezerApiService lastFMRestClient, OkHttpClient okhttp) {
         this.context = context;
@@ -46,9 +46,9 @@ public class ArtistImageLoader implements ModelLoader<ArtistImage, InputStream> 
     }
 
     public static class Factory implements ModelLoaderFactory<ArtistImage, InputStream> {
-        private DeezerApiService deezerClient;
-        private Context context;
-        private OkHttpClient okHttp;
+        private final DeezerApiService deezerClient;
+        private final Context context;
+        private final OkHttpClient okHttp;
 
         public Factory(Context context) {
             this.context = context;

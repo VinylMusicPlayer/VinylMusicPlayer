@@ -45,7 +45,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     protected final AppCompatActivity activity;
     protected ArrayList<Artist> dataSet;
 
-    protected int itemLayoutRes;
+    protected final int itemLayoutRes;
 
     protected boolean usePalette = false;
 
@@ -224,7 +224,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
             if (isInQuickSelectMode()) {
                 toggleChecked(getAdapterPosition());
             } else {
-                Pair[] artistPairs = new Pair[]{
+                Pair<View, String>[] artistPairs = new Pair[]{
                         Pair.create(image,
                                 activity.getResources().getString(R.string.transition_artist_image)
                         )};

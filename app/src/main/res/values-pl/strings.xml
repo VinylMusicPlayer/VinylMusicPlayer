@@ -181,17 +181,13 @@
     <string name="permissions_denied">Odmówiono zezwolenia</string>
     <string name="permission_external_storage_denied">Pozwolenie na dostęp do pamięci zewnętrznej odrzucone</string>
     <string name="support_development">Wspomóż rozwój</string>
-    <string name="thank_you">Dziękuję!</string>
     <string name="version">Wersja</string>
     <string name="author">O autorze</string>
     <string name="write_an_email">Napisz maila</string>
-    <string name="follow_on_twitter">Śledź na Twitterze</string>
     <string name="fork_on_github">Aplikacja na GitHub\'ie</string>
     <string name="visit_website">Odwiedź stronę</string>
     <string name="report_bugs">Zgłoś błędy</string>
     <string name="report_bugs_summary">Zgłaszaj błędy lub propozycje nowych funkcji</string>
-    <string name="translate">Tłumaczenie</string>
-    <string name="translate_summary">Pomóż przetłumaczyć Vinyl Music Player na Twój ojczysty język</string>
     <string name="rate_on_google_play">Oceń</string>
     <string name="rate_on_google_play_summary">Jeśli polubiłeś/aś Vinyl Music Player, oceń go pozytywnie w sklepie Google Play</string>
     <string name="aidan_follestad_summary">Za mechanizm motywów i kilka innych, świetnych rzeczy</string>
@@ -306,7 +302,6 @@
     <string name="saf_error_uri">Nie można pobrać URI SAF</string>
     <string name="saf_write_failed">Zapis pliku się nie udał: %s</string>
     <string name="saf_delete_failed">Usunięcie pliku się nie udało: %s</string>
-    <string name="saf_pick_sdcard">Potrzebny dostęp do karty SD. Proszę wybrać główny katalog na karcie.</string>
     <string name="saf_pick_file">Dostęp do plików wymagany. Wybierz %s</string>
     <string name="saf_guide_slide1_title">%s potrzebuje dostępu do karty SD</string>
     <string name="saf_guide_slide1_description_before_o">Wybierz \"Pokaż kartę SD\" w menu</string>

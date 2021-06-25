@@ -64,7 +64,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         super.onViewCreated(view, savedInstanceState);
         viewPager.addOnPageChangeListener(this);
         viewPager.setOnTouchListener(new View.OnTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            final GestureDetector gestureDetector = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
                     if (callbacks != null) {
@@ -107,7 +107,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
     }
 
     private void updatePlayingQueue() {
-        viewPager.setAdapter(new AlbumCoverPagerAdapter(getFragmentManager(), MusicPlayerRemote.getPlayingQueue()));
+        viewPager.setAdapter(new AlbumCoverPagerAdapter(getParentFragmentManager(), MusicPlayerRemote.getPlayingQueue()));
         viewPager.setCurrentItem(MusicPlayerRemote.getPosition());
         onPageSelected(MusicPlayerRemote.getPosition());
     }
@@ -125,7 +125,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         }
     }
 
-    private AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver colorReceiver = new AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver() {
+    private final AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver colorReceiver = new AlbumCoverPagerAdapter.AlbumCoverFragment.ColorReceiver() {
         @Override
         public void onColorReady(int color, int requestCode) {
             if (currentPosition == requestCode) {
@@ -145,8 +145,8 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         favoriteIcon.setScaleX(0f);
         favoriteIcon.setScaleY(0f);
         favoriteIcon.setVisibility(View.VISIBLE);
-        favoriteIcon.setPivotX(favoriteIcon.getWidth() / 2);
-        favoriteIcon.setPivotY(favoriteIcon.getHeight() / 2);
+        favoriteIcon.setPivotX(favoriteIcon.getWidth() / 2.0f);
+        favoriteIcon.setPivotY(favoriteIcon.getHeight() / 2.0f);
 
         favoriteIcon.animate()
                 .setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME / 2)

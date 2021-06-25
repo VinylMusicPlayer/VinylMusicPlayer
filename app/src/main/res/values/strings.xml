@@ -223,17 +223,13 @@
     <string name="permissions_denied">Permissions denied.</string>
     <string name="permission_external_storage_denied">Permission to access external storage denied.</string>
     <string name="support_development">Support development</string>
-    <string name="thank_you">Thank you!</string>
     <string name="version">Version</string>
     <string name="author">Author</string>
     <string name="write_an_email">Write an email</string>
-    <string name="follow_on_twitter">Follow on Twitter</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="visit_website">Visit website</string>
     <string name="report_bugs">Report bugs</string>
     <string name="report_bugs_summary">Report bugs or request new features.</string>
-    <string name="translate">Translate</string>
-    <string name="translate_summary">Help translating Vinyl Music Player to your native language.</string>
     <string name="rate_on_google_play">Rate</string>
     <string name="rate_on_google_play_summary">Leave a positive rating on Google Play if you like Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">For the theme engine and some other great stuff.</string>
@@ -259,7 +255,6 @@
     <string name="nothing_to_scan">Nothing to scan.</string>
     <string name="scanned_files">Scanned %1$d of %2$d files.</string>
     <string name="could_not_scan_files">Could not scan %d files.</string>
-    <string name="scanning_songs_started">Updating songs…</string>
     <string name="scanning_x_songs_in_progress">Updating %1$d songs…</string>
     <string name="scanning_x_songs_finished">Updated %1$d songs</string>
     <string name="listing_files">Listing files</string>
@@ -347,7 +342,6 @@
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>
     <string name="saf_delete_failed">File delete failed: %s</string>
-    <string name="saf_pick_sdcard">SD card access required. Please pick root directory of SD card</string>
     <string name="saf_pick_file">File access required. Pick %s</string>
     <!-- SAF guide -->
     <string name="saf_guide_slide1_title">%s needs SD card access</string>
@@ -358,8 +352,6 @@
     <string name="saf_guide_slide3_title">Tap \'select\' button at the bottom of the screen</string>
     <string name="saf_guide_slide3_description">Do not open any subfolders</string>
     <!-- Android Auto -->
-    <string name="albums_label">Albums</string>
-    <string name="artists_label">Artists</string>
     <string name="playlists_label">Playlists</string>
     <string name="history_label">History</string>
     <string name="top_tracks_label">Top Tracks</string>

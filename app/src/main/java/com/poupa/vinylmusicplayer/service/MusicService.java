@@ -589,7 +589,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (PreferenceUtil.getInstance().albumArtOnLockscreen()) {
             final Point screenSize = Util.getScreenSize(MusicService.this);
 
-            GlideRequest request = GlideApp.with(MusicService.this)
+            GlideRequest<Bitmap> request = GlideApp.with(MusicService.this)
                     .asBitmap()
                     .load(VinylGlideExtension.getSongModel(song))
                     .transition(VinylGlideExtension.getDefaultTransition())
@@ -1199,6 +1199,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String command = intent.getStringExtra(EXTRA_APP_WIDGET_NAME);
+            if (command == null) {return;}
 
             final int[] ids = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
             switch (command) {

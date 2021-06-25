@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SwipeAndDragHelper extends ItemTouchHelper.Callback {
 
-    private ActionCompletionContract contract;
+    private final ActionCompletionContract contract;
 
     public SwipeAndDragHelper(ActionCompletionContract contract) {
         this.contract = contract;

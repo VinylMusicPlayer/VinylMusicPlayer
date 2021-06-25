@@ -104,7 +104,6 @@
     <string name="today">היום</string>
     <string name="this_week">השבוע</string>
     <string name="this_month">החודש</string>
-    <string name="past_three_months">שלשה חודשים האחרונים</string>
     <string name="this_year">השנה</string>
     <string name="equalizer">אקוולייזר</string>
     <string name="pref_header_colors">צבעים</string>
@@ -187,17 +186,13 @@
     <string name="permissions_denied">הרשאות נדחו.</string>
     <string name="permission_external_storage_denied">הרשאה לגישה לאחסון החיצוני נדחתה.</string>
     <string name="support_development">תמיכה בפיתוח</string>
-    <string name="thank_you">תודה לכם!</string>
     <string name="version">גרסה</string>
     <string name="author">מחבר</string>
     <string name="write_an_email">כתוב אימייל</string>
-    <string name="follow_on_twitter">עקוב בטוויטר</string>
     <string name="fork_on_github">גירסה בGitHub</string>
     <string name="visit_website">ביקור באתר</string>
     <string name="report_bugs">דווח על באגים</string>
     <string name="report_bugs_summary">דווח על באגים או בקש פיצ\'רים חדשים.</string>
-    <string name="translate">תרגם</string>
-    <string name="translate_summary">עזור לתרגם את Vinyl Music Player לשפת האם שלך.</string>
     <string name="rate_on_google_play">דרג</string>
     <string name="rate_on_google_play_summary">השאר דירוג חיובי ב-Google Play אם אתה אוהב את Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">על מנוע ערכת הנושא, ועוד כמה דברים נחמדים.</string>

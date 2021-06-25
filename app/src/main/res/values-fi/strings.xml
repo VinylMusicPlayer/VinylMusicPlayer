@@ -181,17 +181,13 @@
     <string name="permissions_denied">Sinulla ei ole oikeuksia tähän.</string>
     <string name="permission_external_storage_denied">Oikeus päästä muistikortille evätty.</string>
     <string name="support_development">Tue kehitystä</string>
-    <string name="thank_you">Kiitos!</string>
     <string name="version">Versio</string>
     <string name="author">Luoja</string>
     <string name="write_an_email">Kirjoita sähköpostia</string>
-    <string name="follow_on_twitter">Seuraa Twitterissä</string>
     <string name="fork_on_github">Forkkaa GitHubissa</string>
     <string name="visit_website">Vieraile verkkosivulla</string>
     <string name="report_bugs">Raportoi bugeja</string>
     <string name="report_bugs_summary">Raportoi bugeja tai ehdota uusia ominaisuuksia.</string>
-    <string name="translate">Käännä</string>
-    <string name="translate_summary">Auta kääntämään Vinyl Music Player sinun äidinkielellesi.</string>
     <string name="rate_on_google_play">Arvostele</string>
     <string name="rate_on_google_play_summary">Jos pidät Vinyl Music Playerista, jätä sille positiivinen arvostelu Google Play -kaupassa.</string>
     <string name="aidan_follestad_summary">Teemamoottorista ja muutamista muista hienoista jutuista.</string>

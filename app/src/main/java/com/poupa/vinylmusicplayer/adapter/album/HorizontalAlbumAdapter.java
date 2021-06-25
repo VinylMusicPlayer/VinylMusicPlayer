@@ -45,15 +45,13 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
 
     @Override
     protected void setColors(int color, ViewHolder holder) {
-        if (holder.itemView != null) {
-            CardView card = (CardView) holder.itemView;
-            card.setCardBackgroundColor(color);
-            if (holder.title != null) {
-                    holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
-            }
-            if (holder.text != null) {
-                    holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
-            }
+        CardView card = (CardView) holder.itemView;
+        card.setCardBackgroundColor(color);
+        if (holder.title != null) {
+                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+        }
+        if (holder.text != null) {
+                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
         }
     }
 

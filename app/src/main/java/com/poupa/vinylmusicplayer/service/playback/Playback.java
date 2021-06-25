@@ -15,13 +15,13 @@ public interface Playback {
 
     boolean isInitialized();
 
-    boolean start();
+    void start();
 
     void stop();
 
     void release();
 
-    boolean pause();
+    void pause();
 
     boolean isPlaying();
 
@@ -29,7 +29,7 @@ public interface Playback {
 
     int position();
 
-    int seek(int whereto);
+    void seek(int whereto);
 
     boolean setAudioSessionId(int sessionId);
 

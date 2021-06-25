@@ -252,14 +252,16 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             });
 
             final Preference autoDownloadImagesPolicy = findPreference(PreferenceUtil.AUTO_DOWNLOAD_IMAGES_POLICY);
-            setSummary(autoDownloadImagesPolicy);
-            autoDownloadImagesPolicy.setOnPreferenceChangeListener((preference, o) -> {
-                setSummary(autoDownloadImagesPolicy, o);
-                return true;
-            });
+            if (autoDownloadImagesPolicy != null) {
+                setSummary(autoDownloadImagesPolicy);
+                autoDownloadImagesPolicy.setOnPreferenceChangeListener((preference, o) -> {
+                    setSummary(autoDownloadImagesPolicy, o);
+                    return true;
+                });
+            }
 
             final ATEColorPreference primaryColorPref = findPreference("primary_color");
-            if (getActivity() != null) {
+            if (getActivity() != null && primaryColorPref != null) {
                 final int primaryColor = ThemeStore.primaryColor(getActivity());
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
                 primaryColorPref.setOnPreferenceClickListener(preference -> {
@@ -274,64 +276,87 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
 
             final ATEColorPreference accentColorPref = findPreference("accent_color");
-            final int accentColor = ThemeStore.accentColor(getActivity());
-            accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
-            accentColorPref.setOnPreferenceClickListener(preference -> {
-                new ColorChooserDialog.Builder(getActivity(), R.string.accent_color)
-                        .accentMode(true)
-                        .allowUserColorInput(true)
-                        .allowUserColorInputAlpha(false)
-                        .preselect(accentColor)
-                        .show(getActivity());
-                return true;
-            });
-
-            TwoStatePreference colorNavBar = findPreference("should_color_navigation_bar");
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                colorNavBar.setVisible(false);
-            } else {
-                colorNavBar.setChecked(ThemeStore.coloredNavigationBar(getActivity()));
-                colorNavBar.setOnPreferenceChangeListener((preference, newValue) -> {
-                    ThemeStore.editTheme(getActivity())
-                            .coloredNavigationBar((Boolean) newValue)
-                            .commit();
-                    getActivity().recreate();
+            if (getActivity() != null && accentColorPref != null) {
+                final int accentColor = ThemeStore.accentColor(getActivity());
+                accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
+                accentColorPref.setOnPreferenceClickListener(preference -> {
+                    new ColorChooserDialog.Builder(getActivity(), R.string.accent_color)
+                            .accentMode(true)
+                            .allowUserColorInput(true)
+                            .allowUserColorInputAlpha(false)
+                            .preselect(accentColor)
+                            .show(getActivity());
                     return true;
                 });
+            }
+            TwoStatePreference colorNavBar = findPreference("should_color_navigation_bar");
+            if (colorNavBar != null) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    colorNavBar.setVisible(false);
+                } else {
+                    colorNavBar.setChecked(ThemeStore.coloredNavigationBar(getActivity()));
+                    colorNavBar.setOnPreferenceChangeListener((preference, newValue) -> {
+                        ThemeStore.editTheme(getActivity())
+                                .coloredNavigationBar((Boolean) newValue)
+                                .commit();
+                        getActivity().recreate();
+                        return true;
+                    });
+                }
             }
 
             final TwoStatePreference classicNotification = findPreference(PreferenceUtil.CLASSIC_NOTIFICATION);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                classicNotification.setVisible(false);
-            } else {
-                classicNotification.setChecked(PreferenceUtil.getInstance().classicNotification());
-                classicNotification.setOnPreferenceChangeListener((preference, newValue) -> {
-                    // Save preference
-                    PreferenceUtil.getInstance().setClassicNotification((Boolean) newValue);
-                    return true;
-                });
+            if (classicNotification != null) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    classicNotification.setVisible(false);
+                } else {
+                    classicNotification.setChecked(PreferenceUtil.getInstance().classicNotification());
+                    classicNotification.setOnPreferenceChangeListener((preference, newValue) -> {
+                        // Save preference
+                        PreferenceUtil.getInstance().setClassicNotification((Boolean) newValue);
+                        return true;
+                    });
+                }
             }
 
             final TwoStatePreference coloredNotification = findPreference(PreferenceUtil.COLORED_NOTIFICATION);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                coloredNotification.setEnabled(PreferenceUtil.getInstance().classicNotification());
-            } else {
-                coloredNotification.setChecked(PreferenceUtil.getInstance().coloredNotification());
-                coloredNotification.setOnPreferenceChangeListener((preference, newValue) -> {
-                    // Save preference
-                    PreferenceUtil.getInstance().setColoredNotification((Boolean) newValue);
-                    return true;
-                });
+            if (coloredNotification != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    coloredNotification.setEnabled(PreferenceUtil.getInstance().classicNotification());
+                } else {
+                    coloredNotification.setChecked(PreferenceUtil.getInstance().coloredNotification());
+                    coloredNotification.setOnPreferenceChangeListener((preference, newValue) -> {
+                        // Save preference
+                        PreferenceUtil.getInstance().setColoredNotification((Boolean) newValue);
+                        return true;
+                    });
+                }
             }
 
             final TwoStatePreference colorAppShortcuts = findPreference("should_color_app_shortcuts");
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-                colorAppShortcuts.setVisible(false);
-            } else {
-                colorAppShortcuts.setChecked(PreferenceUtil.getInstance().coloredAppShortcuts());
-                colorAppShortcuts.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (colorAppShortcuts != null) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+                    colorAppShortcuts.setVisible(false);
+                } else {
+                    colorAppShortcuts.setChecked(PreferenceUtil.getInstance().coloredAppShortcuts());
+                    colorAppShortcuts.setOnPreferenceChangeListener((preference, newValue) -> {
+                        // Save preference
+                        PreferenceUtil.getInstance().setColoredAppShortcuts((Boolean) newValue);
+
+                        // Update app shortcuts
+                        new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
+
+                        return true;
+                    });
+                }
+            }
+
+            final TwoStatePreference transparentWidgets = findPreference("should_make_widget_background_transparent");
+            if (transparentWidgets != null) {
+                transparentWidgets.setChecked(PreferenceUtil.getInstance().transparentBackgroundWidget());
+                transparentWidgets.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
-                    PreferenceUtil.getInstance().setColoredAppShortcuts((Boolean) newValue);
+                    PreferenceUtil.getInstance().setTransparentBackgroundWidget((Boolean) newValue);
 
                     // Update app shortcuts
                     new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
@@ -340,32 +365,24 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final TwoStatePreference transparentWidgets = findPreference("should_make_widget_background_transparent");
-            transparentWidgets.setChecked(PreferenceUtil.getInstance().transparentBackgroundWidget());
-            transparentWidgets.setOnPreferenceChangeListener((preference, newValue) -> {
-                // Save preference
-                PreferenceUtil.getInstance().setTransparentBackgroundWidget((Boolean) newValue);
-
-                // Update app shortcuts
-                new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
-
-                return true;
-            });
-
             final Preference equalizer = findPreference("equalizer");
-            if (!hasEqualizer()) {
-                equalizer.setEnabled(false);
-                equalizer.setSummary(getResources().getString(R.string.no_equalizer));
+            if (equalizer != null) {
+                if (!hasEqualizer()) {
+                    equalizer.setEnabled(false);
+                    equalizer.setSummary(getResources().getString(R.string.no_equalizer));
+                }
+                equalizer.setOnPreferenceClickListener(preference -> {
+                    NavigationUtil.openEqualizer(getActivity());
+                    return true;
+                });
             }
-            equalizer.setOnPreferenceClickListener(preference -> {
-                NavigationUtil.openEqualizer(getActivity());
-                return true;
-            });
 
             if (PreferenceUtil.getInstance().getReplayGainSourceMode() == PreferenceUtil.RG_SOURCE_MODE_NONE) {
                 Preference pref = findPreference("replaygain_preamp");
-                pref.setEnabled(false);
-                pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
+                if (pref != null) {
+                    pref.setEnabled(false);
+                    pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
+                }
             }
 
             updateNowPlayingScreenSummary();
@@ -395,12 +412,14 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     break;
                 case PreferenceUtil.RG_SOURCE_MODE_V2:
                     Preference pref = findPreference("replaygain_preamp");
-                    if (!sharedPreferences.getString(key, "none").equals("none")) {
-                        pref.setEnabled(true);
-                        pref.setSummary(R.string.pref_summary_rg_preamp);
-                    } else {
-                        pref.setEnabled(false);
-                        pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
+                    if (pref != null) {
+                        if (!sharedPreferences.getString(key, "none").equals("none")) {
+                            pref.setEnabled(true);
+                            pref.setSummary(R.string.pref_summary_rg_preamp);
+                        } else {
+                            pref.setEnabled(false);
+                            pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
+                        }
                     }
                     break;
                 case PreferenceUtil.WHITELIST_ENABLED:

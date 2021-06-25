@@ -27,14 +27,14 @@ public class RingtoneManager {
         return false;
     }
 
-    public static MaterialDialog showDialog(Context context) {
-        return new MaterialDialog.Builder(context)
+    public static void showDialog(Context context) {
+        new MaterialDialog.Builder(context)
                 .title(R.string.dialog_ringtone_title)
                 .content(R.string.dialog_ringtone_message)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
                 .onPositive((dialog, which) -> {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
@@ -56,21 +56,16 @@ public class RingtoneManager {
         }
 
         try {
-            Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            try (Cursor cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     new String[]{MediaStore.MediaColumns.TITLE},
                     BaseColumns._ID + "=?",
                     new String[]{String.valueOf(id)},
-                    null);
-            try {
+                    null)) {
                 if (cursor != null && cursor.getCount() == 1) {
                     cursor.moveToFirst();
                     Settings.System.putString(resolver, Settings.System.RINGTONE, uri.toString());
                     final String message = context.getString(R.string.x_has_been_set_as_ringtone, cursor.getString(0));
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
                 }
             }
         } catch (SecurityException ignored) {

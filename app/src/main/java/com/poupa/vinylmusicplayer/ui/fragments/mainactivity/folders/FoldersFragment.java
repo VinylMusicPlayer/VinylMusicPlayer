@@ -104,7 +104,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         if (addToHistory) {
             breadCrumbs.addHistory(crumb);
         }
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
     private void saveScrollPosition() {
@@ -130,7 +130,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
             setCrumb(new BreadCrumbLayout.Crumb(FileUtil.safeGetCanonicalFile((File) getArguments().getSerializable(PATH))), true);
         } else {
             breadCrumbs.restoreFromStateWrapper(savedInstanceState.getParcelable(CRUMBS));
-            getLoaderManager().initLoader(LOADER_ID, null, this);
+            LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
         }
     }
 
@@ -479,7 +479,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     private static class AsyncFileLoader extends WrappedAsyncTaskLoader<List<File>> {
-        private WeakReference<FoldersFragment> fragmentWeakReference;
+        private final WeakReference<FoldersFragment> fragmentWeakReference;
 
         public AsyncFileLoader(FoldersFragment foldersFragment) {
             super(foldersFragment.getActivity());
@@ -507,8 +507,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     private static class ListSongsAsyncTask extends ListingFilesDialogAsyncTask<ListSongsAsyncTask.LoadingInfo, Void, ArrayList<Song>> {
-        private WeakReference<Context> contextWeakReference;
-        private WeakReference<OnSongsListedCallback> callbackWeakReference;
+        private final WeakReference<Context> contextWeakReference;
+        private final WeakReference<OnSongsListedCallback> callbackWeakReference;
         private final Object extra;
 
         public ListSongsAsyncTask(Context context, Object extra, OnSongsListedCallback callback) {
@@ -590,7 +590,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     }
 
     public static class ListPathsAsyncTask extends ListingFilesDialogAsyncTask<ListPathsAsyncTask.LoadingInfo, String, String[]> {
-        private OnPathsListedCallback onPathsListedCallback;
+        private final OnPathsListedCallback onPathsListedCallback;
 
         public ListPathsAsyncTask(Context context, OnPathsListedCallback callback) {
             super(context, 500);

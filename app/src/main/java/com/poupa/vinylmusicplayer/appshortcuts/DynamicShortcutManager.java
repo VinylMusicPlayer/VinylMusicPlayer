@@ -22,8 +22,8 @@ import java.util.List;
 @TargetApi(Build.VERSION_CODES.N_MR1)
 public class DynamicShortcutManager {
 
-    private Context context;
-    private ShortcutManager shortcutManager;
+    private final Context context;
+    private final ShortcutManager shortcutManager;
 
     public DynamicShortcutManager(Context context) {
         this.context = context;

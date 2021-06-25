@@ -190,17 +190,13 @@
     <string name="permissions_denied">Autorisations refusées.</string>
     <string name="permission_external_storage_denied">Accès au stockage externe refusé.</string>
     <string name="support_development">Faire un don</string>
-    <string name="thank_you">Merci !</string>
     <string name="version">Version</string>
     <string name="author">Auteur</string>
     <string name="write_an_email">Écrire un email</string>
-    <string name="follow_on_twitter">Suivre sur Twitter</string>
     <string name="fork_on_github">Afficher sur GitHub</string>
     <string name="visit_website">Visiter le site internet</string>
     <string name="report_bugs">Signaler des bugs</string>
     <string name="report_bugs_summary">Signalez des bugs ou demandez des nouvelles fonctionnalités.</string>
-    <string name="translate">Traduire</string>
-    <string name="translate_summary">Aidez à traduire Vinyl Music Player dans votre langue maternelle.</string>
     <string name="rate_on_google_play">Évaluer</string>
     <string name="rate_on_google_play_summary">Laissez une note positive sur le Play Store si vous aimez Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">Pour le moteur de thème et quelques autres trucs formidables.</string>
@@ -314,7 +310,6 @@
     <string name="saf_error_uri">Impossible d\'obtenir SAF URI</string>
     <string name="saf_write_failed">Echec d\'écriture: %s</string>
     <string name="saf_delete_failed">La suppression du fichier a echoué: %s</string>
-    <string name="saf_pick_sdcard">L\'accès à la carte SD est nécessaire. Sélectionné la racine de la carte SD</string>
     <string name="saf_guide_slide1_title">%s à besoin de l\'accès a la carte SD</string>
     <string name="saf_guide_slide1_description_before_o">Activé \'Show SD card\' dans le menu déroulan</string>
     <string name="saf_guide_slide1_description">Ouvrir le menu de navigation</string>
@@ -322,8 +317,6 @@
     <string name="saf_guide_slide2_description">Vous devez selectionner la racine de la carte SD</string>
     <string name="saf_guide_slide3_title">Appuyé sur le boutton \'selectionner\' en bas de l\'écran</string>
     <string name="saf_guide_slide3_description">N\'ouvrez aucun sous-dossier</string>
-    <string name="albums_label">Albums</string>
-    <string name="artists_label">Artistes</string>
     <string name="playlists_label">Playlists</string>
     <string name="history_label">Historique</string>
     <string name="queue_label">File d\'attente</string>

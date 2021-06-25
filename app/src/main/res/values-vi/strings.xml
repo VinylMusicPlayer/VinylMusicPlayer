@@ -180,17 +180,13 @@
     <string name="permissions_denied">Quyền hạn bị từ chối.</string>
     <string name="permission_external_storage_denied">Quyền truy cập lưu trữ bên ngoài bị từ chối.</string>
     <string name="support_development">Hỗ trợ phát triển</string>
-    <string name="thank_you">Cảm ơn!</string>
     <string name="version">Phiên bản</string>
     <string name="author">Tác giả</string>
     <string name="write_an_email">Viết email</string>
-    <string name="follow_on_twitter">Theo dõi trên Twitter</string>
     <string name="fork_on_github">Fork trên GitHub</string>
     <string name="visit_website">Truy cập trang web</string>
     <string name="report_bugs">Báo lỗi</string>
     <string name="report_bugs_summary">Báo lỗi và yêu cầu tính năng mới.</string>
-    <string name="translate">Dịch</string>
-    <string name="translate_summary">Hỗ trợ dịch Vinyl Music Player sang ngôn ngữ của bạn.</string>
     <string name="rate_on_google_play">Đánh giá</string>
     <string name="rate_on_google_play_summary">Hãy để lại một đánh giá tốt trên Google Play nếu bạn thích Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">Bộ máy chủ đề và một vài thứ tuyệt vời khác.</string>

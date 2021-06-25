@@ -91,7 +91,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 alpha = 1;
             }
             toolbar.setBackgroundColor(ColorUtil.withAlpha(paletteColorPrimary, alpha));
-            image.setTranslationY(scrollY / 2);
+            image.setTranslationY(scrollY / 2.0f);
         }
     };
     private List<String> songPaths;
@@ -331,7 +331,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     private static class WriteTagsAsyncTask extends DialogAsyncTask<WriteTagsAsyncTask.LoadingInfo, Integer, String[]> {
-        private WeakReference<Activity> activity;
+        private final WeakReference<Activity> activity;
 
         public WriteTagsAsyncTask(Activity activity) {
             super(activity);
@@ -490,7 +490,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             @Nullable
             public final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
-            private ArtworkInfo artworkInfo;
+            private final ArtworkInfo artworkInfo;
 
             private LoadingInfo(Collection<String> filePaths, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
                 this.filePaths = filePaths;
@@ -517,6 +517,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        if (intent == null) {return;}
+
         switch (requestCode) {
             case REQUEST_CODE_SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {

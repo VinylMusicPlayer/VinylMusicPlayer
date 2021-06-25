@@ -41,7 +41,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
     private final CabHolder cabHolder;
     private MaterialCab cab;
     private ArrayList<Song> dataSet;
-    private ArrayList<Song> checked;
+    private final ArrayList<Song> checked;
 
     private int color;
 
@@ -119,7 +119,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.action_go_to_album) {
-                    Pair[] albumPairs = new Pair[]{
+                    Pair<View, String>[] albumPairs = new Pair[]{
                             Pair.create(albumArt, activity.getResources().getString(R.string.transition_album_art))
                     };
                     NavigationUtil.goToAlbum(activity, song.albumId, albumPairs);

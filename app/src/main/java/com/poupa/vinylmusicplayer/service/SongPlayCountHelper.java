@@ -6,7 +6,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 class SongPlayCountHelper {
     public static final String TAG = com.poupa.vinylmusicplayer.service.SongPlayCountHelper.class.getSimpleName();
 
-    private StopWatch stopWatch = new StopWatch();
+    private final StopWatch stopWatch = new StopWatch();
     private Song song = Song.EMPTY_SONG;
 
     public Song getSong() {

@@ -193,17 +193,13 @@
     <string name="permissions_denied">İzinler reddedildi.</string>
     <string name="permission_external_storage_denied">Harici depolamaya erişim izin reddedildi.</string>
     <string name="support_development">Geliştirmeyi destekleyin</string>
-    <string name="thank_you">Teşekkürler!</string>
     <string name="version">Sürüm</string>
     <string name="author">Yapımcı</string>
     <string name="write_an_email">Bir e-posta yazın</string>
-    <string name="follow_on_twitter">Twitter\'da takip et</string>
     <string name="fork_on_github">GitHub\'a bağlanın</string>
     <string name="visit_website">Web sitesini ziyaret edin</string>
     <string name="report_bugs">Hataları raporlayın</string>
     <string name="report_bugs_summary">Hataları raporlayın ya da yeni özellikler talep edin.</string>
-    <string name="translate">Çeviri</string>
-    <string name="translate_summary">Vinyl Music Player\'ı kendi dilinize çevirmek için yardımcı olun.</string>
     <string name="rate_on_google_play">Oy ver</string>
     <string name="rate_on_google_play_summary">Eğer Vinyl Music Player\'ı beğendiyseniz Google Play\'de olumlu oy verin.</string>
     <string name="aidan_follestad_summary">Tema motoru ve diğer muhteşem özellikler için.</string>

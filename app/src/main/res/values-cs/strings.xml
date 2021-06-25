@@ -193,16 +193,12 @@
     <string name="permissions_denied">"Oprávnění zamítnuta. "</string>
     <string name="permission_external_storage_denied">"Přístup k otevření externího úložiště zamítnut. "</string>
     <string name="support_development">Podpořte vývoj</string>
-    <string name="thank_you">"Díky! "</string>
     <string name="version">Verze</string>
     <string name="author">Autor</string>
     <string name="write_an_email">Napsat e-mail</string>
-    <string name="follow_on_twitter">Sledovat na Twitteru</string>
     <string name="visit_website">Navštívit stránku</string>
     <string name="report_bugs">Ohlásit chybu</string>
     <string name="report_bugs_summary">"Nahlásit chyby nebo požádat o nové funkce. "</string>
-    <string name="translate">Překládejte</string>
-    <string name="translate_summary">"Pomozte nám přeložit Vinyl Music Player do vašeho mateřského jazyka. "</string>
     <string name="rate_on_google_play">Ohodnotit</string>
     <string name="rate_on_google_play_summary">Pokud máte Vinyl Music Player rádi, zanechte pozitivní hodnocení na Google Play.</string>
     <string name="aidan_follestad_summary">Za motivy a jiné další super věci.</string>

@@ -221,7 +221,7 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
     void invalidateActivatedAll() {
         for (int i = 0; i < mCrumbs.size(); i++) {
             Crumb crumb = mCrumbs.get(i);
-            invalidateActivated(mChildFrame.getChildAt(i), mActive == mCrumbs.indexOf(crumb), false, i < mCrumbs.size() - 1).setText(crumb.getTitle());
+            invalidateActivated(mChildFrame.getChildAt(i), mActive == mCrumbs.indexOf(crumb), i < mCrumbs.size() - 1).setText(crumb.getTitle());
         }
     }
 
@@ -247,7 +247,7 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
                 removeCrumbAt(index);
             if (mChildFrame.getChildCount() > 0) {
                 int lastIndex = mCrumbs.size() - 1;
-                invalidateActivated(mChildFrame.getChildAt(lastIndex), mActive == lastIndex, false, false);
+                invalidateActivated(mChildFrame.getChildAt(lastIndex), mActive == lastIndex, false);
             }
         }
         return removedActive || mCrumbs.size() == 0;
@@ -297,16 +297,14 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
         return mCrumbs.size();
     }
 
-    private TextView invalidateActivated(View view, final boolean isActive, final boolean noArrowIfAlone, final boolean allowArrowVisible) {
+    private TextView invalidateActivated(View view, final boolean isActive, final boolean allowArrowVisible) {
         int contentColor = isActive ? contentColorActivated : contentColorDeactivated;
         LinearLayout child = (LinearLayout) view;
         TextView tv = (TextView) child.getChildAt(0);
         tv.setTextColor(contentColor);
         ImageView iv = (ImageView) child.getChildAt(1);
         iv.setColorFilter(contentColor, PorterDuff.Mode.SRC_IN);
-        if (noArrowIfAlone && getChildCount() == 1)
-            iv.setVisibility(View.GONE);
-        else if (allowArrowVisible)
+        if (allowArrowVisible)
             iv.setVisibility(View.VISIBLE);
         else
             iv.setVisibility(View.GONE);
