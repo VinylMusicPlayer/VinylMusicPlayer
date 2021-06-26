@@ -50,22 +50,6 @@ import java.util.ArrayList;
  * <p>Subclasses only need to implement {@link #getItem(int)}
  * and {@link #getCount()} to have a working adapter.
  * <p/>
- * <p>Here is an example implementation of a pager containing fragments of
- * lists:
- * <p/>
- * {@sample development/samples/Support13Demos/src/com/example/android/supportv13/app/FragmentStatePagerSupport.java
- * complete}
- * <p/>
- * <p>The <code>R.layout.fragment_pager</code> resource of the top-level fragment is:
- * <p/>
- * {@sample development/samples/Support13Demos/res/layout/fragment_pager.xml
- * complete}
- * <p/>
- * <p>The <code>R.layout.fragment_pager_list</code> resource containing each
- * individual fragment's layout is:
- * <p/>
- * {@sample development/samples/Support13Demos/res/layout/fragment_pager_list.xml
- * complete}
  */
 public abstract class CustomFragmentStatePagerAdapter extends PagerAdapter {
 
