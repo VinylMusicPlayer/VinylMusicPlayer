@@ -11,8 +11,6 @@ import android.widget.FrameLayout;
  */
 public class HeightFitSquareLayout extends FrameLayout {
 
-    private final boolean forceSquare = true;
-
     public HeightFitSquareLayout(Context context) {
         super(context);
     }
@@ -32,6 +30,6 @@ public class HeightFitSquareLayout extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(forceSquare ? heightMeasureSpec : widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(heightMeasureSpec, heightMeasureSpec);
     }
 }

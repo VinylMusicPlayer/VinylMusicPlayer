@@ -62,7 +62,7 @@ class MaterialTheme implements ThemeStyle {
     }
 
     public void setDragView(AppCompatImageView dragView) {
-        ((AppCompatImageView)dragView).setImageResource(R.drawable.ic_drag_vertical_material_white_24dp);
+        dragView.setImageResource(R.drawable.ic_drag_vertical_material_white_24dp);
         ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) dragView.getLayoutParams();
         p.leftMargin = 0;
     }
