@@ -50,7 +50,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     protected final int itemLayoutRes;
 
     protected boolean usePalette;
-    protected boolean showSectionName;
+    protected final boolean showSectionName;
     protected boolean showAlbumImage = true;
 
     public RecyclerView recyclerView;
