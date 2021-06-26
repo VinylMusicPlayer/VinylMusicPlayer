@@ -2,9 +2,6 @@ package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.loader.app.LoaderManager;
-
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
 

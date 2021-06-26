@@ -11,11 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter.ViewHolder;
-import com.poupa.vinylmusicplayer.adapter.album.AlbumAdapter;
-import com.poupa.vinylmusicplayer.adapter.artist.ArtistAdapter;
-import com.poupa.vinylmusicplayer.adapter.song.PlayingQueueAdapter;
-import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
-import com.poupa.vinylmusicplayer.glide.GlideRequest;
 
 public interface ThemeStyle {
     boolean showSongAlbumArt();
