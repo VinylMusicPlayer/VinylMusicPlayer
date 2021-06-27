@@ -193,14 +193,14 @@ public final class SortOrder {
                 ),
                 Impl.build(
                         MediaStore.Audio.Media.YEAR,
-                        album -> Integer.toString(album.getYear()),
+                        album -> MusicUtil.getYearString(album.getYear()),
                         BY_YEAR,
                         R.id.action_album_sort_order_year,
                         R.string.sort_order_year
                 ),
                 Impl.build(
                         MediaStore.Audio.Media.YEAR + " DESC",
-                        artist -> Integer.toString(artist.getYear()),
+                        artist -> MusicUtil.getYearString(artist.getYear()),
                         BY_YEAR_DESC,
                         R.id.action_album_sort_order_year_reverse,
                         R.string.sort_order_year_reverse
