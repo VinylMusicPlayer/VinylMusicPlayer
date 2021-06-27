@@ -35,9 +35,7 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -203,32 +201,8 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @NonNull
     @Override
     public String getSectionName(int position) {
-        @Nullable String sectionName = null;
-        final String sortOrder = PreferenceUtil.getInstance().getAlbumSortOrder();
-        switch (sortOrder) {
-            case SortOrder.AlbumSortOrder.ALBUM_A_Z:
-            case SortOrder.AlbumSortOrder.ALBUM_Z_A:
-                sectionName = dataSet.get(position).getTitle();
-                break;
-            case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
-                sectionName = dataSet.get(position).getArtistName();
-                break;
-            case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
-                return MusicUtil.getYearString(dataSet.get(position).getYear());
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_MODIFIED_REVERSE:
-                long date;
-                if (sortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE)) {
-                    date = dataSet.get(position).getDateAdded();
-                } else {
-                    date = dataSet.get(position).getDateModified();
-                }
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(new Date(1000 * date));
-                break;
-        }
-
-        return MusicUtil.getSectionName(sectionName);
+        SortOrder.Base<Album> sortOrder = SortOrder.ByAlbum.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {

@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
@@ -18,10 +17,6 @@ import java.util.Comparator;
  * @author SC (soncaokim)
  */
 public class ArtistLoader {
-    public final static Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
-    public final static Comparator<Artist> BY_ARTIST_DESC = ComparatorUtil.reverse(BY_ARTIST);
-    public final static Comparator<Artist> BY_DATE_MODIFIED_DESC = (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateModified(), a1.getDateModified());
-
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
         ArrayList<Artist> artists = Discography.getInstance().getAllArtists();

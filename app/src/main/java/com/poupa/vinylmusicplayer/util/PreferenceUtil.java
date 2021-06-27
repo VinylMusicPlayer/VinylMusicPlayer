@@ -304,7 +304,7 @@ public final class PreferenceUtil {
     }
 
     public final String getAlbumSortOrder() {
-        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
+        return mPreferences.getString(ALBUM_SORT_ORDER, "");
     }
 
     public void setAlbumSortOrder(final String sortOrder) {

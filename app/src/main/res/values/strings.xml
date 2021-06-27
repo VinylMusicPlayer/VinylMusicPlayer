@@ -319,7 +319,9 @@
     <string name="sort_order_name_reverse">Name - Z to A</string>
     <string name="sort_order_artist">Artist</string>
     <string name="sort_order_album">Album</string>
+    <string name="sort_order_year">Year</string>
     <string name="sort_order_year_reverse">Year - Recent first</string>
+    <string name="sort_order_date_added">Added</string>
     <string name="sort_order_date_added_reverse">Added - Recent first</string>
     <string name="sort_order_date_modified">Modified</string>
     <string name="sort_order_date_modified_reverse">Modified - Recent first</string>

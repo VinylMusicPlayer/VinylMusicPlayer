@@ -33,6 +33,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
@@ -331,18 +332,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         sortOrderMenu.clear();
 
         if (fragment instanceof AlbumsFragment) {
-            sortOrderMenu.add(0, R.id.action_album_sort_order_name, 0, R.string.sort_order_name)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_A_Z));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_name_reverse, 1, R.string.sort_order_name_reverse)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_Z_A));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_artist, 2, R.string.sort_order_artist)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_ARTIST));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_year_reverse, 3, R.string.sort_order_year_reverse)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_date_added_reverse, 4, R.string.sort_order_date_added_reverse)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE));
-            sortOrderMenu.add(0, R.id.action_album_sort_order_date_modified_reverse, 4, R.string.sort_order_date_modified_reverse)
-                    .setChecked(currentSortOrder.equals(SortOrder.AlbumSortOrder.ALBUM_DATE_MODIFIED_REVERSE));
+            SortOrder.ByAlbum.buildMenu(sortOrderMenu, currentSortOrder);
         } else if (fragment instanceof ArtistsFragment) {
             SortOrder.ByArtist.buildMenu(sortOrderMenu, currentSortOrder);
         } else if (fragment instanceof SongsFragment) {
@@ -369,19 +359,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         String sortOrder = null;
         final int itemId = item.getItemId();
         if (fragment instanceof AlbumsFragment) {
-            if (itemId == R.id.action_album_sort_order_name) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_A_Z;
-            } else if (itemId == R.id.action_album_sort_order_name_reverse) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_Z_A;
-            } else if (itemId == R.id.action_album_sort_order_artist) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_ARTIST;
-            } else if (itemId == R.id.action_album_sort_order_year_reverse) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE;
-            } else if (itemId == R.id.action_album_sort_order_date_added_reverse) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE;
-            } else if (itemId == R.id.action_album_sort_order_date_modified_reverse) {
-                sortOrder = SortOrder.AlbumSortOrder.ALBUM_DATE_MODIFIED_REVERSE;
-            }
+            SortOrder.Base<Album> sorter = SortOrder.ByAlbum.fromMenuResourceId(itemId);
+            if (sorter != null) {sortOrder = sorter.preferenceValue;}
         } else if (fragment instanceof ArtistsFragment) {
             SortOrder.Base<Artist> sorter = SortOrder.ByArtist.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}

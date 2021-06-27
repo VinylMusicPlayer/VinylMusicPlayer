@@ -9,12 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -45,14 +46,14 @@ public final class SortOrder {
     }
 
     private static class Impl {
-        static Base<Artist> build(
+        static <T> Base<T> build(
                 @NonNull String preferenceValue,
-                @NonNull Function<Artist, String> sectionNameBuilder,
-                @NonNull Comparator<Artist> comparatorFunc,
+                @NonNull Function<T, String> sectionNameBuilder,
+                @NonNull Comparator<T> comparatorFunc,
                 @IdRes int menuResourceId,
                 @StringRes int menuTextId)
         {
-            Base<Artist> result = new Base<>();
+            Base<T> result = new Base<>();
             result.preferenceValue = preferenceValue;
             result.sectionNameBuilder = sectionNameBuilder;
             result.comparator = comparatorFunc;
@@ -63,7 +64,7 @@ public final class SortOrder {
 
         static @NonNull String getSectionName(long seconds) {
             final Date date = new Date(1000 * seconds);
-            final String format = "yy";
+            final String format = "yyyy";
             return android.text.format.DateFormat.format(format, date).toString();
         }
 
@@ -94,37 +95,39 @@ public final class SortOrder {
     }
 
     public static abstract class ByArtist {
-        private static final List<Base<Artist>> SUPPORTED_ORDERS = new ArrayList<>();
-        static {
-            SUPPORTED_ORDERS.add(Impl.build(
-                    MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
-                    artist -> Impl.getSectionName(artist.getName()),
-                    (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name),
-                    R.id.action_artist_sort_order_name,
-                    R.string.sort_order_name
-            ));
-            SUPPORTED_ORDERS.add(Impl.build(
-                    MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + " DESC",
-                    artist -> Impl.getSectionName(artist.getName()),
-                    (a1, a2) -> StringUtil.compareIgnoreAccent(a2.name, a1.name),
-                    R.id.action_artist_sort_order_name_reverse,
-                    R.string.sort_order_name_reverse
-            ));
-            SUPPORTED_ORDERS.add(Impl.build(
-                    MediaStore.Audio.Media.DATE_MODIFIED,
-                    artist -> Impl.getSectionName(artist.getDateModified()),
-                    (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified()),
-                    R.id.action_artist_sort_order_date_modified,
-                    R.string.sort_order_date_modified
-            ));
-            SUPPORTED_ORDERS.add(Impl.build(
-                    MediaStore.Audio.Media.DATE_MODIFIED + " DESC",
-                    artist -> Impl.getSectionName(artist.getDateModified()),
-                    (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateModified(), a1.getDateModified()),
-                    R.id.action_artist_sort_order_date_modified_reverse,
-                    R.string.sort_order_date_modified_reverse
-            ));
-        }
+        private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
+        private static final Comparator<Artist> BY_DATE_MODIFIED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified());
+
+        private static final List<Base<Artist>> SUPPORTED_ORDERS = Arrays.asList(
+                Impl.build(
+                        MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
+                        artist -> Impl.getSectionName(artist.getName()),
+                        BY_ARTIST,
+                        R.id.action_artist_sort_order_name,
+                        R.string.sort_order_name
+                ),
+                Impl.build(
+                        MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + " DESC",
+                        artist -> Impl.getSectionName(artist.getName()),
+                        ComparatorUtil.reverse(BY_ARTIST),
+                        R.id.action_artist_sort_order_name_reverse,
+                        R.string.sort_order_name_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED,
+                        artist -> Impl.getSectionName(artist.getDateModified()),
+                        BY_DATE_MODIFIED,
+                        R.id.action_artist_sort_order_date_modified,
+                        R.string.sort_order_date_modified
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED + " DESC",
+                        artist -> Impl.getSectionName(artist.getDateModified()),
+                        ComparatorUtil.reverse(BY_DATE_MODIFIED),
+                        R.id.action_artist_sort_order_date_modified_reverse,
+                        R.string.sort_order_date_modified_reverse
+                )
+        );
 
         public static @NonNull Base<Artist> fromPreference(@NonNull String preferenceValue) {
             Base<Artist> match = Impl.collectionSearch(SUPPORTED_ORDERS, preferenceValue, x -> x.preferenceValue);
@@ -135,7 +138,8 @@ public final class SortOrder {
         }
 
         public static @Nullable Base<Artist> fromMenuResourceId(@IdRes int id) {
-            // Attn: Dont provide fallback default value, this function can be called with an alien menu res ID
+            // Attn: Dont provide fallback default value
+            // this function can be called with an alien menu res ID, and in such case it should return null value
             return Impl.collectionSearch(SUPPORTED_ORDERS, id, x -> x.menuResourceId);
         }
 
@@ -144,27 +148,110 @@ public final class SortOrder {
         }
     }
 
-    /**
-     * Album sort order entries.
-     */
-    public interface AlbumSortOrder {
-        /* Album sort order A-Z */
-        String ALBUM_A_Z = MediaStore.Audio.Albums.DEFAULT_SORT_ORDER;
+    public static abstract class ByAlbum {
+        private static final Comparator<Album> _BY_ALBUM_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
+                a1.safeGetFirstSong().albumName,
+                a2.safeGetFirstSong().albumName);
+        private static final Comparator<Album> _BY_ARTIST_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
+                a1.getArtistName(),
+                a2.getArtistName());
+        private static final Comparator<Album> _BY_DATE_ADDED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
+        private static final Comparator<Album> _BY_DATE_MODIFIED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified());
+        private static final Comparator<Album> _BY_YEAR = (a1, a2) -> a1.getYear() - a2.getYear();
 
-        /* Album sort order Z-A */
-        String ALBUM_Z_A = ALBUM_A_Z + " DESC";
+        private static final Comparator<Album> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM_NAME, _BY_ARTIST_NAME);
+        private static final Comparator<Album> BY_ALBUM_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_ALBUM_NAME), _BY_ARTIST_NAME);
+        private static final Comparator<Album> BY_ARTIST = ComparatorUtil.chain(_BY_ARTIST_NAME, _BY_ALBUM_NAME);
+        private static final Comparator<Album> BY_DATE_ADDED = ComparatorUtil.chain(_BY_DATE_ADDED, _BY_ALBUM_NAME);
+        private static final Comparator<Album> BY_DATE_ADDED_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_DATE_ADDED), _BY_ALBUM_NAME);
+        private static final Comparator<Album> BY_DATE_MODIFIED = ComparatorUtil.chain(_BY_DATE_MODIFIED, _BY_ALBUM_NAME);
+        private static final Comparator<Album> BY_DATE_MODIFIED_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_DATE_MODIFIED), _BY_ALBUM_NAME);
+        private static final Comparator<Album> BY_YEAR = ComparatorUtil.chain(_BY_YEAR, _BY_ALBUM_NAME);
+        public static final Comparator<Album> BY_YEAR_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_YEAR), _BY_ALBUM_NAME);
 
-        /* Album sort order artist */
-        String ALBUM_ARTIST = MediaStore.Audio.Artists.DEFAULT_SORT_ORDER
-                + ", " + MediaStore.Audio.Albums.DEFAULT_SORT_ORDER;
+        private static final List<Base<Album>> SUPPORTED_ORDERS = Arrays.asList(
+                Impl.build(
+                        MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + ", " + MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
+                        album -> Impl.getSectionName(album.getArtistName()),
+                        BY_ARTIST,
+                        R.id.action_album_sort_order_artist,
+                        R.string.sort_order_artist
+                ),
+                Impl.build(
+                        MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
+                        album -> Impl.getSectionName(album.getTitle()),
+                        BY_ALBUM,
+                        R.id.action_album_sort_order_name,
+                        R.string.sort_order_name
+                ),
+                Impl.build(
+                        MediaStore.Audio.Albums.DEFAULT_SORT_ORDER + " DESC",
+                        album -> Impl.getSectionName(album.getTitle()),
+                        BY_ALBUM_DESC,
+                        R.id.action_album_sort_order_name_reverse,
+                        R.string.sort_order_name_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.YEAR,
+                        album -> Impl.getSectionName(album.getYear()),
+                        BY_YEAR,
+                        R.id.action_album_sort_order_year,
+                        R.string.sort_order_year
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.YEAR + " DESC",
+                        artist -> Impl.getSectionName(artist.getYear()),
+                        BY_YEAR_DESC,
+                        R.id.action_album_sort_order_year_reverse,
+                        R.string.sort_order_year_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_ADDED,
+                        album -> Impl.getSectionName(album.getDateAdded()),
+                        BY_DATE_ADDED,
+                        R.id.action_album_sort_order_date_added,
+                        R.string.sort_order_date_added
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                        artist -> Impl.getSectionName(artist.getDateAdded()),
+                        BY_DATE_ADDED_DESC,
+                        R.id.action_album_sort_order_date_added_reverse,
+                        R.string.sort_order_date_added_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED,
+                        album -> Impl.getSectionName(album.getDateModified()),
+                        BY_DATE_MODIFIED,
+                        R.id.action_album_sort_order_date_modified,
+                        R.string.sort_order_date_modified
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED + " DESC",
+                        artist -> Impl.getSectionName(artist.getDateModified()),
+                        BY_DATE_MODIFIED_DESC,
+                        R.id.action_album_sort_order_date_modified_reverse,
+                        R.string.sort_order_date_modified_reverse
+                )
+        );
 
-        /* Album sort order year */
-        String ALBUM_YEAR_REVERSE = MediaStore.Audio.Media.YEAR + " DESC";
+        public static @NonNull Base<Album> fromPreference(@NonNull String preferenceValue) {
+            Base<Album> match = Impl.collectionSearch(SUPPORTED_ORDERS, preferenceValue, x -> x.preferenceValue);
+            if (match == null) {
+                match = SUPPORTED_ORDERS.get(0);
+            }
+            return match;
+        }
 
-        /* Album date added */
-        String ALBUM_DATE_ADDED_REVERSE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
+        public static @Nullable Base<Album> fromMenuResourceId(@IdRes int id) {
+            // Attn: Dont provide fallback default value
+            // this function can be called with an alien menu res ID, and in such case it should return null value
+            return Impl.collectionSearch(SUPPORTED_ORDERS, id, x -> x.menuResourceId);
+        }
 
-        String ALBUM_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
+        public static void buildMenu(@NonNull SubMenu sortOrderMenu, String currentPreferenceValue) {
+            Impl.buildMenu(SUPPORTED_ORDERS, sortOrderMenu, currentPreferenceValue);
+        }
     }
 
     /**
