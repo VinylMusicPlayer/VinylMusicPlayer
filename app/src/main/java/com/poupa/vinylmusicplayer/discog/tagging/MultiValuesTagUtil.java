@@ -59,11 +59,13 @@ public class MultiValuesTagUtil {
     @NonNull
     private static List<String> splitImpl(@Nullable final String names, @NonNull final String separator) {
         ArrayList<String> result = new ArrayList<>();
-        if (TextUtils.isEmpty(names)) {return result;}
-
-        String[] namesSplit = names.split(separator);
-        for (String name : namesSplit) {
-            result.add(name.trim());
+        if (TextUtils.isEmpty(names)) {
+            result.add("");
+        } else {
+            String[] namesSplit = names.split(separator);
+            for (String name : namesSplit) {
+                result.add(name.trim());
+            }
         }
         return result;
     }
