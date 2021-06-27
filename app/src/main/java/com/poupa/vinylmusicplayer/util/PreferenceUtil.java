@@ -314,7 +314,7 @@ public final class PreferenceUtil {
     }
 
     public final String getSongSortOrder() {
-        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
+        return mPreferences.getString(SONG_SORT_ORDER, "");
     }
 
     public void setSongSortOrder(final String sortOrder) {

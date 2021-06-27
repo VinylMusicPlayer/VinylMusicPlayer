@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
-import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -199,7 +199,7 @@ public class Discography implements MusicServiceEventListener {
             }
         }
         // Maintain sorted album after merge
-        Collections.sort(fullAlbum.songs, SongLoader.BY_DISC_TRACK);
+        Collections.sort(fullAlbum.songs, SortOrder.BySong.BY_DISC_TRACK);
         return fullAlbum;
     }
 

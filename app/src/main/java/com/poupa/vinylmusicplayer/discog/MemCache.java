@@ -64,7 +64,7 @@ class MemCache {
             Collections.sort(artist.albums, SortOrder.ByAlbum.BY_YEAR_DESC);
         }
         for (Album album : albums.values()) {
-            Collections.sort(album.songs, SongLoader.BY_DISC_TRACK);
+            Collections.sort(album.songs, SortOrder.BySong.BY_DISC_TRACK);
         }
     }
 

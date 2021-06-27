@@ -9,8 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
@@ -94,7 +96,7 @@ public final class SortOrder {
         }
     }
 
-    public static abstract class ByArtist {
+    public static class ByArtist {
         private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
         private static final Comparator<Artist> BY_DATE_MODIFIED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified());
 
@@ -148,7 +150,7 @@ public final class SortOrder {
         }
     }
 
-    public static abstract class ByAlbum {
+    public static class ByAlbum {
         private static final Comparator<Album> _BY_ALBUM_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
                 a1.safeGetFirstSong().albumName,
                 a2.safeGetFirstSong().albumName);
@@ -254,28 +256,117 @@ public final class SortOrder {
         }
     }
 
-    /**
-     * Song sort order entries.
-     */
-    public interface SongSortOrder {
-        /* Song sort order A-Z */
-        String SONG_A_Z = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+    public static class BySong {
+        private static final Comparator<Song> _BY_TITLE = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.title, s2.title);
+        private static final Comparator<Song> _BY_ARTIST = (s1, s2) -> StringUtil.compareIgnoreAccent(
+                MultiValuesTagUtil.infoString(s1.artistNames),
+                MultiValuesTagUtil.infoString(s2.artistNames));
+        private static final Comparator<Song> _BY_ALBUM = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.albumName, s2.albumName);
+        private static final Comparator<Song> _BY_YEAR = (s1, s2) -> s1.year - s2.year;
+        public static final Comparator<Song> BY_DATE_ADDED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded);
+        public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
+        private static final Comparator<Song> BY_DATE_MODIFIED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateModified, s2.dateModified);
+        private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
+        public static final Comparator<Song> BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
+                ? (s1.discNumber - s2.discNumber)
+                : (s1.trackNumber - s2.trackNumber);
 
-        /* Song sort order Z-A */
-        String SONG_Z_A = SONG_A_Z + " DESC";
+        private static final Comparator<Song> BY_TITLE = ComparatorUtil.chain(_BY_TITLE, _BY_ARTIST);
+        private static final Comparator<Song> BY_TITLE_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_TITLE), _BY_ARTIST);
+        private static final Comparator<Song> BY_ARTIST = ComparatorUtil.chain(_BY_ARTIST, _BY_TITLE);
+        public static final Comparator<Song> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM, BY_DISC_TRACK);
+        private static final Comparator<Song> BY_YEAR = ComparatorUtil.chain(_BY_YEAR, _BY_TITLE);
+        private static final Comparator<Song> BY_YEAR_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_YEAR), _BY_TITLE);
 
-        /* Song sort order artist */
-        String SONG_ARTIST = MediaStore.Audio.Artists.DEFAULT_SORT_ORDER;
+        private static final List<Base<Song>> SUPPORTED_ORDERS = Arrays.asList(
+                Impl.build(
+                        MediaStore.Audio.Media.DEFAULT_SORT_ORDER,
+                        song -> Impl.getSectionName(song.title),
+                        BY_TITLE,
+                        R.id.action_song_sort_order_name,
+                        R.string.sort_order_name
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DEFAULT_SORT_ORDER + " DESC",
+                        song -> Impl.getSectionName(song.title),
+                        BY_TITLE_DESC,
+                        R.id.action_song_sort_order_name_reverse,
+                        R.string.sort_order_name_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
+                        song -> Impl.getSectionName(MultiValuesTagUtil.infoString(song.artistNames)),
+                        BY_ARTIST,
+                        R.id.action_song_sort_order_artist,
+                        R.string.sort_order_artist
+                ),
+                Impl.build(
+                        MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
+                        song -> Impl.getSectionName(song.albumName),
+                        BY_ALBUM,
+                        R.id.action_song_sort_order_album,
+                        R.string.sort_order_album
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.YEAR,
+                        song -> MusicUtil.getYearString(song.year),
+                        BY_YEAR,
+                        R.id.action_song_sort_order_year,
+                        R.string.sort_order_year
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.YEAR + " DESC",
+                        song -> MusicUtil.getYearString(song.year),
+                        BY_YEAR_DESC,
+                        R.id.action_song_sort_order_year_reverse,
+                        R.string.sort_order_year_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_ADDED,
+                        song -> Impl.getSectionName(song.dateAdded),
+                        BY_DATE_ADDED,
+                        R.id.action_song_sort_order_date_added,
+                        R.string.sort_order_date_added
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                        song -> Impl.getSectionName(song.dateAdded),
+                        BY_DATE_ADDED_DESC,
+                        R.id.action_song_sort_order_date_added_reverse,
+                        R.string.sort_order_date_added_reverse
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED,
+                        song -> Impl.getSectionName(song.dateModified),
+                        BY_DATE_MODIFIED,
+                        R.id.action_song_sort_order_date_modified,
+                        R.string.sort_order_date_modified
+                ),
+                Impl.build(
+                        MediaStore.Audio.Media.DATE_MODIFIED + " DESC",
+                        song -> Impl.getSectionName(song.dateModified),
+                        BY_DATE_MODIFIED_DESC,
+                        R.id.action_song_sort_order_date_modified_reverse,
+                        R.string.sort_order_date_modified_reverse
+                )
+        );
 
-        /* Song sort order album */
-        String SONG_ALBUM = MediaStore.Audio.Albums.DEFAULT_SORT_ORDER;
+        public static @NonNull Base<Song> fromPreference(@NonNull String preferenceValue) {
+            Base<Song> match = Impl.collectionSearch(SUPPORTED_ORDERS, preferenceValue, x -> x.preferenceValue);
+            if (match == null) {
+                match = SUPPORTED_ORDERS.get(0);
+            }
+            return match;
+        }
 
-        /* Song sort order year */
-        String SONG_YEAR_REVERSE = MediaStore.Audio.Media.YEAR + " DESC";
+        public static @Nullable Base<Song> fromMenuResourceId(@IdRes int id) {
+            // Attn: Dont provide fallback default value
+            // this function can be called with an alien menu res ID, and in such case it should return null value
+            return Impl.collectionSearch(SUPPORTED_ORDERS, id, x -> x.menuResourceId);
+        }
 
-        /* Song sort order date */
-        String SONG_DATE_ADDED_REVERSE = MediaStore.Audio.Media.DATE_ADDED + " DESC";
-
-        String SONG_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
+        public static void buildMenu(@NonNull SubMenu sortOrderMenu, String currentPreferenceValue) {
+            Impl.buildMenu(SUPPORTED_ORDERS, sortOrderMenu, currentPreferenceValue);
+        }
     }
 }

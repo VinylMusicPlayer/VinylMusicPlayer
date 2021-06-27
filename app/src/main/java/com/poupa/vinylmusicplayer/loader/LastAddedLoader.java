@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.loader;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -20,7 +21,7 @@ public class LastAddedLoader {
             if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
         }
 
-        Collections.sort(lastAddedSongs, SongLoader.BY_DATE_ADDED_DESC);
+        Collections.sort(lastAddedSongs, SortOrder.BySong.BY_DATE_ADDED_DESC);
         return lastAddedSongs;
     }
 }

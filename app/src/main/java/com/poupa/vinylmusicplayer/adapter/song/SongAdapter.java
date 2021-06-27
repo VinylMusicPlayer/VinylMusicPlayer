@@ -21,7 +21,6 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
-import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
@@ -35,9 +34,7 @@ import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -202,35 +199,8 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             return "";
         }
 
-        @Nullable String sectionName = null;
-        final String sortOrder = PreferenceUtil.getInstance().getSongSortOrder();
-        switch (sortOrder) {
-            case SortOrder.SongSortOrder.SONG_A_Z:
-            case SortOrder.SongSortOrder.SONG_Z_A:
-                sectionName = dataSet.get(position).title;
-                break;
-            case SortOrder.SongSortOrder.SONG_ALBUM:
-                sectionName = dataSet.get(position).albumName;
-                break;
-            case SortOrder.SongSortOrder.SONG_ARTIST:
-                sectionName = MultiValuesTagUtil.infoString(dataSet.get(position).artistNames);
-                break;
-            case SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE:
-            case SortOrder.SongSortOrder.SONG_DATE_MODIFIED_REVERSE:
-                long date;
-                if (sortOrder.equals(SortOrder.SongSortOrder.SONG_DATE_ADDED_REVERSE)) {
-                    date = dataSet.get(position).dateAdded;
-                } else {
-                    date = dataSet.get(position).dateModified;
-                }
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(new Date(1000 * date));
-                break;
-            case SortOrder.SongSortOrder.SONG_YEAR_REVERSE:
-                return MusicUtil.getYearString(dataSet.get(position).year);
-        }
-
-        return MusicUtil.getSectionName(sectionName);
+        SortOrder.Base<Song> sortOrder = SortOrder.BySong.fromPreference(PreferenceUtil.getInstance().getSongSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
