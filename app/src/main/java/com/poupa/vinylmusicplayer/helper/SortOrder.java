@@ -63,7 +63,7 @@ public final class SortOrder {
 
         static @NonNull String getSectionName(long seconds) {
             final Date date = new Date(1000 * seconds);
-            final String format = "y";
+            final String format = "yy";
             return android.text.format.DateFormat.format(format, date).toString();
         }
 
@@ -109,6 +109,13 @@ public final class SortOrder {
                     (a1, a2) -> StringUtil.compareIgnoreAccent(a2.name, a1.name),
                     R.id.action_artist_sort_order_name_reverse,
                     R.string.sort_order_name_reverse
+            ));
+            SUPPORTED_ORDERS.add(Impl.build(
+                    MediaStore.Audio.Media.DATE_MODIFIED,
+                    artist -> Impl.getSectionName(artist.getDateModified()),
+                    (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified()),
+                    R.id.action_artist_sort_order_date_modified,
+                    R.string.sort_order_date_modified
             ));
             SUPPORTED_ORDERS.add(Impl.build(
                     MediaStore.Audio.Media.DATE_MODIFIED + " DESC",

@@ -11,6 +11,7 @@
     <item name="action_album_sort_order_date_modified_reverse" type="id" />
     <item name="action_artist_sort_order_name" type="id" />
     <item name="action_artist_sort_order_name_reverse" type="id" />
+    <item name="action_artist_sort_order_date_modified" type="id" />
     <item name="action_artist_sort_order_date_modified_reverse" type="id" />
     <item name="action_song_sort_order_name" type="id" />
     <item name="action_song_sort_order_name_reverse" type="id" />
