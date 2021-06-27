@@ -31,11 +31,14 @@ import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
+import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
@@ -333,11 +336,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         sortOrderMenu.clear();
 
         if (fragment instanceof AlbumsFragment) {
-            SortOrder.ByAlbum.buildMenu(sortOrderMenu, currentSortOrder);
+            AlbumSortOrder.buildMenu(sortOrderMenu, currentSortOrder);
         } else if (fragment instanceof ArtistsFragment) {
-            SortOrder.ByArtist.buildMenu(sortOrderMenu, currentSortOrder);
+            ArtistSortOrder.buildMenu(sortOrderMenu, currentSortOrder);
         } else if (fragment instanceof SongsFragment) {
-            SortOrder.BySong.buildMenu(sortOrderMenu, currentSortOrder);
+            SongSortOrder.buildMenu(sortOrderMenu, currentSortOrder);
         }
 
         sortOrderMenu.setGroupCheckable(0, true, true);
@@ -347,13 +350,13 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         String sortOrder = null;
         final int itemId = item.getItemId();
         if (fragment instanceof AlbumsFragment) {
-            SortOrder.Base<Album> sorter = SortOrder.ByAlbum.fromMenuResourceId(itemId);
+            SortOrder<Album> sorter = AlbumSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         } else if (fragment instanceof ArtistsFragment) {
-            SortOrder.Base<Artist> sorter = SortOrder.ByArtist.fromMenuResourceId(itemId);
+            SortOrder<Artist> sorter = ArtistSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         } else if (fragment instanceof SongsFragment) {
-            SortOrder.Base<Song> sorter = SortOrder.BySong.fromMenuResourceId(itemId);
+            SortOrder<Song> sorter = SongSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         }
 

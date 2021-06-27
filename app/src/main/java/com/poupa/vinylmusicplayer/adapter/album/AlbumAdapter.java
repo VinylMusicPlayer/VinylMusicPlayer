@@ -24,11 +24,12 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -201,7 +202,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @NonNull
     @Override
     public String getSectionName(int position) {
-        SortOrder.Base<Album> sortOrder = SortOrder.ByAlbum.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
+        SortOrder<Album> sortOrder = AlbumSortOrder.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 

@@ -3,9 +3,10 @@ package com.poupa.vinylmusicplayer.loader;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.util.StringUtil;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class AlbumLoader {
 
     @NonNull
     private static Comparator<Album> getSortOrder() {
-        SortOrder.Base<Album> sortOrder = SortOrder.ByAlbum.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
+        SortOrder<Album> sortOrder = AlbumSortOrder.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
         return sortOrder.comparator;
     }
 }

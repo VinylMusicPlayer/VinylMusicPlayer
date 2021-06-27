@@ -23,20 +23,19 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -192,7 +191,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     @NonNull
     @Override
     public String getSectionName(int position) {
-        SortOrder.Base<Artist> sortOrder = SortOrder.ByArtist.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
+        SortOrder<Artist> sortOrder = ArtistSortOrder.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 

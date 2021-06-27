@@ -22,11 +22,11 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.provider.StoreLoader;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class TopAndRecentlyPlayedTracksLoader {
         // Collect not played songs
         ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
         ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
-        Collections.sort(allSongs, SortOrder.BySong.BY_DATE_ADDED);
+        Collections.sort(allSongs, SongSortOrder.BY_DATE_ADDED);
 
         for (Song song : allSongs) {
             if (!playedSongIds.contains(song.id)) {

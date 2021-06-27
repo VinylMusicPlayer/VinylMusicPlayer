@@ -22,7 +22,8 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -199,7 +200,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             return "";
         }
 
-        SortOrder.Base<Song> sortOrder = SortOrder.BySong.fromPreference(PreferenceUtil.getInstance().getSongSortOrder());
+        SortOrder<Song> sortOrder = SongSortOrder.fromPreference(PreferenceUtil.getInstance().getSongSortOrder());
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 

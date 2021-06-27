@@ -17,7 +17,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
