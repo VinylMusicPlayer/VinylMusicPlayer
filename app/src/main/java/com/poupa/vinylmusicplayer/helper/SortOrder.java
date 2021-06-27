@@ -1,42 +1,140 @@
-/*
- * Copyright (C) 2012 Andrew Neal Licensed under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
 package com.poupa.vinylmusicplayer.helper;
 
 import android.provider.MediaStore;
+import android.view.SubMenu;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+
+import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.util.ComparatorUtil;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Function;
+
+import static android.view.Menu.NONE;
 
 /**
- * Holds all of the sort orders for each list type.
- *
- * @author Andrew Neal (andrewdneal@gmail.com)
+ * @author SC (soncaokim)
  */
 public final class SortOrder {
+    // TODO Rename this class
+    public static class Base<T> {
+        /** The value saved in the preferences for this sort order */
+        public String preferenceValue;
 
-    /**
-     * This class is never instantiated
-     */
-    public SortOrder() {
+        /** The representative text for this item */
+        public Function<T, String> sectionNameBuilder;
+
+        /** The comparator used for this sort order*/
+        public Comparator<T> comparator;
+
+        /** the menu resource ID that is assigned to this sort order */
+        public @IdRes int menuResourceId;
+
+        /** the menu string ID that is assigned to this sort order */
+        public int menuTextId;
     }
 
-    /**
-     * Artist sort order entries.
-     */
-    public interface ArtistSortOrder {
-        /* Artist sort order A-Z */
-        String ARTIST_A_Z = MediaStore.Audio.Artists.DEFAULT_SORT_ORDER;
+    private static class Impl {
+        static Base<Artist> build(
+                @NonNull String preferenceValue,
+                @NonNull Function<Artist, String> sectionNameBuilder,
+                @NonNull Comparator<Artist> comparatorFunc,
+                @IdRes int menuResourceId,
+                @StringRes int menuTextId)
+        {
+            Base<Artist> result = new Base<>();
+            result.preferenceValue = preferenceValue;
+            result.sectionNameBuilder = sectionNameBuilder;
+            result.comparator = comparatorFunc;
+            result.menuResourceId = menuResourceId;
+            result.menuTextId = menuTextId;
+            return result;
+        }
 
-        /* Artist sort order Z-A */
-        String ARTIST_Z_A = ARTIST_A_Z + " DESC";
+        static @NonNull String getSectionName(long seconds) {
+            final Date date = new Date(1000 * seconds);
+            final String format = "y";
+            return android.text.format.DateFormat.format(format, date).toString();
+        }
 
-        String ARTIST_DATE_MODIFIED_REVERSE = MediaStore.Audio.Media.DATE_MODIFIED + " DESC";
+        static @NonNull String getSectionName(@NonNull String name) {
+            // TODO This is too much, can be simplified as: charAt[0].toUpper()
+            return MusicUtil.getSectionName(name);
+        }
+
+        static <T, U> T collectionSearch(List<T> collection, U searchValue, Function<T, U> valueExtractor) {
+            T match = null;
+            for (T item : collection) {
+                if (valueExtractor.apply(item).equals(searchValue)) {
+                    match = item;
+                    break;
+                }
+            }
+            return match;
+        }
+
+
+        static <T> void buildMenu(List<Base<T>> collection, @NonNull SubMenu sortOrderMenu, String currentPreferenceValue) {
+            for (Base<T> item : collection) {
+                sortOrderMenu
+                        .add(0, item.menuResourceId, NONE, item.menuTextId)
+                        .setChecked(currentPreferenceValue.equals(item.preferenceValue));
+            }
+        }
+    }
+
+    public static abstract class ByArtist {
+        private static final List<Base<Artist>> SUPPORTED_ORDERS = new ArrayList<>();
+        static {
+            SUPPORTED_ORDERS.add(Impl.build(
+                    MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
+                    artist -> Impl.getSectionName(artist.getName()),
+                    (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name),
+                    R.id.action_artist_sort_order_name,
+                    R.string.sort_order_name
+            ));
+            SUPPORTED_ORDERS.add(Impl.build(
+                    MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + " DESC",
+                    artist -> Impl.getSectionName(artist.getName()),
+                    (a1, a2) -> StringUtil.compareIgnoreAccent(a2.name, a1.name),
+                    R.id.action_artist_sort_order_name_reverse,
+                    R.string.sort_order_name_reverse
+            ));
+            SUPPORTED_ORDERS.add(Impl.build(
+                    MediaStore.Audio.Media.DATE_MODIFIED + " DESC",
+                    artist -> Impl.getSectionName(artist.getDateModified()),
+                    (a1, a2) -> ComparatorUtil.compareLongInts(a2.getDateModified(), a1.getDateModified()),
+                    R.id.action_artist_sort_order_date_modified_reverse,
+                    R.string.sort_order_date_modified_reverse
+            ));
+        }
+
+        public static @NonNull Base<Artist> fromPreference(@NonNull String preferenceValue) {
+            Base<Artist> match = Impl.collectionSearch(SUPPORTED_ORDERS, preferenceValue, x -> x.preferenceValue);
+            if (match == null) {
+                match = SUPPORTED_ORDERS.get(0);
+            }
+            return match;
+        }
+
+        public static @Nullable Base<Artist> fromMenuResourceId(@IdRes int id) {
+            // Attn: Dont provide fallback default value, this function can be called with an alien menu res ID
+            return Impl.collectionSearch(SUPPORTED_ORDERS, id, x -> x.menuResourceId);
+        }
+
+        public static void buildMenu(@NonNull SubMenu sortOrderMenu, String currentPreferenceValue) {
+            Impl.buildMenu(SUPPORTED_ORDERS, sortOrderMenu, currentPreferenceValue);
+        }
     }
 
     /**

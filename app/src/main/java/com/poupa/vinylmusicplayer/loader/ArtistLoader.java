@@ -56,16 +56,7 @@ public class ArtistLoader {
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
-            case SortOrder.ArtistSortOrder.ARTIST_DATE_MODIFIED_REVERSE:
-                return BY_DATE_MODIFIED_DESC;
-
-            case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                return BY_ARTIST_DESC;
-
-            case SortOrder.ArtistSortOrder.ARTIST_A_Z:
-            default:
-                return BY_ARTIST;
-        }
+        SortOrder.Base<Artist> sortOrder = SortOrder.ByArtist.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
+        return sortOrder.comparator;
     }
 }

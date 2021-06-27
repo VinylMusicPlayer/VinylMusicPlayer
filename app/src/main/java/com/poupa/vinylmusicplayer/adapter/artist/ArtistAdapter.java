@@ -184,7 +184,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     private ArrayList<Song> getSongList(@NonNull List<Artist> artists) {
         final ArrayList<Song> songs = new ArrayList<>();
         for (Artist artist : artists) {
-            songs.addAll(artist.getSongs()); // maybe async in future?
+            songs.addAll(artist.getSongs());
         }
         return songs;
     }
@@ -192,21 +192,8 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     @NonNull
     @Override
     public String getSectionName(int position) {
-        @Nullable String sectionName = null;
-        switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
-            case SortOrder.ArtistSortOrder.ARTIST_A_Z:
-            case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                sectionName = dataSet.get(position).getName();
-                break;
-
-            case SortOrder.ArtistSortOrder.ARTIST_DATE_MODIFIED_REVERSE:
-                Date date = new Date(1000 * dataSet.get(position).getDateModified());
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(date);
-                break;
-        }
-
-        return MusicUtil.getSectionName(sectionName);
+        SortOrder.Base<Artist> sortOrder = SortOrder.ByArtist.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {

@@ -294,7 +294,7 @@ public final class PreferenceUtil {
     }
 
     public final String getArtistSortOrder() {
-        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z);
+        return mPreferences.getString(ARTIST_SORT_ORDER, "");
     }
 
     public void setArtistSortOrder(final String sortOrder) {
