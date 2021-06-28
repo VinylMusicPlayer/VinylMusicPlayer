@@ -47,6 +47,7 @@ public class Discography implements MusicServiceEventListener {
 
     private MainActivity mainActivity = null;
     private Handler mainActivityTaskQueue = null;
+    private final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
     public Discography() {
@@ -70,6 +71,9 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void stopService() {
+        // Flush the delayed task queue - dont do anything is we are stopping
+        mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+
         mainActivity = null;
         mainActivityTaskQueue = null;
     }
@@ -266,10 +270,9 @@ public class Discography implements MusicServiceEventListener {
             // Prevent reentrance - delay to later
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 final long DELAY = 500;
-                final String COALESCENCE_TOKEN = "Discography::triggerSyncWithMediaStore";
 
-                mainActivityTaskQueue.removeCallbacksAndMessages(COALESCENCE_TOKEN);
-                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), COALESCENCE_TOKEN, DELAY);
+                mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
         } else {
             (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
