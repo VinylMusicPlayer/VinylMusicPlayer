@@ -1,6 +1,9 @@
 package com.poupa.vinylmusicplayer.discog.tagging;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -19,7 +22,7 @@ public class MultiValuesTagUtil {
     private static final String INFO_STRING_SEPARATOR = "; ";
 
     @NonNull
-    public static List<String> split(@NonNull final String names) {
+    public static List<String> split(@Nullable final String names) {
         return MultiValuesTagUtil.splitImpl(names, SINGLE_LINE_SEPARATOR);
     }
 
@@ -44,7 +47,7 @@ public class MultiValuesTagUtil {
     }
 
     @NonNull
-    public static List<String> tagEditorSplit(@NonNull final String names) {
+    public static List<String> tagEditorSplit(@Nullable final String names) {
         return MultiValuesTagUtil.splitIfNeeded(MultiValuesTagUtil.splitImpl(names, MULTI_LINE_SEPARATOR));
     }
 
@@ -54,11 +57,15 @@ public class MultiValuesTagUtil {
     }
 
     @NonNull
-    private static List<String> splitImpl(@NonNull final String names, @NonNull final String separator) {
-        String[] namesSplit = names.split(separator);
+    private static List<String> splitImpl(@Nullable final String names, @NonNull final String separator) {
         ArrayList<String> result = new ArrayList<>();
-        for (String name : namesSplit) {
-            result.add(name.trim());
+        if (TextUtils.isEmpty(names)) {
+            result.add("");
+        } else {
+            String[] namesSplit = names.split(separator);
+            for (String name : namesSplit) {
+                result.add(name.trim());
+            }
         }
         return result;
     }
