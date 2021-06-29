@@ -148,7 +148,7 @@
 	<string name="pref_summary_maintain_top_tracks_playlist">Salva una playlist dei brani più ascoltati</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Salva una playlist dei brani più saltati durante la riproduzione</string>
     <string name="pref_title_synchronized_lyrics_show">Mostra testi sincronizzati</string>
-    <string name="pref_title_animate_playing_song_icon">Anzimazioni dell'icona di riproduzoione del brano</string>
+    <string name="pref_title_animate_playing_song_icon">Anzimazioni dell\'icona di riproduzoione del brano</string>
     <string name="pref_title_remember_last_tab">Ricorda ultima scheda</string>
     <string name="pref_title_remember_shuffle">Ricorda ripdouzione casuale</string>
     <string name="no_equalizer">Nessun equalizzatore trovato</string>
@@ -186,7 +186,7 @@
     <string name="pref_summary_audio_ducking">Notifiche, navigazione ecc.</string>
     <string name="pref_summary_synchronized_lyrics_show">Al momento solo i testi sincronizzati in formato LRC sono supportati, sia integrati o come file separati.</string>
     <string name="pref_summary_animate_playing_song_icon">Dai vita all\'icona del brano in ascolto nelle schermate relative al brano</string>
-    <string name="pref_summary_remember_last_tab">All'\avvio apre l\'ultima scheda aperta</string>
+    <string name="pref_summary_remember_last_tab">All\'avvio apre l\'ultima scheda aperta</string>
     <string name="pref_summary_remember_shuffle">La riproduzione casuale rimarrà attiva selezionando un nuovo elenco di brani</string>
     <string name="could_not_download_album_cover">"Impossibile scaricare una copertina adatta."</string>
     <string name="search_hint">Cercando nella tua libreria…</string>
@@ -215,17 +215,13 @@
     <string name="permissions_denied">Permesso negato.</string>
     <string name="permission_external_storage_denied">Permesso per accedere alla memoria esterna negato.</string>
     <string name="support_development">Supporta lo sviluppo</string>
-    <string name="thank_you">Grazie!</string>
     <string name="version">Versione</string>
     <string name="author">Autore</string>
     <string name="write_an_email">Scrivi un\'email</string>
-    <string name="follow_on_twitter">Segui su Twitter</string>
     <string name="fork_on_github">Vai su GitHub</string>
     <string name="visit_website">Visita sito web</string>
     <string name="report_bugs">Segnala bug</string>
     <string name="report_bugs_summary">Segnala bug o richiedi nuove funzionalità.</string>
-    <string name="translate">Traduci</string>
-    <string name="translate_summary">Aiuta a tradurre Vinyl Music Player nella tua lingua.</string>
     <string name="rate_on_google_play">Valuta</string>
     <string name="rate_on_google_play_summary">Lascia una valutazione positiva su Google Play se ti piace Vinyl Music Player.</string>
     <string name="aidan_follestad_summary">Per il theme engine e altre cose fantastiche.</string>
@@ -338,8 +334,7 @@
     <string name="saf_error_uri">Impossibile ottnere SAF URI</string>
     <string name="saf_write_failed">Scrittura del file fallita: %s</string>
     <string name="saf_delete_failed">Eliminazione del file fallita: %s</string>
-    <string name="saf_pick_sdcard">È richiesto l'accesso alla scheda SD. Conferma la radice della scheda SD card</string>
-    <string name="saf_pick_file">È richiesto l'accesso ai file. Conferma %s</string>
+    <string name="saf_pick_file">È richiesto l\'accesso ai file. Conferma %s</string>
     <!-- SAF guide -->
     <string name="saf_guide_slide1_title">%s richiede accesso alla scheda SD</string>
     <string name="saf_guide_slide1_description_before_o">Abilita \'Mostra scheda SD \' nel menù a scomparsa</string>
@@ -349,8 +344,6 @@
     <string name="saf_guide_slide3_title">Tocca il pulsante \'seleziona\' in basso alla schermata</string>
     <string name="saf_guide_slide3_description">Non aprire alcuna sottocartella</string>
     <!-- Android Auto -->
-    <string name="albums_label">Album</string>
-    <string name="artists_label">Artisti</string>
     <string name="playlists_label">Playlist</string>
     <string name="history_label">Cronologia</string>
     <string name="top_tracks_label">Brani più ascoltati</string>
@@ -361,7 +354,7 @@
     <string name="pref_summary_show_song_number">Mostra il numero della traccia nella coda di riproduzione e nella notifica</string>
     <string name="pref_title_show_song_number">Mostra numero della traccia</string>
     <string name="auto_limited_listing_title">Elenco limitato durante la guida</string>
-    <string name="auto_limited_listing_subtitle">Apri l'\app per vedere l\'elenco completo</string>
+    <string name="auto_limited_listing_subtitle">Apri l\'app per vedere l\'elenco completo</string>
     <string name="whitelist">Lista bianca</string>
     <string name="pref_summary_whitelist">Mostra esclusivamente il contenuto di questa cartella: </string>
 </resources>
