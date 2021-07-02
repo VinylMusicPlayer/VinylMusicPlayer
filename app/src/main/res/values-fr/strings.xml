@@ -267,11 +267,11 @@
     <string name="pref_summary_library_categories">Configurer la visibilité et l\'ordre des catégories.</string>
     <string name="you_have_to_select_at_least_one_category">Vous devez sélectionner au moins une catégorie.</string>
     <string name="action_sort_order">Ordre de tri</string>
-    <string name="sort_order_a_z">Ascendant</string>
-    <string name="sort_order_z_a">Descendant</string>
+    <string name="sort_order_name">Ascendant</string>
+    <string name="sort_order_name_reverse">Descendant</string>
     <string name="sort_order_artist">Artiste</string>
     <string name="sort_order_album">Album</string>
-    <string name="sort_order_year">Année</string>
+    <string name="sort_order_year_reverse">Année</string>
     <string name="action_scan_directory">Scanner les dossiers</string>
     <string name="scan_media">Scanner les médias</string>
     <string name="pref_summary_widget_background_transparent">Rend le fond des widgets transparents.</string>
@@ -300,7 +300,7 @@
     <string name="snack_bar_action_undo">annuler</string>
     <string name="snack_bar_title_removed_song">Supprimer</string>
     <string name="adrian_summary">"Pour avoir créé le design de la page d'album "</string>
-    <string name="sort_order_date_added">Année ajouté</string>
+    <string name="sort_order_date_added_reverse">Année ajouté</string>
     <string name="finish_current_music_sleep_timer">Finir le dernier titre</string>
     <string name="dialog_ringtone_title">Définir comme sonnerie</string>
     <string name="dialog_ringtone_message">Autoriser Vinyl Music Player à modifier les paramètres audio</string>

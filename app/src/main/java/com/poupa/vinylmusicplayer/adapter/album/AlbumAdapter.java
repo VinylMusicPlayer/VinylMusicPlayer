@@ -24,20 +24,19 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -203,25 +202,8 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @NonNull
     @Override
     public String getSectionName(int position) {
-        @Nullable String sectionName = null;
-        switch (PreferenceUtil.getInstance().getAlbumSortOrder()) {
-            case SortOrder.AlbumSortOrder.ALBUM_A_Z:
-            case SortOrder.AlbumSortOrder.ALBUM_Z_A:
-                sectionName = dataSet.get(position).getTitle();
-                break;
-            case SortOrder.AlbumSortOrder.ALBUM_ARTIST:
-                sectionName = dataSet.get(position).getArtistName();
-                break;
-            case SortOrder.AlbumSortOrder.ALBUM_YEAR_REVERSE:
-                return MusicUtil.getYearString(dataSet.get(position).getYear());
-            case SortOrder.AlbumSortOrder.ALBUM_DATE_ADDED_REVERSE:
-                Date date = new Date(1000 * dataSet.get(position).getDateAdded());
-                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
-                sectionName = dateFormat.format(date);
-                break;
-        }
-
-        return MusicUtil.getSectionName(sectionName);
+        SortOrder<Album> sortOrder = AlbumSortOrder.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {

@@ -2,10 +2,10 @@ package com.poupa.vinylmusicplayer.loader;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.helper.SortOrder;
-import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.util.ComparatorUtil;
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
@@ -18,9 +18,6 @@ import java.util.Comparator;
  * @author SC (soncaokim)
  */
 public class ArtistLoader {
-    public final static Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
-    public final static Comparator<Artist> BY_ARTIST_DESC = ComparatorUtil.reverse(BY_ARTIST);
-
     @NonNull
     public static ArrayList<Artist> getAllArtists() {
         ArrayList<Artist> artists = Discography.getInstance().getAllArtists();
@@ -55,13 +52,7 @@ public class ArtistLoader {
 
     @NonNull
     private static Comparator<Artist> getSortOrder() {
-        switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
-            case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                return BY_ARTIST_DESC;
-
-            case SortOrder.ArtistSortOrder.ARTIST_A_Z:
-            default:
-                return BY_ARTIST;
-        }
+        SortOrder<Artist> sortOrder = ArtistSortOrder.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
+        return sortOrder.comparator;
     }
 }

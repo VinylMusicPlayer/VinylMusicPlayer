@@ -17,7 +17,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
@@ -294,7 +293,7 @@ public final class PreferenceUtil {
     }
 
     public final String getArtistSortOrder() {
-        return mPreferences.getString(ARTIST_SORT_ORDER, SortOrder.ArtistSortOrder.ARTIST_A_Z);
+        return mPreferences.getString(ARTIST_SORT_ORDER, "");
     }
 
     public void setArtistSortOrder(final String sortOrder) {
@@ -304,7 +303,7 @@ public final class PreferenceUtil {
     }
 
     public final String getAlbumSortOrder() {
-        return mPreferences.getString(ALBUM_SORT_ORDER, SortOrder.AlbumSortOrder.ALBUM_A_Z);
+        return mPreferences.getString(ALBUM_SORT_ORDER, "");
     }
 
     public void setAlbumSortOrder(final String sortOrder) {
@@ -314,7 +313,7 @@ public final class PreferenceUtil {
     }
 
     public final String getSongSortOrder() {
-        return mPreferences.getString(SONG_SORT_ORDER, SortOrder.SongSortOrder.SONG_A_Z);
+        return mPreferences.getString(SONG_SORT_ORDER, "");
     }
 
     public void setSongSortOrder(final String sortOrder) {

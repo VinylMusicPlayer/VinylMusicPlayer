@@ -3,9 +3,10 @@ package com.poupa.vinylmusicplayer.loader;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +28,7 @@ public class GenreLoader {
         }
         else {
             ArrayList<Song> songs = new ArrayList<>(genreSongs);
-            Collections.sort(songs, SongLoader.BY_TITLE);
+            Collections.sort(songs, SongSortOrder.BY_ALBUM);
             return songs;
         }
     }

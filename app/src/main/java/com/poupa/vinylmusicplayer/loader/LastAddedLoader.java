@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class LastAddedLoader {
             if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
         }
 
-        Collections.sort(lastAddedSongs, SongLoader.BY_DATE_ADDED_DESC);
+        Collections.sort(lastAddedSongs, SongSortOrder.BY_DATE_ADDED_DESC);
         return lastAddedSongs;
     }
 }

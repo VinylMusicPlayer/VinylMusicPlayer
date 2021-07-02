@@ -275,11 +275,11 @@
     <string name="pref_summary_library_categories">Kitaplık kategorilerinin görünürlüğünü ve sırasını yapılandırma.</string>
     <string name="you_have_to_select_at_least_one_category">En az bir kategori seçmeniz gerekiyor.</string>
     <string name="action_sort_order">Sıralama düzeni</string>
-    <string name="sort_order_a_z">Yükselen</string>
-    <string name="sort_order_z_a">Azalan</string>
+    <string name="sort_order_name">Yükselen</string>
+    <string name="sort_order_name_reverse">Azalan</string>
     <string name="sort_order_artist">Sanatçı</string>
     <string name="sort_order_album">Albüm</string>
-    <string name="sort_order_year">Yıl</string>
+    <string name="sort_order_year_reverse">Yıl</string>
     <string name="action_scan_directory">Dizin tarama</string>
     <string name="scan_media">Medyayı tara</string>
     <string name="none">Yok</string>

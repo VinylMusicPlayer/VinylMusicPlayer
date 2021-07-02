@@ -23,11 +23,12 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.helper.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -182,7 +183,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     private ArrayList<Song> getSongList(@NonNull List<Artist> artists) {
         final ArrayList<Song> songs = new ArrayList<>();
         for (Artist artist : artists) {
-            songs.addAll(artist.getSongs()); // maybe async in future?
+            songs.addAll(artist.getSongs());
         }
         return songs;
     }
@@ -190,15 +191,8 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     @NonNull
     @Override
     public String getSectionName(int position) {
-        @Nullable String sectionName = null;
-        switch (PreferenceUtil.getInstance().getArtistSortOrder()) {
-            case SortOrder.ArtistSortOrder.ARTIST_A_Z:
-            case SortOrder.ArtistSortOrder.ARTIST_Z_A:
-                sectionName = dataSet.get(position).getName();
-                break;
-        }
-
-        return MusicUtil.getSectionName(sectionName);
+        SortOrder<Artist> sortOrder = ArtistSortOrder.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
