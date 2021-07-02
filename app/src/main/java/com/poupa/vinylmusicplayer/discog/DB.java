@@ -112,7 +112,7 @@ class DB extends SQLiteOpenHelper {
     }
 
     @NonNull
-    synchronized Collection<Song> fetchAllSongs() {
+    synchronized Collection<Song> loadSongs() {
         ArrayList<Song> songs = new ArrayList<>();
         final SQLiteDatabase database = getReadableDatabase();
 
