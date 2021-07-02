@@ -72,10 +72,12 @@ public class Discography implements MusicServiceEventListener {
 
     public void stopService() {
         // Flush the delayed task queue - dont do anything is we are stopping
-        mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+        if (mainActivityTaskQueue != null && mainActivity != null) {
+            mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
 
-        mainActivity = null;
-        mainActivityTaskQueue = null;
+            mainActivity = null;
+            mainActivityTaskQueue = null;
+        }
     }
 
     public void setStale(boolean value) {
