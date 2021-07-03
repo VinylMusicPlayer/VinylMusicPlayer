@@ -61,9 +61,6 @@ public class DB extends SQLiteOpenHelper {
     synchronized void removeFirstAlbumOfHistory() {
         try (final SQLiteDatabase db = getWritableDatabase()) {
 
-            //String selection = ListenHistoryColumns._ID + " LIKE ?";
-            //String[] selectionArgs = { "1" };
-            //db.delete(ListenHistoryColumns.NAME, selection, selectionArgs);
             String DELETE_FIRST_ELEMENT = "DELETE FROM " + ListenHistoryColumns.NAME + " WHERE " + ListenHistoryColumns._ID + " IN " +
                     "(SELECT " + ListenHistoryColumns._ID + " FROM " + ListenHistoryColumns.NAME + " ORDER BY " + ListenHistoryColumns._ID + " LIMIT 1)";
             db.execSQL(DELETE_FIRST_ELEMENT);
@@ -161,7 +158,6 @@ public class DB extends SQLiteOpenHelper {
             return nextRandomAlbums;
         }
     }
-
 
     public static class ListenHistoryColumns implements BaseColumns {
         public static final String NAME = "listenHistory";

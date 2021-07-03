@@ -1,10 +1,11 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum;
+package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
 
 
 import java.util.ArrayList;
 
 import android.content.Context;
 
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.History;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
@@ -16,16 +17,17 @@ public class AutomaticSearch extends Search {
     }
 
     public boolean searchTypeIsTrue(Song song, Album album) {
-        return albumSearch();
+        return artistSearch(song, album);
+        //return albumSearch();
     }
 
     @Override
-    public Album foundNextAlbum(Song song, ArrayList<Album> albums, long nextRandomAlbumId, History listenHistory, History searchHistory, Context context) {
+    public Album foundNextAlbum(Song song, ArrayList<Album> albums, long previousNextRandomAlbumId, History listenHistory, History searchHistory, Context context) {
         Album album = null;
 
-        constructPositionAlbum(song, albums, nextRandomAlbumId, searchHistory, listenHistory);
+        constructPositionAlbum(song, albums, previousNextRandomAlbumId, searchHistory, listenHistory);
 
-        int albumPosition = getRandomAlbumPosition(albumArrayList.size(), lastSongPosition, nextRandomAlbumPosition, forbiddenPosition);
+        int albumPosition = getRandomAlbumPosition(albumArrayList.size(), currentSongPosition, currentlyShownNextRandomAlbumPosition, forbiddenPosition);
 
         if (albumPosition >= 0) {
             album = albumArrayList.get(albumPosition);

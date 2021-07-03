@@ -28,9 +28,9 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.ManualAlbumSearch;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.ManualArtistSearch;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.ManualGenreSearch;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.ManualAlbumSearch;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.ManualArtistSearch;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.ManualGenreSearch;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 

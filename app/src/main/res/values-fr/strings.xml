@@ -343,7 +343,6 @@
     <string name="shuffle_album_genre">Recharger album dans le même genre</string>
     <string name="shuffle_album_artist">Recharger album avec le même artist</string>
     <string name="error_random_album_only_one_album">Aucun autre album n\'est disponible</string>
-    <string name="error_random_album_only_two_album">Seul un album possible via cette action</string>
     <string name="error_random_album_no_new_found">Aucun autre album trouvé via ce critère</string>
     <string name="error_random_album_repeat_mode">Répetition impossible en mode album aléatoire</string>
     <string name="error_random_album_search_history">Vous avez chercher tous les albums possible dans cette catégorie</string>

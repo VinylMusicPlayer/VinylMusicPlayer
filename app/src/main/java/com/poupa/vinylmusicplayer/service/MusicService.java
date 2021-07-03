@@ -51,8 +51,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.AutomaticSearch;
-import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.AutomaticSearch;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
@@ -403,7 +402,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
             int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
-            //if ((restoredQueue.size() > 0 && NextRandomAlbum.IsRandomAlbum(restoredQueue.get(restoredQueue.size() - 1).id) ) ||
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
 
                 this.originalPlayingQueue = restoredOriginalQueue;
@@ -1072,9 +1070,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     position = newPosition;
 
                     if (PreferenceUtil.getInstance().allowRandomAlbum()) {
-                        automaticRefreshRandomAlbumIfPossible(false);
+                        automaticRefreshRandomAlbumIfPossible(false); // run automatic random album search
                     }
                 }
+                // go directly to random song order as random album is not activated in preferences
                 if (PreferenceUtil.getInstance().allowRandomAlbum()) {
                     break;
                 }
@@ -1115,7 +1114,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             Song lastSong = playingQueue.get(playingQueue.size() - 1);
             boolean randomAlbumIsActive = NextRandomAlbum.IsRandomAlbum(lastSong.id);
 
-            if (!randomAlbumIsActive || NextRandomAlbum.getInstance().searchHasEnded()) { // forbid double search one after the other
+            if (!randomAlbumIsActive || NextRandomAlbum.getInstance().searchHasEnded()) { // forbid more than one automatic search on the same album
                 NextRandomAlbum.getInstance().initSearch(new AutomaticSearch());
 
                 getRandomAlbumIfPossible(notify);

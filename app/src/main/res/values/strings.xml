@@ -344,7 +344,6 @@
     <string name="rounded_theme_style_name">Rounded</string>
     <string name="error_random_album_search_history">You have search every album in this category</string>
     <string name="error_random_album_only_one_album">There is no other album to get</string>
-    <string name="error_random_album_only_two_album">There is only one other album</string>
     <string name="error_random_album_no_new_found">No other album where found with this criteria</string>
     <string name="error_random_album_repeat_mode">Cannot activate the repeat mode when in album shuffling</string>
     <!-- SAF -->

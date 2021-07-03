@@ -7,15 +7,22 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 
+/*
+ * History: buffer with max size, if no more space, first added element will be removed
+ *          a connection to a database can be done to allow to save the history even if app reboot
+ *          /!\ only one database exist, thus if more that one history instance connect to the database, chaos will ensue
+ *
+ *          This buffer ensure that data are unique and in order of add operation
+ */
 public class History {
-    private ArrayList<Long> history;
-    private ArrayList<Long> originalHistory;
+    private ArrayList<Long> history;         // list of element currently saved
+    private ArrayList<Long> originalHistory; // copy of the history used to allow revert of history last operation
 
-    private final int historySize;
+    private final int maxSize;
     private final DB database;
 
-    public History(int historySize, boolean addDatabase) {
-        this.historySize = historySize;
+    public History(int maxSize, boolean addDatabase) {
+        this.maxSize = maxSize;
 
         history = new ArrayList<>();
         originalHistory = new ArrayList<>();
@@ -42,6 +49,7 @@ public class History {
         clearOriginalHistory();
     }
 
+    // Get first element added and remove it
     public long popHistory() {
         if (history.size() > 0) {
             long id = history.get(0);
@@ -52,14 +60,32 @@ public class History {
         return -1;
     }
 
-    public void revertHistory() {
+    // undo last operation done on history
+    public void revertHistory(boolean updateDatabase) {
         history = new ArrayList<>(originalHistory);
+
+        if (updateDatabase) {
+            synchronizeDatabase();
+        }
     }
 
+    // set originalHistory up to date with current history
     public void synchronizeHistory() {
         originalHistory = new ArrayList<>(history);
     }
 
+    // set database up to date with current history
+    public void synchronizeDatabase() {
+        if (database != null) {
+            database.clear();
+
+            for (int i = 0; i < history.size(); i++) {
+                database.addIdToHistory(history.get(i));
+            }
+        }
+    }
+
+    // get if id can be put in history and follow the no duplicate policy
     static public boolean isIdForbidden(long id, ArrayList<Long> array) {
         for (Long forbiddenId : array) {
             if (id == forbiddenId) {
@@ -69,8 +95,9 @@ public class History {
         return false;
     }
 
+    // add new if if possible (no duplicate) and remove old one if needed
     public void addIdToHistory(long id, boolean updateDatabase) {
-        if (history.size() >= historySize) {
+        if (history.size() >= maxSize) {
             if (database != null && updateDatabase) { database.removeFirstAlbumOfHistory(); }
             history.remove(0);
             originalHistory.remove(0);
@@ -82,11 +109,7 @@ public class History {
         }
     }
 
-    synchronized Long fetchNextRandomAlbumId() {
-        if (database != null) { return database.fetchNextRandomAlbumId(); }
-        else { return (long)0; }
-    }
-
+    // reset history to the database state
     public void fetchHistory() {
         if (database != null) {
             List<Long> nextRandomAlbums = database.fetchAllListenHistory();
@@ -97,6 +120,13 @@ public class History {
         }
     }
 
+    // get database NextRandomAlbum id
+    synchronized Long fetchNextRandomAlbumId() {
+        if (database != null) { return database.fetchNextRandomAlbumId(); }
+        else { return (long)0; }
+    }
+
+    // set database NextRandomAlbum id
     public void setNextRandomAlbumId(@NonNull Long id) {
         if (database != null) {
             database.setNextRandomAlbumId(id);
