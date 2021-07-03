@@ -61,7 +61,7 @@ abstract public class ManualSearch extends Search {
         }
 
         if (album != null) {
-            searchHistory.addIdToHistory(nextRandomAlbum.getId());
+            searchHistory.addIdToHistory(nextRandomAlbum.getId(), false);
             searchHistory.synchronizeHistory();
         } else {
             searchHistory.revertHistory();

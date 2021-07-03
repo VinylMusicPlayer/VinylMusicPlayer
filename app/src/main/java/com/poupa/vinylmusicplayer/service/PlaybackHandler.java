@@ -30,12 +30,13 @@ final class PlaybackHandler extends Handler {
         if (nextPosition >= 0 && nextPosition < service.getPlayingQueue().size()) {
             Song song = service.getPlayingQueue().get(nextPosition);
 
-            if (song.id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID && song.albumId != NextRandomAlbum.EMPTY_NEXT_RANDOM_ALBUM_ID) {
+            if (NextRandomAlbum.IsRandomAlbum(song.id) && !NextRandomAlbum.IsEmptyNextRandomAlbum(song.albumId)) { // next random album need to be loaded in
+                // Add last listen song to next random album history to stop looping on the same three song
                 Song previousSong = service.getPlayingQueue().get(nextPosition - 1);
                 NextRandomAlbum.getInstance().commit(previousSong.albumId);
 
+                // Load next album
                 Album album = AlbumLoader.getAlbum(song.albumId);
-
                 ArrayList<Song> songs = album.songs;
 
                 service.clearQueue();
@@ -46,7 +47,7 @@ final class PlaybackHandler extends Handler {
                 service.notifyChange(MusicService.QUEUE_CHANGED);
 
                 return true;
-            } else if (song.id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID) {
+            } else if (NextRandomAlbum.IsRandomAlbum(song.id)) { // if no next random album where found, stop playing
                 stopPlaying(service);
                 return true;
             }
@@ -116,18 +117,18 @@ final class PlaybackHandler extends Handler {
             case MusicService.TRACK_ENDED:
                 if (checkPendingQuit(service)) {break;}
 
-		boolean shuffleModeAlbum = false;
+                boolean shuffleModeAlbum = false;
                 if (service.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE_ALBUM) {
                     shuffleModeAlbum = accessNextAlbum(service, service.getNextPosition(false));
                 }
 
-		if (!shuffleModeAlbum) {
+                if (!shuffleModeAlbum) {
                     if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
                         service.notifyChange(MusicService.PLAY_STATE_CHANGED);
                     } else {
                         service.playNextSong(false);
                     }
-		}
+                }
                 sendEmptyMessage(MusicService.RELEASE_WAKELOCK);
                 break;
 

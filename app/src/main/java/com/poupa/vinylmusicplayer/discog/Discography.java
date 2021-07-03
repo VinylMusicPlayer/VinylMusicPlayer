@@ -227,8 +227,8 @@ public class Discography implements MusicServiceEventListener {
 
     private void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
-            // Race condition check: If the song has been added -> skip
-            if (song.id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID || cache.songsById.containsKey(song.id)) {
+            // Race condition check: If the song has been added -> skip + never add a random album to discography as it is not a real song
+            if (NextRandomAlbum.IsRandomAlbum(song.id) || cache.songsById.containsKey(song.id)) {
                 return;
             }
 

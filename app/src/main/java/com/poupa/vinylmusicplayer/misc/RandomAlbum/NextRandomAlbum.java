@@ -16,34 +16,97 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 public class NextRandomAlbum {
 
-    public static final int RANDOM_ALBUM_SONG_ID = -2;
-    public static final int EMPTY_NEXT_RANDOM_ALBUM_ID = -3;
+    private static final int RANDOM_ALBUM_SONG_ID = Song.EMPTY_SONG_ID-1; //-2;
+    private static final int EMPTY_NEXT_RANDOM_ALBUM_ID = Song.EMPTY_SONG_ID-1; //-3;
 
-    static private NextRandomAlbum sInstance = new NextRandomAlbum();
+    static private final NextRandomAlbum sInstance = new NextRandomAlbum();
+
+    static public boolean IsRandomAlbum(long song_id) { return song_id == RANDOM_ALBUM_SONG_ID; }
+    static public boolean IsEmptyNextRandomAlbum(long song_id) { return song_id == EMPTY_NEXT_RANDOM_ALBUM_ID; }
 
     private History listenHistory; // already listen album
-    private History searchHistory; // manually searched album (with 3-dot menu)
+    private History searchHistory; // manually searched album (with 3-dot menu) on this playlist (before going to next random album)
     private long nextRandomAlbumId;
-    private long lastAlbumIdSearched;
+    private boolean isSearchEnded;
     private Search searchFunction;
 
 
+    // ----------------------------------------- PUBLIC METHOD  -----------------------------------------
     static public NextRandomAlbum getInstance() {
         return sInstance;
     }
 
-    private NextRandomAlbum() {
+    public NextRandomAlbum() {
         int historySize = 5; // Doesn't need to be too big, as history is there only so that we don't listen to the same set of album endlessly
 
-        searchHistory = new History(historySize);
-        listenHistory = new History(historySize);
+        searchHistory = new History(historySize, false);
+        listenHistory = new History(historySize, true);
 
-        lastAlbumIdSearched = -1;
-        nextRandomAlbumId = -1;
+        endSearch();
+    }
+
+    public Song search(Song song, Context context) {
+
+        ArrayList<Album> albums;
+        synchronized (Discography.getInstance()) {
+            albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
+        }
+
+        isSearchEnded = false;
+
+        Album album = searchFunction.foundNextAlbum(song, albums, nextRandomAlbumId, listenHistory, searchHistory, context);
+
+        if (album != null) {
+            nextRandomAlbumId = album.getId();
+            listenHistory.setNextRandomAlbumId(nextRandomAlbumId);
+        }
+        return addNewRandomAlbum(album, context);
+    }
+
+    public Song resetHistories(Context context) {
+        searchHistory.clearHistory();
+        endSearch();
+
+        listenHistory.fetchHistory();
+
+        nextRandomAlbumId = listenHistory.fetchNextRandomAlbumId();
+        return addNewRandomAlbum(Discography.getInstance().getAlbum(nextRandomAlbumId), context);
+    }
+
+    public void commit(long albumId) {
+        // add id to listen history, this should be the old album not the wanted one
+        listenHistory.addIdToHistory(albumId, true);
+
+        endSearch();
+    }
+
+    public boolean searchHasEnded() {
+        return this.isSearchEnded;
+    }
+
+    // called when shuffling change
+    public void stop() {
+        // clear history search and listen
+        searchHistory.stop();
+        listenHistory.stop();
+
+        endSearch();
+    }
+
+    public void clearSearchHistory() {
+        searchHistory.clearHistory();
+
+        endSearch();
     }
 
     public void initSearch(Search searchFunction) {
         this.searchFunction = searchFunction;
+    }
+
+    // ----------------------------------------- PRIVATE METHOD -----------------------------------------
+    private void endSearch() {
+        isSearchEnded = true;
+        nextRandomAlbumId = -1;
     }
 
     private Song addNewRandomAlbum(long albumId, String albumName, long artistId, @NonNull List<String> artistNames, Context context) {
@@ -61,53 +124,5 @@ public class NextRandomAlbum {
         } else {
             return addEmptyRandomAlbum(context);
         }
-    }
-
-    public Song search(Song song, Context context) {
-
-        ArrayList<Album> albums;
-        synchronized (Discography.getInstance()) {
-            albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
-        }
-
-        lastAlbumIdSearched = song.albumId;
-
-        Album album = searchFunction.foundNextAlbum(song, albums, nextRandomAlbumId, listenHistory, searchHistory, context);
-
-        if (album != null) {
-            nextRandomAlbumId = album.getId();
-        }
-        return addNewRandomAlbum(album, context);
-    }
-
-    public void resetHistories(long albumId) {
-        searchHistory.clearHistory();
-        listenHistory.clearHistory();
-        nextRandomAlbumId = albumId;
-    }
-
-    public void commit(long albumId) {
-        // add id to listen history, this should be the old album not the wanted one
-        listenHistory.addIdToHistory(albumId);
-        nextRandomAlbumId = -1; // until new search is done
-        lastAlbumIdSearched = -1;
-    }
-
-    public Long getLastAlbumIdSearched() {
-        return lastAlbumIdSearched;
-    }
-
-    // called when shuffling change
-    public void stop() {
-        // clear history search and listen
-        searchHistory.stop();
-        listenHistory.stop();
-        nextRandomAlbumId = -1;
-        lastAlbumIdSearched = -1;
-    }
-
-    public void clearSearchHistory() {
-        searchHistory.clearHistory();
-        lastAlbumIdSearched = -1;
     }
 }

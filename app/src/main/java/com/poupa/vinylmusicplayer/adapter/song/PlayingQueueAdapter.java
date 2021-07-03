@@ -52,21 +52,17 @@ public class PlayingQueueAdapter extends SongAdapter
     private static Snackbar currentlyShownSnackbar;
 
     private int current;
-    private boolean lastIsRandomAlbum;
 
-    private void setLastIsRandomAlbum() {
+    private boolean isRandomAlbum(int position) {
         if (dataSet.size() > 0)
-            lastIsRandomAlbum = (dataSet.get(dataSet.size()-1).id == NextRandomAlbum.RANDOM_ALBUM_SONG_ID);
-        else
-            lastIsRandomAlbum = false;
+            return (position == dataSet.size()-1) && NextRandomAlbum.IsRandomAlbum(dataSet.get(position).id);
+        return false;
     }
 
     public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
-
-        setLastIsRandomAlbum();
     }
 
     @NonNull
@@ -86,7 +82,7 @@ public class PlayingQueueAdapter extends SongAdapter
         super.onBindViewHolder(holder, position);
 
         if (holder.imageText != null) {
-            if (position == dataSet.size()-1 && lastIsRandomAlbum)
+            if (isRandomAlbum(position)) // A random album as no number in playlist to better differentiate it
                 holder.imageText.setText("-");
             else
                 holder.imageText.setText(String.valueOf(position - current));
@@ -99,7 +95,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public int getItemViewType(int position) {
-        if (position == dataSet.size()-1 && lastIsRandomAlbum) {
+        if (isRandomAlbum(position)) { // next random album as a different menu as lot of menu option don't make sense for it
             return RANDOM_ALBUM;
         } else if (position < current) {
             return HISTORY;
@@ -112,8 +108,6 @@ public class PlayingQueueAdapter extends SongAdapter
     public void swapDataSet(ArrayList<Song> dataSet, int position) {
         this.dataSet = dataSet;
         current = position;
-
-        setLastIsRandomAlbum();
         notifyDataSetChanged();
     }
 
@@ -234,26 +228,29 @@ public class PlayingQueueAdapter extends SongAdapter
         @Override
         protected int getSongMenuRes(int itemViewType) {
             if (itemViewType == RANDOM_ALBUM)
-                return R.menu.menu_item_random_album_queue_song;
+                return R.menu.menu_item_random_album_queue_song; // menu that allow to change the proposed next random album + give album info
             return R.menu.menu_item_playing_queue_song;
         }
 
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_shuffle_random_album) {
-                NextRandomAlbum.getInstance().initSearch(new ManualAlbumSearch());
+                // Refresh proposed next random album with one completely random
+                NextRandomAlbum.getInstance().initSearch(new ManualAlbumSearch()); // set type of search
 
-                MusicPlayerRemote.shuffleRandomAlbum();
+                MusicPlayerRemote.shuffleNextRandomAlbum(); // run search
                 return true;
             } else if (item.getItemId() == R.id.action_shuffle_artist_album) {
-                NextRandomAlbum.getInstance().initSearch(new ManualArtistSearch());
+                // Refresh proposed next random album with one with the same artist than the one I listen to right now
+                NextRandomAlbum.getInstance().initSearch(new ManualArtistSearch()); // set type of search
 
-                MusicPlayerRemote.shuffleRandomAlbum();
+                MusicPlayerRemote.shuffleNextRandomAlbum(); // run search
                 return true;
             } else if (item.getItemId() == R.id.action_shuffle_genre_album) {
-                NextRandomAlbum.getInstance().initSearch(new ManualGenreSearch());
+                // Refresh proposed next random album with one with the same genre than the one I listen to right now
+                NextRandomAlbum.getInstance().initSearch(new ManualGenreSearch()); // set type of search
 
-                MusicPlayerRemote.shuffleRandomAlbum();
+                MusicPlayerRemote.shuffleNextRandomAlbum(); // run search
                 return true;
             } else if (item.getItemId() == R.id.action_remove_from_playing_queue) {
                 // If song removed was the playing song, then play the next song
