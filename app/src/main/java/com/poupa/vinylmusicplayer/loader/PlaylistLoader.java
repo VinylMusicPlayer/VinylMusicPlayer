@@ -39,7 +39,7 @@ public class PlaylistLoader {
     }
 
     @NonNull
-    public static Playlist getPlaylist(@Nullable final Cursor cursor) {
+    private static Playlist getPlaylist(@Nullable final Cursor cursor) {
         Playlist playlist = new Playlist();
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -52,7 +52,7 @@ public class PlaylistLoader {
     }
 
     @NonNull
-    public static ArrayList<Playlist> getAllPlaylists(@Nullable final Cursor cursor) {
+    private static ArrayList<Playlist> getAllPlaylists(@Nullable final Cursor cursor) {
         ArrayList<Playlist> playlists = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -73,13 +73,13 @@ public class PlaylistLoader {
     }
 
     @Nullable
-    public static Cursor makePlaylistCursor(@NonNull final Context context, final String selection, final String[] values) {
+    private static Cursor makePlaylistCursor(@NonNull final Context context, final String selection, final String[] values) {
         try {
             return context.getContentResolver().query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
                     new String[]{
-                        /* 0 */
+                            /* 0 */
                             BaseColumns._ID,
-                        /* 1 */
+                            /* 1 */
                             PlaylistsColumns.NAME
                     }, selection, values, MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER);
         } catch (SecurityException e) {
