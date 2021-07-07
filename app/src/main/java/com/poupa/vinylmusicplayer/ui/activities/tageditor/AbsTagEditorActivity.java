@@ -409,7 +409,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         Activity activity = this.activity.get();
 
                         SAFUtil.write(activity, audioFile, safUri);
-                    } catch (@NonNull Exception | NoSuchMethodError e) {
+                    } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
                         e.printStackTrace();
                     }
                 }
@@ -552,7 +552,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private AudioFile getAudioFile(@NonNull String path) {
         try {
             return AudioFileIO.read(new File(path));
-        } catch (@NonNull Exception | NoSuchMethodError e) {
+        } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
             Log.e(TAG, "Could not read audio file " + path, e);
             return new AudioFile();
         }
