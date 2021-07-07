@@ -29,7 +29,10 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid)
  */
 @SuppressWarnings("unchecked")
-public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements DraggableItemAdapter<OrderablePlaylistSongAdapter.ViewHolder> {
+public class OrderablePlaylistSongAdapter
+        extends PlaylistSongAdapter
+        implements DraggableItemAdapter<AbsOffsetSongAdapter.ViewHolder>
+{
 
     private final OnMoveItemListener onMoveItemListener;
 
@@ -68,13 +71,17 @@ public class OrderablePlaylistSongAdapter extends PlaylistSongAdapter implements
     }
 
     @Override
-    public boolean onCheckCanStartDrag(ViewHolder holder, int position, int x, int y) {
-        return onMoveItemListener != null && position > 0 &&
-                (ViewUtil.hitTest(holder.dragView, x, y) || ViewUtil.hitTest(holder.image, x, y));
+    public boolean onCheckCanStartDrag(AbsOffsetSongAdapter.ViewHolder holder, int position, int x, int y) {
+        if (holder instanceof ViewHolder) {
+            return onMoveItemListener != null && position > 0 &&
+                    (ViewUtil.hitTest(holder.dragView, x, y) || ViewUtil.hitTest(holder.image, x, y));
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public ItemDraggableRange onGetItemDraggableRange(ViewHolder holder, int position) {
+    public ItemDraggableRange onGetItemDraggableRange(AbsOffsetSongAdapter.ViewHolder holder, int position) {
         return new ItemDraggableRange(1, dataSet.size());
     }
 
