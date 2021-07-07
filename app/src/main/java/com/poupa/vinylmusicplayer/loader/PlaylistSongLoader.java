@@ -106,6 +106,7 @@ public class PlaylistSongLoader {
     @Nullable
     private static Cursor makePlaylistSongCursor(@NonNull final Context context, final long playlistId) {
         try {
+            // TODO Use internal DB instead
             return context.getContentResolver().query(
                     MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId),
                     new String[]{

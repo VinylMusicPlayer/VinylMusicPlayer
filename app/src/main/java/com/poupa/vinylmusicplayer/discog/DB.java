@@ -13,6 +13,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author SC (soncaokim)
@@ -20,7 +21,7 @@ import java.util.Collection;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 6;
+    private static final int VERSION = 7;
 
     DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -49,18 +50,71 @@ class DB extends SQLiteOpenHelper {
                         + SongColumns.YEAR + " LONG"
                         + ");"
         );
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS " + PlaylistColumns.NAME + " ("
+                        + PlaylistColumns.ID + " LONG NOT NULL, "
+                        + PlaylistColumns.PLAYLIST_NAME + " TEXT"
+                        + ");"
+        );
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS " + PlaylistSongsColumns.NAME + " ("
+                        + PlaylistSongsColumns.SONG_ID + " LONG NOT NULL, "
+                        + PlaylistSongsColumns.PLAYLIST_ID + " LONG NOT NULL, "
+                        + PlaylistSongsColumns.POSITION_IN_PLAYLIST + " LONG NOT NULL"
+                        + ");"
+        );
     }
 
     @Override
     public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + SongColumns.NAME);
-        onCreate(db);
+        migrateDB(db, oldVersion, newVersion);
     }
 
     @Override
     public void onDowngrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + SongColumns.NAME);
-        onCreate(db);
+        migrateDB(db, oldVersion, newVersion);
+    }
+
+    public void migrateDB(@NonNull SQLiteDatabase dbase, int oldVersion, int newVersion) {
+        final Consumer<SQLiteDatabase> migrateResetAll = (db) -> {
+            db.execSQL(String.format("DROP TABLE IF EXISTS %s", SongColumns.NAME));
+            db.execSQL(String.format("DROP TABLE IF EXISTS %s", PlaylistColumns.NAME));
+            db.execSQL(String.format("DROP TABLE IF EXISTS %s", PlaylistSongsColumns.NAME));
+
+            onCreate(db);
+        };
+        final Consumer<SQLiteDatabase> migrateUnsupported = (db) -> {
+            final String message = String.format("Unsupported migration version %s -> %s of database %s", oldVersion, newVersion, DATABASE_NAME);
+            throw new IllegalStateException(message);
+        };
+
+        // V7: No DB schema change, just new table
+        final Consumer<SQLiteDatabase> migradeV6ToV7 = this::onCreate;
+
+        if (oldVersion < newVersion)
+        {
+            // Upgrade path
+            switch (oldVersion) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    migrateResetAll.accept(dbase);
+                case 6:
+                    migradeV6ToV7.accept(dbase);
+                case VERSION: // At target. This case is here for consistency check
+                    break;
+
+                default:
+                    migrateUnsupported.accept(dbase);
+                    break;
+            }
+        } else {
+            // Downgrade path
+            // TODO Review this implementation - downgrading is often impossible
+            migrateResetAll.accept(dbase);
+        }
     }
 
     synchronized void addSong(@NonNull Song song) {
@@ -211,5 +265,20 @@ class DB extends SQLiteOpenHelper {
         String TRACK_TITLE = "track_title";
         String TRACK_NUMBER = "track_number";
         String YEAR = "year";
+    }
+
+    interface PlaylistColumns {
+        String NAME = "playlists";
+
+        String ID = "id";
+        String PLAYLIST_NAME = "name";
+    }
+
+    interface PlaylistSongsColumns {
+        String NAME = "playlist_songs";
+
+        String PLAYLIST_ID = "playlist_id";
+        String SONG_ID = "song_id";
+        String POSITION_IN_PLAYLIST = "position_in_playlist";
     }
 }
