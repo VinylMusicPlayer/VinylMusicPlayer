@@ -108,7 +108,7 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
 
-            addSong(song, false);
+            addSong(song);
 
             return song;
         }
@@ -277,16 +277,14 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void addSong(@NonNull Song song, boolean cacheOnly) {
+    private void addSong(@NonNull Song song) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
             if (cache.songsById.containsKey(song.id)) {
                 return;
             }
 
-            if (!cacheOnly) {
-                TagExtractor.extractTags(song);
-            }
+            TagExtractor.extractTags(song);
 
             Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
                 List<String> normalized = new ArrayList<>();
@@ -310,7 +308,7 @@ public class Discography implements MusicServiceEventListener {
                 }
             } catch (NumberFormatException ignored) {}
 
-            cache.addSong(song, cacheOnly);
+            cache.addSong(song, false);
 
             notifyDiscographyChanged();
         }
@@ -354,7 +352,6 @@ public class Discography implements MusicServiceEventListener {
             }
             return false;
         };
-
 
         final int initialSongCount = getSongCount();
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);

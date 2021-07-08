@@ -52,7 +52,13 @@ class MemCache {
 
     @NonNull
     synchronized Collection<Song> loadSongs() {
-        return database.loadSongs();
+        Collection<Song> songs = database.loadSongs();
+
+        for (Song song : songs) {
+            addSong(song, true);
+        }
+
+        return songs;
     }
 
     synchronized void addSong(@NonNull final Song song, boolean cacheOnly) {
