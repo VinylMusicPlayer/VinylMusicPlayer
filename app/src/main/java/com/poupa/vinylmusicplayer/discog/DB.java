@@ -147,6 +147,10 @@ class DB extends SQLiteOpenHelper {
     synchronized void clear() {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(SongColumns.NAME, null, null);
+
+            // TODO Do we want to clear the playlists
+            db.delete(PlaylistColumns.NAME, null, null);
+            db.delete(PlaylistSongsColumns.NAME, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
