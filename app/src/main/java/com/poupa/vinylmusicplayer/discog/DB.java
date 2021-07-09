@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 7;
+    private static final int VERSION = 6;
 
     DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -50,19 +50,6 @@ class DB extends SQLiteOpenHelper {
                         + SongColumns.YEAR + " LONG"
                         + ");"
         );
-        db.execSQL(
-                "CREATE TABLE IF NOT EXISTS " + PlaylistColumns.NAME + " ("
-                        + PlaylistColumns.ID + " LONG NOT NULL, "
-                        + PlaylistColumns.PLAYLIST_NAME + " TEXT"
-                        + ");"
-        );
-        db.execSQL(
-                "CREATE TABLE IF NOT EXISTS " + PlaylistSongsColumns.NAME + " ("
-                        + PlaylistSongsColumns.SONG_ID + " LONG NOT NULL, "
-                        + PlaylistSongsColumns.PLAYLIST_ID + " LONG NOT NULL, "
-                        + PlaylistSongsColumns.POSITION_IN_PLAYLIST + " LONG NOT NULL"
-                        + ");"
-        );
     }
 
     @Override
@@ -88,9 +75,6 @@ class DB extends SQLiteOpenHelper {
             throw new IllegalStateException(message);
         };
 
-        // V7: No DB schema change, just new table
-        final Consumer<SQLiteDatabase> migradeV6ToV7 = this::onCreate;
-
         if (oldVersion < newVersion)
         {
             // Upgrade path
@@ -100,10 +84,8 @@ class DB extends SQLiteOpenHelper {
                 case 3:
                 case 4:
                 case 5:
-                    migrateResetAll.accept(dbase);
-                case 6:
-                    migradeV6ToV7.accept(dbase);
                 case VERSION: // At target. This case is here for consistency check
+                    migrateResetAll.accept(dbase);
                     break;
 
                 default:
@@ -160,10 +142,12 @@ class DB extends SQLiteOpenHelper {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(
                     SongColumns.NAME,
-                    SongColumns.ID + " = ?",
-                    new String[]{
-                            String.valueOf(songId)
-                    });
+                    SongColumns.ID + " = " + songId,
+                    null);
+            db.delete(
+                    PlaylistSongsColumns.NAME,
+                    PlaylistSongsColumns.SONG_ID + " = " + songId,
+                    null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,7 +155,6 @@ class DB extends SQLiteOpenHelper {
 
     @NonNull
     synchronized Collection<Song> loadSongs() {
-        ArrayList<Song> songs = new ArrayList<>();
         final SQLiteDatabase database = getReadableDatabase();
 
         try (final Cursor cursor = database.query(SongColumns.NAME,
@@ -200,6 +183,8 @@ class DB extends SQLiteOpenHelper {
                 null,
                 null))
         {
+            ArrayList<Song> songs = new ArrayList<>();
+
             if (cursor == null || !cursor.moveToFirst()) {
                 return songs;
             }
@@ -245,6 +230,7 @@ class DB extends SQLiteOpenHelper {
 
                 songs.add(song);
             } while (cursor.moveToNext());
+
             return songs;
         }
     }
@@ -269,20 +255,5 @@ class DB extends SQLiteOpenHelper {
         String TRACK_TITLE = "track_title";
         String TRACK_NUMBER = "track_number";
         String YEAR = "year";
-    }
-
-    interface PlaylistColumns {
-        String NAME = "playlists";
-
-        String ID = "id";
-        String PLAYLIST_NAME = "name";
-    }
-
-    interface PlaylistSongsColumns {
-        String NAME = "playlist_songs";
-
-        String PLAYLIST_ID = "playlist_id";
-        String SONG_ID = "song_id";
-        String POSITION_IN_PLAYLIST = "position_in_playlist";
     }
 }

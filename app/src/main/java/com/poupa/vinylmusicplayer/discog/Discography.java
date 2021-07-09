@@ -375,8 +375,6 @@ public class Discography implements MusicServiceEventListener {
             removeSongById(cacheSongsId.toArray(new Long[0]));
         }
 
-        // TODO Fetch playlists from media store?
-
         return (getSongCount() - initialSongCount);
     }
 
