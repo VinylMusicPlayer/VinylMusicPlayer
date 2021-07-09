@@ -149,7 +149,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         }
     }
 
-    protected static Bitmap createRoundedBitmap(Drawable drawable, int width, int height, float tl, float tr, float bl, float br) {
+    protected static Bitmap createRoundedBitmap(Drawable drawable, int width, int height, float tl, float bl) {
         if (drawable == null) return null;
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -163,7 +163,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         Paint paint = new Paint();
         paint.setShader(new BitmapShader(bitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
-        canvas.drawPath(composeRoundedRectPath(new RectF(0, 0, width, height), tl, tr, bl, br), paint);
+        canvas.drawPath(composeRoundedRectPath(new RectF(0, 0, width, height), tl, 0f, bl, 0f), paint);
 
         return rounded;
     }
@@ -256,7 +256,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
                                 appWidgetView.setImageViewBitmap(R.id.button_prev, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(appContext, R.drawable.ic_skip_previous_white_24dp, color)));
 
                                 final Drawable image = getAlbumArtDrawable(appContext.getResources(), bitmap);
-                                final Bitmap roundedBitmap = createRoundedBitmap(image, imageSize, imageSize, cardRadius, 0, cardRadius, 0);
+                                final Bitmap roundedBitmap = createRoundedBitmap(image, imageSize, imageSize, cardRadius, cardRadius);
                                 appWidgetView.setImageViewBitmap(R.id.image, roundedBitmap);
 
                                 setBackground();

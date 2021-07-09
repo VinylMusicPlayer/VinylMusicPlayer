@@ -34,9 +34,8 @@ class MaterialTheme implements ThemeStyle {
 
     public void setHeightListItem(View itemView, float density) {
         int padding_in_dp = 64;  // 64 dps
-        int padding_in_px = (int) (padding_in_dp * density + 0.5f);
 
-        itemView.getLayoutParams().height = padding_in_px;
+        itemView.getLayoutParams().height = (int) (padding_in_dp * density + 0.5f);
     }
 
     public void setHeaderPadding(RecyclerView recyclerView, float density) {
@@ -62,7 +61,7 @@ class MaterialTheme implements ThemeStyle {
     }
 
     public void setDragView(AppCompatImageView dragView) {
-        ((AppCompatImageView)dragView).setImageResource(R.drawable.ic_drag_vertical_material_white_24dp);
+        dragView.setImageResource(R.drawable.ic_drag_vertical_material_white_24dp);
         ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) dragView.getLayoutParams();
         p.leftMargin = 0;
     }

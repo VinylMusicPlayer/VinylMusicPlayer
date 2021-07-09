@@ -21,7 +21,6 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 
 import java.io.File;
 

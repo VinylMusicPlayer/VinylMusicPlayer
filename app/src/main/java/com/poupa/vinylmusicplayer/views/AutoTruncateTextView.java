@@ -80,7 +80,7 @@ public class AutoTruncateTextView extends AppCompatTextView {
      * Get it using TAG for Android 6 and below
      */
     public TouchInterceptFrameLayout getTouchInterceptFrameLayoutByTag() {
-        return (TouchInterceptFrameLayout) getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
+        return getRootView().findViewWithTag(TouchInterceptFrameLayout.TAG);
     }
 
     public ViewParent findParentRecursively(@NotNull View view, int targetId) {

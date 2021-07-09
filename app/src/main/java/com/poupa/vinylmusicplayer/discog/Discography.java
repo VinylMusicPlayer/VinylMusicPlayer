@@ -292,7 +292,7 @@ public class Discography implements MusicServiceEventListener {
         final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
         Predicate<Song> isNotWhiteListed = (s) -> {
             if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
-                if (!s.data.startsWith(startPath)) return true;
+                return !s.data.startsWith(startPath);
             }
             return false;
         };
