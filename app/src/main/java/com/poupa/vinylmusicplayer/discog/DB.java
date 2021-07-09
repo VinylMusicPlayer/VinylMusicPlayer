@@ -65,9 +65,6 @@ class DB extends SQLiteOpenHelper {
     public void migrateDB(@NonNull SQLiteDatabase dbase, int oldVersion, int newVersion) {
         final Consumer<SQLiteDatabase> migrateResetAll = (db) -> {
             db.execSQL(String.format("DROP TABLE IF EXISTS %s", SongColumns.NAME));
-            db.execSQL(String.format("DROP TABLE IF EXISTS %s", PlaylistColumns.NAME));
-            db.execSQL(String.format("DROP TABLE IF EXISTS %s", PlaylistSongsColumns.NAME));
-
             onCreate(db);
         };
         final Consumer<SQLiteDatabase> migrateUnsupported = (db) -> {
@@ -129,10 +126,6 @@ class DB extends SQLiteOpenHelper {
     synchronized void clear() {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(SongColumns.NAME, null, null);
-
-            // TODO Do we want to clear the playlists
-            db.delete(PlaylistColumns.NAME, null, null);
-            db.delete(PlaylistSongsColumns.NAME, null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,10 +136,6 @@ class DB extends SQLiteOpenHelper {
             db.delete(
                     SongColumns.NAME,
                     SongColumns.ID + " = " + songId,
-                    null);
-            db.delete(
-                    PlaylistSongsColumns.NAME,
-                    PlaylistSongsColumns.SONG_ID + " = " + songId,
                     null);
         } catch (Exception e) {
             e.printStackTrace();
