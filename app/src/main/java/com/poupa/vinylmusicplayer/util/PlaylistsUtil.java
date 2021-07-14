@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.M3UWriter;
+import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -34,19 +35,16 @@ import static android.provider.MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
  */
 public class PlaylistsUtil {
     private static void notifyChange(@NonNull final Context context, @NonNull Uri uri) {
+        // TODO Use a more appropriate notification
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final long playlistId) {
-        return playlistId != -1 && doesPlaylistExist(context,
-                MediaStore.Audio.Playlists._ID + "=?",
-                new String[]{String.valueOf(playlistId)});
+        return (PlaylistLoader.getPlaylist(context, playlistId).id != -1);
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
-        return doesPlaylistExist(context,
-                MediaStore.Audio.PlaylistsColumns.NAME + "=?",
-                new String[]{name});
+        return (PlaylistLoader.getPlaylist(context, name).id != -1);
     }
 
     public static long createPlaylist(@NonNull final Context context, @Nullable final String name) {
@@ -235,35 +233,10 @@ public class PlaylistsUtil {
     }
 
     public static String getNameForPlaylist(@NonNull final Context context, final long id) {
-        try (Cursor cursor = context.getContentResolver().query(
-                    ContentUris.withAppendedId(EXTERNAL_CONTENT_URI, id),
-                    new String[]{MediaStore.Audio.PlaylistsColumns.NAME},
-                    null,
-                    null,
-                    null))
-        {
-            if (cursor != null && cursor.moveToFirst()) {
-                return cursor.getString(0);
-            }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return PlaylistLoader.getPlaylist(context, id).name;
     }
 
     public static File savePlaylist(Context context, Playlist playlist) throws IOException {
         return M3UWriter.write(context, new File(Environment.getExternalStorageDirectory(), "Playlists"), playlist);
-    }
-
-    private static boolean doesPlaylistExist(@NonNull Context context, @NonNull final String selection, @NonNull final String[] values) {
-        Cursor cursor = context.getContentResolver().query(EXTERNAL_CONTENT_URI,
-                new String[]{}, selection, values, null);
-
-        boolean exists = false;
-        if (cursor != null) {
-            exists = cursor.getCount() != 0;
-            cursor.close();
-        }
-        return exists;
     }
 }
