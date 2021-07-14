@@ -46,6 +46,8 @@ public class PlaylistLoader {
 
     @NonNull
     public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
+        // TODO Use StaticPlaylist instead
+
         ArrayList<Playlist> all = getAllPlaylists(context);
         for (Playlist playlist : all) {
             if (playlist.id == playlistId) {return playlist;}
@@ -55,6 +57,8 @@ public class PlaylistLoader {
 
     @NonNull
     public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
+        // TODO Use StaticPlaylist instead
+
         ArrayList<Playlist> all = getAllPlaylists(context);
         for (Playlist playlist : all) {
             if (TextUtils.equals(playlist.name, playlistName)) {return playlist;}

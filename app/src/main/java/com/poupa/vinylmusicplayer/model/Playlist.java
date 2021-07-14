@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jetbrains.annotations.NonNls;
@@ -68,7 +68,9 @@ public class Playlist implements Parcelable {
     @NonNull
     public ArrayList<Song> getSongs(Context context) {
         // this default implementation covers static playlists
-        return PlaylistSongLoader.getPlaylistSongList(context, id);
+        // TODO Avoid IO overhead in creating a new StaticPlaylist each time
+        StaticPlaylist staticPlaylist = new StaticPlaylist(name);
+        return staticPlaylist.asSongs();
     }
 
     @Override
