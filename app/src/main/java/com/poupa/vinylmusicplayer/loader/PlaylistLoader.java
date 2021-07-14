@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.PlaylistsColumns;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Playlist;
 
@@ -17,74 +17,48 @@ public class PlaylistLoader {
 
     @NonNull
     public static ArrayList<Playlist> getAllPlaylists(@NonNull final Context context) {
-        return getAllPlaylists(makePlaylistCursor(context, null, null));
-    }
-
-    @NonNull
-    public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
-        return getPlaylist(makePlaylistCursor(
-                context,
-                BaseColumns._ID + "=" + playlistId,
-                null
-        ));
-    }
-
-    @NonNull
-    public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
-        return getPlaylist(makePlaylistCursor(
-                context,
-                PlaylistsColumns.NAME + "='" + playlistName + "'",
-                null
-        ));
-    }
-
-    @NonNull
-    private static Playlist getPlaylist(@Nullable final Cursor cursor) {
-        Playlist playlist = new Playlist();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            playlist = getPlaylistFromCursorImpl(cursor);
-        }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return playlist;
-    }
-
-    @NonNull
-    private static ArrayList<Playlist> getAllPlaylists(@Nullable final Cursor cursor) {
         ArrayList<Playlist> playlists = new ArrayList<>();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                playlists.add(getPlaylistFromCursorImpl(cursor));
-            } while (cursor.moveToNext());
+        try (Cursor cursor = context.getContentResolver().query(
+                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        BaseColumns._ID, // 0
+                        PlaylistsColumns.NAME // 1
+                },
+                null,
+                null,
+                MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER))
+        {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    final long id = cursor.getLong(0);
+                    final String name = cursor.getString(1);
+
+                    playlists.add(new Playlist(id, name));
+                } while (cursor.moveToNext());
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
-        if (cursor != null)
-            cursor.close();
+
         return playlists;
     }
 
     @NonNull
-    private static Playlist getPlaylistFromCursorImpl(@NonNull final Cursor cursor) {
-        final long id = cursor.getLong(0);
-        final String name = cursor.getString(1);
-        return new Playlist(id, name);
+    public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
+        ArrayList<Playlist> all = getAllPlaylists(context);
+        for (Playlist playlist : all) {
+            if (playlist.id == playlistId) {return playlist;}
+        }
+        return new Playlist();
     }
 
-    @Nullable
-    private static Cursor makePlaylistCursor(@NonNull final Context context, final String selection, final String[] values) {
-        try {
-            return context.getContentResolver().query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                    new String[]{
-                            /* 0 */
-                            BaseColumns._ID,
-                            /* 1 */
-                            PlaylistsColumns.NAME
-                    }, selection, values, MediaStore.Audio.Playlists.DEFAULT_SORT_ORDER);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            return null;
+    @NonNull
+    public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
+        ArrayList<Playlist> all = getAllPlaylists(context);
+        for (Playlist playlist : all) {
+            if (TextUtils.equals(playlist.name, playlistName)) {return playlist;}
         }
+        return new Playlist();
     }
 }
