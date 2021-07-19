@@ -27,6 +27,12 @@ abstract class SongList {
      SongList(@NonNull String name) {
           this.name = name;
           load();
+
+          if (songIds.isEmpty()) {
+               // TODO Review this implementation
+               // Assume that the playlist is just created -> force a save
+               save(null);
+          }
      }
 
      abstract void load();
@@ -61,33 +67,60 @@ abstract class MutableSongList extends SongList {
           super(name);
      }
 
-     void removeSong(long id) {
-          songIds.remove(id);
-          save(null);
-          // TODO Call observers
+     private void callObservers() {
+          // TODO Add support for mutation observers
      }
 
      void addSong(long id) {
+          // TODO Add handler for duplicate detection
           songIds.add(id);
           save(null);
-          // TODO Call observers
+          callObservers();
      }
 
-     void addSongs(@NonNull List<Song> songs) {
+     public void addSongs(@NonNull List<Song> songs) {
+          // TODO Add handler for duplicate detection
           for (Song song : songs) {
                songIds.add(song.id);
           }
           save(null);
-          // TODO Call observers
+          callObservers();
+     }
+
+     public void removeSong(long id) {
+          songIds.remove(id);
+          save(null);
+          callObservers();
+     }
+
+     public boolean moveSong(int fromPosition, int toPosition) {
+          if (fromPosition == toPosition) {return true;}
+
+          final int size = songIds.size();
+          if (fromPosition >= size) {return false;}
+          if (toPosition >= size) {return false;}
+
+          final long movedSongId = songIds.get(fromPosition);
+          songIds.remove(fromPosition);
+
+          final int toPositionShift = fromPosition < toPosition ? -1 : 0;
+          songIds.add(toPosition + toPositionShift, movedSongId);
+
+          save(null);
+          callObservers();
+
+          return true;
      }
 
      void clear() {
           songIds.clear();
           save(null);
+          callObservers();
      }
 
-     void rename(@NonNull final String newName) {
+     public void rename(@NonNull final String newName) {
           save(newName);
+          callObservers();
      }
 }
 
@@ -95,18 +128,25 @@ class PreferencesBackedSongList extends MutableSongList {
      private final static String SEPARATOR = ",";
      private final static String PREF_NAME_PREFIX = "SONG_IDS_";
 
-     static List<String> loadAll() {
-          ArrayList<String> result = new ArrayList<>();
+     static List<PreferencesBackedSongList> loadAll() {
+          ArrayList<PreferencesBackedSongList> result = new ArrayList<>();
 
           SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
           for (String prefName : preferences.getAll().keySet()) {
                if (prefName.startsWith(PREF_NAME_PREFIX)) {
-                    result.add(prefName.substring(PREF_NAME_PREFIX.length()));
+                    final String name = prefName.substring(PREF_NAME_PREFIX.length());
+                    result.add(new PreferencesBackedSongList(name));
                }
           }
 
           // TODO Sort the result
+          // TODO Cache the result
           return result;
+     }
+
+     static void remove(@NonNull String name) {
+          SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+          preferences.edit().remove(PREF_NAME_PREFIX + name).apply();
      }
 
      PreferencesBackedSongList(@NonNull String name) {

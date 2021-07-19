@@ -5,11 +5,11 @@ import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.PlaylistsColumns;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 
 import java.util.ArrayList;
 
@@ -46,23 +46,15 @@ public class PlaylistLoader {
 
     @NonNull
     public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
-        // TODO Use StaticPlaylist instead
-
-        ArrayList<Playlist> all = getAllPlaylists(context);
-        for (Playlist playlist : all) {
-            if (playlist.id == playlistId) {return playlist;}
-        }
-        return new Playlist();
+        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistId);
+        if (playlist == null) {return new Playlist();}
+        return playlist.asPlaylist();
     }
 
     @NonNull
     public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
-        // TODO Use StaticPlaylist instead
-
-        ArrayList<Playlist> all = getAllPlaylists(context);
-        for (Playlist playlist : all) {
-            if (TextUtils.equals(playlist.name, playlistName)) {return playlist;}
-        }
-        return new Playlist();
+        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistName);
+        if (playlist == null) {return new Playlist();}
+        return playlist.asPlaylist();
     }
 }
