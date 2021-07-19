@@ -344,10 +344,10 @@
     <string name="pref_summary_album_shuffling_activation">Une fois activé, choisissez l\'icone de lecture aléatoire par album a la place de la lecture aléatoire classique (sigle a droite de button lecture/pause)</string>
     <string name="enable">Activée</string>
     <string name="disable">Désactivée</string>
-    <string name="history_size">Taille de l\'historique d\'écoute (0–9 albums)</string>
-    <string name="search_style">Premier critère</string>
-    <string name="secondary_search_style">Deuxieme critère</string>
-    <string name="tertiary_search_style">Troisième critère</string>
+    <string name="album_shuffling_history_size">Taille de l\'historique d\'écoute (0–9 albums)</string>
+    <string name="first_search_criteria">Premier critère</string>
+    <string name="second_search_criteria">Deuxieme critère</string>
+    <string name="third_search_criteria">Troisième critère</string>
 
     <string name="next_album">Album suivant :</string>
     <string name="no_album_found">Rien de trouvé</string>

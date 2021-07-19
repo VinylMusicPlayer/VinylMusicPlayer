@@ -7,7 +7,7 @@
        android:negativeButtonText="@null"
        android:positiveButtonText="@null"
        android:defaultValue="false"
-       android:key="allow_random_album_shuffling"
+       android:key="allow_album_shuffling"
        android:title="@string/pref_title_allow_random_album"
        android:summary="@string/pref_summary_allow_random_album" />
 
@@ -24,26 +24,26 @@
    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
        app:iconSpaceReserved="false"
        android:defaultValue="random"
-       android:entries="@array/pref_next_random_album_search_style_titles"
-       android:entryValues="@array/pref_next_random_album_search_style_values"
-       android:key="search_style"
+       android:entries="@array/pref_album_shuffling_search_criteria_titles"
+       android:entryValues="@array/pref_album_shuffling_search_criteria_values"
+       android:key="first_search_criteria"
        android:negativeButtonText="@null"
        android:positiveButtonText="@null"
-       android:title="@string/search_style" />
+       android:title="@string/first_search_criteria" />
 
    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
        app:iconSpaceReserved="false"
-       android:key="secondary_search_style"
+       android:key="second_search_criteria"
        android:negativeButtonText="@null"
        android:positiveButtonText="@null"
-       android:title="@string/secondary_search_style" />
+       android:title="@string/second_search_criteria" />
 
    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
        app:iconSpaceReserved="false"
-       android:key="tertiary_search_style"
+       android:key="third_search_criteria"
        android:negativeButtonText="@null"
        android:positiveButtonText="@null"
-       android:title="@string/tertiary_search_style" />
+       android:title="@string/third_search_criteria" />
 
    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
        app:allowDividerAbove="true"
@@ -57,8 +57,8 @@
 
    <EditTextPreference
        app:iconSpaceReserved="false"
-       android:key="next_random_album_history_size"
-       android:title="@string/history_size"
+       android:key="album_shuffling_history_size"
+       android:title="@string/album_shuffling_history_size"
        android:defaultValue="5" />
 
    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference

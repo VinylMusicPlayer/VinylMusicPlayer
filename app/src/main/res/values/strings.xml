@@ -378,10 +378,10 @@
     <string name="pref_summary_album_shuffling_activation">Once activated, choose the album shuffling icon instead of the classic shuffling icon (right of the play/pause button)</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
-    <string name="history_size">Size of the listing history (0–9 albums)</string>
-    <string name="search_style">First criteria</string>
-    <string name="secondary_search_style">Second criteria</string>
-    <string name="tertiary_search_style">Third criteria</string>
+    <string name="album_shuffling_history_size">Size of the listing history (0–9 albums)</string>
+    <string name="first_search_criteria">First criteria</string>
+    <string name="second_search_criteria">Second criteria</string>
+    <string name="third_search_criteria">Third criteria</string>
 
     <string name="error_random_album_search_history">You have search every album in this category</string>
     <string name="error_random_album_only_one_album">There is no other album to get</string>

@@ -22,13 +22,13 @@
         <item>rounded</item>
     </string-array>
 
-    <string-array name="pref_next_random_album_search_style_titles">
+    <string-array name="pref_album_shuffling_search_criteria_titles">
         <item>@string/artist</item>
         <item>@string/genre</item>
         <item>@string/random</item>
     </string-array>
 
-    <string-array name="pref_next_random_album_search_style_values">
+    <string-array name="pref_album_shuffling_search_criteria_values">
         <item>artist</item>
         <item>genre</item>
         <item>random</item>

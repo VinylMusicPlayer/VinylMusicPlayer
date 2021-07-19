@@ -1,17 +1,22 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search;
 
 
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.History;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.History;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 
+/*
+ * AutomaticSearch: Class that search the next random album to be played
+ *                  For this, all albums that follow the search criteria set in preferences but not present in listenHistory are found and take one randomly
+ *                  If no album are found, go to the next preferences criteria until something is found
+ *                  If nothing is possible given the criteria, no album will be played at the end of the playlist
+ */
 public class AutomaticSearch extends Search {
     @Override
     public boolean isManual() {
@@ -62,30 +67,6 @@ public class AutomaticSearch extends Search {
         return album;
     }
 
-    // Preference Case:
-    //  [ARTIST_SEARCH]
-    //  [GENRE_SEARCH]
-    //  [RANDOM_SEARCH]
-    //  [ARTIST_SEARCH, GENRE_SEARCH]
-    //  [GENRE_SEARCH, ARTIST_SEARCH]
-    //  [ARTIST_SEARCH, GENRE_SEARCH, RANDOM_SEARCH]
-    //  [GENRE_SEARCH, ARTIST_SEARCH, RANDOM_SEARCH]
-
-    // Preference 1
-    //  - Type of automatic search: artist | genre | random
-    // If not random, add option:
-    //  - Type of automatic fallback (if search criteria return nothing): genre | genre & random | random  ||  artist | artist & random | random
-
-    // Preference 2
-    //  - Type of automatic search: artist | genre | random
-    // If not random, add option:
-    //  - Type of automatic fallback (if search criteria return nothing): genre | random  ||  artist | random
-    // If not random, add option:
-    //  - Type of second automatic fallback (if first fallback criteria return nothing): none | random  ||  none | random
-
-    // Preference History size ??
-
-    // preference should give me a array so that i can iterate on it
     private void initSearchType() {
         fallbackLevel = 0;
         setNextSearchType();
@@ -98,11 +79,11 @@ public class AutomaticSearch extends Search {
 
         String key;
         if (fallbackLevel == 1)
-            key = PreferenceUtil.SEARCH_STYLE;
+            key = PreferenceUtil.AS_FIRST_SEARCH_CRITERIA;
         else if (fallbackLevel == 2)
-            key = PreferenceUtil.SECONDARY_SEARCH_STYLE;
+            key = PreferenceUtil.AS_SECOND_SEARCH_CRITERIA;
         else
-            key = PreferenceUtil.TERTIARY_SEARCH_STYLE;
+            key = PreferenceUtil.AS_THIRD_SEARCH_CRITERIA;
 
         String keyEntry = PreferenceUtil.getInstance().getNextRandomAlbumSearchHistory(key);
 

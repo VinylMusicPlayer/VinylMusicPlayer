@@ -36,7 +36,7 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_allow_random_album"
-            android:key="next_random_album" />
+            android:key="album_shuffling" />
 
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 

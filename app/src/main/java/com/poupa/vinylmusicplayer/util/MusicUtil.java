@@ -23,7 +23,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.NextRandomAlbum;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;

@@ -8,7 +8,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.NextRandomAlbum;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;

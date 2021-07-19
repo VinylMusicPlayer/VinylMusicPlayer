@@ -121,11 +121,12 @@ public final class PreferenceUtil {
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
 
-    public static final String ALLOW_RANDOM_ALBUM = "allow_random_album_shuffling";
-    public static final String NEXT_RANDOM_ALBUM_HISTORY_SIZE = "next_random_album_history_size";
-    public static final String SEARCH_STYLE = "search_style";
-    public static final String SECONDARY_SEARCH_STYLE = "secondary_search_style";
-    public static final String TERTIARY_SEARCH_STYLE = "tertiary_search_style";
+    public static final String AS_ALBUM_SHUFFLING = "album_shuffling";
+    public static final String AS_ALLOW_ALBUM_SHUFFLING = "allow_album_shuffling";
+    public static final String AS_HISTORY_SIZE = "album_shuffling_history_size";
+    public static final String AS_FIRST_SEARCH_CRITERIA = "first_search_criteria";
+    public static final String AS_SECOND_SEARCH_CRITERIA = "second_search_criteria";
+    public static final String AS_THIRD_SEARCH_CRITERIA = "third_search_criteria";
 
     public static final String SAF_SDCARD_URI = "saf_sdcard_uri";
 
@@ -650,11 +651,11 @@ public final class PreferenceUtil {
     }
 
     public final boolean allowRandomAlbum() {
-        return mPreferences.getBoolean(ALLOW_RANDOM_ALBUM, false);
+        return mPreferences.getBoolean(AS_ALLOW_ALBUM_SHUFFLING, false);
     }
 
     public final int getNextRandomAlbumHistorySize() {
-        String size = mPreferences.getString(NEXT_RANDOM_ALBUM_HISTORY_SIZE, "5");
+        String size = mPreferences.getString(AS_HISTORY_SIZE, "5");
 
         return parseInt(size);
     }

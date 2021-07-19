@@ -387,7 +387,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             updateNowPlayingScreenSummary();
             updatePlaylistsSummary();
 
-            Preference nextRandomAlbum = findPreference("next_random_album");
+            Preference nextRandomAlbum = findPreference(PreferenceUtil.AS_ALBUM_SHUFFLING);
             if (PreferenceUtil.getInstance().allowRandomAlbum()) {
                 nextRandomAlbum.setSummary(getContext().getResources().getString(R.string.enable));
             } else {

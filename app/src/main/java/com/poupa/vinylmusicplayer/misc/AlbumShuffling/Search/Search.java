@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search;
 
 
 import java.util.ArrayList;
@@ -7,13 +7,13 @@ import java.util.Random;
 
 import android.content.Context;
 
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.History;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.History;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
 /*
- * NextRandomAlbum: Abstract class used to put the random album shared search function
+ * Search: Abstract class used to agglomerate the random album shared search functions
  *
  */
 abstract public class Search {

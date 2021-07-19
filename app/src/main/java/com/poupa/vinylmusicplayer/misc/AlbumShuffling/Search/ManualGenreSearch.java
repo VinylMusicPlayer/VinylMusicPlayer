@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search;
 
 
 import com.poupa.vinylmusicplayer.model.Album;

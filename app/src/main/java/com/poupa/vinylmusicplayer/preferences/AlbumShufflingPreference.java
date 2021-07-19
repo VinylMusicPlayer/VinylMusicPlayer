@@ -1,30 +1,25 @@
 package com.poupa.vinylmusicplayer.preferences;
 
-import java.util.Locale;
-
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.preference.EditTextPreference;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragmentCompat;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.NextRandomAlbum;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 
-public class NextRandomAlbumPreference extends ATEPreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
+public class AlbumShufflingPreference extends ATEPreferenceFragmentCompat implements OnSharedPreferenceChangeListener {
 
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.pref_next_random_album);
+        addPreferencesFromResource(R.xml.pref_album_shuffling);
 
-        androidx.preference.EditTextPreference editTextPreference = findPreference(PreferenceUtil.NEXT_RANDOM_ALBUM_HISTORY_SIZE);
+        androidx.preference.EditTextPreference editTextPreference = findPreference(PreferenceUtil.AS_HISTORY_SIZE);
         editTextPreference.setOnBindEditTextListener(editText -> {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1)});
@@ -51,19 +46,19 @@ public class NextRandomAlbumPreference extends ATEPreferenceFragmentCompat imple
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case PreferenceUtil.ALLOW_RANDOM_ALBUM:
+            case PreferenceUtil.AS_ALLOW_ALBUM_SHUFFLING:
                 enablePreference();
                 break;
-            case PreferenceUtil.NEXT_RANDOM_ALBUM_HISTORY_SIZE:
+            case PreferenceUtil.AS_HISTORY_SIZE:
                 updateNextRandomAlbumHistorySize();
                 break;
-            case PreferenceUtil.SEARCH_STYLE:
+            case PreferenceUtil.AS_FIRST_SEARCH_CRITERIA:
                 updateNextRandomAlbumSearchStyle(true);
                 break;
-            case PreferenceUtil.SECONDARY_SEARCH_STYLE:
-                updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.SECONDARY_SEARCH_STYLE, PreferenceUtil.TERTIARY_SEARCH_STYLE, PreferenceUtil.SEARCH_STYLE, true);
+            case PreferenceUtil.AS_SECOND_SEARCH_CRITERIA:
+                updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.AS_SECOND_SEARCH_CRITERIA, PreferenceUtil.AS_THIRD_SEARCH_CRITERIA, PreferenceUtil.AS_FIRST_SEARCH_CRITERIA, true);
                 break;
-            case PreferenceUtil.TERTIARY_SEARCH_STYLE:
+            case PreferenceUtil.AS_THIRD_SEARCH_CRITERIA:
 
                 break;
         }
@@ -71,18 +66,18 @@ public class NextRandomAlbumPreference extends ATEPreferenceFragmentCompat imple
 
     private void enablePreference() {
         boolean enable = PreferenceUtil.getInstance().allowRandomAlbum();
-        findPreference("next_random_album_history_size").setEnabled(enable);
-        findPreference("search_style").setEnabled(enable);
-        findPreference("secondary_search_style").setEnabled(enable);
-        findPreference("tertiary_search_style").setEnabled(enable);
+        findPreference(PreferenceUtil.AS_HISTORY_SIZE).setEnabled(enable);
+        findPreference(PreferenceUtil.AS_FIRST_SEARCH_CRITERIA).setEnabled(enable);
+        findPreference(PreferenceUtil.AS_SECOND_SEARCH_CRITERIA).setEnabled(enable);
+        findPreference(PreferenceUtil.AS_THIRD_SEARCH_CRITERIA).setEnabled(enable);
     }
 
     private void updateNextRandomAlbumSearchStyle(boolean reset) {
-        boolean isShown = updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.SEARCH_STYLE, PreferenceUtil.SECONDARY_SEARCH_STYLE, null, reset);
+        boolean isShown = updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.AS_FIRST_SEARCH_CRITERIA, PreferenceUtil.AS_SECOND_SEARCH_CRITERIA, null, reset);
         if (!isShown) {
-            updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.SEARCH_STYLE, PreferenceUtil.TERTIARY_SEARCH_STYLE, null, reset);
+            updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.AS_FIRST_SEARCH_CRITERIA, PreferenceUtil.AS_THIRD_SEARCH_CRITERIA, null, reset);
         } else {
-            updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.SECONDARY_SEARCH_STYLE, PreferenceUtil.TERTIARY_SEARCH_STYLE, PreferenceUtil.SEARCH_STYLE, reset);
+            updateSpecificNextRandomAlbumSearchStyle(PreferenceUtil.AS_SECOND_SEARCH_CRITERIA, PreferenceUtil.AS_THIRD_SEARCH_CRITERIA, PreferenceUtil.AS_FIRST_SEARCH_CRITERIA, reset);
         }
     }
 
@@ -124,7 +119,7 @@ public class NextRandomAlbumPreference extends ATEPreferenceFragmentCompat imple
     }
 
     private void updateNextRandomAlbumHistorySize() {
-        EditTextPreference editTextPreference = findPreference(PreferenceUtil.NEXT_RANDOM_ALBUM_HISTORY_SIZE);
+        EditTextPreference editTextPreference = findPreference(PreferenceUtil.AS_HISTORY_SIZE);
         editTextPreference.setSummary(editTextPreference.getText());
 
         NextRandomAlbum.getInstance().setHistoriesSize(PreferenceUtil.getInstance().getNextRandomAlbumHistorySize());

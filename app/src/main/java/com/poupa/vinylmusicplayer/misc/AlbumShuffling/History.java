@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling;
 
 
 import java.util.ArrayList;

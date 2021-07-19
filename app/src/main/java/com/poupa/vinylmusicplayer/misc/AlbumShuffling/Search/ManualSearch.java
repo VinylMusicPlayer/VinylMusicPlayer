@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search;
 
 
 import java.util.ArrayList;
@@ -7,11 +7,17 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.History;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.History;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
+/*
+ * ManualSearch: Abstract class used to agglomerate the random album manual shared search functions (access via 3-dot menu)
+ *               For each search criteria (artist/genre/random) the concept is the same: get all albums not present in searchHistory that follow the criteria
+ *               Randomly get one of them, if no album can be found remove the oldest album stocked into searchHistory and try again
+ *               If after removing all album from searchHistory nothing is found tell it to the user
+ */
 abstract public class ManualSearch extends Search {
     @Override
     public boolean isManual() {

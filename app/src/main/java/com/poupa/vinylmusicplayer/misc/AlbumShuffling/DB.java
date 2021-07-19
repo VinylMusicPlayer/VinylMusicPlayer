@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import com.poupa.vinylmusicplayer.App;
 
 public class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "next_random_album.db";
-    private static final int VERSION = 5;
+    private static final int VERSION = 1;
 
     DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);

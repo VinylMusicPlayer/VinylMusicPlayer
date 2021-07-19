@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.tagging.TagExtractor;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.NextRandomAlbum;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.NextRandomAlbum;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;

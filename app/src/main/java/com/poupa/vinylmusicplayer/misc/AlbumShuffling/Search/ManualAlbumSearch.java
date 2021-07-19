@@ -1,13 +1,13 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum.Search;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search;
 
 
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
-public class ManualArtistSearch extends ManualSearch {
+public class ManualAlbumSearch extends ManualSearch {
     @Override
     public boolean searchTypeIsTrue(Song song, Album album) {
-        return artistSearch(song, album);
+        return albumSearch();
     }
 }

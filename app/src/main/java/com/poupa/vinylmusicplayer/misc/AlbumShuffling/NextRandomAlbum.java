@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.RandomAlbum;
+package com.poupa.vinylmusicplayer.misc.AlbumShuffling;
 
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.Search;
+import com.poupa.vinylmusicplayer.misc.AlbumShuffling.Search.Search;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -24,12 +24,12 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
  */
 public class NextRandomAlbum {
 
-    private static final int RANDOM_ALBUM_SONG_ID = Song.EMPTY_SONG_ID-1; // a valid next album song id
+    private static final int NEXT_RANDOM_ALBUM_SONG_ID = Song.EMPTY_SONG_ID-1; // a valid next album song id
     private static final int EMPTY_NEXT_RANDOM_ALBUM_ID = Song.EMPTY_SONG_ID-1; // an invalid next album song id
 
     static private final NextRandomAlbum sInstance = new NextRandomAlbum();
 
-    static public boolean IsRandomAlbum(long song_id) { return song_id == RANDOM_ALBUM_SONG_ID; }
+    static public boolean IsRandomAlbum(long song_id) { return song_id == NEXT_RANDOM_ALBUM_SONG_ID; }
     static public boolean IsEmptyNextRandomAlbum(long song_id) { return song_id == EMPTY_NEXT_RANDOM_ALBUM_ID; }
 
     private History listenHistory; // already listen album
@@ -134,13 +134,13 @@ public class NextRandomAlbum {
 
     @NonNull
     private Song addNewRandomAlbum(long albumId, String albumName, long artistId, @NonNull List<String> artistNames, Context context) {
-        return new Song(RANDOM_ALBUM_SONG_ID, context.getResources().getString(R.string.next_album), 0, -1, -1, "",
+        return new Song(NEXT_RANDOM_ALBUM_SONG_ID, context.getResources().getString(R.string.next_album), 0, -1, -1, "",
                 -1, -1, albumId, albumName, artistId, artistNames);
     }
 
     @NonNull
     private Song addEmptyRandomAlbum(Context context) {
-        return addNewRandomAlbum(EMPTY_NEXT_RANDOM_ALBUM_ID, "None", -1, MultiValuesTagUtil.split(context.getResources().getString(R.string.no_album_found)), context);
+        return addNewRandomAlbum(EMPTY_NEXT_RANDOM_ALBUM_ID, context.getResources().getString(R.string.none), -1, MultiValuesTagUtil.split(context.getResources().getString(R.string.no_album_found)), context);
     }
 
     @NonNull
