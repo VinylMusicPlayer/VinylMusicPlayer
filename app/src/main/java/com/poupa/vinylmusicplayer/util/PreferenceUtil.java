@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Integer.parseInt;
+
+
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
     public static final String GENERAL_THEME = "general_theme";
@@ -97,7 +100,6 @@ public final class PreferenceUtil {
     public static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
     public static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
     public static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
-    public static final String ALLOW_RANDOM_ALBUM = "allow_random_album_shuffling";
 
     public static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
     public static final String WHITELIST_ENABLED = "whitelist_enabled";
@@ -118,6 +120,12 @@ public final class PreferenceUtil {
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
+
+    public static final String ALLOW_RANDOM_ALBUM = "allow_random_album_shuffling";
+    public static final String NEXT_RANDOM_ALBUM_HISTORY_SIZE = "next_random_album_history_size";
+    public static final String SEARCH_STYLE = "search_style";
+    public static final String SECONDARY_SEARCH_STYLE = "secondary_search_style";
+    public static final String TERTIARY_SEARCH_STYLE = "tertiary_search_style";
 
     public static final String SAF_SDCARD_URI = "saf_sdcard_uri";
 
@@ -377,7 +385,7 @@ public final class PreferenceUtil {
         final Pattern pattern = Pattern.compile("^([0-9]*?)([dwmy])$");
         final Matcher matcher = pattern.matcher(value);
         if (matcher.find()) {
-            final int count = Integer.parseInt(matcher.group(1));
+            final int count = parseInt(matcher.group(1));
             final String unit = matcher.group(2);
 
             if (count == 0) {return disabledValue;}
@@ -643,6 +651,16 @@ public final class PreferenceUtil {
 
     public final boolean allowRandomAlbum() {
         return mPreferences.getBoolean(ALLOW_RANDOM_ALBUM, false);
+    }
+
+    public final int getNextRandomAlbumHistorySize() {
+        String size = mPreferences.getString(NEXT_RANDOM_ALBUM_HISTORY_SIZE, "5");
+
+        return parseInt(size);
+    }
+
+    public final String getNextRandomAlbumSearchHistory(@NonNull String key) {
+        return mPreferences.getString(key, "none");
     }
 
     public void setInitializedBlacklist() {

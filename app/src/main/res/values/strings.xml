@@ -342,10 +342,6 @@
     <string name="classic_theme_style_name">Classic</string>
     <string name="pref_title_theme_style">Theme style</string>
     <string name="rounded_theme_style_name">Rounded</string>
-    <string name="error_random_album_search_history">You have search every album in this category</string>
-    <string name="error_random_album_only_one_album">There is no other album to get</string>
-    <string name="error_random_album_no_new_found">No other album where found with this criteria</string>
-    <string name="error_random_album_repeat_mode">Cannot activate the repeat mode when in album shuffling</string>
     <!-- SAF -->
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>
@@ -373,8 +369,24 @@
     <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Only show content below start folder: </string>
-    <string name="pref_summary_allow_random_album">At the end of the playing queue a random album will be chosen</string>
+    <!-- Next random album -->
+    <string name="random">Random</string>
     <string name="pref_title_allow_random_album">Album shuffling</string>
+    <string name="pref_summary_allow_random_album">At the end of the playing queue, a new album is loaded randomly</string>
+    <string name="pref_summary_album_shuffling_criteria">The search is done following theme and order of the different criteria that you have chosen</string>
+    <string name="pref_summary_album_shuffling_history">To avoid repeat, a listing history is used</string>
+    <string name="pref_summary_album_shuffling_activation">Once activated, choose the album shuffling icon instead of the classic shuffling icon (right of the play/pause button)</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="history_size">Size of the listing history (0–9 albums)</string>
+    <string name="search_style">First criteria</string>
+    <string name="secondary_search_style">Second criteria</string>
+    <string name="tertiary_search_style">Third criteria</string>
+
+    <string name="error_random_album_search_history">You have search every album in this category</string>
+    <string name="error_random_album_only_one_album">There is no other album to get</string>
+    <string name="error_random_album_no_new_found">No other album where found with this criteria</string>
+    <string name="error_random_album_repeat_mode">Cannot activate the repeat mode when in album shuffling</string>
     <string name="next_album">Next album:</string>
     <string name="no_album_found">Nothing found</string>
     <string name="shuffle_album">Shuffle album</string>

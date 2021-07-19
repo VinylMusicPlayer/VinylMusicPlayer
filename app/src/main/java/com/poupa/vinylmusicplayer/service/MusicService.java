@@ -1115,7 +1115,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             boolean randomAlbumIsActive = NextRandomAlbum.IsRandomAlbum(lastSong.id);
 
             if (!randomAlbumIsActive || NextRandomAlbum.getInstance().searchHasEnded()) { // forbid more than one automatic search on the same album
-                NextRandomAlbum.getInstance().initSearch(new AutomaticSearch());
+                NextRandomAlbum.getInstance().initSearch(new AutomaticSearch(), true);
 
                 getRandomAlbumIfPossible(notify);
             }

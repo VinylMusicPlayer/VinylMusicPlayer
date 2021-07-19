@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+       app:iconSpaceReserved="false"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:defaultValue="false"
+       android:key="allow_random_album_shuffling"
+       android:title="@string/pref_title_allow_random_album"
+       android:summary="@string/pref_summary_allow_random_album" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+       app:allowDividerAbove="true"
+       app:allowDividerBelow="false"
+       android:selectable="false"
+       android:persistent="false"
+       app:iconSpaceReserved="false"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:summary="@string/pref_summary_album_shuffling_criteria" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+       app:iconSpaceReserved="false"
+       android:defaultValue="random"
+       android:entries="@array/pref_next_random_album_search_style_titles"
+       android:entryValues="@array/pref_next_random_album_search_style_values"
+       android:key="search_style"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:title="@string/search_style" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+       app:iconSpaceReserved="false"
+       android:key="secondary_search_style"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:title="@string/secondary_search_style" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEListPreference
+       app:iconSpaceReserved="false"
+       android:key="tertiary_search_style"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:title="@string/tertiary_search_style" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+       app:allowDividerAbove="true"
+       app:allowDividerBelow="false"
+       android:selectable="false"
+       android:persistent="false"
+       app:iconSpaceReserved="false"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:summary="@string/pref_summary_album_shuffling_history" />
+
+   <EditTextPreference
+       app:iconSpaceReserved="false"
+       android:key="next_random_album_history_size"
+       android:title="@string/history_size"
+       android:defaultValue="5" />
+
+   <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
+       app:allowDividerAbove="true"
+       app:allowDividerBelow="false"
+       android:selectable="false"
+       android:persistent="false"
+       app:iconSpaceReserved="false"
+       android:negativeButtonText="@null"
+       android:positiveButtonText="@null"
+       android:summary="@string/pref_summary_album_shuffling_activation" />
+
+</androidx.preference.PreferenceScreen>

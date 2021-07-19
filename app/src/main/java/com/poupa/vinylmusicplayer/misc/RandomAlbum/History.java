@@ -18,7 +18,7 @@ public class History {
     private ArrayList<Long> history;         // list of element currently saved
     private ArrayList<Long> originalHistory; // copy of the history used to allow revert of history last operation
 
-    private final int maxSize;
+    private int maxSize;
     private final DB database;
 
     public History(int maxSize, boolean addDatabase) {
@@ -49,6 +49,10 @@ public class History {
         clearOriginalHistory();
     }
 
+    public void setHistorySize(int size) {
+        this.maxSize = size;
+    }
+
     // Get first element added and remove it
     public long popHistory() {
         if (history.size() > 0) {
@@ -74,6 +78,11 @@ public class History {
         originalHistory = new ArrayList<>(history);
     }
 
+    public void setHistory(History init) {
+        this.originalHistory = new ArrayList<>(init.originalHistory);
+        this.history = new ArrayList<>(init.history);
+    }
+
     // set database up to date with current history
     public void synchronizeDatabase() {
         if (database != null) {
@@ -97,7 +106,7 @@ public class History {
 
     // add new if if possible (no duplicate) and remove old one if needed
     public void addIdToHistory(long id, boolean updateDatabase) {
-        if (history.size() >= maxSize) {
+        while (history.size() >= maxSize) {
             if (database != null && updateDatabase) { database.removeFirstAlbumOfHistory(); }
             history.remove(0);
             originalHistory.remove(0);

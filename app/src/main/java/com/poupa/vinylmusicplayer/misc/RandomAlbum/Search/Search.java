@@ -35,6 +35,8 @@ abstract public class Search {
     // implementation of the search algorithm
     abstract public Album foundNextAlbum(Song song, ArrayList<Album> albums, long currentlyShownNextRandomAlbumId, History listenHistory, History searchHistory, Context context);
 
+    public Search() {}
+
     // init global variable to ensure foundNextAlbum can easily find something
     protected void constructPositionAlbum(Song song, ArrayList<Album> albums, long currentlyShownNextRandomAlbumId, History searchHistory, History listenHistory) {
         int i = 0;

@@ -335,8 +335,20 @@
     <string name="rounded_theme_style_name">Arrondi</string>
     <string name="classic_theme_style_name">Classique</string>
     <string name="pref_title_theme_style">Thème style</string>
-    <string name="pref_summary_allow_random_album">A la fin de la liste de lecture, un nouvel album va être chargé aléatoire</string>
-    <string name="pref_title_allow_random_album">Album aléatoire en fin de file de lecture</string>
+
+    <string name="random">Aléatoire</string>
+    <string name="pref_title_allow_random_album">Lecture aléatoire par album</string>
+    <string name="pref_summary_allow_random_album">A la fin de la liste de lecture, un nouvel album va être chargé aléatoirement</string>
+    <string name="pref_summary_album_shuffling_criteria">La recherche s\'effectue en fonction du theme et de l\'ordre des criteres que vous avez retenus</string>
+    <string name="pref_summary_album_shuffling_history">Pour éviter les repetitions, un historique d\'écoute est utilisé</string>
+    <string name="pref_summary_album_shuffling_activation">Une fois activé, choisissez l\'icone de lecture aléatoire par album a la place de la lecture aléatoire classique (sigle a droite de button lecture/pause)</string>
+    <string name="enable">Activée</string>
+    <string name="disable">Désactivée</string>
+    <string name="history_size">Taille de l\'historique d\'écoute (0–9 albums)</string>
+    <string name="search_style">Premier critère</string>
+    <string name="secondary_search_style">Deuxieme critère</string>
+    <string name="tertiary_search_style">Troisième critère</string>
+
     <string name="next_album">Album suivant :</string>
     <string name="no_album_found">Rien de trouvé</string>
     <string name="shuffle_album">Recharger album aléatoirement</string>

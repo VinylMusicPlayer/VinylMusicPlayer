@@ -156,7 +156,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
             final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
             findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
-
         }
 
         @Nullable
@@ -387,6 +386,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
             updateNowPlayingScreenSummary();
             updatePlaylistsSummary();
+
+            Preference nextRandomAlbum = findPreference("next_random_album");
+            if (PreferenceUtil.getInstance().allowRandomAlbum()) {
+                nextRandomAlbum.setSummary(getContext().getResources().getString(R.string.enable));
+            } else {
+                nextRandomAlbum.setSummary(getContext().getResources().getString(R.string.disable));
+            }
         }
 
         private boolean hasEqualizer() {

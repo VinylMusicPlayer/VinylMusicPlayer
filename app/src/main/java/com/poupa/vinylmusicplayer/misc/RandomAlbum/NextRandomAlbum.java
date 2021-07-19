@@ -13,6 +13,8 @@ import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.RandomAlbum.Search.Search;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+
 
 /*
  * NextRandomAlbum: Class that manage the next random album to be played
@@ -39,7 +41,7 @@ public class NextRandomAlbum {
     private Search searchFunction; // type of search to be done: auto, manual by genre/artist/album
 
     private NextRandomAlbum() {
-        int historySize = 5; // Doesn't need to be too big, as history is there only so that we don't listen to the same set of album endlessly
+        int historySize = PreferenceUtil.getInstance().getNextRandomAlbumHistorySize(); // Doesn't need to be too big, as history is there only so that we don't listen to the same set of album endlessly
 
         searchHistory = new History(historySize, false);
         listenHistory = new History(historySize, true);
@@ -80,6 +82,11 @@ public class NextRandomAlbum {
         return addNewRandomAlbum(Discography.getInstance().getAlbum(nextRandomAlbumId), context);
     }
 
+    public void setHistoriesSize(int size) {
+        searchHistory.setHistorySize(size);
+        listenHistory.setHistorySize(size);
+    }
+
     // next random album is been loaded into queue, thus old one as been listen too
     public void commit(long albumId) {
         // add id to listen history, this should be the old album not the wanted one
@@ -108,7 +115,15 @@ public class NextRandomAlbum {
     }
 
     public void initSearch(Search searchFunction) {
+        initSearch(searchFunction, false);
+    }
+
+    public void initSearch(Search searchFunction, boolean synchronizeHistories) {
         this.searchFunction = searchFunction;
+
+        if (synchronizeHistories) {
+            searchHistory.setHistory(listenHistory);
+        }
     }
 
     // ----------------------------------------- PRIVATE METHOD -----------------------------------------
