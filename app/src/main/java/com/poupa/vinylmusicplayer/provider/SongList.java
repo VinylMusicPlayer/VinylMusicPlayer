@@ -27,19 +27,13 @@ abstract class SongList {
      SongList(@NonNull String name) {
           this.name = name;
           load();
-
-          if (songIds.isEmpty()) {
-               // TODO Review this implementation
-               // Assume that the playlist is just created -> force a save
-               save(null);
-          }
      }
 
-     abstract void load();
+     abstract boolean load();
      abstract void save(@Nullable String newName);
 
      @NonNull
-     public ArrayList<Song> asSongs() {
+     ArrayList<Song> asSongs() {
           ArrayList<Song> result = new ArrayList<>();
           ArrayList<Long> orphanIds = new ArrayList<>();
 
@@ -67,7 +61,7 @@ abstract class MutableSongList extends SongList {
           super(name);
      }
 
-     private void callObservers() {
+     protected static void callObservers() {
           // TODO Add support for mutation observers
      }
 
@@ -128,10 +122,18 @@ class PreferencesBackedSongList extends MutableSongList {
      private final static String SEPARATOR = ",";
      private final static String PREF_NAME_PREFIX = "SONG_IDS_";
 
+     private static SharedPreferences preferences = null;
+     protected static SharedPreferences getPreferences() {
+          if (preferences == null) {
+               preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+          }
+          return preferences;
+     }
+
      static List<PreferencesBackedSongList> loadAll() {
           ArrayList<PreferencesBackedSongList> result = new ArrayList<>();
 
-          SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+          final SharedPreferences preferences = getPreferences();
           for (String prefName : preferences.getAll().keySet()) {
                if (prefName.startsWith(PREF_NAME_PREFIX)) {
                     final String name = prefName.substring(PREF_NAME_PREFIX.length());
@@ -145,8 +147,10 @@ class PreferencesBackedSongList extends MutableSongList {
      }
 
      static void remove(@NonNull String name) {
-          SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+          final SharedPreferences preferences = getPreferences();
           preferences.edit().remove(PREF_NAME_PREFIX + name).apply();
+
+          callObservers();
      }
 
      PreferencesBackedSongList(@NonNull String name) {
@@ -154,12 +158,17 @@ class PreferencesBackedSongList extends MutableSongList {
      }
 
      @Override
-     void load() {
-          SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+     boolean load() {
+          final SharedPreferences preferences = getPreferences();
           String values = preferences.getString(PREF_NAME_PREFIX + name, "");
 
           songIds.clear();
-          for (String id : values.split(SEPARATOR)) {songIds.add(Long.valueOf(id));}
+          try {
+               for (String id : values.split(SEPARATOR)) {songIds.add(Long.valueOf(id));}
+               return true;
+          } catch (NumberFormatException ignored) {
+               return false;
+          }
      }
 
      @Override
@@ -170,7 +179,7 @@ class PreferencesBackedSongList extends MutableSongList {
                values.append(id);
           }
 
-          SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+          final SharedPreferences preferences = getPreferences();
           if (newName != null) {
                preferences.edit().remove(PREF_NAME_PREFIX + name).apply();
                name = newName;
