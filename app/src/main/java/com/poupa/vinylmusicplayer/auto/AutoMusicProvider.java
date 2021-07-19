@@ -10,7 +10,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -23,6 +22,7 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.ShuffleAllPlaylist;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -231,7 +231,8 @@ public class AutoMusicProvider {
         }
 
         // Static playlists
-        for (Playlist entry : PlaylistLoader.getAllPlaylists(mContext)) {
+        for (StaticPlaylist staticPlaylist : StaticPlaylist.getAllPlaylists()) {
+            Playlist entry = staticPlaylist.asPlaylist();
             // Here we are appending playlist ID to the MEDIA_ID_MUSICS_BY_PLAYLIST category.
             // Upon browsing event, this will be handled as per the case of other playlists
             mediaItems.add(AutoMediaItem.with(mContext)

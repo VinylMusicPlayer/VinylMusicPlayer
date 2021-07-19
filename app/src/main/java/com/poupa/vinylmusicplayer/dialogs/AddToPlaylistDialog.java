@@ -10,9 +10,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.util.ArrayList;
@@ -42,11 +41,11 @@ public class AddToPlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final List<Playlist> playlists = PlaylistLoader.getAllPlaylists(getActivity());
+        final List<StaticPlaylist> playlists = StaticPlaylist.getAllPlaylists();
         CharSequence[] playlistNames = new CharSequence[playlists.size() + 1];
         playlistNames[0] = getActivity().getResources().getString(R.string.action_new_playlist);
         for (int i = 1; i < playlistNames.length; i++) {
-            playlistNames[i] = playlists.get(i - 1).name;
+            playlistNames[i] = playlists.get(i - 1).asPlaylist().name;
         }
         return new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_playlist_title)
@@ -60,7 +59,7 @@ public class AddToPlaylistDialog extends DialogFragment {
                     } else {
                         materialDialog.dismiss();
                         Context ctx = getActivity();
-                        final long playlistId = playlists.get(i - 1).id;
+                        final long playlistId = playlists.get(i - 1).asPlaylist().id;
 
                         if (hasDuplicates(playlistId, songs, ctx)) {
                             new MaterialDialog.Builder(ctx)
