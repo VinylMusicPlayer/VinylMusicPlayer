@@ -84,4 +84,19 @@ public class StaticPlaylist extends PreferencesBackedSongList {
         // TODO Dont use hashcode as a substitude for id
         return new Playlist(name.hashCode(), name);
     }
+
+    @Override
+    @NonNull
+    public ArrayList<Song> asSongs() {
+        // TODO Review this suboptimal implementation
+        // Repackage the song lists as a list of PlaylistSong
+        final ArrayList<Song> songs = super.asSongs();
+        final long playlistId = asPlaylist().id;
+
+        ArrayList<Song> result = new ArrayList<>();
+        for (Song song : songs) {
+            result.add(new PlaylistSong(song, playlistId, result.size()));
+        }
+        return result;
+    }
 }
