@@ -331,14 +331,7 @@ public class MusicUtil {
 
     @NonNull
     public static String getSectionName(@Nullable String musicMediaTitle) {
-        if ((musicMediaTitle == null) || (musicMediaTitle.length() == 0)) return "";
-        musicMediaTitle = musicMediaTitle.trim().toLowerCase();
-        if (musicMediaTitle.startsWith("the ")) {
-            musicMediaTitle = musicMediaTitle.substring(4);
-        } else if (musicMediaTitle.startsWith("a ")) {
-            musicMediaTitle = musicMediaTitle.substring(2);
-        }
-        if (musicMediaTitle.isEmpty()) return "";
+        if (TextUtils.isEmpty(musicMediaTitle)) {return "";}
         return String.valueOf(musicMediaTitle.charAt(0)).toUpperCase();
     }
 

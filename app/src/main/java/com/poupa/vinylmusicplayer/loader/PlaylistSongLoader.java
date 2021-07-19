@@ -46,6 +46,10 @@ public class PlaylistSongLoader {
     public static ArrayList<Song> getPlaylistSongList(
             @NonNull final Context context,
             @NonNull final String playlistNameSearchTerm) {
+        // TODO Review the implementation of this - we dont use SQL anymore
+        return new ArrayList<>();
+
+        /*
         // First find all playlists whose name contains the desired playlist name
 
         // Avoid SQL injection by using parameter
@@ -72,6 +76,7 @@ public class PlaylistSongLoader {
         }
 
         return getPlaylistSongList(context, match.id);
+        */
     }
 
     /**

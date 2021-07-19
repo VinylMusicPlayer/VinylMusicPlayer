@@ -467,12 +467,7 @@ public class Discography implements MusicServiceEventListener {
 
     private void fetchAllSongs() {
         setCacheState(MemCache.ConsistencyState.REFRESHING);
-
-        Collection<Song> songs = cache.loadSongs();
-        for (Song song : songs) {
-            addSong(song, true);
-        }
-
+        cache.loadSongs();
         setCacheState(MemCache.ConsistencyState.OK);
     }
 

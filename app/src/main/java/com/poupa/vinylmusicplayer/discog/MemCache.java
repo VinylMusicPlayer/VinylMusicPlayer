@@ -51,15 +51,11 @@ class MemCache {
     private final DB database = new DB();
 
     synchronized void loadSongs() {
-        isStale = true;
-
         Collection<Song> songs = database.loadSongs();
 
         for (Song song : songs) {
             addSong(song, true);
         }
-
-        isStale = false;
     }
 
     synchronized void addSong(@NonNull final Song song, boolean cacheOnly) {
