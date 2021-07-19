@@ -302,8 +302,8 @@
     <string name="pref_summary_library_categories">Configura visibilità e ordine delle categorie della libreria.</string>
     <string name="you_have_to_select_at_least_one_category">Devi scegliere almeno una categoria.</string>
     <string name="action_sort_order">Ordina per</string>
-    <string name="sort_order_a_z">Nome</string>
-    <string name="sort_order_z_a">Nome (invertito)</string>
+    <string name="sort_order_name">Nome</string>
+    <string name="sort_order_name_reverse">Nome (invertito)</string>
     <string name="sort_order_artist">Arista</string>
     <string name="sort_order_album">Album</string>
     <string name="sort_order_year">Anno</string>
