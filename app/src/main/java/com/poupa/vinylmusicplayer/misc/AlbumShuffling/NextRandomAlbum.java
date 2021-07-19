@@ -140,7 +140,7 @@ public class NextRandomAlbum {
 
     @NonNull
     private Song addEmptyRandomAlbum(Context context) {
-        return addNewRandomAlbum(EMPTY_NEXT_RANDOM_ALBUM_ID, context.getResources().getString(R.string.none), -1, MultiValuesTagUtil.split(context.getResources().getString(R.string.no_album_found)), context);
+        return addNewRandomAlbum(EMPTY_NEXT_RANDOM_ALBUM_ID, context.getResources().getString(R.string.empty), -1, MultiValuesTagUtil.split(context.getResources().getString(R.string.no_album_found)), context);
     }
 
     @NonNull

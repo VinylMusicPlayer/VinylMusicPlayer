@@ -340,8 +340,8 @@
     <string name="pref_title_allow_random_album">Lecture aléatoire par album</string>
     <string name="pref_summary_allow_random_album">A la fin de la liste de lecture, un nouvel album va être chargé aléatoirement</string>
     <string name="pref_summary_album_shuffling_criteria">La recherche s\'effectue en fonction du theme et de l\'ordre des criteres que vous avez retenus</string>
-    <string name="pref_summary_album_shuffling_history">Pour éviter les repetitions, un historique d\'écoute est utilisé</string>
-    <string name="pref_summary_album_shuffling_activation">Une fois activé, choisissez l\'icone de lecture aléatoire par album a la place de la lecture aléatoire classique (sigle a droite de button lecture/pause)</string>
+    <string name="pref_summary_album_shuffling_history">Pour éviter les repetitions, un historique locale d\'écoute est utilisé</string>
+    <string name="pref_summary_album_shuffling_activation">Une fois activé, choisissez l\'icone de lecture aléatoire par album a la place de la lecture aléatoire classique pour l\'utilisé (sigle a droite de button lecture/pause) \nUne fois désélectionné, l\'hsitorique est supprimé</string>
     <string name="enable">Activée</string>
     <string name="disable">Désactivée</string>
     <string name="album_shuffling_history_size">Taille de l\'historique d\'écoute (0–9 albums)</string>
@@ -350,13 +350,11 @@
     <string name="third_search_criteria">Troisième critère</string>
 
     <string name="next_album">Album suivant :</string>
-    <string name="no_album_found">Rien de trouvé</string>
+    <string name="no_other_album_found">Rien d\'autre n\'a été trouvé</string>
+    <string name="no_album_found">Rien n\'a été trouvé</string>
     <string name="shuffle_album">Recharger album aléatoirement</string>
     <string name="shuffle_album_genre">Recharger album dans le même genre</string>
     <string name="shuffle_album_artist">Recharger album avec le même artist</string>
-    <string name="error_random_album_only_one_album">Aucun autre album n\'est disponible</string>
-    <string name="error_random_album_no_new_found">Aucun autre album trouvé via ce critère</string>
     <string name="error_random_album_repeat_mode">Répetition impossible en mode album aléatoire</string>
-    <string name="error_random_album_search_history">Vous avez chercher tous les albums possible dans cette catégorie</string>
 
 </resources>

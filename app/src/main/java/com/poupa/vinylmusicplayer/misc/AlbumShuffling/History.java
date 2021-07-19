@@ -106,25 +106,34 @@ public class History {
 
     // add new if if possible (no duplicate) and remove old one if needed
     public void addIdToHistory(long id, boolean updateDatabase) {
-        while (history.size() >= maxSize) {
-            if (database != null && updateDatabase) { database.removeFirstAlbumOfHistory(); }
-            history.remove(0);
-            originalHistory.remove(0);
-        }
-        if (!isIdForbidden(id, history)) { // i don't want duplication in this array as it complicate what to do when no new random album can be found because of this array
-            if (database != null && updateDatabase) { database.addIdToHistory(id); }
-            history.add(id);
-            originalHistory.add(id);
+        if (maxSize > 0) {
+            while (history.size() >= maxSize) {
+                if (database != null && updateDatabase) {
+                    database.removeFirstAlbumOfHistory();
+                }
+                history.remove(0);
+                originalHistory.remove(0);
+            }
+            if (!isIdForbidden(id,
+                    history)) { // i don't want duplication in this array as it complicate what to do when no new random album can be found because of this array
+                if (database != null && updateDatabase) {
+                    database.addIdToHistory(id);
+                }
+                history.add(id);
+                originalHistory.add(id);
+            }
         }
     }
 
     // reset history to the database state
     public void fetchHistory() {
-        if (database != null) {
-            List<Long> nextRandomAlbums = database.fetchAllListenHistory();
+        if (maxSize > 0) {
+            if (database != null) {
+                List<Long> nextRandomAlbums = database.fetchAllListenHistory();
 
-            for (int i = 0; i <= nextRandomAlbums.size() - 1; i++) {
-                addIdToHistory(nextRandomAlbums.get(i), false);
+                for (int i = 0; i <= nextRandomAlbums.size() - 1; i++) {
+                    addIdToHistory(nextRandomAlbums.get(i), false);
+                }
             }
         }
     }

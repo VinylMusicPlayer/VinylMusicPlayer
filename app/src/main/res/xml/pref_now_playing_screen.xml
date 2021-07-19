@@ -31,7 +31,7 @@
             android:title="@string/pref_title_show_song_number" />
 
         <Preference
-            app:fragment="com.poupa.vinylmusicplayer.preferences.NextRandomAlbumPreference"
+            app:fragment="com.poupa.vinylmusicplayer.preferences.AlbumShufflingPreference"
             app:iconSpaceReserved="false"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"

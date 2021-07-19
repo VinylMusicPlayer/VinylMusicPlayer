@@ -36,8 +36,8 @@ abstract public class ManualSearch extends Search {
         int albumPosition = getRandomAlbumPosition(albumSize, currentSongPosition, currentlyShownNextRandomAlbumPosition, forbiddenPosition);
         boolean albumPositionAsChange = (albumPosition >= 0);
 
-        if (albumPosition == Search.ERROR_ARRAY_SIZE_IS_1) {
-            Toast.makeText(context, context.getResources().getString(R.string.error_random_album_only_one_album), Toast.LENGTH_SHORT).show();
+        if (albumPosition == Search.ERROR_ARRAY_SIZE_IS_0 || albumPosition == Search.ERROR_ARRAY_SIZE_IS_1 || albumPosition == Search.ERROR_UNRESOLVED) {
+            Toast.makeText(context, context.getResources().getString(R.string.no_other_album_found), Toast.LENGTH_SHORT).show();
         } else if (albumPosition == Search.ERROR_HISTORY) { //clear-up history until something is found
             // Get first history element that follow current search criteria
             int firstElementPos;
@@ -56,7 +56,7 @@ abstract public class ManualSearch extends Search {
             if (albumPosition >= 0) {
                 album = albumArrayList.get(albumPosition);
             } else if (currentlyShownNextRandomAlbumPosition != -1) {
-                Toast.makeText(context, context.getResources().getString(R.string.error_random_album_no_new_found), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.no_other_album_found), Toast.LENGTH_SHORT).show();
             }
         }
 
