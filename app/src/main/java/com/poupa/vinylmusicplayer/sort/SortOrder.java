@@ -54,7 +54,13 @@ class Utils {
     static @NonNull
     String getSectionName(long seconds) {
         final Date date = new Date(1000 * seconds);
-        final String format = "yyyy";
+        final long millisOneDay = 1000 * 60 * 60 * 24;
+        final long daysSinceToday = ((new Date()).getTime() - date.getTime()) / millisOneDay;
+        String format = "yyyy";
+        if (daysSinceToday >= 0) {
+            if (daysSinceToday < 7) {format = "EEE";}
+            else if (daysSinceToday < 365) {format = "MMM";}
+        }
         return android.text.format.DateFormat.format(format, date).toString();
     }
 
