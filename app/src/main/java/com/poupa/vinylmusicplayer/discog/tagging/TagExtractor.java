@@ -33,7 +33,17 @@ public class TagExtractor {
     };
     private static final Func3Args<Tag, FieldKey, Integer, Integer> safeGetTagAsInteger = (tags, tag, defaultValue) -> {
         try {return Integer.parseInt(safeGetTag.apply(tags, tag, String.valueOf(defaultValue)));}
-        catch (NumberFormatException ignored) {return 0;}
+        catch (NumberFormatException ignored) {return defaultValue;}
+    };
+    private static final Func3Args<Tag, FieldKey, Integer, Integer> safeGetTagAsReleaseYear = (tags, tag, defaultValue) -> {
+        try {
+            String tagValueAsText = safeGetTag.apply(tags, tag, "");
+            final int MINIMAL_LENGHT = 4; // yyyy
+            if (tagValueAsText.length() < MINIMAL_LENGHT) {
+                return defaultValue;
+            }
+            return Integer.parseInt(tagValueAsText.substring(0, MINIMAL_LENGHT));
+        } catch (NumberFormatException ignored) {return defaultValue;}
     };
     private static final Func3Args<Tag, FieldKey, List<String>, List<String>> safeGetTagAsList = (tags, tag, defaultValue) -> {
         try {return MultiValuesTagUtil.splitIfNeeded(tags.getAll(tag));}
@@ -61,7 +71,7 @@ public class TagExtractor {
             song.genre = safeGetTag.apply(tags, FieldKey.GENRE, song.genre);
             song.discNumber = safeGetTagAsInteger.apply(tags, FieldKey.DISC_NO, song.discNumber);
             song.trackNumber = safeGetTagAsInteger.apply(tags, FieldKey.TRACK, song.trackNumber);
-            song.year = safeGetTagAsInteger.apply(tags, FieldKey.YEAR, song.year);
+            song.year = safeGetTagAsReleaseYear.apply(tags, FieldKey.YEAR, song.year);
 
             ReplayGainTagExtractor.ReplayGainValues rgValues = ReplayGainTagExtractor.setReplayGainValues(file);
             song.replayGainAlbum = rgValues.album;
