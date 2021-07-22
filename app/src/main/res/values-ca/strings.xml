@@ -216,7 +216,7 @@
     <string name="maarten_corpel_summary">Per la il·lustració de Play Store i la portada d\'àlbum buida.</string>
     <string name="aleksandar_tesic_summary">Per ajudar-me amb el disseny.</string>
     <string name="website">Lloc web.</string>
-    <string name="up_next">Temps restant</string>
+    <string name="up_next">A continuació</string>
     <string name="pref_title_now_playing_screen_appearance">Aparença</string>
     <string name="intro_label">Introducció</string>
     <string name="welcome_to_vinyl_music_player">Benvingut al Vinyl, un reproductor de música bonic i lleuger per a Android.</string>
@@ -286,12 +286,12 @@
     <string name="pref_summary_library_categories">Configura la visibilitat i l\'ordre de les categories de la col·lecció</string>
     <string name="you_have_to_select_at_least_one_category">Heu de seleccionar com a mínim una categoria</string>
     <string name="action_sort_order">Criteri d\'ordenació</string>
-    <string name="sort_order_name">Ascendent</string>
-    <string name="sort_order_name_reverse">Descendent</string>
+    <string name="sort_order_name">Nom</string>
+    <string name="sort_order_name_reverse">Nom - Z a A</string>
     <string name="sort_order_artist">Artista</string>
     <string name="sort_order_album">Àlbum</string>
-    <string name="sort_order_year_reverse">Any</string>
-    <string name="sort_order_date_added_reverse">Data d\'addició</string>
+    <string name="sort_order_year_reverse">Any - Recents primer</string>
+    <string name="sort_order_date_added_reverse">Addició - Recents primer</string>
     <string name="finish_current_music_sleep_timer">Finalitza l\'última cançó</string>
     <string name="dialog_ringtone_title">Estableix el to de trucada</string>
     <string name="dialog_ringtone_message">Permet al Vinyl modificar els paràmetres del sistema en la pantalla següent per establir el to de trucada.</string>
@@ -356,4 +356,8 @@
     <string name="confirm_adding_duplicates">Voleu afegir les pistes ja incloses a la llista seleccionada?</string>
     <string name="auto_limited_listing_subtitle">Obre l\'aplicació per veure la llista completa</string>
     <string name="auto_limited_listing_title">Llista reduïda durant la conducció</string>
+    <string name="sort_order_year">Any</string>
+    <string name="sort_order_date_modified">Modificació</string>
+    <string name="sort_order_date_modified_reverse">Modificació - Recents primer</string>
+    <string name="sort_order_date_added">Addició</string>
 </resources>
