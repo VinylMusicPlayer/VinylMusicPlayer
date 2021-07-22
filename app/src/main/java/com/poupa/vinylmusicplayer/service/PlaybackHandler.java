@@ -58,13 +58,9 @@ final class PlaybackHandler extends Handler {
                 break;
 
             case MusicService.TRACK_WENT_TO_NEXT:
-                if (service.getRepeatMode() == MusicService.REPEAT_MODE_NONE && service.isLastTrack()) {
-                    service.pause();
-                } else {
-                    service.setPositionToNextPosition();
-                    service.prepareNextImpl();
-                    service.notifyChange(MusicService.META_CHANGED);
-                }
+                service.setPositionToNextPosition();
+                service.prepareNextImpl();
+                service.notifyChange(MusicService.META_CHANGED);
                 break;
 
             case MusicService.TRACK_ENDED:
