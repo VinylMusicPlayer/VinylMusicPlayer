@@ -490,7 +490,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             try {
                 int nextPosition = getNextPosition(false);
-                playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
+                if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && isLastTrack()) {
+                    playback.setNextDataSource(null);
+                } else {
+                    playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
+                }
                 this.nextPosition = nextPosition;
             } catch (Exception e) {
                 e.printStackTrace();
