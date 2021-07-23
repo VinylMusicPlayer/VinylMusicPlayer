@@ -73,7 +73,8 @@ public class Album implements Parcelable {
     }
 
     public long getDateAdded() {
-        //return safeGetFirstSong().dateAdded;
+        if (songs.isEmpty()) {return Song.EMPTY_SONG.dateModified;}
+
         return Collections.min(
                 songs,
                 (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded)
@@ -81,7 +82,8 @@ public class Album implements Parcelable {
     }
 
     public long getDateModified() {
-        //return safeGetFirstSong().dateModified;
+        if (songs.isEmpty()) {return Song.EMPTY_SONG.dateModified;}
+
         return Collections.max(
                 songs,
                 (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateModified, s2.dateModified)
