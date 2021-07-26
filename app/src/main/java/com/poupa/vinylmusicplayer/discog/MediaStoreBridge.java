@@ -57,7 +57,8 @@ public class MediaStoreBridge {
 
     @NonNull
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
-        // TODO Consider ignoring most of these columns, we do extract them ourselves already
+        // Most of the time data imported from these columns are overriden by those extracted ourselves from ID3 tags
+        // However, in the case extraction fails (unsupported track format), they serve as fallback values
         final long id = cursor.getLong(0);
         final String title = cursor.getString(1);
         final int trackNumber = cursor.getInt(2);
