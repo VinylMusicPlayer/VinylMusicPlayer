@@ -72,7 +72,14 @@ public class MediaStoreBridge {
         final long artistId = cursor.getLong(10);
         final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(11));
 
-        return new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
+        final Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
+
+        // MediaStore compat: Split track number into disc + track number
+        // See documentation for MediaStore.Audio.AudioColumns.TRACK
+        song.discNumber = trackNumber / 1000;
+        song.trackNumber = trackNumber % 1000;
+
+        return song;
     }
 
     @Nullable
