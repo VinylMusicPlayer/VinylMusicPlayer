@@ -43,18 +43,4 @@ public class PlaylistLoader {
 
         return playlists;
     }
-
-    @NonNull
-    public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
-        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistId);
-        if (playlist == null) {return new Playlist();}
-        return playlist.asPlaylist();
-    }
-
-    @NonNull
-    public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
-        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistName);
-        if (playlist == null) {return new Playlist();}
-        return playlist.asPlaylist();
-    }
 }

@@ -22,13 +22,13 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 import org.jaudiotagger.audio.AudioFileIO;
@@ -284,20 +284,25 @@ public class MusicUtil {
         return playlistName.equals(context.getString(R.string.favorites));
     }
 
+    @Nullable
     public static Playlist getFavoritesPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, context.getString(R.string.favorites));
+        StaticPlaylist playlist = StaticPlaylist.getPlaylist(context.getString(R.string.favorites));
+        if (playlist != null) {return playlist.asPlaylist();}
+        return null;
     }
 
     private static Playlist getOrCreateFavoritesPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, PlaylistsUtil.createPlaylist(context, context.getString(R.string.favorites)));
+        return StaticPlaylist.getOrCreatePlaylist(context.getString(R.string.favorites)).asPlaylist();
     }
 
     public static Playlist getOrCreateSkippedPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, PlaylistsUtil.createPlaylist(context, context.getString(R.string.skipped_songs)));
+        return StaticPlaylist.getOrCreatePlaylist(context.getString(R.string.skipped_songs)).asPlaylist();
     }
 
     public static boolean isFavorite(@NonNull final Context context, @NonNull final Song song) {
-        return PlaylistsUtil.doesPlaylistContain(context, getFavoritesPlaylist(context).id, song.id);
+        Playlist playlist = getFavoritesPlaylist(context);
+        if (playlist == null) {return false;}
+        return PlaylistsUtil.doesPlaylistContain(context, playlist.id, song.id);
     }
 
     public static void toggleFavorite(@NonNull final Context context, @NonNull final Song song) {

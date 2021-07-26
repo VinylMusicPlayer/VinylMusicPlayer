@@ -31,32 +31,34 @@ public class PlaylistsUtil {
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final long playlistId) {
-        return (PlaylistLoader.getPlaylist(context, playlistId).id != -1);
+        return (StaticPlaylist.getPlaylist(playlistId) != null);
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
-        return (PlaylistLoader.getPlaylist(context, name).id != -1);
+        return (StaticPlaylist.getPlaylist(name) != null);
     }
 
     public static long createPlaylist(@NonNull final Context context, @NonNull final String name) {
-        long id = PlaylistLoader.getPlaylist(context, name).id;
-        if (id == -1) {
-            id = StaticPlaylist.getOrCreatePlaylist(name).asPlaylist().id;
-            if (id != -1) {
-                notifyChange(context);
+        StaticPlaylist playlist = StaticPlaylist.getPlaylist(name);
+        if (playlist != null) {
+            return playlist.asPlaylist().id;
+        }
 
-                Toast.makeText(
-                        context,
-                        context.getResources().getString(R.string.created_playlist_x, name),
-                        Toast.LENGTH_SHORT
-                ).show();
-            } else {
-                Toast.makeText(
-                        context,
-                        context.getResources().getString(R.string.could_not_create_playlist),
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
+        long id = StaticPlaylist.getOrCreatePlaylist(name).asPlaylist().id;
+        if (id != -1) {
+            notifyChange(context);
+
+            Toast.makeText(
+                    context,
+                    context.getResources().getString(R.string.created_playlist_x, name),
+                    Toast.LENGTH_SHORT
+            ).show();
+        } else {
+            Toast.makeText(
+                    context,
+                    context.getResources().getString(R.string.could_not_create_playlist),
+                    Toast.LENGTH_SHORT
+            ).show();
         }
         return id;
     }
@@ -138,7 +140,9 @@ public class PlaylistsUtil {
     }
 
     public static String getNameForPlaylist(@NonNull final Context context, final long id) {
-        return PlaylistLoader.getPlaylist(context, id).name;
+        StaticPlaylist playlist = StaticPlaylist.getPlaylist(id);
+        if (playlist == null) {return "";}
+        return playlist.getName();
     }
 
     public static File savePlaylist(Context context, Playlist playlist) throws IOException {

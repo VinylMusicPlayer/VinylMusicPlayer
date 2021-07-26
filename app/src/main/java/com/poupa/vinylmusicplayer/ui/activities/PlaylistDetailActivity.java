@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.ui.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,11 +35,11 @@ import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
@@ -191,16 +192,17 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         super.onMediaStoreChanged();
 
         if (!(playlist instanceof AbsCustomPlaylist)) {
+            final StaticPlaylist existingPlaylist = StaticPlaylist.getPlaylist(playlist.id);
+
             // Playlist deleted
-            if (!PlaylistsUtil.doesPlaylistExist(this, playlist.id)) {
+            if (existingPlaylist == null) {
                 finish();
                 return;
             }
 
             // Playlist renamed
-            final String playlistName = PlaylistsUtil.getNameForPlaylist(this, playlist.id);
-            if (!playlistName.equals(playlist.name)) {
-                playlist = PlaylistLoader.getPlaylist(this, playlist.id);
+            if (!TextUtils.equals(existingPlaylist.getName(), playlist.name)) {
+                playlist = existingPlaylist.asPlaylist();
                 setToolbarTitle(playlist.name);
             }
 

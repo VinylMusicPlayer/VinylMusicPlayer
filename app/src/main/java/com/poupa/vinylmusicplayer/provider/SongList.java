@@ -23,7 +23,7 @@ import java.util.Map;
  * @author SC (soncaokim)
  */
 abstract class SongList {
-     String name;
+     @NonNull String name;
      final List<Long> songIds = new ArrayList<>();
 
      SongList(@NonNull String name) {
@@ -33,6 +33,10 @@ abstract class SongList {
 
      abstract void load();
      abstract void save(@Nullable String newName);
+
+     // TODO Use this method instead of asPlaylist().name
+     @NonNull
+     public String getName() {return name;}
 
      @NonNull
      ArrayList<Song> asSongs() {
