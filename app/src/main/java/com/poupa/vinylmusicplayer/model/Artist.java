@@ -60,6 +60,8 @@ public class Artist implements Parcelable {
     }
 
     public long getDateModified() {
+        if (albums.isEmpty()) {return Song.EMPTY_SONG.dateModified;}
+
         return Collections.max(
                 albums,
                 (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified())
