@@ -37,8 +37,8 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SearchQueryHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
@@ -289,8 +289,10 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             final long id = parseIdFromIntent(intent, "playlistId", "playlist");
             if (id >= 0) {
                 int position = intent.getIntExtra("position", 0);
-                ArrayList<Song> songs = PlaylistSongLoader.getPlaylistSongList(this, id);
-                MusicPlayerRemote.openQueue(songs, position, true);
+                final StaticPlaylist playlist = StaticPlaylist.getPlaylist(id);
+                if (playlist != null) {
+                    MusicPlayerRemote.openQueue(playlist.asSongs(), position, true);
+                }
                 handled = true;
             }
         } else if (MediaStore.Audio.Albums.CONTENT_TYPE.equals(mimeType)) {

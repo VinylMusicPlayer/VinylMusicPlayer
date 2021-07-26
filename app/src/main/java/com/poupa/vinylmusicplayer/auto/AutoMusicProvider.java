@@ -273,7 +273,10 @@ public class AutoMusicProvider {
                 if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
                     try {
                         long playListId = Long.parseLong(AutoMediaIDHelper.extractMusicID(path));
-                        songs = PlaylistSongLoader.getPlaylistSongList(mContext, playListId);
+                        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playListId);
+                        if (playlist != null) {
+                            songs = playlist.asSongs();
+                        }
                     }
                     catch (NumberFormatException ignored) {}
                 }
