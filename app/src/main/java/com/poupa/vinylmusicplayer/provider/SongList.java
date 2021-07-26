@@ -34,7 +34,6 @@ abstract class SongList {
      abstract void load();
      abstract void save(@Nullable String newName);
 
-     // TODO Use this method instead of asPlaylist().name
      @NonNull
      public String getName() {return name;}
 

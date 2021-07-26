@@ -88,7 +88,7 @@ public class PlaylistsUtil {
                     context.getResources().getString(
                             R.string.inserted_x_songs_into_playlist_x,
                             songs.size(),
-                            list.asPlaylist().name),
+                            list.getName()),
                     Toast.LENGTH_SHORT
             ).show();
         }
