@@ -25,36 +25,36 @@ public class StaticPlaylist extends PreferencesBackedSongList {
 
     @NonNull
     public static List<StaticPlaylist> getAllPlaylists() {
-        List<PreferencesBackedSongList> loadedPlaylists = null;
-
         final SharedPreferences preferences = getPreferences();
         if (preferences.getBoolean(PREF_STATIC_PLAYLISTS_MIGRATED, false)) {
-            loadedPlaylists = PreferencesBackedSongList.loadAll();
+            List<StaticPlaylist> result = new ArrayList<>();
+            for (PreferencesBackedSongList playlist : PreferencesBackedSongList.loadAll()) {
+                result.add(new StaticPlaylist(playlist.name));
+            }
+            return result;
         } else {
             // Migrate from MediaStore
             final Context context = App.getStaticContext();
             List<Playlist> playlistsToMigrate = PlaylistLoader.getAllPlaylists(context);
 
-            loadedPlaylists = new ArrayList<>();
+            List<StaticPlaylist> result = new ArrayList<>();
             for (Playlist playlist : playlistsToMigrate) {
                 StaticPlaylist importedPlaylist = new StaticPlaylist(playlist.name);
                 importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
 
-                loadedPlaylists.add(importedPlaylist);
+                result.add(importedPlaylist);
             }
 
-            // TODO Delete migrated playlist?
+            // Note: Dont delete migrated playlists here, for two reasons:
+            // - since playlist can be shared with other apps, this will be a destructive action
+            // - this *would* require extra priviledge (see https://github.com/AdrienPoupa/VinylMusicPlayer/pull/298)
 
             // Set a persistent marker in prefs, to avoid doing this again
             // Otherwise the MediaStore playlists will be reimported whence there is no static playlist in the prefs
             preferences.edit().putBoolean(PREF_STATIC_PLAYLISTS_MIGRATED, true).apply();
-        }
 
-        List<StaticPlaylist> result = new ArrayList<>();
-        for (PreferencesBackedSongList playlist : loadedPlaylists) {
-            result.add(new StaticPlaylist(playlist.name));
+            return result;
         }
-        return result;
     }
 
     @Nullable

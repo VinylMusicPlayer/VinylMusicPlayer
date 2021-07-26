@@ -9,8 +9,10 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ abstract class SongList {
           load();
      }
 
-     abstract boolean load();
+     abstract void load();
      abstract void save(@Nullable String newName);
 
      @NonNull
@@ -141,7 +143,8 @@ class PreferencesBackedSongList extends MutableSongList {
                }
           }
 
-          // TODO Sort the result
+          Collections.sort(result, (l1, l2) -> StringUtil.compareIgnoreAccent(l1.name, l2.name));
+
           // TODO Cache the result
           return result;
      }
@@ -158,16 +161,14 @@ class PreferencesBackedSongList extends MutableSongList {
      }
 
      @Override
-     boolean load() {
+     void load() {
           final SharedPreferences preferences = getPreferences();
           String values = preferences.getString(PREF_NAME_PREFIX + name, "");
 
           songIds.clear();
           try {
                for (String id : values.split(SEPARATOR)) {songIds.add(Long.valueOf(id));}
-               return true;
           } catch (NumberFormatException ignored) {
-               return false;
           }
      }
 
