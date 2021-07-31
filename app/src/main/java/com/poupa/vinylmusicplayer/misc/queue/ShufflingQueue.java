@@ -75,19 +75,6 @@ public class ShufflingQueue {
         }
     }
 
-    // remove song at position position, numbering need to be redone for every song after this position (-1)
-    public void remove(int position) {
-        PositionSong o = queue.getAll().remove(position);
-        queue.getAllPreviousState().remove(o.position);
-
-        for (int i = 0; i < queue.getAll().size(); i++) {
-            queue.getAllPreviousState().get(i).position = i;
-            if (queue.getAll().get(i).position >= o.position) {
-                queue.getAll().get(i).position = queue.getAll().get(i).position - 1;
-            }
-        }
-    }
-
     // move song from from to to, position are conserved
     public void move(int from, int to) {
         if (from == to) return;
@@ -115,51 +102,84 @@ public class ShufflingQueue {
         }
     }
 
- /*   private int rePosition(int deletedPosition) {
-        if (deletedPosition < this.currentPosition) {
-            this.currentPosition = this.currentPosition - 1;
-        } else if (deletedPosition == this.currentPosition) {
+    private boolean rePosition(int deletedPosition) {
+        int position = this.currentPosition;
+
+        if (deletedPosition < position) {
+            this.currentPosition = position - 1;
+        } else if (deletedPosition == position) { //the current position was deleted
             if (queue.getAll().size() > deletedPosition) {
-                return this.currentPosition;
+                this.currentPosition = position;
             } else {
-                return this.currentPosition - 1;
+                this.currentPosition = position - 1;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    // remove song at index position, numbering need to be redone for every song after this position (-1)
+    public boolean remove(int position) {
+        PositionSong o = queue.getAll().remove(position);
+        queue.getAllPreviousState().remove(o.position);
+
+        for (int i = 0; i < queue.getAll().size(); i++) {
+            queue.getAllPreviousState().get(i).position = i;
+            if (queue.getAll().get(i).position >= o.position) {
+                queue.getAll().get(i).position = queue.getAll().get(i).position - 1;
             }
         }
 
-        return -1;
+        return rePosition(position);
     }
 
-    public int removeAllOccurrence(Song song) {
-        int newPosition = -1;
+    private boolean removeAllOccurrence(Song song) {
+        boolean hasPositionChanged = false;
 
         for (int i = queue.getAll().size() - 1; i >= 0; i--) {
             if (queue.getAll().get(i).song.id == song.id) {
-                queue.getAll().remove(i);
-                newPosition = rePosition(i) == -1 ? newPosition | rePosition(i);
+                //queue.getAll().remove(i);
+                if (remove(i)) {
+                    hasPositionChanged = true;
+                }
             }
-            if (queue.getAllPreviousState().get(i).song.id == song.id) {
+            /*if (queue.getAllPreviousState().get(i).song.id == song.id) {
                 queue.getAllPreviousState().remove(i);
+            }*/
+        }
+
+        return hasPositionChanged;
+    }
+
+    public boolean removeSongs(@NonNull List<Song> songs) {
+        boolean hasPositionChanged = false;
+
+        for (Song song : songs) {
+            if (removeAllOccurrence(song)) {
+                hasPositionChanged = true;
             }
         }
 
-        // could be done by MusicService
-        if (newPosition != -1) {
+        /*
+        // can know be done in MusicService
+        if (hasPositionChanged) {
             setPosition(newPosition);
-        }
+        } */
 
-        return newPosition;
+        return hasPositionChanged;
     }
 
-    public int removeSongs(@NonNull List<Song> songs) {
-        int newPosition = -1;
-        for (Song song : songs) {
-            removeAllOccurrence(song);
-        }
-
-        return newPosition;
+    public int getPosition() {
+        return currentPosition;
     }
 
-  */
+    public void setPosition(int position) {
+        if (position >= queue.size())
+            return;
+
+        currentPosition = position;
+    }
 
     public void toggleShuffle() {
         isShuffled = !isShuffled;

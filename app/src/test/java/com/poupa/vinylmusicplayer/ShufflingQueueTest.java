@@ -22,6 +22,13 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(JUnit4.class)
 public class ShufflingQueueTest {
 
+    private final int id_a = 12;
+    private final int id_b = 123;
+    private final int id_c = 56;
+    private final int id_d = 13;
+    private final int id_e = 1;
+    private final int id_f = 40;
+
     private void print(ShufflingQueue test) {
         System.out.print("original queue: ");
         System.out.println(Arrays.toString(test.queue.getAllPreviousState().toArray()));
@@ -34,10 +41,10 @@ public class ShufflingQueueTest {
         ShufflingQueue test = new ShufflingQueue();
 
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(12, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(12, "b", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song3 = new Song(12, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song4 = new Song(12, "d", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_b, "b", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song3 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song4 = new Song(id_d, "d", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -93,7 +100,7 @@ public class ShufflingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(12, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         System.out.println("Add song");
         test.add(song1);
@@ -113,7 +120,7 @@ public class ShufflingQueueTest {
         // test
         int pos = 2;
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(12, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         System.out.println("Add after position: "+pos);
         test.addAfter(pos, song1);
@@ -135,8 +142,8 @@ public class ShufflingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(12, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(12, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -163,8 +170,8 @@ public class ShufflingQueueTest {
         // test
         int pos = 2;
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(12, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(12, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -224,6 +231,58 @@ public class ShufflingQueueTest {
         System.out.println("Remove position: "+pos);
         print(test);
 
+        checkQueuePosition(test);
+    }
+
+    @Test
+    public void removeSongs_OnCurrentPosition() throws Exception {
+        // init
+        ShufflingQueue test = init();
+
+        print(test);
+
+        // test
+        List<String> artistName = new ArrayList<>();
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+
+        test.setPosition(2);
+
+        ArrayList<Song> list = new ArrayList<>();
+        list.add(song1);
+        list.add(song2);
+
+        System.out.println("RemoveSongs");
+        boolean hasPositionChanged = test.removeSongs(list);
+        print(test);
+
+        assertEquals(true, hasPositionChanged);
+        checkQueuePosition(test);
+    }
+
+    @Test
+    public void removeSongs_OtherThanCurrentPosition() throws Exception {
+        // init
+        ShufflingQueue test = init();
+
+        print(test);
+
+        // test
+        List<String> artistName = new ArrayList<>();
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+
+        test.setPosition(1);
+
+        ArrayList<Song> list = new ArrayList<>();
+        list.add(song1);
+        list.add(song2);
+
+        System.out.println("RemoveSongs");
+        boolean hasPositionChanged = test.removeSongs(list);
+        print(test);
+
+        assertEquals(false, hasPositionChanged);
         checkQueuePosition(test);
     }
 }
