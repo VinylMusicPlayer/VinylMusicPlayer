@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
 import com.poupa.vinylmusicplayer.misc.queue.ShufflingQueue;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -35,6 +33,9 @@ public class ShufflingQueueTest {
 
         System.out.print("         queue: ");
         System.out.println(Arrays.toString(test.queue.getAll().toArray()));
+
+        System.out.print("         position: ");
+        System.out.println(test.getCurrentPosition());
     }
 
     private ShufflingQueue init() {
@@ -69,22 +70,26 @@ public class ShufflingQueueTest {
     public void toggleShuffle() throws Exception {
         // init
         ShufflingQueue init = init();
+        init.setCurrentPosition(2);
 
         ShufflingQueue test = init();
+        test.setCurrentPosition(2);
         System.out.println("Init");
         print(test);
 
         // test
         System.out.println("Shuffle 1");
-        test.toggleShuffle();
+        test.setShuffle(true);
         print(test);
 
+        assertEquals(0, test.getCurrentPosition());
         checkQueuePosition(test);
 
         System.out.println("Shuffle 2");
-        test.toggleShuffle();
+        test.setShuffle(false);
         print(test);
 
+        assertEquals(init.getCurrentPosition(), test.getCurrentPosition());
         checkQueuePosition(test);
 
         assertEquals(init.queue.toString(), test.queue.toString());
@@ -94,7 +99,7 @@ public class ShufflingQueueTest {
     public void add_Song() throws Exception {
         // init
         ShufflingQueue test = init();
-        test.toggleShuffle();
+        test.setShuffle(true);
         System.out.println("Init");
         print(test);
 
@@ -113,7 +118,7 @@ public class ShufflingQueueTest {
     public void add_Position() throws Exception {
         // init
         ShufflingQueue test = init();
-        test.toggleShuffle();
+        test.setShuffle(true);
         System.out.println("Init");
         print(test);
 
@@ -137,7 +142,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.toggleShuffle();
+        test.setShuffle(true);
         print(test);
 
         // test
@@ -164,7 +169,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.toggleShuffle();
+        test.setShuffle(true);
         print(test);
 
         // test
@@ -202,7 +207,7 @@ public class ShufflingQueueTest {
         checkQueuePosition(test);
 
         System.out.println("Shuffle");
-        test.toggleShuffle();
+        test.setShuffle(true);
         print(test);
 
         System.out.println("Move from: "+from+" to: "+to);
@@ -220,7 +225,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.toggleShuffle();
+        test.setShuffle(true);
         print(test);
 
         // test
@@ -246,7 +251,7 @@ public class ShufflingQueueTest {
         Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
         Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
-        test.setPosition(2);
+        test.setCurrentPosition(2);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -272,7 +277,7 @@ public class ShufflingQueueTest {
         Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
         Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
-        test.setPosition(1);
+        test.setCurrentPosition(1);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
