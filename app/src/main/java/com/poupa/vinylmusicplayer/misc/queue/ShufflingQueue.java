@@ -9,12 +9,13 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
 
-import static com.poupa.vinylmusicplayer.service.MusicService.SHUFFLE_MODE_SHUFFLE;
-
 
 public class ShufflingQueue {
 
-    private boolean isShuffled;
+    public static final int SHUFFLE_MODE_NONE = 0;
+    public static final int SHUFFLE_MODE_SHUFFLE = 1;
+    private int shuffleMode;
+
     private int currentPosition;
 
     private int nextPosition; // is this really needed ???
@@ -22,13 +23,13 @@ public class ShufflingQueue {
 
     public ShufflingQueue() {
         queue = new SyncQueue<>();
-        isShuffled = false;
+        shuffleMode = SHUFFLE_MODE_NONE;
         currentPosition = -1;
     }
 
-    public ShufflingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, boolean isShuffled) {
+    public ShufflingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
         queue = new SyncQueue<>(restoreQueue, restoreOriginalQueue);
-        this.isShuffled = isShuffled;
+        this.shuffleMode = shuffleMode;
 
         currentPosition = restoredPosition;
     }
@@ -36,7 +37,7 @@ public class ShufflingQueue {
     // This should be remove and only previous one should be used
     public ShufflingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
         queue = new SyncQueue<>();
-        isShuffled = false;
+        shuffleMode = SHUFFLE_MODE_NONE;
 
         ArrayList<PositionSong> test = new ArrayList<>();
         int i=0;
@@ -138,7 +139,7 @@ public class ShufflingQueue {
         PositionSong songToMove = queue.getAll().remove(from);
         queue.getAll().add(to, songToMove);
 
-        if (!isShuffled) {
+        if (shuffleMode == SHUFFLE_MODE_NONE) {
             PositionSong previousSongToMove = queue.getAllPreviousState().remove(from);
             queue.getAllPreviousState().add(to, previousSongToMove);
 
@@ -229,9 +230,8 @@ public class ShufflingQueue {
 
             this.currentPosition = startPosition;
 
-            if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                setShuffle(true);
-            }
+            setShuffle(shuffleMode);
+
             return true;
         }
 
@@ -299,11 +299,11 @@ public class ShufflingQueue {
 
     /* -------------------- shuffle method -------------------- */
 
-    public void setShuffle(boolean shuffle) {
-        if (shuffle == isShuffled)
+    public void setShuffle(int shuffleMode) {
+        if (this.shuffleMode == shuffleMode)
             return;
 
-        if (!shuffle) {
+        if (shuffleMode == SHUFFLE_MODE_NONE) {
             currentPosition = queue.getAll().get(currentPosition).position;
             queue.revert();
         } else {
@@ -311,10 +311,20 @@ public class ShufflingQueue {
             currentPosition = 0;
         }
 
-        isShuffled = shuffle;
+        this.shuffleMode = shuffleMode;
     }
 
-    public boolean getShuffleMode() {
-        return isShuffled;
+    public void toggleShuffle() {
+        switch (shuffleMode) {
+            case SHUFFLE_MODE_NONE:
+                setShuffle(SHUFFLE_MODE_SHUFFLE);
+                break;
+            case SHUFFLE_MODE_SHUFFLE:
+                setShuffle(SHUFFLE_MODE_NONE);
+        }
+    }
+
+    public int getShuffleMode() {
+        return shuffleMode;
     }
 }

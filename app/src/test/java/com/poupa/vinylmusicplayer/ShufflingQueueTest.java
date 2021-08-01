@@ -79,14 +79,14 @@ public class ShufflingQueueTest {
 
         // test
         System.out.println("Shuffle 1");
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         assertEquals(0, test.getCurrentPosition());
         checkQueuePosition(test);
 
         System.out.println("Shuffle 2");
-        test.setShuffle(false);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_NONE);
         print(test);
 
         assertEquals(init.getCurrentPosition(), test.getCurrentPosition());
@@ -99,7 +99,7 @@ public class ShufflingQueueTest {
     public void add_Song() throws Exception {
         // init
         ShufflingQueue test = init();
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
@@ -118,7 +118,7 @@ public class ShufflingQueueTest {
     public void addAfter_Position() throws Exception {
         // init
         ShufflingQueue test = init();
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
@@ -138,7 +138,7 @@ public class ShufflingQueueTest {
     public void addSongBackTo() throws Exception {
         // init
         ShufflingQueue test = init();
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
@@ -168,7 +168,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test
@@ -195,7 +195,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test
@@ -233,7 +233,7 @@ public class ShufflingQueueTest {
         checkQueuePosition(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         System.out.println("Move from: "+from+" to: "+to);
@@ -251,7 +251,7 @@ public class ShufflingQueueTest {
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(true);
+        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test

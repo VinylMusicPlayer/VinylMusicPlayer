@@ -126,8 +126,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int UNDUCK = 8;
     public static final int RESTORE_QUEUES = 9;
 
-    public static final int SHUFFLE_MODE_NONE = 0;
-    public static final int SHUFFLE_MODE_SHUFFLE = 1;
+    public static final int RANDOM_START_POSITION_ON_SHUFFLE = -1;
+    public static final int SHUFFLE_MODE_NONE = ShufflingQueue.SHUFFLE_MODE_NONE;
+    public static final int SHUFFLE_MODE_SHUFFLE = ShufflingQueue.SHUFFLE_MODE_SHUFFLE;
 
     public static final int REPEAT_MODE_NONE = 0;
     public static final int REPEAT_MODE_ALL = 1;
@@ -284,17 +285,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         break;
                     case ACTION_PLAY_PLAYLIST:
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
-                        int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, getShuffleMode());
+                        int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, shufflingQueue.getShuffleMode());
                         if (playlist != null) {
                             ArrayList<Song> playlistSongs = playlist.getSongs(getApplicationContext());
                             if (!playlistSongs.isEmpty()) {
-                                if (shuffleMode == SHUFFLE_MODE_SHUFFLE) {
-                                    int startPosition = new Random().nextInt(playlistSongs.size());
-                                    openQueue(playlistSongs, startPosition, true);
-                                    setShuffleMode(shuffleMode);
-                                } else {
-                                    openQueue(playlistSongs, 0, true);
-                                }
+                                openQueue(playlistSongs, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
                             }
@@ -381,7 +376,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void restoreState() {
-        shufflingQueue.setShuffle((PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0) == SHUFFLE_MODE_SHUFFLE));
+        shufflingQueue.setShuffle(PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0));
         repeatMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0);
         handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
         handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
@@ -398,9 +393,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
-                boolean previousShuffleMode = shufflingQueue.getShuffleMode();
-                shufflingQueue = new ShufflingQueue(restoredQueue, restoredOriginalQueue, restoredPosition);
-                shufflingQueue.setShuffle(previousShuffleMode);
+                shufflingQueue = new ShufflingQueue(restoredQueue, restoredOriginalQueue, restoredPosition); //, shufflingQueue.getShuffleMode());
 
                 openCurrent();
                 prepareNext();
@@ -557,7 +550,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 CYCLE_REPEAT, getString(R.string.action_cycle_repeat), repeatIcon)
                 .build());
 
-        final int shuffleIcon = getShuffleMode() == SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
+        final int shuffleIcon = shufflingQueue.getShuffleMode() == MusicService.SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
         stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
                 TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
                 .build());
@@ -715,15 +708,51 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying) {
-        if (shufflingQueue.openQueue(playingQueue, startPosition, startPlaying, SHUFFLE_MODE_NONE)) {
+    private void shuffleChangeSignaling() {
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(SAVED_SHUFFLE_MODE, shufflingQueue.getShuffleMode())
+                .apply();
+        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+        notifyChange(QUEUE_CHANGED);
+    }
+
+    public int getShuffleMode() {
+        return shufflingQueue.getShuffleMode();
+    }
+
+    public void toggleShuffle() {
+        shufflingQueue.toggleShuffle();
+
+        shuffleChangeSignaling();
+    }
+
+    public void setShuffleMode(final int shuffleMode) {
+        shufflingQueue.setShuffle(shuffleMode);
+
+        shuffleChangeSignaling();
+    }
+
+    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+        int position = startPosition;
+        if (playingQueue != null && shuffleMode != MusicService.SHUFFLE_MODE_NONE && startPosition == MusicService.RANDOM_START_POSITION_ON_SHUFFLE) {
+            position = new Random().nextInt(playingQueue.size());
+        }
+
+        if (shufflingQueue.openQueue(playingQueue, position, startPlaying, MusicService.SHUFFLE_MODE_NONE)) {
+
+            setShuffleMode(shuffleMode);
+
             if (startPlaying) {
                 playSongAt(shufflingQueue.getCurrentPosition());
             } else {
-                setPosition(startPosition);
+                setPosition(position);
             }
             notifyChange(QUEUE_CHANGED);
         }
+    }
+
+    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying) {
+        openQueue(playingQueue, startPosition, startPlaying, shufflingQueue.getShuffleMode());
     }
 
     public void addAfter(int position, Song song) {
@@ -949,36 +978,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 setRepeatMode(REPEAT_MODE_NONE);
                 break;
         }
-    }
-
-    public void toggleShuffle() {
-        if (shufflingQueue.getShuffleMode()) {
-            setShuffleMode(SHUFFLE_MODE_NONE);
-        } else {
-            setShuffleMode(SHUFFLE_MODE_SHUFFLE);
-        }
-    }
-
-    public int getShuffleMode() {
-        if (shufflingQueue.getShuffleMode())
-            return SHUFFLE_MODE_SHUFFLE;
-        return SHUFFLE_MODE_NONE;
-    }
-
-    public void setShuffleMode(final int shuffleMode) { //can't this be replace by a toggle ?
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putInt(SAVED_SHUFFLE_MODE, shuffleMode)
-                .apply();
-        switch (shuffleMode) {
-            case SHUFFLE_MODE_SHUFFLE:
-                shufflingQueue.setShuffle(true);
-                break;
-            case SHUFFLE_MODE_NONE:
-                shufflingQueue.setShuffle(false);
-                break;
-        }
-        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
-        notifyChange(QUEUE_CHANGED);
     }
 
     public void notifyChange(@NonNull final String what) {

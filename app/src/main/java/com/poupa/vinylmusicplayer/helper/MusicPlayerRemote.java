@@ -199,14 +199,8 @@ public class MusicPlayerRemote {
      * Async
      */
     public static void openAndShuffleQueue(final ArrayList<Song> queue, boolean startPlaying) {
-        int startPosition = 0;
-        if (!queue.isEmpty()) {
-            startPosition = new Random().nextInt(queue.size());
-        }
-
-        if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
-            openQueue(queue, startPosition, startPlaying);
-            setShuffleMode(MusicService.SHUFFLE_MODE_SHUFFLE);
+        if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
+            musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
     }
 
