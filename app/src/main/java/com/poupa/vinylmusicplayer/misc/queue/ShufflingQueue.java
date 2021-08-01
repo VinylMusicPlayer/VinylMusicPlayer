@@ -4,6 +4,8 @@ package com.poupa.vinylmusicplayer.misc.queue;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
@@ -11,6 +13,12 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 
 public class ShufflingQueue {
+
+    public static final int REPEAT_MODE_NONE = 0;
+    public static final int REPEAT_MODE_ALL = 1;
+    public static final int REPEAT_MODE_THIS = 2;
+
+    private int repeatMode;
 
     public static final int SHUFFLE_MODE_NONE = 0;
     public static final int SHUFFLE_MODE_SHUFFLE = 1;
@@ -32,6 +40,11 @@ public class ShufflingQueue {
         this.shuffleMode = shuffleMode;
 
         currentPosition = restoredPosition;
+    }
+
+    public void restoreMode(int shuffleMode, int repeatMode) {
+        this.shuffleMode = shuffleMode;
+        this.repeatMode = repeatMode;
     }
 
     // This should be remove and only previous one should be used
@@ -284,6 +297,64 @@ public class ShufflingQueue {
         nextPosition = position;
     }
 
+    public boolean isLastTrack() {
+        return getCurrentPosition() == queue.size() - 1;
+    }
+
+    public int getNextPosition(boolean force) {
+        int position = getCurrentPosition() + 1;
+        switch (getRepeatMode()) {
+            case REPEAT_MODE_ALL:
+                if (isLastTrack()) {
+                    position = 0;
+                }
+                break;
+            case REPEAT_MODE_THIS:
+                if (force) {
+                    if (isLastTrack()) {
+                        position = 0;
+                    }
+                } else {
+                    position -= 1;
+                }
+                break;
+            default:
+            case REPEAT_MODE_NONE:
+                if (isLastTrack()) {
+                    position -= 1;
+                }
+                break;
+        }
+        return position;
+    }
+
+    public int getPreviousPosition(boolean force) {
+        int newPosition = getCurrentPosition() - 1;
+        switch (repeatMode) {
+            case REPEAT_MODE_ALL:
+                if (newPosition < 0) {
+                    newPosition = queue.size() - 1;
+                }
+                break;
+            case REPEAT_MODE_THIS:
+                if (force) {
+                    if (newPosition < 0) {
+                        newPosition = queue.size() - 1;
+                    }
+                } else {
+                    newPosition = getCurrentPosition();
+                }
+                break;
+            default:
+            case REPEAT_MODE_NONE:
+                if (newPosition < 0) {
+                    newPosition = 0;
+                }
+                break;
+        }
+        return newPosition;
+    }
+
     /* -------------------- song getter info -------------------- */
 
     public PositionSong getPositionSongAt(int position) {
@@ -303,12 +374,15 @@ public class ShufflingQueue {
         if (this.shuffleMode == shuffleMode)
             return;
 
-        if (shuffleMode == SHUFFLE_MODE_NONE) {
-            currentPosition = queue.getAll().get(currentPosition).position;
-            queue.revert();
-        } else {
-            ShuffleHelper.makeShuffleListTest(queue.getAll(), currentPosition);
-            currentPosition = 0;
+        switch (shuffleMode) {
+            case SHUFFLE_MODE_NONE:
+                currentPosition = queue.getAll().get(currentPosition).position;
+                queue.revert();
+                break;
+            case SHUFFLE_MODE_SHUFFLE:
+                ShuffleHelper.makeShuffleListTest(queue.getAll(), currentPosition);
+                currentPosition = 0;
+                break;
         }
 
         this.shuffleMode = shuffleMode;
@@ -321,10 +395,43 @@ public class ShufflingQueue {
                 break;
             case SHUFFLE_MODE_SHUFFLE:
                 setShuffle(SHUFFLE_MODE_NONE);
+                break;
         }
     }
 
     public int getShuffleMode() {
         return shuffleMode;
+    }
+
+    /* -------------------- repeat method -------------------- */
+    public void setRepeatMode(final int repeatMode) {
+        if (this.repeatMode == repeatMode)
+            return;
+
+        switch (repeatMode) {
+            case REPEAT_MODE_NONE:
+            case REPEAT_MODE_ALL:
+            case REPEAT_MODE_THIS:
+                this.repeatMode = repeatMode;
+                break;
+        }
+    }
+
+    public int getRepeatMode() {
+        return repeatMode;
+    }
+
+    public void cycleRepeatMode() {
+        switch (getRepeatMode()) {
+            case REPEAT_MODE_NONE:
+                setRepeatMode(REPEAT_MODE_ALL);
+                break;
+            case REPEAT_MODE_ALL:
+                setRepeatMode(REPEAT_MODE_THIS);
+                break;
+            default:
+                setRepeatMode(REPEAT_MODE_NONE);
+                break;
+        }
     }
 }

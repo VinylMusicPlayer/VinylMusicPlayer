@@ -130,9 +130,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int SHUFFLE_MODE_NONE = ShufflingQueue.SHUFFLE_MODE_NONE;
     public static final int SHUFFLE_MODE_SHUFFLE = ShufflingQueue.SHUFFLE_MODE_SHUFFLE;
 
-    public static final int REPEAT_MODE_NONE = 0;
-    public static final int REPEAT_MODE_ALL = 1;
-    public static final int REPEAT_MODE_THIS = 2;
+    public static final int REPEAT_MODE_NONE = ShufflingQueue.REPEAT_MODE_NONE;
+    public static final int REPEAT_MODE_ALL = ShufflingQueue.REPEAT_MODE_ALL;
+    public static final int REPEAT_MODE_THIS = ShufflingQueue.REPEAT_MODE_THIS;
 
     public static final int SAVE_QUEUES = 0;
 
@@ -148,8 +148,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private Playback playback;
 
     private ShufflingQueue shufflingQueue = new ShufflingQueue();
-
-    private int repeatMode;
 
     private boolean queuesRestored;
     private boolean pausedByTransientLossOfFocus;
@@ -376,8 +374,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void restoreState() {
-        shufflingQueue.setShuffle(PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0));
-        repeatMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0);
+        shufflingQueue.restoreMode(
+                PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0),
+                PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0));
         handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
         handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
 
@@ -449,7 +448,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             PlaylistsUtil.addToPlaylist(this, getCurrentSong(), playlistId, true);
         }
 
-        playSongAt(getNextPosition(force));
+        playSongAt(shufflingQueue.getNextPosition(force));
     }
 
     public boolean openTrackAndPrepareNextAt(int position) {
@@ -482,8 +481,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void prepareNextImpl() {
         synchronized (this) {
             try {
-                int nextPosition = getNextPosition(false);
-                if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && isLastTrack()) {
+                int nextPosition = shufflingQueue.getNextPosition(false);
+                if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && shufflingQueue.isLastTrack()) {
                     playback.setNextDataSource(null);
                 } else {
                     playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
@@ -654,35 +653,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public int getNextPosition(boolean force) { // to put in shufflingQueue
-        int position = getPosition() + 1;
-        switch (getRepeatMode()) {
-            case REPEAT_MODE_ALL:
-                if (isLastTrack()) {
-                    position = 0;
-                }
-                break;
-            case REPEAT_MODE_THIS:
-                if (force) {
-                    if (isLastTrack()) {
-                        position = 0;
-                    }
-                } else {
-                    position -= 1;
-                }
-                break;
-            default:
-            case REPEAT_MODE_NONE:
-                if (isLastTrack()) {
-                    position -= 1;
-                }
-                break;
-        }
-        return position;
-    }
-
     public boolean isLastTrack() {
-        return getPosition() == getPlayingQueue().size() - 1;
+        return shufflingQueue.isLastTrack();
     }
 
     public ArrayList<Song> getPlayingQueue() {
@@ -690,22 +662,21 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public int getRepeatMode() {
-        return repeatMode;
+        return shufflingQueue.getRepeatMode();
     }
 
     public void setRepeatMode(final int repeatMode) {
-        switch (repeatMode) {
-            case REPEAT_MODE_NONE:
-            case REPEAT_MODE_ALL:
-            case REPEAT_MODE_THIS:
-                this.repeatMode = repeatMode;
-                PreferenceManager.getDefaultSharedPreferences(this).edit()
-                        .putInt(SAVED_REPEAT_MODE, repeatMode)
-                        .apply();
-                prepareNext();
-                handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
-                break;
-        }
+        shufflingQueue.setRepeatMode(repeatMode);
+
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(SAVED_REPEAT_MODE, repeatMode)
+                .apply();
+        prepareNext();
+        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+    }
+
+    public void cycleRepeatMode() {
+        shufflingQueue.cycleRepeatMode();
     }
 
     private void shuffleChangeSignaling() {
@@ -905,7 +876,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void playPreviousSong(boolean force) {
-        playSongAt(getPreviousPosition(force));
+        playSongAt(shufflingQueue.getPreviousPosition(force));
     }
 
     public void back(boolean force) {
@@ -914,33 +885,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         } else {
             playPreviousSong(force);
         }
-    }
-
-    public int getPreviousPosition(boolean force) {
-        int newPosition = getPosition() - 1;
-        switch (repeatMode) {
-            case REPEAT_MODE_ALL:
-                if (newPosition < 0) {
-                    newPosition = getPlayingQueue().size() - 1;
-                }
-                break;
-            case REPEAT_MODE_THIS:
-                if (force) {
-                    if (newPosition < 0) {
-                        newPosition = getPlayingQueue().size() - 1;
-                    }
-                } else {
-                    newPosition = getPosition();
-                }
-                break;
-            default:
-            case REPEAT_MODE_NONE:
-                if (newPosition < 0) {
-                    newPosition = 0;
-                }
-                break;
-        }
-        return newPosition;
     }
 
     public int getSongProgressMillis() {
@@ -963,20 +907,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void cycleRepeatMode() {
-        switch (getRepeatMode()) {
-            case REPEAT_MODE_NONE:
-                setRepeatMode(REPEAT_MODE_ALL);
-                break;
-            case REPEAT_MODE_ALL:
-                setRepeatMode(REPEAT_MODE_THIS);
-                break;
-            default:
-                setRepeatMode(REPEAT_MODE_NONE);
-                break;
         }
     }
 
