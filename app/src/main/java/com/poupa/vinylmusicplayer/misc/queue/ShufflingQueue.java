@@ -26,6 +26,41 @@ public class ShufflingQueue {
         currentPosition = -1;
     }
 
+    public ShufflingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, boolean isShuffled) {
+        queue = new SyncQueue<>(restoreQueue, restoreOriginalQueue);
+        this.isShuffled = isShuffled;
+
+        currentPosition = restoredPosition;
+    }
+
+    // This should be remove and only previous one should be used
+    public ShufflingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
+        queue = new SyncQueue<>();
+        isShuffled = false;
+
+        ArrayList<PositionSong> test = new ArrayList<>();
+        int i=0;
+        for (Song song : restoreQueue) {
+            PositionSong toto = new PositionSong(song, i);
+            test.add(toto);
+            i++;
+        }
+        queue.getAll().addAll(test);
+
+        ArrayList<PositionSong> test2 = new ArrayList<>();
+        i=0;
+        for (Song song : restoreOriginalQueue) {
+            PositionSong toto = new PositionSong(song, i);
+            test2.add(toto);
+            i++;
+        }
+        queue.getAllPreviousState().addAll(test2);
+
+        currentPosition = restoredPosition;
+    }
+
+    /* -------------------- queue modification (add, remove, move, ...) -------------------- */
+
     // add song at the end of both list
     public void add(Song song) {
         queue.getAll().add(new PositionSong(song, queue.getAll().size()));
@@ -178,74 +213,14 @@ public class ShufflingQueue {
             }
         }
 
-        /*
-        // can know be done in MusicService
-        if (hasPositionChanged) {
-            setPosition(newPosition);
-        } */
-
         return hasPositionChanged;
-    }
-
-    public int getCurrentPosition() {
-        return currentPosition;
-    }
-
-    public void setCurrentPosition(int position) {
-        if (position >= queue.size())
-            return;
-
-        currentPosition = position;
-    }
-
-    public void setPositionToNextPosition() {
-        currentPosition = nextPosition;
-    }
-
-    public void setNextPosition(int position) {
-        if (position >= queue.size())
-            return;
-
-        nextPosition = position;
     }
 
     public void clear() {
         queue.clear();
     }
 
-    public PositionSong getPositionSongAt(int position) {
-        return queue.get(position);
-    }
-
-    public long getQueueDurationMillis(int position){
-        long duration = 0;
-        for (int i = position + 1; i < queue.size(); i++)
-            duration += queue.getAll().get(i).song.duration;
-        return duration;
-    }
-
-    public void setShuffle(boolean shuffle) {
-        if (shuffle == isShuffled)
-            return;
-
-        if (!shuffle) {
-            currentPosition = queue.getAll().get(currentPosition).position;
-            queue.revert();
-        } else {
-            ShuffleHelper.makeShuffleListTest(queue.getAll(), currentPosition);
-            currentPosition = 0;
-        }
-
-        isShuffled = shuffle;
-    }
-
-    public boolean getShuffleMode() {
-        return isShuffled;
-    }
-
-    public int size() {
-        return queue.size();
-    }
+    /* -------------------- queue getter info -------------------- */
 
     public boolean openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, int shuffleMode) {
         if (playingQueue != null && !playingQueue.isEmpty() && startPosition >= 0 && startPosition < playingQueue.size()) {
@@ -281,36 +256,65 @@ public class ShufflingQueue {
         return songs;
     }
 
-    public ShufflingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, boolean isShuffled) {
-        queue = new SyncQueue<>(restoreQueue, restoreOriginalQueue);
-        this.isShuffled = isShuffled;
-
-        currentPosition = restoredPosition;
+    public int size() {
+        return queue.size();
     }
 
-    // Position should be restored too
-    public ShufflingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
-        queue = new SyncQueue<>();
-        isShuffled = false;
+    /* -------------------- position method -------------------- */
 
-        ArrayList<PositionSong> test = new ArrayList<>();
-        int i=0;
-        for (Song song : restoreQueue) {
-            PositionSong toto = new PositionSong(song, i);
-            test.add(toto);
-            i++;
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int position) {
+        if (position >= queue.size())
+            return;
+
+        currentPosition = position;
+    }
+
+    public void setPositionToNextPosition() {
+        currentPosition = nextPosition;
+    }
+
+    public void setNextPosition(int position) {
+        if (position >= queue.size())
+            return;
+
+        nextPosition = position;
+    }
+
+    /* -------------------- song getter info -------------------- */
+
+    public PositionSong getPositionSongAt(int position) {
+        return queue.get(position);
+    }
+
+    public long getQueueDurationMillis(int position){
+        long duration = 0;
+        for (int i = position + 1; i < queue.size(); i++)
+            duration += queue.getAll().get(i).song.duration;
+        return duration;
+    }
+
+    /* -------------------- shuffle method -------------------- */
+
+    public void setShuffle(boolean shuffle) {
+        if (shuffle == isShuffled)
+            return;
+
+        if (!shuffle) {
+            currentPosition = queue.getAll().get(currentPosition).position;
+            queue.revert();
+        } else {
+            ShuffleHelper.makeShuffleListTest(queue.getAll(), currentPosition);
+            currentPosition = 0;
         }
-        queue.getAll().addAll(test);
 
-        ArrayList<PositionSong> test2 = new ArrayList<>();
-        i=0;
-        for (Song song : restoreOriginalQueue) {
-            PositionSong toto = new PositionSong(song, i);
-            test2.add(toto);
-            i++;
-        }
-        queue.getAllPreviousState().addAll(test2);
+        isShuffled = shuffle;
+    }
 
-        currentPosition = restoredPosition;
+    public boolean getShuffleMode() {
+        return isShuffled;
     }
 }
