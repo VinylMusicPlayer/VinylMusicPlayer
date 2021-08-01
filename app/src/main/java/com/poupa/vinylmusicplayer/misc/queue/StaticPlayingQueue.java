@@ -12,7 +12,7 @@ import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
-public class ShufflingQueue {
+public class StaticPlayingQueue {
 
     public static final int REPEAT_MODE_NONE = 0;
     public static final int REPEAT_MODE_ALL = 1;
@@ -29,13 +29,13 @@ public class ShufflingQueue {
     private int nextPosition; // is this really needed ???
     public SyncQueue<PositionSong> queue; // should be private
 
-    public ShufflingQueue() {
+    public StaticPlayingQueue() {
         queue = new SyncQueue<>();
         shuffleMode = SHUFFLE_MODE_NONE;
         currentPosition = -1;
     }
 
-    public ShufflingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
+    public StaticPlayingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
         queue = new SyncQueue<>(restoreQueue, restoreOriginalQueue);
         this.shuffleMode = shuffleMode;
 
@@ -48,7 +48,7 @@ public class ShufflingQueue {
     }
 
     // This should be remove and only previous one should be used
-    public ShufflingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
+    public StaticPlayingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
         queue = new SyncQueue<>();
         shuffleMode = SHUFFLE_MODE_NONE;
 

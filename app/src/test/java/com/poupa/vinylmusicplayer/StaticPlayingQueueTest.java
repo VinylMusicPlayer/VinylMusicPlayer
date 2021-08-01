@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
-import com.poupa.vinylmusicplayer.misc.queue.ShufflingQueue;
+import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import org.junit.runners.JUnit4;
@@ -18,7 +18,7 @@ import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(JUnit4.class)
-public class ShufflingQueueTest {
+public class StaticPlayingQueueTest {
 
     private final int id_a = 12;
     private final int id_b = 123;
@@ -27,7 +27,7 @@ public class ShufflingQueueTest {
     private final int id_e = 1;
     private final int id_f = 40;
 
-    private void print(ShufflingQueue test) {
+    private void print(StaticPlayingQueue test) {
         System.out.print("original queue: ");
         System.out.println(Arrays.toString(test.queue.getAllPreviousState().toArray()));
 
@@ -38,8 +38,8 @@ public class ShufflingQueueTest {
         System.out.println(test.getCurrentPosition());
     }
 
-    private ShufflingQueue init() {
-        ShufflingQueue test = new ShufflingQueue();
+    private StaticPlayingQueue init() {
+        StaticPlayingQueue test = new StaticPlayingQueue();
 
         List<String> artistName = new ArrayList<>();
         Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
@@ -58,7 +58,7 @@ public class ShufflingQueueTest {
         return test;
     }
 
-    private void checkQueuePosition(ShufflingQueue test) throws Exception {
+    private void checkQueuePosition(StaticPlayingQueue test) throws Exception {
         for (int i = 0; i < test.queue.getAll().size(); i++) {
             PositionSong song = test.queue.getAll().get(i);
 
@@ -69,24 +69,24 @@ public class ShufflingQueueTest {
     @Test
     public void toggleShuffle() throws Exception {
         // init
-        ShufflingQueue init = init();
+        StaticPlayingQueue init = init();
         init.setCurrentPosition(2);
 
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
         test.setCurrentPosition(2);
         System.out.println("Init");
         print(test);
 
         // test
         System.out.println("Shuffle 1");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         assertEquals(0, test.getCurrentPosition());
         checkQueuePosition(test);
 
         System.out.println("Shuffle 2");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_NONE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_NONE);
         print(test);
 
         assertEquals(init.getCurrentPosition(), test.getCurrentPosition());
@@ -98,8 +98,8 @@ public class ShufflingQueueTest {
     @Test
     public void add_Song() throws Exception {
         // init
-        ShufflingQueue test = init();
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        StaticPlayingQueue test = init();
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
@@ -117,8 +117,8 @@ public class ShufflingQueueTest {
     @Test
     public void addAfter_Position() throws Exception {
         // init
-        ShufflingQueue test = init();
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        StaticPlayingQueue test = init();
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
@@ -137,12 +137,12 @@ public class ShufflingQueueTest {
     @Test
     public void addSongBackTo() throws Exception {
         // init
-        ShufflingQueue test = init();
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        StaticPlayingQueue test = init();
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         System.out.println("Init");
         print(test);
 
-        ShufflingQueue init = new ShufflingQueue(test.queue.getAll(), test.queue.getAllPreviousState(), test.getCurrentPosition(), test.getShuffleMode());
+        StaticPlayingQueue init = new StaticPlayingQueue(test.queue.getAll(), test.queue.getAllPreviousState(), test.getCurrentPosition(), test.getShuffleMode());
 
         // test
         int pos = 2;
@@ -163,12 +163,12 @@ public class ShufflingQueueTest {
     @Test
     public void addAll_Songs() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test
@@ -190,12 +190,12 @@ public class ShufflingQueueTest {
     @Test
     public void addAllAfter_Position() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test
@@ -218,7 +218,7 @@ public class ShufflingQueueTest {
     @Test
     public void move() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
@@ -233,7 +233,7 @@ public class ShufflingQueueTest {
         checkQueuePosition(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         System.out.println("Move from: "+from+" to: "+to);
@@ -246,12 +246,12 @@ public class ShufflingQueueTest {
     @Test
     public void remove() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
         System.out.println("Shuffle");
-        test.setShuffle(ShufflingQueue.SHUFFLE_MODE_SHUFFLE);
+        test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
         print(test);
 
         // test
@@ -268,7 +268,7 @@ public class ShufflingQueueTest {
     @Test
     public void removeSongs_OnCurrentPosition() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
@@ -294,7 +294,7 @@ public class ShufflingQueueTest {
     @Test
     public void removeSongs_OtherThanCurrentPosition() throws Exception {
         // init
-        ShufflingQueue test = init();
+        StaticPlayingQueue test = init();
 
         print(test);
 
