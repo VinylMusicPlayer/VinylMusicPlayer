@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -297,7 +298,7 @@ public class MusicPlayerRemote {
     public static void playNext(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
-                musicService.addSong(getPosition() + 1, song);
+                musicService.addAfter(getPosition(), song);
             } else {
                 ArrayList<Song> queue = new ArrayList<>();
                 queue.add(song);
@@ -310,7 +311,7 @@ public class MusicPlayerRemote {
     public static void playNext(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
-                musicService.addSongs(getPosition() + 1, songs);
+                musicService.addSongsAfter(getPosition(), songs);
             } else {
                 openQueue(songs, 0, false);
             }
@@ -356,15 +357,22 @@ public class MusicPlayerRemote {
         }
     }
 
+    public static PositionSong getSongPosition(int position) {
+        if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
+            return musicService.getPositionSongAt(position);
+        }
+        return new PositionSong(Song.EMPTY_SONG, -1);
+    }
+
     public static void moveSong(int from, int to) {
         if (musicService != null && from >= 0 && to >= 0 && from < getPlayingQueue().size() && to < getPlayingQueue().size()) {
             musicService.moveSong(from, to);
         }
     }
 
-    public static void addSong(int to, @NonNull Song song) {
+    public static void addSongBackTo(int to, @NonNull PositionSong song) {
         if (musicService != null) {
-            musicService.addSong(to,song);
+            musicService.addSongBackTo(to,song);
         }
     }
 

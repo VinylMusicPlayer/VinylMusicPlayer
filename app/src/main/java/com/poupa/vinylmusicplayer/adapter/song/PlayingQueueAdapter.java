@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
@@ -42,7 +43,7 @@ public class PlayingQueueAdapter extends SongAdapter
     private static final int CURRENT = 1;
     private static final int UP_NEXT = 2;
 
-    public Song songToRemove;
+    public PositionSong songToRemove;
 
     private static Snackbar currentlyShownSnackbar;
 
@@ -262,9 +263,9 @@ public class PlayingQueueAdapter extends SongAdapter
             currentlyShownSnackbar = null;
         }
         @Override
-        protected void onSlideAnimationEnd() {
-            Song songToRemove = adapter.dataSet.get(position);
-            boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
+        protected void onSlideAnimationEnd() { // SHould be a list of positionsong ?
+            PositionSong songToRemove = MusicPlayerRemote.getSongPosition(position); //adapter.dataSet.get(position);
+            boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove.song);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);
 
@@ -306,7 +307,7 @@ public class PlayingQueueAdapter extends SongAdapter
         songTitle.setText(adapter.dataSet.get(position).title + " " + snackBarTitle);
 
         snackbar.setAction(R.string.snack_bar_action_undo, v -> {
-            MusicPlayerRemote.addSong(position,adapter.getSongToRemove());
+            MusicPlayerRemote.addSongBackTo(position, adapter.getSongToRemove());
             //If playing and currently playing song is removed, then added back, then play it at
             //current song progress
             if (isPlayingSongToRemove) {
@@ -323,11 +324,11 @@ public class PlayingQueueAdapter extends SongAdapter
 
     }
 
-    private void setSongToRemove (@NonNull Song song){
+    private void setSongToRemove (@NonNull PositionSong song){
         songToRemove = song;
     }
 
-    private Song getSongToRemove(){
+    private PositionSong getSongToRemove(){
         return songToRemove;
     }
 }

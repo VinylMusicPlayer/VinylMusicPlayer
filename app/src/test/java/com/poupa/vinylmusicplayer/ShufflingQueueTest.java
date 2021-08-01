@@ -115,7 +115,7 @@ public class ShufflingQueueTest {
     }
 
     @Test
-    public void add_Position() throws Exception {
+    public void addAfter_Position() throws Exception {
         // init
         ShufflingQueue test = init();
         test.setShuffle(true);
@@ -132,6 +132,32 @@ public class ShufflingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+    }
+
+    @Test
+    public void addSongBackTo() throws Exception {
+        // init
+        ShufflingQueue test = init();
+        test.setShuffle(true);
+        System.out.println("Init");
+        print(test);
+
+        ShufflingQueue init = new ShufflingQueue(test.queue.getAll(), test.queue.getAllPreviousState(), test.getCurrentPosition(), test.getShuffleMode());
+
+        // test
+        int pos = 2;
+
+        System.out.println("Remove position: "+pos);
+        PositionSong song = test.getPositionSongAt(pos);
+        test.remove(pos);
+        print(test);
+
+        System.out.println("Add back to position: "+pos);
+        test.addSongBackTo(pos, song);
+        print(test);
+
+        checkQueuePosition(test);
+        assertEquals(init.queue.toString(), test.queue.toString());
     }
 
     @Test
@@ -162,7 +188,7 @@ public class ShufflingQueueTest {
     }
 
     @Test
-    public void addAll_Position() throws Exception {
+    public void addAllAfter_Position() throws Exception {
         // init
         ShufflingQueue test = init();
 
@@ -258,7 +284,7 @@ public class ShufflingQueueTest {
         list.add(song2);
 
         System.out.println("RemoveSongs");
-        boolean hasPositionChanged = test.removeSongs(list);
+        boolean hasPositionChanged = (test.removeSongs(list) != -1);
         print(test);
 
         assertEquals(true, hasPositionChanged);
@@ -284,7 +310,7 @@ public class ShufflingQueueTest {
         list.add(song2);
 
         System.out.println("RemoveSongs");
-        boolean hasPositionChanged = test.removeSongs(list);
+        boolean hasPositionChanged = (test.removeSongs(list) != -1);
         print(test);
 
         assertEquals(false, hasPositionChanged);

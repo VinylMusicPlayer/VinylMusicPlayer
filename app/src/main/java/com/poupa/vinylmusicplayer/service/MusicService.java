@@ -49,6 +49,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
+import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
 import com.poupa.vinylmusicplayer.misc.queue.ShufflingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -652,7 +653,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public int getNextPosition(boolean force) {
+    public PositionSong getPositionSongAt(int position) {
+        if (position >= 0 && position < getPlayingQueue().size()) {
+            return shufflingQueue.getPositionSongAt(position);
+        } else {
+            return new PositionSong(Song.EMPTY_SONG, -1);
+        }
+    }
+
+    public int getNextPosition(boolean force) { // to put in shufflingQueue
         int position = getPosition() + 1;
         switch (getRepeatMode()) {
             case REPEAT_MODE_ALL:
@@ -711,24 +720,29 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (startPlaying) {
                 playSongAt(shufflingQueue.getCurrentPosition());
             } else {
-                setPosition(shufflingQueue.getPosition());
+                setPosition(startPosition);
             }
             notifyChange(QUEUE_CHANGED);
         }
     }
 
-    public void addSong(int position, Song song) {
+    public void addAfter(int position, Song song) {
         shufflingQueue.addAfter(position, song);
+        notifyChange(QUEUE_CHANGED);
+    }
+
+    public void addSongBackTo(int position, PositionSong song) {
+        shufflingQueue.addSongBackTo(position, song);
+        notifyChange(QUEUE_CHANGED);
+    }
+
+    public void addSongsAfter(int position, List<Song> songs) {
+        shufflingQueue.addAllAfter(position, songs);
         notifyChange(QUEUE_CHANGED);
     }
 
     public void addSong(Song song) {
         shufflingQueue.add(song);
-        notifyChange(QUEUE_CHANGED);
-    }
-
-    public void addSongs(int position, List<Song> songs) {
-        shufflingQueue.addAllAfter(position, songs);
         notifyChange(QUEUE_CHANGED);
     }
 
@@ -738,16 +752,18 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void removeSong(int position) {
-        if (shufflingQueue.remove(position)) {
-            setPosition(shufflingQueue.getPosition());
+        int newPosition = shufflingQueue.remove(position);
+        if (newPosition != -1) {
+            setPosition(newPosition);
         }
 
         notifyChange(QUEUE_CHANGED);
     }
 
     public void removeSongs(@NonNull List<Song> songs) {
-        if (shufflingQueue.removeSongs(songs)) {
-            setPosition(shufflingQueue.getPosition());
+        int newPosition = shufflingQueue.removeSongs(songs);
+        if (newPosition != -1) {
+            setPosition(newPosition);
         }
 
         notifyChange(QUEUE_CHANGED);
@@ -779,7 +795,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void setPositionToNextPosition() {
-        shufflingQueue.setCurrentPosition(shufflingQueue.getNextPosition());
+        shufflingQueue.setPositionToNextPosition();
     }
 
     public void playSongAtImpl(int position) {
