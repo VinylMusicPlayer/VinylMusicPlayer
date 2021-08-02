@@ -42,7 +42,8 @@ abstract class SongList {
           ArrayList<Song> result = new ArrayList<>();
           ArrayList<Long> orphanIds = new ArrayList<>();
 
-          // TODO Do this cleaning and mapping once
+          // Since the song list is decoupled from Discography, we need to check its content
+          // against the valid songs in discog
           final Map<Long, Song> availableSongsById = Discography.getInstance().getAllSongsById();
           for (Long id : songIds) {
                final Song matchingSong = availableSongsById.get(id);
@@ -148,7 +149,6 @@ class PreferencesBackedSongList extends MutableSongList {
 
           Collections.sort(result, (l1, l2) -> StringUtil.compareIgnoreAccent(l1.name, l2.name));
 
-          // TODO Cache the result
           return result;
      }
 

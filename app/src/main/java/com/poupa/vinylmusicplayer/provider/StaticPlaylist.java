@@ -102,7 +102,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
     @Override
     @NonNull
     public ArrayList<Song> asSongs() {
-        // TODO Review this suboptimal implementation
+        // TODO Review this suboptimal implementation, probably by removing the PlaylistSong class
         // Repackage the song lists as a list of PlaylistSong
         final ArrayList<Song> songs = super.asSongs();
         final long playlistId = asPlaylist().id;
