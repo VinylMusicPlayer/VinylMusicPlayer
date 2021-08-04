@@ -27,7 +27,7 @@ public class SongSortOrder {
             MultiValuesTagUtil.infoString(s1.artistNames),
             MultiValuesTagUtil.infoString(s2.artistNames));
     private static final Comparator<Song> _BY_ALBUM = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.albumName, s2.albumName);
-    private static final Comparator<Song> _BY_ALBUM_ID = (s1, s2) -> ComparatorUtil.compareLongInts(s1.albumId, s2.albumId);
+    private static final Comparator<Song> _BY_ALBUM_ID = (s1, s2) -> ComparatorUtil.compareLongInts(s1.albumId, s2.albumId); // to combine with comparison by name to make the sorting deterministic in the case the names are identical
     private static final Comparator<Song> _BY_YEAR = (s1, s2) -> s1.year - s2.year;
     public static final Comparator<Song> BY_DATE_ADDED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
@@ -37,10 +37,10 @@ public class SongSortOrder {
             ? (s1.discNumber - s2.discNumber)
             : (s1.trackNumber - s2.trackNumber);
 
-    private static final Comparator<Song> BY_TITLE = ComparatorUtil.chain(_BY_TITLE, _BY_ARTIST, _BY_ALBUM);
-    private static final Comparator<Song> BY_TITLE_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_TITLE), _BY_ARTIST, _BY_ALBUM);
-    private static final Comparator<Song> BY_ARTIST = ComparatorUtil.chain(_BY_ARTIST, _BY_TITLE, _BY_ALBUM);
     public static final Comparator<Song> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM, _BY_ALBUM_ID, BY_DISC_TRACK);
+    private static final Comparator<Song> BY_TITLE = ComparatorUtil.chain(_BY_TITLE, _BY_ARTIST, BY_ALBUM);
+    private static final Comparator<Song> BY_TITLE_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_TITLE), _BY_ARTIST, BY_ALBUM);
+    private static final Comparator<Song> BY_ARTIST = ComparatorUtil.chain(_BY_ARTIST, _BY_TITLE, BY_ALBUM);
     private static final Comparator<Song> BY_YEAR = ComparatorUtil.chain(_BY_YEAR, BY_TITLE);
     private static final Comparator<Song> BY_YEAR_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_YEAR), BY_TITLE);
 
