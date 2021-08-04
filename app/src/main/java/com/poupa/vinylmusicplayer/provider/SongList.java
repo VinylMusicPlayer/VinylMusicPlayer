@@ -62,20 +62,40 @@ abstract class SongList {
      }
 }
 
+//interface IMutableSongListObserver {
+//     void onSongAdded();
+//     void onSongMoved();
+//     void onSongRemoved();
+//
+//     void onListCleared();
+//     void onListRenamed();
+//     void onListCreated();
+//     void onListDeleted();
+//}
+
 abstract class MutableSongList extends SongList {
+//     @NonNull
+//     static protected List<IMutableSongListObserver> observers = new ArrayList<>();
+
      MutableSongList(@NonNull String name) {
           super(name);
      }
 
-     protected static void callObservers() {
-          // TODO Add support for mutation observers
-     }
+//     static void addMutableSongListObserver(@NonNull IMutableSongListObserver observer) {
+//          if (observers.contains(observer)) return;
+//          observers.add(observer);
+//     }
+//
+//     static void removeMutableSongListObserver(@NonNull IMutableSongListObserver observer) {
+//          observers.remove(observer);
+//     }
 
      void addSong(long id) {
           // TODO Add handler for duplicate detection
           songIds.add(id);
           save(null);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onSongAdded();}
      }
 
      public void addSongs(@NonNull List<Song> songs) {
@@ -84,13 +104,15 @@ abstract class MutableSongList extends SongList {
                songIds.add(song.id);
           }
           save(null);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onSongAdded();}
      }
 
      public void removeSong(long id) {
           songIds.remove(id);
           save(null);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onSongRemoved();}
      }
 
      public boolean moveSong(int fromPosition, int toPosition) {
@@ -107,7 +129,8 @@ abstract class MutableSongList extends SongList {
           songIds.add(toPosition + toPositionShift, movedSongId);
 
           save(null);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onSongMoved();}
 
           return true;
      }
@@ -115,12 +138,14 @@ abstract class MutableSongList extends SongList {
      void clear() {
           songIds.clear();
           save(null);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onListCleared();}
      }
 
      public void rename(@NonNull final String newName) {
           save(newName);
-          callObservers();
+
+//          for (IMutableSongListObserver observer : observers) {observer.onListRenamed();}
      }
 }
 
@@ -156,11 +181,13 @@ class PreferencesBackedSongList extends MutableSongList {
           final SharedPreferences preferences = getPreferences();
           preferences.edit().remove(PREF_NAME_PREFIX + name).apply();
 
-          callObservers();
+//          for (IMutableSongListObserver observer : observers) {observer.onListDeleted();}
      }
 
      PreferencesBackedSongList(@NonNull String name) {
           super(name);
+
+//          for (IMutableSongListObserver observer : observers) {observer.onListCreated();}
      }
 
      @Override
