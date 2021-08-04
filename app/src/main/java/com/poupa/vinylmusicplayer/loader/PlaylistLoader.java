@@ -9,7 +9,6 @@ import android.provider.MediaStore.Audio.PlaylistsColumns;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Playlist;
-import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 
 import java.util.ArrayList;
 

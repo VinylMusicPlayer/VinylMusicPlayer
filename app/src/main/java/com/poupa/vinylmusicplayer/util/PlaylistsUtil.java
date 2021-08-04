@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class PlaylistsUtil {
     private static void notifyChange(@NonNull final Context context) {
-        // TODO Use a more appropriate notification
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 
