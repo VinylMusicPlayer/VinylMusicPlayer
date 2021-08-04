@@ -101,21 +101,26 @@ public class PlaylistsUtil {
     }
 
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<PlaylistSong> songs) {
-        // TODO This is suboptimal and may create a notification spam
+        if (songs.size() == 0) {return;}
+
+        final long playlistId = songs.get(0).playlistId;
+        StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
+        if (list == null) {return;}
+
+        List<Long> songIds = new ArrayList<>();
         for (PlaylistSong song : songs) {
-            removeFromPlaylist(context, song, song.playlistId);
+            if (song.playlistId == playlistId) {songIds.add(song.id);}
+            else {throw new IllegalArgumentException("Must remove songs from the same playlist");}
         }
+
+        list.removeSongs(songIds);
+        notifyChange(context);
     }
 
     public static boolean doesPlaylistContain(@NonNull final Context context, final long playlistId, final long songId) {
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return false;}
-
-        // TODO Not optimal implementation
-        for (Song song : list.asSongs()) {
-            if (song.id == songId) {return true;}
-        }
-        return false;
+        return list.contains(songId);
     }
 
     public static boolean moveItem(@NonNull final Context context, long playlistId, int from, int to) {

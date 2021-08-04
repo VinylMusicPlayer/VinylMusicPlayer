@@ -37,6 +37,10 @@ abstract class SongList {
      @NonNull
      public String getName() {return name;}
 
+     public boolean contains(long songId) {
+          return songIds.contains(songId);
+     }
+
      @NonNull
      ArrayList<Song> asSongs() {
           ArrayList<Song> result = new ArrayList<>();
@@ -110,6 +114,13 @@ abstract class MutableSongList extends SongList {
 
      public void removeSong(long id) {
           songIds.remove(id);
+          save(null);
+
+//          for (IMutableSongListObserver observer : observers) {observer.onSongRemoved();}
+     }
+
+     public void removeSongs(List<Long> ids) {
+          songIds.removeAll(ids);
           save(null);
 
 //          for (IMutableSongListObserver observer : observers) {observer.onSongRemoved();}
