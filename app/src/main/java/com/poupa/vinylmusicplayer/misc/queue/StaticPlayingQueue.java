@@ -391,7 +391,7 @@ public class StaticPlayingQueue {
                 revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:
-                ShuffleHelper.makeShuffleListTest(queue, currentPosition);
+                ShuffleHelper.makeShuffleListWithIndexes(queue, currentPosition);
                 songsIsStale = true;
                 currentPosition = 0;
                 break;

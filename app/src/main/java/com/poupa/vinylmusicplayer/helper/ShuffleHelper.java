@@ -24,7 +24,7 @@ public class ShuffleHelper {
         }
     }
 
-    public static void makeShuffleListTest(@NonNull List<IndexedSong> listToShuffle, final int current) {
+    public static void makeShuffleListWithIndexes(@NonNull List<IndexedSong> listToShuffle, final int current) {
         if (listToShuffle.isEmpty()) return;
         if (current >= 0) {
             IndexedSong song = listToShuffle.remove(current);
