@@ -55,6 +55,8 @@ public class StaticPlayingQueueTest {
 
         test.addAll(list);
 
+        test.getPlayingQueueSongOnly(); //ensure songsIsStale is false before commencing the test
+
         return test;
     }
 
@@ -63,6 +65,26 @@ public class StaticPlayingQueueTest {
             IndexedSong song = test.getPlayingQueue().get(i);
 
             assertEquals(test.getOriginalPlayingQueue().get(song.index).song.title, song.song.title);
+        }
+    }
+
+    private void checkSongs(StaticPlayingQueue test) throws Exception {
+        List<Song> songs = test.getPlayingQueueSongOnly();
+
+        System.out.print("         queue: ");
+        System.out.println(Arrays.toString(test.getPlayingQueue().toArray()));
+
+        System.out.print("         songs: [");
+        for (int i = 0; i < test.size(); i++) {
+            System.out.print(songs.get(i).title+", ");
+        }
+        System.out.println("]");
+
+
+        for (int i = 0; i < test.size(); i++) {
+            IndexedSong song = test.getPlayingQueue().get(i);
+
+            assertEquals(song.song.title, songs.get(i).title);
         }
     }
 
@@ -84,6 +106,7 @@ public class StaticPlayingQueueTest {
 
         assertEquals(0, test.getCurrentPosition());
         checkQueuePosition(test);
+        checkSongs(test);
 
         System.out.println("Shuffle 2");
         test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_NONE);
@@ -91,6 +114,7 @@ public class StaticPlayingQueueTest {
 
         assertEquals(init.getCurrentPosition(), test.getCurrentPosition());
         checkQueuePosition(test);
+        checkSongs(test);
 
         assertEquals(init.getPlayingQueue().toString(), test.getPlayingQueue().toString());
     }
@@ -112,6 +136,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -132,6 +157,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -157,6 +183,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
         assertEquals(init.getPlayingQueue().toString(), test.getPlayingQueue().toString());
     }
 
@@ -185,6 +212,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -213,6 +241,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -231,6 +260,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
 
         System.out.println("Shuffle");
         test.setShuffle(StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE);
@@ -241,6 +271,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -263,6 +294,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -288,6 +320,7 @@ public class StaticPlayingQueueTest {
 
         assertEquals(true, hasPositionChanged);
         checkQueuePosition(test);
+        checkSongs(test);
     }
 
     @Test
@@ -313,5 +346,6 @@ public class StaticPlayingQueueTest {
 
         assertEquals(false, hasPositionChanged);
         checkQueuePosition(test);
+        checkSongs(test);
     }
 }

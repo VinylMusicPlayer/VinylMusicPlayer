@@ -24,8 +24,9 @@ public class StaticPlayingQueue {
 
     private int currentPosition;
 
-    private int nextPosition; // is this really needed ???
+    private int nextPosition;
 
+    private boolean songsIsStale;
     private final ArrayList<Song> songs;              // necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song
     private ArrayList<IndexedSong> queue;             // list of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified)
     private final ArrayList<IndexedSong> backupQueue; // copy of the queue used to allow revert of history last operation
@@ -37,6 +38,7 @@ public class StaticPlayingQueue {
         backupQueue = new ArrayList<>();
         shuffleMode = SHUFFLE_MODE_NONE;
         currentPosition = -1;
+        songsIsStale = false;
     }
 
     public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
@@ -47,6 +49,7 @@ public class StaticPlayingQueue {
         currentPosition = restoredPosition;
 
         songs = new ArrayList<>();
+        songsIsStale = true;
         resetSongs();
     }
 
@@ -61,6 +64,8 @@ public class StaticPlayingQueue {
     public void add(Song song) {
         queue.add(new IndexedSong(song, queue.size()));
         backupQueue.add(new IndexedSong(song, backupQueue.size()));
+
+        songsIsStale = true;
     }
 
     // add list of song at the end of both list
@@ -87,6 +92,8 @@ public class StaticPlayingQueue {
                 queue.get(i).index = queue.get(i).index + 1;
             }
         }
+
+        songsIsStale = true;
     }
 
     public void addSongBackTo(int position, IndexedSong song) {
@@ -101,6 +108,8 @@ public class StaticPlayingQueue {
                 queue.get(i).index = queue.get(i).index + 1;
             }
         }
+
+        songsIsStale = true;
     }
 
     // add songs after and including position, numbering need to be redone for every song after this position (+number of song)
@@ -124,6 +133,8 @@ public class StaticPlayingQueue {
                 queue.get(i).index = queue.get(i).index + n + 1;
             }
         }
+
+        songsIsStale = true;
     }
 
     // move song from from to to, position are conserved
@@ -151,6 +162,8 @@ public class StaticPlayingQueue {
         } else if (from == currentPosition) {
             this.currentPosition = to;
         }
+
+        songsIsStale = true;
     }
 
     private int rePosition(int deletedPosition) {
@@ -181,6 +194,8 @@ public class StaticPlayingQueue {
             }
         }
 
+        songsIsStale = true;
+
         return rePosition(position);
     }
 
@@ -195,6 +210,8 @@ public class StaticPlayingQueue {
                 }
             }
         }
+
+        songsIsStale = true;
 
         return hasPositionChanged;
     }
@@ -213,12 +230,14 @@ public class StaticPlayingQueue {
     }
 
     public void clear() {
+        songs.clear();
         queue.clear();
         backupQueue.clear();
     }
 
     private void revert() {
         queue = new ArrayList<>(backupQueue);
+        songsIsStale = true;
     }
 
     /* -------------------- queue getter info -------------------- */
@@ -252,10 +271,12 @@ public class StaticPlayingQueue {
         for (IndexedSong song : queue) {
             songs.add(song.song);
         }
+        songsIsStale = false;
     }
 
     public ArrayList<Song> getPlayingQueueSongOnly() {
-        resetSongs();
+        if (songsIsStale)
+            resetSongs();
         return songs;
     }
 
@@ -371,6 +392,7 @@ public class StaticPlayingQueue {
                 break;
             case SHUFFLE_MODE_SHUFFLE:
                 ShuffleHelper.makeShuffleListTest(queue, currentPosition);
+                songsIsStale = true;
                 currentPosition = 0;
                 break;
         }
