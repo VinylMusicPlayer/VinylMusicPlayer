@@ -37,6 +37,7 @@ import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.Lyrics;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
@@ -192,7 +193,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
-        impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
+        impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
 
         // give the adapter a chance to update the decoration
         recyclerView.getAdapter().notifyDataSetChanged();
@@ -389,7 +390,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     interface Impl {
         void init();
 
-        void updateCurrentSong(Song song);
+        void updateCurrentSong(IndexedSong song);
 
         void animateColorChange(final int newColor);
 
@@ -498,10 +499,10 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
 
         @Override
-        public void updateCurrentSong(Song song) {
-            currentSong = song;
-            currentSongViewHolder.title.setText(song.title);
-            currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
+        public void updateCurrentSong(IndexedSong song) {
+            currentSong = song.song;
+            currentSongViewHolder.title.setText(song.song.title);
+            currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song.song));
 
             if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
                 final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
@@ -536,9 +537,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
 
         @Override
-        public void updateCurrentSong(Song song) {
-            fragment.toolbar.setTitle(song.title);
-            fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
+        public void updateCurrentSong(IndexedSong song) {
+            fragment.toolbar.setTitle(song.song.title);
+            fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song.song));
         }
 
         @Override

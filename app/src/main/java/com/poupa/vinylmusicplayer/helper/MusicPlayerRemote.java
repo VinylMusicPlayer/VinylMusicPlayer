@@ -172,8 +172,11 @@ public class MusicPlayerRemote {
     }
 
     public static boolean isPlaying(@NonNull Song song) {
-        if (!isPlaying()) {return false;}
-        return (song.id == getCurrentSong().id);
+        return musicService != null && musicService.isPlaying(song);
+    }
+
+    public static boolean isPlaying(@NonNull IndexedSong song) {
+        return musicService != null && musicService.isPlaying(song);
     }
 
     public static void resumePlaying() {
@@ -220,6 +223,13 @@ public class MusicPlayerRemote {
             return musicService.getCurrentSong();
         }
         return Song.EMPTY_SONG;
+    }
+
+    public static IndexedSong getCurrentIndexedSong() {
+        if (musicService != null) {
+            return musicService.getCurrentIndexedSong();
+        }
+        return new IndexedSong(Song.EMPTY_SONG, -1);
     }
 
     public static int getPosition() {

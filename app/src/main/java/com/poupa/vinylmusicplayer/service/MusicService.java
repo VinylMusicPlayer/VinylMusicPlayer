@@ -438,6 +438,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return playback != null && playback.isPlaying();
     }
 
+    public boolean isPlaying(@NonNull Song song) {
+        if (!isPlaying()) {return false;}
+        return (song.id == getCurrentSong().id);
+    }
+
+    public boolean isPlaying(@NonNull IndexedSong song) {
+        if (!isPlaying()) {return false;}
+        return (song.song.id == getCurrentIndexedSong().song.id) && (song.index == getCurrentIndexedSong().index);
+    }
+
     public int getPosition() {
         return playingQueue.getCurrentPosition();
     }
@@ -637,6 +647,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return getSongAt(getPosition());
     }
 
+    public IndexedSong getCurrentIndexedSong() {
+        return getIndexedSongAt(getPosition());
+    }
+
     public Song getSongAt(int position) {
         if (position >= 0 && position < playingQueue.size()) {
             return playingQueue.getPlayingQueue().get(position).song;
@@ -751,10 +765,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void removeSong(int position) {
+    public void removeSong(int position) { // better to test is playing here and have only one signal than calling playNextSong and then removeSong (two signal need time in between to work ok)
+        boolean isPlaying = isPlaying(playingQueue.getPlayingQueue().get(position));
+
         int newPosition = playingQueue.remove(position);
         if (newPosition != -1) {
-            setPosition(newPosition);
+            if (isPlaying)
+                playSongAt(newPosition);
+            else
+                setPosition(newPosition);
         }
 
         notifyChange(QUEUE_CHANGED);

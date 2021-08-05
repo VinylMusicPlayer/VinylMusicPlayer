@@ -218,14 +218,9 @@ public class PlayingQueueAdapter extends SongAdapter
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_remove_from_playing_queue) {
-                // If song removed was the playing song, then play the next song
-                if (MusicPlayerRemote.isPlaying(getSong()))
-                {
-                    MusicPlayerRemote.playNextSong();
-                }
-
                 final int position = getAdapterPosition();
                 MusicPlayerRemote.removeFromQueue(position);
+
                 return true;
             }
             return super.onSongMenuItemClick(item);
@@ -265,14 +260,9 @@ public class PlayingQueueAdapter extends SongAdapter
         @Override
         protected void onSlideAnimationEnd() { // Should be a list of indexedSong ?
             IndexedSong songToRemove = MusicPlayerRemote.getIndexedSongAt(position); //adapter.dataSet.get(position);
-            boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove.song);
+            boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);
-
-            //If song removed was the playing song, then play the next song
-            if (isPlayingSongToRemove) {
-                MusicPlayerRemote.playNextSong();
-            }
 
             //Swipe animation is much smoother when we do the heavy lifting after it's completed
             adapter.setSongToRemove(songToRemove);

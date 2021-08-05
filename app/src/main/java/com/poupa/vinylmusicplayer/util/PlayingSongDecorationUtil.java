@@ -21,6 +21,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
@@ -42,7 +43,7 @@ public class PlayingSongDecorationUtil {
     public static void decorate(
             @NonNull final SongAdapter songAdapter,
             @NonNull final SongAdapter.ViewHolder holder,
-            Song song,
+            IndexedSong song,
             @NonNull final AppCompatActivity activity)
     {
         PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, songAdapter.isShowAlbumImage());
@@ -51,9 +52,9 @@ public class PlayingSongDecorationUtil {
             if (!MusicPlayerRemote.isPlaying(song)) {
                 GlideApp.with(activity)
                     .asBitmapPalette()
-                    .load(VinylGlideExtension.getSongModel(song))
+                    .load(VinylGlideExtension.getSongModel(song.song))
                     .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song)
+                    .songOptions(song.song)
                     .into(new VinylColoredTarget(holder.image) {
                         @Override
                         public void onLoadCleared(Drawable placeholder) {
@@ -78,7 +79,18 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
+        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, -1), activity, showAlbumImage);
+    }
+
+    private static void decorate(
+            @Nullable final TextView title,
+            @Nullable final ImageView image,
+            @Nullable final TextView imageText,
+            IndexedSong song,
+            @NonNull final AppCompatActivity activity,
+            boolean showAlbumImage)
+    {
+        final boolean isPlaying = (song.index == -1) ? MusicPlayerRemote.isPlaying(song.song) : MusicPlayerRemote.isPlaying(song);
 
         if (title != null) {
             title.setTypeface(null, isPlaying ? Typeface.BOLD : Typeface.NORMAL);

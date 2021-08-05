@@ -93,6 +93,10 @@ public class StaticPlayingQueue {
             }
         }
 
+        if (position < this.currentPosition) {
+            this.currentPosition++;
+        }
+
         songsIsStale = true;
     }
 
@@ -107,6 +111,10 @@ public class StaticPlayingQueue {
             if (i != position && queue.get(i).index >= previousPosition) {
                 queue.get(i).index = queue.get(i).index + 1;
             }
+        }
+
+        if (position <= this.currentPosition) {
+            this.currentPosition++;
         }
 
         songsIsStale = true;
@@ -125,6 +133,10 @@ public class StaticPlayingQueue {
             backupQueue.add(previousPosition, new IndexedSong(songs.get(i), previousPosition + i));
 
             queue.add(position, new IndexedSong(songs.get(i), previousPosition + i));
+
+            if (position < this.currentPosition) {
+                this.currentPosition++;
+            }
         }
 
         for (int i = 0; i < queue.size(); i++) {
