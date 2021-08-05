@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Song;
 
@@ -60,9 +60,9 @@ public class StaticPlayingQueueTest {
 
     private void checkQueuePosition(StaticPlayingQueue test) throws Exception {
         for (int i = 0; i < test.queue.getAll().size(); i++) {
-            PositionSong song = test.queue.getAll().get(i);
+            IndexedSong song = test.queue.getAll().get(i);
 
-            assertEquals(test.queue.getAllPreviousState().get(song.position).song.title, song.song.title);
+            assertEquals(test.queue.getAllPreviousState().get(song.index).song.title, song.song.title);
         }
     }
 
@@ -148,7 +148,7 @@ public class StaticPlayingQueueTest {
         int pos = 2;
 
         System.out.println("Remove position: "+pos);
-        PositionSong song = test.getPositionSongAt(pos);
+        IndexedSong song = test.getIndexedSongAt(pos);
         test.remove(pos);
         print(test);
 

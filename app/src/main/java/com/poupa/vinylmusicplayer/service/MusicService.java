@@ -49,7 +49,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
-import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -645,11 +645,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public PositionSong getPositionSongAt(int position) {
+    public IndexedSong getIndexedSongAt(int position) {
         if (position >= 0 && position < getPlayingQueue().size()) {
-            return playingQueue.getPositionSongAt(position);
+            return playingQueue.getIndexedSongAt(position);
         } else {
-            return new PositionSong(Song.EMPTY_SONG, -1);
+            return new IndexedSong(Song.EMPTY_SONG, -1);
         }
     }
 
@@ -658,7 +658,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public ArrayList<Song> getPlayingQueue() {
-        return playingQueue.getPlayingQueue();
+        return playingQueue.getPlayingQueueSongOnly();
     }
 
     public int getRepeatMode() {
@@ -731,7 +731,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongBackTo(int position, PositionSong song) {
+    public void addSongBackTo(int position, IndexedSong song) {
         playingQueue.addSongBackTo(position, song);
         notifyChange(QUEUE_CHANGED);
     }

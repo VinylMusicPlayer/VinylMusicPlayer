@@ -4,8 +4,6 @@ package com.poupa.vinylmusicplayer.misc.queue;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.preference.PreferenceManager;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
@@ -27,7 +25,7 @@ public class StaticPlayingQueue {
     private int currentPosition;
 
     private int nextPosition; // is this really needed ???
-    public SyncQueue<PositionSong> queue; // should be private
+    public SyncQueue<IndexedSong> queue; // should be private
 
     public StaticPlayingQueue() {
         queue = new SyncQueue<>();
@@ -35,7 +33,7 @@ public class StaticPlayingQueue {
         currentPosition = -1;
     }
 
-    public StaticPlayingQueue(ArrayList<PositionSong> restoreQueue, ArrayList<PositionSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
+    public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
         queue = new SyncQueue<>(restoreQueue, restoreOriginalQueue);
         this.shuffleMode = shuffleMode;
 
@@ -93,30 +91,30 @@ public class StaticPlayingQueue {
         if (position >= queue.size()) {
             position = queue.size()-1;
         }
-        int oldSongAtPosition_Position = queue.get(position).position+1;
-        position = position+1;
+        int previousPosition = queue.get(position).index + 1;
+        position = position + 1;
 
-        queue.getAllPreviousState().add(oldSongAtPosition_Position, new PositionSong(song, oldSongAtPosition_Position));
-        queue.getAll().add(position, new PositionSong(song, oldSongAtPosition_Position));
+        queue.getAllPreviousState().add(previousPosition, new IndexedSong(song, previousPosition));
+        queue.getAll().add(position, new IndexedSong(song, previousPosition));
         for (int i = 0; i < queue.getAll().size(); i++) {
-            queue.getAllPreviousState().get(i).position = i;
+            queue.getAllPreviousState().get(i).index = i;
 
-            if (i != position && queue.getAll().get(i).position >= oldSongAtPosition_Position) {
-                queue.getAll().get(i).position = queue.getAll().get(i).position + 1;
+            if (i != position && queue.getAll().get(i).index >= previousPosition) {
+                queue.getAll().get(i).index = queue.getAll().get(i).index + 1;
             }
         }
     }
 
-    public void addSongBackTo(int position, PositionSong song) {
-        int oldSongAtPosition_Position = song.position;
+    public void addSongBackTo(int position, IndexedSong song) {
+        int previousPosition = song.index;
 
-        queue.getAllPreviousState().add(oldSongAtPosition_Position, new PositionSong(song.song, oldSongAtPosition_Position));
-        queue.getAll().add(position, new PositionSong(song.song, oldSongAtPosition_Position));
+        queue.getAllPreviousState().add(previousPosition, new IndexedSong(song.song, previousPosition));
+        queue.getAll().add(position, new IndexedSong(song.song, previousPosition));
         for (int i = 0; i < queue.getAll().size(); i++) {
-            queue.getAllPreviousState().get(i).position = i;
+            queue.getAllPreviousState().get(i).index = i;
 
-            if (i != position && queue.getAll().get(i).position >= oldSongAtPosition_Position) {
-                queue.getAll().get(i).position = queue.getAll().get(i).position + 1;
+            if (i != position && queue.getAll().get(i).index >= previousPosition) {
+                queue.getAll().get(i).index = queue.getAll().get(i).index + 1;
             }
         }
     }
@@ -126,20 +124,20 @@ public class StaticPlayingQueue {
         if (position >= queue.size()) {
             position = queue.size()-1;
         }
-        int oldSongAtPosition_Position = queue.get(position).position+1;
-        position = position+1;
+        int previousPosition = queue.get(position).index + 1;
+        position = position + 1;
 
         int n = songs.size()-1;
         for (int i = n; i >= 0; i--) {
-            queue.getAllPreviousState().add(oldSongAtPosition_Position, new PositionSong(songs.get(i), oldSongAtPosition_Position + i));
+            queue.getAllPreviousState().add(previousPosition, new IndexedSong(songs.get(i), previousPosition + i));
 
-            queue.getAll().add(position, new PositionSong(songs.get(i), oldSongAtPosition_Position + i));
+            queue.getAll().add(position, new IndexedSong(songs.get(i), previousPosition + i));
         }
 
         for (int i = 0; i < queue.getAll().size(); i++) {
-            queue.getAllPreviousState().get(i).position = i;
-            if (!(i >= position && i <= position+n) && queue.getAll().get(i).position >= oldSongAtPosition_Position) {
-                queue.getAll().get(i).position = queue.getAll().get(i).position + n + 1;
+            queue.getAllPreviousState().get(i).index = i;
+            if (!(i >= position && i <= position+n) && queue.getAll().get(i).index >= previousPosition  ) {
+                queue.getAll().get(i).index = queue.getAll().get(i).index + n + 1;
             }
         }
     }
@@ -149,16 +147,16 @@ public class StaticPlayingQueue {
         if (from == to) return;
         final int currentPosition = this.currentPosition;
 
-        PositionSong songToMove = queue.getAll().remove(from);
+        IndexedSong songToMove = queue.getAll().remove(from);
         queue.getAll().add(to, songToMove);
 
         if (shuffleMode == SHUFFLE_MODE_NONE) {
-            PositionSong previousSongToMove = queue.getAllPreviousState().remove(from);
+            IndexedSong previousSongToMove = queue.getAllPreviousState().remove(from);
             queue.getAllPreviousState().add(to, previousSongToMove);
 
             for (int i = 0; i < queue.getAll().size(); i++) {
-                queue.getAll().get(i).position = i;
-                queue.getAllPreviousState().get(i).position = i;
+                queue.getAll().get(i).index = i;
+                queue.getAllPreviousState().get(i).index = i;
             }
         }
 
@@ -189,13 +187,13 @@ public class StaticPlayingQueue {
 
     // remove song at index position, numbering need to be redone for every song after this position (-1)
     public int remove(int position) {
-        PositionSong o = queue.getAll().remove(position);
-        queue.getAllPreviousState().remove(o.position);
+        IndexedSong o = queue.getAll().remove(position);
+        queue.getAllPreviousState().remove(o.index);
 
         for (int i = 0; i < queue.getAll().size(); i++) {
-            queue.getAllPreviousState().get(i).position = i;
-            if (queue.getAll().get(i).position >= o.position) {
-                queue.getAll().get(i).position = queue.getAll().get(i).position - 1;
+            queue.getAllPreviousState().get(i).index = i;
+            if (queue.getAll().get(i).index >= o.index) {
+                queue.getAll().get(i).index = queue.getAll().get(i).index - 1;
             }
         }
 
@@ -357,7 +355,7 @@ public class StaticPlayingQueue {
 
     /* -------------------- song getter info -------------------- */
 
-    public PositionSong getPositionSongAt(int position) {
+    public IndexedSong getIndexedSongAt(int position) {
         return queue.get(position);
     }
 
@@ -376,7 +374,7 @@ public class StaticPlayingQueue {
 
         switch (shuffleMode) {
             case SHUFFLE_MODE_NONE:
-                currentPosition = queue.getAll().get(currentPosition).position;
+                currentPosition = queue.getAll().get(currentPosition).index;
                 queue.revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:

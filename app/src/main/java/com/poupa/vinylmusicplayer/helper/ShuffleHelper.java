@@ -2,7 +2,7 @@ package com.poupa.vinylmusicplayer.helper;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.Collections;
@@ -24,10 +24,10 @@ public class ShuffleHelper {
         }
     }
 
-    public static void makeShuffleListTest(@NonNull List<PositionSong> listToShuffle, final int current) {
+    public static void makeShuffleListTest(@NonNull List<IndexedSong> listToShuffle, final int current) {
         if (listToShuffle.isEmpty()) return;
         if (current >= 0) {
-            PositionSong song = listToShuffle.remove(current);
+            IndexedSong song = listToShuffle.remove(current);
             Collections.shuffle(listToShuffle);
             listToShuffle.add(0, song);
         } else {

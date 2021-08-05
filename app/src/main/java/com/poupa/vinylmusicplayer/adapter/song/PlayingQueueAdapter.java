@@ -27,7 +27,7 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
-import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
@@ -43,7 +43,7 @@ public class PlayingQueueAdapter extends SongAdapter
     private static final int CURRENT = 1;
     private static final int UP_NEXT = 2;
 
-    public PositionSong songToRemove;
+    public IndexedSong songToRemove;
 
     private static Snackbar currentlyShownSnackbar;
 
@@ -264,7 +264,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
         @Override
         protected void onSlideAnimationEnd() { // SHould be a list of positionsong ?
-            PositionSong songToRemove = MusicPlayerRemote.getSongPosition(position); //adapter.dataSet.get(position);
+            IndexedSong songToRemove = MusicPlayerRemote.getIndexedSongAt(position); //adapter.dataSet.get(position);
             boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove.song);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);
@@ -324,11 +324,11 @@ public class PlayingQueueAdapter extends SongAdapter
 
     }
 
-    private void setSongToRemove (@NonNull PositionSong song){
+    private void setSongToRemove (@NonNull IndexedSong song){
         songToRemove = song;
     }
 
-    private PositionSong getSongToRemove(){
+    private IndexedSong getSongToRemove(){
         return songToRemove;
     }
 }

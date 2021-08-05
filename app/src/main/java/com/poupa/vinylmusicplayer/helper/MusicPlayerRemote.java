@@ -23,7 +23,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.misc.queue.PositionSong;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -32,7 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.WeakHashMap;
 
 /**
@@ -351,11 +350,11 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static PositionSong getSongPosition(int position) {
+    public static IndexedSong getIndexedSongAt(int position) {
         if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
-            return musicService.getPositionSongAt(position);
+            return musicService.getIndexedSongAt(position);
         }
-        return new PositionSong(Song.EMPTY_SONG, -1);
+        return new IndexedSong(Song.EMPTY_SONG, -1);
     }
 
     public static void moveSong(int from, int to) {
@@ -364,7 +363,7 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void addSongBackTo(int to, @NonNull PositionSong song) {
+    public static void addSongBackTo(int to, @NonNull IndexedSong song) {
         if (musicService != null) {
             musicService.addSongBackTo(to,song);
         }
