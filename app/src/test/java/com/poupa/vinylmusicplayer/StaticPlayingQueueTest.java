@@ -29,10 +29,10 @@ public class StaticPlayingQueueTest {
 
     private void print(StaticPlayingQueue test) {
         System.out.print("original queue: ");
-        System.out.println(Arrays.toString(test.queue.getAllPreviousState().toArray()));
+        System.out.println(Arrays.toString(test.getOriginalPlayingQueue().toArray()));
 
         System.out.print("         queue: ");
-        System.out.println(Arrays.toString(test.queue.getAll().toArray()));
+        System.out.println(Arrays.toString(test.getPlayingQueue().toArray()));
 
         System.out.print("         position: ");
         System.out.println(test.getCurrentPosition());
@@ -59,10 +59,10 @@ public class StaticPlayingQueueTest {
     }
 
     private void checkQueuePosition(StaticPlayingQueue test) throws Exception {
-        for (int i = 0; i < test.queue.getAll().size(); i++) {
-            IndexedSong song = test.queue.getAll().get(i);
+        for (int i = 0; i < test.size(); i++) {
+            IndexedSong song = test.getPlayingQueue().get(i);
 
-            assertEquals(test.queue.getAllPreviousState().get(song.index).song.title, song.song.title);
+            assertEquals(test.getOriginalPlayingQueue().get(song.index).song.title, song.song.title);
         }
     }
 
@@ -92,7 +92,7 @@ public class StaticPlayingQueueTest {
         assertEquals(init.getCurrentPosition(), test.getCurrentPosition());
         checkQueuePosition(test);
 
-        assertEquals(init.queue.toString(), test.queue.toString());
+        assertEquals(init.getPlayingQueue().toString(), test.getPlayingQueue().toString());
     }
 
     @Test
@@ -142,7 +142,7 @@ public class StaticPlayingQueueTest {
         System.out.println("Init");
         print(test);
 
-        StaticPlayingQueue init = new StaticPlayingQueue(test.queue.getAll(), test.queue.getAllPreviousState(), test.getCurrentPosition(), test.getShuffleMode());
+        StaticPlayingQueue init = new StaticPlayingQueue(test.getPlayingQueue(), test.getOriginalPlayingQueue(), test.getCurrentPosition(), test.getShuffleMode());
 
         // test
         int pos = 2;
@@ -157,7 +157,7 @@ public class StaticPlayingQueueTest {
         print(test);
 
         checkQueuePosition(test);
-        assertEquals(init.queue.toString(), test.queue.toString());
+        assertEquals(init.getPlayingQueue().toString(), test.getPlayingQueue().toString());
     }
 
     @Test
