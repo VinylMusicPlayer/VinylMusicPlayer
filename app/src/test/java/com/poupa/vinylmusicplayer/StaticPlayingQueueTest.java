@@ -270,14 +270,13 @@ public class StaticPlayingQueueTest {
         // init
         StaticPlayingQueue test = init();
 
-        print(test);
-
         // test
         List<String> artistName = new ArrayList<>();
         Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
         Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         test.setCurrentPosition(2);
+        print(test);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -296,14 +295,13 @@ public class StaticPlayingQueueTest {
         // init
         StaticPlayingQueue test = init();
 
-        print(test);
-
         // test
         List<String> artistName = new ArrayList<>();
         Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
         Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
 
         test.setCurrentPosition(1);
+        print(test);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);

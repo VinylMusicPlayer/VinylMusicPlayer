@@ -4,7 +4,7 @@ package com.poupa.vinylmusicplayer.misc.queue;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
-public class IndexedSong { //IndexedSong
+public class IndexedSong {
 
     public Song song;
     public int index;
@@ -16,7 +16,6 @@ public class IndexedSong { //IndexedSong
 
     @Override
     public String toString() {
-        //return "{"+ index + ", " + song.toString() + "}";
         return "{"+ index + ", " + song.title + "}";
     }
 }

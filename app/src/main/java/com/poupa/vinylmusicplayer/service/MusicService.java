@@ -579,7 +579,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, getPlayingQueue().size());
+            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
         }
 
         if (PreferenceUtil.getInstance().albumArtOnLockscreen()) {
@@ -638,15 +638,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getSongAt(int position) {
-        if (position >= 0 && position < getPlayingQueue().size()) {
-            return getPlayingQueue().get(position);
+        if (position >= 0 && position < playingQueue.size()) {
+            return playingQueue.getPlayingQueue().get(position).song;
         } else {
             return Song.EMPTY_SONG;
         }
     }
 
     public IndexedSong getIndexedSongAt(int position) {
-        if (position >= 0 && position < getPlayingQueue().size()) {
+        if (position >= 0 && position < playingQueue.size()) {
             return playingQueue.getIndexedSongAt(position);
         } else {
             return new IndexedSong(Song.EMPTY_SONG, -1);

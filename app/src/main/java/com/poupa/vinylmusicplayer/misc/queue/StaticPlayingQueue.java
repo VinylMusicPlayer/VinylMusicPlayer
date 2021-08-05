@@ -26,11 +26,13 @@ public class StaticPlayingQueue {
 
     private int nextPosition; // is this really needed ???
 
-    private ArrayList<IndexedSong> queue;       // list of element currently saved
-    private ArrayList<IndexedSong> backupQueue; // copy of the queue used to allow revert of history last operation
+    private final ArrayList<Song> songs;              // necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song
+    private ArrayList<IndexedSong> queue;             // list of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified)
+    private final ArrayList<IndexedSong> backupQueue; // copy of the queue used to allow revert of history last operation
 
 
     public StaticPlayingQueue() {
+        songs = new ArrayList<>();
         queue = new ArrayList<>();
         backupQueue = new ArrayList<>();
         shuffleMode = SHUFFLE_MODE_NONE;
@@ -43,6 +45,9 @@ public class StaticPlayingQueue {
         this.shuffleMode = shuffleMode;
 
         currentPosition = restoredPosition;
+
+        songs = new ArrayList<>();
+        resetSongs();
     }
 
     public void restoreMode(int shuffleMode, int repeatMode) {
@@ -241,12 +246,16 @@ public class StaticPlayingQueue {
         return backupQueue;
     }
 
-    public ArrayList<Song> getPlayingQueueSongOnly() {
-        ArrayList<Song> songs = new ArrayList<>();
+    private void resetSongs() {
+        this.songs.clear();
 
         for (IndexedSong song : queue) {
             songs.add(song.song);
         }
+    }
+
+    public ArrayList<Song> getPlayingQueueSongOnly() {
+        resetSongs();
         return songs;
     }
 
