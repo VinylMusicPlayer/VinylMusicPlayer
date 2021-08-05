@@ -50,32 +50,6 @@ public class StaticPlayingQueue {
         this.repeatMode = repeatMode;
     }
 
-    // This should be remove and only previous one should be used
-    public StaticPlayingQueue(ArrayList<Song> restoreQueue, ArrayList<Song> restoreOriginalQueue, int restoredPosition) {
-        queue = new SyncQueue<>();
-        shuffleMode = SHUFFLE_MODE_NONE;
-
-        ArrayList<PositionSong> test = new ArrayList<>();
-        int i=0;
-        for (Song song : restoreQueue) {
-            PositionSong toto = new PositionSong(song, i);
-            test.add(toto);
-            i++;
-        }
-        queue.getAll().addAll(test);
-
-        ArrayList<PositionSong> test2 = new ArrayList<>();
-        i=0;
-        for (Song song : restoreOriginalQueue) {
-            PositionSong toto = new PositionSong(song, i);
-            test2.add(toto);
-            i++;
-        }
-        queue.getAllPreviousState().addAll(test2);
-
-        currentPosition = restoredPosition;
-    }
-
     /* -------------------- queue modification (add, remove, move, ...) -------------------- */
 
     // add song at the end of both list
@@ -259,19 +233,18 @@ public class StaticPlayingQueue {
         return false;
     }
 
-    public ArrayList<Song> getPlayingQueue() { //stop using a SyncQueue and just put orig queue and position list in this class
-        ArrayList<Song> songs = new ArrayList<>();
-
-        for (PositionSong song : queue.getAll()) {
-            songs.add(song.song);
-        }
-        return songs;
+    public ArrayList<IndexedSong> getPlayingQueue() {
+        return queue;
     }
 
-    public ArrayList<Song> getOriginalPlayingQueue() { //stop using a SyncQueue and just put orig queue and position list in this class
+    public ArrayList<IndexedSong> getOriginalPlayingQueue() {
+        return backupQueue;
+    }
+
+    public ArrayList<Song> getPlayingQueueSongOnly() {
         ArrayList<Song> songs = new ArrayList<>();
 
-        for (PositionSong song : queue.getAllPreviousState()) {
+        for (IndexedSong song : queue) {
             songs.add(song.song);
         }
         return songs;
