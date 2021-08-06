@@ -79,7 +79,7 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, -1), activity, showAlbumImage);
+        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, IndexedSong.INVALID_INDEX), activity, showAlbumImage);
     }
 
     private static void decorate(

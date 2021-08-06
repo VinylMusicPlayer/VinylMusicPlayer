@@ -229,7 +229,7 @@ public class MusicPlayerRemote {
         if (musicService != null) {
             return musicService.getCurrentIndexedSong();
         }
-        return new IndexedSong(Song.EMPTY_SONG, -1);
+        return IndexedSong.EMPTY_INDEXED_SONG;
     }
 
     public static int getPosition() {
@@ -301,7 +301,7 @@ public class MusicPlayerRemote {
     public static void playNext(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
-                musicService.addAfter(getPosition(), song);
+                musicService.addSongAfter(getPosition(), song);
             } else {
                 ArrayList<Song> queue = new ArrayList<>();
                 queue.add(song);
@@ -364,7 +364,7 @@ public class MusicPlayerRemote {
         if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
             return musicService.getIndexedSongAt(position);
         }
-        return new IndexedSong(Song.EMPTY_SONG, -1);
+        return IndexedSong.EMPTY_INDEXED_SONG;
     }
 
     public static void moveSong(int from, int to) {

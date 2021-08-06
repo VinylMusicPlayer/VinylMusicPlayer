@@ -126,7 +126,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int UNDUCK = 8;
     public static final int RESTORE_QUEUES = 9;
 
-    public static final int RANDOM_START_POSITION_ON_SHUFFLE = -1;
+    public static final int RANDOM_START_POSITION_ON_SHUFFLE = StaticPlayingQueue.INVALID_POSITION;
     public static final int SHUFFLE_MODE_NONE = StaticPlayingQueue.SHUFFLE_MODE_NONE;
     public static final int SHUFFLE_MODE_SHUFFLE = StaticPlayingQueue.SHUFFLE_MODE_SHUFFLE;
 
@@ -663,7 +663,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (position >= 0 && position < playingQueue.size()) {
             return playingQueue.getIndexedSongAt(position);
         } else {
-            return new IndexedSong(Song.EMPTY_SONG, -1);
+            return IndexedSong.EMPTY_INDEXED_SONG;
         }
     }
 
@@ -693,7 +693,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         playingQueue.cycleRepeatMode();
     }
 
-    private void shuffleChangeSignaling() {
+    private void propagateShuffleChange() {
         PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putInt(SAVED_SHUFFLE_MODE, playingQueue.getShuffleMode())
                 .apply();
@@ -708,13 +708,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void toggleShuffle() {
         playingQueue.toggleShuffle();
 
-        shuffleChangeSignaling();
+        propagateShuffleChange();
     }
 
     public void setShuffleMode(final int shuffleMode) {
         playingQueue.setShuffle(shuffleMode);
 
-        shuffleChangeSignaling();
+        propagateShuffleChange();
     }
 
     public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
@@ -740,7 +740,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         openQueue(playingQueue, startPosition, startPlaying, this.playingQueue.getShuffleMode());
     }
 
-    public void addAfter(int position, Song song) {
+    public void addSongAfter(int position, Song song) {
         playingQueue.addAfter(position, song);
         notifyChange(QUEUE_CHANGED);
     }
