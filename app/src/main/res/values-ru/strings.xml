@@ -140,7 +140,7 @@
     <string name="x_selected">%1$d выбрано</string>
     <string name="primary_color">Основной цвет</string>
     <string name="accent_color">Цвет акцента</string>
-    <string name="primary_color_desc">Основной цвет темы, по умолчанию - индиго.</string>
+    <string name="primary_color_desc">Основной цвет темы, по умолчанию - индиго</string>
     <string name="accent_color_desc">Цвет акцента, по умолчанию — розовый</string>
     <string name="update_image">Обновить изображение</string>
     <string name="playlist_empty_text">Пустой плейлист</string>
@@ -152,14 +152,14 @@
     <string name="empty">Пусто</string>
     <string name="playlist_name_empty">Имя плейлиста</string>
     <string name="song">Песня</string>
-    <string name="pref_summary_album_art_on_lockscreen">Обложка альбома текущей песни используется как изображение экрана блокировки.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Обложка альбома текущей песни используется как изображение экрана блокировки</string>
     <string name="pref_summary_blurred_album_art">Делает размытую обложку фоном экрана блокировки. Может создавать проблемы с другими приложениями и виджетами.</string>
-    <string name="pref_summary_classic_notification">Использовать классический дизайн уведомления.</string>
-    <string name="pref_summary_colored_notification">"\u041e\u043a\u0440\u0430\u0448\u0438\u0432\u0430\u0435\u0442 \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u0435 \u0432 \u0442\u043e\u043d \u043e\u0431\u043b\u043e\u0436\u043a\u0438 \u0430\u043b\u044c\u0431\u043e\u043c\u0430."</string>
-    <string name="pref_summary_gapless_playback">"Может вызвать проблемы с воспроизведением на некоторых устройствах."</string>
+    <string name="pref_summary_classic_notification">Использовать классический дизайн уведомления</string>
+    <string name="pref_summary_colored_notification">"\u041e\u043a\u0440\u0430\u0448\u0438\u0432\u0430\u0435\u0442 \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u0435 \u0432 \u0442\u043e\u043d \u043e\u0431\u043b\u043e\u0436\u043a\u0438 \u0430\u043b\u044c\u0431\u043e\u043c\u0430"</string>
+    <string name="pref_summary_gapless_playback">"Может вызвать проблемы с воспроизведением на некоторых устройствах"</string>
     <string name="pref_summary_ignore_media_store_artwork">Может увеличить качество обложки, но также увеличивает время ее отрисовки. Влючайте только, если вы имеете проблемы с низким разрешением обложек альбомов.</string>
-    <string name="pref_summary_colored_navigation_bar">Окрашивает панель навигации в основной цвет.</string>
-    <string name="pref_summary_colored_app_shortcuts">Окрашивает шорткаты в основной цвет.</string>
+    <string name="pref_summary_colored_navigation_bar">Окрашивает панель навигации в основной цвет</string>
+    <string name="pref_summary_colored_app_shortcuts">Окрашивает шорткаты в основной цвет</string>
     <string name="pref_summary_audio_ducking">Уведомления, навигация, т.д.</string>
     <string name="pref_summary_synchronized_lyrics_show">Сейчас только синхронизированные тексты в LRC формате поддерживаются. Либо встроенный, либо отдельный файл.</string>
     <string name="pref_summary_remember_last_tab">Перейти на последнюю открытую вкладку при запуске</string>
@@ -257,10 +257,10 @@
     <string name="do_you_want_to_remove_from_the_blacklist"><![CDATA[Убрать <b>%1$s</b> из черного списка?]]></string>
     <string name="clear_blacklist">Очистить черный список</string>
     <string name="do_you_want_to_clear_the_blacklist">Вы хотите очистить черный список?</string>
-    <string name="pref_summary_blacklist">Занесенные в черный список папки скрыты из вашей библиотеки.</string>
+    <string name="pref_summary_blacklist">Занесенные в черный список папки скрыты из вашей библиотеки</string>
     <string name="reset_artist_image">Сбросить картинку исполнителя</string>
     <string name="set_artist_image">Установить картинку исполнителя</string>
     <string name="library_categories">Категории библиотеки</string>
-    <string name="pref_summary_library_categories">Настройте видимость и порядок категорий библиотеки.</string>
+    <string name="pref_summary_library_categories">Настройте видимость и порядок категорий библиотеки</string>
     <string name="you_have_to_select_at_least_one_category">Вы должны выбрать хотя бы одну категорию.</string>
 </resources>

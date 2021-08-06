@@ -140,8 +140,8 @@
     <string name="x_selected">%1$d selectat/ă</string>
     <string name="primary_color">Culoare primară</string>
     <string name="accent_color">Culoare de accent</string>
-    <string name="primary_color_desc">Culoarea primară temei, originalul este indigo.</string>
-    <string name="accent_color_desc">Culoarea de accent a temei, originalul este roz.</string>
+    <string name="primary_color_desc">Culoarea primară temei, originalul este indigo</string>
+    <string name="accent_color_desc">Culoarea de accent a temei, originalul este roz</string>
     <string name="update_image">Actualizare imagine</string>
     <string name="playlist_empty_text">Listă goală</string>
     <string name="no_playlists">Nu sunt liste de redare</string>
@@ -152,14 +152,14 @@
     <string name="empty">Gol</string>
     <string name="playlist_name_empty">Nume listă</string>
     <string name="song">Melodie</string>
-    <string name="pref_summary_album_art_on_lockscreen">Folosește coperta de album a melodiei curente ca fundal pentru ecranul de blocare.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Folosește coperta de album a melodiei curente ca fundal pentru ecranul de blocare</string>
     <string name="pref_summary_blurred_album_art">Blurează coperta de album pentru ecranul de blocare. Poate cauza probleme cu widgeturi și aplicații terțe.</string>
-    <string name="pref_summary_classic_notification">Utilizați designul clasic de notificare.</string>
-    <string name="pref_summary_colored_notification">"Coloreaz\u0103 bara de notificare cu cea mai vibrant\u0103 culoare a copertei de album."</string>
-    <string name="pref_summary_gapless_playback">"Poate cauza probleme de redare pe unele dispozitive."</string>
+    <string name="pref_summary_classic_notification">Utilizați designul clasic de notificare</string>
+    <string name="pref_summary_colored_notification">"Coloreaz\u0103 bara de notificare cu cea mai vibrant\u0103 culoare a copertei de album"</string>
+    <string name="pref_summary_gapless_playback">"Poate cauza probleme de redare pe unele dispozitive"</string>
     <string name="pref_summary_ignore_media_store_artwork">Poate mări calitatea coperții de album, dar cauzează încărcarea mai lentă a imaginilor. Activați doar dacă aveți probleme cu imaginile de rezoluție mică.</string>
-    <string name="pref_summary_colored_navigation_bar">Colorare bară de navigare în culoarea primară.</string>
-    <string name="pref_summary_colored_app_shortcuts">Colorarea comenzilor rapide ale aplicației în culoarea primară.</string>
+    <string name="pref_summary_colored_navigation_bar">Colorare bară de navigare în culoarea primară</string>
+    <string name="pref_summary_colored_app_shortcuts">Colorarea comenzilor rapide ale aplicației în culoarea primară</string>
     <string name="pref_summary_audio_ducking">Notificări, navigație etc.</string>
     <string name="pref_summary_synchronized_lyrics_show">În prezent sunt acceptate numai versurile sincronizate în format LRC. Fie încorporate, fie ca fişier separat.</string>
     <string name="pref_summary_remember_last_tab">Accesați ultima filă deschisă la lansare</string>
@@ -257,10 +257,10 @@
     <string name="do_you_want_to_remove_from_the_blacklist"><![CDATA[Doriți să eliminați <b>%1$s</b> din lista neagră?]]></string>
     <string name="clear_blacklist">Ștergeţi lista neagră</string>
     <string name="do_you_want_to_clear_the_blacklist">Doriți să ștergeți lista neagră?</string>
-    <string name="pref_summary_blacklist">Conținutul dosarelor din lista neagră este ascuns în bibliotecă.</string>
+    <string name="pref_summary_blacklist">Conținutul dosarelor din lista neagră este ascuns în bibliotecă</string>
     <string name="reset_artist_image">Resetați imaginea artistului</string>
     <string name="set_artist_image">Setați imaginea artistului</string>
     <string name="library_categories">Categorii</string>
-    <string name="pref_summary_library_categories">Configurați vizibilitatea și ordinea categoriilor din bibliotecă.</string>
+    <string name="pref_summary_library_categories">Configurați vizibilitatea și ordinea categoriilor din bibliotecă</string>
     <string name="you_have_to_select_at_least_one_category">Trebuie să selectați cel puțin o categorie.</string>
 </resources>

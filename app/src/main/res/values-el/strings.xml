@@ -122,8 +122,8 @@
     <string name="x_selected">Επιλέχθηκαν %1$d</string>
     <string name="primary_color">Πρωτεύον χρώμα</string>
     <string name="accent_color">Χρώμα χαρακτήρων</string>
-    <string name="primary_color_desc">Το πρωτεύον χρώμα θέματος είναι λουλακί.</string>
-    <string name="accent_color_desc">Το χρώμα των χαρακτήρων του θέματος είναι ροζ.</string>
+    <string name="primary_color_desc">Το πρωτεύον χρώμα θέματος είναι λουλακί</string>
+    <string name="accent_color_desc">Το χρώμα των χαρακτήρων του θέματος είναι ροζ</string>
     <string name="update_image">Ανανέωση εικόνας</string>
     <string name="playlist_empty_text">Άδεια λίστα αναπαραγωγής</string>
     <string name="no_playlists">Καμία λίστα</string>
@@ -133,13 +133,13 @@
     <string name="empty">Κενό</string>
     <string name="playlist_name_empty">Όνομα λίστας</string>
     <string name="song">Τραγούδι</string>
-    <string name="pref_summary_album_art_on_lockscreen">Εμφάνιση του album art στην οθόνη κλειδώματος.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Εμφάνιση του album art στην οθόνη κλειδώματος</string>
     <string name="pref_summary_blurred_album_art">Εμφανίζει,θωριασμένα, το album art στην οθόνη κλειδώματος.Μπορεί να δημιουργίσει πρόβλημα με εφαρμογές Τρίτων.</string>
     <string name="pref_summary_colored_notification">"\u03a7\u03c1\u03c9\u03bc\u03b1\u03c4\u03af\u03b6\u03b5\u03b9 \u03c4\u03b7\u03bd \u03bc\u03c0\u03ac\u03c1\u03b1 \u03b5\u03b9\u03b4\u03bf\u03c0\u03bf\u03b9\u03ae\u03c3\u03b5\u03c9\u03bd \u03c3\u03c4\u03bf \u03c7\u03c1\u03ce\u03bc\u03b1 \u03c4\u03bf\u03c5 album art \u03c4\u03bf\u03c5 \u03c4\u03c1\u03b1\u03b3\u03bf\u03c5\u03b4\u03b9\u03bf\u03cd"</string>
-    <string name="pref_summary_gapless_playback">"Μπορεί να δημιουργίσει θέματα αναπαραγωγής σε μερικές συσκευές."</string>
+    <string name="pref_summary_gapless_playback">"Μπορεί να δημιουργίσει θέματα αναπαραγωγής σε μερικές συσκευές"</string>
     <string name="pref_summary_ignore_media_store_artwork">Μπορεί να αυξήσει την ποιότητα του εξώφυλλου του άλμπουμ, αλλά προκαλεί αργούς χρόνους φόρτωσης της εικόνας. Ενεργοποιήστε το μόνο αν έχετε προβλήματα με εξώφυλλα  χαμηλής ανάλυσης.</string>
     <string name="pref_summary_colored_navigation_bar">Χρωματίζει την μπάρα πλοήγησης στο πρωτεύον χρώμα</string>
-    <string name="pref_summary_colored_app_shortcuts">Χρωματίζει τις συντομεύσεις της εφαρμογής στο κυρίως χρώμα.</string>
+    <string name="pref_summary_colored_app_shortcuts">Χρωματίζει τις συντομεύσεις της εφαρμογής στο κυρίως χρώμα</string>
     <string name="pref_summary_audio_ducking">Ειδοποιήσεις, πλοήγηση κ.λπ.</string>
     <string name="could_not_download_album_cover">"\u0394\u03b5\u03bd \u03ae\u03c4\u03b1\u03bd \u03b4\u03c5\u03bd\u03b1\u03c4\u03ae \u03b7 \u03b5\u03cd\u03c1\u03b5\u03c3\u03b7 \u03ba\u03b1\u03b9 \u03b7 \u03bb\u03ae\u03c8\u03b7 \u03b5\u03bd\u03cc\u03c2 \u03b5\u03be\u03ce\u03c6\u03c5\u03bb\u03bb\u03bf\u03c5 \u03c0\u03bf\u03c5 \u03bd\u03b1 \u03c4\u03b1\u03b9\u03c1\u03b9\u03ac\u03b6\u03b5\u03b9."</string>
     <string name="search_hint">Αναζήτηση στη βιβλιοθήκη…</string>

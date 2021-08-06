@@ -115,8 +115,8 @@
     <string name="x_selected">%1$d selecionados</string>
     <string name="primary_color">Cor principal</string>
     <string name="accent_color">Cor de realce</string>
-    <string name="primary_color_desc">Cor de tema primária, predefine para anil.</string>
-    <string name="accent_color_desc">Cor de tema de realce, predefine para cor-de-rosa.</string>
+    <string name="primary_color_desc">Cor de tema primária, predefine para anil</string>
+    <string name="accent_color_desc">Cor de tema de realce, predefine para cor-de-rosa</string>
     <string name="update_image">Atualizar imagem</string>
     <string name="playlist_empty_text">Lista de reprodução vazia</string>
     <string name="no_playlists">Sem listas de reprodução</string>
@@ -126,12 +126,12 @@
     <string name="empty">Vazio</string>
     <string name="playlist_name_empty">Nome de lista de reprodução</string>
     <string name="song">Música</string>
-    <string name="pref_summary_album_art_on_lockscreen">Usa a capa de álbum da faixa atual como papel de parede da tela de bloqueio.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Usa a capa de álbum da faixa atual como papel de parede da tela de bloqueio</string>
     <string name="pref_summary_blurred_album_art">Desfoca a capa do álbum no ecrã de bloqueio. Pode causar problemas com aplicações de terceiros e widgets.</string>
-    <string name="pref_summary_colored_notification">"Colorir a notifica\u00e7\u00e3o na cor viva da capa de \u00e1lbum."</string>
-    <string name="pref_summary_gapless_playback">"Pode causar problemas na reprodução em alguns dispositivos."</string>
+    <string name="pref_summary_colored_notification">"Colorir a notifica\u00e7\u00e3o na cor viva da capa de \u00e1lbum"</string>
+    <string name="pref_summary_gapless_playback">"Pode causar problemas na reprodução em alguns dispositivos"</string>
     <string name="pref_summary_ignore_media_store_artwork">Pode aumentar a qualidade da capa do album, mas aumenta o tempo de carregamento. Ative isto somente se tiver problemas com capas de baixa resolução.</string>
-    <string name="pref_summary_colored_navigation_bar">Colorir a barra de navegação na cor primária.</string>
+    <string name="pref_summary_colored_navigation_bar">Colorir a barra de navegação na cor primária</string>
     <string name="pref_summary_audio_ducking">Notificações, navegação etc.</string>
     <string name="could_not_download_album_cover">"N\u00e3o foi encontrada uma capa para este \u00e1lbum."</string>
     <string name="search_hint">Procurar na biblioteca…</string>

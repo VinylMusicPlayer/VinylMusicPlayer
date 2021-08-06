@@ -135,8 +135,8 @@
     <string name="x_selected">Đã chọn %1$d</string>
     <string name="primary_color">Màu chính</string>
     <string name="accent_color">Màu phụ</string>
-    <string name="primary_color_desc">Màu sắc chính, mặc định là màu chàm.</string>
-    <string name="accent_color_desc">Màu sắc chủ đề, mặc định là màu hồng.</string>
+    <string name="primary_color_desc">Màu sắc chính, mặc định là màu chàm</string>
+    <string name="accent_color_desc">Màu sắc chủ đề, mặc định là màu hồng</string>
     <string name="update_image">Cập nhật hình ảnh</string>
     <string name="playlist_empty_text">Danh sách nhạc trống</string>
     <string name="no_playlists">Không có danh sách nhạc</string>
@@ -146,13 +146,13 @@
     <string name="empty">Trống</string>
     <string name="playlist_name_empty">Tên danh sách nhạc</string>
     <string name="song">Bài hát</string>
-    <string name="pref_summary_album_art_on_lockscreen">Sử dụng bìa album các bài hát hiện tại làm hình nền màn hình khóa.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Sử dụng bìa album các bài hát hiện tại làm hình nền màn hình khóa</string>
     <string name="pref_summary_blurred_album_art">Làm mờ bìa album trên màn hình khóa. Có thể gây ra vấn đề với các ứng dụng của bên thứ ba và các tiện ích (widget).</string>
-    <string name="pref_summary_classic_notification">Sử dụng thiết kế thông báo cổ điển.</string>
-    <string name="pref_summary_colored_notification">"M\u00e0u s\u1eafc r\u1ef1c r\u1ee1 cho c\u00e1c th\u00f4ng b\u00e1o trong b\u00eca album."</string>
-    <string name="pref_summary_gapless_playback">"Có thể gây ra các vấn đề phát trên một số thiết bị."</string>
+    <string name="pref_summary_classic_notification">Sử dụng thiết kế thông báo cổ điển</string>
+    <string name="pref_summary_colored_notification">"M\u00e0u s\u1eafc r\u1ef1c r\u1ee1 cho c\u00e1c th\u00f4ng b\u00e1o trong b\u00eca album"</string>
+    <string name="pref_summary_gapless_playback">"Có thể gây ra các vấn đề phát trên một số thiết bị"</string>
     <string name="pref_summary_ignore_media_store_artwork">Có thể làm tăng chất lượng bìa album nhưng làm chậm quá trình tải hình ảnh. Chỉ cho phép điều này nếu bạn có vấn đề với hình ảnh có độ phân giải thấp.</string>
-    <string name="pref_summary_colored_navigation_bar">Màu sắc thanh điều hướng trong các màu cơ bản.</string>
+    <string name="pref_summary_colored_navigation_bar">Màu sắc thanh điều hướng trong các màu cơ bản</string>
     <string name="pref_summary_colored_app_shortcuts">Màu sắc chủ đạo của biểu tượng ứng dụng.</string>
     <string name="pref_summary_audio_ducking">Thông báo, điều hướng, vv.</string>
     <string name="pref_summary_synchronized_lyrics_show">Hiện tại chỉ được đồng bộ lời bài hát ở định dạng LRC. Nhúng hoặc là một tập tin riêng biệt.</string>
@@ -250,5 +250,5 @@
     <string name="do_you_want_to_remove_from_the_blacklist"><![CDATA[Bạn có muốn xóa <b>%1$s</b> từ danh sách đen?]]></string>
     <string name="clear_blacklist">Xóa danh sách đen</string>
     <string name="do_you_want_to_clear_the_blacklist">Bạn muốn xóa danh sách đen không?</string>
-    <string name="pref_summary_blacklist">Nội dung của các thư mục chọn vào danh sách đen được ẩn trong thư viện của bạn.</string>
+    <string name="pref_summary_blacklist">Nội dung của các thư mục chọn vào danh sách đen được ẩn trong thư viện của bạn</string>
 </resources>
