@@ -120,8 +120,8 @@
     <string name="x_selected">%1$d terpilih</string>
     <string name="primary_color">Warna utama</string>
     <string name="accent_color">Warna aksen</string>
-    <string name="primary_color_desc">Warna tema utama, distandarkan ke biru tua.</string>
-    <string name="accent_color_desc">Warna aksen tema, distandarkan ke merah muda.</string>
+    <string name="primary_color_desc">Warna tema utama, distandarkan ke biru tua</string>
+    <string name="accent_color_desc">Warna aksen tema, distandarkan ke merah muda</string>
     <string name="update_image">Perbaharui gambar</string>
     <string name="playlist_empty_text">Daftar putar kosong</string>
     <string name="no_playlists">Tidak ada daftar putar</string>
@@ -133,11 +133,11 @@
     <string name="song">Lagu</string>
     <string name="pref_summary_album_art_on_lockscreen">Gunakan sambul album lagu yang sedang diputar sebagai wallpaper layar kunci</string>
     <string name="pref_summary_blurred_album_art">Buramkan sampul album di layar kunci. Dapat menyebabkan masalah dengan aplikasi pihak ke tiga dan widget</string>
-    <string name="pref_summary_colored_notification">"Mewarnai notifikasi putar dengan warna yang cerah dari album."</string>
-    <string name="pref_summary_gapless_playback">"Dapat menyebabkan masalah pemutaran pada beberapa perangkat."</string>
+    <string name="pref_summary_colored_notification">"Mewarnai notifikasi putar dengan warna yang cerah dari album"</string>
+    <string name="pref_summary_gapless_playback">"Dapat menyebabkan masalah pemutaran pada beberapa perangkat"</string>
     <string name="pref_summary_ignore_media_store_artwork">"Dapat meningkatkan kualitas sampul album, namun menyebabkan waktu pemuatan lebih lambat. Aktifkan jika Anda bermasalah dengan resolusi gambar album yang rendah. "</string>
-    <string name="pref_summary_colored_navigation_bar">"Mewarnai bilah navigasi dengan warna primer. "</string>
-    <string name="pref_summary_colored_app_shortcuts">Mewarnai pintasan-pintasan dengan warna utama.</string>
+    <string name="pref_summary_colored_navigation_bar">"Mewarnai bilah navigasi dengan warna primer"</string>
+    <string name="pref_summary_colored_app_shortcuts">Mewarnai pintasan-pintasan dengan warna utama</string>
     <string name="pref_summary_audio_ducking">Pemberitahuan, navigasi dll.</string>
     <string name="could_not_download_album_cover">"Tidak dapat mengunduh sampul album yang cocok."</string>
     <string name="search_hint">Mencari pustaka Anda…</string>

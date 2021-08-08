@@ -136,8 +136,8 @@
     <string name="x_selected">%1$d valittu</string>
     <string name="primary_color">Ensisijainen väri</string>
     <string name="accent_color">Aksenttiväri</string>
-    <string name="primary_color_desc">Ensisijainen teemaväri, oletuksena indigo.</string>
-    <string name="accent_color_desc">Aksentti teemaväri, oletuksena pinkki.</string>
+    <string name="primary_color_desc">Ensisijainen teemaväri, oletuksena indigo</string>
+    <string name="accent_color_desc">Aksentti teemaväri, oletuksena pinkki</string>
     <string name="update_image">Päivitä kuva</string>
     <string name="playlist_empty_text">Tyhjä soittolista</string>
     <string name="no_playlists">Ei soittolistoja</string>
@@ -148,15 +148,15 @@
     <string name="empty">Tyhjä</string>
     <string name="playlist_name_empty">Soittolistan nimi</string>
     <string name="song">Kappale</string>
-    <string name="pref_summary_album_art_on_lockscreen">Käyttää tämänhetkisen kappaleen albumin kantta lukitusnäytön taustakuvana.</string>
+    <string name="pref_summary_album_art_on_lockscreen">Käyttää tämänhetkisen kappaleen albumin kantta lukitusnäytön taustakuvana</string>
     <string name="pref_summary_blurred_album_art">Sumentaa albumin kannen lukitusnäytöllä. Saattaa aiheuttaa ongelmia kolmannen osapuolen sovellusten ja widgettien kanssa.</string>
-    <string name="pref_summary_colored_notification">"V\u00e4ritt\u00e4\u00e4 ilmoituksen albumin eloisalla v\u00e4rill\u00e4."</string>
-    <string name="pref_summary_gapless_playback">"Saattaa aiheuttaa toisto-ongelmia joillain laitteilla."</string>
+    <string name="pref_summary_colored_notification">"V\u00e4ritt\u00e4\u00e4 ilmoituksen albumin eloisalla v\u00e4rill\u00e4"</string>
+    <string name="pref_summary_gapless_playback">"Saattaa aiheuttaa toisto-ongelmia joillain laitteilla"</string>
     <string name="pref_summary_ignore_media_store_artwork">Saattaa nostaa albumin kannen laatua, mutta aiheuttaa hitaampaa kuvien latausaikaa. Käytä tätä vain, jos sinulla on ongelmia huonolaatuisten taideteosten kanssa.</string>
-    <string name="pref_summary_colored_navigation_bar">Värittää navigointipalkin ensisijaisella värillä.</string>
+    <string name="pref_summary_colored_navigation_bar">Värittää navigointipalkin ensisijaisella värillä</string>
     <string name="pref_summary_audio_ducking">Ilmoitukset, liikkuminen jne.</string>
-    <string name="pref_summary_synchronized_lyrics_show">Nykyiseltään sovellus tukee vain LRC-muodossa olevia sanoituksia, joko sulautettuna tai erillisinä tiedostoina.</string>
-    <string name="pref_summary_remember_last_tab">Palauttaa käynnistyessään viimeksi avoinna olleen välilehden.</string>
+    <string name="pref_summary_synchronized_lyrics_show">Nykyiseltään sovellus tukee vain LRC-muodossa olevia sanoituksia, joko sulautettuna tai erillisinä tiedostoina</string>
+    <string name="pref_summary_remember_last_tab">Palauttaa käynnistyessään viimeksi avoinna olleen välilehden</string>
     <string name="could_not_download_album_cover">"Ei voitu ladata albumia vastaavaa albumin kantta."</string>
     <string name="search_hint">Etsi kirjastostasi…</string>
     <string name="favorites">Suosikit</string>
@@ -245,7 +245,7 @@
     <string name="do_you_want_to_remove_from_the_blacklist"><![CDATA[Haluatko poistaa kohteen <b>%1$s</b> estolistalta?]]></string>
     <string name="clear_blacklist">Tyhjennä estolista</string>
     <string name="do_you_want_to_clear_the_blacklist">Haluatko tyhjentää estolistan?</string>
-    <string name="pref_summary_blacklist">Estolistalla olevien hakemistojen sisältö piilotetaan kirjastoltasi.</string>
+    <string name="pref_summary_blacklist">Estolistalla olevien hakemistojen sisältö piilotetaan kirjastoltasi</string>
     <string name="library_categories">Kirjaston välilehdet</string>
-    <string name="pref_summary_library_categories">Määrittele kirjaston välilehtien näkyvyyttä ja järjestystä.</string>
+    <string name="pref_summary_library_categories">Määrittele kirjaston välilehtien näkyvyyttä ja järjestystä</string>
 </resources>
