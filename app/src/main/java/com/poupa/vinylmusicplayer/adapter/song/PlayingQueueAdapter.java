@@ -258,8 +258,8 @@ public class PlayingQueueAdapter extends SongAdapter
             currentlyShownSnackbar = null;
         }
         @Override
-        protected void onSlideAnimationEnd() { // Should be a list of indexedSong ?
-            IndexedSong songToRemove = MusicPlayerRemote.getIndexedSongAt(position); //adapter.dataSet.get(position);
+        protected void onSlideAnimationEnd() {
+            IndexedSong songToRemove = MusicPlayerRemote.getIndexedSongAt(position);
             boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);

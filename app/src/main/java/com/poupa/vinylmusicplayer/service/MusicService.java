@@ -682,15 +682,22 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void setRepeatMode(final int repeatMode) {
         playingQueue.setRepeatMode(repeatMode);
 
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putInt(SAVED_REPEAT_MODE, repeatMode)
-                .apply();
-        prepareNext();
-        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+        propagateRepeatChange();
     }
 
     public void cycleRepeatMode() {
         playingQueue.cycleRepeatMode();
+
+        propagateRepeatChange();
+    }
+
+
+    private void propagateRepeatChange() {
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putInt(SAVED_REPEAT_MODE, playingQueue.getRepeatMode())
+                .apply();
+        prepareNext();
+        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
     }
 
     private void propagateShuffleChange() {
