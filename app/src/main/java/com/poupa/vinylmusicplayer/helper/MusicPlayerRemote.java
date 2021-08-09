@@ -243,6 +243,13 @@ public class MusicPlayerRemote {
         return new ArrayList<>();
     }
 
+    public static Song getDynamicElement() {
+        if (musicService != null) {
+            return musicService.getDynamicElement();
+        }
+        return Song.EMPTY_SONG;
+    }
+
     public static int getSongProgressMillis() {
         if (musicService != null) {
             return musicService.getSongProgressMillis();

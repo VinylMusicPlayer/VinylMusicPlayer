@@ -28,7 +28,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,6 +50,7 @@ import com.poupa.vinylmusicplayer.glide.GlideRequest;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicPlayingQueue;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -149,7 +149,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private Playback playback;
 
-    private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
+    private StaticPlayingQueue playingQueue = new DynamicPlayingQueue(); //new StaticPlayingQueue();
 
     private boolean queuesRestored;
     private boolean pausedByTransientLossOfFocus;
@@ -396,12 +396,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
                 try {
-                    playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
+                    playingQueue = new DynamicPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
                 } catch (ArrayIndexOutOfBoundsException queueCopiesOutOfSync) {
                     // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
                     Log.e(TAG, "Restored queues are corrupted", queueCopiesOutOfSync);
                     final int shuffleMode = playingQueue.getShuffleMode();
-                    playingQueue = new StaticPlayingQueue();
+                    playingQueue = new DynamicPlayingQueue();
                     playingQueue.setShuffle(shuffleMode);
                 }
 
@@ -470,11 +470,21 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public boolean openTrackAndPrepareNextAt(int position) {
         synchronized (this) {
-            playingQueue.setCurrentPosition(position);
-            boolean prepared = openCurrent();
-            if (prepared) prepareNextImpl();
-            notifyChange(META_CHANGED);
-            notHandledMetaChangedForCurrentTrack = false;
+            boolean prepared = false;
+
+            int status = playingQueue.setCurrentPosition(position);
+            if (status != StaticPlayingQueue.INVALID_POSITION) {
+                prepared = openCurrent();
+                if (prepared)
+                    prepareNextImpl();
+
+                if (status == StaticPlayingQueue.QUEUE_HAS_CHANGED)
+                    notifyChange(QUEUE_CHANGED);
+                else if (status == StaticPlayingQueue.VALID_POSITION)
+                    notifyChange(META_CHANGED);
+
+                notHandledMetaChangedForCurrentTrack = false;
+            }
             return prepared;
         }
     }
@@ -676,6 +686,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public ArrayList<Song> getPlayingQueue() {
         return playingQueue.getPlayingQueueSongOnly();
+    }
+
+    public Song getDynamicElement() {
+        //if (playingQueue instanceof DynamicPlayingQueue)
+            return ((DynamicPlayingQueue)playingQueue).getPseudoSong();
+
+        //return Song.EMPTY_SONG;
     }
 
     public int getRepeatMode() {

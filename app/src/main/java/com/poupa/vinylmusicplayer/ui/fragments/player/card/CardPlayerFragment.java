@@ -34,6 +34,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
+import com.poupa.vinylmusicplayer.adapter.song.DynamicPlayingQueueAdapter;
 import com.poupa.vinylmusicplayer.databinding.FragmentCardPlayerBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
@@ -188,6 +189,9 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             resetToCurrentPosition();
         }
+
+        // if shuffle pref is activated
+        ((DynamicPlayingQueueAdapter)playingQueueAdapter).swapDynamicElement(MusicPlayerRemote.getDynamicElement());
     }
 
     private void updateQueuePosition() {

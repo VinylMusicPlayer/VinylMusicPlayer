@@ -40,9 +40,9 @@ import java.util.ArrayList;
 public class PlayingQueueAdapter extends SongAdapter
         implements DraggableItemAdapter<PlayingQueueAdapter.ViewHolder>, SwipeableItemAdapter<PlayingQueueAdapter.ViewHolder> {
 
-    private static final int HISTORY = 0;
-    private static final int CURRENT = 1;
-    private static final int UP_NEXT = 2;
+    protected static final int HISTORY = 0;
+    protected static final int CURRENT = 1;
+    protected static final int UP_NEXT = 2;
 
     public IndexedSong songToRemove;
 
@@ -219,7 +219,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
 
         @Override
-        protected int getSongMenuRes() {
+        protected int getSongMenuRes(int itemViewType) {
             return R.menu.menu_item_playing_queue_song;
         }
 

@@ -14,25 +14,27 @@ public class StaticPlayingQueue {
     public static final int REPEAT_MODE_ALL = 1;
     public static final int REPEAT_MODE_THIS = 2;
 
-    private int repeatMode;
+    protected int repeatMode;
 
-    public static final int INVALID_POSITION = IndexedSong.INVALID_INDEX;
     public static final int SHUFFLE_MODE_NONE = 0;
     public static final int SHUFFLE_MODE_SHUFFLE = 1;
-    private int shuffleMode;
+    protected int shuffleMode;
 
-    private int currentPosition;
+    public static final int INVALID_POSITION = IndexedSong.INVALID_INDEX;
+    public static final int VALID_POSITION = INVALID_POSITION - 1;
+    public static final int QUEUE_HAS_CHANGED = VALID_POSITION - 1;
+    protected int currentPosition;
 
-    private int nextPosition;
+    protected int nextPosition;
 
     /** Used to know when songs and queue.song are not equal so that getPlayingQueueSongOnly() will not always recreate songs every time */
-    private boolean songsIsStale;
+    protected boolean songsIsStale;
     /** Necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song */
-    private final ArrayList<Song> songs;
+    protected final ArrayList<Song> songs;
     /** List of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified) */
-    private ArrayList<IndexedSong> queue;
+    protected ArrayList<IndexedSong> queue;
     /** Copy of the queue used to allow revert of history last operation */
-    private final ArrayList<IndexedSong> originalQueue;
+    protected ArrayList<IndexedSong> originalQueue;
 
     private long nextUniqueId;
 
@@ -346,11 +348,12 @@ public class StaticPlayingQueue {
         return currentPosition;
     }
 
-    public void setCurrentPosition(int position) {
+    public int setCurrentPosition(int position) {
         if (position >= queue.size())
-            return;
+            return INVALID_POSITION;
 
         currentPosition = position;
+        return VALID_POSITION;
     }
 
     public void setPositionToNextPosition() {
@@ -362,10 +365,6 @@ public class StaticPlayingQueue {
             return;
 
         nextPosition = position;
-    }
-
-    public boolean isLastTrack() {
-        return getCurrentPosition() == queue.size() - 1;
     }
 
     public int getNextPosition(boolean force) {
@@ -420,6 +419,10 @@ public class StaticPlayingQueue {
                 break;
         }
         return newPosition;
+    }
+
+    public boolean isLastTrack() {
+        return getCurrentPosition() == queue.size() - 1;
     }
 
     /* -------------------- song getter info -------------------- */
