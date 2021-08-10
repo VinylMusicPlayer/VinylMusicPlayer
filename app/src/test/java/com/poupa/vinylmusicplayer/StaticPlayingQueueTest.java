@@ -64,7 +64,7 @@ public class StaticPlayingQueueTest {
         for (int i = 0; i < test.size(); i++) {
             IndexedSong song = test.getPlayingQueue().get(i);
 
-            assertEquals(test.getOriginalPlayingQueue().get(song.index).song.title, song.song.title);
+            assertEquals(test.getOriginalPlayingQueue().get(song.index).title, song.title);
         }
     }
 
@@ -84,7 +84,7 @@ public class StaticPlayingQueueTest {
         for (int i = 0; i < test.size(); i++) {
             IndexedSong song = test.getPlayingQueue().get(i);
 
-            assertEquals(song.song.title, songs.get(i).title);
+            assertEquals(song.title, songs.get(i).title);
         }
     }
 
@@ -174,7 +174,7 @@ public class StaticPlayingQueueTest {
         int pos = 2;
 
         System.out.println("Remove position: "+pos);
-        IndexedSong song = test.getIndexedSongAt(pos);
+        IndexedSong song = test.getPlayingQueue().get(pos);
         test.remove(pos);
         print(test);
 

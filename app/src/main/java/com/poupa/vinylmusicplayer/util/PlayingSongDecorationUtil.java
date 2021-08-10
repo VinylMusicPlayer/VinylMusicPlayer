@@ -52,9 +52,9 @@ public class PlayingSongDecorationUtil {
             if (!MusicPlayerRemote.isPlaying(song)) {
                 GlideApp.with(activity)
                     .asBitmapPalette()
-                    .load(VinylGlideExtension.getSongModel(song.song))
+                    .load(VinylGlideExtension.getSongModel(song))
                     .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song.song)
+                    .songOptions(song)
                     .into(new VinylColoredTarget(holder.image) {
                         @Override
                         public void onLoadCleared(Drawable placeholder) {
@@ -90,7 +90,7 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        final boolean isPlaying = (song.index == -1) ? MusicPlayerRemote.isPlaying(song.song) : MusicPlayerRemote.isPlaying(song);
+        final boolean isPlaying = (song.index == -1) ? MusicPlayerRemote.isPlaying((Song)song) : MusicPlayerRemote.isPlaying(song);
 
         if (title != null) {
             title.setTypeface(null, isPlaying ? Typeface.BOLD : Typeface.NORMAL);

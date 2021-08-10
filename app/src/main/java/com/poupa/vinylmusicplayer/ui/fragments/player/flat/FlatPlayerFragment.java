@@ -500,9 +500,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void updateCurrentSong(IndexedSong song) {
-            currentSong = song.song;
-            currentSongViewHolder.title.setText(song.song.title);
-            currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song.song));
+            currentSong = song;
+            currentSongViewHolder.title.setText(song.title);
+            currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
 
             if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
                 final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
@@ -538,8 +538,8 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void updateCurrentSong(IndexedSong song) {
-            fragment.toolbar.setTitle(song.song.title);
-            fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song.song));
+            fragment.toolbar.setTitle(song.title);
+            fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
         }
 
         @Override

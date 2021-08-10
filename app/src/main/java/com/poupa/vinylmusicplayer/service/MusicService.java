@@ -445,7 +445,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public boolean isPlaying(@NonNull IndexedSong song) {
         if (!isPlaying()) {return false;}
-        return (song.song.id == getCurrentIndexedSong().song.id) && (song.index == getCurrentIndexedSong().index);
+        return (song.id == getCurrentIndexedSong().id) && (song.index == getCurrentIndexedSong().index);
     }
 
     public int getPosition() {
@@ -644,7 +644,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getCurrentSong() {
-        return getSongAt(getPosition());
+        return (Song)getCurrentIndexedSong();
     }
 
     public IndexedSong getCurrentIndexedSong() {
@@ -652,16 +652,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getSongAt(int position) {
-        if (position >= 0 && position < playingQueue.size()) {
-            return playingQueue.getPlayingQueue().get(position).song;
-        } else {
-            return Song.EMPTY_SONG;
-        }
+        return (Song)getIndexedSongAt(position);
     }
 
     public IndexedSong getIndexedSongAt(int position) {
         if (position >= 0 && position < playingQueue.size()) {
-            return playingQueue.getIndexedSongAt(position);
+            return playingQueue.getPlayingQueue().get(position);
         } else {
             return IndexedSong.EMPTY_INDEXED_SONG;
         }

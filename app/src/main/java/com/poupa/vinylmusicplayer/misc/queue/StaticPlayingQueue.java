@@ -63,8 +63,8 @@ public class StaticPlayingQueue {
 
     // add song at the end of both list
     public void add(Song song) {
-        queue.add(new IndexedSong(song, queue.size()));
-        originalQueue.add(new IndexedSong(song, originalQueue.size()));
+        queue.add(new IndexedSong((Song)song, queue.size()));
+        originalQueue.add(new IndexedSong((Song)song, originalQueue.size()));
 
         songsIsStale = true;
     }
@@ -104,8 +104,8 @@ public class StaticPlayingQueue {
     public void addSongBackTo(int position, IndexedSong song) {
         int previousPosition = song.index;
 
-        originalQueue.add(previousPosition, new IndexedSong(song.song, previousPosition));
-        queue.add(position, new IndexedSong(song.song, previousPosition));
+        originalQueue.add(previousPosition, new IndexedSong((Song)song, previousPosition));
+        queue.add(position, new IndexedSong((Song)song, previousPosition));
         for (int i = 0; i < queue.size(); i++) {
             originalQueue.get(i).index = i;
 
@@ -216,7 +216,7 @@ public class StaticPlayingQueue {
         int hasPositionChanged = INVALID_POSITION;
 
         for (int i = queue.size() - 1; i >= 0; i--) {
-            if (queue.get(i).song.id == song.id) {
+            if (queue.get(i).id == song.id) {
                 int temp = remove(i);
                 if (temp != INVALID_POSITION) {
                     hasPositionChanged = temp;
@@ -282,7 +282,7 @@ public class StaticPlayingQueue {
         this.songs.clear();
 
         for (IndexedSong song : queue) {
-            songs.add(song.song);
+            songs.add((Song)song);
         }
         songsIsStale = false;
     }
@@ -381,14 +381,10 @@ public class StaticPlayingQueue {
 
     /* -------------------- song getter info -------------------- */
 
-    public IndexedSong getIndexedSongAt(int position) {
-        return queue.get(position);
-    }
-
     public long getQueueDurationMillis(int position){
         long duration = 0;
         for (int i = position + 1; i < queue.size(); i++)
-            duration += queue.get(i).song.duration;
+            duration += queue.get(i).duration;
         return duration;
     }
 
