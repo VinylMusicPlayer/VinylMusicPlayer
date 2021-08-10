@@ -155,7 +155,7 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             holder.text.setText(getSongText(song));
         }
 
-        PlayingSongDecorationUtil.decorate(this, holder, new IndexedSong(song, position), activity);
+        PlayingSongDecorationUtil.decorate(this, holder, song, activity);
     }
 
     public void setColors(int color, ViewHolder holder) {

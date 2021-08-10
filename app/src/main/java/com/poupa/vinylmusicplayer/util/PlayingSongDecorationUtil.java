@@ -43,6 +43,15 @@ public class PlayingSongDecorationUtil {
     public static void decorate(
             @NonNull final SongAdapter songAdapter,
             @NonNull final SongAdapter.ViewHolder holder,
+            Song song,
+            @NonNull final AppCompatActivity activity)
+    {
+        PlayingSongDecorationUtil.decorate(songAdapter, holder, new IndexedSong(song, IndexedSong.INVALID_INDEX), activity);
+    }
+
+    public static void decorate(
+            @NonNull final SongAdapter songAdapter,
+            @NonNull final SongAdapter.ViewHolder holder,
             IndexedSong song,
             @NonNull final AppCompatActivity activity)
     {
@@ -90,7 +99,7 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        final boolean isPlaying = (song.index == -1) ? MusicPlayerRemote.isPlaying((Song)song) : MusicPlayerRemote.isPlaying(song);
+        final boolean isPlaying = (song.index == IndexedSong.INVALID_INDEX) ? MusicPlayerRemote.isPlaying((Song)song) : MusicPlayerRemote.isPlaying(song);
 
         if (title != null) {
             title.setTypeface(null, isPlaying ? Typeface.BOLD : Typeface.NORMAL);

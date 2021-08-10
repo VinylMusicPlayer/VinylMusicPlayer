@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class PlayingQueueAdapter extends SongAdapter
     @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
+        PlayingSongDecorationUtil.decorate(this, holder, MusicPlayerRemote.getIndexedSongAt(position), activity);
 
         if (holder.imageText != null) {
             holder.imageText.setText(String.valueOf(position - current));
