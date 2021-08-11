@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.DocumentsContract;
@@ -23,6 +24,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -243,11 +245,17 @@ public class MusicPlayerRemote {
         return new ArrayList<>();
     }
 
-    public static Song getDynamicElement() {
+    public static DynamicElement getDynamicElement() {
         if (musicService != null) {
             return musicService.getDynamicElement();
         }
-        return Song.EMPTY_SONG;
+        return DynamicElement.EMPTY_ELEMENT;
+    }
+
+    public static void setNextDynamicQueue(Bundle criteria) {
+        if (musicService != null) {
+            musicService.setNextDynamicQueue(criteria);
+        }
     }
 
     public static int getSongProgressMillis() {

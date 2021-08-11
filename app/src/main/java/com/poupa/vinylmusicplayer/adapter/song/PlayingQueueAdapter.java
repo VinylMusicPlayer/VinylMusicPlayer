@@ -37,6 +37,8 @@ import java.util.ArrayList;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
+
+// Should be renamed StaticPlayingQueueAdatper
 public class PlayingQueueAdapter extends SongAdapter
         implements DraggableItemAdapter<PlayingQueueAdapter.ViewHolder>, SwipeableItemAdapter<PlayingQueueAdapter.ViewHolder> {
 

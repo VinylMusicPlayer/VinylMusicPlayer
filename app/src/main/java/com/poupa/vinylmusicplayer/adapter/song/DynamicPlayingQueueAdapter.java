@@ -4,34 +4,51 @@ package com.poupa.vinylmusicplayer.adapter.song;
 import java.util.ArrayList;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
 
     protected static final int OFFSET_ITEM = UP_NEXT+1;
-    private Song pseudoSong; // should be replace by an interface that give data to show
-    // new private interface to get menutype and menu action
 
-    public DynamicPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder, Song pseudoSong) {
+    private DynamicQueueItemAdapter dynamicQueueItemAdapter;
+
+    public DynamicPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, current, usePalette, cabHolder);
 
-        this.pseudoSong = pseudoSong;
+        this.dynamicQueueItemAdapter = new AlbumShufflingQueueItemAdapter();
+    }
+
+    public void swapDynamicElement() {
+        dynamicQueueItemAdapter.swapDynamicElement();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
+        if (holder.getItemViewType() == OFFSET_ITEM) {
+            dynamicQueueItemAdapter.onBindViewHolder(holder);
+        } else {
+            super.onBindViewHolder(holder, position);
+        }
     }
 
     @NonNull
     @Override
     public SongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == OFFSET_ITEM) {
-            ItemListBinding binding =  ItemListBinding.inflate(LayoutInflater.from(activity), parent, false);
+            ItemListBinding binding = ItemListBinding.inflate(LayoutInflater.from(activity), parent, false);
             return createViewHolder(binding);
         }
         return super.onCreateViewHolder(parent, viewType);
@@ -49,26 +66,9 @@ public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
         return -1;
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == OFFSET_ITEM) {
-            holder.title.setText(pseudoSong.title);
-            holder.text.setText(pseudoSong.albumName);
-            // should add icon
-        } else {
-            super.onBindViewHolder(holder, position);
-        }
-    }
-
     @NonNull
     @Override
     protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
-        return new ViewHolder(binding);
-    }
-
-    @NonNull
-    @Override
-    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
         return new ViewHolder(binding);
     }
 
@@ -78,11 +78,6 @@ public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
             return OFFSET_ITEM;
 
         return super.getItemViewType(position);
-    }
-
-    public void swapDynamicElement(Song dynamicElement) {
-        this.pseudoSong = dynamicElement;
-        notifyDataSetChanged();
     }
 
     public class ViewHolder extends PlayingQueueAdapter.ViewHolder {
@@ -98,10 +93,18 @@ public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
         @Override
         protected int getSongMenuRes(int itemViewType) {
             if (itemViewType == OFFSET_ITEM) {
-                return R.menu.menu_item_playing_queue_album_shuffling;
+                return dynamicQueueItemAdapter.getSongMenuRes(itemViewType);
             } else {
                 return super.getSongMenuRes(itemViewType);
             }
+        }
+
+        @Override
+        protected boolean onSongMenuItemClick(MenuItem item) {
+            if (dynamicQueueItemAdapter.onSongMenuItemClick(item))
+                return true;
+
+            return super.onSongMenuItemClick(item);
         }
     }
 }

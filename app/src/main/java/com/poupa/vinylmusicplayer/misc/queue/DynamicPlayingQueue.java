@@ -13,66 +13,47 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
 public class DynamicPlayingQueue extends StaticPlayingQueue {
 
-    private Album nextAlbum; //test, will be replace by a interface for loading songs
+    private DynamicQueueLoader queueLoader;
 
     public DynamicPlayingQueue() {
         super();
 
-        nextAlbum = new Album();
+        queueLoader = new AlbumShufflingQueueLoader();
     }
 
     public DynamicPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
         super(restoreQueue, restoreOriginalQueue, restoredPosition, shuffleMode);
 
-        nextAlbum = new Album();
+        queueLoader = new AlbumShufflingQueueLoader();
     }
 
     private void loadNextQueue() {
         this.queue.clear();
-        addAll(nextAlbum.songs);
+        addAll(queueLoader.getNextQueue());
         this.songsIsStale = true;
     }
 
-    private static final int NEXT_RANDOM_ALBUM_SONG_ID = -1;
-
-    @NonNull
-    private Song addNewRandomAlbum(long albumId, String albumName, long artistId, @NonNull List<String> artistNames) {
-        return new Song(NEXT_RANDOM_ALBUM_SONG_ID, "Next Album: ", 0, -1, -1, "",
-                -1, -1, albumId, albumName, artistId, artistNames);
+    public DynamicElement getDynamicElement() {
+        return queueLoader.getDynamicElement();
     }
 
-    public Song getPseudoSong() { //temporary
-        return addNewRandomAlbum(this.nextAlbum.getId(), this.nextAlbum.getTitle(), this.nextAlbum.getArtistId(), MultiValuesTagUtil
-                .split(this.nextAlbum.getArtistName()));
+    public void setNextDynamicQueue(Bundle criteria) {
+        queueLoader.setNextDynamicQueue(criteria);
     }
-
-    /*public void setNextQueue(Bundle criteria) {
-
-    }*/
 
     // all method than modify queue should check if they need to call setNextQueue(criteria)
     public void add(Song song) {
         super.add(song);
 
-        setNextQueue();
+        queueLoader.setNextDynamicQueue();
     }
-
-    private void setNextQueue() {
-        ArrayList<Album> albums;
-        synchronized (Discography.getInstance()) {
-            albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
-        }
-
-        Random rand = new Random();
-        this.nextAlbum = albums.get(rand.nextInt(albums.size()));
-    }
-
 
     public int setCurrentPosition(int position) {
         if (position >= queue.size()) {
@@ -85,7 +66,7 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         }
     }
 
-    public boolean isLastTrack() { // will this work, or will musicservice call staticplayingqueue ???
+    public boolean isLastTrack() {
         return getCurrentPosition() == queue.size();
     }
 }

@@ -50,6 +50,7 @@ import com.poupa.vinylmusicplayer.glide.GlideRequest;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicPlayingQueue;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
@@ -688,11 +689,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return playingQueue.getPlayingQueueSongOnly();
     }
 
-    public Song getDynamicElement() {
+    public DynamicElement getDynamicElement() {
         //if (playingQueue instanceof DynamicPlayingQueue)
-            return ((DynamicPlayingQueue)playingQueue).getPseudoSong();
+            return ((DynamicPlayingQueue)playingQueue).getDynamicElement();
 
         //return Song.EMPTY_SONG;
+    }
+
+    public void setNextDynamicQueue(Bundle criteria) {
+        ((DynamicPlayingQueue)playingQueue).setNextDynamicQueue(criteria);
+        notifyChange(QUEUE_CHANGED);
     }
 
     public int getRepeatMode() {
