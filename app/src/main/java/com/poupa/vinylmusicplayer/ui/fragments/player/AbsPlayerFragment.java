@@ -23,7 +23,7 @@ import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.DynamicPlayingQueueAdapter;
-import com.poupa.vinylmusicplayer.adapter.song.PlayingQueueAdapter;
+import com.poupa.vinylmusicplayer.adapter.song.StaticPlayingQueueAdapter;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
@@ -46,7 +46,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     protected Toolbar toolbar;
 
-    public PlayingQueueAdapter playingQueueAdapter;
+    public StaticPlayingQueueAdapter playingQueueAdapter;
     public RecyclerView.Adapter wrappedAdapter;
     public RecyclerViewDragDropManager recyclerViewDragDropManager;
     public RecyclerViewSwipeManager recyclerViewSwipeManager;
@@ -80,7 +80,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
         // Disable the change animation in order to make turning back animation of swiped item works properly.
         animator.setSupportsChangeAnimations(false);
 
-        // if shuffle pref is activated, else call PlayingQueueAdapter
+        // if shuffle pref is activated, else call StaticPlayingQueueAdapter
         playingQueueAdapter = new DynamicPlayingQueueAdapter(
                 ((AppCompatActivity) getActivity()),
                 MusicPlayerRemote.getPlayingQueue(),

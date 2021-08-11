@@ -18,7 +18,7 @@ import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueI
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
-public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
+public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
     protected static final int OFFSET_ITEM = UP_NEXT+1;
 
@@ -80,7 +80,7 @@ public class DynamicPlayingQueueAdapter extends PlayingQueueAdapter {
         return super.getItemViewType(position);
     }
 
-    public class ViewHolder extends PlayingQueueAdapter.ViewHolder {
+    public class ViewHolder extends StaticPlayingQueueAdapter.ViewHolder {
 
         public ViewHolder(@NonNull ItemListBinding binding) {
             super(binding);

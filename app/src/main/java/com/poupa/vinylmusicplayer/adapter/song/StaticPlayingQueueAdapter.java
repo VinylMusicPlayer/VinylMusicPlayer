@@ -38,9 +38,8 @@ import java.util.ArrayList;
  * @author Karim Abou Zeid (kabouzeid)
  */
 
-// Should be renamed StaticPlayingQueueAdatper
-public class PlayingQueueAdapter extends SongAdapter
-        implements DraggableItemAdapter<PlayingQueueAdapter.ViewHolder>, SwipeableItemAdapter<PlayingQueueAdapter.ViewHolder> {
+public class StaticPlayingQueueAdapter extends SongAdapter
+        implements DraggableItemAdapter<StaticPlayingQueueAdapter.ViewHolder>, SwipeableItemAdapter<StaticPlayingQueueAdapter.ViewHolder> {
 
     protected static final int HISTORY = 0;
     protected static final int CURRENT = 1;
@@ -52,7 +51,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     private int current;
 
-    public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public StaticPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
@@ -253,11 +252,11 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     static class SwipedResultActionRemoveItem extends SwipeResultActionRemoveItem {
-        private final PlayingQueueAdapter adapter;
+        private final StaticPlayingQueueAdapter adapter;
         private final int position;
         private final AppCompatActivity activity;
 
-        public SwipedResultActionRemoveItem(PlayingQueueAdapter adapter, int position, AppCompatActivity activity) {
+        public SwipedResultActionRemoveItem(StaticPlayingQueueAdapter adapter, int position, AppCompatActivity activity) {
             this.adapter = adapter;
             this.position = position;
             this.activity = activity;
@@ -290,7 +289,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
     }
 
-    public static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
+    public static void initializeSnackBar(final StaticPlayingQueueAdapter adapter,final int position,
                                           final AppCompatActivity activity,
                                           final boolean isPlayingSongToRemove) {
 
