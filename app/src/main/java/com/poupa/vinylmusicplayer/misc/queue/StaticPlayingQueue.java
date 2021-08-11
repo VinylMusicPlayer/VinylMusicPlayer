@@ -3,10 +3,13 @@ package com.poupa.vinylmusicplayer.misc.queue;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 
 public class StaticPlayingQueue {
 
@@ -84,6 +87,26 @@ public class StaticPlayingQueue {
 
             originalQueue.get(queue.get(i).index).setUniqueId(uniqueId);
         }
+    }
+
+    public boolean restoreQueue(Context context, int restoredPosition) {
+        ArrayList<IndexedSong> restoredQueue = MusicPlaybackQueueStore.getInstance(context).getSavedPlayingQueue();
+        ArrayList<IndexedSong> restoredOriginalQueue = MusicPlaybackQueueStore.getInstance(context).getSavedOriginalPlayingQueue();
+
+        if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
+            this.queue = restoredQueue;
+            this.originalQueue = restoredOriginalQueue;
+            this.currentPosition = restoredPosition;
+
+            songsIsStale = true;
+            resetSongs();
+
+            restoreUniqueId();
+
+            return true;
+        }
+
+        return false;
     }
 
     /* -------------------- queue modification (add, remove, move, ...) -------------------- */

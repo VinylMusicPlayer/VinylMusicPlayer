@@ -31,7 +31,13 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
     public DynamicPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
         super(restoreQueue, restoreOriginalQueue, restoredPosition, shuffleMode);
 
-        queueLoader = new AlbumShufflingQueueLoader();
+        queueLoader = new AlbumShufflingQueueLoader(); // should not always be this one, setup a way to choose what loader I want
+
+        queueLoader.setNextDynamicQueue(lastSong(), false);
+    }
+
+    public boolean restoreQueue(Context context, int restoredPosition) {
+        return super.restoreQueue(context, restoredPosition) && queueLoader.restoreQueue(context, lastSong());
     }
 
     private void loadNextQueue() {
@@ -40,19 +46,23 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         this.songsIsStale = true;
     }
 
-    public DynamicElement getDynamicElement() {
-        return queueLoader.getDynamicElement();
+    private Song lastSong() {
+        if (queue.size() != 0)
+            return queue.get(queue.size()-1);
+        return Song.EMPTY_SONG;
+    }
+
+    public DynamicElement getDynamicElement(Context context) {
+        return queueLoader.getDynamicElement(context);
     }
 
     public void setNextDynamicQueue(Bundle criteria) {
-        queueLoader.setNextDynamicQueue(criteria);
+        queueLoader.setNextDynamicQueue(criteria, lastSong(), true);
     }
 
-    // all method than modify queue should check if they need to call setNextQueue(criteria)
-    public void add(Song song) {
-        super.add(song);
-
-        queueLoader.setNextDynamicQueue();
+    public ArrayList<Song> getPlayingQueueSongOnly() {
+        queueLoader.setNextDynamicQueue(lastSong(), false); // better way of updating this element (method is always called when queue is updated)
+        return super.getPlayingQueueSongOnly();
     }
 
     public int setCurrentPosition(int position) {
