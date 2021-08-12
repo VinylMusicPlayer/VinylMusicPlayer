@@ -42,23 +42,14 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
     }
 
     public void setNextDynamicQueue(Song song, boolean force) {
-        if (song != null && (force || (song.id != songUsedForSearching.id))) {
-            this.songUsedForSearching = song;
-
-            ArrayList<Album> albums;
-            synchronized (Discography.getInstance()) {
-                albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
-            }
-
-            Random rand = new Random();
-            this.nextAlbum = albums.get(rand.nextInt(albums.size()));
-            this.database.setNextRandomAlbumId(nextAlbum.getId());
-        }
+        Bundle bundle = new Bundle();
+        bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.RANDOM_SEARCH);
+        setNextDynamicQueue(bundle, song, force);
     }
 
 
     public void setNextDynamicQueue(Bundle criteria, Song song, boolean force) {
-        if (force || (song.id != songUsedForSearching.id)) {
+        if (song != null && (force || (song.id != songUsedForSearching.id))) {
             this.songUsedForSearching = song;
 
             int searchType = criteria.getInt(SEARCH_TYPE);
@@ -71,21 +62,23 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
             ArrayList<Album> subList = new ArrayList<>();
             boolean isAlbumInCriteria = false;
             for (Album album : albums) {
-                switch (searchType) {
-                    case RANDOM_SEARCH:
-                        isAlbumInCriteria = true;
-                        break;
-                    case ARTIST_SEARCH:
-                        isAlbumInCriteria = album.getArtistId() == song.artistId;
-                        break;
-                    case GENRE_SEARCH:
-                        isAlbumInCriteria = album.songs != null && album.songs.size() > 0 &&
-                                song.genre.equals(album.songs.get(0).genre);
-                        break;
-                }
+                if (song.albumId != album.getId()) {
+                    switch (searchType) {
+                        case RANDOM_SEARCH:
+                            isAlbumInCriteria = true;
+                            break;
+                        case ARTIST_SEARCH:
+                            isAlbumInCriteria = album.getArtistId() == song.artistId;
+                            break;
+                        case GENRE_SEARCH:
+                            isAlbumInCriteria = album.songs != null && album.songs.size() > 0 &&
+                                    song.genre.equals(album.songs.get(0).genre);
+                            break;
+                    }
 
-                if (isAlbumInCriteria) {
-                    subList.add(album);
+                    if (isAlbumInCriteria) {
+                        subList.add(album);
+                    }
                 }
             }
 
