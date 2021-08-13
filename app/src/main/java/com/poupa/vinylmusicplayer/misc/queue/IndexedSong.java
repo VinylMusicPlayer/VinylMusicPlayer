@@ -20,4 +20,18 @@ public class IndexedSong extends Song {
     public String toString() {
         return "{"+ index + ", " + title + "}";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        return (index == ((IndexedSong)o).index);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * super.hashCode() + index;
+    }
 }

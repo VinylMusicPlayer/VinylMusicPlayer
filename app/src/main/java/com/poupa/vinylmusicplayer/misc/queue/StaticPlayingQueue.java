@@ -27,10 +27,14 @@ public class StaticPlayingQueue {
 
     private int nextPosition;
 
-    private boolean songsIsStale;                     // used to know when songs and queue.song are not equal so that getPlayingQueueSongOnly() will not always recreate songs every time
-    private final ArrayList<Song> songs;              // necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song
-    private ArrayList<IndexedSong> queue;             // list of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified)
-    private final ArrayList<IndexedSong> originalQueue; // copy of the queue used to allow revert of history last operation
+    /** Used to know when songs and queue.song are not equal so that getPlayingQueueSongOnly() will not always recreate songs every time */
+    private boolean songsIsStale;
+    /** Necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song */
+    private final ArrayList<Song> songs;
+    /** List of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified) */
+    private ArrayList<IndexedSong> queue;
+    /** Copy of the queue used to allow revert of history last operation */
+    private final ArrayList<IndexedSong> originalQueue;
 
 
     public StaticPlayingQueue() {
@@ -61,7 +65,9 @@ public class StaticPlayingQueue {
 
     /* -------------------- queue modification (add, remove, move, ...) -------------------- */
 
-    // add song at the end of both list
+    /**
+     * Add song at the end of both list
+      */
     public void add(Song song) {
         queue.add(new IndexedSong((Song)song, queue.size()));
         originalQueue.add(new IndexedSong((Song)song, originalQueue.size()));
@@ -69,59 +75,69 @@ public class StaticPlayingQueue {
         songsIsStale = true;
     }
 
-    // add list of song at the end of both list
+    /**
+     * Add list of song at the end of both list
+     */
     public void addAll(@NonNull List<Song> songs) {
         for (Song song : songs) {
             add(song);
         }
     }
 
-    // add song after and including position, numbering need to be redone for every song after this position (+1)
+    private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int previousPosition, int direction) {
+        for (int i = 0; i < queue.size(); i++) {
+            originalQueue.get(i).index = i;
+
+            if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
+                queue.get(i).index = queue.get(i).index + direction*(occurrence + 1);
+            }
+        }
+    }
+
+    private void addOneSong(int position, int previousPosition, Song song) {
+        IndexedSong newSong = new IndexedSong(song, previousPosition);
+        originalQueue.add(previousPosition, newSong);
+        queue.add(position, newSong);
+
+        updateQueueIndexesAfterSongsModification(position, 0, previousPosition, +1);
+
+        songsIsStale = true;
+    }
+
+    /**
+     * Add song after and including position, numbering need to be redone for every song after this position (+1)
+     */
     public void addAfter(int position, Song song) {
-        if (position >= queue.size()) {
-            position = queue.size() - 1;
+        int queueSize = queue.size();
+        if (position >= queueSize) {
+            position = queueSize - 1;
         }
         int previousPosition = queue.get(position).index + 1;
         position = position + 1;
 
-        originalQueue.add(previousPosition, new IndexedSong(song, previousPosition));
-        queue.add(position, new IndexedSong(song, previousPosition));
-        for (int i = 0; i < queue.size(); i++) {
-            originalQueue.get(i).index = i;
-
-            if (i != position && queue.get(i).index >= previousPosition) {
-                queue.get(i).index = queue.get(i).index + 1;
-            }
-        }
+        addOneSong(position, previousPosition, song);
 
         if (position < this.currentPosition) {
             this.currentPosition++;
         }
-
-        songsIsStale = true;
     }
 
+    /**
+     * Add song at position, numbering need to be redone for every song after this position (+1)
+     */
     public void addSongBackTo(int position, IndexedSong song) {
         int previousPosition = song.index;
 
-        originalQueue.add(previousPosition, new IndexedSong((Song)song, previousPosition));
-        queue.add(position, new IndexedSong((Song)song, previousPosition));
-        for (int i = 0; i < queue.size(); i++) {
-            originalQueue.get(i).index = i;
-
-            if (i != position && queue.get(i).index >= previousPosition) {
-                queue.get(i).index = queue.get(i).index + 1;
-            }
-        }
+        addOneSong(position, previousPosition, (Song)song);
 
         if (position <= this.currentPosition) {
             this.currentPosition++;
         }
-
-        songsIsStale = true;
     }
 
-    // add songs after and including position, numbering need to be redone for every song after this position (+number of song)
+    /**
+     * Add songs after and including position, numbering need to be redone for every song after this position (+number of song)
+     */
     public void addAllAfter(int position, @NonNull List<Song> songs) {
         if (position >= queue.size()) {
             position = queue.size() - 1;
@@ -131,26 +147,23 @@ public class StaticPlayingQueue {
 
         int n = songs.size() - 1;
         for (int i = n; i >= 0; i--) {
-            originalQueue.add(previousPosition, new IndexedSong(songs.get(i), previousPosition + i));
-
-            queue.add(position, new IndexedSong(songs.get(i), previousPosition + i));
+            IndexedSong newSong = new IndexedSong(songs.get(i), previousPosition + i);
+            originalQueue.add(previousPosition, newSong);
+            queue.add(position, newSong);
 
             if (position < this.currentPosition) {
                 this.currentPosition++;
             }
         }
 
-        for (int i = 0; i < queue.size(); i++) {
-            originalQueue.get(i).index = i;
-            if (!(i >= position && i <= position+n) && queue.get(i).index >= previousPosition  ) {
-                queue.get(i).index = queue.get(i).index + n + 1;
-            }
-        }
+        updateQueueIndexesAfterSongsModification(position, n, previousPosition, +1);
 
         songsIsStale = true;
     }
 
-    // move song from from to to, position are conserved
+    /**
+     * Move song from from to to, position are conserved
+     */
     public void move(int from, int to) {
         if (from == to) return;
         final int currentPosition = this.currentPosition;
@@ -195,24 +208,21 @@ public class StaticPlayingQueue {
         return INVALID_POSITION;
     }
 
-    // remove song at index position, numbering need to be redone for every song after this position (-1)
+    /**
+     * Remove song at index position, numbering need to be redone for every song after this position (-1)
+     */
     public int remove(int position) {
         IndexedSong o = queue.remove(position);
         originalQueue.remove(o.index);
 
-        for (int i = 0; i < queue.size(); i++) {
-            originalQueue.get(i).index = i;
-            if (queue.get(i).index >= o.index) {
-                queue.get(i).index = queue.get(i).index - 1;
-            }
-        }
+        updateQueueIndexesAfterSongsModification(-1, 0, o.index, -1);
 
         songsIsStale = true;
 
         return rePosition(position);
     }
 
-    private int removeAllOccurrence(Song song) {
+    private int removeAllOccurrences(Song song) {
         int hasPositionChanged = INVALID_POSITION;
 
         for (int i = queue.size() - 1; i >= 0; i--) {
@@ -233,7 +243,7 @@ public class StaticPlayingQueue {
         int hasPositionChanged = INVALID_POSITION;
 
         for (Song song : songs) {
-            int temp = removeAllOccurrence(song);
+            int temp = removeAllOccurrences(song);
             if (temp != INVALID_POSITION) {
                 hasPositionChanged = temp;
             }
@@ -256,18 +266,18 @@ public class StaticPlayingQueue {
     /* -------------------- queue getter info -------------------- */
 
     public boolean openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, int shuffleMode) {
-        if (playingQueue != null && !playingQueue.isEmpty() && startPosition >= 0 && startPosition < playingQueue.size()) {
-            clear();
-            addAll(playingQueue);
-
-            this.currentPosition = startPosition;
-
-            setShuffle(shuffleMode);
-
-            return true;
+        if ( !(playingQueue != null && !playingQueue.isEmpty() && startPosition >= 0 && startPosition < playingQueue.size()) ) {
+            return false;
         }
 
-        return false;
+        clear();
+        addAll(playingQueue);
+
+        this.currentPosition = startPosition;
+
+        setShuffle(shuffleMode);
+
+        return true;
     }
 
     public ArrayList<IndexedSong> getPlayingQueue() {
