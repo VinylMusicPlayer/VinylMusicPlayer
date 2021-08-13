@@ -13,11 +13,15 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import androidx.fragment.app.FragmentTransaction;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.song.DynamicPlayingQueueAdapter;
+import com.poupa.vinylmusicplayer.adapter.song.StaticPlayingQueueAdapter;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
+import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.MiniPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
@@ -139,6 +143,13 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     @Override
     public void onQueueChanged() {
         super.onQueueChanged();
+
+        AbsPlayerFragment fragment = (AbsPlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment_container);
+        if ((MusicPlayerRemote.isDynamicQueueActivated() && !(fragment.playingQueueAdapter instanceof DynamicPlayingQueueAdapter)) ||
+                (!MusicPlayerRemote.isDynamicQueueActivated() && (fragment.playingQueueAdapter instanceof DynamicPlayingQueueAdapter))) {
+            fragment.recreate();
+        }
+
         hideBottomBar(MusicPlayerRemote.getPlayingQueue().isEmpty());
     }
 

@@ -89,6 +89,8 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
             registerReceiver(musicStateReceiver, filter);
 
             receiverRegistered = true;
+
+            onQueueChanged(); // ensure correct adapter is shown (static or dynamic), as adapter creation is done before musicservice is created and restored
         }
 
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {

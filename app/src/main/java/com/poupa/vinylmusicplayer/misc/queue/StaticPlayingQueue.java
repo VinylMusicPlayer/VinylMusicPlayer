@@ -52,12 +52,15 @@ public class StaticPlayingQueue {
         restoreUniqueId();
     }
 
-    public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
-        this.queue = new ArrayList<>(restoreQueue);
-        this.originalQueue = new ArrayList<>(restoreOriginalQueue);
-        this.shuffleMode = shuffleMode;
+    public StaticPlayingQueue(StaticPlayingQueue queue) {
+        this.queue = new ArrayList<>(queue.queue);
+        this.originalQueue = new ArrayList<>(queue.originalQueue);
+        this.shuffleMode = queue.shuffleMode;
+        this.repeatMode = queue.repeatMode;
 
-        currentPosition = restoredPosition;
+        this.nextPosition = queue.nextPosition;
+
+        this.currentPosition = queue.currentPosition;
 
         // Adjust for removed songs, marked with Song.EMPTY in the restored queues
         // See MusicPlaybackQueueStore.getSongPosition
@@ -107,6 +110,10 @@ public class StaticPlayingQueue {
         }
 
         return false;
+    }
+
+    public void saveQueue(Context context) {
+        MusicPlaybackQueueStore.getInstance(context).saveQueues(this.queue, this.originalQueue);
     }
 
     /* -------------------- queue modification (add, remove, move, ...) -------------------- */

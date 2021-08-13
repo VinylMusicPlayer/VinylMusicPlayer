@@ -91,6 +91,10 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         return binding.getRoot();
     }
 
+    public void recreate() {
+        setUpRecyclerView(recyclerView,slidingUpPanelLayout);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -184,8 +188,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             resetToCurrentPosition();
         }
 
-        // if shuffle pref is activated
-        ((DynamicPlayingQueueAdapter)playingQueueAdapter).swapDynamicElement();
+        if (playingQueueAdapter instanceof DynamicPlayingQueueAdapter) {
+            ((DynamicPlayingQueueAdapter) playingQueueAdapter).swapDynamicElement();
+        }
     }
 
     private void updateQueuePosition() {

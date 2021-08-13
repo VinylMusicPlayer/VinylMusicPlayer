@@ -76,6 +76,10 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     private Impl impl;
 
+    public void recreate() {
+        setUpRecyclerView(recyclerView,slidingUpPanelLayout);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (Util.isLandscape(getResources())) {
@@ -190,8 +194,9 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             resetToCurrentPosition();
         }
 
-        // if shuffle pref is activated
-        ((DynamicPlayingQueueAdapter)playingQueueAdapter).swapDynamicElement();
+        if (playingQueueAdapter instanceof DynamicPlayingQueueAdapter) {
+            ((DynamicPlayingQueueAdapter) playingQueueAdapter).swapDynamicElement();
+        }
     }
 
     private void updateQueuePosition() {

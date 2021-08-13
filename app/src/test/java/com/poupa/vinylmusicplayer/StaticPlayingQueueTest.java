@@ -168,7 +168,7 @@ public class StaticPlayingQueueTest {
         System.out.println("Init");
         print(test);
 
-        StaticPlayingQueue init = new StaticPlayingQueue(test.getPlayingQueue(), test.getOriginalPlayingQueue(), test.getCurrentPosition(), test.getShuffleMode());
+        StaticPlayingQueue init = new StaticPlayingQueue(test);
 
         // test
         int pos = 2;

@@ -332,8 +332,11 @@
     <string name="classic_theme_style_name">Classique</string>
     <string name="pref_title_theme_style">Style du thème</string>
     <string name="rounded_theme_style_name">Arrondi</string>
+    <string name="start_dynamic_queue">Démarrer la file d\'attente perpétuelle</string>
+    <string name="stop_dynamic_queue">Arrêter la file d\'attente perpétuelle</string>
     <string name="next_album">Album suivant :</string>
     <string name="no_album_found">Rien n\'a été trouvé</string>
+    <string name="no_other_album_found">Rien d\'autre n\'a été trouvé</string>
     <string name="shuffle_album">Recharger album aléatoirement</string>
     <string name="shuffle_album_genre">Recharger album dans le même genre</string>
     <string name="shuffle_album_artist">Recharger album avec le même artist</string>    

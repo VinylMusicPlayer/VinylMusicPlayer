@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicPlayingQueue;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -255,6 +256,25 @@ public class MusicPlayerRemote {
     public static void setNextDynamicQueue(Bundle criteria) {
         if (musicService != null) {
             musicService.setNextDynamicQueue(criteria);
+        }
+    }
+
+    public static boolean isDynamicQueueActivated() {
+        if (musicService != null) {
+            return musicService.isDynamicQueueActivated();
+        }
+        return false;
+    }
+
+    public static void setQueueToStaticQueue() {
+        if (musicService != null) {
+            musicService.setQueueToStaticQueue();
+        }
+    }
+
+    public static void setQueueToDynamicQueue() {
+        if (musicService != null) {
+            musicService.setQueueToDynamicQueue();
         }
     }
 

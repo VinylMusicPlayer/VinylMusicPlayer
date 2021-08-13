@@ -48,6 +48,8 @@ public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
             bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.GENRE_SEARCH);
             MusicPlayerRemote.setNextDynamicQueue(bundle);
             return true;
+        } else if (item.getItemId() == R.id.delete) {
+            MusicPlayerRemote.setQueueToStaticQueue();
         }
         return false;
     }

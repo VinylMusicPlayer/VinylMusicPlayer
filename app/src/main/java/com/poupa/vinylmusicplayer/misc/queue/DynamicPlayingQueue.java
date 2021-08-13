@@ -25,15 +25,19 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
     public DynamicPlayingQueue() {
         super();
 
+        queueLoader = new AlbumShufflingQueueLoader(); // should not always be this one, setup a way to choose what loader I want
+    }
+
+    public DynamicPlayingQueue(StaticPlayingQueue queue) {
+        super(queue);
+
         queueLoader = new AlbumShufflingQueueLoader();
     }
 
-    public DynamicPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
-        super(restoreQueue, restoreOriginalQueue, restoredPosition, shuffleMode);
+    public DynamicPlayingQueue(DynamicPlayingQueue queue) {
+        super(queue);
 
-        queueLoader = new AlbumShufflingQueueLoader(); // should not always be this one, setup a way to choose what loader I want
-
-        queueLoader.setNextDynamicQueue(lastSong(), false);
+        queueLoader = queue.queueLoader;
     }
 
     public boolean restoreQueue(Context context, int restoredPosition) {

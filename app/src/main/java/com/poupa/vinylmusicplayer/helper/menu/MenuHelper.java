@@ -27,6 +27,8 @@ public class MenuHelper {
         MenuItem liveItem = menu.findItem(R.id.action_delete_playlist);
         if (liveItem == null)
             liveItem = menu.findItem(R.id.action_delete_from_device);
+        if (liveItem == null)
+            liveItem = menu.findItem(R.id.delete);
 
         if (liveItem != null) {
             SpannableString s = new SpannableString(liveItem.getTitle().toString());

@@ -22,12 +22,12 @@
         android:title="@string/shuffle_album"
         app:showAsAction="never" />
 
-    <item
+    <!--<item
         android:id="@+id/pref"
         android:title="PREFERENCE"
-        app:showAsAction="never" />
+        app:showAsAction="never" /> -->
     <item
         android:id="@+id/delete"
-        android:title="DELETE RED"
+        android:title="@string/stop_dynamic_queue"
         app:showAsAction="never" />
 </menu>

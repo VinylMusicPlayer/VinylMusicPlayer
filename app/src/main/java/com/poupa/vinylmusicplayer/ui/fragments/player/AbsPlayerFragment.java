@@ -69,6 +69,8 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
         callbacks = null;
     }
 
+    public abstract void recreate();
+
     public void setUpRecyclerView(RecyclerView recyclerView, final SlidingUpPanelLayout slidingUpPanelLayout) {
         recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
         recyclerViewSwipeManager = new RecyclerViewSwipeManager();
@@ -80,13 +82,22 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
         // Disable the change animation in order to make turning back animation of swiped item works properly.
         animator.setSupportsChangeAnimations(false);
 
-        // if shuffle pref is activated, else call StaticPlayingQueueAdapter
-        playingQueueAdapter = new DynamicPlayingQueueAdapter(
-                ((AppCompatActivity) getActivity()),
-                MusicPlayerRemote.getPlayingQueue(),
-                MusicPlayerRemote.getPosition(),
-                false,
-                null);
+        if (MusicPlayerRemote.isDynamicQueueActivated()) {
+            playingQueueAdapter = new DynamicPlayingQueueAdapter(
+                    ((AppCompatActivity) getActivity()),
+                    MusicPlayerRemote.getPlayingQueue(),
+                    MusicPlayerRemote.getPosition(),
+                    false,
+                    null);
+        } else {
+            playingQueueAdapter = new StaticPlayingQueueAdapter(
+                    ((AppCompatActivity) getActivity()),
+                    MusicPlayerRemote.getPlayingQueue(),
+                    MusicPlayerRemote.getPosition(),
+                    false,
+                    null);
+        }
+
         wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(playingQueueAdapter);
         wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(wrappedAdapter);
 
@@ -136,6 +147,9 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
             return true;
         } else if (itemId == R.id.action_clear_playing_queue) {
             MusicPlayerRemote.clearQueue();
+            return true;
+        } else if (itemId == R.id.action_dynamic_queue) {
+            MusicPlayerRemote.setQueueToDynamicQueue();
             return true;
         } else if (itemId == R.id.action_save_playing_queue) {
             CreatePlaylistDialog.create(MusicPlayerRemote.getPlayingQueue()).show(getActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");

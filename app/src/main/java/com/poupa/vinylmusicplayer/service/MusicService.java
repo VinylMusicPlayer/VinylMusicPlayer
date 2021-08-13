@@ -57,7 +57,6 @@ import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
-import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl;
@@ -117,6 +116,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
     public static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
     public static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
+    public static final String SAVED_QUEUE_TYPE = "QUEUE_TYPE";
 
     public static final int RELEASE_WAKELOCK = 0;
     public static final int TRACK_ENDED = 1;
@@ -150,7 +150,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private Playback playback;
 
-    private StaticPlayingQueue playingQueue = new DynamicPlayingQueue(); //new StaticPlayingQueue();
+    private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
+    private boolean queueIsDynamic = false;
 
     private boolean queuesRestored;
     private boolean pausedByTransientLossOfFocus;
@@ -355,7 +356,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void saveQueuesImpl() {
-        MusicPlaybackQueueStore.getInstance(this).saveQueues(playingQueue.getPlayingQueue(), playingQueue.getOriginalPlayingQueue());
+        playingQueue.saveQueue(this);
     }
 
     private void savePosition() {
@@ -366,10 +367,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(SAVED_POSITION_IN_TRACK, getSongProgressMillis()).apply();
     }
 
+    public void saveQueueType() {
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean(SAVED_QUEUE_TYPE, isDynamicQueueActivated()).apply();
+    }
+
     public void saveState() {
         saveQueues();
         savePosition();
         savePositionInTrack();
+
+        saveQueueType();
     }
 
     private void saveQueues() {
@@ -392,6 +399,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (!queuesRestored && playingQueue.size()==0) {
             int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
             int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+
+            queueIsDynamic = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SAVED_QUEUE_TYPE, false);
+            if (queueIsDynamic) {
+                playingQueue = new DynamicPlayingQueue();
+            }
 
             if (playingQueue.restoreQueue(this, restoredPosition)) {
                 openCurrent();
@@ -678,15 +690,39 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public DynamicElement getDynamicElement() {
-        //if (playingQueue instanceof DynamicPlayingQueue)
+        if (playingQueue instanceof DynamicPlayingQueue)
             return ((DynamicPlayingQueue)playingQueue).getDynamicElement(this);
 
-        //return Song.EMPTY_SONG;
+        return DynamicElement.EMPTY_ELEMENT;
     }
 
     public void setNextDynamicQueue(Bundle criteria) {
-        ((DynamicPlayingQueue)playingQueue).setNextDynamicQueue(criteria);
-        notifyChange(QUEUE_CHANGED);
+        if (playingQueue instanceof DynamicPlayingQueue) {
+            ((DynamicPlayingQueue) playingQueue).setNextDynamicQueue(criteria);
+            notifyChange(QUEUE_CHANGED);
+        }
+    }
+
+    public boolean isDynamicQueueActivated() {
+        return queueIsDynamic;
+    }
+
+    public synchronized void setQueueToStaticQueue() {
+        if (queueIsDynamic) {
+            playingQueue = new StaticPlayingQueue(playingQueue);
+            queueIsDynamic = false;
+            saveQueueType();
+            notifyChange(QUEUE_CHANGED);
+        }
+    }
+
+    public synchronized void setQueueToDynamicQueue() {
+        if (!queueIsDynamic) {
+            playingQueue = new DynamicPlayingQueue(playingQueue);
+            queueIsDynamic = true;
+            saveQueueType();
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public int getRepeatMode() {
