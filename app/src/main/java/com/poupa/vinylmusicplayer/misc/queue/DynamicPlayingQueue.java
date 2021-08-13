@@ -56,21 +56,25 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         return Song.EMPTY_SONG;
     }
 
+    @NonNull
     public DynamicElement getDynamicElement(Context context) {
         return queueLoader.getDynamicElement(context);
     }
 
-    public void setNextDynamicQueue(Bundle criteria) {
-        queueLoader.setNextDynamicQueue(criteria, lastSong(), true);
+    public void setNextDynamicQueue(Bundle criteria, Context context) {
+        queueLoader.setNextDynamicQueue(criteria, context, lastSong(), true);
     }
 
     public ArrayList<Song> getPlayingQueueSongOnly() {
-        queueLoader.setNextDynamicQueue(lastSong(), false); // better way of updating this element (method is always called when queue is updated)
+        queueLoader.setNextDynamicQueue(null, lastSong(), false); // better way of updating this element (method is always called when queue is updated)
         return super.getPlayingQueueSongOnly();
     }
 
     public int setCurrentPosition(int position) {
         if (position >= queue.size()) {
+            if (queueLoader.isNextQueueEmpty())
+                return INVALID_POSITION;
+
             loadNextQueue();
             currentPosition = 0;
             return QUEUE_HAS_CHANGED;

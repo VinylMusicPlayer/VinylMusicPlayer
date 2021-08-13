@@ -6,7 +6,9 @@ import java.util.Random;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
@@ -41,14 +43,14 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
         return true;
     }
 
-    public void setNextDynamicQueue(Song song, boolean force) {
+    public void setNextDynamicQueue(Context context, Song song, boolean force) {
         Bundle bundle = new Bundle();
         bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.RANDOM_SEARCH);
-        setNextDynamicQueue(bundle, song, force);
+        setNextDynamicQueue(bundle, context, song, force);
     }
 
 
-    public void setNextDynamicQueue(Bundle criteria, Song song, boolean force) {
+    public void setNextDynamicQueue(Bundle criteria, Context context, Song song, boolean force) {
         if (song != null && (force || (song.id != songUsedForSearching.id))) {
             this.songUsedForSearching = song;
 
@@ -82,18 +84,32 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
                 }
             }
 
-            Random rand = new Random();
-            this.nextAlbum = subList.get(rand.nextInt(subList.size()));
-            this.database.setNextRandomAlbumId(nextAlbum.getId());
+            if (subList.size() > 0) {
+                Random rand = new Random();
+                this.nextAlbum = subList.get(rand.nextInt(subList.size()));
+                this.database.setNextRandomAlbumId(nextAlbum.getId());
+            } else {
+                if (context != null) {
+                    Toast.makeText(context, context.getResources().getString(R.string.no_other_album_found), Toast.LENGTH_SHORT).show();
+                } else {
+                    this.nextAlbum = null;
+                    this.database.setNextRandomAlbumId(-1);
+                }
+            }
         }
     }
 
+    @NonNull
     public DynamicElement getDynamicElement(Context context) {
         if (nextAlbum != null)
             return new DynamicElement(context.getResources().getString(R.string.next_album),
                     MusicUtil.buildInfoString(this.nextAlbum.getArtistName(), this.nextAlbum.getTitle()),
                     "-");
         return getEmptyDynamicElement(context);
+    }
+
+    public boolean isNextQueueEmpty() {
+        return  (nextAlbum == null);
     }
 
     private DynamicElement getEmptyDynamicElement(Context context) {

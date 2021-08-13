@@ -106,7 +106,7 @@ public class DB extends SQLiteOpenHelper {
     }
     */
 
-    synchronized void setNextRandomAlbumId(@NonNull Long albumId) {
+    synchronized void setNextRandomAlbumId(long albumId) {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             //replace current album id
             final ContentValues values = new ContentValues();

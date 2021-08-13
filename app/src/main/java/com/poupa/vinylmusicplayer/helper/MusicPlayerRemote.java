@@ -255,7 +255,7 @@ public class MusicPlayerRemote {
 
     public static void setNextDynamicQueue(Bundle criteria) {
         if (musicService != null) {
-            musicService.setNextDynamicQueue(criteria);
+            musicService.setNextDynamicQueue(criteria, musicService);
         }
     }
 
