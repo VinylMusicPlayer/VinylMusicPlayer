@@ -69,6 +69,11 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     @Override
+    public long getItemId(int position) {
+        return MusicPlayerRemote.getIndexedSongAt(position).hashCode();
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
 
