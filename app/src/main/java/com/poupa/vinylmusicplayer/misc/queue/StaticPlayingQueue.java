@@ -399,15 +399,16 @@ public class StaticPlayingQueue {
 
     public int getNextPosition(boolean force) {
         int position = getCurrentPosition() + 1;
+
         switch (getRepeatMode()) {
             case REPEAT_MODE_ALL:
-                if (isLastTrack()) {
+                if (isLastTrackInner()) {
                     position = 0;
                 }
                 break;
             case REPEAT_MODE_THIS:
                 if (force) {
-                    if (isLastTrack()) {
+                    if (isLastTrackInner()) {
                         position = 0;
                     }
                 } else {
@@ -415,10 +416,7 @@ public class StaticPlayingQueue {
                 }
                 break;
             default:
-            case REPEAT_MODE_NONE:
-                if (isLastTrack()) {
-                    position -= 1;
-                }
+            case REPEAT_MODE_NONE: // nothing to do as position is already set correctly
                 break;
         }
         return position;
@@ -451,8 +449,13 @@ public class StaticPlayingQueue {
         return newPosition;
     }
 
-    public boolean isLastTrack() {
+    /** Used internally to ensure subclass will not override repeat mode functionality */
+    private boolean isLastTrackInner() {
         return getCurrentPosition() == queue.size() - 1;
+    }
+
+    public boolean isLastTrack() {
+        return isLastTrackInner();
     }
 
     /* -------------------- song getter info -------------------- */

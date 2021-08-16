@@ -45,7 +45,7 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
     }
 
     private void loadNextQueue() {
-        this.queue.clear();
+        clear();
         addAll(queueLoader.getNextQueue());
         this.songsIsStale = true;
     }
