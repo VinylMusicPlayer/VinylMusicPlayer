@@ -26,6 +26,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicPlayingQueue;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -264,6 +265,13 @@ public class MusicPlayerRemote {
             return musicService.isDynamicQueueActivated();
         }
         return false;
+    }
+
+    public static DynamicQueueItemAdapter getDynamicAdapter() {
+        if (musicService != null) {
+            return musicService.getDynamicAdapter();
+        }
+        return null;
     }
 
     public static void setQueueToStaticQueue() {

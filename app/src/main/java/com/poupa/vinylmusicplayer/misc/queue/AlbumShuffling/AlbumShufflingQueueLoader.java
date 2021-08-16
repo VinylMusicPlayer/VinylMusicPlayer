@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -41,6 +42,10 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
         this.songUsedForSearching = song;
 
         return true;
+    }
+
+    public DynamicQueueItemAdapter getAdapter() {
+        return new AlbumShufflingQueueItemAdapter();
     }
 
     public void setNextDynamicQueue(Context context, Song song, boolean force) {

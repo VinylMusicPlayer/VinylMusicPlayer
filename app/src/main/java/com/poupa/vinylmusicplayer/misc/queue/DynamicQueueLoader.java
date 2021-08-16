@@ -11,6 +11,8 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 
 public interface DynamicQueueLoader {
+    DynamicQueueItemAdapter getAdapter();
+
     @NonNull
     DynamicElement getDynamicElement(Context context);
 

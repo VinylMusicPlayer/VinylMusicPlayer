@@ -24,20 +24,22 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
     private DynamicQueueItemAdapter dynamicQueueItemAdapter;
 
-    public DynamicPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public DynamicPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder, DynamicQueueItemAdapter dynamicQueueItemAdapter) {
         super(activity, dataSet, current, usePalette, cabHolder);
 
-        this.dynamicQueueItemAdapter = new AlbumShufflingQueueItemAdapter();
+        this.dynamicQueueItemAdapter = dynamicQueueItemAdapter;
     }
 
     public void swapDynamicElement() {
-        dynamicQueueItemAdapter.swapDynamicElement();
-        notifyDataSetChanged();
+        if (dynamicQueueItemAdapter != null) {
+            dynamicQueueItemAdapter.swapDynamicElement();
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == OFFSET_ITEM) {
+        if (dynamicQueueItemAdapter != null && holder.getItemViewType() == OFFSET_ITEM) {
             dynamicQueueItemAdapter.onBindViewHolder(holder);
         } else {
             super.onBindViewHolder(holder, position);
@@ -92,7 +94,7 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
         @Override
         protected int getSongMenuRes(int itemViewType) {
-            if (itemViewType == OFFSET_ITEM) {
+            if (dynamicQueueItemAdapter != null && itemViewType == OFFSET_ITEM) {
                 return dynamicQueueItemAdapter.getSongMenuRes(itemViewType);
             } else {
                 return super.getSongMenuRes(itemViewType);
@@ -101,7 +103,7 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
-            if (dynamicQueueItemAdapter.onSongMenuItemClick(item))
+            if (dynamicQueueItemAdapter != null && dynamicQueueItemAdapter.onSongMenuItemClick(item))
                 return true;
 
             return super.onSongMenuItemClick(item);

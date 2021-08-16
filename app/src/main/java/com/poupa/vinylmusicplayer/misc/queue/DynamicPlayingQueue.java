@@ -22,16 +22,16 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
 
     private DynamicQueueLoader queueLoader;
 
-    public DynamicPlayingQueue() {
+    public DynamicPlayingQueue(DynamicQueueLoader queueLoader) {
         super();
 
-        queueLoader = new AlbumShufflingQueueLoader(); // should not always be this one, setup a way to choose what loader I want
+        this.queueLoader = queueLoader;
     }
 
-    public DynamicPlayingQueue(StaticPlayingQueue queue) {
+    public DynamicPlayingQueue(StaticPlayingQueue queue, DynamicQueueLoader queueLoader) {
         super(queue);
 
-        queueLoader = new AlbumShufflingQueueLoader();
+        this.queueLoader = queueLoader;
     }
 
     public DynamicPlayingQueue(DynamicPlayingQueue queue) {
@@ -86,5 +86,9 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
 
     public boolean isLastTrack() {
         return getCurrentPosition() == queue.size();
+    }
+
+    public DynamicQueueItemAdapter getAdapter() {
+        return queueLoader.getAdapter();
     }
 }
