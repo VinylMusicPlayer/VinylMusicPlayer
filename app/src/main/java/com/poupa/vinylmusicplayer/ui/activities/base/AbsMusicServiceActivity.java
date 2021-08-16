@@ -90,7 +90,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
 
             receiverRegistered = true;
 
-            onQueueChanged(); // ensure correct adapter is shown (static or dynamic), as adapter creation is done before musicservice is created and restored
+            onQueueChanged(); // ensure correct adapter is shown (static or dynamic) at startup when queue is restored, as adapter creation is done before musicService is created and restored
         }
 
         for (MusicServiceEventListener listener : mMusicServiceEventListeners) {

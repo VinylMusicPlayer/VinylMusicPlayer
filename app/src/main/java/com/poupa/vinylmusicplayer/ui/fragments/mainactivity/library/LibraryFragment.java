@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +36,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -207,6 +211,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
             menu.removeItem(R.id.action_colored_footers);
             menu.removeItem(R.id.action_sort_order);
         }
+
+        if (currentFragment instanceof AlbumsFragment) {
+            menu.findItem(R.id.action_shuffle_all).setTitle(R.string.action_create_album_shuffling_queue);
+        }
+
         Activity activity = getActivity();
         if (activity == null) return;
         ToolbarContentTintHelper.handleOnCreateOptionsMenu(getActivity(), toolbar, menu, ATHToolbarActivity.getToolbarBackgroundColor(toolbar));
@@ -241,7 +250,12 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
         final int id = item.getItemId();
         if (id == R.id.action_shuffle_all) {
-            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
+            if (currentFragment instanceof AlbumsFragment) {
+                MusicPlayerRemote.openQueue(AlbumShufflingQueueLoader.getNextRandomQueue(), 0, true);
+                MusicPlayerRemote.setQueueToDynamicQueue();
+            } else {
+                MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
+            }
             return true;
         } else if (id == R.id.action_new_playlist) {
             CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");

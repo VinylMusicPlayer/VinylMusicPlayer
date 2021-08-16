@@ -49,7 +49,6 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
         setNextDynamicQueue(bundle, context, song, force);
     }
 
-
     public void setNextDynamicQueue(Bundle criteria, Context context, Song song, boolean force) {
         if (song != null && (force || (song.id != songUsedForSearching.id))) {
             this.songUsedForSearching = song;
@@ -97,6 +96,17 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
                 }
             }
         }
+    }
+
+    public static ArrayList<Song> getNextRandomQueue() {
+        ArrayList<Album> albums;
+        synchronized (Discography.getInstance()) {
+            albums = new ArrayList<>(Discography.getInstance().getAllAlbums());
+        }
+        Random rand = new Random();
+        Album album = albums.get(rand.nextInt(albums.size()));
+
+        return album.songs;
     }
 
     @NonNull

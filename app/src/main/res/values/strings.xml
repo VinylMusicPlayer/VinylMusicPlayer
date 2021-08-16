@@ -373,6 +373,7 @@
     <string name="pref_summary_whitelist">Only show content below start folder: </string>
 
     <!-- Next random album -->
+    <string name="action_create_album_shuffling_queue">Start album shuffling queue</string>
     <string name="start_dynamic_queue">Start new perpetual queue</string>
     <string name="stop_dynamic_queue">Stop the perpetual queue</string>
     <string name="next_album">Next album:</string>
