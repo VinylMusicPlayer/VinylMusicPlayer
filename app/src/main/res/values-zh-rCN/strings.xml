@@ -85,10 +85,10 @@
     <string name="clear_playlist_title">清空播放列表</string>
     <string name="save_playlist_title">另存为</string>
     <string name="add_playlist_title">"添加到播放列表"</string>
-    <string name="action_shuffle_all">随机播放所有歌曲</string>
-    <string name="action_shuffle_album">随机播放此专辑</string>
-    <string name="action_shuffle_artist">随机播放此艺术家</string>
-    <string name="action_shuffle_playlist">随机播放此播放列表</string>
+    <string name="action_shuffle_all_songs">随机播放所有歌曲</string>
+    <string name="action_shuffle_album_songs">随机播放此专辑</string>
+    <string name="action_shuffle_artist_songs">随机播放此艺术家</string>
+    <string name="action_shuffle_playlist_songs">随机播放此播放列表</string>
     <string name="action_clear_playing_queue">清空播放队列</string>
     <string name="action_save_playing_queue">保存播放队列</string>
     <string name="action_go_to_start_directory">跳转至起始目录</string>

@@ -83,10 +83,10 @@
     <string name="clear_playlist_title">Εκκαθάριση λίστας</string>
     <string name="save_playlist_title">Αποθήκευση ως αρχείο</string>
     <string name="add_playlist_title">"Προσθήκη στη λίστα αναπαραγωγής"</string>
-    <string name="action_shuffle_all">Τυχαία τραγούδια</string>
-    <string name="action_shuffle_album">Τυχαίο άλμπουμ</string>
-    <string name="action_shuffle_artist">Τυχαίος καλλιτέχνης</string>
-    <string name="action_shuffle_playlist">Τυχαία λίστα αναπαραγωγής</string>
+    <string name="action_shuffle_all_songs">Τυχαία τραγούδια</string>
+    <string name="action_shuffle_album_songs">Τυχαίο άλμπουμ</string>
+    <string name="action_shuffle_artist_songs">Τυχαίος καλλιτέχνης</string>
+    <string name="action_shuffle_playlist_songs">Τυχαία λίστα αναπαραγωγής</string>
     <string name="action_clear_playing_queue">Εκκαθάριση της ουράς αναπαραγωγής</string>
     <string name="action_go_to_start_directory">Πηγαίνετε στον κατάλογο έναρξης</string>
     <string name="action_show_lyrics">Εμφάνιση στίχων</string>

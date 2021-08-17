@@ -213,7 +213,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         }
 
         if (currentFragment instanceof AlbumsFragment) {
-            menu.findItem(R.id.action_shuffle_all).setTitle(R.string.action_create_album_shuffling_queue);
+            menu.findItem(R.id.action_shuffle_all).setTitle(R.string.action_shuffle_all_albums);
         }
 
         Activity activity = getActivity();

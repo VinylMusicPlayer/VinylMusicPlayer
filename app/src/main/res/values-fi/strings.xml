@@ -85,10 +85,10 @@
     <string name="clear_playlist_title">Tyhjennä soittolistat</string>
     <string name="save_playlist_title">Tallenna tiedostona</string>
     <string name="add_playlist_title">"Lisää soittolistaan"</string>
-    <string name="action_shuffle_all">Sekoita kaikki</string>
-    <string name="action_shuffle_album">Sekoita albumit</string>
-    <string name="action_shuffle_artist">Sekoita artistit</string>
-    <string name="action_shuffle_playlist">Sekoita soittolistat</string>
+    <string name="action_shuffle_all_songs">Sekoita kaikki</string>
+    <string name="action_shuffle_album_songs">Sekoita albumit</string>
+    <string name="action_shuffle_artist_songs">Sekoita artistit</string>
+    <string name="action_shuffle_playlist_songs">Sekoita soittolistat</string>
     <string name="action_clear_playing_queue">Tyhjennä toistojono</string>
     <string name="action_save_playing_queue">Tallenna toistojono</string>
     <string name="action_go_to_start_directory">Mene aloitushakemistoon</string>

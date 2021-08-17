@@ -86,10 +86,10 @@
     <string name="clear_playlist_title">Afspeellijst legen</string>
     <string name="save_playlist_title">Opslaan als bestand</string>
     <string name="add_playlist_title">"Toevoegen aan afspeellijst"</string>
-    <string name="action_shuffle_all">Shuffle alles</string>
-    <string name="action_shuffle_album">Shuffle album</string>
-    <string name="action_shuffle_artist">Shuffle artiest</string>
-    <string name="action_shuffle_playlist">Shuffle afspeellijst</string>
+    <string name="action_shuffle_all_songs">Shuffle alles</string>
+    <string name="action_shuffle_album_songs">Shuffle album</string>
+    <string name="action_shuffle_artist_songs">Shuffle artiest</string>
+    <string name="action_shuffle_playlist_songs">Shuffle afspeellijst</string>
     <string name="action_clear_playing_queue">Leeg afspeelwachtrij</string>
     <string name="action_save_playing_queue">Afspeelwachtrij opslaan</string>
     <string name="action_go_to_start_directory">Ga naar startmap</string>

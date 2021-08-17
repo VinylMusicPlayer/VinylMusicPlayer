@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/action_shuffle_all"
-        android:title="@string/action_shuffle_all"
+        android:title="@string/action_shuffle_all_songs"
         app:showAsAction="never" />
 
     <item

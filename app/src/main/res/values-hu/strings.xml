@@ -84,10 +84,10 @@
     <string name="clear_playlist_title">Lejátszási lista kiürítése</string>
     <string name="save_playlist_title">Mentés fájlként</string>
     <string name="add_playlist_title">"Hozzáadás a lejátszási listához"</string>
-    <string name="action_shuffle_all">Összes keverése</string>
-    <string name="action_shuffle_album">Album dalainak keverése</string>
-    <string name="action_shuffle_artist">Előadó dalainak keverése</string>
-    <string name="action_shuffle_playlist">Lejátszási lista keverése</string>
+    <string name="action_shuffle_all_songs">Összes keverése</string>
+    <string name="action_shuffle_album_songs">Album dalainak keverése</string>
+    <string name="action_shuffle_artist_songs">Előadó dalainak keverése</string>
+    <string name="action_shuffle_playlist_songs">Lejátszási lista keverése</string>
     <string name="action_clear_playing_queue">Lejátszási lista törlése</string>
     <string name="action_save_playing_queue">Mentés a lejátszási sorba</string>
     <string name="action_go_to_start_directory">Ugrás a kezdő könyvtárra</string>

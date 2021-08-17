@@ -51,7 +51,7 @@ public class ShuffleButtonSongAdapter extends AbsOffsetSongAdapter {
         if (holder.getItemViewType() == OFFSET_ITEM) {
             int accentColor = ThemeStore.accentColor(activity);
             if (holder.title != null) {
-                holder.title.setText(activity.getResources().getString(R.string.action_shuffle_all).toUpperCase());
+                holder.title.setText(activity.getResources().getString(R.string.action_shuffle_all_songs).toUpperCase());
                 holder.title.setTextColor(accentColor);
                 holder.title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
             }

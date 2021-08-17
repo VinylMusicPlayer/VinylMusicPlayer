@@ -93,10 +93,10 @@
     <string name="save_playlist_title">Als Datei speichern</string>
     <string name="add_playlist_title">"Zu Wiedergabeliste hinzufügen"</string>
     <string name="select_all_title">Alle auswählen</string>
-    <string name="action_shuffle_all">Alle Titel zufällig wiedergeben</string>
-    <string name="action_shuffle_album">Album zufällig wiedergeben</string>
-    <string name="action_shuffle_artist">Interpret zufällig wiedergeben</string>
-    <string name="action_shuffle_playlist">Wiedergabeliste zufällig wiedergeben</string>
+    <string name="action_shuffle_all_songs">Alle Titel zufällig wiedergeben</string>
+    <string name="action_shuffle_album_songs">Album zufällig wiedergeben</string>
+    <string name="action_shuffle_artist_songs">Interpret zufällig wiedergeben</string>
+    <string name="action_shuffle_playlist_songs">Wiedergabeliste zufällig wiedergeben</string>
     <string name="action_clear_playing_queue">Warteschlange leeren</string>
     <string name="action_save_playing_queue">Warteschlange speichern</string>
     <string name="action_go_to_start_directory">Zum Start-Verzeichnis gehen</string>

@@ -86,10 +86,10 @@
     <string name="clear_playlist_title">נקה רשימת השמעה</string>
     <string name="save_playlist_title">שמור כקובץ</string>
     <string name="add_playlist_title">"הוסף לרשימת ההשמעה"</string>
-    <string name="action_shuffle_all">ערבב הכל</string>
-    <string name="action_shuffle_album">ערבב אלבום</string>
-    <string name="action_shuffle_artist">ערבב אמן</string>
-    <string name="action_shuffle_playlist">ערבב רשימת השמעה</string>
+    <string name="action_shuffle_all_songs">ערבב הכל</string>
+    <string name="action_shuffle_album_songs">ערבב אלבום</string>
+    <string name="action_shuffle_artist_songs">ערבב אמן</string>
+    <string name="action_shuffle_playlist_songs">ערבב רשימת השמעה</string>
     <string name="action_clear_playing_queue">איפוס תור השמעה</string>
     <string name="action_save_playing_queue">שמור תור פעיל</string>
     <string name="action_go_to_start_directory">עבור לנתיב התחלתי</string>

@@ -88,10 +88,10 @@
     <string name="save_playlist_title">Uložit jako soubor</string>
     <string name="add_playlist_title">"Přidat do playlistu"</string>
     <string name="select_all_title">Vybrat vše</string>
-    <string name="action_shuffle_all">Přehrát náhodně</string>
-    <string name="action_shuffle_album">Přehrát album náhodně</string>
-    <string name="action_shuffle_artist">Přehrát skladby interpreta náhodně</string>
-    <string name="action_shuffle_playlist">Přehrát playlist náhodně</string>
+    <string name="action_shuffle_all_songs">Přehrát náhodně</string>
+    <string name="action_shuffle_album_songs">Přehrát album náhodně</string>
+    <string name="action_shuffle_artist_songs">Přehrát skladby interpreta náhodně</string>
+    <string name="action_shuffle_playlist_songs">Přehrát playlist náhodně</string>
     <string name="action_clear_playing_queue">Vyčistit frontu přehrávání</string>
     <string name="action_save_playing_queue">Uložit frontu přehrávání</string>
     <string name="action_go_to_start_directory">Jít na domovskou složku</string>

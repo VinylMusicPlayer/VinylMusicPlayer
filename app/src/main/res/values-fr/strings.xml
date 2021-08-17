@@ -93,10 +93,10 @@
     <string name="save_playlist_title">Sauvegarder en tant que fichier</string>
     <string name="add_playlist_title">"Ajouter à la playlist"</string>
     <string name="select_all_title">Tout sélectionner</string>
-    <string name="action_shuffle_all">Tout lire en aléatoire</string>
-    <string name="action_shuffle_album">Lecture aléatoire des albums</string>
-    <string name="action_shuffle_artist">Lecture aléatoire des artistes</string>
-    <string name="action_shuffle_playlist">Lecture aléatoire des playlists</string>
+    <string name="action_shuffle_all_songs">Lire les titres en aléatoire</string>
+    <string name="action_shuffle_album_songs">Lecture aléatoire des titres de l\'album</string>
+    <string name="action_shuffle_artist_songs">Lecture aléatoire des titres de l\'artiste</string>
+    <string name="action_shuffle_playlist_songs">Lecture aléatoire des titre de la playlist</string>
     <string name="action_clear_playing_queue">Vider la file de lecture</string>
     <string name="action_save_playing_queue">Sauvegarder la file de lecture</string>
     <string name="action_go_to_start_directory">Aller au répertoire de départ</string>

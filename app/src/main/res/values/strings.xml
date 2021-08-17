@@ -96,10 +96,10 @@
     <string name="save_playlist_title">Save as file</string>
     <string name="add_playlist_title">"Add to playlist"</string>
     <string name="select_all_title">Select all</string>
-    <string name="action_shuffle_all">Shuffle all</string>
-    <string name="action_shuffle_album">Shuffle album</string>
-    <string name="action_shuffle_artist">Shuffle artist</string>
-    <string name="action_shuffle_playlist">Shuffle playlist</string>
+    <string name="action_shuffle_all_songs">Shuffle all songs</string>
+    <string name="action_shuffle_album_songs">Shuffle album songs</string>
+    <string name="action_shuffle_artist_songs">Shuffle artist songs</string>
+    <string name="action_shuffle_playlist_songs">Shuffle playlist songs</string>
     <string name="action_clear_playing_queue">Clear playing queue</string>
     <string name="action_save_playing_queue">Save playing queue</string>
     <string name="action_go_to_start_directory">Go to start directory</string>
@@ -372,8 +372,9 @@
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Only show content below start folder: </string>
 
-    <!-- Next random album -->
-    <string name="action_create_album_shuffling_queue">Shuffle by album</string>
+    <!-- Album shuffling -->
+    <string name="action_shuffle_all_albums">Shuffle by album</string>
+    <string name="start_album_shuffling_queue">Start new perpetual album queue</string>
     <string name="start_dynamic_queue">Start new perpetual queue</string>
     <string name="stop_dynamic_queue">Stop the perpetual queue</string>
     <string name="next_album">Next album:</string>

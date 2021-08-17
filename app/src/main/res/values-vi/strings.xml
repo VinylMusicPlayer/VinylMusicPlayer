@@ -84,10 +84,10 @@
     <string name="clear_playlist_title">Dọn danh sách nhạc</string>
     <string name="save_playlist_title">Lưu thành tập tin</string>
     <string name="add_playlist_title">"Thêm vào danh sách nhạc"</string>
-    <string name="action_shuffle_all">Trộn tất cả</string>
-    <string name="action_shuffle_album">Trộn album</string>
-    <string name="action_shuffle_artist">Trộn nghệ sĩ</string>
-    <string name="action_shuffle_playlist">Trộn danh sách nhạc</string>
+    <string name="action_shuffle_all_songs">Trộn tất cả</string>
+    <string name="action_shuffle_album_songs">Trộn album</string>
+    <string name="action_shuffle_artist_songs">Trộn nghệ sĩ</string>
+    <string name="action_shuffle_playlist_songs">Trộn danh sách nhạc</string>
     <string name="action_clear_playing_queue">Dọn hàng đợi phát</string>
     <string name="action_save_playing_queue">Lưu hàng đợi phát</string>
     <string name="action_go_to_start_directory">Tới thư mục đầu</string>

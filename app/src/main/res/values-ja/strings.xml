@@ -85,10 +85,10 @@
     <string name="clear_playlist_title">プレイリストの初期化</string>
     <string name="save_playlist_title">ファイルに保存</string>
     <string name="add_playlist_title">"プレイリストに追加"</string>
-    <string name="action_shuffle_all">全曲シャッフル</string>
-    <string name="action_shuffle_album">アルバムでシャッフル</string>
-    <string name="action_shuffle_artist">アーティストでシャッフル</string>
-    <string name="action_shuffle_playlist">プレイリストでシャッフル</string>
+    <string name="action_shuffle_all_songs">全曲シャッフル</string>
+    <string name="action_shuffle_album_songs">アルバムでシャッフル</string>
+    <string name="action_shuffle_artist_songs">アーティストでシャッフル</string>
+    <string name="action_shuffle_playlist_songs">プレイリストでシャッフル</string>
     <string name="action_clear_playing_queue">再生キューを空に</string>
     <string name="action_save_playing_queue">再生キューを保存</string>
     <string name="action_go_to_start_directory">初期ディレクトリに移動</string>
