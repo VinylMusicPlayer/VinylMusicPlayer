@@ -372,11 +372,14 @@
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Only show content below start folder: </string>
 
+    <!-- Dynamic element -->
+    <string name="start_dynamic_queue">Start new perpetual queue</string>
+    <string name="stop_dynamic_queue">Stop the perpetual queue</string>
+    <string name="pref_title_remember_dynamic_element">Remember perpetual queue</string>
+    <string name="pref_summary_remember_dynamic_element">Perpetual queue will stay on when selecting a new list of songs</string>
     <!-- Album shuffling -->
     <string name="action_shuffle_all_albums">Shuffle by album</string>
     <string name="start_album_shuffling_queue">Start new perpetual album queue</string>
-    <string name="start_dynamic_queue">Start new perpetual queue</string>
-    <string name="stop_dynamic_queue">Stop the perpetual queue</string>
     <string name="next_album">Next album:</string>
     <string name="no_album_found">Nothing found</string>
     <string name="no_other_album_found">Nothing else was found</string>

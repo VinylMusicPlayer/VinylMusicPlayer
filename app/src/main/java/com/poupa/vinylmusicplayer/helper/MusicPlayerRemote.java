@@ -194,6 +194,9 @@ public class MusicPlayerRemote {
             if (!PreferenceUtil.getInstance().rememberShuffle()){
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
+            if (!PreferenceUtil.getInstance().rememberDynamicQueue()){
+                setQueueToStaticQueue();
+            }
         }
     }
 
