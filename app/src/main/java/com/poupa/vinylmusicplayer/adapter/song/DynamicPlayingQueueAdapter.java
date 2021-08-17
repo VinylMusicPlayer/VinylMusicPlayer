@@ -40,7 +40,7 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
     @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         if (dynamicQueueItemAdapter != null && holder.getItemViewType() == OFFSET_ITEM) {
-            dynamicQueueItemAdapter.onBindViewHolder(holder);
+            dynamicQueueItemAdapter.onBindViewHolder(holder, activity);
         } else {
             super.onBindViewHolder(holder, position);
         }

@@ -119,7 +119,7 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
         if (nextAlbum != null)
             return new DynamicElement(context.getResources().getString(R.string.next_album),
                     MusicUtil.buildInfoString(this.nextAlbum.getArtistName(), this.nextAlbum.getTitle()),
-                    "-");
+                    R.drawable.ic_shuffle_album_white_24dp); //"-");
         return getEmptyDynamicElement(context);
     }
 
@@ -128,7 +128,7 @@ public class AlbumShufflingQueueLoader implements DynamicQueueLoader {
     }
 
     private DynamicElement getEmptyDynamicElement(Context context) {
-        return new DynamicElement(context.getResources().getString(R.string.next_album), context.getResources().getString(R.string.no_album_found), "-");
+        return new DynamicElement(context.getResources().getString(R.string.next_album), context.getResources().getString(R.string.no_album_found), R.drawable.ic_shuffle_album_white_24dp); //"-");
     }
 
     public ArrayList<Song> getNextQueue() {

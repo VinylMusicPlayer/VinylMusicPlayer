@@ -1,23 +1,30 @@
 package com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling;
 
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import com.kabouzeid.appthemehelper.ThemeStore;
+import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
+import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 
 
 public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
 
-    private DynamicElement dynamicElement; // should be replace by an interface that give data to show
+    private DynamicElement dynamicElement;
 
     public AlbumShufflingQueueItemAdapter() {
         this.dynamicElement = MusicPlayerRemote.getDynamicElement();
@@ -54,11 +61,20 @@ public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
         return false;
     }
 
-    public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder) {
+    public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, @NonNull final AppCompatActivity activity) {
         holder.title.setText(dynamicElement.firstLine);
         holder.text.setText(dynamicElement.secondLine);
-        holder.imageText.setText(dynamicElement.icon);
-        holder.image.setVisibility(View.GONE);
-        holder.imageText.setVisibility(View.VISIBLE);
+
+        if (dynamicElement.icon == DynamicElement.INVALID_ICON) {
+            holder.image.setVisibility(View.GONE);
+
+            holder.imageText.setVisibility(View.VISIBLE);
+            holder.imageText.setText(dynamicElement.iconText);
+        } else {
+            holder.imageText.setVisibility(View.GONE);
+            holder.image.setVisibility(View.VISIBLE);
+
+            PlayingSongDecorationUtil.addIconToItem(activity, holder.image, dynamicElement.icon);
+        }
     }
 }
