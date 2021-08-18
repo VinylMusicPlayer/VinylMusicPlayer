@@ -55,13 +55,16 @@ public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
             bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.GENRE_SEARCH);
             MusicPlayerRemote.setNextDynamicQueue(bundle);
             return true;
-        } else if (item.getItemId() == R.id.delete) {
+        } else if (item.getItemId() == R.id.action_delete_dynamic_element) {
             MusicPlayerRemote.setQueueToStaticQueue();
         }
         return false;
     }
 
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, @NonNull final AppCompatActivity activity) {
+        if (dynamicElement == null)
+            return;
+
         holder.title.setText(dynamicElement.firstLine);
         holder.text.setText(dynamicElement.secondLine);
 

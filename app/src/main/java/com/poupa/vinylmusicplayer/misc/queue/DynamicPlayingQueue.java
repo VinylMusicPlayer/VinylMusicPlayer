@@ -66,7 +66,7 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
     }
 
     public ArrayList<Song> getPlayingQueueSongOnly() {
-        queueLoader.setNextDynamicQueue(null, lastSong(), false); // better way of updating this element (method is always called when queue is updated)
+        queueLoader.setNextDynamicQueue(null, lastSong(), false); // best way of updating this element (method is always called when queue is updated)
         return super.getPlayingQueueSongOnly();
     }
 

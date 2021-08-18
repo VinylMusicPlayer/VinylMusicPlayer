@@ -2,8 +2,6 @@ package com.poupa.vinylmusicplayer.misc.queue;
 
 
 public class DynamicElement {
-    public final static DynamicElement EMPTY_ELEMENT = new DynamicElement("", "", ""); // Should be put into an interface
-
     public String firstLine;
     public String secondLine;
     public String iconText;

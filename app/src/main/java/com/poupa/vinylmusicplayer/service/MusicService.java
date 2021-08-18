@@ -404,7 +404,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
             queueIsDynamic = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SAVED_QUEUE_TYPE, false);
             if (queueIsDynamic) {
-                playingQueue = new DynamicPlayingQueue(new AlbumShufflingQueueLoader()); // Will depend on a saved preference to have the same than before
+                playingQueue = new DynamicPlayingQueue(new AlbumShufflingQueueLoader()); // For album shuffling V2: Will depend on a saved preference to have the same than before
             }
 
             if (playingQueue.restoreQueue(this, restoredPosition)) {
@@ -695,7 +695,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (playingQueue instanceof DynamicPlayingQueue)
             return ((DynamicPlayingQueue)playingQueue).getDynamicElement(this);
 
-        return DynamicElement.EMPTY_ELEMENT;
+        return null;
     }
 
     public void setNextDynamicQueue(Bundle criteria, Context context) {
@@ -728,7 +728,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public synchronized void setQueueToDynamicQueue() {
         if (!queueIsDynamic) {
-            playingQueue = new DynamicPlayingQueue(playingQueue, new AlbumShufflingQueueLoader()); // Will depend on what user select on bottom sheet dialog (album, song, genre, ...)
+            playingQueue = new DynamicPlayingQueue(playingQueue, new AlbumShufflingQueueLoader()); // For album shuffling V2: Will depend on what user select on bottom sheet dialog (album, song, genre, ...)
             queueIsDynamic = true;
             saveQueueType();
             notifyChange(QUEUE_CHANGED);

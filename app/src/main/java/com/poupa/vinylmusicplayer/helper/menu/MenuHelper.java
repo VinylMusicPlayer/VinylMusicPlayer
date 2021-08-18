@@ -28,7 +28,7 @@ public class MenuHelper {
         if (liveItem == null)
             liveItem = menu.findItem(R.id.action_delete_from_device);
         if (liveItem == null)
-            liveItem = menu.findItem(R.id.delete);
+            liveItem = menu.findItem(R.id.action_delete_dynamic_element);
 
         if (liveItem != null) {
             SpannableString s = new SpannableString(liveItem.getTitle().toString());
