@@ -16,6 +16,17 @@ public class IndexedSong extends Song {
         this.index = index;
     }
 
+    public boolean isQuickEqual(Song song) {
+        boolean ret = super.isQuickEqual(song);
+
+        if (getClass() == song.getClass()) {
+            IndexedSong indexedSong = (IndexedSong) song;
+            ret &= (indexedSong.index == INVALID_INDEX) || (this.index == indexedSong.index);
+        }
+
+        return ret;
+    }
+
     @Override
     public String toString() {
         return "{"+ index + ", " + title + "}";

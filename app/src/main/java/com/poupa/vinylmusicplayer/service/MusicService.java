@@ -440,12 +440,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public boolean isPlaying(@NonNull Song song) {
         if (!isPlaying()) {return false;}
-        return (song.id == getCurrentSong().id);
-    }
 
-    public boolean isPlaying(@NonNull IndexedSong song) {
-        if (!isPlaying()) {return false;}
-        return (song.id == getCurrentIndexedSong().id) && (song.index == getCurrentIndexedSong().index);
+        return getCurrentIndexedSong().isQuickEqual(song);
     }
 
     public int getPosition() {

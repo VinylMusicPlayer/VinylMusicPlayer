@@ -99,7 +99,7 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        final boolean isPlaying = (song.index == IndexedSong.INVALID_INDEX) ? MusicPlayerRemote.isPlaying((Song)song) : MusicPlayerRemote.isPlaying(song);
+        final boolean isPlaying = MusicPlayerRemote.isPlaying(song);
 
         if (title != null) {
             title.setTypeface(null, isPlaying ? Typeface.BOLD : Typeface.NORMAL);

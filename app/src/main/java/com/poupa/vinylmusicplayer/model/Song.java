@@ -75,6 +75,10 @@ public class Song implements Parcelable {
         this.year = song.year;
     }
 
+    public boolean isQuickEqual(Song song) {
+        return (this.id == song.id);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
