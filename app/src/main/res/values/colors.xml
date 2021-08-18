@@ -10,5 +10,6 @@
 
     <color name="transparent">#00000000</color>
 
+    <color name="delete">#da3500</color>
 
 </resources>

@@ -88,6 +88,9 @@ public class SongMenuHelper {
             PopupMenu popupMenu = new PopupMenu(activity, v);
             popupMenu.inflate(getMenuRes());
             popupMenu.setOnMenuItemClickListener(this);
+
+            MenuHelper.setDeleteMenuItemRed(popupMenu.getMenu(), v.getContext());
+
             popupMenu.show();
         }
 
