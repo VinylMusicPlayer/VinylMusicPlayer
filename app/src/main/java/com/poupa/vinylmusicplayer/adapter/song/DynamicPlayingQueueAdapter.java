@@ -58,7 +58,9 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
     @Override
     public int getItemCount() {
-        return dataSet.size()+1;
+        if (dataSet.size() > 0)
+            return dataSet.size()+1;
+        return 0;
     }
 
     @Override
