@@ -264,7 +264,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_album_detail, menu);
 
-        MenuHelper.setDeleteMenuItemRed(menu, this.getApplicationContext());
+        MenuHelper.setDeleteMenuItemRed(menu, this);
 
         return super.onCreateOptionsMenu(menu);
     }
