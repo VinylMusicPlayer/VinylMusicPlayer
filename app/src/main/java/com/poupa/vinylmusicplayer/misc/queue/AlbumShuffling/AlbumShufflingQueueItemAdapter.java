@@ -1,24 +1,17 @@
 package com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling;
 
 
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.kabouzeid.appthemehelper.ThemeStore;
-import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 
 

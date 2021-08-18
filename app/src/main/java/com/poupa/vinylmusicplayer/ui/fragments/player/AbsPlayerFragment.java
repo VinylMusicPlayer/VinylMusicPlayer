@@ -31,7 +31,6 @@ import com.poupa.vinylmusicplayer.dialogs.SongDetailDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
-import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.SongTagEditorActivity;

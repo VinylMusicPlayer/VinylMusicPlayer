@@ -1,8 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

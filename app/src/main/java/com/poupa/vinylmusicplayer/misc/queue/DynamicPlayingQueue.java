@@ -2,19 +2,11 @@ package com.poupa.vinylmusicplayer.misc.queue;
 
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueLoader;
-import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
