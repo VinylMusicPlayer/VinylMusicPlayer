@@ -28,6 +28,8 @@
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+        <item name="md_delete">@color/delete</item>
     </style>
 
     <style name="Theme.VinylMusicPlayer.Base.Light" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
@@ -57,6 +59,8 @@
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+        <item name="md_delete">@color/delete</item>
     </style>
 
     <style name="Theme.VinylMusicPlayer.Base.Black" parent="@style/Theme.VinylMusicPlayer.Base">
@@ -65,6 +69,8 @@
         <item name="defaultFooterColor">@color/md_grey_800</item>
         <item name="cardBackgroundColor">@color/md_grey_900</item>
         <item name="md_background_color">@color/md_grey_900</item>
+
+        <item name="md_delete">@color/delete</item>
     </style>
 
     <style name="FabParent">

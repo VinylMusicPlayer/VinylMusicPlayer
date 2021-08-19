@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -278,6 +279,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
+
+                        MenuHelper.setDeleteMenuItemRed(popupMenu.getMenu(), activity);
+
                         popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
                             activity, dataSet.get(getAdapterPosition()), item));
                     }

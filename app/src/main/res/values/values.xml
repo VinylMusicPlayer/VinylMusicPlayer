@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr format="color" name="md_delete"/>
     <string name="transition_album_art" translatable="false">album_art_transition</string>
     <string name="transition_artist_image" translatable="false">artist_image_transition</string>
     <string name="transition_fab" translatable="false">fab_transition</string>

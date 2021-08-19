@@ -28,12 +28,12 @@
         android:title="@string/action_rename"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_delete_playlist"
-        android:title="@string/action_delete"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_save_playlist"
         android:title="@string/save_playlist_title"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete_playlist"
+        android:title="@string/action_delete"
         app:showAsAction="never" />
 
 </menu>
