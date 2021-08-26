@@ -67,7 +67,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     protected void defaultAppWidget(final Context context, final int[] appWidgetIds) {
         appWidgetView = new RemoteViews(context.getPackageName(), getLayout());
 
-        setBackground();
+        setBackground(context.getResources());
         appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         appWidgetView.setImageViewResource(R.id.image, R.drawable.default_album_art);
         appWidgetView.setImageViewBitmap(R.id.button_next, ImageUtil.createBitmap(ImageUtil.getTintedVectorDrawable(context, R.drawable.ic_skip_next_white_24dp, MaterialValueHelper.getSecondaryTextColor(context, true))));
@@ -203,11 +203,20 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         return MusicUtil.getSongInfoString(song);
     }
 
-    protected void setBackground() {
+    protected void setBackground(final Resources resources) {
         if (PreferenceUtil.getInstance().transparentBackgroundWidget()) {
             appWidgetView.setInt(getId(), "setBackgroundResource", android.R.color.transparent);
         } else {
-            appWidgetView.setInt(getId(), "setBackgroundResource", R.color.md_grey_50);
+            int currentTheme = PreferenceUtil.getInstance().getGeneralTheme();
+            if(currentTheme == R.style.Theme_VinylMusicPlayer || currentTheme == R.style.Theme_VinylMusicPlayer_Black){
+                appWidgetView.setInt(getId(), "setBackgroundResource", R.color.cardview_dark_background);
+                appWidgetView.setTextColor(R.id.title, resources.getColor(R.color.ate_primary_text_dark));
+                appWidgetView.setTextColor(R.id.text, resources.getColor(R.color.ate_primary_text_dark));
+            }else{
+                appWidgetView.setInt(getId(), "setBackgroundResource", R.color.md_grey_50);
+                appWidgetView.setTextColor(R.id.title, resources.getColor(R.color.ate_primary_text_light));
+                appWidgetView.setTextColor(R.id.text, resources.getColor(R.color.ate_primary_text_light));
+            }
         }
     }
 
@@ -259,7 +268,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
                                 final Bitmap roundedBitmap = createRoundedBitmap(image, imageSize, imageSize, cardRadius, cardRadius);
                                 appWidgetView.setImageViewBitmap(R.id.image, roundedBitmap);
 
-                                setBackground();
+                                setBackground(appContext.getResources());
 
                                 pushUpdate(appContext, appWidgetIds);
                             }
