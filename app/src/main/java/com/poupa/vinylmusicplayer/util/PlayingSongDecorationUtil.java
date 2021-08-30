@@ -115,7 +115,7 @@ public class PlayingSongDecorationUtil {
         }
 
         if (imageText != null) {
-            imageText.setVisibility((isPlaying || showAlbumImage) ? View.GONE : View.VISIBLE);
+            imageText.setVisibility((isPlaying || showAlbumImage) ? View.INVISIBLE : View.VISIBLE);
         }
     }
 
