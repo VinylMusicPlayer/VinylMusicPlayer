@@ -31,6 +31,7 @@ import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -166,6 +167,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(getActivity())))
                 .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(callback);
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this.getContext());
+
         return cab;
     }
 

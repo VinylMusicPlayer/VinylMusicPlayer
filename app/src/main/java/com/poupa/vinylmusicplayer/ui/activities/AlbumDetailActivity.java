@@ -406,6 +406,9 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
                         return callback.onCabFinished(materialCab);
                     }
                 });
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+
         return cab;
     }
 

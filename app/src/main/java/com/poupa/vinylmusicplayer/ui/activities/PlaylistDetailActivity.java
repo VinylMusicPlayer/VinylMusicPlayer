@@ -179,6 +179,9 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(this)))
                 .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(callback);
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+
         return cab;
     }
 

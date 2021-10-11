@@ -39,6 +39,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
@@ -425,6 +426,9 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
                         return callback.onCabFinished(materialCab);
                     }
                 });
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+
         return cab;
     }
 

@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.GenreLoader;
@@ -147,6 +148,9 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(this)))
                 .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(callback);
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+
         return cab;
     }
 

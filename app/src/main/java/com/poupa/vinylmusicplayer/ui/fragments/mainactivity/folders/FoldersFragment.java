@@ -37,6 +37,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SongFileAdapter;
 import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -239,6 +240,9 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(getActivity())))
                 .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
                 .start(callback);
+
+        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this.getContext());
+
         return cab;
     }
 
