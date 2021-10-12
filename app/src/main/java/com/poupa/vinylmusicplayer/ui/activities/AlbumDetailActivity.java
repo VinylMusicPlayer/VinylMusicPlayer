@@ -56,7 +56,6 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -264,7 +263,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_album_detail, menu);
 
-        MenuHelper.setDeleteMenuItemRed(menu, this);
+        MenuHelper.decorateDestructiveItems(menu, this);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -385,11 +384,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
     public MaterialCab openCab(int menuRes, @NonNull final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
         adapter.setColor(getPaletteColor());
-        cab = new MaterialCab(this, R.id.cab_stub)
-                .setMenu(menuRes)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(getPaletteColor()))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
+        cab = MenuHelper.setOverflowMenu(this, menuRes, getPaletteColor())
                 .start(new MaterialCab.Callback() {
                     @Override
                     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
@@ -407,7 +402,7 @@ public class AlbumDetailActivity extends AbsSlidingMusicPanelActivity implements
                     }
                 });
 
-        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+        MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
 
         return cab;
     }

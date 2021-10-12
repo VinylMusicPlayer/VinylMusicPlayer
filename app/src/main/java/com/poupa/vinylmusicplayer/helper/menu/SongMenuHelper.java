@@ -89,7 +89,7 @@ public class SongMenuHelper {
             popupMenu.inflate(getMenuRes());
             popupMenu.setOnMenuItemClickListener(this);
 
-            MenuHelper.setDeleteMenuItemRed(popupMenu.getMenu(), v.getContext());
+            MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), v.getContext());
 
             popupMenu.show();
         }

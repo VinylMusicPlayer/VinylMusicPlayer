@@ -32,9 +32,7 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -142,14 +140,10 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     public MaterialCab openCab(final int menu, final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
         adapter.setColor(ThemeStore.primaryColor(this));
-        cab = new MaterialCab(this, R.id.cab_stub)
-                .setMenu(menu)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(this)))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
+        cab = MenuHelper.setOverflowMenu(this, menu, ThemeStore.primaryColor(this))
                 .start(callback);
 
-        MenuHelper.setDeleteMenuItemRed(cab.getMenu(), this);
+        MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
 
         return cab;
     }
