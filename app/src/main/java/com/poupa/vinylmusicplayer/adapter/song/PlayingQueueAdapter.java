@@ -70,7 +70,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public long getItemId(int position) {
-        return MusicPlayerRemote.getIndexedSongAt(position).hashCode();
+        return MusicPlayerRemote.getIndexedSongAt(position).getUniqueId(); // use hashCode instead of song.id+song.index to ensure every song have a unique id
     }
 
     @Override

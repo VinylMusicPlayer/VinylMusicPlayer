@@ -46,7 +46,7 @@ public class PlayingSongDecorationUtil {
             Song song,
             @NonNull final AppCompatActivity activity)
     {
-        PlayingSongDecorationUtil.decorate(songAdapter, holder, new IndexedSong(song, IndexedSong.INVALID_INDEX), activity);
+        PlayingSongDecorationUtil.decorate(songAdapter, holder, new IndexedSong(song, IndexedSong.INVALID_INDEX, IndexedSong.INVALID_INDEX), activity);
     }
 
     public static void decorate(
@@ -88,7 +88,7 @@ public class PlayingSongDecorationUtil {
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
-        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, IndexedSong.INVALID_INDEX), activity, showAlbumImage);
+        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, IndexedSong.INVALID_INDEX, IndexedSong.INVALID_INDEX), activity, showAlbumImage);
     }
 
     private static void decorate(

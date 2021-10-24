@@ -7,13 +7,16 @@ import com.poupa.vinylmusicplayer.model.Song;
 public class IndexedSong extends Song {
 
     public static final int INVALID_INDEX = -1;
-    public static final IndexedSong EMPTY_INDEXED_SONG = new IndexedSong(Song.EMPTY_SONG, INVALID_INDEX);
+    public static final IndexedSong EMPTY_INDEXED_SONG = new IndexedSong(Song.EMPTY_SONG, INVALID_INDEX, INVALID_INDEX);
 
     public int index;
+    private long uniqueId;
 
-    public IndexedSong(Song song, int index) {
+    public IndexedSong(Song song, int index, long uniqueId) {
         super(song);
         this.index = index;
+
+        this.uniqueId = uniqueId;
     }
 
     public boolean isQuickEqual(Song song) {
@@ -39,6 +42,14 @@ public class IndexedSong extends Song {
         if (!super.equals(o)) return false;
 
         return (index == ((IndexedSong)o).index);
+    }
+
+    public void setUniqueId(long uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    public long getUniqueId() {
+        return uniqueId;
     }
 
     @Override

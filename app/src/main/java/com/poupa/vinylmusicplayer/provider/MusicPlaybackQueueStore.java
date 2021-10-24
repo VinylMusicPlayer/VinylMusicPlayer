@@ -215,7 +215,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
             int i = 0;
             int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
             do {
-                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns)));
+                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
                 i++;
             } while (cursor.moveToNext());
         }

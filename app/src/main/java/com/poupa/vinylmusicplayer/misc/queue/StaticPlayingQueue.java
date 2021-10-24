@@ -36,6 +36,7 @@ public class StaticPlayingQueue {
     /** Copy of the queue used to allow revert of history last operation */
     private final ArrayList<IndexedSong> originalQueue;
 
+    private long nextUniqueId;
 
     public StaticPlayingQueue() {
         songs = new ArrayList<>();
@@ -44,6 +45,8 @@ public class StaticPlayingQueue {
         shuffleMode = SHUFFLE_MODE_NONE;
         currentPosition = INVALID_POSITION;
         songsIsStale = false;
+
+        restoreUniqueId();
     }
 
     public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
@@ -56,6 +59,8 @@ public class StaticPlayingQueue {
         songs = new ArrayList<>();
         songsIsStale = true;
         resetSongs();
+
+        restoreUniqueId();
     }
 
     public void restoreMode(int shuffleMode, int repeatMode) {
@@ -63,14 +68,33 @@ public class StaticPlayingQueue {
         this.repeatMode = repeatMode;
     }
 
+    private void restoreUniqueId() {
+        nextUniqueId = 0;
+        for (int i = 0; i < queue.size(); i++) {
+            long uniqueId = getNextUniqueId();
+            queue.get(i).setUniqueId(uniqueId);
+
+            originalQueue.get(queue.get(i).index).setUniqueId(uniqueId);
+        }
+    }
+
     /* -------------------- queue modification (add, remove, move, ...) -------------------- */
+
+    /**
+     * unique id is necessary for clean use of recyclerView
+     * as indexedSong hashCode will change when position change/and indexedSong id is not unique (multiple instance of the same song)
+     */
+    private long getNextUniqueId() {
+        return nextUniqueId++;
+    }
 
     /**
      * Add song at the end of both list
       */
     public void add(Song song) {
-        queue.add(new IndexedSong((Song)song, queue.size()));
-        originalQueue.add(new IndexedSong((Song)song, originalQueue.size()));
+        long uniqueId = getNextUniqueId();
+        queue.add(new IndexedSong((Song)song, queue.size(), uniqueId));
+        originalQueue.add(new IndexedSong((Song)song, originalQueue.size(), uniqueId));
 
         songsIsStale = true;
     }
@@ -95,8 +119,9 @@ public class StaticPlayingQueue {
     }
 
     private void addOneSong(int position, int previousPosition, Song song) {
-        originalQueue.add(previousPosition, new IndexedSong(song, previousPosition));
-        queue.add(position, new IndexedSong(song, previousPosition));
+        long uniqueId = getNextUniqueId();
+        originalQueue.add(previousPosition, new IndexedSong(song, previousPosition, uniqueId));
+        queue.add(position, new IndexedSong(song, previousPosition, uniqueId));
 
         updateQueueIndexesAfterSongsModification(position, 0, previousPosition, +1);
 
@@ -147,8 +172,9 @@ public class StaticPlayingQueue {
         int n = songs.size() - 1;
         for (int i = n; i >= 0; i--) {
             int newPosition = previousPosition + i;
-            originalQueue.add(previousPosition, new IndexedSong(songs.get(i), newPosition));
-            queue.add(position, new IndexedSong(songs.get(i), newPosition));
+            long uniqueId = getNextUniqueId();
+            originalQueue.add(previousPosition, new IndexedSong(songs.get(i), newPosition, uniqueId));
+            queue.add(position, new IndexedSong(songs.get(i), newPosition, uniqueId));
 
             if (position < this.currentPosition) {
                 this.currentPosition++;
@@ -255,6 +281,8 @@ public class StaticPlayingQueue {
         songs.clear();
         queue.clear();
         originalQueue.clear();
+
+        restoreUniqueId();
     }
 
     private void revert() {
