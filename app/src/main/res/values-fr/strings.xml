@@ -1,4 +1,4 @@
-<?xml version="10" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="what_do_you_want_to_share">Que voulez-vous partager ?</string>
     <string name="currently_listening_to_x_by_x">Vous écoutez %1$s de %2$s</string>
