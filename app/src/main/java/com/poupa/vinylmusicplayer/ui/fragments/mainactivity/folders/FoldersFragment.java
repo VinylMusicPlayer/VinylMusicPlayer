@@ -37,6 +37,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SongFileAdapter;
 import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -51,7 +52,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragm
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.BreadCrumbLayout;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
@@ -233,12 +233,11 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     public MaterialCab openCab(int menuRes, MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
         adapter.setColor(ThemeStore.primaryColor(getActivity()));
-        cab = new MaterialCab(getMainActivity(), R.id.cab_stub)
-                .setMenu(menuRes)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(getActivity())))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
+        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
                 .start(callback);
+
+        MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
+
         return cab;
     }
 

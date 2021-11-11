@@ -40,9 +40,7 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -151,7 +149,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(playlist instanceof AbsCustomPlaylist ? R.menu.menu_smart_playlist_detail : R.menu.menu_playlist_detail, menu);
-        MenuHelper.setDeleteMenuItemRed(menu, this);
+        MenuHelper.decorateDestructiveItems(menu, this);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -173,12 +171,11 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     public MaterialCab openCab(final int menu, final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
         adapter.setColor(ThemeStore.primaryColor(this));
-        cab = new MaterialCab(this, R.id.cab_stub)
-                .setMenu(menu)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(this)))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
+        cab = MenuHelper.setOverflowMenu(this, menu, ThemeStore.primaryColor(this))
                 .start(callback);
+
+        MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
+
         return cab;
     }
 
