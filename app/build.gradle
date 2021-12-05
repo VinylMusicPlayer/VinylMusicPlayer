@@ -116,8 +116,7 @@ dependencies {
         transitive = true
     }
 
-    // TODO Change this to 2.2.5 or 2.2.6 when it's released
-    implementation 'org.bitbucket.ijabz:jaudiotagger:7b004a1'
+    implementation 'org.bitbucket.ijabz:jaudiotagger:2.2.5'
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
