@@ -44,7 +44,8 @@ interface DeezerApiService {
         private fun createDefaultCache(context: Context): Cache? {
             val cacheDir = File(context.applicationContext.cacheDir.absolutePath, "/okhttp-deezer/")
             if (cacheDir.mkdir() or cacheDir.isDirectory) {
-                return Cache(cacheDir, 1024 * 1024 * 10)
+                val maxSize = 1024 * 1024 * 10
+                return Cache(cacheDir, maxSize.toLong())
             }
             return null
         }
