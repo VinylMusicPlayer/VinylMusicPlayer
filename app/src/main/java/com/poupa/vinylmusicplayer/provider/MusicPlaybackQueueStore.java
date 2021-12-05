@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "music_playback_state.db";
     public static final String PLAYING_QUEUE_TABLE_NAME = "playing_queue";
     public static final String ORIGINAL_PLAYING_QUEUE_TABLE_NAME = "original_playing_queue";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     /**
      * Constructor of <code>MusicPlaybackState</code>
@@ -68,6 +69,9 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
         builder.append(BaseColumns._ID);
         builder.append(" LONG NOT NULL,");
+
+        builder.append(MusicPlaybackColumns.INDEX_IN_QUEUE);
+        builder.append(" INT NOT NULL,");
 
         builder.append(AudioColumns.TITLE);
         builder.append(" STRING NOT NULL,");
@@ -133,7 +137,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
         return sInstance;
     }
 
-    public synchronized void saveQueues(@NonNull final ArrayList<Song> playingQueue, @NonNull final ArrayList<Song> originalPlayingQueue) {
+    public synchronized void saveQueues(@NonNull final ArrayList<IndexedSong> playingQueue, @NonNull final ArrayList<IndexedSong> originalPlayingQueue) {
         saveQueue(PLAYING_QUEUE_TABLE_NAME, playingQueue);
         saveQueue(ORIGINAL_PLAYING_QUEUE_TABLE_NAME, originalPlayingQueue);
     }
@@ -144,7 +148,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
      *
      * @param queue the queue to save
      */
-    private synchronized void saveQueue(final String tableName, @NonNull final ArrayList<Song> queue) {
+    private synchronized void saveQueue(final String tableName, @NonNull final ArrayList<IndexedSong> queue) {
         final SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
 
@@ -162,9 +166,11 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
             try {
                 for (int i = position; i < queue.size() && i < position + NUM_PROCESS; i++) {
                     Song song = queue.get(i);
+                    int indexInQueue = queue.get(i).index;
                     ContentValues values = new ContentValues(4);
 
                     values.put(BaseColumns._ID, song.id);
+                    values.put(MusicPlaybackColumns.INDEX_IN_QUEUE, indexInQueue);
                     // TODO No need to save the song metadata here-under
                     //      Keep it for now for backward compat (in the case of rollback)
                     values.put(AudioColumns.TITLE, song.title);
@@ -191,22 +197,45 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     }
 
     @NonNull
-    public ArrayList<Song> getSavedPlayingQueue() {
+    public ArrayList<IndexedSong> getSavedPlayingQueue() {
         return getQueue(PLAYING_QUEUE_TABLE_NAME);
     }
 
     @NonNull
-    public ArrayList<Song> getSavedOriginalPlayingQueue() {
+    public ArrayList<IndexedSong> getSavedOriginalPlayingQueue() {
         return getQueue(ORIGINAL_PLAYING_QUEUE_TABLE_NAME);
     }
 
+
     @NonNull
-    private ArrayList<Song> getQueue(@NonNull final String tableName) {
-        try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID},
+    private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs) {
+        ArrayList<IndexedSong> queue = new ArrayList<>();
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int i = 0;
+            int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+            do {
+                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
+                i++;
+            } while (cursor.moveToNext());
+        }
+
+        return queue;
+    }
+
+    @NonNull
+    private ArrayList<IndexedSong> getQueue(@NonNull final String tableName) {
+        try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID, MusicPlaybackColumns.INDEX_IN_QUEUE},
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
-            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+
+            return getSongPosition(cursor, songs);
         }
+    }
+
+    public interface MusicPlaybackColumns extends AudioColumns {
+        String INDEX_IN_QUEUE = "index_in_queue";
     }
 }

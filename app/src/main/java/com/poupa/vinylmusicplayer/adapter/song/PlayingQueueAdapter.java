@@ -27,7 +27,9 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class PlayingQueueAdapter extends SongAdapter
     private static final int CURRENT = 1;
     private static final int UP_NEXT = 2;
 
-    public Song songToRemove;
+    public IndexedSong songToRemove;
 
     private static Snackbar currentlyShownSnackbar;
 
@@ -67,8 +69,15 @@ public class PlayingQueueAdapter extends SongAdapter
     }
 
     @Override
+    public long getItemId(int position) {
+        return MusicPlayerRemote.getIndexedSongAt(position).getUniqueId(); // use hashCode instead of song.id+song.index to ensure every song have a unique id
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
+        PlayingSongDecorationUtil.decorate(this, holder, MusicPlayerRemote.getIndexedSongAt(position), activity);
 
         if (holder.imageText != null) {
             holder.imageText.setText(String.valueOf(position - current));
@@ -217,14 +226,9 @@ public class PlayingQueueAdapter extends SongAdapter
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_remove_from_playing_queue) {
-                // If song removed was the playing song, then play the next song
-                if (MusicPlayerRemote.isPlaying(getSong()))
-                {
-                    MusicPlayerRemote.playNextSong();
-                }
-
                 final int position = getAdapterPosition();
                 MusicPlayerRemote.removeFromQueue(position);
+
                 return true;
             }
             return super.onSongMenuItemClick(item);
@@ -263,19 +267,14 @@ public class PlayingQueueAdapter extends SongAdapter
         }
         @Override
         protected void onSlideAnimationEnd() {
-            Song songToRemove = adapter.dataSet.get(position);
+            IndexedSong songToRemove = MusicPlayerRemote.getIndexedSongAt(position);
             boolean isPlayingSongToRemove = MusicPlayerRemote.isPlaying(songToRemove);
 
             initializeSnackBar(adapter, position, activity, isPlayingSongToRemove);
 
-            //If song removed was the playing song, then play the next song
-            if (isPlayingSongToRemove) {
-                MusicPlayerRemote.playNextSong();
-            }
-
             //Swipe animation is much smoother when we do the heavy lifting after it's completed
             adapter.setSongToRemove(songToRemove);
-            MusicPlayerRemote.removeFromQueue(songToRemove);
+            MusicPlayerRemote.removeFromQueue(position);
         }
     }
 
@@ -306,7 +305,7 @@ public class PlayingQueueAdapter extends SongAdapter
         songTitle.setText(adapter.dataSet.get(position).title + " " + snackBarTitle);
 
         snackbar.setAction(R.string.snack_bar_action_undo, v -> {
-            MusicPlayerRemote.addSong(position,adapter.getSongToRemove());
+            MusicPlayerRemote.addSongBackTo(position, adapter.getSongToRemove());
             //If playing and currently playing song is removed, then added back, then play it at
             //current song progress
             if (isPlayingSongToRemove) {
@@ -323,11 +322,11 @@ public class PlayingQueueAdapter extends SongAdapter
 
     }
 
-    private void setSongToRemove (@NonNull Song song){
+    private void setSongToRemove (@NonNull IndexedSong song){
         songToRemove = song;
     }
 
-    private Song getSongToRemove(){
+    private IndexedSong getSongToRemove(){
         return songToRemove;
     }
 }

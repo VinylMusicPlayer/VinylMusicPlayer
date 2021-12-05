@@ -21,6 +21,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
@@ -43,6 +44,15 @@ public class PlayingSongDecorationUtil {
             @NonNull final SongAdapter songAdapter,
             @NonNull final SongAdapter.ViewHolder holder,
             Song song,
+            @NonNull final AppCompatActivity activity)
+    {
+        PlayingSongDecorationUtil.decorate(songAdapter, holder, new IndexedSong(song, IndexedSong.INVALID_INDEX, IndexedSong.INVALID_INDEX), activity);
+    }
+
+    public static void decorate(
+            @NonNull final SongAdapter songAdapter,
+            @NonNull final SongAdapter.ViewHolder holder,
+            IndexedSong song,
             @NonNull final AppCompatActivity activity)
     {
         PlayingSongDecorationUtil.decorate(holder.title, holder.image, holder.imageText, song, activity, songAdapter.isShowAlbumImage());
@@ -75,6 +85,17 @@ public class PlayingSongDecorationUtil {
             @Nullable final ImageView image,
             @Nullable final TextView imageText,
             Song song,
+            @NonNull final AppCompatActivity activity,
+            boolean showAlbumImage)
+    {
+        PlayingSongDecorationUtil.decorate(title, image, imageText, new IndexedSong(song, IndexedSong.INVALID_INDEX, IndexedSong.INVALID_INDEX), activity, showAlbumImage);
+    }
+
+    private static void decorate(
+            @Nullable final TextView title,
+            @Nullable final ImageView image,
+            @Nullable final TextView imageText,
+            IndexedSong song,
             @NonNull final AppCompatActivity activity,
             boolean showAlbumImage)
     {
