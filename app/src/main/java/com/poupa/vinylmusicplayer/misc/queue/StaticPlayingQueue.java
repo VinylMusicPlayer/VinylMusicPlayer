@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.misc.queue;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
-
 
 public class StaticPlayingQueue {
 
@@ -74,6 +72,7 @@ public class StaticPlayingQueue {
             long uniqueId = getNextUniqueId();
             queue.get(i).setUniqueId(uniqueId);
 
+            // TODO The queue sizes may differ
             originalQueue.get(queue.get(i).index).setUniqueId(uniqueId);
         }
     }

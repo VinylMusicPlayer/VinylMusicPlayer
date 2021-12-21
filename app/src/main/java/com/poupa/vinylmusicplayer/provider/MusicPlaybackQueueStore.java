@@ -22,7 +22,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.provider.MediaStore.Audio.AudioColumns;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -212,18 +211,13 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
 
-        // TODO It is possible that the size of cursor and songs differ (orphan songs cleaned up)
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                int i = 0;
-                int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
-                do {
-                    queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
-                    i++;
-                } while (cursor.moveToNext());
-            }
-        } catch (IndexOutOfBoundsException swallowed) {
-            Log.e(MusicPlaybackQueueStore.class.getName(), "Error loading queue: " + swallowed.toString());
+        if (cursor != null && cursor.moveToFirst()) {
+            int i = 0;
+            int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+            do {
+                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
+                i++;
+            } while (cursor.moveToNext());
         }
 
         return queue;
@@ -235,6 +229,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
+            // TODO It is possible that the size of cursor and songs differ (orphan songs cleaned up)
             ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
 
             return getSongPosition(cursor, songs);
