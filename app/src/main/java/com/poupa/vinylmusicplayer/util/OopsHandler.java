@@ -114,6 +114,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
+                // TODO Localized text
                 String subject = APP_NAME + " crashed";
                 builder.setTitle(subject);
                 builder.create();
@@ -131,7 +132,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
                             context.startActivity(sendIntent);
                             System.exit(0);
                         });
-                builder.setMessage(subject);
+                builder.setMessage("Crash report information is collected and can be reported to developer (via email).\n\nYou can review the crash report before sending.");
                 builder.show();
                 Looper.loop();
             }
