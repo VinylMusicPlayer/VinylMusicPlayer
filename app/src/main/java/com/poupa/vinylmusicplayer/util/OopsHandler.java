@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
  * Heavily based on https://www.coderzheaven.com/2013/03/13/customize-force-close-dialog-android/
  */
 public class OopsHandler implements UncaughtExceptionHandler {
-    public final static String EMAIL = "oops-handler.vinyl@maildrop.cc";
+    public final static String EMAIL = "D-1qzcxj36d5n2jhccd@maildrop.cc";
     public final static String APP_NAME = "Vinyl";
 
     private final Context context;
