@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.provider.MediaStore.Audio.AudioColumns;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -221,7 +222,9 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                     i++;
                 } while (cursor.moveToNext());
             }
-        } catch (IndexOutOfBoundsException swallowed) {}
+        } catch (IndexOutOfBoundsException swallowed) {
+            Log.e(MusicPlaybackQueueStore.class.getName(), "Error loading queue: " + swallowed.toString());
+        }
 
         return queue;
     }
