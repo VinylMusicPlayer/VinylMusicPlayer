@@ -211,14 +211,17 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
 
-        if (cursor != null && cursor.moveToFirst()) {
-            int i = 0;
-            int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
-            do {
-                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
-                i++;
-            } while (cursor.moveToNext());
-        }
+        // TODO It is possible that the size of cursor and songs differ (orphan songs cleaned up)
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                int i = 0;
+                int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+                do {
+                    queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
+                    i++;
+                } while (cursor.moveToNext());
+            }
+        } catch (IndexOutOfBoundsException swallowed) {}
 
         return queue;
     }
