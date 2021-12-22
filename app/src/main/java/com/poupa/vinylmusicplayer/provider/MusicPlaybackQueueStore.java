@@ -26,6 +26,7 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -256,6 +257,10 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
         try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID, MusicPlaybackColumns.INDEX_IN_QUEUE},
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
+
+            // Spinning wait for the media store refresh to finish
+            while (Discography.getInstance().isStale()) {}
+
             ArrayList<Long> removedSongIds = new ArrayList<>();
             ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
 
