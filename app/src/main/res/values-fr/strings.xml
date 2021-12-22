@@ -111,7 +111,7 @@
     <string name="never">Jamais</string>
     <string name="today">Aujourd\'hui</string>
     <string name="this_week">Cette semaine</string>
-    <string name="this_month">Ce mois</string>
+    <string name="this_month">Ce mois-ci</string>
     <string name="this_year">Cette année</string>
     <string name="past_X_days">Les %d derniers jours</string>
     <string name="past_X_weeks">Les %d dernières semaines</string>
