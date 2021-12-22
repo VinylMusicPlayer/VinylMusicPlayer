@@ -258,10 +258,6 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
-            // Spinning wait for the media store refresh to finish
-            // TODO Rework this fragile wait condition
-            while (Discography.getInstance().isStale()) {}
-
             ArrayList<Long> removedSongIds = new ArrayList<>();
             ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
 

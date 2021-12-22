@@ -36,11 +36,14 @@ public class StoreLoader {
         ArrayList<Long> orphanSongIds = new ArrayList<>();
 
         ArrayList<Song> songs = new ArrayList<>();
-        final boolean isStale = discography.isStale(); // Must capture this before the discog.getSong
+
+        // Spinning wait for the media store refresh to finish
+        while (discography.isStale()) {}
+
         for (Long id : songIds) {
             Song song = discography.getSong(id);
             if (song.equals(Song.EMPTY_SONG)) {
-                if (!isStale) {orphanSongIds.add(id);}
+                orphanSongIds.add(id);
             } else {
                 songs.add(song);
             }
