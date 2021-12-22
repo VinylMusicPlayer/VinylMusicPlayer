@@ -191,9 +191,9 @@
     <string name="search_hint">Recherche dans votre bibliothèque…</string>
     <string name="favorites">Favoris</string>
     <string name="last_added">Derniers ajouts</string>
-    <string name="history">Historique</string>
+    <string name="history">Joués récemment</string>
     <string name="my_top_tracks">Titres les plus écoutés</string>
-    <string name="not_recently_played">Titres pas écoutés récemment</string>
+    <string name="not_recently_played">Titres peu écoutés</string>
     <string name="skipped_songs">Titres ignorés</string>
     <string name="remove_cover">Supprimer la pochette</string>
     <string name="download_from_last_fm">Télécharger depuis Last.fm</string>
