@@ -31,6 +31,7 @@ import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Andrew Neal, modified by Karim Abou Zeid
@@ -210,6 +211,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     @NonNull
     private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs, @NonNull final ArrayList<Long> removedSongIds) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
+        ArrayList<Integer> removedIndexes = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()) {
             int i = 0;
@@ -218,15 +220,32 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
             do {
                 long songId = cursor.getLong(idColumn);
+                int songIndex = cursor.getInt(indexColumn);
+
                 if (removedSongIds.contains(songId)) {
-                    // Note that the queue store will still contain the orphan song id
-                    // It will only cleaned up when a new queue is created
+                    // Note that the queue store will still contain the orphan songs
+                    // It will only gets cleaned up when a new queue is created
+                    removedIndexes.add(songIndex);
                     continue;
                 }
 
-                queue.add(new IndexedSong(songs.get(i), cursor.getInt(indexColumn), IndexedSong.INVALID_INDEX));
+                queue.add(new IndexedSong(songs.get(i), songIndex, IndexedSong.INVALID_INDEX));
                 i++;
             } while (cursor.moveToNext());
+        }
+
+        // Adjust the index value, since there are removed songs
+        if (!removedIndexes.isEmpty())
+        {
+            Collections.sort(removedIndexes);
+            Collections.reverse(removedIndexes);
+            for (int removedIndex : removedIndexes) {
+                for (IndexedSong song : queue) {
+                    if (song.index > removedIndex) {
+                        song.index = song.index - 1;
+                    }
+                }
+            }
         }
 
         return queue;
@@ -237,15 +256,8 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
         try (Cursor cursor = getReadableDatabase().query(tableName, new String[]{BaseColumns._ID, MusicPlaybackColumns.INDEX_IN_QUEUE},
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
-
-            // Due to orphan song cleanup, the cursor and songs list may differ
-            // To reproduce:
-            // - Start a playing queue with all songs
-            // - Stop the app
-            // - Remove some songs from the device, leave sometime for the indexer to pickup the removal
-            // - Restart the app
             ArrayList<Long> removedSongIds = new ArrayList<>();
-            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, (list) -> removedSongIds.addAll(list));
+            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
 
             return getSongPosition(cursor, songs, removedSongIds);
         }
