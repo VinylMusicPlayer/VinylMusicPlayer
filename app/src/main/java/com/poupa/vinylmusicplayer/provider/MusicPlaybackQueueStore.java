@@ -208,14 +208,23 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
 
     @NonNull
-    private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs) {
+    private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs, @NonNull final ArrayList<Long> removedSongIds) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()) {
             int i = 0;
-            int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+            int idColumn = cursor.getColumnIndex(BaseColumns._ID);
+            int indexColumn = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+
             do {
-                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
+                int songId = cursor.getInt(idColumn);
+                if (removedSongIds.contains(songId)) {
+                    // Note that the queue store will still contain the orphan song id
+                    // It will only cleaned up when a new queue is created
+                    continue;
+                }
+
+                queue.add(new IndexedSong(songs.get(i), cursor.getInt(indexColumn), IndexedSong.INVALID_INDEX));
                 i++;
             } while (cursor.moveToNext());
         }
@@ -229,10 +238,16 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
-            // TODO It is possible that the size of cursor and songs differ (orphan songs cleaned up)
-            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            // Due to orphan song cleanup, the cursor and songs list may differ
+            // To reproduce:
+            // - Start a playing queue with all songs
+            // - Stop the app
+            // - Remove some songs from the device, leave sometime for the indexer to pickup the removal
+            // - Restart the app
+            ArrayList<Long> removedSongIds = new ArrayList<>();
+            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, (list) -> removedSongIds.addAll(list));
 
-            return getSongPosition(cursor, songs);
+            return getSongPosition(cursor, songs, removedSongIds);
         }
     }
 

@@ -72,7 +72,6 @@ public class StaticPlayingQueue {
             long uniqueId = getNextUniqueId();
             queue.get(i).setUniqueId(uniqueId);
 
-            // TODO The queue sizes may differ
             originalQueue.get(queue.get(i).index).setUniqueId(uniqueId);
         }
     }
