@@ -217,7 +217,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
             int indexColumn = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
 
             do {
-                int songId = cursor.getInt(idColumn);
+                long songId = cursor.getLong(idColumn);
                 if (removedSongIds.contains(songId)) {
                     // Note that the queue store will still contain the orphan song id
                     // It will only cleaned up when a new queue is created
