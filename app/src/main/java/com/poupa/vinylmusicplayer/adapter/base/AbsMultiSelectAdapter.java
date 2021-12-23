@@ -9,21 +9,30 @@ import androidx.annotation.MenuRes;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
+
+import static com.afollestad.materialcab.MaterialCabKt.createCab;
+import static com.afollestad.materialcab.attached.AttachedCabKt.destroy;
+import static com.afollestad.materialcab.attached.AttachedCabKt.isActive;
+
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 
 import java.util.ArrayList;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, I> extends RecyclerView.Adapter<VH> implements MaterialCab.Callback {
+public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, I> extends RecyclerView.Adapter<VH> {
     @Nullable
     private final CabHolder cabHolder;
-    private MaterialCab cab;
+    private AttachedCab cab;
     private final ArrayList<I> checked;
     private int menuRes;
     private final Context context;
@@ -71,13 +80,50 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     private void updateCab() {
         if (cabHolder != null) {
-            if (cab == null || !cab.isActive()) {
-                cab = cabHolder.openCab(menuRes, this);
+            if (cab == null || !isActive(cab)) {
+                cab = createCab((Activity) context, menuRes, new Function1<AttachedCab, Unit>() {
+                    @Override
+                    public Unit invoke(AttachedCab attachedCab) {
+                        attachedCab.onCreate(new Function2<AttachedCab, Menu, Unit>() {
+                            @Override
+                            public Unit invoke(AttachedCab attachedCab, Menu menuItem) {
+                                AbsThemeActivity.static_setStatusbarColor((Activity) context, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
+                                return Unit.INSTANCE;
+                            }
+                        });
+
+                        attachedCab.onSelection(new Function1<MenuItem, Boolean>() {
+                            @Override
+                            public Boolean invoke(MenuItem menuItem) {
+                                if (menuItem.getItemId() == R.id.action_multi_select_adapter_check_all) {
+                                    checkAll();
+                                } else {
+                                    onMultipleItemAction(menuItem, new ArrayList<>(checked));
+                                    destroy(cab);
+                                    clearChecked();
+                                }
+                                return true;
+                            }
+                        });
+
+                        attachedCab.onDestroy(new Function1<AttachedCab, Boolean>() {
+                            @Override
+                            public Boolean invoke(AttachedCab attachedCab) {
+                                AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
+                                clearChecked();
+                                return true;
+                            }
+                        });
+
+
+                        return Unit.INSTANCE;
+                    }
+                });
             }
             final int size = checked.size();
-            if (size <= 0) cab.finish();
-            else if (size == 1) cab.setTitle(getName(checked.get(0)));
-            else cab.setTitle(context.getString(R.string.x_selected, size));
+            if (size <= 0) destroy(cab);
+            else if (size == 1) cab.title(null, getName(checked.get(0)));
+            else cab.title(null, context.getString(R.string.x_selected, size));
         }
     }
 
@@ -91,36 +137,11 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     }
 
     protected boolean isInQuickSelectMode() {
-        return cab != null && cab.isActive();
+        return cab != null && isActive(cab);
     }
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor((Activity) context, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
-        return true;
-    }
-
-    @Override
-    public boolean onCabItemClicked(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_multi_select_adapter_check_all) {
-            checkAll();
-        } else {
-            onMultipleItemAction(menuItem, new ArrayList<>(checked));
-            cab.finish();
-            clearChecked();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
-        clearChecked();
-        return true;
     }
 
     protected String getName(I object) {
