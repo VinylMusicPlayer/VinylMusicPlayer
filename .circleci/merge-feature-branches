@@ -32,7 +32,7 @@ function git_describe()
 last_commits="$(git_describe origin/${CIRCLE_BRANCH})"
 
 # Merge with feature branches, unless black-listed
-branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
+branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3- | grep -v 'HEAD ')
 
 function is_blacklisted()
 {
