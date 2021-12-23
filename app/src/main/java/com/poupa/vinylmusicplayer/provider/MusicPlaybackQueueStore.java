@@ -258,7 +258,8 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
             ArrayList<Long> removedSongIds = new ArrayList<>();
-            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
+            Discography discography = Discography.getInstance();
+            ArrayList<Song> songs = discography.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
 
             return getSongPosition(cursor, songs, removedSongIds);
         }

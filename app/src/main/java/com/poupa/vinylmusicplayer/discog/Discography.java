@@ -125,6 +125,32 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
+    public ArrayList<Song> getSongsFromIdsAndCleanupOrphans(@NonNull ArrayList<Long> songIds, @Nullable Consumer<ArrayList<Long>> orphanIdsCleaner) {
+        ArrayList<Long> orphanSongIds = new ArrayList<>();
+        ArrayList<Song> songs = new ArrayList<>();
+
+        // Spinning wait for the media store refresh to finish
+        // TODO Put it under sync block?
+        while (isStale()) {Thread.yield();}
+
+        synchronized (cache) {
+            for (Long id : songIds) {
+                Song song = cache.songsById.get(id);
+                if (song != null) {
+                    songs.add(song);
+                } else if (orphanIdsCleaner != null) {
+                    orphanSongIds.add(id);
+                }
+            }
+        }
+
+        if (orphanIdsCleaner != null) {
+            orphanIdsCleaner.accept(orphanSongIds);
+        }
+        return songs;
+    }
+
+    @NonNull
     public Song getSongByPath(@NonNull final String path) {
         synchronized (cache) {
             Song matchingSong = Song.EMPTY_SONG;
