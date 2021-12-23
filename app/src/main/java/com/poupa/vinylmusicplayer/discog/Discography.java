@@ -130,7 +130,6 @@ public class Discography implements MusicServiceEventListener {
         ArrayList<Song> songs = new ArrayList<>();
 
         // Spinning wait for the media store refresh to finish
-        // TODO Put it under sync block?
         while (isStale()) {Thread.yield();}
 
         synchronized (cache) {
