@@ -80,13 +80,13 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    public void setStale(boolean value) {
+    void setStale(boolean value) {
         synchronized (cache) {
             cache.isStale = value;
         }
     }
 
-    public boolean isStale() {
+    boolean isStale() {
         synchronized (cache) {
             return cache.isStale;
         }
