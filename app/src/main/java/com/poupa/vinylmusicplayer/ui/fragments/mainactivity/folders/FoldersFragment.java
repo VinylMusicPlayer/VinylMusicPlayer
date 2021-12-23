@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
+import static com.afollestad.materialcab.attached.AttachedCabKt.destroy;
+import static com.afollestad.materialcab.attached.AttachedCabKt.isActive;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +29,7 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -80,7 +83,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     FastScrollRecyclerView recyclerView;
 
     private SongFileAdapter adapter;
-    private MaterialCab cab;
+    private AttachedCab cab;
 
     public FoldersFragment() {
     }
@@ -217,8 +220,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && cab.isActive()) {
-            cab.finish();
+        if (cab != null && isActive(cab)) {
+            destroy(cab);
             return true;
         }
         if (breadCrumbs.popHistory()) {
@@ -230,11 +233,10 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     @NonNull
     @Override
-    public MaterialCab openCab(int menuRes, MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
+    public AttachedCab openCab(int menuRes) {
+        if (cab != null && isActive(cab)) destroy(cab);
         adapter.setColor(ThemeStore.primaryColor(getActivity()));
-        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
-                .start(callback);
+        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()));
 
         MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
 

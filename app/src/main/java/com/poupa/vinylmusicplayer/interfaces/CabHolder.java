@@ -2,13 +2,12 @@ package com.poupa.vinylmusicplayer.interfaces;
 
 import androidx.annotation.NonNull;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public interface CabHolder {
-
     @NonNull
-    MaterialCab openCab(final int menuRes, final MaterialCab.Callback callback);
+    AttachedCab openCab(final int menuRes);
 }

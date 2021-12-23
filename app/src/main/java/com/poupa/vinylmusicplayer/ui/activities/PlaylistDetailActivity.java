@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import static com.afollestad.materialcab.attached.AttachedCabKt.destroy;
+import static com.afollestad.materialcab.attached.AttachedCabKt.isActive;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +17,7 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
@@ -59,7 +62,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     private Playlist playlist;
 
-    private MaterialCab cab;
+    private AttachedCab cab;
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
@@ -168,11 +171,10 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @NonNull
     @Override
-    public MaterialCab openCab(final int menu, final MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
+    public AttachedCab openCab(final int menu) {
+        if (cab != null && isActive(cab)) destroy(cab);
         adapter.setColor(ThemeStore.primaryColor(this));
-        cab = MenuHelper.setOverflowMenu(this, menu, ThemeStore.primaryColor(this))
-                .start(callback);
+        cab = MenuHelper.setOverflowMenu(this, menu, ThemeStore.primaryColor(this));
 
         MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
 
@@ -181,7 +183,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @Override
     public void onBackPressed() {
-        if (cab != null && cab.isActive()) cab.finish();
+        if (cab != null && isActive(cab)) destroy(cab);
         else {
             recyclerView.stopScroll();
             super.onBackPressed();

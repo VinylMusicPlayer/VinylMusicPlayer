@@ -1,6 +1,9 @@
 package com.poupa.vinylmusicplayer.helper.menu;
 
 
+import static com.afollestad.materialcab.MaterialCabKt.createCab;
+
+import android.app.Activity;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -12,12 +15,13 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import com.afollestad.materialcab.MaterialCab;
-import com.kabouzeid.appthemehelper.ThemeStore;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 
 public class MenuHelper {
@@ -41,11 +45,19 @@ public class MenuHelper {
         }
     }
 
-    public static MaterialCab setOverflowMenu(@NonNull AppCompatActivity context, @MenuRes int menuRes, @ColorInt int backgroundColor) {
-        return new MaterialCab(context, R.id.cab_stub)
-                .setMenu(menuRes)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme());
+    public static AttachedCab setOverflowMenu(@NonNull AppCompatActivity context, @MenuRes int menuRes, @ColorInt int backgroundColor) {
+        AttachedCab cab = createCab((Activity) context, R.id.cab_stub, new Function1<AttachedCab, Unit>() {
+            @Override
+            public Unit invoke(AttachedCab attachedCab) {
+                return Unit.INSTANCE;
+            }
+        });
+
+        cab.menu(menuRes);
+        cab.closeDrawable(R.drawable.ic_close_white_24dp);
+        cab.backgroundColor(null, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor));
+        cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
+
+        return cab;
     }
 }

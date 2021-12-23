@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library;
 
+import static com.afollestad.materialcab.attached.AttachedCabKt.destroy;
+import static com.afollestad.materialcab.attached.AttachedCabKt.isActive;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -58,7 +61,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     ViewPager pager;
 
     private MusicLibraryPagerAdapter pagerAdapter;
-    private MaterialCab cab;
+    private AttachedCab cab;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -158,10 +161,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     @NonNull
     @Override
-    public MaterialCab openCab(final int menuRes, final MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
-        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
-                .start(callback);
+    public AttachedCab openCab(final int menuRes) {
+        if (cab != null && isActive(cab)) destroy(cab);
+        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()));
 
         MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
 
@@ -370,8 +372,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && cab.isActive()) {
-            cab.finish();
+        if (cab != null && isActive(cab)) {
+            destroy(cab);
             return true;
         }
         return false;

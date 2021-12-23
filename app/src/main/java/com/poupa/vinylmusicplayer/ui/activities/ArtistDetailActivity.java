@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import static com.afollestad.materialcab.attached.AttachedCabKt.destroy;
+import static com.afollestad.materialcab.attached.AttachedCabKt.isActive;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -22,7 +25,7 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
@@ -92,7 +95,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     View songListHeader;
     RecyclerView albumRecyclerView;
 
-    private MaterialCab cab;
+    private AttachedCab cab;
     private int headerViewHeight;
     private int toolbarColor;
 
@@ -401,26 +404,10 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @NonNull
     @Override
-    public MaterialCab openCab(int menuRes, @NonNull final MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
+    public AttachedCab openCab(int menuRes) {
+        if (cab != null && isActive(cab)) destroy(cab);
         songAdapter.setColor(getPaletteColor());
-        cab = MenuHelper.setOverflowMenu(this, menuRes, getPaletteColor())
-                .start(new MaterialCab.Callback() {
-                    @Override
-                    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-                        return callback.onCabCreated(materialCab, menu);
-                    }
-
-                    @Override
-                    public boolean onCabItemClicked(MenuItem menuItem) {
-                        return callback.onCabItemClicked(menuItem);
-                    }
-
-                    @Override
-                    public boolean onCabFinished(MaterialCab materialCab) {
-                        return callback.onCabFinished(materialCab);
-                    }
-                });
+        cab = MenuHelper.setOverflowMenu(this, menuRes, getPaletteColor());
 
         MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
 
@@ -429,7 +416,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @Override
     public void onBackPressed() {
-        if (cab != null && cab.isActive()) cab.finish();
+        if (cab != null && isActive(cab)) destroy(cab);
         else {
             albumRecyclerView.stopScroll();
             super.onBackPressed();
