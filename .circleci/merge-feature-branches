@@ -40,6 +40,7 @@ function is_blacklisted()
     # Space separated list of branch names
     local blacklist="
         internal-playlists
+        fix/489-update-material-cab
     "
 
     for bl in ${blacklist}; do
