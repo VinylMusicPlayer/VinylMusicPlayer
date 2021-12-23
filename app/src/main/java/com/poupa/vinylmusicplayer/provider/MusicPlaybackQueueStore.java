@@ -212,7 +212,6 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     @NonNull
     private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs, @NonNull final ArrayList<Long> removedSongIds) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
-        ArrayList<Integer> removedIndexes = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()) {
             int i = 0;
@@ -224,28 +223,14 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 int songIndex = cursor.getInt(indexColumn);
 
                 if (removedSongIds.contains(songId)) {
-                    // Note that the queue store will still contain the orphan songs
-                    // It will only gets cleaned up when a new queue is created
-                    removedIndexes.add(songIndex);
-                    continue;
+                    // Add a place holder song here, to be removed after by the caller
+                    // This is done to maintain consistent queue and playing position
+                    queue.add(new IndexedSong(Song.EMPTY_SONG, songIndex, IndexedSong.INVALID_INDEX));
+                } else {
+                    queue.add(new IndexedSong(songs.get(i), songIndex, IndexedSong.INVALID_INDEX));
+                    i++;
                 }
-
-                queue.add(new IndexedSong(songs.get(i), songIndex, IndexedSong.INVALID_INDEX));
-                i++;
             } while (cursor.moveToNext());
-        }
-
-        // Adjust the index value, since there are removed songs
-        if (!removedIndexes.isEmpty())
-        {
-            Collections.sort(removedIndexes, Collections.reverseOrder());
-            for (int removedIndex : removedIndexes) {
-                for (IndexedSong song : queue) {
-                    if (song.index > removedIndex) {
-                        song.index = song.index - 1;
-                    }
-                }
-            }
         }
 
         return queue;
