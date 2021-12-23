@@ -238,8 +238,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
         // Adjust the index value, since there are removed songs
         if (!removedIndexes.isEmpty())
         {
-            Collections.sort(removedIndexes);
-            Collections.reverse(removedIndexes);
+            Collections.sort(removedIndexes, Collections.reverseOrder());
             for (int removedIndex : removedIndexes) {
                 for (IndexedSong song : queue) {
                     if (song.index > removedIndex) {
