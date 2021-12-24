@@ -67,7 +67,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -392,34 +391,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
             int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
-            // // Adjust for removed songs, marked with IndexedSong.EMPTY_INDEXED_SONG
-            // ArrayList<Integer> removedIndexes = new ArrayList<>();
-            // for (IndexedSong song : restoredQueue) {
-            //     if (song.id == Song.EMPTY_SONG.id) {
-            //         removedIndexes.add(song.index);
-            //     }
-            // }
-            // if (!removedIndexes.isEmpty())
-            // {
-            //     Collections.sort(removedIndexes, Collections.reverseOrder());
-            //     for (int removedIndex : removedIndexes) {
-            //         // Adjust the index value
-            //         for (IndexedSong song : queue) {
-            //             if (song.index > removedIndex) {
-            //                 song.index = song.index - 1;
-            //             }
-            //         }
-            //         // Adjust the queue position
-            //         if (restoredPosition > removedIndex) {
-            //             restoredPosition--;
-            //         } else if (restoredPosition == removedIndex) {
-            //             restoredPositionInTrack = 0; // force to the start of the next track
-            //         }
-            //     }
-            // }
-
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
                 playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
+
+                // Adjust for removed songs, marked with Song.EMPTY in the restored queues
+                for (int i = restoredQueue.size() - 1; i >= 0; --i) {
+                    if (restoredQueue.get(i).id == Song.EMPTY_SONG.id) {
+                        playingQueue.remove(i);
+                    }
+                }
 
                 openCurrent();
                 prepareNext();
