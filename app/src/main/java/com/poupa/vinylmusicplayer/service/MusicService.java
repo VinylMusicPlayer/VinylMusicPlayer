@@ -394,13 +394,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
                 playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
 
-                // Adjust for removed songs, marked with Song.EMPTY in the restored queues
-                for (int i = restoredQueue.size() - 1; i >= 0; --i) {
-                    if (restoredQueue.get(i).id == Song.EMPTY_SONG.id) {
-                        playingQueue.remove(i);
-                    }
-                }
-
                 openCurrent();
                 prepareNext();
 
