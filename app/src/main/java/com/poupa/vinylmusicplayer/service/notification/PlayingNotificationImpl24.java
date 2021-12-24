@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Build.VERSION;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,12 +51,23 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
 
         Intent action = new Intent(service, MainActivity.class);
         action.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        final PendingIntent clickIntent = PendingIntent.getActivity(service, 0, action, 0);
+
+        final PendingIntent clickIntent;
+        if (VERSION.SDK_INT >= 23) {
+            clickIntent = PendingIntent.getActivity(service, 0, action, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            clickIntent = PendingIntent.getActivity(service, 0, action, 0);
+        }
 
         final ComponentName serviceName = new ComponentName(service, MusicService.class);
         Intent intent = new Intent(MusicService.ACTION_QUIT);
         intent.setComponent(serviceName);
-        final PendingIntent deleteIntent = PendingIntent.getService(service, 0, intent, 0);
+        final PendingIntent deleteIntent;
+        if (VERSION.SDK_INT >= 23) {
+            deleteIntent = PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            deleteIntent = PendingIntent.getService(service, 0, intent, 0);
+        }
 
         final int bigNotificationImageSize = service.getResources().getDimensionPixelSize(R.dimen.notification_big_image_size);
         service.runOnUiThread(() -> GlideApp.with(service)
@@ -122,6 +134,10 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
         final ComponentName serviceName = new ComponentName(service, MusicService.class);
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);
-        return PendingIntent.getService(service, 0, intent, 0);
+        if (VERSION.SDK_INT >= 23) {
+            return PendingIntent.getService(service, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            return PendingIntent.getService(service, 0, intent, 0);
+        }
     }
 }

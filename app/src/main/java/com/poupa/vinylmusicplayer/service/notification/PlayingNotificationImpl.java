@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build.VERSION;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -196,7 +197,11 @@ public class PlayingNotificationImpl extends PlayingNotification {
     private PendingIntent buildPendingIntent(Context context, final String action, final ComponentName serviceName) {
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);
-        return PendingIntent.getService(context, 0, intent, 0);
+        if (VERSION.SDK_INT >= 23) {
+            return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            return PendingIntent.getService(context, 0, intent, 0);
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -194,7 +195,11 @@ public class SleepTimerDialog extends DialogFragment {
     }
 
     private PendingIntent makeTimerPendingIntent(int flag) {
-        return PendingIntent.getService(getActivity(), 0, makeTimerIntent(), flag);
+        if (VERSION.SDK_INT >= 23) {
+            return PendingIntent.getService(getActivity(), 0, makeTimerIntent(), flag|PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            return PendingIntent.getService(getActivity(), 0, makeTimerIntent(), flag);
+        }
     }
 
     private Intent makeTimerIntent() {
