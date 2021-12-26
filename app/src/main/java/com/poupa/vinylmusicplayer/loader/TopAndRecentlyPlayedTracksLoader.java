@@ -41,7 +41,16 @@ public class TopAndRecentlyPlayedTracksLoader {
         HistoryStore historyStore = HistoryStore.getInstance(context);
         ArrayList<Long> songIds = historyStore.getRecentIds(cutoff);
         Discography discography = Discography.getInstance();
-        return discography.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
+
+        // Do nothing when the Discography is stale
+        // The stale state means either:
+        // - The cache is being refreshed
+        // - The cache is being reset
+        // In the latter situation, a reset operation takes time, and while the cache is being filled up,
+        // correct and existing songs may be considered as orphan
+        // --> incorrectly cleaned from the auxiliary DBs (history, queue, etc)
+        final boolean isStale = discography.isStale();
+        return discography.getSongsFromIdsAndCleanupOrphans(songIds, isStale ? null : historyStore::removeSongIds);
     }
 
     @NonNull
@@ -68,7 +77,15 @@ public class TopAndRecentlyPlayedTracksLoader {
         ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
         songIds.addAll(notRecentSongIds);
 
-        return discography.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
+        // Do nothing when the Discography is stale
+        // The stale state means either:
+        // - The cache is being refreshed
+        // - The cache is being reset
+        // In the latter situation, a reset operation takes time, and while the cache is being filled up,
+        // correct and existing songs may be considered as orphan
+        // --> incorrectly cleaned from the auxiliary DBs (history, queue, etc)
+        final boolean isStale = discography.isStale();
+        return discography.getSongsFromIdsAndCleanupOrphans(songIds, isStale ? null : historyStore::removeSongIds);
     }
 
     @NonNull

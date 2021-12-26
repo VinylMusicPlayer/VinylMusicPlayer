@@ -86,7 +86,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    boolean isStale() {
+    public boolean isStale() {
         synchronized (cache) {
             return cache.isStale;
         }
@@ -129,15 +129,12 @@ public class Discography implements MusicServiceEventListener {
         ArrayList<Long> orphanSongIds = new ArrayList<>();
         ArrayList<Song> songs = new ArrayList<>();
 
-        // If stale, the orphan detection is not correct
-        final boolean stale = isStale();
-
         synchronized (cache) {
             for (Long id : songIds) {
                 Song song = cache.songsById.get(id);
                 if (song != null) {
                     songs.add(song);
-                } else if (!stale && orphanIdsCleaner != null) {
+                } else if (orphanIdsCleaner != null) {
                     orphanSongIds.add(id);
                 }
             }
