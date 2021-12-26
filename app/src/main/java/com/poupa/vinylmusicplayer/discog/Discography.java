@@ -129,23 +129,18 @@ public class Discography implements MusicServiceEventListener {
         ArrayList<Long> orphanSongIds = new ArrayList<>();
         ArrayList<Song> songs = new ArrayList<>();
 
-        while (true) {
-            synchronized (cache) {
-                // Wait for the media store refresh to finish, to ensure correct orphan detection
-                if (!isStale()) {
-                    for (Long id : songIds) {
-                        Song song = cache.songsById.get(id);
-                        if (song != null) {
-                            songs.add(song);
-                        } else if (orphanIdsCleaner != null) {
-                            orphanSongIds.add(id);
-                        }
-                    }
-                    break; // done, exit the loop
+        // If stale, the orphan detection is not correct
+        final boolean stale = isStale();
+
+        synchronized (cache) {
+            for (Long id : songIds) {
+                Song song = cache.songsById.get(id);
+                if (song != null) {
+                    songs.add(song);
+                } else if (!stale && orphanIdsCleaner != null) {
+                    orphanSongIds.add(id);
                 }
             }
-            // Return the CPU time to other
-            Thread.yield();
         }
 
         if (orphanIdsCleaner != null) {
