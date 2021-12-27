@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Date;
 import java.util.Locale;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -18,6 +17,9 @@ import android.os.StatFs;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.poupa.vinylmusicplayer.R;
 
 /**
  * Capture uncaught exceptions
@@ -109,19 +111,17 @@ public class OopsHandler implements UncaughtExceptionHandler {
      * This method for call alert dialog when application crashed!
      */
     public void sendErrorMail(final StringBuilder errorContent) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         new Thread() {
             @Override
             public void run() {
                 Looper.prepare();
-                // TODO Localized text
+
                 String subject = APP_NAME + " crashed";
-                builder.setTitle(subject);
-                builder.create();
-                builder.setNegativeButton("Cancel",
-                        (dialog, which) -> System.exit(0));
-                builder.setPositiveButton("Report",
-                        (dialog, which) -> {
+                new MaterialDialog.Builder(context)
+                        .title(subject)
+                        .content(R.string.report_a_crash_description)
+                        .autoDismiss(true)
+                        .onPositive((dialog, which) -> {
                             Intent sendIntent = new Intent(Intent.ACTION_SEND);
                             // sendIntent.setType("text/plain");
                             sendIntent.setType("message/rfc822");
@@ -131,9 +131,12 @@ public class OopsHandler implements UncaughtExceptionHandler {
 
                             context.startActivity(sendIntent);
                             System.exit(0);
-                        });
-                builder.setMessage("Crash report information is collected and can be reported to developer (via email).\n\nYou can review the crash report before sending.");
-                builder.show();
+                        })
+                        .onNegative(((dialog, which) -> System.exit(0)))
+                        .positiveText(R.string.report_a_crash)
+                        .negativeText(android.R.string.cancel)
+                        .show();
+
                 Looper.loop();
             }
         }.start();

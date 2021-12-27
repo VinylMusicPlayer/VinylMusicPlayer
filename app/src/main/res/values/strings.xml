@@ -264,6 +264,8 @@
     <string name="app_widget_classic_name">Vinyl Music Player - Classic</string>
     <string name="app_widget_small_name">Vinyl Music Player - Small</string>
     <string name="app_widget_card_name">Vinyl Music Player - Card</string>
+    <string name="report_a_crash">Report a crash</string>
+    <string name="report_a_crash_description">Crash report information is collected and can be reported to developer (via email).\n\nYou can review the crash report before sending.</string>
     <string name="report_an_issue">Report an issue</string>
     <string name="bug_report_issue">Issue</string>
     <string name="login">Login</string>
