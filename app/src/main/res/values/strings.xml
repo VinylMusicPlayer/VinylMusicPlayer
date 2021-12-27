@@ -326,6 +326,7 @@
     <string name="action_scan_directory">Scan directory</string>
     <string name="scan_media">Scan media</string>
     <string name="reset_discography">Rescan library</string>
+    <string name="reset_discography_warning">This will clear and rebuild the app internal song database.\n\nNo song will be deleted during this operation, but this might clear the play history.\n\nDuring a possible long duration, until the rescan is complete, you will not be able to use the app normally</string>
     <string name="none">None</string>
     <string name="track">Track</string>
     <string name="label_with_rg_info">With ReplayGain Tags :</string>

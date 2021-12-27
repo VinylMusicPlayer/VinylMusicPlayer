@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
@@ -180,7 +181,14 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
                 }, 200);
             } else if (itemId == R.id.action_reset_discography) {
-                Discography.getInstance().triggerSyncWithMediaStore(true);
+                new MaterialDialog.Builder(this)
+                        .title(R.string.reset_discography)
+                        .content(R.string.reset_discography_warning)
+                        .autoDismiss(true)
+                        .onPositive((dialog, which) -> Discography.getInstance().triggerSyncWithMediaStore(true))
+                        .positiveText(R.string.reset_discography)
+                        .negativeText(android.R.string.cancel)
+                        .show();
             } else if (itemId == R.id.nav_settings) {
                 new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, SettingsActivity.class)), 200);
             } else if (itemId == R.id.nav_about) {
