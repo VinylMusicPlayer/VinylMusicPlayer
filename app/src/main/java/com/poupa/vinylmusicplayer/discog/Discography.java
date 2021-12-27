@@ -80,15 +80,15 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    void setStale(boolean value) {
+    void setCacheState(MemCache.ConsistencyState value) {
         synchronized (cache) {
-            cache.isStale = value;
+            cache.consistencyState = value;
         }
     }
 
-    public boolean isStale() {
+    MemCache.ConsistencyState getCacheState() {
         synchronized (cache) {
-            return cache.isStale;
+            return cache.consistencyState;
         }
     }
 
@@ -140,7 +140,12 @@ public class Discography implements MusicServiceEventListener {
             }
         }
 
-        if (orphanIdsCleaner != null) {
+        MemCache.ConsistencyState cacheState = getCacheState();
+        // In the case where the Discog is being reset situation, the operation takes time,
+        // and while the cache is being filled up,
+        // correct and existing songs may be considered as orphan
+        // --> incorrectly cleaned from the auxiliary DBs (history, queue, etc)
+        if ((orphanIdsCleaner != null) && (cacheState != MemCache.ConsistencyState.RESETTING)) {
             orphanIdsCleaner.accept(orphanSongIds);
         }
         return songs;
@@ -290,7 +295,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void triggerSyncWithMediaStore(boolean reset) {
-        if (isStale()) {
+        if (getCacheState() != MemCache.ConsistencyState.OK) {
             // Prevent reentrance - delay to later
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 final long DELAY = 500;
@@ -299,7 +304,7 @@ public class Discography implements MusicServiceEventListener {
                 mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
         } else {
-            (new SyncWithMediaStoreAsyncTask(mainActivity, this)).execute(reset);
+            (new SyncWithMediaStoreAsyncTask(mainActivity, this, reset)).execute();
         }
     }
 
@@ -434,13 +439,13 @@ public class Discography implements MusicServiceEventListener {
     }
 
     private void fetchAllSongs() {
-        setStale(true);
+        setCacheState(MemCache.ConsistencyState.REFRESHING);
 
         Collection<Song> songs = database.fetchAllSongs();
         for (Song song : songs) {
             addSong(song, true);
         }
 
-        setStale(false);
+        setCacheState(MemCache.ConsistencyState.OK);
     }
 }

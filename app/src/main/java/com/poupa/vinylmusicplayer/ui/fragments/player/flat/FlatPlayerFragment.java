@@ -172,6 +172,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     @Override
     public void onMediaStoreChanged() {
+        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
         updateQueue();
     }
 
