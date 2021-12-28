@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Branches (in same repo) that we dont want to include in CI builds
+# Space separated list of branch names
+blacklist_branches="
+    internal-playlists
+    fix/489-update-material-cab
+"
+
+# Alien branches (from other repos) that we want to pull in (pull requests etc)
+# Space separated list, each following the 'login/repo/branch' format
+#  Octoton/VinylMusicPlayer/random_album_access_version_1
+alien_branches="
+  Sai-P/VinylMusicPlayer/black-theme-fixes
+"
+
 [ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
 [ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
 
@@ -37,13 +51,8 @@ branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3- | grep -v 'HEAD '
 function is_blacklisted()
 {
     local branch=$1
-    # Space separated list of branch names
-    local blacklist="
-        internal-playlists
-        fix/489-update-material-cab
-    "
 
-    for bl in ${blacklist}; do
+    for bl in ${blacklist_branches}; do
         [ "${branch}" = "${bl}" ] && return 0
     done
     return 1
@@ -59,10 +68,6 @@ for branch in ${branches}; do
     last_commits+="$(git_describe origin/${branch})"
     echo
 done
-
-# Merge with white-listed remotes (pull requests etc)
-# Space separated list, each following the 'login/repo/branch' format
-alien_branches=""
 
 for alien_branch in ${alien_branches}; do
     user=$(echo "${alien_branch}" | cut -d/ -f1)
