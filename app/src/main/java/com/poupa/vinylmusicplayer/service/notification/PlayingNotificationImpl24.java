@@ -56,7 +56,7 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
         final ComponentName serviceName = new ComponentName(service, MusicService.class);
         Intent intent = new Intent(MusicService.ACTION_QUIT);
         intent.setComponent(serviceName);
-        final PendingIntent deleteIntent = PendingIntentCompat.getService(service, 0, action, 0);
+        final PendingIntent deleteIntent = PendingIntentCompat.getService(service, 0, intent, 0);
 
         final int bigNotificationImageSize = service.getResources().getDimensionPixelSize(R.dimen.notification_big_image_size);
         service.runOnUiThread(() -> GlideApp.with(service)
