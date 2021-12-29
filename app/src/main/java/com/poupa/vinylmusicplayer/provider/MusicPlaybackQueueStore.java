@@ -222,7 +222,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 long songId = cursor.getLong(idColumn);
                 int songIndex = cursor.getInt(indexColumn);
 
-                if (removedSongIds.contains(songId)) {
+                if (removedSongIds.contains(songId) || i >= songs.size()) {
                     // Add a place holder song here, to be removed after by the caller
                     // This is done to maintain consistent queue and playing position
                     queue.add(new IndexedSong(Song.EMPTY_SONG, songIndex, IndexedSong.INVALID_INDEX));
