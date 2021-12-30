@@ -1,13 +1,14 @@
-package com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling;
+package com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AlbumShuffling;
 
 import android.os.Bundle;
 import android.view.MenuItem;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.misc.queue.AbstractShuffling.AbstractQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AbstractShuffling.AbstractQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
 
 
-/** Album shuffling implementation of {@link com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter} */
+/** Album shuffling implementation of {@link DynamicQueueItemAdapter} */
 public class AlbumShufflingQueueItemAdapter extends AbstractQueueItemAdapter {
 
     public AlbumShufflingQueueItemAdapter() {

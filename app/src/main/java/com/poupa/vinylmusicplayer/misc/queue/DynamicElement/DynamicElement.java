@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.queue;
+package com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 
 
 /** Provide data used to show the user what will be loaded into the playing queue when it end */

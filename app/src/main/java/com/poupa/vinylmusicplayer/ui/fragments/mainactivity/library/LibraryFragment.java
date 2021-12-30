@@ -33,7 +33,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
-import com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling.AlbumShufflingQueueLoader;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AlbumShuffling.AlbumShufflingQueueLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;

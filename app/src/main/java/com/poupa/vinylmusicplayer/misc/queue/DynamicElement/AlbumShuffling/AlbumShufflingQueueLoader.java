@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling;
+package com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AlbumShuffling;
 
 
 import java.util.ArrayList;
@@ -11,15 +11,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.misc.queue.AbstractShuffling.AbstractQueueLoader;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AbstractShuffling.AbstractQueueLoader;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 
-/** Album shuffling implementation of {@link com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader} */
+/** Album shuffling implementation of {@link DynamicQueueLoader} */
 public class AlbumShufflingQueueLoader extends AbstractQueueLoader {
     public static final String SEARCH_TYPE = "search_type";
 

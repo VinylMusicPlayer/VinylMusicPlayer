@@ -14,7 +14,7 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 /**

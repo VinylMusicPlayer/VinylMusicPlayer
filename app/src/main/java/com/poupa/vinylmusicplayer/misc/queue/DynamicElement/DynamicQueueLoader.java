@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.misc.queue;
+package com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
 
 
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 

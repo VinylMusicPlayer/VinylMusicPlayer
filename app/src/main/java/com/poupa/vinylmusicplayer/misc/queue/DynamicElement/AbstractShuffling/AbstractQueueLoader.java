@@ -1,16 +1,16 @@
-package com.poupa.vinylmusicplayer.misc.queue.AbstractShuffling;
+package com.poupa.vinylmusicplayer.misc.queue.DynamicElement.AbstractShuffling;
 
 
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
-/** Abstract pseudo implementation of {@link com.poupa.vinylmusicplayer.misc.queue.DynamicQueueLoader} to help creating multiple shuffling system */
+/** Abstract pseudo implementation of {@link DynamicQueueLoader} to help creating multiple shuffling system */
 public abstract class AbstractQueueLoader implements DynamicQueueLoader {
     protected Song songUsedForSearching;
 

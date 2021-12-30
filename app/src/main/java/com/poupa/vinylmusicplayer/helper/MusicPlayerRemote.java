@@ -24,8 +24,8 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
