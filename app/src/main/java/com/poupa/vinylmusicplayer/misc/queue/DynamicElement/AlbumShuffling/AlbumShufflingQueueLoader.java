@@ -63,6 +63,7 @@ public class AlbumShufflingQueueLoader extends AbstractQueueLoader {
         if (!super.setNextDynamicQueue(criteria, context, song, force))
             return false;
 
+        //Random search basic form, will be updated for v2
         int searchType = criteria.getInt(SEARCH_TYPE);
 
         ArrayList<Album> albums;
@@ -73,7 +74,7 @@ public class AlbumShufflingQueueLoader extends AbstractQueueLoader {
         ArrayList<Album> subList = new ArrayList<>();
         boolean isAlbumInCriteria = false;
         for (Album album : albums) {
-            if (song.albumId != album.getId() && nextAlbum.getId() != album.getId()) {
+            if (song.albumId != album.getId() && (nextAlbum == null || nextAlbum.getId() != album.getId())) {
                 switch (searchType) {
                     case RANDOM_SEARCH:
                         isAlbumInCriteria = true;
