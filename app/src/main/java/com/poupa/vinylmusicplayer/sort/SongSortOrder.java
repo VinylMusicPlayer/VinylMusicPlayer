@@ -27,11 +27,11 @@ public class SongSortOrder {
             MultiValuesTagUtil.infoString(s1.artistNames),
             MultiValuesTagUtil.infoString(s2.artistNames));
     private static final Comparator<Song> _BY_ALBUM = (s1, s2) -> StringUtil.compareIgnoreAccent(s1.albumName, s2.albumName);
-    private static final Comparator<Song> _BY_ALBUM_ID = (s1, s2) -> ComparatorUtil.compareLongInts(s1.albumId, s2.albumId); // to combine with comparison by name to make the sorting deterministic in the case the names are identical
-    private static final Comparator<Song> _BY_YEAR = (s1, s2) -> s1.year - s2.year;
-    public static final Comparator<Song> BY_DATE_ADDED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded);
+    private static final Comparator<Song> _BY_ALBUM_ID = Comparator.comparingLong(s -> s.albumId); // to combine with comparison by name to make the sorting deterministic in the case the names are identical
+    private static final Comparator<Song> _BY_YEAR = Comparator.comparingInt(s -> s.year);
+    public static final Comparator<Song> BY_DATE_ADDED = Comparator.comparingLong(s -> s.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
-    private static final Comparator<Song> BY_DATE_MODIFIED = (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateModified, s2.dateModified);
+    private static final Comparator<Song> BY_DATE_MODIFIED = Comparator.comparingLong(s -> s.dateModified);
     private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
     public static final Comparator<Song> BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
             ? (s1.discNumber - s2.discNumber)

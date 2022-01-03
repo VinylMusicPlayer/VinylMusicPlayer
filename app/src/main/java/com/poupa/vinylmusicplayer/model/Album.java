@@ -6,11 +6,11 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -77,7 +77,7 @@ public class Album implements Parcelable {
 
         return Collections.min(
                 songs,
-                (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateAdded, s2.dateAdded)
+                Comparator.comparingLong(s -> s.dateAdded)
         ).dateAdded;
     }
 
@@ -86,7 +86,7 @@ public class Album implements Parcelable {
 
         return Collections.max(
                 songs,
-                (s1, s2) -> ComparatorUtil.compareLongInts(s1.dateModified, s2.dateModified)
+                Comparator.comparingLong(s -> s.dateModified)
         ).dateModified;
     }
 

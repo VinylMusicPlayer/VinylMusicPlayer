@@ -4,11 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -64,7 +64,7 @@ public class Artist implements Parcelable {
 
         return Collections.max(
                 albums,
-                (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified())
+                Comparator.comparingLong(Album::getDateModified)
         ).getDateModified();
     }
 
