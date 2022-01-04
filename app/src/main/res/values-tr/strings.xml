@@ -49,7 +49,6 @@
     <string name="album_or_artist_empty">Albüm başlığı veya albüm sanatçısı bilgisi yok.</string>
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="label_details">Ayrıntılar</string>
-    <string name="label_file_name">Dosya adı</string>
     <string name="label_file_path">Dosya yolu</string>
     <string name="label_file_size">Boyut</string>
     <string name="label_file_format">Biçim</string>

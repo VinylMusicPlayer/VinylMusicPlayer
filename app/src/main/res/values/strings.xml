@@ -54,7 +54,6 @@
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
     <string name="label_details">Details</string>
-    <string name="label_file_name">File name</string>
     <string name="label_file_path">File path</string>
     <string name="label_file_size">Size</string>
     <string name="label_file_format">Format</string>

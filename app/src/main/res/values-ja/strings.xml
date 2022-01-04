@@ -47,7 +47,6 @@
     <string name="album_or_artist_empty">アルバム名またはアルバムアーティストの欄が空白です</string>
     <string name="saving_changes">変更を保存しています…</string>
     <string name="label_details">詳細情報</string>
-    <string name="label_file_name">ファイル名</string>
     <string name="label_file_path">パス</string>
     <string name="label_file_size">サイズ</string>
     <string name="label_file_format">ファイル形式</string>

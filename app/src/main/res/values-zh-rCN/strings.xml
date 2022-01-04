@@ -47,7 +47,6 @@
     <string name="album_or_artist_empty">标题或艺术家名称为空。</string>
     <string name="saving_changes">正在保存更改</string>
     <string name="label_details">详情</string>
-    <string name="label_file_name">文件名</string>
     <string name="label_file_path">文件路径</string>
     <string name="label_file_size">文件大小</string>
     <string name="label_file_format">格式</string>

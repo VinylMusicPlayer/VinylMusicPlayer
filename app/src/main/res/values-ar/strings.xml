@@ -40,7 +40,6 @@
     <string name="album_or_artist_empty">حقل اسم الألبوم أو اسم الفنان فارغ</string>
     <string name="saving_changes">يتم حفظ التغييرات…</string>
     <string name="label_details">التفاصيل</string>
-    <string name="label_file_name">اسم الملف</string>
     <string name="label_file_path">مسار الملف</string>
     <string name="label_file_size">الحجم</string>
     <string name="label_file_format">الصيغة</string>

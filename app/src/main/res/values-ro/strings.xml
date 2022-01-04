@@ -48,7 +48,6 @@
     <string name="album_or_artist_empty">Titlul sau artistul lipseste.</string>
     <string name="saving_changes">Se salvează schimbările</string>
     <string name="label_details">Detalii</string>
-    <string name="label_file_name">Nume fișier</string>
     <string name="label_file_path">Cale fișier</string>
     <string name="label_file_size">Mărime</string>
     <string name="label_file_format">Format</string>

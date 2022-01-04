@@ -40,7 +40,6 @@
     <string name="album_or_artist_empty">Textfältet för titel eller artist är tomt.</string>
     <string name="saving_changes">Sparar ändringar …</string>
     <string name="label_details">Detaljer</string>
-    <string name="label_file_name">Filnamn</string>
     <string name="label_file_path">Sökväg</string>
     <string name="label_file_size">Storlek</string>
     <string name="label_file_format">Format</string>
