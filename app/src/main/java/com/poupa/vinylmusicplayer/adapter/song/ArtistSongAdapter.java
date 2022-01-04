@@ -134,7 +134,11 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
             if (isInQuickSelectMode()) {
                 toggleChecked(song);
             } else {
-                MusicPlayerRemote.openQueue(dataSet, position, true);
+                MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                        activity,
+                        dataSet,
+                        () -> MusicPlayerRemote.openQueue(dataSet, position, true)
+                );
             }
         });
         convertView.setOnLongClickListener(view -> {

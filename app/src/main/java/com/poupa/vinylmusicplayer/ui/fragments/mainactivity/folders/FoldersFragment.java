@@ -316,7 +316,12 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                     }
                 }
                 if (startIndex > -1) {
-                    MusicPlayerRemote.openQueue(songs, startIndex, true);
+                    int finalStartIndex = startIndex;
+                    MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                            getActivity(),
+                            songs,
+                            () -> MusicPlayerRemote.openQueue(songs, finalStartIndex, true)
+                    );
                 } else {
                     Snackbar.make(coordinatorLayout, Html.fromHtml(String.format(getString(R.string.not_listed_in_media_store), canonicalFile.getName())), Snackbar.LENGTH_LONG)
                             .setAction(R.string.action_scan, v -> scanPaths(new String[]{canonicalFile.getPath()}))

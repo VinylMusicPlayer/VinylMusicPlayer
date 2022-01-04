@@ -282,7 +282,11 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
             if (isInQuickSelectMode()) {
                 toggleChecked(getAdapterPosition());
             } else {
-                MusicPlayerRemote.openQueue(dataSet, getAdapterPosition(), true);
+                MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                        v.getContext(),
+                        dataSet,
+                        () -> MusicPlayerRemote.openQueue(dataSet, getAdapterPosition(), true)
+                );
             }
         }
 

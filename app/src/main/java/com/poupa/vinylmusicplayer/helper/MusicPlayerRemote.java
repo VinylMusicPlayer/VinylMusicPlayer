@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
@@ -187,7 +188,7 @@ public class MusicPlayerRemote {
     public static void openQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
             musicService.openQueue(queue, startPosition, startPlaying);
-            if (!PreferenceUtil.getInstance().rememberShuffle()){
+            if (!PreferenceUtil.getInstance().rememberShuffle()) {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
         }
@@ -200,6 +201,28 @@ public class MusicPlayerRemote {
         if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
             musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
+    }
+
+    public static void showReplacePlayingQueueConfirmationDialog(final @NonNull Context context, final ArrayList<Song> queue, Runnable onPositiveAction) {
+        if (musicService == null) {return;}
+        if (!musicService.isPlaying()) {onPositiveAction.run();}
+
+        final boolean prefConfirmationNeeded = true; // TODO PreferenceUtil.isConfirmationNeededToReplacePlayingQueue();
+        if (!prefConfirmationNeeded) {onPositiveAction.run();}
+
+        final Boolean confirmed = false;
+        final String message = queue.size() == 1
+                ? context.getResources().getString(R.string.added_title_to_playing_queue)
+                : context.getResources().getString(R.string.added_x_titles_to_playing_queue, queue.size());
+
+        new MaterialDialog.Builder(context)
+                .title(R.string.label_playing_queue)
+                .content(message)
+                .autoDismiss(true)
+                .positiveText(R.string.action_replace_playing_queue)
+                .negativeText(R.string.no)
+                .onPositive((dialog, which) -> onPositiveAction.run())
+                .show();
     }
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
