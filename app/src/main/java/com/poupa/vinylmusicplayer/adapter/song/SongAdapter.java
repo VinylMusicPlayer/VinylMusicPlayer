@@ -281,7 +281,11 @@ public class SongAdapter
             if (isInQuickSelectMode()) {
                 toggleChecked(getAdapterPosition());
             } else {
-                MusicPlayerRemote.openQueue(dataSet, getAdapterPosition(), true);
+                MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                        v.getContext(),
+                        dataSet,
+                        () -> MusicPlayerRemote.openQueue(dataSet, getAdapterPosition(), true)
+                );
             }
         }
 

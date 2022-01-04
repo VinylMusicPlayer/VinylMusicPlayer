@@ -136,7 +136,11 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
             if (isInQuickSelectMode()) {
                 toggleChecked(song);
             } else {
-                MusicPlayerRemote.openQueue(dataSet, position, true);
+                MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                        activity,
+                        dataSet,
+                        () -> MusicPlayerRemote.openQueue(dataSet, position, true)
+                );
             }
         });
         convertView.setOnLongClickListener(view -> {

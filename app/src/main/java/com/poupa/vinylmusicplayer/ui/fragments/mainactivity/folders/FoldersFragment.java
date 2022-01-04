@@ -327,7 +327,12 @@ public class FoldersFragment
                     }
                 }
                 if (startIndex > -1) {
-                    MusicPlayerRemote.openQueue(songs, startIndex, true);
+                    int finalStartIndex = startIndex;
+                    MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
+                            getActivity(),
+                            songs,
+                            () -> MusicPlayerRemote.openQueue(songs, finalStartIndex, true)
+                    );
                 } else {
                     Snackbar.make(layoutBinding.coordinatorLayout,
                                     Html.fromHtml(String.format(getString(R.string.not_listed_in_media_store), canonicalFile.getName())),
