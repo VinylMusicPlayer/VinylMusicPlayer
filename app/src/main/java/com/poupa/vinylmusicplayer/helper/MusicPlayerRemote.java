@@ -214,6 +214,7 @@ public class MusicPlayerRemote {
         return false;
     }
 
+    @NonNull
     public static Song getCurrentSong() {
         if (musicService != null) {
             return musicService.getCurrentSong();
