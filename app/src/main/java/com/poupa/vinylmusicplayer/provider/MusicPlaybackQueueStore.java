@@ -26,11 +26,13 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Andrew Neal, modified by Karim Abou Zeid
@@ -208,15 +210,26 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
 
     @NonNull
-    private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs) {
+    private ArrayList<IndexedSong> getSongPosition(@Nullable Cursor cursor, @NonNull final ArrayList<Song> songs, @NonNull final ArrayList<Long> removedSongIds) {
         ArrayList<IndexedSong> queue = new ArrayList<>();
 
         if (cursor != null && cursor.moveToFirst()) {
             int i = 0;
-            int idColumns = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+            int idColumn = cursor.getColumnIndex(BaseColumns._ID);
+            int indexColumn = cursor.getColumnIndex(MusicPlaybackColumns.INDEX_IN_QUEUE);
+
             do {
-                queue.add(new IndexedSong(songs.get(i), cursor.getInt(idColumns), IndexedSong.INVALID_INDEX));
-                i++;
+                long songId = cursor.getLong(idColumn);
+                int songIndex = cursor.getInt(indexColumn);
+
+                if (removedSongIds.contains(songId) || i >= songs.size()) {
+                    // Add a place holder song here, to be removed after by the caller
+                    // This is done to maintain consistent queue and playing position
+                    queue.add(new IndexedSong(Song.EMPTY_SONG, songIndex, IndexedSong.INVALID_INDEX));
+                } else {
+                    queue.add(new IndexedSong(songs.get(i), songIndex, IndexedSong.INVALID_INDEX));
+                    i++;
+                }
             } while (cursor.moveToNext());
         }
 
@@ -229,9 +242,11 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 null, null, null, null, null)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, BaseColumns._ID);
 
-            ArrayList<Song> songs = StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            ArrayList<Long> removedSongIds = new ArrayList<>();
+            Discography discography = Discography.getInstance();
+            ArrayList<Song> songs = discography.getSongsFromIdsAndCleanupOrphans(songIds, removedSongIds::addAll);
 
-            return getSongPosition(cursor, songs);
+            return getSongPosition(cursor, songs, removedSongIds);
         }
     }
 

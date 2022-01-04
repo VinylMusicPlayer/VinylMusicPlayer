@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.misc.queue;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
-
 
 public class StaticPlayingQueue {
 
@@ -55,6 +53,14 @@ public class StaticPlayingQueue {
         this.shuffleMode = shuffleMode;
 
         currentPosition = restoredPosition;
+
+        // Adjust for removed songs, marked with Song.EMPTY in the restored queues
+        // See MusicPlaybackQueueStore.getSongPosition
+        for (int i = restoreQueue.size() - 1; i >= 0; --i) {
+            if (restoreQueue.get(i).id == Song.EMPTY_SONG.id) {
+                remove(i);
+            }
+        }
 
         songs = new ArrayList<>();
         songsIsStale = true;

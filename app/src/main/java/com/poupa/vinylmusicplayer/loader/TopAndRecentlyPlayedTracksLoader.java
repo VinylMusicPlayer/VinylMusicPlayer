@@ -40,7 +40,8 @@ public class TopAndRecentlyPlayedTracksLoader {
 
         HistoryStore historyStore = HistoryStore.getInstance(context);
         ArrayList<Long> songIds = historyStore.getRecentIds(cutoff);
-        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
+
+        return Discography.getInstance().getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
@@ -52,8 +53,9 @@ public class TopAndRecentlyPlayedTracksLoader {
         ArrayList<Long> songIds = new ArrayList<>();
 
         // Collect not played songs
+        Discography discography = Discography.getInstance();
         ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
-        ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
+        ArrayList<Song> allSongs = discography.getAllSongs();
         Collections.sort(allSongs, SongSortOrder.BY_DATE_ADDED);
 
         for (Song song : allSongs) {
@@ -66,7 +68,7 @@ public class TopAndRecentlyPlayedTracksLoader {
         ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
         songIds.addAll(notRecentSongIds);
 
-        return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
+        return discography.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
 
     @NonNull
@@ -77,8 +79,8 @@ public class TopAndRecentlyPlayedTracksLoader {
         final int NUMBER_OF_TOP_TRACKS = 100;
         try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
-
-            return StoreLoader.getSongsFromIdsAndCleanupOrphans(songIds, null);
+            Discography discography = Discography.getInstance();
+            return discography.getSongsFromIdsAndCleanupOrphans(songIds, null);
         }
     }
 
