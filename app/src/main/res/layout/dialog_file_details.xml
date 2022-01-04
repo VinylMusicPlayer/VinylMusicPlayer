@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/discography_info"
@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
 </LinearLayout>
