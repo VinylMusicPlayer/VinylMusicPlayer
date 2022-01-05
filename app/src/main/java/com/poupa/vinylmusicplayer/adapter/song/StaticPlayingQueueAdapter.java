@@ -35,6 +35,7 @@ import com.poupa.vinylmusicplayer.util.ViewUtil;
 import java.util.ArrayList;
 
 /**
+ * Provide playing queue adapter (i.e. a list of song that is swipeable for removal and draggable for reordering ) for playing activity
  * @author Karim Abou Zeid (kabouzeid)
  */
 

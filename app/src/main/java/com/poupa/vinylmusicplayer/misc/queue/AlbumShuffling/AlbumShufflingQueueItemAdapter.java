@@ -1,30 +1,22 @@
 package com.poupa.vinylmusicplayer.misc.queue.AlbumShuffling;
 
-
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicElement;
-import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
-import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
+import com.poupa.vinylmusicplayer.misc.queue.AbstractShuffling.AbstractQueueItemAdapter;
 
 
-public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
-
-    private DynamicElement dynamicElement;
+/** Album shuffling implementation of {@link com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter} */
+public class AlbumShufflingQueueItemAdapter extends AbstractQueueItemAdapter {
 
     public AlbumShufflingQueueItemAdapter() {
-        this.dynamicElement = MusicPlayerRemote.getDynamicElement();
+        super();
     }
 
-    public void swapDynamicElement() {
-        this.dynamicElement = MusicPlayerRemote.getDynamicElement();
+    @Override
+    public void reloadDynamicElement() {
+        super.reloadDynamicElement();
     }
 
     public int getSongMenuRes(int itemViewType) {
@@ -39,12 +31,12 @@ public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
             MusicPlayerRemote.setNextDynamicQueue(bundle);
             return true;
         } else if (item.getItemId() == R.id.action_shuffle_artist_album) {
-            // Refresh proposed next random album with one with the same artist than the one I listen to right now
+            // Refresh proposed next random album with one with the same artist than the songs I am listening to right now
             bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.ARTIST_SEARCH);
             MusicPlayerRemote.setNextDynamicQueue(bundle);
             return true;
         } else if (item.getItemId() == R.id.action_shuffle_genre_album) {
-            // Refresh proposed next random album with one with the same genre than the one I listen to right now
+            // Refresh proposed next random album with one with the same genre than the songs I am listening to right now
             bundle.putInt(AlbumShufflingQueueLoader.SEARCH_TYPE, AlbumShufflingQueueLoader.GENRE_SEARCH);
             MusicPlayerRemote.setNextDynamicQueue(bundle);
             return true;
@@ -52,25 +44,5 @@ public class AlbumShufflingQueueItemAdapter implements DynamicQueueItemAdapter {
             MusicPlayerRemote.setQueueToStaticQueue();
         }
         return false;
-    }
-
-    public void onBindViewHolder(@NonNull SongAdapter.ViewHolder holder, @NonNull final AppCompatActivity activity) {
-        if (dynamicElement == null)
-            return;
-
-        holder.title.setText(dynamicElement.firstLine);
-        holder.text.setText(dynamicElement.secondLine);
-
-        if (dynamicElement.icon == DynamicElement.INVALID_ICON) {
-            holder.image.setVisibility(View.GONE);
-
-            holder.imageText.setVisibility(View.VISIBLE);
-            holder.imageText.setText(dynamicElement.iconText);
-        } else {
-            holder.imageText.setVisibility(View.GONE);
-            holder.image.setVisibility(View.VISIBLE);
-
-            PlayingSongDecorationUtil.addIconToItem(activity, holder.image, dynamicElement.icon);
-        }
     }
 }

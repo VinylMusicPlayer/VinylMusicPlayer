@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.model.Song;
 
 
+/** Provide way to load a new queue at the end of the current one */
 public class DynamicPlayingQueue extends StaticPlayingQueue {
 
     private DynamicQueueLoader queueLoader;
@@ -32,6 +33,7 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         queueLoader = queue.queueLoader;
     }
 
+    @Override
     public boolean restoreQueue(Context context, int restoredPosition) {
         return super.restoreQueue(context, restoredPosition) && queueLoader.restoreQueue(context, lastSong());
     }
@@ -57,11 +59,16 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         queueLoader.setNextDynamicQueue(criteria, context, lastSong(), true);
     }
 
+    @Override
     public ArrayList<Song> getPlayingQueueSongOnly() {
         queueLoader.setNextDynamicQueue(null, lastSong(), false); // best way of updating this element (method is always called when queue is updated)
         return super.getPlayingQueueSongOnly();
     }
 
+    /**
+     * @return new position was valid or queue as changed as next queue was loaded
+     */
+    @Override
     public int setCurrentPosition(int position) {
         if (position >= queue.size()) {
             if (queueLoader.isNextQueueEmpty())
@@ -76,6 +83,7 @@ public class DynamicPlayingQueue extends StaticPlayingQueue {
         }
     }
 
+    @Override
     public boolean isLastTrack() {
         return getCurrentPosition() == queue.size();
     }

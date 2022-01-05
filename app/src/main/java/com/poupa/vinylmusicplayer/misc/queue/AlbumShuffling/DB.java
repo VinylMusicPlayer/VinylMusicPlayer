@@ -10,7 +10,10 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.App;
 
 
-// For album shuffling V2: sqlite usage should be squash if possible
+// For album shuffling V2: sqlite usage should be squash if possible + future album history is saved
+/**
+ * Provide saving of album used in {@link com.poupa.vinylmusicplayer.misc.queue.DynamicElement} of AlbumShuffling implementation,
+ * needed to ensure reopening of the app after a deep sleep will not result in a different playing queue state  */
 public class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "shuffling_album.db";
     private static final int VERSION = 1;

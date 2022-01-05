@@ -11,6 +11,8 @@ import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 
+
+/** Provide playing queue management (save list of songs, add/move/remove, know currently played position, restore, ...) */
 public class StaticPlayingQueue {
 
     public static final int REPEAT_MODE_NONE = 0;
@@ -66,7 +68,7 @@ public class StaticPlayingQueue {
         songsIsStale = true;
         resetSongs();
 
-        restoreUniqueId();
+        this.nextUniqueId = queue.nextUniqueId;
     }
 
     public void restoreMode(int shuffleMode, int repeatMode) {
@@ -84,6 +86,7 @@ public class StaticPlayingQueue {
         }
     }
 
+    /** @return is restore successful */
     public boolean restoreQueue(Context context, int restoredPosition) {
         ArrayList<IndexedSong> restoredQueue = MusicPlaybackQueueStore.getInstance(context).getSavedPlayingQueue();
         ArrayList<IndexedSong> restoredOriginalQueue = MusicPlaybackQueueStore.getInstance(context).getSavedOriginalPlayingQueue();
@@ -146,22 +149,25 @@ public class StaticPlayingQueue {
         }
     }
 
-    private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int previousPosition, int direction) {
+    /**
+     * @param direction songs starting at position until position+occurrence where added (direction = +1) or remove (direction = -1)
+     */
+    private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int originalPosition, int direction) {
         for (int i = 0; i < queue.size(); i++) {
             originalQueue.get(i).index = i;
 
-            if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
+            if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= originalPosition  ) {
                 queue.get(i).index = queue.get(i).index + direction*(occurrence + 1);
             }
         }
     }
 
-    private void addOneSong(int position, int previousPosition, Song song) {
+    private void addOneSong(int position, int originalPosition, Song song) {
         long uniqueId = getNextUniqueId();
-        originalQueue.add(previousPosition, new IndexedSong(song, previousPosition, uniqueId));
-        queue.add(position, new IndexedSong(song, previousPosition, uniqueId));
+        originalQueue.add(originalPosition, new IndexedSong(song, originalPosition, uniqueId));
+        queue.add(position, new IndexedSong(song, originalPosition, uniqueId));
 
-        updateQueueIndexesAfterSongsModification(position, 0, previousPosition, +1);
+        updateQueueIndexesAfterSongsModification(position, 0, originalPosition, +1);
 
         songsIsStale = true;
     }
@@ -255,12 +261,17 @@ public class StaticPlayingQueue {
         songsIsStale = true;
     }
 
+    /**
+     *
+     * @param deletedPosition position of the removed song
+     * @return INVALID_POSITION if the remove song doesn't change the song at {@link StaticPlayingQueue#currentPosition}, new position for {@link StaticPlayingQueue#currentPosition} otherwise
+     */
     private int rePosition(int deletedPosition) {
         int position = this.currentPosition;
 
         if (deletedPosition < position) {
             this.currentPosition = position - 1;
-        } else if (deletedPosition == position) { //the current position was deleted
+        } else if (deletedPosition == position) { //the current position song was deleted
             if (queue.size() > deletedPosition) {
                 return position;
             } else {
@@ -273,6 +284,7 @@ public class StaticPlayingQueue {
 
     /**
      * Remove song at index position, numbering need to be redone for every song after this position (-1)
+     * @return see {@link StaticPlayingQueue#rePosition(int)}
      */
     public int remove(int position) {
         IndexedSong o = queue.remove(position);
@@ -285,6 +297,9 @@ public class StaticPlayingQueue {
         return rePosition(position);
     }
 
+    /**
+     * @return see {@link StaticPlayingQueue#rePosition(int)}
+     */
     private int removeAllOccurrences(Song song) {
         int hasPositionChanged = INVALID_POSITION;
 
@@ -302,6 +317,9 @@ public class StaticPlayingQueue {
         return hasPositionChanged;
     }
 
+    /**
+     * @return see {@link StaticPlayingQueue#rePosition(int)}
+     */
     public int removeSongs(@NonNull List<Song> songs) {
         int hasPositionChanged = INVALID_POSITION;
 
@@ -330,6 +348,9 @@ public class StaticPlayingQueue {
 
     /* -------------------- queue getter info -------------------- */
 
+    /**
+     * @return has queue been opened
+     */
     public boolean openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, int shuffleMode) {
         if ( !(playingQueue != null && !playingQueue.isEmpty() && startPosition >= 0 && startPosition < playingQueue.size()) ) {
             return false;
@@ -378,6 +399,9 @@ public class StaticPlayingQueue {
         return currentPosition;
     }
 
+    /**
+     * @return new position was valid or not
+     */
     public int setCurrentPosition(int position) {
         if (position >= queue.size())
             return INVALID_POSITION;

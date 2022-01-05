@@ -153,6 +153,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private Playback playback;
 
     private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
+    /** is {@link MusicService#playingQueue} instance of {@link com.poupa.vinylmusicplayer.model.Song.DynamicPlayingQueue} or not  */
     private boolean queueIsDynamic = false;
 
     private boolean queuesRestored;

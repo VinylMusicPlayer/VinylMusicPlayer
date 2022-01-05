@@ -17,10 +17,16 @@ import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.misc.queue.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
+/**
+ * Extension of StaticPlayingQueueAdapter that manage the list of song + an item showing the queue to be loaded at the end of the current one
+ */
+
 public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
+    /** To differentiate next queue item */
     protected static final int OFFSET_ITEM = UP_NEXT+1;
 
+    /** Provide next queue item management (menu & binding) */
     private DynamicQueueItemAdapter dynamicQueueItemAdapter;
 
     public DynamicPlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder, DynamicQueueItemAdapter dynamicQueueItemAdapter) {
@@ -29,9 +35,10 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
         this.dynamicQueueItemAdapter = dynamicQueueItemAdapter;
     }
 
-    public void swapDynamicElement() {
+    /** reload dynamic element and ensure queue is visually updated */
+    public void reloadDynamicElement() {
         if (dynamicQueueItemAdapter != null) {
-            dynamicQueueItemAdapter.swapDynamicElement();
+            dynamicQueueItemAdapter.reloadDynamicElement();
             notifyDataSetChanged();
         }
     }
@@ -57,16 +64,19 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
     @Override
     public int getItemCount() {
-        if (dataSet.size() > 0)
-            return dataSet.size()+1;
-        return 0;
+        if (dataSet.size() == 0) // if song list is empty, then dynamic element cannot exist
+            return 0;
+
+        return dataSet.size()+1;
     }
 
     @Override
     public long getItemId(int position) {
-        if (position < dataSet.size())
-            return dataSet.get(position).id;
-        return -1;
+        // dynamic element need unique value, thus made it negative and other element positive
+        if (position >= dataSet.size())
+            return -1;
+
+        return Math.abs(super.getItemId(position));
     }
 
     @NonNull
@@ -95,11 +105,10 @@ public class DynamicPlayingQueueAdapter extends StaticPlayingQueueAdapter {
 
         @Override
         protected int getSongMenuRes(int itemViewType) {
-            if (dynamicQueueItemAdapter != null && itemViewType == OFFSET_ITEM) {
+            if (dynamicQueueItemAdapter != null && itemViewType == OFFSET_ITEM)
                 return dynamicQueueItemAdapter.getSongMenuRes(itemViewType);
-            } else {
-                return super.getSongMenuRes(itemViewType);
-            }
+
+            return super.getSongMenuRes(itemViewType);
         }
 
         @Override
