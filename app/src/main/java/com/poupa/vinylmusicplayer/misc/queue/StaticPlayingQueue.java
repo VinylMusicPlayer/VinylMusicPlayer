@@ -62,14 +62,6 @@ public class StaticPlayingQueue {
 
         this.currentPosition = queue.currentPosition;
 
-        // Adjust for removed songs, marked with Song.EMPTY in the restored queues
-        // See MusicPlaybackQueueStore.getSongPosition
-        for (int i = restoreQueue.size() - 1; i >= 0; --i) {
-            if (restoreQueue.get(i).id == Song.EMPTY_SONG.id) {
-                remove(i);
-            }
-        }
-
         songs = new ArrayList<>();
         songsIsStale = true;
         resetSongs();
@@ -100,6 +92,14 @@ public class StaticPlayingQueue {
             this.queue = restoredQueue;
             this.originalQueue = restoredOriginalQueue;
             this.currentPosition = restoredPosition;
+
+            // Adjust for removed songs, marked with Song.EMPTY in the restored queues
+            // See MusicPlaybackQueueStore.getSongPosition
+            for (int i = restoredQueue.size() - 1; i >= 0; --i) {
+                if (restoredQueue.get(i).id == Song.EMPTY_SONG.id) {
+                    remove(i);
+                }
+            }
 
             songsIsStale = true;
             resetSongs();
