@@ -127,14 +127,14 @@ public class SongDetailDialog extends DialogFragment {
         };
         htmlBuilder.appendLine(R.string.label_date_added, formatDate.apply(song.dateAdded));
         htmlBuilder.appendLine(R.string.label_date_modified, formatDate.apply(song.dateModified));
-        htmlBuilder.appendLine(R.string.label_track_number, String.valueOf(song.trackNumber));
-        htmlBuilder.appendLine(R.string.label_disc_number, String.valueOf(song.discNumber));
-        htmlBuilder.appendLine(R.string.label_track_title, song.title);
-        htmlBuilder.appendLine(R.string.label_track_artists, MultiValuesTagUtil.merge(song.artistNames));
-        htmlBuilder.appendLine(R.string.label_album_title, song.albumName);
-        htmlBuilder.appendLine(R.string.label_album_artists, MultiValuesTagUtil.merge(song.albumArtistNames));
-        htmlBuilder.appendLine(R.string.label_genre, song.genre);
-        htmlBuilder.appendLine(R.string.label_year, MusicUtil.getYearString(song.year));
+        htmlBuilder.appendLine(R.string.track_number, String.valueOf(song.trackNumber));
+        htmlBuilder.appendLine(R.string.disc_number, String.valueOf(song.discNumber));
+        htmlBuilder.appendLine(R.string.title, song.title);
+        htmlBuilder.appendLine(R.string.artist, MultiValuesTagUtil.merge(song.artistNames));
+        htmlBuilder.appendLine(R.string.album, song.albumName);
+        htmlBuilder.appendLine(R.string.album_artist, MultiValuesTagUtil.merge(song.albumArtistNames));
+        htmlBuilder.appendLine(R.string.genre, song.genre);
+        htmlBuilder.appendLine(R.string.year, MusicUtil.getYearString(song.year));
 
         htmlBuilder.appendLine(R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration));
 

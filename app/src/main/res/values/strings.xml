@@ -63,14 +63,6 @@
     <string name="label_replay_gain" translatable="false">ReplayGain</string>
     <string name="label_date_added">Added</string>
     <string name="label_date_modified">Modified</string>
-    <string name="label_disc_number">Disc</string>
-    <string name="label_track_title">Title</string>
-    <string name="label_track_number">Track number</string>
-    <string name="label_track_artists">Artists</string>
-    <string name="label_album_title">Album</string>
-    <string name="label_album_artists">Album Artists</string>
-    <string name="label_genre">Genre</string>
-    <string name="label_year">Year</string>
     <string name="action_go_to_artist">Go to artist</string>
     <string name="action_go_to_album">Go to album</string>
     <string name="label_playing_queue">Playing queue</string>
