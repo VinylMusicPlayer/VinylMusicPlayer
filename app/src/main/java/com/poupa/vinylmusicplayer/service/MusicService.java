@@ -28,6 +28,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -392,7 +393,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
             if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
-                playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
+                try {
+                    playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
+                } catch (ArrayIndexOutOfBoundsException queueCopiesOutOfSync) {
+                    // fallback, when the copies of the restored queues are out of sync
+                    // in this case, discard the original queue
+                    Log.e(TAG, "Restored queues are not synchronised", queueCopiesOutOfSync);
+                    playingQueue = new StaticPlayingQueue(restoredQueue, restoredQueue, restoredPosition, playingQueue.getShuffleMode());
+                }
 
                 openCurrent();
                 prepareNext();
