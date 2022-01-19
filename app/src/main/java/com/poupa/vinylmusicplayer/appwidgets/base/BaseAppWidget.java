@@ -33,6 +33,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
+import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
@@ -90,7 +91,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         // Home
         action = new Intent(context, MainActivity.class);
         action.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        pendingIntent = PendingIntent.getActivity(context, 0, action, 0);
+        pendingIntent = PendingIntentCompat.getActivity(context, 0, action, 0);
         appWidgetView.setOnClickPendingIntent(R.id.image, pendingIntent);
         appWidgetView.setOnClickPendingIntent(R.id.media_titles, pendingIntent);
 
