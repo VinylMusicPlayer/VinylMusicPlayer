@@ -398,7 +398,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 } catch (ArrayIndexOutOfBoundsException queueCopiesOutOfSync) {
                     // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
                     Log.e(TAG, "Restored queues are corrupted", queueCopiesOutOfSync);
+                    final int shuffleMode = playingQueue.getShuffleMode();
                     playingQueue = new StaticPlayingQueue();
+                    playingQueue.setShuffle(shuffleMode);
                 }
 
                 openCurrent();
