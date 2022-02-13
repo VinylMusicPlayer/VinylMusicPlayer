@@ -59,13 +59,9 @@ android {
         }
     }
     packagingOptions {
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
-    lintOptions {
-        disable 'MissingTranslation'
-        disable 'InvalidPackage'
-        abortOnError false
+        resources {
+            excludes += ['META-INF/LICENSE', 'META-INF/NOTICE']
+        }
     }
     compileOptions {
         // Flag to enable support for the new language APIs
@@ -80,6 +76,10 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+    lint {
+        abortOnError false
+        disable 'MissingTranslation', 'InvalidPackage'
     }
 }
 
