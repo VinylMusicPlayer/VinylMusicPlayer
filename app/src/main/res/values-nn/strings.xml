@@ -25,7 +25,6 @@
     <string name="album_or_artist_empty">Tekstfeltet for albumtittel eller albumartist er tomt.</string>
     <string name="saving_changes">Lagrar endringar…</string>
     <string name="label_details">Detaljar</string>
-    <string name="label_file_name">Filnamn</string>
     <string name="label_file_path">Sti til fil</string>
     <string name="label_file_size">Storleik</string>
     <string name="label_file_format">Format</string>

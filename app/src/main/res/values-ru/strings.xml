@@ -48,7 +48,6 @@
     <string name="album_or_artist_empty">Поля названия альбома или альбом исполнителя пусты</string>
     <string name="saving_changes">Сохранение изменений</string>
     <string name="label_details">Подробнее</string>
-    <string name="label_file_name">Имя файла</string>
     <string name="label_file_path">Расположение</string>
     <string name="label_file_size">Размер</string>
     <string name="label_file_format">Формат</string>

@@ -48,7 +48,6 @@
     <string name="album_or_artist_empty">Polje za naziv ili izvođača je prazno.</string>
     <string name="saving_changes">Spremanje promjena</string>
     <string name="label_details">Detalji</string>
-    <string name="label_file_name">Naziv datoteke</string>
     <string name="label_file_path">Odredište datoteke</string>
     <string name="label_file_size">Veličina</string>
     <string name="label_file_format">Format</string>
