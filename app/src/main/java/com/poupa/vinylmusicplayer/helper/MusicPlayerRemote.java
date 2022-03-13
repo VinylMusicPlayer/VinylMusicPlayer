@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -205,23 +206,33 @@ public class MusicPlayerRemote {
 
     public static void showReplacePlayingQueueConfirmationDialog(final @NonNull Context context, final ArrayList<Song> queue, Runnable onPositiveAction) {
         if (musicService == null) {return;}
-        if (!musicService.isPlaying()) {onPositiveAction.run();}
 
-        final boolean prefConfirmationNeeded = true; // TODO PreferenceUtil.isConfirmationNeededToReplacePlayingQueue();
-        if (!prefConfirmationNeeded) {onPositiveAction.run();}
+        // TODO Check isPlaying or check queue emptyness?
+        if (!musicService.isPlaying()) {
+            onPositiveAction.run();
+            return;
+        }
 
-        final Boolean confirmed = false;
-        final String message = queue.size() == 1
-                ? context.getResources().getString(R.string.added_title_to_playing_queue)
-                : context.getResources().getString(R.string.added_x_titles_to_playing_queue, queue.size());
+        // TODO String localization, possibly with singular/plural variants
+        final String message = "About to enqueue %s songs while currenly playing.\nPlease choose one of the following option:";
+        final String CHOICE_REPLACE = "Replace playing queue";
+        final String CHOICE_APPEND = "Append at the end of the playing queue";
+        final String CHOICE_INSERT = "Insert after current song";
 
         new MaterialDialog.Builder(context)
                 .title(R.string.label_playing_queue)
-                .content(message)
+                .content(String.format(message, queue.size()))
                 .autoDismiss(true)
-                .positiveText(R.string.action_replace_playing_queue)
-                .negativeText(R.string.no)
-                .onPositive((dialog, which) -> onPositiveAction.run())
+                .items(Arrays.asList(CHOICE_REPLACE, CHOICE_INSERT, CHOICE_APPEND))
+                .negativeText(android.R.string.cancel)
+                .itemsCallback((MaterialDialog dialog, View itemView, int position, CharSequence text) -> {
+                    if (TextUtils.equals(text, CHOICE_REPLACE)) {
+                        onPositiveAction.run();
+                    } else {
+                        // TODO
+                        Toast.makeText(context, "Action not supported", Toast.LENGTH_LONG).show();
+                    }
+                })
                 .show();
     }
 
