@@ -443,7 +443,7 @@ public class StaticPlayingQueue {
                 revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:
-                ShuffleHelper.makeShuffleListWithIndexes(queue, currentPosition);
+                ShuffleHelper.makeShuffleList(queue, currentPosition);
                 songsIsStale = true;
                 currentPosition = 0;
                 break;
