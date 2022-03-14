@@ -22,7 +22,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -204,34 +206,86 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void showReplacePlayingQueueConfirmationDialog(final @NonNull Context context, final ArrayList<Song> queue, Runnable onPositiveAction) {
+    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final ArrayList<Song> queue, int positionInQueue) {
         if (musicService == null) {return;}
 
-        // TODO Check isPlaying or check queue emptyness?
-        if (!musicService.isPlaying()) {
-            onPositiveAction.run();
+        if (tryToHandleOpenPlayingQueue(queue, positionInQueue, true)) {
+            // User is just switching songs in the current playing queue, nothing more to do
             return;
         }
 
-        // TODO String localization, possibly with singular/plural variants
-        final String message = "About to enqueue %s songs while currenly playing.\nPlease choose one of the following option:";
-        final String CHOICE_REPLACE = "Replace playing queue";
-        final String CHOICE_APPEND = "Append at the end of the playing queue";
-        final String CHOICE_INSERT = "Insert after current song";
+        ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        if (currentQueue.isEmpty()) {
+            openQueue(queue, positionInQueue, true);
+            return;
+        }
+
+        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(positionInQueue, queue.size()));
+        final Runnable removeDuplicateFromCurrentQueue = () -> {
+            // Deduplicate songs, favoring the occurrences in the new queue
+            ArrayList<Song> songsToRemove = new ArrayList<>();
+            for (Song song : currentQueue) {
+                // Dont use List.contains or Song.equals
+                // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
+                for (Song songToAdd : songsToAdd) {
+                    if (song.isQuickEqual(songToAdd)) {
+                        songsToRemove.add(song);
+                        break;
+                    }
+                }
+            }
+            musicService.removeSongs(songsToRemove);
+        };
+
+        List<Pair<String, Runnable>> possibleActions = Arrays.asList(
+                new Pair<>(
+                        context.getString(R.string.action_replace_playing_queue),
+                        () -> {
+                            musicService.openQueue(songsToAdd, 0, true);
+                        }),
+                new Pair<>(
+                        context.getString(R.string.action_play_next),
+                        () -> {
+                            removeDuplicateFromCurrentQueue.run();
+                            musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
+                        }),
+                new Pair<>(
+                        context.getString(R.string.action_add_to_playing_queue),
+                        () -> {
+                            removeDuplicateFromCurrentQueue.run();
+                            musicService.addSongs(songsToAdd);
+                        })
+        );
+        final int defaultActionIndex = 1; // TODO Get from pref
+
+        // TODO String localization, with singular/plural variants
+        final String message = "About to add %s songs to existing playing queue.\nHow do you want to proceed?";
+        List<String> choicesText = new ArrayList<>();
+        for (Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
         new MaterialDialog.Builder(context)
                 .title(R.string.label_playing_queue)
                 .content(String.format(message, queue.size()))
-                .autoDismiss(true)
-                .items(Arrays.asList(CHOICE_REPLACE, CHOICE_INSERT, CHOICE_APPEND))
+                .autoDismiss(false)
+                .items(choicesText)
+                .itemsCallbackSingleChoice(
+                        defaultActionIndex,
+                        (MaterialDialog dialog, View itemView, int which, CharSequence text) -> true)
                 .negativeText(android.R.string.cancel)
-                .itemsCallback((MaterialDialog dialog, View itemView, int position, CharSequence text) -> {
-                    if (TextUtils.equals(text, CHOICE_REPLACE)) {
-                        onPositiveAction.run();
-                    } else {
-                        // TODO
-                        Toast.makeText(context, "Action not supported", Toast.LENGTH_LONG).show();
+                .positiveText(R.string.add_action)
+                .onPositive((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    final int chosenActionIndex = dialog.getSelectedIndex();
+                    if (chosenActionIndex >= 0 && chosenActionIndex < possibleActions.size()) {
+                        final Runnable action = possibleActions.get(chosenActionIndex).second;
+                        action.run();
+
+                        // TODO Save the chosenActionIndex back to pref for next time?
+
+                        dialog.dismiss();
                     }
+                })
+                .onNegative((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    dialog.dismiss();
                 })
                 .show();
     }
