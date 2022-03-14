@@ -214,17 +214,26 @@ public class MusicPlayerRemote {
             return;
         }
 
-        ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
         if (currentQueue.isEmpty()) {
             openQueue(queue, positionInQueue, true);
             return;
         }
 
         final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(positionInQueue, queue.size()));
+        if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
+            ShuffleHelper.makeShuffleList(songsToAdd, 0);
+        }
+
         final Runnable removeDuplicateFromCurrentQueue = () -> {
             // Deduplicate songs, favoring the occurrences in the new queue
             ArrayList<Song> songsToRemove = new ArrayList<>();
-            for (Song song : currentQueue) {
+
+            final List<Song> remainingSongsInQueue = currentQueue.subList(
+                    musicService.getPosition() + 1,
+                    currentQueue.size()
+            );
+            for (Song song : remainingSongsInQueue) {
                 // Dont use List.contains or Song.equals
                 // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
                 for (Song songToAdd : songsToAdd) {
@@ -237,23 +246,32 @@ public class MusicPlayerRemote {
             musicService.removeSongs(songsToRemove);
         };
 
+        final Runnable showToastEnqueued = () -> {
+            int count = queue.size();
+            final String toast = (count == 1)
+                    ? context.getString(R.string.added_title_to_playing_queue)
+                    : context.getString(R.string.added_x_titles_to_playing_queue, count);
+
+            Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+        };
+
         List<Pair<String, Runnable>> possibleActions = Arrays.asList(
                 new Pair<>(
                         context.getString(R.string.action_replace_playing_queue),
-                        () -> {
-                            musicService.openQueue(songsToAdd, 0, true);
-                        }),
+                        () -> musicService.openQueue(songsToAdd, 0, true)),
                 new Pair<>(
                         context.getString(R.string.action_play_next),
                         () -> {
                             removeDuplicateFromCurrentQueue.run();
                             musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
+                            showToastEnqueued.run();
                         }),
                 new Pair<>(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
                             removeDuplicateFromCurrentQueue.run();
                             musicService.addSongs(songsToAdd);
+                            showToastEnqueued.run();
                         })
         );
         final int defaultActionIndex = 1; // TODO Get from pref
