@@ -123,11 +123,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
             if (isInQuickSelectMode() && getItemViewType() != OFFSET_ITEM) {
                 toggleChecked(getAdapterPosition());
             } else {
-                MusicPlayerRemote.showReplacePlayingQueueConfirmationDialog(
-                        v.getContext(),
-                        dataSet,
-                        () -> MusicPlayerRemote.openQueue(dataSet, getAdapterPosition() - 1, true)
-                );
+                MusicPlayerRemote.enqueueSongsWithConfirmation(v.getContext(), dataSet, getBindingAdapterPosition() - 1);
             }
         }
 
