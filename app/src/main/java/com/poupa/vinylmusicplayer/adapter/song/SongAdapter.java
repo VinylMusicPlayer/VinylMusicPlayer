@@ -144,7 +144,7 @@ public class SongAdapter
         holder.itemView.setActivated(isChecked);
 
         if (holder.shortSeparator != null) {
-            if (holder.getAdapterPosition() == getItemCount() - 1) {
+            if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
                 holder.shortSeparator.setVisibility(View.GONE);
             } else {
                 holder.shortSeparator.setVisibility(ThemeStyleUtil.getInstance().getShortSeparatorVisibilityState());
@@ -255,10 +255,10 @@ public class SongAdapter
         }
 
         protected Song getSong() {
-            final int position = getAdapterPosition();
+            final int position = getBindingAdapterPosition();
             if (position < 0 || position >= dataSet.size()) {return Song.EMPTY_SONG;}
 
-            return dataSet.get(getAdapterPosition());
+            return dataSet.get(getBindingAdapterPosition());
         }
 
         protected int getSongMenuRes() {
@@ -279,7 +279,7 @@ public class SongAdapter
         @Override
         public void onClick(View v) {
             if (isInQuickSelectMode()) {
-                toggleChecked(getAdapterPosition());
+                toggleChecked(getBindingAdapterPosition());
             } else {
                 MusicPlayerRemote.enqueueSongsWithConfirmation(v.getContext(), dataSet, getBindingAdapterPosition());
             }
@@ -287,7 +287,7 @@ public class SongAdapter
 
         @Override
         public boolean onLongClick(View view) {
-            return toggleChecked(getAdapterPosition());
+            return toggleChecked(getBindingAdapterPosition());
         }
     }
 }
