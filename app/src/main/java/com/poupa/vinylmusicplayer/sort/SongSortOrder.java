@@ -33,10 +33,10 @@ public class SongSortOrder {
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
     private static final Comparator<Song> BY_DATE_MODIFIED = Comparator.comparingLong(s -> s.dateModified);
     private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
-    public static final Comparator<Song> BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
+    private static final Comparator<Song> _BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
             ? (s1.discNumber - s2.discNumber)
             : (s1.trackNumber - s2.trackNumber);
-
+    public static final Comparator<Song> BY_DISC_TRACK = ComparatorUtil.chain(_BY_DISC_TRACK, _BY_TITLE);
     public static final Comparator<Song> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM, _BY_ALBUM_ID, BY_DISC_TRACK);
     private static final Comparator<Song> BY_TITLE = ComparatorUtil.chain(_BY_TITLE, _BY_ARTIST, BY_ALBUM);
     private static final Comparator<Song> BY_TITLE_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_TITLE), _BY_ARTIST, BY_ALBUM);
