@@ -247,6 +247,7 @@
     <string name="rearrange_playing_queue_instruction">Rearrange the playing queue by dragging a song from its track number.</string>
     <string name="library">Library</string>
     <string name="folders">Folders</string>
+    <string name="sdfolders">SD Card</string>
     <string name="saved_playlist_to">Saved playlist to %s.</string>
     <string name="failed_to_save_playlist">Failed to save playlist (%s).</string>
     <string name="saved_x_playlists_to_x">Saved %1$d playlists to %2$s.</string>

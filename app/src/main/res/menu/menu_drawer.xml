@@ -12,6 +12,10 @@
             android:id="@+id/nav_folders"
             android:icon="@drawable/ic_folder_white_24dp"
             android:title="@string/folders" />
+        <item
+            android:id="@+id/nav_sd_folders"
+            android:icon="@drawable/ic_folder_white_24dp"
+            android:title="@string/sdfolders" />
     </group>
 
     <group android:checkableBehavior="none">
