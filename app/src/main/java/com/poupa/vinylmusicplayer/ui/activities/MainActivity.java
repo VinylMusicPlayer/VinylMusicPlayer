@@ -1,13 +1,11 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -126,10 +124,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 if(sd_path != null) {
                     navigationView.setCheckedItem(R.id.nav_sd_folders);
                     setCurrentFragment(FoldersFragment.newInstance(sd_path));
-                }
-                else {
-                    /*SD Card not available*/
-                    setMusicChooser(FOLDERS); /*TODO Select FOLDERS or LIBRARY*/
+                } else {
+                    // SD Card not available
+                    setMusicChooser(FOLDERS);
                 }
                 break;
         }
