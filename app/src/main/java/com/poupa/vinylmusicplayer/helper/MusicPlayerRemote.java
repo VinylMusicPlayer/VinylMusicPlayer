@@ -220,7 +220,9 @@ public class MusicPlayerRemote {
             return;
         }
 
-        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(positionInQueue, queue.size()));
+        // Check the positionInQueue value
+        // If one tapped on the very first element of History queue, the positionInQueue will be -1
+        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(Math.max(positionInQueue, 0), queue.size()));
         if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(songsToAdd, 0);
         }
