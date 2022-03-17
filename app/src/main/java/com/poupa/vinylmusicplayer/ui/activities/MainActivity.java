@@ -1,11 +1,13 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -120,9 +122,15 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 setCurrentFragment(FoldersFragment.newInstance(this));
                 break;
             case SD_FOLDERS:
-                navigationView.setCheckedItem(R.id.nav_sd_folders);
-                File path = new File("/");
-                setCurrentFragment(FoldersFragment.newInstance(path));
+                File sd_path = FoldersFragment.getSDCardDirectory(this);
+                if(sd_path != null) {
+                    navigationView.setCheckedItem(R.id.nav_sd_folders);
+                    setCurrentFragment(FoldersFragment.newInstance(sd_path));
+                }
+                else {
+                    /*SD Card not available*/
+                    setMusicChooser(FOLDERS); /*TODO Select FOLDERS or LIBRARY*/
+                }
                 break;
         }
     }
@@ -174,6 +182,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         int accentColor = ThemeStore.accentColor(this);
         NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
         NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
+        if(FoldersFragment.getSDCardDirectory(this) != null){
+            navigationView.getMenu().findItem(R.id.nav_sd_folders).setVisible(true);
+        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();

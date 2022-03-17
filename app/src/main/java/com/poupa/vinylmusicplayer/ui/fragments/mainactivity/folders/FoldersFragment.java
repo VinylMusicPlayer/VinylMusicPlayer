@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,6 +66,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class FoldersFragment extends AbsMainActivityFragment implements MainActivity.MainActivityFragmentCallbacks, CabHolder, BreadCrumbLayout.SelectionCallback, SongFileAdapter.Callbacks, AppBarLayout.OnOffsetChangedListener, LoaderManager.LoaderCallbacks<List<File>> {
 
@@ -278,6 +282,25 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
             }
         }
         return startFolder;
+    }
+
+    public static File getSDCardDirectory(Context context) {
+        File sd_path = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            for (File file : context.getExternalFilesDirs(null)) {
+                if(file != null) {
+                    if (file.equals(context.getExternalFilesDir(null))) {
+                        Log.d("path int", file.getAbsolutePath());
+                        continue;
+                    }
+                    String path = file.getAbsolutePath();
+                    String base_path = path.substring(0, path.indexOf("Android/data"));
+                    Log.d("path", base_path);
+                    sd_path = new File(base_path);
+                }
+            }
+        }
+        return sd_path;
     }
 
     @Override
