@@ -65,7 +65,7 @@
 
     <style name="Theme.VinylMusicPlayer.Base.Black" parent="@style/Theme.VinylMusicPlayer.Base">
         <item name="android:colorBackground">@android:color/black</item>
-		<item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@android:color/black</item>
         <item name="dividerColor">#18FFFFFF</item>
         <item name="defaultFooterColor">@color/md_grey_800</item>
         <item name="cardBackgroundColor">@color/md_black_1000</item>
