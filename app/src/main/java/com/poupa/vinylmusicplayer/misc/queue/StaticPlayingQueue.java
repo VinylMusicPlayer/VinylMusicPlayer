@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 
+import static com.poupa.vinylmusicplayer.service.MusicService.TAG;
 
 /** Provide playing queue management (save list of songs, add/move/remove, know currently played position, restore, ...) */
 public class StaticPlayingQueue {
@@ -104,10 +106,18 @@ public class StaticPlayingQueue {
                 }
             }
 
+            try {
+                restoreUniqueId();
+            } catch (ArrayIndexOutOfBoundsException queueCopiesOutOfSync) {
+                // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
+                Log.e(TAG, "Restored queues are corrupted", queueCopiesOutOfSync);
+                this.queue = new ArrayList<>();
+                this.originalQueue = new ArrayList<>();
+                this.currentPosition = INVALID_POSITION;
+            }
+
             songsIsStale = true;
             resetSongs();
-
-            restoreUniqueId();
 
             return true;
         }

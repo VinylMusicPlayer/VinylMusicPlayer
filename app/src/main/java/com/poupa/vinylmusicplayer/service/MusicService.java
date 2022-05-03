@@ -153,7 +153,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private Playback playback;
 
     private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
-    /** is {@link MusicService#playingQueue} instance of {@link com.poupa.vinylmusicplayer.model.Song.DynamicPlayingQueue} or not  */
+    /** is {@link MusicService#playingQueue} instance of {@link com.poupa.vinylmusicplayer.misc.queue.DynamicPlayingQueue} or not  */
     private boolean queueIsDynamic = false;
 
     private boolean queuesRestored;
@@ -405,7 +405,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
             queueIsDynamic = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SAVED_QUEUE_TYPE, false);
             if (queueIsDynamic) {
-                playingQueue = new DynamicPlayingQueue(new AlbumShufflingQueueLoader()); // For album shuffling V2: Will depend on a saved preference to have the same than before
+                playingQueue = new DynamicPlayingQueue(playingQueue, new AlbumShufflingQueueLoader()); // For album shuffling V2: Will depend on a saved preference to have the same than before
             }
 
             if (playingQueue.restoreQueue(this, restoredPosition)) {
