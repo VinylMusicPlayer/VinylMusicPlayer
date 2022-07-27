@@ -12,7 +12,6 @@ import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -48,12 +47,11 @@ public class SearchQueryHelper {
         Predicate<Song> isMatchingQuery= (s) -> (!query.isEmpty() && normalize.apply(s.title).contains(query));
 
         ArrayList<Song> matchingSongs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs()) {
+        for (Song song : Discography.getInstance().getAllSongs(SongLoader.getSortOrder())) {
             if (isMatchingTitle.test(song) || isMatchingAlbum.test(song) || isMatchingArtist.test(song) || isMatchingQuery.test(song)) {
                 matchingSongs.add(song);
             }
         }
-        Collections.sort(matchingSongs, SongLoader.getSortOrder());
         return matchingSongs;
     }
 }

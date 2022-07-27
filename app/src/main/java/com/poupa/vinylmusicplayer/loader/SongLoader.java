@@ -10,7 +10,6 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -20,9 +19,7 @@ import java.util.Comparator;
 public class SongLoader {
     @NonNull
     public static ArrayList<Song> getAllSongs() {
-        ArrayList<Song> songs = Discography.getInstance().getAllSongs();
-        Collections.sort(songs, getSortOrder());
-        return songs;
+        return Discography.getInstance().getAllSongs(getSortOrder());
     }
 
     @NonNull
@@ -30,13 +27,12 @@ public class SongLoader {
         final String strippedQuery = StringUtil.stripAccent(query.toLowerCase());
 
         ArrayList<Song> songs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs()) {
+        for (Song song : Discography.getInstance().getAllSongs(getSortOrder())) {
             final String strippedTitle = StringUtil.stripAccent(song.title.toLowerCase());
             if (strippedTitle.contains(strippedQuery)) {
                 songs.add(song);
             }
         }
-        Collections.sort(songs, getSortOrder());
         return songs;
     }
 

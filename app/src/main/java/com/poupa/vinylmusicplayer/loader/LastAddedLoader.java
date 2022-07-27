@@ -8,7 +8,6 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class LastAddedLoader {
 
@@ -17,11 +16,9 @@ public class LastAddedLoader {
         long cutoff = PreferenceUtil.getInstance().getLastAddedCutoffTimeSecs();
 
         ArrayList<Song> lastAddedSongs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs()) {
+        for (Song song : Discography.getInstance().getAllSongs(SongSortOrder.BY_DATE_ADDED_DESC)) {
             if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
         }
-
-        Collections.sort(lastAddedSongs, SongSortOrder.BY_DATE_ADDED_DESC);
         return lastAddedSongs;
     }
 }
