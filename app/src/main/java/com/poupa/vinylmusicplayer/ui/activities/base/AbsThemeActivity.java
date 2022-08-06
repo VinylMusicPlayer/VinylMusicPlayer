@@ -25,11 +25,17 @@ import com.poupa.vinylmusicplayer.util.Util;
 public abstract class AbsThemeActivity extends ATHToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Thread.setDefaultUncaughtExceptionHandler(new OopsHandler(AbsThemeActivity.this));
+        Thread.setDefaultUncaughtExceptionHandler(new OopsHandler(this));
 
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());
         super.onCreate(savedInstanceState);
         MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Thread.setDefaultUncaughtExceptionHandler(null);
+        super.onDestroy();
     }
 
     protected void setDrawUnderStatusbar() {
