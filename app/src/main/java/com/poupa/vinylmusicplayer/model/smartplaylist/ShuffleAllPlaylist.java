@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class ShuffleAllPlaylist extends AbsSmartPlaylist {
 
     public ShuffleAllPlaylist(@NonNull Context context) {
-        super(context.getString(R.string.action_shuffle_all), R.drawable.ic_shuffle_white_24dp);
+        super(context.getString(R.string.action_shuffle_all_songs), R.drawable.ic_shuffle_white_24dp);
     }
 
     @NonNull

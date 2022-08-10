@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.DocumentsContract;
@@ -23,6 +24,8 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicElement;
+import com.poupa.vinylmusicplayer.misc.queue.DynamicElement.DynamicQueueItemAdapter;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -190,6 +193,9 @@ public class MusicPlayerRemote {
             if (!PreferenceUtil.getInstance().rememberShuffle()){
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
+            if (!PreferenceUtil.getInstance().rememberDynamicQueue()){
+                setQueueToStaticQueue();
+            }
         }
     }
 
@@ -241,6 +247,45 @@ public class MusicPlayerRemote {
             return musicService.getPlayingQueue();
         }
         return new ArrayList<>();
+    }
+
+    public static DynamicElement getDynamicElement() {
+        if (musicService != null) {
+            return musicService.getDynamicElement();
+        }
+        return null;
+    }
+
+    public static void setNextDynamicQueue(Bundle criteria) {
+        if (musicService != null) {
+            musicService.setNextDynamicQueue(criteria, musicService);
+        }
+    }
+
+    public static boolean isDynamicQueueActivated() {
+        if (musicService != null) {
+            return musicService.isDynamicQueueActivated();
+        }
+        return false;
+    }
+
+    public static DynamicQueueItemAdapter getDynamicAdapter() {
+        if (musicService != null) {
+            return musicService.getDynamicAdapter();
+        }
+        return null;
+    }
+
+    public static void setQueueToStaticQueue() {
+        if (musicService != null) {
+            musicService.setQueueToStaticQueue();
+        }
+    }
+
+    public static void setQueueToDynamicQueue() {
+        if (musicService != null) {
+            musicService.setQueueToDynamicQueue();
+        }
     }
 
     public static int getSongProgressMillis() {

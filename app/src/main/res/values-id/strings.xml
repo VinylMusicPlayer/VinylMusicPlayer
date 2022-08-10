@@ -81,10 +81,10 @@
     <string name="clear_playlist_title">Kosongkan daftar putar</string>
     <string name="save_playlist_title">Simpan sebagai berkas</string>
     <string name="add_playlist_title">"Tambahkan ke daftar putar"</string>
-    <string name="action_shuffle_all">Acak semua</string>
-    <string name="action_shuffle_album">Putar album secara acak</string>
-    <string name="action_shuffle_artist">Putar artis secara acak</string>
-    <string name="action_shuffle_playlist">Putar daftar putar secara acak</string>
+    <string name="action_shuffle_all_songs">Acak semua</string>
+    <string name="action_shuffle_album_songs">Putar album secara acak</string>
+    <string name="action_shuffle_artist_songs">Putar artis secara acak</string>
+    <string name="action_shuffle_playlist_songs">Putar daftar putar secara acak</string>
     <string name="action_clear_playing_queue">Kosongkan antrean yang sedang diputar</string>
     <string name="action_go_to_start_directory">Ke direktori awal</string>
     <string name="action_show_lyrics">Tampilkan lirik</string>

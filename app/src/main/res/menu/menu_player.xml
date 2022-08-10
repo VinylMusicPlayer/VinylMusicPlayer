@@ -31,4 +31,10 @@
         android:orderInCategory="99"
         android:title="@string/equalizer"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_dynamic_queue"
+        android:orderInCategory="99"
+        android:title="@string/start_dynamic_queue"
+        app:showAsAction="never" />
 </menu>

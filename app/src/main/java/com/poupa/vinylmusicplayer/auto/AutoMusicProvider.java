@@ -155,7 +155,7 @@ public class AutoMusicProvider {
                     case SONGS:
                         mediaItems.add(AutoMediaItem.with(mContext)
                                 .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)
-                                .title(resources.getString(R.string.action_shuffle_all))
+                                .title(resources.getString(R.string.action_shuffle_all_songs))
                                 .subTitle(new ShuffleAllPlaylist(mContext).getInfoString(mContext))
                                 .icon(R.drawable.ic_shuffle_white_24dp)
                                 .asPlayable()

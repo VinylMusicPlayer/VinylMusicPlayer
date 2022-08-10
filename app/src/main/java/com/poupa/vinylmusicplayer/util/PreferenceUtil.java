@@ -104,6 +104,7 @@ public final class PreferenceUtil {
     public static final String LIBRARY_CATEGORIES = "library_categories";
 
     private static final String REMEMBER_SHUFFLE = "remember_shuffle";
+    private static final String REMEMBER_DYNAMIC_QUEUE = "remember_dynamic_queue";
 
     @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
@@ -604,6 +605,10 @@ public final class PreferenceUtil {
 
     public final boolean rememberShuffle() {
         return mPreferences.getBoolean(REMEMBER_SHUFFLE, true);
+    }
+
+    public final boolean rememberDynamicQueue() {
+        return mPreferences.getBoolean(REMEMBER_DYNAMIC_QUEUE, true);
     }
 
     public final String autoDownloadImagesPolicy() {

@@ -78,10 +78,10 @@
     <string name="clear_playlist_title">Очистити список відтворення</string>
     <string name="save_playlist_title">Зберегти як файл</string>
     <string name="add_playlist_title">"Додати до списку відтворення"</string>
-    <string name="action_shuffle_all">Перемішати всі</string>
-    <string name="action_shuffle_album">Перемішати альбом</string>
-    <string name="action_shuffle_artist">Перемішати виконавця</string>
-    <string name="action_shuffle_playlist">Перемішати список відтворення</string>
+    <string name="action_shuffle_all_songs">Перемішати всі</string>
+    <string name="action_shuffle_album_songs">Перемішати альбом</string>
+    <string name="action_shuffle_artist_songs">Перемішати виконавця</string>
+    <string name="action_shuffle_playlist_songs">Перемішати список відтворення</string>
     <string name="action_clear_playing_queue">Очистити чергу відтворення</string>
     <string name="action_go_to_start_directory">Перейти до початкової теки</string>
     <string name="action_show_lyrics">Показати текст</string>

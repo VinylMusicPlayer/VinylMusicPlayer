@@ -78,10 +78,10 @@
     <string name="clear_playlist_title">Limpar lista de reprodução</string>
     <string name="save_playlist_title">Guardar como ficheiro</string>
     <string name="add_playlist_title">"Adicionar à lista de reprodução"</string>
-    <string name="action_shuffle_all">Embaralhar Todas</string>
-    <string name="action_shuffle_album">Embaralhar Álbum</string>
-    <string name="action_shuffle_artist">Embaralhar Artista</string>
-    <string name="action_shuffle_playlist">Embaralhar lista de reprodução</string>
+    <string name="action_shuffle_all_songs">Embaralhar Todas</string>
+    <string name="action_shuffle_album_songs">Embaralhar Álbum</string>
+    <string name="action_shuffle_artist_songs">Embaralhar Artista</string>
+    <string name="action_shuffle_playlist_songs">Embaralhar lista de reprodução</string>
     <string name="action_clear_playing_queue">Limpar fila de reprodução</string>
     <string name="action_go_to_start_directory">Ir para diretoria principal</string>
     <string name="action_show_lyrics">Mostrar letra</string>

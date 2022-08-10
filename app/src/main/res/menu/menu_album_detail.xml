@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_shuffle_album"
         android:icon="@drawable/ic_shuffle_white_24dp"
-        android:title="@string/action_shuffle_album"
+        android:title="@string/action_shuffle_album_songs"
         app:showAsAction="ifRoom" />
   
     <item  
@@ -22,6 +22,11 @@
     <item
         android:id="@+id/action_add_to_current_playing"
         android:title="@string/action_add_to_playing_queue"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_open_playing_queue_in_album_shuffling_mode"
+        android:title="@string/start_album_shuffling_queue"
         app:showAsAction="never" />
 
     <item

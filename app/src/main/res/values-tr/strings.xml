@@ -88,10 +88,10 @@
     <string name="save_playlist_title">Dosya olarak kaydet</string>
     <string name="add_playlist_title">"Çalma listesine ekle"</string>
     <string name="select_all_title">Hepsini seç</string>
-    <string name="action_shuffle_all">Tümünü karıştır</string>
-    <string name="action_shuffle_album">Albümü karıştır</string>
-    <string name="action_shuffle_artist">Sanatçıyı karıştır</string>
-    <string name="action_shuffle_playlist">Çalma listesini karıştır</string>
+    <string name="action_shuffle_all_songs">Tümünü karıştır</string>
+    <string name="action_shuffle_album_songs">Albümü karıştır</string>
+    <string name="action_shuffle_artist_songs">Sanatçıyı karıştır</string>
+    <string name="action_shuffle_playlist_songs">Çalma listesini karıştır</string>
     <string name="action_clear_playing_queue">Çalma sırasını temizle</string>
     <string name="action_save_playing_queue">Çalma sırasını kaydet</string>
     <string name="action_go_to_start_directory">Başlangıç dizinine git</string>

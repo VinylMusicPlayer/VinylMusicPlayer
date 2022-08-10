@@ -86,10 +86,10 @@
     <string name="clear_playlist_title">Ştergeţi lista de redare</string>
     <string name="save_playlist_title">Salveaza ca fișier</string>
     <string name="add_playlist_title">"Adăugaţi la lista de redare"</string>
-    <string name="action_shuffle_all">Amestecare tot</string>
-    <string name="action_shuffle_album">Amestecare album</string>
-    <string name="action_shuffle_artist">Amestecare artist</string>
-    <string name="action_shuffle_playlist">Amestecare listă de redare</string>
+    <string name="action_shuffle_all_songs">Amestecare tot</string>
+    <string name="action_shuffle_album_songs">Amestecare album</string>
+    <string name="action_shuffle_artist_songs">Amestecare artist</string>
+    <string name="action_shuffle_playlist_songs">Amestecare listă de redare</string>
     <string name="action_clear_playing_queue">Golește lista de redare</string>
     <string name="action_save_playing_queue">Salvați lista de redare</string>
     <string name="action_go_to_start_directory">Du-te la directorul de pornire</string>

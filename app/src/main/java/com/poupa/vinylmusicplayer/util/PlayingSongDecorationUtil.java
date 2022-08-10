@@ -110,19 +110,7 @@ public class PlayingSongDecorationUtil {
             final boolean animateIcon = PreferenceUtil.getInstance().animatePlayingSongIcon();
 
             if (isPlaying) {
-                final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
-                image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-
-                // sizing and positioning
-                final int size = (int)(24 * activity.getResources().getDisplayMetrics().density);
-                image.setScaleType(ImageView.ScaleType.CENTER);
-
-                // Note: No transition for Glide, the animation is explicitly controlled
-                GlideApp.with(activity)
-                        .asBitmap()
-                        .load(sIconPlaying)
-                        .override(size)
-                        .into(image);
+                addIconToItem(activity, image, sIconPlaying);
 
                 if (animateIcon) { image.startAnimation(sIconAnimation); }
             }
@@ -140,4 +128,23 @@ public class PlayingSongDecorationUtil {
         }
     }
 
+    public static void addIconToItem(
+            @NonNull final AppCompatActivity activity,
+            @Nullable final ImageView image,
+            int icon) {
+
+        final int color = ATHUtil.resolveColor(activity, R.attr.iconColor, ThemeStore.textColorSecondary(activity));
+        image.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+
+        // sizing and positioning
+        final int size = (int)(24 * activity.getResources().getDisplayMetrics().density);
+        image.setScaleType(ImageView.ScaleType.CENTER);
+
+        // Note: No transition for Glide, the animation is explicitly controlled
+        GlideApp.with(activity)
+                .asBitmap()
+                .load(icon)
+                .override(size)
+                .into(image);
+    }
 }

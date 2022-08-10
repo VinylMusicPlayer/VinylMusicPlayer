@@ -89,10 +89,10 @@
     <string name="save_playlist_title">Desa en un fitxer</string>
     <string name="add_playlist_title">Afegeix a una llista</string>
     <string name="select_all_title">Selecciona-ho tot</string>
-    <string name="action_shuffle_all">Reprodueix aleatòriament</string>
-    <string name="action_shuffle_album">Reprodueix aleatòriament</string>
-    <string name="action_shuffle_artist">Reprodueix aleatòriament</string>
-    <string name="action_shuffle_playlist">Reprodueix aleatòriament</string>
+    <string name="action_shuffle_all_songs">Reprodueix aleatòriament</string>
+    <string name="action_shuffle_album_songs">Reprodueix aleatòriament</string>
+    <string name="action_shuffle_artist_songs">Reprodueix aleatòriament</string>
+    <string name="action_shuffle_playlist_songs">Reprodueix aleatòriament</string>
     <string name="action_clear_playing_queue">Buida la cua de reproducció</string>
     <string name="action_save_playing_queue">Desa la cua de reproducció</string>
     <string name="action_go_to_start_directory">Ves al directori d\'inici</string>

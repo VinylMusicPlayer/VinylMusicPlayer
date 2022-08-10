@@ -82,10 +82,10 @@
     <string name="clear_playlist_title">Изчисти този плейлист</string>
     <string name="save_playlist_title">Запази като файл</string>
     <string name="add_playlist_title">"Добави към плейлист"</string>
-    <string name="action_shuffle_all">Разбъркай всички</string>
-    <string name="action_shuffle_album">Разбъркай албумът</string>
-    <string name="action_shuffle_artist">Разбъркай артист</string>
-    <string name="action_shuffle_playlist">Разбъркай този плейлист</string>
+    <string name="action_shuffle_all_songs">Разбъркай всички</string>
+    <string name="action_shuffle_album_songs">Разбъркай албумът</string>
+    <string name="action_shuffle_artist_songs">Разбъркай артист</string>
+    <string name="action_shuffle_playlist_songs">Разбъркай този плейлист</string>
     <string name="action_clear_playing_queue">Изчисти списъкът с възпроизвеждащи се песни</string>
     <string name="action_go_to_start_directory">Отиди в началната директория</string>
     <string name="action_show_lyrics">Покажи текст</string>

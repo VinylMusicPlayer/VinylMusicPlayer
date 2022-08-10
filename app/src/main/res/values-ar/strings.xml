@@ -77,10 +77,10 @@
     <string name="clear_playlist_title">مسح قائمة التشغيل</string>
     <string name="save_playlist_title">حفظ كملف</string>
     <string name="add_playlist_title">"أضف إلى قائمة التشغيل"</string>
-    <string name="action_shuffle_all">بعثرة الكل</string>
-    <string name="action_shuffle_album">بعثرة الألبوم</string>
-    <string name="action_shuffle_artist">تشغيل أغاني الفنان عشوائيا</string>
-    <string name="action_shuffle_playlist">تشغيل قائمة التشغيل عشوائيا</string>
+    <string name="action_shuffle_all_songs">بعثرة الكل</string>
+    <string name="action_shuffle_album_songs">بعثرة الألبوم</string>
+    <string name="action_shuffle_artist_songs">تشغيل أغاني الفنان عشوائيا</string>
+    <string name="action_shuffle_playlist_songs">تشغيل قائمة التشغيل عشوائيا</string>
     <string name="action_clear_playing_queue">مسح قائمة الانتظار</string>
     <string name="action_show_lyrics">اعرض كلمات الأغنية</string>
     <string name="light_theme_name">فاتح</string>

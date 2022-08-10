@@ -93,10 +93,10 @@
     <string name="save_playlist_title">파일로 저장</string>
     <string name="add_playlist_title">"재생 목록에 추가"</string>
     <string name="select_all_title">모두 선택</string>
-    <string name="action_shuffle_all">모든 곡 무작위 재생</string>
-    <string name="action_shuffle_album">앨범 무작위 재생</string>
-    <string name="action_shuffle_artist">아티스트 무작위 재생</string>
-    <string name="action_shuffle_playlist">재생 목록 무작위 재생</string>
+    <string name="action_shuffle_all_songs">모든 곡 무작위 재생</string>
+    <string name="action_shuffle_album_songs">앨범 무작위 재생</string>
+    <string name="action_shuffle_artist_songs">아티스트 무작위 재생</string>
+    <string name="action_shuffle_playlist_songs">재생 목록 무작위 재생</string>
     <string name="action_clear_playing_queue">재생 대기열 비우기</string>
     <string name="action_save_playing_queue">재생 대기열 저장</string>
     <string name="action_go_to_start_directory">시작 디렉터리로 가기</string>

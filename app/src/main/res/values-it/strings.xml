@@ -94,10 +94,10 @@
     <string name="save_playlist_title">Salva come file</string>
     <string name="add_playlist_title">"Aggiungi alla playlist"</string>
 	<string name="select_all_title">Seleziona tutto</string>
-    <string name="action_shuffle_all">Riproduzione casuale</string>
-    <string name="action_shuffle_album">Riproduzione casuale album</string>
-    <string name="action_shuffle_artist">Riproduzione casuale artista</string>
-    <string name="action_shuffle_playlist">Riproduzione casuale playlist</string>
+    <string name="action_shuffle_all_songs">Riproduzione casuale</string>
+    <string name="action_shuffle_album_songs">Riproduzione casuale album</string>
+    <string name="action_shuffle_artist_songs">Riproduzione casuale artista</string>
+    <string name="action_shuffle_playlist_songs">Riproduzione casuale playlist</string>
     <string name="action_clear_playing_queue">Svuota coda di riproduzione</string>
     <string name="action_save_playing_queue">Salva la coda di riproduzione</string>
     <string name="action_go_to_start_directory">Vai alla directory iniziale</string>
