@@ -1,13 +1,84 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.0] - 2022-08-12
+### What's Changed
+* Sort orders by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/467
+* Fast scroll popup: Show relative date for recent ones by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/494
+* When parsing release year from metadata, only consider the first `yyyy` part by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/491
+* Fixed Image Flicker on notifyDataSetChanged() by @prathameshmm02 in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/508
+* tweak song sorting for Song and Genre tabs by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/506
+* Disc number fallback by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/498
+* Better menuItem visual queue for delete action by @Octoton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/520
+* Set imageText visibility to INVISIBLE from GONE to allow reordering current song in queue by @bertin0 in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/523
+* Adding missing red menu item delete in all multiselecion menu by @Octoton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/532
+* add darkmode to BaseAppWidget by @newhinton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/522
+* Most album covers are square, not rectangle -> show as square on the nav drawer by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/546
+* More info in the song's Details dialog by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/561
+* Fix Black (OLED) theme to actually be black. by @Sai-P in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/588
+
+### Translation updates
+* Update Italian translation by @auanasgheps in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/476
+* Brazilian Portuguese translation updated by @DeltaInsight in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/475
+* Catalan translation updated by @albertgasset in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/471
+* Update italian translation by @auanasgheps in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/477
+* Fix italian build error by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/478
+* Updated Brazilian Portuguese translation by @DeltaInsight in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/488
+* Catalan translation updated by @albertgasset in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/496
+* Fixed or added German translations by @tschlegeldigos in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/499
+* Update Korean translation by @yurical in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/505
+* Unified period usage in settings  by @tschlegeldigos in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/510
+* English traduction for CA and GB removal by @Octoton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/519
+* Fixed some German translations by @tschlegeldigos in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/507
+* Update French translation by @GladiusTM in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/538
+* Updated Brazilian Portuguese translation by @DeltaInsight in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/601
+
+### Fixes
+* Fix NPE on artist name splitting by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/474
+* Fix crash on tapping/dragging the very fist item of the orderable playlist by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/486
+* Prevent repeating last track when gapless is enabled (fixes #435) by @albertgasset in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/495
+* Fix crash if the songs/albums collection is empty by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/497
+* Fixes https://github.com/AdrienPoupa/VinylMusicPlayer/issues/431 by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/550
+* Fix Android Auto regression  by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/551
+* Fix crash on restoring queue after song removal by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/547
+* Resolve IMMUTABLE crash on android 12 following a change in android specification by @Octoton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/549
+* Fix crash launching from Google Assistant by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/567
+* Queue restore crash by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/570
+* Use song title to stabilize the sorting if disc+track are equals or missing by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/583
+* Fix data race by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/610
+
+### Engineering
+* Lint by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/426
+* Flush the Discog task queue on stop by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/470
+* Playing hide and seek with jaudiotagger - contain the VerifyError with FLAC by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/487
+* Add missing null check by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/481
+* Lint by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/473
+* Align to recent strings rename by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/493
+* Spitting playingQueue from musicservice by @Octoton in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/509
+* Drop ComparatorUtil.compareLongInts... by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/558
+* Tweak text transparency to improve readability by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/559
+* Tweak navbar album cover text transparency by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/560
+* Stick to API 29, avoid regression in song deletion by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/552
+* Upgrade gradle by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/578
+* Upgrade to new CircleCI image by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/585
+* Update build to large resource class in config.yml by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/612
+
+### New Contributors
+* @auanasgheps made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/476
+* @DeltaInsight made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/475
+* @tschlegeldigos made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/499
+* @yurical made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/505
+* @prathameshmm02 made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/508
+* @bertin0 made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/523
+* @newhinton made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/522
+* @GladiusTM made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/538
+* @Sai-P made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/588
 
 ## [1.3.0] - 2021-06-24
-## Added
+### Added
 - Whitelist
 - Switch theme based on OS setting
 - Ability to fast forward miss in fragment flat and rewind by holding next and previous song buttons
-## Fixed
+### Fixed
 - "Shuffle All" button will now start a new playback
 - Crash when reading MP3 tags on Nougat
 
