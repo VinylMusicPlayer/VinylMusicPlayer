@@ -9,27 +9,19 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 public class GenreLoader {
     @NonNull
     public static ArrayList<Genre> getAllGenres() {
-        ArrayList<Genre> genres = Discography.getInstance().getAllGenres();
-        Collections.sort(genres, (g1, g2) -> StringUtil.compareIgnoreAccent(g1.name, g2.name));
-        return genres;
+        return Discography.getInstance().getAllGenres(
+                (g1, g2) -> StringUtil.compareIgnoreAccent(g1.name, g2.name)
+        );
     }
 
     @NonNull
     public static ArrayList<Song> getSongs(final long genreId) {
-        Collection<Song> genreSongs = Discography.getInstance().getSongsForGenre(genreId);
-        if (genreSongs == null) {
-            return new ArrayList<>();
-        }
-        else {
-            ArrayList<Song> songs = new ArrayList<>(genreSongs);
-            Collections.sort(songs, SongSortOrder.BY_ALBUM);
-            return songs;
-        }
+        ArrayList<Song> songs = Discography.getInstance().getSongsForGenre(genreId, SongSortOrder.BY_ALBUM);
+        if (songs == null) {return new ArrayList<>();}
+        return songs;
     }
 }
