@@ -60,6 +60,9 @@ public class SAFUtil {
     }
 
     public static boolean isSAFRequiredForSongs(List<Song> songs) {
+        if (PreferenceUtil.getInstance().getAlwaysAskWritePermission())
+            return false;
+
         for (Song song : songs) {
             if (isSAFRequired(song)) return true;
         }
@@ -141,16 +144,12 @@ public class SAFUtil {
         audio.commit();
     }
 
-    public static void writeSAF(Context context, AudioFile audio, Uri safUri) {
+    public static Uri getUriFromAudio(Context context, AudioFile audio, Uri safUri) {
         Uri uri = null;
 
-        if (context == null) {
-            Log.e(TAG, "writeSAF: context == null");
-            return;
-        }
-
         if (isTreeUriSaved()) {
-            List<String> pathSegments = new ArrayList<>(Arrays.asList(audio.getFile().getAbsolutePath().split("/")));
+            List<String> pathSegments =
+                    new ArrayList<>(Arrays.asList(audio.getFile().getAbsolutePath().split("/")));
             Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
             uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
         }
@@ -158,6 +157,17 @@ public class SAFUtil {
         if (uri == null) {
             uri = safUri;
         }
+
+        return uri;
+    }
+
+    public static void writeSAF(Context context, AudioFile audio, Uri safUri) {
+        if (context == null) {
+            return;
+        }
+
+        Uri uri = null;
+        uri = getUriFromAudio(context, audio, safUri);
 
         if (uri == null) {
             Log.e(TAG, "writeSAF: Can't get SAF URI");

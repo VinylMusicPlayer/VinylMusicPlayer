@@ -29,6 +29,13 @@
             android:summary="@string/pref_summary_whitelist"
             android:title="@string/whitelist" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="always_ask_write_permission"
+            android:summary="@string/pref_summary_write_permission"
+            android:title="@string/write_permission" />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

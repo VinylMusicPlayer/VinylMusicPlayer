@@ -2,15 +2,21 @@ package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
@@ -41,13 +49,18 @@ import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -102,6 +115,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
     private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
+    private ActivityResultLauncher<Uri> writeTagsAndroidR_SAFTreePicker;
+    private ActivityResultLauncher<Intent> writeTagsAndroidR_SAFGuide;
+
+    private ActivityResultLauncher<IntentSenderRequest> writeRequestAndroidR;
     private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
 
@@ -161,6 +178,55 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 resultUri -> {
                     SAFUtil.saveTreeUri(this, resultUri);
                     writeTags(savedSongPaths);
+                });
+
+        writeTagsAndroidR_SAFGuide = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
+                            writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
+                        } else if (!checkForWritingAccessForAndroid11()) {
+                            askForWritingAccessForAndroid11();
+                        }
+                    } else {
+                        showFab();
+                    }
+                });
+
+        writeTagsAndroidR_SAFTreePicker = registerForActivityResult(
+                new ActivityResultContracts.OpenDocumentTree() {
+                    @NonNull
+                    @Override
+                    public Intent createIntent(@NonNull Context context, Uri input) {
+                        return super.createIntent(context, input)
+                                .putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    }
+                },
+                resultUri -> {
+                    if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
+                        SAFUtil.saveTreeUri(this, resultUri);
+                        writeTags(savedSongPaths);
+                        if (!checkForWritingAccessForAndroid11()) {
+                            askForWritingAccessForAndroid11();
+                        } else {
+                            writeTags(savedSongPaths);
+                        }
+                    } else {
+                        showFab();
+                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        writeRequestAndroidR = registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        writeTags(savedSongPaths);
+                    } else {
+                        showFab();
+                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         imagePicker = registerForActivityResult(
@@ -342,19 +408,70 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         savedTags = fieldKeyValueMap;
         savedArtworkInfo = artworkInfo;
 
-        if (!SAFUtil.isSAFRequired(savedSongPaths)) {
-            writeTags(savedSongPaths);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (SAFUtil.isSDCardAccessGranted(this)) {
-                    writeTags(savedSongPaths);
-                } else {
-                    writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
-                }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (!SAFUtil.isSAFRequired(savedSongPaths)) {
+                writeTags(savedSongPaths);
             } else {
                 writeTagsKitkat();
             }
+        } else if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+            if (!SAFUtil.isSAFRequired(savedSongPaths)) {
+                writeTags(savedSongPaths);
+            } else if (SAFUtil.isSDCardAccessGranted(this)) {
+                writeTags(savedSongPaths);
+            } else {
+                writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
+            }
+        } else {
+            if (SAFUtil.isSDCardAccessGranted(this)) {
+                if (SAFUtil.isSAFRequired(savedSongPaths) && !checkForWritingAccessForAndroid11()) {
+                    askForWritingAccessForAndroid11();
+                } else {
+                    writeTags(savedSongPaths);
+                }
+            } else if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
+                writeTagsAndroidR_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
+            } else {
+                askForWritingAccessForAndroid11();
+            }
         }
+    }
+
+    private boolean checkForWritingAccessForAndroid11() {
+        // TODO: find correct function to test if file can be access and better to change SAFUtil
+        AudioFile test = null;
+        try {
+            test = AudioFileIO.read(new File(savedSongPaths.get(0)));
+        } catch (CannotReadException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TagException e) {
+            e.printStackTrace();
+        } catch (ReadOnlyFileException e) {
+            e.printStackTrace();
+        } catch (InvalidAudioFrameException e) {
+            e.printStackTrace();
+        }
+
+        return (SAFUtil.getUriFromAudio(this, test, null) != null && Build.VERSION.SDK_INT > VERSION_CODES.Q);
+    }
+
+
+    @RequiresApi(api = VERSION_CODES.R)
+    private void askForWritingAccessForAndroid11() {
+        List<Uri> urisToModify = new ArrayList<>();
+
+        //for (File song : getSongPaths()) {
+        // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
+        //    urisToModify.add(Uri.fromFile(song));
+        //}
+        urisToModify.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), getId()));
+        PendingIntent editPendingIntent =
+                MediaStore.createWriteRequest(this.getContentResolver(), urisToModify);
+
+        // Launch a system prompt requesting user permission for the operation.
+        writeRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
     }
 
     private void writeTags(List<String> paths) {

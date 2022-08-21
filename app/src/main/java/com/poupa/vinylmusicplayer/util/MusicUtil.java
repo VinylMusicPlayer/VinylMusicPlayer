@@ -1,23 +1,30 @@
 package com.poupa.vinylmusicplayer.util;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import androidx.fragment.app.Fragment;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
@@ -233,8 +240,10 @@ public class MusicUtil {
         return albumArtDir;
     }
 
-    public static void deleteTracks(@NonNull final Activity activity, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris, @Nullable final Runnable callback) {
+    public static void deleteTracks(@NonNull final Fragment fragment, ActivityResultLauncher<IntentSenderRequest> deleteRequestAndroidR, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris) {
         final int songCount = songs.size();
+
+        Activity activity = fragment.getActivity();
 
         try {
             // Step 1: Remove selected tracks from the current playlist
@@ -254,25 +263,36 @@ public class MusicUtil {
             activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     selection.toString(), null);
 
-            // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            // Step 3: Remove files from card
+            if (Build.VERSION.SDK_INT > VERSION_CODES.Q) {
+                List<Uri> urisToDelete = new ArrayList<>();
+                for (Song song: songs) {
+                    // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
+                    urisToDelete.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
+                }
+                PendingIntent editPendingIntent = MediaStore.createDeleteRequest(activity.getContentResolver(),
+                        urisToDelete);
+
+                deleteRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
+
+            } else if (Build.VERSION.SDK_INT < VERSION_CODES.Q) { // Android Q takes care of this if the element is remove via MediaStore
                 for (int i = 0; i < songCount; i++) {
                     final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
                     SAFUtil.delete(activity, songs.get(i).data, safUri);
                 }
             }
-        } catch (SecurityException e) {
+        } catch (SecurityException e) { // | SendIntentException e) {
+            Log.d("TOTO", "exception");
             e.printStackTrace();
         }
 
-        activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
+        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+            activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-        activity.runOnUiThread(() -> {
-            Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
-            if (callback != null) {
-                callback.run();
-            }
-        });
+            activity.runOnUiThread(() -> {
+                Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 
     public static boolean isFavoritePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) {

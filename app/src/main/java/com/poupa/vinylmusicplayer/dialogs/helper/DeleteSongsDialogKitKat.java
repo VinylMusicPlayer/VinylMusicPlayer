@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.dialogs;
+package com.poupa.vinylmusicplayer.dialogs.helper;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
-public class DeleteSongsDialog extends DialogFragment {
+public class DeleteSongsDialogKitKat extends DialogFragment {
     private static final String SONGS = "songs";
 
     private BaseDeleteSongsAsyncTask deleteSongsTask;
@@ -46,15 +46,15 @@ public class DeleteSongsDialog extends DialogFragment {
     private ActivityResultLauncher<Uri> deleteSongs_SAFTreePicker;
 
     @NonNull
-    public static DeleteSongsDialog create(Song song) {
+    public static DeleteSongsDialogKitKat create(Song song) {
         ArrayList<Song> list = new ArrayList<>();
         list.add(song);
         return create(list);
     }
 
     @NonNull
-    public static DeleteSongsDialog create(ArrayList<Song> songs) {
-        DeleteSongsDialog dialog = new DeleteSongsDialog();
+    public static DeleteSongsDialogKitKat create(ArrayList<Song> songs) {
+        DeleteSongsDialogKitKat dialog = new DeleteSongsDialogKitKat();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
@@ -131,14 +131,11 @@ public class DeleteSongsDialog extends DialogFragment {
                 .onPositive((dialog, which) -> {
                     dismiss();
 
-                    // If song removed was the playing song, then play the next song
-                    if ((songs.size() == 1) && MusicPlayerRemote.isPlaying(songs.get(0))) {
-                        MusicPlayerRemote.playNextSong(false);
-                    }
+                    DeleteSongsHelper.managePlayingSong(songs);
 
                     // Now remove the track in background
                     songsToRemove = songs;
-                    deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialog.this);
+                    deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialogKitKat.this);
                     ((DeleteSongsAsyncTask)deleteSongsTask).execute(songs);
                 })
                 .onNegative((materialDialog, dialogAction) -> dismiss())
@@ -146,7 +143,7 @@ public class DeleteSongsDialog extends DialogFragment {
     }
 
     private void deleteSongs(List<Song> songs, List<Uri> safUris) {
-        MusicUtil.deleteTracks(requireActivity(), songs, safUris, null);
+        MusicUtil.deleteTracks(DeleteSongsDialogKitKat.this, null, songs, safUris);
     }
 
     private void deleteSongsKitkat() {
@@ -170,10 +167,10 @@ public class DeleteSongsDialog extends DialogFragment {
     private static abstract class BaseDeleteSongsAsyncTask<Params>
             extends DialogAsyncTask<Params, Integer, Void>
     {
-        protected final WeakReference<DeleteSongsDialog> dialog;
+        protected final WeakReference<DeleteSongsDialogKitKat> dialog;
         protected final WeakReference<FragmentActivity> activity;
 
-        public BaseDeleteSongsAsyncTask(DeleteSongsDialog dialog) {
+        public BaseDeleteSongsAsyncTask(DeleteSongsDialogKitKat dialog) {
             super(dialog.getActivity());
             this.dialog = new WeakReference<>(dialog);
             this.activity = new WeakReference<>(dialog.getActivity());
@@ -191,7 +188,7 @@ public class DeleteSongsDialog extends DialogFragment {
 
     private static class DeleteSongsAsyncTask
             extends BaseDeleteSongsAsyncTask<List<Song>> {
-        public DeleteSongsAsyncTask(DeleteSongsDialog dialog) {
+        public DeleteSongsAsyncTask(DeleteSongsDialogKitKat dialog) {
             super(dialog);
         }
 
@@ -199,7 +196,7 @@ public class DeleteSongsDialog extends DialogFragment {
         @Override
         protected final Void doInBackground(List<Song>... lists) {
             try {
-                DeleteSongsDialog dialog = this.dialog.get();
+                DeleteSongsDialogKitKat dialog = this.dialog.get();
                 FragmentActivity activity = this.activity.get();
 
                 if (dialog == null || activity == null) {return null;}
@@ -229,14 +226,14 @@ public class DeleteSongsDialog extends DialogFragment {
     private static class DeleteSongsKitkatAsyncTask
             extends BaseDeleteSongsAsyncTask<Uri> {
 
-        public DeleteSongsKitkatAsyncTask(DeleteSongsDialog dialog) {
+        public DeleteSongsKitkatAsyncTask(DeleteSongsDialogKitKat dialog) {
             super(dialog);
         }
 
         @Override
         protected Void doInBackground(Uri... uris) {
             try {
-                DeleteSongsDialog dialog = this.dialog.get();
+                DeleteSongsDialogKitKat dialog = this.dialog.get();
                 if (dialog != null) {
                     dialog.deleteSongs(List.of(dialog.currentSong), List.of(uris[0]));
                 }
@@ -251,14 +248,14 @@ public class DeleteSongsDialog extends DialogFragment {
     private static class DeleteSongsLollipopAsyncTask
             extends BaseDeleteSongsAsyncTask<Uri> {
 
-        public DeleteSongsLollipopAsyncTask(DeleteSongsDialog dialog) {
+        public DeleteSongsLollipopAsyncTask(DeleteSongsDialogKitKat dialog) {
             super(dialog);
         }
 
         @Override
         protected Void doInBackground(Uri... uris) {
             try {
-                DeleteSongsDialog dialog = this.dialog.get();
+                DeleteSongsDialogKitKat dialog = this.dialog.get();
                 FragmentActivity activity = this.activity.get();
 
                 if (dialog == null || activity == null) {return null;}
