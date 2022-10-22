@@ -275,7 +275,23 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         boolean handled = false;
 
         if (intent.getAction() != null && intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
-            final ArrayList<Song> songs = SearchQueryHelper.getSongs(intent.getExtras());
+            ArrayList<Song> songs = null;
+            final String focus = intent.getStringExtra(MediaStore.EXTRA_MEDIA_FOCUS);
+            if (focus != null) {
+                if (focus.equals(MediaStore.Audio.Playlists.ENTRY_CONTENT_TYPE)) {
+                    // ignore Android L deprecation by using direct constant as recommended by
+                    // https://developer.android.com/guide/components/intents-common
+                    final String playlist = intent
+                            .getStringExtra("android.intent.extra.playlist");
+                    if (playlist != null) {
+                        songs = PlaylistSongLoader
+                                .getPlaylistSongList(getApplicationContext(), playlist);
+                    }
+                }
+            }
+            if (songs == null) {
+                songs = SearchQueryHelper.getSongs(intent.getExtras());
+            }
             if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
                 MusicPlayerRemote.openAndShuffleQueue(songs, true);
             } else {

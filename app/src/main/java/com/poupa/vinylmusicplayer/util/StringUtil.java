@@ -38,4 +38,13 @@ public class StringUtil {
     public static String stripAccent(@NonNull final String text) {
         return accentStripRegex.matcher(text).replaceAll("");
     }
+
+    @NonNull
+    public static String join(@NonNull String... s) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < s.length; i++) {
+            stringBuilder = stringBuilder.append(s[i]);
+        }
+        return stringBuilder.toString();
+    }
 }

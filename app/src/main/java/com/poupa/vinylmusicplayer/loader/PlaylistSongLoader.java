@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,23 @@ public class PlaylistSongLoader {
             }
             return songs;
         }
+    }
+
+    @NonNull
+    public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, @NonNull final String playlistName) {
+        // First find one playlist whose name contains the desired playlist name
+
+        // Avoid SQL injection by using parameter
+        String selection = StringUtil.join(MediaStore.Audio.Playlists.NAME, " LIKE '%' || ? ||'%'");
+        Cursor cursor = PlaylistLoader.makePlaylistCursor(context, selection, new String[]{
+                playlistName// 0
+        });
+        if (cursor.moveToFirst()) {
+            // then get that playlists id, and pass it to the songs by id method
+            Playlist playlist = PlaylistLoader.getPlaylistFromCursorImpl(cursor);
+            return getPlaylistSongList(context, playlist.id);
+        }
+        return new ArrayList<>();
     }
 
     @NonNull
