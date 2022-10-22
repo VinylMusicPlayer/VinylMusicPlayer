@@ -46,8 +46,14 @@ public class SearchQueryHelper {
         Predicate<Song> isMatchingTitle = (s) -> (!title.isEmpty() && normalize.apply(s.title).contains(title));
         Predicate<Song> isMatchingQuery= (s) -> (!query.isEmpty() && normalize.apply(s.title).contains(query));
 
+        final ArrayList<Song> allSongs = Discography.getInstance().getAllSongs(SongLoader.getSortOrder());
+        // Match empty intent to all songs
+        if(query.isEmpty() && artistName.isEmpty() && albumName.isEmpty() && title.isEmpty()) {
+            return allSongs;
+        }
+
         ArrayList<Song> matchingSongs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs(SongLoader.getSortOrder())) {
+        for (Song song : allSongs) {
             if (isMatchingTitle.test(song) || isMatchingAlbum.test(song) || isMatchingArtist.test(song) || isMatchingQuery.test(song)) {
                 matchingSongs.add(song);
             }
