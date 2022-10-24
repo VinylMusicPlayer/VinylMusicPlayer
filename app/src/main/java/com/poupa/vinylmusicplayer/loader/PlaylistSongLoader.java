@@ -32,21 +32,66 @@ public class PlaylistSongLoader {
         }
     }
 
+    /**
+     * Gets all songs contained in the *closestMatch* playlist to contain the playlistNameSearchTerm.
+     *
+     * Match closeness defined by StringUtil.closestOfMatches
+     *
+     * For instance "Punk" might return songs from the playlist named "punk rock", but would prefer
+     * to use a playlist named "punk" if it exists.
+     * @param playlistNameSearchTerm A partial playlist name.
+     * @return Song list from the playlist found by search term
+     */
     @NonNull
-    public static ArrayList<Song> getPlaylistSongList(@NonNull final Context context, @NonNull final String playlistName) {
-        // First find one playlist whose name contains the desired playlist name
+    public static ArrayList<Song> getPlaylistSongList(
+            @NonNull final Context context,
+            @NonNull final String playlistNameSearchTerm) {
+        // First find all playlists whose name contains the desired playlist name
 
         // Avoid SQL injection by using parameter
-        String selection = StringUtil.join(MediaStore.Audio.Playlists.NAME, " LIKE '%' || ? ||'%'");
-        Cursor cursor = PlaylistLoader.makePlaylistCursor(context, selection, new String[]{
-                playlistName// 0
+        // it seems column case sensitivity is defined on table creation time so leave
+        // search term alone for this pass
+        final String selection = StringUtil.join(MediaStore.Audio.Playlists.NAME, " LIKE '%' || ? ||'%'");
+        final Cursor cursor = PlaylistLoader.makePlaylistCursor(context, selection, new String[]{
+                playlistNameSearchTerm// 0
         });
-        if (cursor.moveToFirst()) {
-            // then get that playlists id, and pass it to the songs by id method
-            Playlist playlist = PlaylistLoader.getPlaylistFromCursorImpl(cursor);
-            return getPlaylistSongList(context, playlist.id);
+
+        // Find closest match
+        final String lowercaseSearchTerm = playlistNameSearchTerm.toLowerCase();
+        Playlist match = null;
+        for(Playlist playlist : PlaylistLoader.getAllPlaylists(cursor)) {
+            if (match == null) {
+                match = playlist;
+            } else {
+                match = closerMatch(lowercaseSearchTerm, match, playlist);
+            }
         }
-        return new ArrayList<>();
+
+        if (match == null) {
+            return new ArrayList<>();
+        }
+
+        return getPlaylistSongList(context, match.id);
+    }
+
+    /**
+     * This can be sped up by passing in indexOfs and lowerCaseOfs.
+     * Users probably wont complain though, should be fast enough as is.
+     */
+    @NonNull private static Playlist closerMatch(
+            @NonNull final String playlistNameSearchTerm,
+            @NonNull final Playlist first,
+            @NonNull final Playlist second) {
+        final StringUtil.ClosestMatch match = StringUtil.closestOfMatches(
+                playlistNameSearchTerm,
+                first.name.toLowerCase(),
+                second.name.toLowerCase());
+        // if equal, go with first, respect pre established order.
+        if (match != StringUtil.ClosestMatch.SECOND) {
+            return first;
+        } else {
+            return second;
+        }
     }
 
     @NonNull
