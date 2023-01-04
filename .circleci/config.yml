@@ -10,7 +10,7 @@ jobs:
       - checkout
       - run:
           name: Merge Feature Branches
-          command: ./.circleci/merge-feature-branches
+          command: ./script/merge-feature-branches
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:

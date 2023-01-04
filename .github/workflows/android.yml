@@ -2,13 +2,13 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" ] # TODO: On any branch
   pull_request:
     branches: [ "master" ]
 
 jobs:
+  # TODO Rename as setup job
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,35 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Merge feature branches
+      run: ./script/merge-feature-branches
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    # TODO Run as a separate // job
     - name: Build with Gradle
-      run: ./gradlew build
+      #run: ./gradlew build
+      #run: ./gradlew assembleRelease
+      run: ./gradlew assembleCiRelease
+    # TODO
+    #- store_artifacts:
+    #  path: app/build/outputs/apk
+    #  destination: outputs
+
+    # TODO Run as a separate // job
+    - name: Static Analysis
+      run: ./gradlew lint
+    # TODO
+    #- store_artifacts:
+    #  path: app/build/reports
+    #  destination: outputs
+
+    # TODO Run as a separate // job
+    - name: Run Tests
+      run: ./gradlew test
+    # TODO
+    #- store_test_results:
+    #  path: app/build/test-results
+    #  destination: outputs
+
