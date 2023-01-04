@@ -15,6 +15,7 @@
 * Most album covers are square, not rectangle -> show as square on the nav drawer by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/546
 * More info in the song's Details dialog by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/561
 * Fix Black (OLED) theme to actually be black. by @Sai-P in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/588
+* Add search for genre and playlist, by @gaycodegal in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/619
 
 ### Translation updates
 * Update Italian translation by @auanasgheps in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/476
@@ -45,6 +46,7 @@
 * Queue restore crash by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/570
 * Use song title to stabilize the sorting if disc+track are equals or missing by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/583
 * Fix data race by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/610
+* Fix crash by by @poolborges in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/617
 
 ### Engineering
 * Lint by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/426
@@ -62,16 +64,6 @@
 * Upgrade to new CircleCI image by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/585
 * Update build to large resource class in config.yml by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/612
 
-### New Contributors
-* @auanasgheps made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/476
-* @DeltaInsight made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/475
-* @tschlegeldigos made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/499
-* @yurical made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/505
-* @prathameshmm02 made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/508
-* @bertin0 made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/523
-* @newhinton made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/522
-* @GladiusTM made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/538
-* @Sai-P made their first contribution in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/588
 
 ## [1.3.0] - 2021-06-24
 ### Added
