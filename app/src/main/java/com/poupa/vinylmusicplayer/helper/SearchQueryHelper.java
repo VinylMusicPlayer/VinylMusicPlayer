@@ -1,12 +1,16 @@
 package com.poupa.vinylmusicplayer.helper;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.loader.GenreLoader;
+import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -46,12 +50,49 @@ public class SearchQueryHelper {
         Predicate<Song> isMatchingTitle = (s) -> (!title.isEmpty() && normalize.apply(s.title).contains(title));
         Predicate<Song> isMatchingQuery= (s) -> (!query.isEmpty() && normalize.apply(s.title).contains(query));
 
+        final ArrayList<Song> allSongs = Discography.getInstance().getAllSongs(SongLoader.getSortOrder());
+        // Match empty intent to all songs
+        if(query.isEmpty() && artistName.isEmpty() && albumName.isEmpty() && title.isEmpty()) {
+            return allSongs;
+        }
+
         ArrayList<Song> matchingSongs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs(SongLoader.getSortOrder())) {
+        for (Song song : allSongs) {
             if (isMatchingTitle.test(song) || isMatchingAlbum.test(song) || isMatchingArtist.test(song) || isMatchingQuery.test(song)) {
                 matchingSongs.add(song);
             }
         }
         return matchingSongs;
+    }
+
+    @NonNull
+    public static ArrayList<Song> getSongs(
+            @NonNull final Context context,
+            @Nullable final String focus,
+            @NonNull final Bundle extras) {
+        // First try known search metrics Genre and Playlist
+        if (focus != null) {
+            if (focus.equals(MediaStore.Audio.Playlists.ENTRY_CONTENT_TYPE)) {
+                // Ignore Android L deprecation by using direct constant as recommended by
+                // https://developer.android.com/guide/components/intents-common
+                final String playlist = extras
+                        .getString("android.intent.extra.playlist");
+                if (playlist != null) {
+                    return PlaylistSongLoader
+                            .getPlaylistSongList(context, playlist);
+                }
+            } else if (focus.equals(MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE)) {
+                // Ignore Android L deprecation by using direct constant as recommended by
+                // https://developer.android.com/guide/components/intents-common
+                final String genre = extras
+                        .getString("android.intent.extra.genre");
+                if (genre != null) {
+                    return GenreLoader
+                            .getGenreSongsByName(genre);
+                }
+            }
+        }
+        // Otherwise do a generic match on all known songs on the phone
+        return getSongs(extras);
     }
 }

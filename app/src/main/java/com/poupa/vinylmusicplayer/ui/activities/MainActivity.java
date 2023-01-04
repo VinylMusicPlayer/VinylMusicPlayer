@@ -275,13 +275,18 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         boolean handled = false;
 
         if (intent.getAction() != null && intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
-            final ArrayList<Song> songs = SearchQueryHelper.getSongs(intent.getExtras());
-            if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
-                MusicPlayerRemote.openAndShuffleQueue(songs, true);
-            } else {
-                MusicPlayerRemote.openQueue(songs, 0, true);
+            final String focus = intent.getStringExtra(MediaStore.EXTRA_MEDIA_FOCUS);
+            final ArrayList<Song> songs =
+                    SearchQueryHelper.getSongs(getApplicationContext(), focus, intent.getExtras());
+            // Guards against no songs found. Will cause a crash otherwise
+            if (songs.size() > 0) {
+                if (MusicPlayerRemote.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
+                    MusicPlayerRemote.openAndShuffleQueue(songs, true);
+                } else {
+                    MusicPlayerRemote.openQueue(songs, 0, true);
+                }
+                handled = true;
             }
-            handled = true;
         }
 
         if (uri != null && uri.toString().length() > 0) {
