@@ -7,10 +7,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  # TODO Rename as setup job
-  build:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: set up JDK 11
@@ -19,14 +17,15 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
-
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
     - name: Merge feature branches
       run: ./script/merge-feature-branches
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    # TODO Run as a separate // job
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
     - name: Build with Gradle
       #run: ./gradlew build
       #run: ./gradlew assembleRelease
@@ -36,7 +35,10 @@ jobs:
     #  path: app/build/outputs/apk
     #  destination: outputs
 
-    # TODO Run as a separate // job
+  lint:
+    runs-on: ubuntu-latest
+    needs: build # TODO Try to depend on setup only
+    steps:
     - name: Static Analysis
       run: ./gradlew lint
     # TODO
@@ -44,7 +46,10 @@ jobs:
     #  path: app/build/reports
     #  destination: outputs
 
-    # TODO Run as a separate // job
+  test:
+    runs-on: ubuntu-latest
+    needs: build # TODO Try to depend on setup only
+    steps:
     - name: Run Tests
       run: ./gradlew test
     # TODO
