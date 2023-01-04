@@ -31,9 +31,10 @@ android {
     signingConfigs {
         ci {
             storeFile file("../script/ci-unsecured.jks")
-            keyAlias = "vinyl2-unsecured"
-            storePassword = "vinyl2-unsecured"
-            keyPassword = "vinyl2-unsecured"
+            // TODO Update password to drop 'phono'
+            keyAlias = "phono-unsecured"
+            storePassword = "phono-unsecured"
+            keyPassword = "phono-unsecured"
         }
     }
     flavorDimensions "default"
