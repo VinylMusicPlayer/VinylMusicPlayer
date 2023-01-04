@@ -1,16 +1,11 @@
 name: Android CI
 
-on:
-  push:
-    branches: [ "master" ] # TODO: On any branch
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -19,41 +14,33 @@ jobs:
         cache: gradle
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - uses: actions/checkout@v3
     - name: Merge feature branches
       run: ./script/merge-feature-branches
 
-  build:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-    - name: Build with Gradle
+    - name: Build application
       #run: ./gradlew build
       #run: ./gradlew assembleRelease
       run: ./gradlew assembleCiRelease
-    # TODO
-    #- store_artifacts:
-    #  path: app/build/outputs/apk
-    #  destination: outputs
+    - name: Archive APKs
+      uses: actions/upload-artifact@v3
+      with:
+        name: outputs-apk
+        path: app/build/outputs/apk
 
-  lint:
-    runs-on: ubuntu-latest
-    needs: build # TODO Try to depend on setup only
-    steps:
-    - name: Static Analysis
-      run: ./gradlew lint
-    # TODO
-    #- store_artifacts:
-    #  path: app/build/reports
-    #  destination: outputs
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build # TODO Try to depend on setup only
-    steps:
-    - name: Run Tests
+    - name: Run tests
       run: ./gradlew test
-    # TODO
-    #- store_test_results:
-    #  path: app/build/test-results
-    #  destination: outputs
+    - name: Archive test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: outputs-tests
+        path: app/build/test-results
+
+    - name: Static analysis
+      run: ./gradlew lint
+    - name: Archive lint results
+      uses: actions/upload-artifact@v3
+      with:
+        name: outputs-lint
+        path: app/build/reports
 
