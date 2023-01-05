@@ -25,11 +25,11 @@ jobs:
     - name: Archive APKs
       uses: actions/upload-artifact@v3
       with:
-        name: outputs-apk
-        path: app/build/outputs/apk
+        #name: outputs-apk
+        path: app/build/outputs/apk/**/*.apk
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew testCiRelease # TODO Dont run tests on all build variant
     - name: Archive test results
       uses: actions/upload-artifact@v3
       with:
@@ -37,10 +37,10 @@ jobs:
         path: app/build/test-results
 
     - name: Static analysis
-      run: ./gradlew lint
+      run: ./gradlew lint # TODO Dont run lint on all build variant
     - name: Archive lint results
       uses: actions/upload-artifact@v3
       with:
-        name: outputs-lint
-        path: app/build/reports
+        #name: outputs-lint
+        path: app/build/reports/lint-*
 
