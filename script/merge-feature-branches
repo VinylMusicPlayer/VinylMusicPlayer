@@ -32,7 +32,7 @@ fi
 
 function git_init()
 {
-    git config --global user.email "$0@circleci"
+    git config --global user.email "$0@ci-bot"
     git config --global user.name "$0"
 }
 
@@ -40,6 +40,7 @@ case "${CI_BRANCH}" in
     cont-integ)
         echo "Branch '${CI_BRANCH}' detected"
         git_init
+        git pull --unshallow # Force full history, to support rebase/merge with other branches
         git fetch origin
         git rebase origin/master || exit 1
         echo
