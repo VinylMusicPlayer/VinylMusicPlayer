@@ -2,8 +2,8 @@
 
 #set -x
 
-[ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
-[ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
+[ -n "${CIRCLE_TAG}" ] && exit 0 # Building a tag, dont mess around
+[ -z "${CIRCLE_BRANCH}" ] && exit 0 # Dont have the branch name, dont go forward
 
 function git_init()
 {
