@@ -221,7 +221,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         registerReceiver(updateFavoriteReceiver, new IntentFilter(FAVORITE_STATE_CHANGED));
 
         initNotification();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android O+ requires a foreground service to post a notification asap
+            updateNotification();
+        }
         mediaStoreObserver = new MediaStoreObserver(this, playerHandler);
         throttledSeekHandler = new ThrottledSeekHandler(this, playerHandler);
         getContentResolver().registerContentObserver(
@@ -532,7 +535,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void updateNotification() {
-        if (playingNotification != null && getCurrentSong().id != -1) {
+        //if (playingNotification != null && getCurrentSong().id != Song.EMPTY_SONG.id) {
+        if (playingNotification != null) {
             playingNotification.update();
         }
     }
