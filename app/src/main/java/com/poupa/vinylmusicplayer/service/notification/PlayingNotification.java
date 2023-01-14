@@ -10,7 +10,7 @@ public abstract class PlayingNotification extends AbsNotification {
 
     public abstract void update();
 
-    public void stop() {
+    public synchronized void stop() {
         stopped = true;
         notificationManager.cancel(NOTIFICATION_ID);
     }

@@ -40,7 +40,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
     private Target target;
 
     @Override
-    public void update() {
+    public synchronized void update() {
         stopped = false;
 
         final Song song = service.getCurrentSong();
