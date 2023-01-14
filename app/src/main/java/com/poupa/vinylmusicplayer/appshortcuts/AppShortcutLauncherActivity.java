@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+
 import com.poupa.vinylmusicplayer.appshortcuts.shortcuttype.LastAddedShortcutType;
 import com.poupa.vinylmusicplayer.appshortcuts.shortcuttype.ShuffleAllShortcutType;
 import com.poupa.vinylmusicplayer.appshortcuts.shortcuttype.TopTracksShortcutType;
@@ -69,6 +71,6 @@ public class AppShortcutLauncherActivity extends Activity {
 
         intent.putExtras(bundle);
 
-        startService(intent);
+        ContextCompat.startForegroundService(this, intent);
     }
 }
