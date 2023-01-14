@@ -40,7 +40,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
     private Target target;
 
     @Override
-    public synchronized void update() {
+    public void update() {
         stopped = false;
 
         final Song song = service.getCurrentSong();
@@ -130,7 +130,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
 
                                 if (stopped)
                                     return; // notification has been stopped before loading was finished
-                                updateNotifyModeAndPostNotification(notification);
+                                updateImpl(notification);
                             }
 
                             private void setBackgroundColor(int color) {

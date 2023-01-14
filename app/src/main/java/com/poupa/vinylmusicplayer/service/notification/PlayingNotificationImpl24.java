@@ -36,7 +36,7 @@ import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
 public class PlayingNotificationImpl24 extends PlayingNotification {
 
     @Override
-    public synchronized void update() {
+    public void update() {
         stopped = false;
 
         final Song song = service.getCurrentSong();
@@ -114,7 +114,7 @@ public class PlayingNotificationImpl24 extends PlayingNotification {
 
                         if (stopped)
                             return; // notification has been stopped before loading was finished
-                        updateNotifyModeAndPostNotification(builder.build());
+                        updateImpl(builder.build());
                     }
                 }));
     }
