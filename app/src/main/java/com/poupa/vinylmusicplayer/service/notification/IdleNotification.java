@@ -14,7 +14,7 @@ public class IdleNotification extends AbsNotification {
         final Notification notification = new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(service.getString(R.string.idle_notification_title))
-                .setContentText(service.getString(R.string.idle_notification_description))
+                .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

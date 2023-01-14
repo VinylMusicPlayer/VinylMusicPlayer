@@ -298,7 +298,7 @@
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
 
-    <string name="idle_notification_description">The application is ready but the playing queue is empty</string>
+    <string name="idle_notification_description">The idle notification is used where the playing queue is empty</string>
     <string name="idle_notification_name">Idle notification</string>
     <string name="idle_notification_title">Vinyl is running</string>
 
