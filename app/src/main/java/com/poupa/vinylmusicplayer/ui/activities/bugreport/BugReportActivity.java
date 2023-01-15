@@ -48,7 +48,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class BugReportActivity extends AbsThemeActivity {
-
     private static final int STATUS_BAD_CREDENTIALS = 401;
     private static final int STATUS_ISSUES_NOT_ENABLED = 410;
 
@@ -64,31 +63,29 @@ public class BugReportActivity extends AbsThemeActivity {
     private static final String RESULT_ISSUES_NOT_ENABLED = "RESULT_ISSUES_NOT_ENABLED";
     private static final String RESULT_UNKNOWN = "RESULT_UNKNOWN";
 
-    private DeviceInfo deviceInfo;
+    private Toolbar toolbar;
 
-    Toolbar toolbar;
+    private TextInputLayout inputLayoutTitle;
+    private TextInputEditText inputTitle;
+    private TextInputLayout inputLayoutDescription;
+    private TextInputEditText inputDescription;
+    private TextView textDeviceInfo;
 
-    TextInputLayout inputLayoutTitle;
-    TextInputEditText inputTitle;
-    TextInputLayout inputLayoutDescription;
-    TextInputEditText inputDescription;
-    TextView textDeviceInfo;
+    private TextInputLayout inputLayoutUsername;
+    private TextInputEditText inputUsername;
+    private TextInputLayout inputLayoutPassword;
+    private TextInputEditText inputPassword;
+    private RadioButton optionUseAccount;
+    private RadioButton optionManual;
 
-    TextInputLayout inputLayoutUsername;
-    TextInputEditText inputUsername;
-    TextInputLayout inputLayoutPassword;
-    TextInputEditText inputPassword;
-    RadioButton optionUseAccount;
-    RadioButton optionManual;
+    private FloatingActionButton sendFab;
 
-    FloatingActionButton sendFab;
-
-    private static final String ISSUE_TRACKER_LINK = "https://github.com/AdrienPoupa/VinylMusicPlayer";
+    private static final String ISSUE_TRACKER_LINK = "https://github.com/vinyl2-team/vinyl2/issues";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityBugReportBinding binding = ActivityBugReportBinding.inflate(LayoutInflater.from(this));
+        final ActivityBugReportBinding binding = ActivityBugReportBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 
         toolbar = binding.toolbar;
@@ -116,9 +113,14 @@ public class BugReportActivity extends AbsThemeActivity {
         if (TextUtils.isEmpty(getTitle()))
             setTitle(R.string.report_an_issue);
 
+        final String subject = getIntent().getStringExtra(Intent.EXTRA_SUBJECT);
+        if (!TextUtils.isEmpty(subject)) {
+            inputTitle.setText(subject);
+        }
 
-        deviceInfo = new DeviceInfo(this);
-        textDeviceInfo.setText(deviceInfo.toString());
+        final DeviceInfo deviceInfo = new DeviceInfo(this);
+        final String extraInfo = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        textDeviceInfo.setText(deviceInfo + (extraInfo != null ? ("\n\n" + extraInfo) : ""));
     }
 
     private void initViews() {
@@ -132,7 +134,7 @@ public class BugReportActivity extends AbsThemeActivity {
         TintHelper.setTintAuto(optionUseAccount, accentColor, false);
         optionUseAccount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 inputTitle.setEnabled(true);
                 inputDescription.setEnabled(true);
                 inputUsername.setEnabled(true);
@@ -141,7 +143,7 @@ public class BugReportActivity extends AbsThemeActivity {
                 optionManual.setChecked(false);
                 sendFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                     @Override
-                    public void onHidden(FloatingActionButton fab) {
+                    public void onHidden(final FloatingActionButton fab) {
                         super.onHidden(fab);
                         sendFab.setImageResource(R.drawable.ic_send_white_24dp);
                         sendFab.show();
@@ -152,7 +154,7 @@ public class BugReportActivity extends AbsThemeActivity {
         TintHelper.setTintAuto(optionManual, accentColor, false);
         optionManual.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 inputTitle.setEnabled(false);
                 inputDescription.setEnabled(false);
                 inputUsername.setEnabled(false);
@@ -161,7 +163,7 @@ public class BugReportActivity extends AbsThemeActivity {
                 optionUseAccount.setChecked(false);
                 sendFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                     @Override
-                    public void onHidden(FloatingActionButton fab) {
+                    public void onHidden(final FloatingActionButton fab) {
                         super.onHidden(fab);
                         sendFab.setImageResource(R.drawable.ic_open_in_browser_white_24dp);
                         sendFab.show();
@@ -192,13 +194,13 @@ public class BugReportActivity extends AbsThemeActivity {
     private void reportIssue() {
         if (optionUseAccount.isChecked()) {
             if (!validateInput()) return;
-            String username = inputUsername.getText().toString();
-            String password = inputPassword.getText().toString();
+            final String username = inputUsername.getText().toString();
+            final String password = inputPassword.getText().toString();
             sendBugReport(new GithubLogin(username, password));
         } else {
             copyDeviceInfoToClipBoard();
 
-            Intent i = new Intent(Intent.ACTION_VIEW);
+            final Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(ISSUE_TRACKER_LINK));
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
@@ -206,11 +208,11 @@ public class BugReportActivity extends AbsThemeActivity {
     }
 
     private void copyDeviceInfoToClipBoard() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(getString(R.string.device_info), deviceInfo.toMarkdown());
+        final ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        final ClipData clip = ClipData.newPlainText(getString(R.string.device_info), textDeviceInfo.getText());
         clipboard.setPrimaryClip(clip);
 
-        Toast.makeText(BugReportActivity.this, R.string.copied_device_info_to_clipboard, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.copied_device_info_to_clipboard, Toast.LENGTH_LONG).show();
     }
 
     private boolean validateInput() {
@@ -249,7 +251,7 @@ public class BugReportActivity extends AbsThemeActivity {
         return !hasErrors;
     }
 
-    private void setError(TextInputLayout editTextLayout, @StringRes int errorRes) {
+    private void setError(final TextInputLayout editTextLayout, @StringRes final int errorRes) {
         editTextLayout.setError(getString(errorRes));
     }
 
@@ -257,20 +259,20 @@ public class BugReportActivity extends AbsThemeActivity {
         editTextLayout.setError(null);
     }
 
-    private void sendBugReport(GithubLogin login) {
+    private void sendBugReport(final GithubLogin login) {
         if (!validateInput()) return;
 
-        String bugTitle = inputTitle.getText().toString();
-        String bugDescription = inputDescription.getText().toString();
+        final String bugTitle = inputTitle.getText().toString();
+        final String bugDescription = inputDescription.getText().toString();
 
-        Report report = new Report(bugTitle, bugDescription, deviceInfo, new ExtraInfo());
-        GithubTarget target = new GithubTarget("AdrienPoupa", "VinylMusicPlayer");
+        final Report report = new Report(bugTitle, bugDescription, textDeviceInfo.getText(), new ExtraInfo());
+        final GithubTarget target = new GithubTarget("vinyl2-team", "vinyl2");
 
         ReportIssueAsyncTask.report(this, report, target, login);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
@@ -282,13 +284,13 @@ public class BugReportActivity extends AbsThemeActivity {
         private final GithubTarget target;
         private final GithubLogin login;
 
-        public static void report(Activity activity, Report report, GithubTarget target,
-                                  GithubLogin login) {
+        static void report(final Activity activity, final Report report, final GithubTarget target,
+                           final GithubLogin login) {
             new ReportIssueAsyncTask(activity, report, target, login).execute();
         }
 
-        private ReportIssueAsyncTask(Activity activity, Report report, GithubTarget target,
-                                     GithubLogin login) {
+        private ReportIssueAsyncTask(final Activity activity, final Report report, final GithubTarget target,
+                                     final GithubLogin login) {
             super(activity);
             this.report = report;
             this.target = target;
@@ -296,7 +298,7 @@ public class BugReportActivity extends AbsThemeActivity {
         }
 
         @Override
-        protected Dialog createDialog(@NonNull Context context) {
+        protected Dialog createDialog(@NonNull final Context context) {
             return new MaterialDialog.Builder(context)
                     .progress(true, 0)
                     .progressIndeterminateStyle(true)
@@ -306,19 +308,19 @@ public class BugReportActivity extends AbsThemeActivity {
 
         @Override
         @Result
-        protected String doInBackground(Void... params) {
-            GitHubClient client;
+        protected String doInBackground(final Void... params) {
+            final GitHubClient client;
             if (login.shouldUseApiToken()) {
                 client = new GitHubClient().setOAuth2Token(login.getApiToken());
             } else {
                 client = new GitHubClient().setCredentials(login.getUsername(), login.getPassword());
             }
 
-            Issue issue = new Issue().setTitle(report.getTitle()).setBody(report.getDescription());
+            final Issue issue = new Issue().setTitle(report.getTitle()).setBody(report.getDescription());
             try {
                 new IssueService(client).createIssue(target.getUsername(), target.getRepository(), issue);
                 return RESULT_OK;
-            } catch (RequestException e) {
+            } catch (final RequestException e) {
                 switch (e.getStatus()) {
                     case STATUS_BAD_CREDENTIALS:
                         if (login.shouldUseApiToken())
@@ -330,17 +332,17 @@ public class BugReportActivity extends AbsThemeActivity {
                         e.printStackTrace();
                         return RESULT_UNKNOWN;
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return RESULT_UNKNOWN;
             }
         }
 
         @Override
-        protected void onPostExecute(@Result String result) {
+        protected void onPostExecute(@Result final String result) {
             super.onPostExecute(result);
 
-            Context context = getContext();
+            final Context context = getContext();
             if (context == null) return;
 
             switch (result) {

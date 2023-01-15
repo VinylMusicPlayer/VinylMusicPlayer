@@ -31,7 +31,7 @@ import de.psdev.licensesdialog.LicensesDialog;
  */
 public class AboutActivity extends AbsBaseActivity implements View.OnClickListener {
 
-    private static final String GITHUB = "https://github.com/AdrienPoupa/VinylMusicPlayer";
+    private static final String GITHUB = "https://github.com/vinyl2-team/vinyl2";
 
     private static final String WEBSITE = "https://adrien.poupa.fr/";
 
@@ -56,35 +56,35 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private static final String ADRIAN_TWITTER = "https://twitter.com/froschgames";
     private static final String ADRIAN_WEBSITE = "https://froschgames.com/";
 
-    Toolbar toolbar;
-    TextView appVersion;
-    LinearLayout changelog;
-    LinearLayout intro;
-    LinearLayout licenses;
-    LinearLayout writeAnEmail;
-    LinearLayout forkOnGitHub;
-    LinearLayout visitWebsite;
-    LinearLayout reportBugs;
-    LinearLayout rateOnGooglePlay;
+    private Toolbar toolbar;
+    private TextView appVersion;
+    private LinearLayout changelog;
+    private LinearLayout intro;
+    private LinearLayout licenses;
+    private LinearLayout writeAnEmail;
+    private LinearLayout forkOnGitHub;
+    private LinearLayout visitWebsite;
+    private LinearLayout reportBugs;
+    private LinearLayout rateOnGooglePlay;
 
-    AppCompatButton kabouzeidGooglePlus;
-    AppCompatButton kabouzeidWebsite;
-    AppCompatButton aidanFollestadGooglePlus;
-    AppCompatButton aidanFollestadGitHub;
-    AppCompatButton michaelCookGooglePlus;
-    AppCompatButton michaelCookWebsite;
-    AppCompatButton maartenCorpelGooglePlus;
-    AppCompatButton aleksandarTesicGooglePlus;
-    AppCompatButton eugeneCheungGitHub;
-    AppCompatButton eugeneCheungWebsite;
-    AppCompatButton adrianTwitter;
-    AppCompatButton adrianWebsite;
+    private AppCompatButton kabouzeidGooglePlus;
+    private AppCompatButton kabouzeidWebsite;
+    private AppCompatButton aidanFollestadGooglePlus;
+    private AppCompatButton aidanFollestadGitHub;
+    private AppCompatButton michaelCookGooglePlus;
+    private AppCompatButton michaelCookWebsite;
+    private AppCompatButton maartenCorpelGooglePlus;
+    private AppCompatButton aleksandarTesicGooglePlus;
+    private AppCompatButton eugeneCheungGitHub;
+    private AppCompatButton eugeneCheungWebsite;
+    private AppCompatButton adrianTwitter;
+    private AppCompatButton adrianWebsite;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityAboutBinding binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+        final ActivityAboutBinding binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
         toolbar = binding.toolbar;
 
         appVersion = binding.content.cardAboutApp.appVersion;
@@ -164,7 +164,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
@@ -175,14 +175,14 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private static String getCurrentVersionName(@NonNull final Context context) {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (final PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return "Unkown";
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v == changelog) {
             ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
         } else if (v == licenses) {
@@ -196,7 +196,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         } else if (v == reportBugs) {
             startActivity(new Intent(this, BugReportActivity.class));
         } else if (v == writeAnEmail) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            final Intent intent = new Intent(Intent.ACTION_SENDTO);
             intent.setData(Uri.parse("mailto:adrien@poupa.fr"));
             intent.putExtra(Intent.EXTRA_EMAIL, "adrien@poupa.fr");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Vinyl Music Player");
@@ -230,8 +230,8 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         }
     }
 
-    private void openUrl(String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
+    private void openUrl(final String url) {
+        final Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
