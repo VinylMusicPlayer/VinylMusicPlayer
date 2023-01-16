@@ -16,11 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="24dp"
+            android:padding="16dp"
             android:text="@string/device_info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="?android:textColorSecondary" />
 
         <TextView
@@ -30,7 +28,8 @@
             android:background="?rectSelector"
             android:padding="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="?android:textColorSecondary" />
+            android:textColor="?android:textColorSecondary"
+            android:textIsSelectable="true" />
 
     </LinearLayout>
 

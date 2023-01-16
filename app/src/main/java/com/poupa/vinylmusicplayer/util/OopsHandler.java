@@ -16,11 +16,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 
-/**
- * Capture uncaught exceptions
- *
- * Heavily based on https://www.coderzheaven.com/2013/03/13/customize-force-close-dialog-android/
- */
 public class OopsHandler implements UncaughtExceptionHandler {
     private static final String APP_NAME = "Vinyl";
 
@@ -62,7 +57,6 @@ public class OopsHandler implements UncaughtExceptionHandler {
                         .autoDismiss(true)
                         .onPositive((dialog, which) -> {
                             final Intent sendIntent = new Intent(context, BugReportActivity.class);
-                            sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
                             sendIntent.putExtra(Intent.EXTRA_TEXT, errorContent.toString());
                             context.startActivity(sendIntent);
                             System.exit(0);
