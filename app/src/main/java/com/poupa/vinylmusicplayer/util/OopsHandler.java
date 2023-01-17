@@ -17,8 +17,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 
 public class OopsHandler implements UncaughtExceptionHandler {
-    private static final String APP_NAME = "Vinyl";
-
     private final Context context;
 
     public OopsHandler(final Context ctx) {
@@ -28,7 +26,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
     public void uncaughtException(@NonNull final Thread t, @NonNull final Throwable e) {
         try {
             final StringBuilder report = new StringBuilder();
-            report.append("Crash collected on : ").append(new Date()).append("\n\n");
+            report.append("Time : ").append(new Date()).append("\n\n");
             report.append("Stack:\n");
             final Writer result = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(result);
@@ -36,11 +34,11 @@ public class OopsHandler implements UncaughtExceptionHandler {
             report.append(result);
             printWriter.close();
             report.append('\n');
-            Log.e(OopsHandler.class.getName(), "Submitting crash report to Github");
+            Log.e(OopsHandler.class.getName(), "Submitting crash report");
 
             sendBugReport(report);
         } catch (final Throwable sendError) {
-            Log.e(OopsHandler.class.getName(), "Error while submitting to Github", sendError);
+            Log.e(OopsHandler.class.getName(), "Error while submitting", sendError);
         }
     }
 
@@ -50,10 +48,9 @@ public class OopsHandler implements UncaughtExceptionHandler {
             public void run() {
                 Looper.prepare();
 
-                final String subject = APP_NAME + " crashed";
                 new MaterialDialog.Builder(context)
-                        .title(subject)
-                        .content(R.string.report_a_crash_description)
+                        .title(R.string.app_crashed)
+                        .content(R.string.report_a_crash_invitation)
                         .autoDismiss(true)
                         .onPositive((dialog, which) -> {
                             final Intent sendIntent = new Intent(context, BugReportActivity.class);
