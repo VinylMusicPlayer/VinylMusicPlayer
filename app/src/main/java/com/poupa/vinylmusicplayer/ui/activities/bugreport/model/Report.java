@@ -1,31 +1,31 @@
 package com.poupa.vinylmusicplayer.ui.activities.bugreport.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.model.github.ExtraInfo;
 
 public class Report {
-    private final String title;
-
-    private final String description;
-
-    private final DeviceInfo deviceInfo;
-
+    private final CharSequence title;
+    private final CharSequence description;
+    private final CharSequence collectedInfo;
     private final ExtraInfo extraInfo;
 
-    public Report(String title, String description, DeviceInfo deviceInfo, ExtraInfo extraInfo) {
+    public Report(@NonNull final CharSequence title, @NonNull final CharSequence description, @Nullable final CharSequence collectedInfo,
+                  final ExtraInfo extraInfo) {
         this.title = title;
         this.description = description;
-        this.deviceInfo = deviceInfo;
+        this.collectedInfo = collectedInfo;
         this.extraInfo = extraInfo;
     }
 
     public String getTitle() {
-        return title;
+        return title.toString();
     }
 
     public String getDescription() {
         return description + "\n\n"
-                + "-\n\n"
-                + deviceInfo.toMarkdown() + "\n\n"
+                + (collectedInfo != null ? collectedInfo : "") + "\n\n"
                 + extraInfo.toMarkdown();
     }
 }
