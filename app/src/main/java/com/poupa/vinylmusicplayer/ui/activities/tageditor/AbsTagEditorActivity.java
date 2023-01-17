@@ -376,7 +376,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (info.fieldKeyValueMap != null) {
                             for (Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
                                 try {
-                                    if (entry.getValue().isEmpty()) {
+                                    if (entry.getValue().trim().isEmpty()) {
                                         tag.deleteField(entry.getKey());
                                     }
                                     else if (entry.getKey() == FieldKey.ARTIST || entry.getKey() == FieldKey.ALBUM_ARTIST) {
@@ -387,7 +387,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         }
                                     }
                                     else {
-                                        tag.setField(entry.getKey(), entry.getValue());
+                                        tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
