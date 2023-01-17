@@ -295,11 +295,8 @@ public class FoldersFragment
         } else if (itemId == R.id.action_scan) {
             final BreadCrumbLayout.Crumb crumb = getActiveCrumb();
             if (crumb != null) {
-                if (((MainActivity) requireActivity()).isNotScanning()) {
-                    ((MainActivity) requireActivity()).setScanning(true);
-                    new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(crumb.getFile(), AUDIO_FILE_FILTER));
-                }
-
+                new ListPathsAsyncTask(getActivity(), this::scanPaths)
+                        .execute(new ListPathsAsyncTask.LoadingInfo(crumb.getFile(), AUDIO_FILE_FILTER));
             }
             return true;
         }
@@ -403,11 +400,8 @@ public class FoldersFragment
                   
                     return true;
                 } else if (itemId == R.id.action_scan) {
-                    if (((MainActivity) requireActivity()).isNotScanning()) {
-                        ((MainActivity) requireActivity()).setScanning(true);
-                        new ListPathsAsyncTask(getActivity(), this::scanPaths).execute(new ListPathsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER));
-                    }
-
+                    new ListPathsAsyncTask(getActivity(), this::scanPaths)
+                            .execute(new ListPathsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER));
                     return true;
                 }
                 return false;
@@ -663,15 +657,20 @@ public class FoldersFragment
     public static class ListPathsAsyncTask extends ListingFilesDialogAsyncTask<ListPathsAsyncTask.LoadingInfo, String, String[]> {
         private final OnPathsListedCallback onPathsListedCallback;
 
+        private static boolean scanningGuard; // avoid piling up scan jobs
+
         public ListPathsAsyncTask(final Context context, final OnPathsListedCallback callback) {
             super(context, 500);
-            this.onPathsListedCallback = callback;
+            onPathsListedCallback = callback;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            isContextStillInMemory();
+            if (!isContextStillInMemory()) {return;}
+            if (!checkAndSetScanningGuard(true)) {
+                cancel(false);
+            }
         }
 
         @Override
@@ -717,24 +716,28 @@ public class FoldersFragment
 
         @Override
         protected void onCancelled(final String[] result) {
-            disableScanning();
+            checkAndSetScanningGuard(false);
             super.onCancelled(result);
         }
 
         @Override
         protected void onPostExecute(final String[] paths) {
             super.onPostExecute(paths);
-            disableScanning();
+            checkAndSetScanningGuard(false);
             if (onPathsListedCallback != null && paths != null) {
                 onPathsListedCallback.onPathsListed(paths);
             }
         }
 
-        private void disableScanning() {
-            final Context context = getContext();
-            if (context instanceof MainActivity) {
-                ((MainActivity) context).setScanning(false);
+        private synchronized boolean checkAndSetScanningGuard(boolean value) {
+            if (value && !scanningGuard) {
+                scanningGuard = true;
+                return true; // success
+            } else if (!value) {
+                scanningGuard = false;
+                return true; // success
             }
+            return false; // failure
         }
 
         private boolean isContextStillInMemory() {
