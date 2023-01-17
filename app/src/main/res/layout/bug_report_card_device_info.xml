@@ -18,8 +18,7 @@
             android:layout_gravity="start|center_vertical"
             android:padding="16dp"
             android:text="@string/device_info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="?android:textColorSecondary" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
         <TextView
             android:id="@+id/air_textDeviceInfo"
@@ -28,7 +27,6 @@
             android:background="?rectSelector"
             android:padding="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="?android:textColorSecondary"
             android:textIsSelectable="true" />
 
     </LinearLayout>

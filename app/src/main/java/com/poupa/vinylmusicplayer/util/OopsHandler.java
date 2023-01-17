@@ -26,7 +26,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
     public void uncaughtException(@NonNull final Thread t, @NonNull final Throwable e) {
         try {
             final StringBuilder report = new StringBuilder();
-            report.append("Time : ").append(new Date()).append("\n\n");
+            report.append("Time: ").append(new Date()).append("\n\n");
             report.append("Stack:\n");
             final Writer result = new StringWriter();
             final PrintWriter printWriter = new PrintWriter(result);
