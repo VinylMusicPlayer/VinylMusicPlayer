@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.helper.menu;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,9 +33,6 @@ public class MenuHelper {
 
         if (liveItem != null) {
             final SpannableString span = new SpannableString(liveItem.getTitle().toString());
-
-            // Get the destructive item color as the accent color
-            @ColorInt final int color = ThemeStore.accentColor(context);
 
             // Get delete color from context's theme
             final TypedValue typedColorBackground = new TypedValue();
