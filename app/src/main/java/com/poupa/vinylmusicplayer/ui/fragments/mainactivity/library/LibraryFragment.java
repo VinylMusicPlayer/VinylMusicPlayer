@@ -12,13 +12,15 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
+import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -32,6 +34,7 @@ import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -58,7 +61,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     ViewPager pager;
 
     private MusicLibraryPagerAdapter pagerAdapter;
-    private MaterialCab cab;
+    private AttachedCab cab;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -158,13 +161,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     @NonNull
     @Override
-    public MaterialCab openCab(final int menuRes, final MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
-        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
-                .start(callback);
+    public AttachedCab openCab(final int menuRes, final CabCallbacks callbacks) {
+        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
 
-        MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
-
+        @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
         return cab;
     }
 

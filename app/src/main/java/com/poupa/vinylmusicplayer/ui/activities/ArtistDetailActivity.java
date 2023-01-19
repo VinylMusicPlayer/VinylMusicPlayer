@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -22,7 +23,8 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
+import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
@@ -40,6 +42,7 @@ import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
@@ -67,7 +70,9 @@ import retrofit2.Response;
 /**
  * Be careful when changing things in this Activity!
  */
-public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Artist> {
+public class ArtistDetailActivity
+        extends AbsSlidingMusicPanelActivity
+        implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Artist> {
 
     private static final int LOADER_ID = LoaderIds.ARTIST_DETAIL_ACTIVITY;
     private static final int REQUEST_CODE_SELECT_IMAGE = 1000;
@@ -92,7 +97,7 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
     View songListHeader;
     RecyclerView albumRecyclerView;
 
-    private MaterialCab cab;
+    private AttachedCab cab;
     private int headerViewHeight;
     private int toolbarColor;
 
@@ -401,35 +406,18 @@ public class ArtistDetailActivity extends AbsSlidingMusicPanelActivity implement
 
     @NonNull
     @Override
-    public MaterialCab openCab(int menuRes, @NonNull final MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
-        songAdapter.setColor(getPaletteColor());
-        cab = MenuHelper.setOverflowMenu(this, menuRes, getPaletteColor())
-                .start(new MaterialCab.Callback() {
-                    @Override
-                    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-                        return callback.onCabCreated(materialCab, menu);
-                    }
+    public AttachedCab openCab(int menuRes, @NonNull final CabCallbacks callbacks) {
+        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
 
-                    @Override
-                    public boolean onCabItemClicked(MenuItem menuItem) {
-                        return callback.onCabItemClicked(menuItem);
-                    }
-
-                    @Override
-                    public boolean onCabFinished(MaterialCab materialCab) {
-                        return callback.onCabFinished(materialCab);
-                    }
-                });
-
-        MenuHelper.decorateDestructiveItems(cab.getMenu(), this);
-
+        @ColorInt final int color = getPaletteColor();
+        songAdapter.setColor(color);
+        cab = MenuHelper.createAndOpenCab(this, menuRes, color, callbacks);
         return cab;
     }
 
     @Override
     public void onBackPressed() {
-        if (cab != null && cab.isActive()) cab.finish();
+        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
         else {
             albumRecyclerView.stopScroll();
             super.onBackPressed();

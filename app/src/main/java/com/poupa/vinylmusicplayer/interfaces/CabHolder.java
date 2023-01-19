@@ -1,14 +1,17 @@
 package com.poupa.vinylmusicplayer.interfaces;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
 
-/**
- * @author Karim Abou Zeid (kabouzeid)
- */
+@FunctionalInterface
 public interface CabHolder {
+    long ANIMATION_DELAY_MS = 500L;
+    @ColorRes int UNDEFINED_COLOR_RES = 0;
+    @StringRes int UNDEFINED_STRING_RES = 0;
 
     @NonNull
-    MaterialCab openCab(final int menuRes, final MaterialCab.Callback callback);
+    AttachedCab openCab(final int menuRes, final CabCallbacks callbacks);
 }

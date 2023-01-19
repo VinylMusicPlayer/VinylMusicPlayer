@@ -15,13 +15,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
+import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
@@ -36,10 +38,10 @@ import java.util.ArrayList;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab.Callback {
+public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallbacks {
     @Nullable
     private final CabHolder cabHolder;
-    private MaterialCab cab;
+    private AttachedCab cab;
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
@@ -157,15 +159,15 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
             notifyDataSetChanged();
 
             final int size = checked.size();
-            if (size <= 0) cab.finish();
-            else if (size == 1) cab.setTitle(checked.get(0).title);
-            else cab.setTitle(String.valueOf(size));
+            if (size <= 0) {AttachedCabKt.destroy(cab);}
+            else if (size == 1) cab.title(CabHolder.UNDEFINED_STRING_RES, checked.get(0).title);
+            else cab.title(CabHolder.UNDEFINED_STRING_RES, activity.getString(R.string.x_selected, size));
         }
     }
 
     private void openCabIfNecessary() {
         if (cabHolder != null) {
-            if (cab == null || !cab.isActive()) {
+            if (cab == null || !AttachedCabKt.isActive(cab)) {
                 cab = cabHolder.openCab(R.menu.menu_media_selection, this);
             }
         }
@@ -181,7 +183,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
     }
 
     protected boolean isInQuickSelectMode() {
-        return cab != null && cab.isActive();
+        return cab != null && AttachedCabKt.isActive(cab);
     }
 
     public void setColor(int color) {
@@ -189,21 +191,21 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements MaterialCab
     }
 
     @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+    public void onCabCreate(AttachedCab materialCab, Menu menu) {
         AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
         return true;
     }
 
     @Override
-    public boolean onCabItemClicked(@NonNull MenuItem menuItem) {
+    public boolean onCabSelection(@NonNull MenuItem menuItem) {
         onMultipleItemAction(menuItem, new ArrayList<>(checked));
-        cab.finish();
+        AttachedCabKt.destroy(cab);
         unCheckAll();
         return true;
     }
 
     @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
+    public boolean onCabDestroy(AttachedCab materialCab) {
         AbsThemeActivity.static_setStatusbarColor(activity, color);
         unCheckAll();
         return true;

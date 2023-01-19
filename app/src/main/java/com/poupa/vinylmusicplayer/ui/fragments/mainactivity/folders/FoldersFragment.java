@@ -17,6 +17,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -26,7 +27,8 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialcab.attached.AttachedCab;
+import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,6 +42,7 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
@@ -80,7 +83,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     FastScrollRecyclerView recyclerView;
 
     private SongFileAdapter adapter;
-    private MaterialCab cab;
+    private AttachedCab cab;
 
     public FoldersFragment() {
     }
@@ -217,8 +220,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && cab.isActive()) {
-            cab.finish();
+        if (cab != null && AttachedCabKt.isActive(cab)) {
+            AttachedCabKt.destroy(cab);
             return true;
         }
         if (breadCrumbs.popHistory()) {
@@ -230,14 +233,12 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     @NonNull
     @Override
-    public MaterialCab openCab(int menuRes, MaterialCab.Callback callback) {
-        if (cab != null && cab.isActive()) cab.finish();
-        adapter.setColor(ThemeStore.primaryColor(getActivity()));
-        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
-                .start(callback);
+    public AttachedCab openCab(int menuRes, final CabCallbacks callbacks) {
+        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
 
-        MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
-
+        @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
+        adapter.setColor(color);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
         return cab;
     }
 

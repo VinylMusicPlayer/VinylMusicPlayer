@@ -12,13 +12,17 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import com.afollestad.materialcab.MaterialCab;
+
+import com.afollestad.materialcab.MaterialCabKt;
+import com.afollestad.materialcab.attached.AttachedCab;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
+import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
+import kotlin.Unit;
 
 public class MenuHelper {
 
@@ -41,11 +45,37 @@ public class MenuHelper {
         }
     }
 
-    public static MaterialCab setOverflowMenu(@NonNull AppCompatActivity context, @MenuRes int menuRes, @ColorInt int backgroundColor) {
-        return new MaterialCab(context, R.id.cab_stub)
-                .setMenu(menuRes)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme());
+    @NonNull
+    public static AttachedCab createAndOpenCab(
+            @NonNull final AppCompatActivity context,
+            @MenuRes final int menuRes,
+            @ColorInt final int backgroundColor,
+            @NonNull final CabCallbacks callbacks)
+    {
+        final AttachedCab attachedCab = MaterialCabKt.createCab(
+                context,
+                R.id.cab_stub,
+                cab -> {
+                    cab.menu(menuRes);
+                    cab.closeDrawable(R.drawable.ic_close_white_24dp);
+                    cab.backgroundColor(
+                            CabHolder.UNDEFINED_COLOR_RES,
+                            VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor));
+                    cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
+
+                    cab.onCreate((attachedCab1, menu) -> {
+                        callbacks.onCabCreate(attachedCab1, menu);
+                        return Unit.INSTANCE;
+                    });
+                    cab.onDestroy(callbacks::onCabDestroy);
+                    cab.onSelection(callbacks::onCabSelection);
+                    cab.slideDown(CabHolder.ANIMATION_DELAY_MS);
+
+                    return Unit.INSTANCE;
+                });
+
+        decorateDestructiveItems(attachedCab.getMenu(), context);
+
+        return attachedCab;
     }
 }
