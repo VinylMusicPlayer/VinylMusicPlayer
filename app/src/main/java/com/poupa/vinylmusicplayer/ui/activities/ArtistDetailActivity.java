@@ -79,23 +79,23 @@ public class ArtistDetailActivity
 
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
-    ObservableListView songListView;
-    com.google.android.material.card.MaterialCardView artistBorderTheme;
-    ImageView artistImage;
-    Toolbar toolbar;
-    View headerView;
-    View headerOverlay;
+    private ObservableListView songListView;
+    private com.google.android.material.card.MaterialCardView artistBorderTheme;
+    private ImageView artistImage;
+    private Toolbar toolbar;
+    private View headerView;
+    private View headerOverlay;
 
-    ImageView durationIconImageView;
-    ImageView songCountIconImageView;
-    ImageView albumCountIconImageView;
-    TextView durationTextView;
-    TextView songCountTextView;
-    TextView albumCountTextView;
-    TextView titleTextView;
+    private ImageView durationIconImageView;
+    private ImageView songCountIconImageView;
+    private ImageView albumCountIconImageView;
+    private TextView durationTextView;
+    private TextView songCountTextView;
+    private TextView albumCountTextView;
+    private TextView titleTextView;
 
-    View songListHeader;
-    RecyclerView albumRecyclerView;
+    private View songListHeader;
+    private RecyclerView albumRecyclerView;
 
     private AttachedCab cab;
     private int headerViewHeight;
@@ -113,22 +113,22 @@ public class ArtistDetailActivity
     private boolean forceDownload;
     private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
         @Override
-        public void onScrollChanged(int scrollY, boolean b, boolean b2) {
-            scrollY += headerViewHeight;
+        public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+            final int y = scrollY + headerViewHeight;
 
             // Change alpha of overlay
-            float headerAlpha = Math.max(0, Math.min(1, (float) 2 * scrollY / headerViewHeight));
+            final float headerAlpha = Math.max(0, Math.min(1, (float) 2 * y / headerViewHeight));
             headerOverlay.setBackgroundColor(ColorUtil.withAlpha(toolbarColor, headerAlpha));
 
             // Translate name text
-            headerView.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            headerOverlay.setTranslationY(Math.max(-scrollY, -headerViewHeight));
-            artistBorderTheme.setTranslationY(Math.max(-scrollY, -headerViewHeight));
+            headerView.setTranslationY(Math.max(-y, -headerViewHeight));
+            headerOverlay.setTranslationY(Math.max(-y, -headerViewHeight));
+            artistBorderTheme.setTranslationY(Math.max(-y, -headerViewHeight));
         }
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
 
@@ -145,8 +145,8 @@ public class ArtistDetailActivity
 
     @Override
     protected View createContentView() {
-        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
-        ActivityArtistDetailBinding binding = ActivityArtistDetailBinding.inflate(
+        final SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        final ActivityArtistDetailBinding binding = ActivityArtistDetailBinding.inflate(
                 getLayoutInflater(),
                 slidingPanelBinding.contentContainer,
                 true);
@@ -210,12 +210,12 @@ public class ArtistDetailActivity
             @Override
             public void onChanged() {
                 super.onChanged();
-                if (albumAdapter.getItemCount() == 0) finish();
+                if (albumAdapter.getItemCount() == 0) {finish();}
             }
         });
     }
 
-    protected void setUsePalette(boolean usePalette) {
+    private void setUsePalette(boolean usePalette) {
         albumAdapter.usePalette(usePalette);
         PreferenceUtil.getInstance().setAlbumArtistColoredFooters(usePalette);
         this.usePalette = usePalette;
@@ -235,9 +235,9 @@ public class ArtistDetailActivity
 
         lastFMRestClient.getApiService()
                 .getArtistInfo(getArtist().getName(), lang, null)
-                .enqueue(new Callback<LastFmArtist>() {
+                .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(@NonNull Call<LastFmArtist> call, @NonNull Response<LastFmArtist> response) {
+                    public void onResponse(@NonNull final Call<LastFmArtist> call, @NonNull final Response<LastFmArtist> response) {
                         final LastFmArtist lastFmArtist = response.body();
                         if (lastFmArtist != null && lastFmArtist.getArtist() != null && lastFmArtist.getArtist().getBio() != null) {
                             final String bioContent = lastFmArtist.getArtist().getBio().getContent();
@@ -263,7 +263,7 @@ public class ArtistDetailActivity
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<LastFmArtist> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull final Call<LastFmArtist> call, @NonNull final Throwable t) {
                         t.printStackTrace();
                         biography = null;
                     }
@@ -288,7 +288,7 @@ public class ArtistDetailActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if (resultCode == RESULT_OK) {
@@ -317,7 +317,7 @@ public class ArtistDetailActivity
         setSupportActionBar(toolbar); // needed to auto readjust the toolbar content color
         setStatusbarColor(color);
 
-        int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
+        final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
         durationIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         songCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         albumCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
@@ -336,15 +336,15 @@ public class ArtistDetailActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_artist_detail, menu);
         menu.findItem(R.id.action_colored_footers).setChecked(usePalette);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+        final int id = item.getItemId();
         final ArrayList<Song> songs = songAdapter.getDataSet();
         if (id == R.id.action_sleep_timer) {
             new SleepTimerDialog().show(getSupportFragmentManager(), "SET_SLEEP_TIMER");
@@ -374,12 +374,12 @@ public class ArtistDetailActivity
                         .positiveText(android.R.string.ok)
                         .build();
             }
-            if (PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) { // wiki should've been already downloaded
+            if (PreferenceUtil.isAllowedToDownloadMetadata(this)) { // wiki should've been already downloaded
                 if (biography != null) {
                     biographyDialog.setContent(biography);
                     biographyDialog.show();
                 } else {
-                    Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
                 }
             } else { // force download
                 biographyDialog.show();
@@ -387,7 +387,7 @@ public class ArtistDetailActivity
             }
             return true;
         } else if (id == R.id.action_set_artist_image) {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_from_local_storage)), REQUEST_CODE_SELECT_IMAGE);
             return true;
@@ -430,7 +430,7 @@ public class ArtistDetailActivity
         setLightStatusbar(false);
     }
 
-    private void setArtist(Artist artist) {
+    private void setArtist(final Artist artist) {
         this.artist = artist;
         loadArtistImage();
 
@@ -448,13 +448,13 @@ public class ArtistDetailActivity
     }
 
     private Artist getArtist() {
-        if (artist == null) artist = Artist.EMPTY;
+        if (artist == null) {artist = Artist.EMPTY;}
         return artist;
     }
 
     @Override
     @NonNull
-    public Loader<Artist> onCreateLoader(int id, Bundle args) {
+    public Loader<Artist> onCreateLoader(int id, @NonNull final Bundle args) {
         return new AsyncArtistDataLoader(this, args.getLong(EXTRA_ARTIST_ID));
     }
 
@@ -475,12 +475,12 @@ public class ArtistDetailActivity
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Artist> loader, Artist data) {
+    public void onLoadFinished(@NonNull final Loader<Artist> loader, final Artist data) {
         setArtist(data);
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<Artist> loader) {
+    public void onLoaderReset(@NonNull final Loader<Artist> loader) {
         this.artist = Artist.EMPTY;
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);
@@ -489,7 +489,7 @@ public class ArtistDetailActivity
     private static class AsyncArtistDataLoader extends WrappedAsyncTaskLoader<Artist> {
         private final long artistId;
 
-        public AsyncArtistDataLoader(Context context, long artistId) {
+        AsyncArtistDataLoader(final Context context, long artistId) {
             super(context);
             this.artistId = artistId;
         }

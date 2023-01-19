@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -17,6 +19,7 @@ import java.util.Objects;
  */
 public class Playlist implements Parcelable {
     public final long id;
+    @NonNls
     public final String name;
 
     public Playlist(final long id, final String name) {

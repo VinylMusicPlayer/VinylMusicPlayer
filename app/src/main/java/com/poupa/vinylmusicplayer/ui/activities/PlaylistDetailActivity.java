@@ -55,10 +55,10 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @NonNull
     public static final String EXTRA_PLAYLIST = "extra_playlist";
 
-    RecyclerView recyclerView;
-    Toolbar toolbar;
-    TextView empty;
-    TextView titleTextView;
+    private RecyclerView recyclerView;
+    private Toolbar toolbar;
+    private TextView empty;
+    private TextView titleTextView;
 
     private Playlist playlist;
 
@@ -69,7 +69,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private RecyclerViewDragDropManager recyclerViewDragDropManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
 
@@ -88,8 +88,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @Override
     protected View createContentView() {
-        SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
-        ActivityPlaylistDetailBinding binding = ActivityPlaylistDetailBinding.inflate(
+        final SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
+        final ActivityPlaylistDetailBinding binding = ActivityPlaylistDetailBinding.inflate(
                 getLayoutInflater(),
                 slidingPanelBinding.contentContainer,
                 true);
@@ -145,19 +145,19 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
-    private void setToolbarTitle(String title) {
+    private void setToolbarTitle(final String title) {
         getSupportActionBar().setTitle(title);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(playlist instanceof AbsCustomPlaylist ? R.menu.menu_smart_playlist_detail : R.menu.menu_playlist_detail, menu);
         MenuHelper.decorateDestructiveItems(menu, this);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_shuffle_playlist) {
             MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
@@ -266,20 +266,22 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
     @Override
     @NonNull
-    public Loader<ArrayList<Song>> onCreateLoader(int id, Bundle args) {
+    public Loader<ArrayList<Song>> onCreateLoader(int id, final Bundle args) {
         return new AsyncPlaylistSongLoader(this, playlist);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<ArrayList<Song>> loader, ArrayList<Song> data) {
-        if (adapter != null)
+    public void onLoadFinished(@NonNull final Loader<ArrayList<Song>> loader, final ArrayList<Song> data) {
+        if (adapter != null) {
             adapter.swapDataSet(data);
+        }
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<ArrayList<Song>> loader) {
-        if (adapter != null)
+    public void onLoaderReset(@NonNull final Loader<ArrayList<Song>> loader) {
+        if (adapter != null) {
             adapter.swapDataSet(new ArrayList<>());
+        }
     }
 
     @Override
@@ -290,11 +292,12 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {
         private final Playlist playlist;
 
-        public AsyncPlaylistSongLoader(Context context, Playlist playlist) {
+        AsyncPlaylistSongLoader(final Context context, final Playlist playlist) {
             super(context);
             this.playlist = playlist;
         }
 
+        @NonNull
         @Override
         public ArrayList<Song> loadInBackground() {
             return playlist.getSongs(getContext());

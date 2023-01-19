@@ -193,7 +193,6 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     @Override
     public void onCabCreate(AttachedCab materialCab, Menu menu) {
         AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
-        return true;
     }
 
     @Override

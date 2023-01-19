@@ -55,10 +55,10 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 public class LibraryFragment extends AbsMainActivityFragment implements CabHolder, MainActivity.MainActivityFragmentCallbacks, ViewPager.OnPageChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
-    Toolbar toolbar;
-    TabLayout tabs;
-    AppBarLayout appbar;
-    ViewPager pager;
+    private Toolbar toolbar;
+    private TabLayout tabs;
+    private AppBarLayout appbar;
+    private ViewPager pager;
 
     private MusicLibraryPagerAdapter pagerAdapter;
     private AttachedCab cab;
@@ -67,12 +67,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         return new LibraryFragment();
     }
 
-    public LibraryFragment() {
-    }
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentLibraryBinding binding = FragmentLibraryBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        final FragmentLibraryBinding binding = FragmentLibraryBinding.inflate(inflater, container, false);
         toolbar = binding.toolbar;
         tabs = binding.tabs;
         appbar = binding.appbar;
@@ -89,7 +86,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
         getMainActivity().setStatusbarColorAuto();
         getMainActivity().setNavigationbarColorAuto();
@@ -100,9 +97,9 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
         if (PreferenceUtil.LIBRARY_CATEGORIES.equals(key)) {
-            Fragment current = getCurrentFragment();
+            final Fragment current = getCurrentFragment();
             pagerAdapter.setCategoryInfos(PreferenceUtil.getInstance().getLibraryCategoryInfos());
             pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
             int position = pagerAdapter.getItemPosition(current);
@@ -116,27 +113,27 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     private void setUpToolbar() {
-        int primaryColor = ThemeStore.primaryColor(getActivity());
+        final int primaryColor = ThemeStore.primaryColor(requireActivity());
         appbar.setBackgroundColor(primaryColor);
         toolbar.setBackgroundColor(primaryColor);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-        getActivity().setTitle(R.string.app_name);
+        requireActivity().setTitle(R.string.app_name);
         getMainActivity().setSupportActionBar(toolbar);
     }
 
     private void setUpViewPager() {
-        pagerAdapter = new MusicLibraryPagerAdapter(getActivity(), getChildFragmentManager());
+        pagerAdapter = new MusicLibraryPagerAdapter(requireActivity(), getChildFragmentManager());
         pager.setAdapter(pagerAdapter);
         pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
 
         tabs.setupWithViewPager(pager);
 
-        int primaryColor = ThemeStore.primaryColor(getActivity());
-        int normalColor = ToolbarContentTintHelper.toolbarSubtitleColor(getActivity(), primaryColor);
-        int selectedColor = ToolbarContentTintHelper.toolbarTitleColor(getActivity(), primaryColor);
+        final int primaryColor = ThemeStore.primaryColor(requireActivity());
+        final int normalColor = ToolbarContentTintHelper.toolbarSubtitleColor(requireActivity(), primaryColor);
+        final int selectedColor = ToolbarContentTintHelper.toolbarTitleColor(requireActivity(), primaryColor);
         TabLayoutUtil.setTabIconColors(tabs, normalColor, selectedColor);
         tabs.setTabTextColors(normalColor, selectedColor);
-        tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(getActivity()));
+        tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(requireActivity()));
 
         updateTabVisibility();
 
@@ -151,7 +148,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         tabs.setVisibility(pagerAdapter.getCount() == 1 ? View.GONE : View.VISIBLE);
     }
 
-    public Fragment getCurrentFragment() {
+    private Fragment getCurrentFragment() {
         return pagerAdapter.getFragment(pager.getCurrentItem());
     }
 
@@ -169,12 +166,12 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         return cab;
     }
 
-    public void addOnAppBarOffsetChangedListener(AppBarLayout.OnOffsetChangedListener onOffsetChangedListener) {
-        appbar.addOnOffsetChangedListener(onOffsetChangedListener);
+    public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
+        appbar.addOnOffsetChangedListener(listener);
     }
 
-    public void removeOnAppBarOffsetChangedListener(AppBarLayout.OnOffsetChangedListener onOffsetChangedListener) {
-        appbar.removeOnOffsetChangedListener(onOffsetChangedListener);
+    public void removeOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
+        appbar.removeOnOffsetChangedListener(listener);
     }
 
     public int getTotalAppBarScrollingRange() {
@@ -182,60 +179,60 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (pager == null) return;
+        if (pager == null) {return;}
         inflater.inflate(R.menu.menu_main, menu);
         if (isPlaylistPage()) {
             menu.add(0, R.id.action_new_playlist, 0, R.string.new_playlist_title);
         }
-        Fragment currentFragment = getCurrentFragment();
+        final Fragment currentFragment = getCurrentFragment();
         if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment && currentFragment.isAdded()) {
-            AbsLibraryPagerRecyclerViewCustomGridSizeFragment absLibraryRecyclerViewCustomGridSizeFragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
+            final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
 
-            MenuItem gridSizeItem = menu.findItem(R.id.action_grid_size);
+            final MenuItem gridSizeItem = menu.findItem(R.id.action_grid_size);
             if (Util.isLandscape(getResources())) {
                 gridSizeItem.setTitle(R.string.action_grid_size_land);
             }
-            setUpGridSizeMenu(absLibraryRecyclerViewCustomGridSizeFragment, gridSizeItem.getSubMenu());
+            setUpGridSizeMenu(fragment, gridSizeItem.getSubMenu());
 
-            menu.findItem(R.id.action_colored_footers).setChecked(absLibraryRecyclerViewCustomGridSizeFragment.usePalette());
-            menu.findItem(R.id.action_colored_footers).setEnabled(absLibraryRecyclerViewCustomGridSizeFragment.canUsePalette());
+            menu.findItem(R.id.action_colored_footers).setChecked(fragment.usePalette());
+            menu.findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
 
-            setUpSortOrderMenu(absLibraryRecyclerViewCustomGridSizeFragment, menu.findItem(R.id.action_sort_order).getSubMenu());
+            setUpSortOrderMenu(fragment, menu.findItem(R.id.action_sort_order).getSubMenu());
         } else {
             menu.removeItem(R.id.action_grid_size);
             menu.removeItem(R.id.action_colored_footers);
             menu.removeItem(R.id.action_sort_order);
         }
-        Activity activity = getActivity();
-        if (activity == null) return;
-        ToolbarContentTintHelper.handleOnCreateOptionsMenu(getActivity(), toolbar, menu, ATHToolbarActivity.getToolbarBackgroundColor(toolbar));
+        final Activity activity = getActivity();
+        if (activity == null) {return;}
+        ToolbarContentTintHelper.handleOnCreateOptionsMenu(activity, toolbar, menu, ATHToolbarActivity.getToolbarBackgroundColor(toolbar));
     }
 
     @Override
-    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull final Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        Activity activity = getActivity();
-        if (activity == null) return;
+        final Activity activity = getActivity();
+        if (activity == null) {return;}
         ToolbarContentTintHelper.handleOnPrepareOptionsMenu(activity, toolbar);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (pager == null) return false;
-        Fragment currentFragment = getCurrentFragment();
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+        if (pager == null) {return false;}
+        final Fragment currentFragment = getCurrentFragment();
         if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment) {
-            AbsLibraryPagerRecyclerViewCustomGridSizeFragment absLibraryRecyclerViewCustomGridSizeFragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
+            final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
             if (item.getItemId() == R.id.action_colored_footers) {
                 item.setChecked(!item.isChecked());
-                absLibraryRecyclerViewCustomGridSizeFragment.setAndSaveUsePalette(item.isChecked());
+                fragment.setAndSaveUsePalette(item.isChecked());
                 return true;
             }
-            if (handleGridSizeMenuItem(absLibraryRecyclerViewCustomGridSizeFragment, item)) {
+            if (handleGridSizeMenuItem(fragment, item)) {
                 return true;
             }
-            if (handleSortOrderMenuItem(absLibraryRecyclerViewCustomGridSizeFragment, item)) {
+            if (handleSortOrderMenuItem(fragment, item)) {
                 return true;
             }
         }
@@ -254,7 +251,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpGridSizeMenu(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull SubMenu gridSizeMenu) {
+    private void setUpGridSizeMenu(@NonNull final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull final SubMenu gridSizeMenu) {
         switch (fragment.getGridSize()) {
             case 1:
                 gridSizeMenu.findItem(R.id.action_grid_size_1).setChecked(true);
@@ -281,7 +278,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
                 gridSizeMenu.findItem(R.id.action_grid_size_8).setChecked(true);
                 break;
         }
-        int maxGridSize = fragment.getMaxGridSize();
+        final int maxGridSize = fragment.getMaxGridSize();
         if (maxGridSize < 8) {
             gridSizeMenu.findItem(R.id.action_grid_size_8).setVisible(false);
         }
@@ -302,7 +299,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         }
     }
 
-    private boolean handleGridSizeMenuItem(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull MenuItem item) {
+    private boolean handleGridSizeMenuItem(@NonNull final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull final MenuItem item) {
         int gridSize = 0;
         final int itemId = item.getItemId();
         if (itemId == R.id.action_grid_size_1) {
@@ -331,8 +328,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         return false;
     }
 
-    private void setUpSortOrderMenu(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull SubMenu sortOrderMenu) {
-        String currentSortOrder = fragment.getSortOrder();
+    private void setUpSortOrderMenu(@NonNull final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull final SubMenu sortOrderMenu) {
+        final String currentSortOrder = fragment.getSortOrder();
         sortOrderMenu.clear();
 
         if (fragment instanceof AlbumsFragment) {
@@ -346,17 +343,17 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         sortOrderMenu.setGroupCheckable(0, true, true);
     }
 
-    private boolean handleSortOrderMenuItem(@NonNull AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull MenuItem item) {
+    private boolean handleSortOrderMenuItem(@NonNull final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment, @NonNull final MenuItem item) {
         String sortOrder = null;
         final int itemId = item.getItemId();
         if (fragment instanceof AlbumsFragment) {
-            SortOrder<Album> sorter = AlbumSortOrder.fromMenuResourceId(itemId);
+            final SortOrder<Album> sorter = AlbumSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         } else if (fragment instanceof ArtistsFragment) {
-            SortOrder<Artist> sorter = ArtistSortOrder.fromMenuResourceId(itemId);
+            final SortOrder<Artist> sorter = ArtistSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         } else if (fragment instanceof SongsFragment) {
-            SortOrder<Song> sorter = SongSortOrder.fromMenuResourceId(itemId);
+            final SortOrder<Song> sorter = SongSortOrder.fromMenuResourceId(itemId);
             if (sorter != null) {sortOrder = sorter.preferenceValue;}
         }
 
@@ -371,8 +368,8 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && cab.isActive()) {
-            cab.finish();
+        if (cab != null && AttachedCabKt.isActive(cab)) {
+            AttachedCabKt.destroy(cab);
             return true;
         }
         return false;

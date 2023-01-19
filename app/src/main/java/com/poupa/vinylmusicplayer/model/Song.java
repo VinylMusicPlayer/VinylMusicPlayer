@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 
+import org.jetbrains.annotations.NonNls;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +28,7 @@ public class Song implements Parcelable {
     public long albumId;
     public List<String> artistNames = new ArrayList<>(Arrays.asList(""));
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
+    @NonNls
     public final String data;
     public final long dateAdded;
     public final long dateModified;

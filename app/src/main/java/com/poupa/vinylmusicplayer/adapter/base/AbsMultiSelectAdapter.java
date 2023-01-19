@@ -42,36 +42,33 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         this.context = context;
     }
 
-    protected void setMultiSelectMenuRes(@MenuRes int menuRes) {
+    protected void setMultiSelectMenuRes(@MenuRes final int menuRes) {
         this.menuRes = menuRes;
     }
 
     protected boolean toggleChecked(final int position) {
-        if (cabHolder != null) {
-            I identifier = getIdentifier(position);
-            if (identifier == null) return false;
+        final I identifier = getIdentifier(position);
+        if (identifier == null) {return false;}
 
-            if (!checked.remove(identifier)) checked.add(identifier);
+        if (!checked.remove(identifier)) {checked.add(identifier);}
 
-            notifyItemChanged(position);
-            updateCab();
-            return true;
-        }
-        return false;
+        notifyItemChanged(position);
+        updateCab();
+
+        return true;
     }
 
-    protected void checkAll() {
-        if (cabHolder != null) {
-            checked.clear();
-            for (int i = 0; i < getItemCount(); i++) {
-                I identifier = getIdentifier(i);
-                if (identifier != null) {
-                    checked.add(identifier);
-                }
+    private void checkAll() {
+        checked.clear();
+        final int itemCount = getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            final I identifier = getIdentifier(i);
+            if (identifier != null) {
+                checked.add(identifier);
             }
-            notifyDataSetChanged();
-            updateCab();
         }
+        notifyDataSetChanged();
+        updateCab();
     }
 
     private void updateCab() {
@@ -91,7 +88,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         notifyDataSetChanged();
     }
 
-    protected boolean isChecked(I identifier) {
+    protected boolean isChecked(final I identifier) {
         return checked.contains(identifier);
     }
 
@@ -127,7 +124,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         return true;
     }
 
-    protected String getName(I object) {
+    protected String getName(@NonNull final I object) {
         return object.toString();
     }
 

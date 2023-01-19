@@ -82,7 +82,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     boolean isInNoImageMode;
     private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
         @Override
-        public void onScrollChanged(int scrollY, boolean b, boolean b2) {
+        public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
             float alpha;
             if (!isInNoImageMode) {
                 alpha = 1 - (float) Math.max(0, headerVariableSpace - scrollY) / headerVariableSpace;
