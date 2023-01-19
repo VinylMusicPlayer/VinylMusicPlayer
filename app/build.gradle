@@ -121,7 +121,6 @@ dependencies {
         transitive = true
     }
 
-    //implementation 'org.bitbucket.ijabz:jaudiotagger:3.0.1'
     implementation 'net.jthink:jaudiotagger:3.0.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
