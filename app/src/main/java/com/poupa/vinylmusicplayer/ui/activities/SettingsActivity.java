@@ -282,6 +282,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
+            // TODO Option to use static primary4accent colors, or dynamic from the playing song (a la now playing screen), or dynamic from OS (MaterialMe only)
+            // TODO Apply the colors to the Auto  screen as well (i.e. the play/pause button)
+
             final ATEColorPreference primaryColorPref = findPreference("primary_color");
             if (getActivity() != null && primaryColorPref != null) {
                 final int primaryColor = ThemeStore.primaryColor(getActivity());

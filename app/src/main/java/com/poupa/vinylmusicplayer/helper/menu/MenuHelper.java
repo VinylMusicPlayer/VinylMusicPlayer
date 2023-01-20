@@ -23,10 +23,7 @@ public class MenuHelper {
         if (liveItem != null) {
             final SpannableString span = new SpannableString(liveItem.getTitle().toString());
 
-            // Get delete color from context's theme
-            final TypedValue typedColorBackground = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.md_delete, typedColorBackground, true);
-            @ColorInt int color = typedColorBackground.data;
+            @ColorInt int color = ThemeStore.accentColor(context);
 
             span.setSpan(new ForegroundColorSpan(color), 0, span.length(), 0);
             liveItem.setTitle(span);
