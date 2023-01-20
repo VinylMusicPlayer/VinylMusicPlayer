@@ -12,10 +12,10 @@ import androidx.annotation.IdRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.afollestad.materialcab.MaterialCabKt;
 import com.afollestad.materialcab.attached.AttachedCab;
-import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -60,7 +60,7 @@ public class MenuHelper {
                     cab.menu(menuRes);
                     cab.closeDrawable(R.drawable.ic_close_white_24dp);
                     cab.backgroundColor(
-                            CabHolder.UNDEFINED_COLOR_RES,
+                            ResourcesCompat.ID_NULL,
                             VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor));
                     cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
 

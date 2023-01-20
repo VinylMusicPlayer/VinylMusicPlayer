@@ -2,12 +2,14 @@ package com.poupa.vinylmusicplayer.adapter.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
@@ -78,8 +80,12 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
             }
             final int size = checked.size();
             if (size <= 0) {AttachedCabKt.destroy(cab);}
-            else if (size == 1) {cab.title(CabHolder.UNDEFINED_STRING_RES, getName(checked.get(0)));}
-            else {cab.title(CabHolder.UNDEFINED_STRING_RES, context.getString(R.string.x_selected, size));}
+            else if (size == 1) {
+                String name = getName(checked.get(0));
+                if (TextUtils.isEmpty(name)) {name = context.getString(R.string.x_selected, 1);}
+                cab.title(ResourcesCompat.ID_NULL, name);
+            }
+            else {cab.title(ResourcesCompat.ID_NULL, context.getString(R.string.x_selected, size));}
         }
     }
 

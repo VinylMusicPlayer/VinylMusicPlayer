@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.util.Pair;
 
 import com.afollestad.materialcab.attached.AttachedCab;
@@ -160,8 +162,12 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
 
             final int size = checked.size();
             if (size <= 0) {AttachedCabKt.destroy(cab);}
-            else if (size == 1) cab.title(CabHolder.UNDEFINED_STRING_RES, checked.get(0).title);
-            else cab.title(CabHolder.UNDEFINED_STRING_RES, activity.getString(R.string.x_selected, size));
+            else if (size == 1) {
+                String title = checked.get(0).title;
+                if (TextUtils.isEmpty(title)) {title = activity.getString(R.string.x_selected, 1);}
+                cab.title(ResourcesCompat.ID_NULL, title);
+            }
+            else {cab.title(ResourcesCompat.ID_NULL, activity.getString(R.string.x_selected, size));}
         }
     }
 
