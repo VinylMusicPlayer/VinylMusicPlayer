@@ -47,7 +47,7 @@
                 </androidx.appcompat.widget.Toolbar>
 
                 <ViewStub
-                    android:id="@+id/cab_stub"
+                    android:id="@+id/cab_stub_genre"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize" />
 

@@ -10,14 +10,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +24,6 @@ import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
-import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
@@ -79,20 +75,7 @@ public class ArtistDetailActivity
 
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
-    private ObservableListView songListView;
-    private com.google.android.material.card.MaterialCardView artistBorderTheme;
-    private ImageView artistImage;
-    private Toolbar toolbar;
-    private View headerView;
-    private View headerOverlay;
-
-    private ImageView durationIconImageView;
-    private ImageView songCountIconImageView;
-    private ImageView albumCountIconImageView;
-    private TextView durationTextView;
-    private TextView songCountTextView;
-    private TextView albumCountTextView;
-    private TextView titleTextView;
+    private ActivityArtistDetailBinding layoutBinding;
 
     private View songListHeader;
     private RecyclerView albumRecyclerView;
@@ -118,12 +101,12 @@ public class ArtistDetailActivity
 
             // Change alpha of overlay
             final float headerAlpha = Math.max(0, Math.min(1, (float) 2 * y / headerViewHeight));
-            headerOverlay.setBackgroundColor(ColorUtil.withAlpha(toolbarColor, headerAlpha));
+            layoutBinding.headerOverlay.setBackgroundColor(ColorUtil.withAlpha(toolbarColor, headerAlpha));
 
             // Translate name text
-            headerView.setTranslationY(Math.max(-y, -headerViewHeight));
-            headerOverlay.setTranslationY(Math.max(-y, -headerViewHeight));
-            artistBorderTheme.setTranslationY(Math.max(-y, -headerViewHeight));
+            layoutBinding.header.setTranslationY(Math.max(-y, -headerViewHeight));
+            layoutBinding.headerOverlay.setTranslationY(Math.max(-y, -headerViewHeight));
+            layoutBinding.imageBorderTheme.setTranslationY(Math.max(-y, -headerViewHeight));
         }
     };
 
@@ -146,25 +129,10 @@ public class ArtistDetailActivity
     @Override
     protected View createContentView() {
         final SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
-        final ActivityArtistDetailBinding binding = ActivityArtistDetailBinding.inflate(
+        layoutBinding = ActivityArtistDetailBinding.inflate(
                 getLayoutInflater(),
                 slidingPanelBinding.contentContainer,
                 true);
-
-        songListView = binding.list;
-        artistBorderTheme = binding.imageBorderTheme;
-        artistImage = binding.image;
-        toolbar = binding.toolbar;
-        headerView = binding.header;
-        headerOverlay = binding.headerOverlay;
-
-        durationIconImageView = binding.durationIcon;
-        songCountIconImageView = binding.songCountIcon;
-        albumCountIconImageView = binding.albumCountIcon;
-        durationTextView = binding.durationText;
-        songCountTextView = binding.songCountText;
-        albumCountTextView = binding.albumCountText;
-        titleTextView = binding.title;
 
         return slidingPanelBinding.getRoot();
     }
@@ -176,7 +144,7 @@ public class ArtistDetailActivity
     }
 
     private void initViews() {
-        songListHeader = LayoutInflater.from(this).inflate(R.layout.artist_detail_header, songListView, false);
+        songListHeader = LayoutInflater.from(this).inflate(R.layout.artist_detail_header, layoutBinding.list, false);
         albumRecyclerView = songListHeader.findViewById(R.id.recycler_view);
     }
 
@@ -188,18 +156,18 @@ public class ArtistDetailActivity
 
     private void setUpSongListView() {
         setUpSongListPadding();
-        songListView.setScrollViewCallbacks(observableScrollViewCallbacks);
-        songListView.addHeaderView(songListHeader);
+        layoutBinding.list.setScrollViewCallbacks(observableScrollViewCallbacks);
+        layoutBinding.list.addHeaderView(songListHeader);
 
         songAdapter = new ArtistSongAdapter(this, getArtist().getSongs(), this);
-        songListView.setAdapter(songAdapter);
+        layoutBinding.list.setAdapter(songAdapter);
 
         final View contentView = getWindow().getDecorView().findViewById(android.R.id.content);
         contentView.post(() -> observableScrollViewCallbacks.onScrollChanged(-headerViewHeight, false, false));
     }
 
     private void setUpSongListPadding() {
-        songListView.setPadding(0, headerViewHeight, 0, 0);
+        layoutBinding.list.setPadding(0, headerViewHeight, 0, 0);
     }
 
     private void setUpAlbumRecyclerView() {
@@ -277,14 +245,14 @@ public class ArtistDetailActivity
                 .transition(VinylGlideExtension.getDefaultTransition())
                 .artistOptions(artist)
                 .dontAnimate()
-                .into(new VinylColoredTarget(artistImage) {
+                .into(new VinylColoredTarget(layoutBinding.image) {
                     @Override
                     public void onColorReady(int color) {
                         setColors(color);
                     }
                 });
         forceDownload = false;
-        artistBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(ArtistDetailActivity.this));
+        layoutBinding.imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(ArtistDetailActivity.this));
     }
 
     @Override
@@ -308,29 +276,27 @@ public class ArtistDetailActivity
 
     private void setColors(int color) {
         toolbarColor = color;
-        headerView.setBackgroundColor(color);
+        layoutBinding.header.setBackgroundColor(color);
 
         setNavigationbarColor(color);
         setTaskDescriptionColor(color);
 
-        toolbar.setBackgroundColor(color);
-        setSupportActionBar(toolbar); // needed to auto readjust the toolbar content color
+        layoutBinding.toolbar.setBackgroundColor(color);
+        setSupportActionBar(layoutBinding.toolbar); // needed to auto readjust the toolbar content color
         setStatusbarColor(color);
 
         final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
-        durationIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        songCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        albumCountIconImageView.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        durationTextView.setTextColor(secondaryTextColor);
-        songCountTextView.setTextColor(secondaryTextColor);
-        albumCountTextView.setTextColor(secondaryTextColor);
-
-        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
+        layoutBinding.durationIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
+        layoutBinding.songCountIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
+        layoutBinding.albumCountIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
+        layoutBinding.durationText.setTextColor(secondaryTextColor);
+        layoutBinding.songCountText.setTextColor(secondaryTextColor);
+        layoutBinding.albumCountText.setTextColor(secondaryTextColor);
+        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
     }
 
     private void setUpToolbar() {
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
+        setSupportActionBar(layoutBinding.toolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -411,7 +377,7 @@ public class ArtistDetailActivity
 
         @ColorInt final int color = getPaletteColor();
         songAdapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubArtist.getId(), menuRes, color, callbacks);
         return cab;
     }
 
@@ -438,10 +404,10 @@ public class ArtistDetailActivity
             loadBiography();
         }
 
-        titleTextView.setText(artist.getName());
-        songCountTextView.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));
-        albumCountTextView.setText(MusicUtil.getAlbumCountString(this, artist.getAlbumCount()));
-        durationTextView.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.getSongs())));
+        layoutBinding.title.setText(artist.getName());
+        layoutBinding.songCountText.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));
+        layoutBinding.albumCountText.setText(MusicUtil.getAlbumCountString(this, artist.getAlbumCount()));
+        layoutBinding.durationText.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(artist.getSongs())));
 
         songAdapter.swapDataSet(artist.getSongs());
         albumAdapter.swapDataSet(artist.albums);

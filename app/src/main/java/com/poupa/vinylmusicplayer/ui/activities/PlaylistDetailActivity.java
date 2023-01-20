@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,10 +53,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @NonNull
     public static final String EXTRA_PLAYLIST = "extra_playlist";
 
-    private RecyclerView recyclerView;
-    private Toolbar toolbar;
-    private TextView empty;
-    private TextView titleTextView;
+    private ActivityPlaylistDetailBinding layoutBinding;
 
     private Playlist playlist;
 
@@ -89,41 +84,44 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @Override
     protected View createContentView() {
         final SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
-        final ActivityPlaylistDetailBinding binding = ActivityPlaylistDetailBinding.inflate(
+        layoutBinding = ActivityPlaylistDetailBinding.inflate(
                 getLayoutInflater(),
                 slidingPanelBinding.contentContainer,
                 true);
-
-        recyclerView = binding.recyclerView;
-        toolbar = binding.toolbar;
-        empty = binding.empty;
-        titleTextView = binding.title;
 
         return slidingPanelBinding.getRoot();
     }
 
     private void setUpRecyclerView() {
-        ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ViewUtil.setUpFastScrollRecyclerViewColor(
+                this,
+                ((FastScrollRecyclerView) layoutBinding.recyclerView),
+                ThemeStore.accentColor(this));
+        layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if (playlist instanceof AbsCustomPlaylist) {
             adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, this);
-            recyclerView.setAdapter(adapter);
+            layoutBinding.recyclerView.setAdapter(adapter);
         } else {
             recyclerViewDragDropManager = new RecyclerViewDragDropManager();
             final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
-            adapter = new OrderablePlaylistSongAdapter(this, new ArrayList<>(), false, this, (fromPosition, toPosition) -> {
-                if (PlaylistsUtil.moveItem(PlaylistDetailActivity.this, playlist.id, fromPosition, toPosition)) {
-                    Song song = adapter.getDataSet().remove(fromPosition);
-                    adapter.getDataSet().add(toPosition, song);
-                    adapter.notifyItemMoved(fromPosition, toPosition);
-                }
-            });
+            adapter = new OrderablePlaylistSongAdapter(
+                    this,
+                    new ArrayList<>(),
+                    false,
+                    this,
+                    (fromPosition, toPosition) -> {
+                        if (PlaylistsUtil.moveItem(PlaylistDetailActivity.this, playlist.id, fromPosition, toPosition)) {
+                            Song song = adapter.getDataSet().remove(fromPosition);
+                            adapter.getDataSet().add(toPosition, song);
+                            adapter.notifyItemMoved(fromPosition, toPosition);
+                        }
+                    });
             wrappedAdapter = recyclerViewDragDropManager.createWrappedAdapter(adapter);
 
-            recyclerView.setAdapter(wrappedAdapter);
-            recyclerView.setItemAnimator(animator);
+            layoutBinding.recyclerView.setAdapter(wrappedAdapter);
+            layoutBinding.recyclerView.setItemAnimator(animator);
 
-            recyclerViewDragDropManager.attachRecyclerView(recyclerView);
+            recyclerViewDragDropManager.attachRecyclerView(layoutBinding.recyclerView);
         }
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -136,13 +134,12 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     }
 
     private void setUpToolbar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        setSupportActionBar(toolbar);
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        setSupportActionBar(layoutBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTitle(null);
-        titleTextView.setText(playlist.name);
-
-        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
+        layoutBinding.title.setText(playlist.name);
+        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     private void setToolbarTitle(final String title) {
@@ -176,7 +173,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, menu, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubPlaylist.getId(), menu, color, callbacks);
         return cab;
     }
 
@@ -184,7 +181,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     public void onBackPressed() {
         if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
         else {
-            recyclerView.stopScroll();
+            layoutBinding.recyclerView.stopScroll();
             super.onBackPressed();
         }
     }
@@ -229,7 +226,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     }
 
     private void checkIsEmpty() {
-        empty.setVisibility(
+        layoutBinding.empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE
         );
     }
@@ -249,11 +246,8 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
             recyclerViewDragDropManager = null;
         }
 
-        if (recyclerView != null) {
-            recyclerView.setItemAnimator(null);
-            recyclerView.setAdapter(null);
-            recyclerView = null;
-        }
+        layoutBinding.recyclerView.setItemAnimator(null);
+        layoutBinding.recyclerView.setAdapter(null);
 
         if (wrappedAdapter != null) {
             WrapperAdapterUtils.releaseAll(wrappedAdapter);

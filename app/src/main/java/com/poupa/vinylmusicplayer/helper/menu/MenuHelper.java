@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.IdRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,13 +48,14 @@ public class MenuHelper {
     @NonNull
     public static AttachedCab createAndOpenCab(
             @NonNull final AppCompatActivity context,
+            @IdRes final int cabRes,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,
             @NonNull final CabCallbacks callbacks)
     {
         final AttachedCab attachedCab = MaterialCabKt.createCab(
                 context,
-                R.id.cab_stub,
+                cabRes,
                 cab -> {
                     cab.menu(menuRes);
                     cab.closeDrawable(R.drawable.ic_close_white_24dp);

@@ -15,14 +15,12 @@ import android.view.ViewGroup;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.tabs.TabLayout;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.TabLayoutUtil;
@@ -55,10 +53,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 public class LibraryFragment extends AbsMainActivityFragment implements CabHolder, MainActivity.MainActivityFragmentCallbacks, ViewPager.OnPageChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
-    private Toolbar toolbar;
-    private TabLayout tabs;
-    private AppBarLayout appbar;
-    private ViewPager pager;
+    private FragmentLibraryBinding layoutBinding;
 
     private MusicLibraryPagerAdapter pagerAdapter;
     private AttachedCab cab;
@@ -69,20 +64,15 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final FragmentLibraryBinding binding = FragmentLibraryBinding.inflate(inflater, container, false);
-        toolbar = binding.toolbar;
-        tabs = binding.tabs;
-        appbar = binding.appbar;
-        pager = binding.pager;
-
-        return binding.getRoot();
+        layoutBinding = FragmentLibraryBinding.inflate(inflater, container, false);
+        return layoutBinding.getRoot();
     }
 
     @Override
     public void onDestroyView() {
         PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         super.onDestroyView();
-        pager.removeOnPageChangeListener(this);
+        layoutBinding.pager.removeOnPageChangeListener(this);
     }
 
     @Override
@@ -101,55 +91,55 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         if (PreferenceUtil.LIBRARY_CATEGORIES.equals(key)) {
             final Fragment current = getCurrentFragment();
             pagerAdapter.setCategoryInfos(PreferenceUtil.getInstance().getLibraryCategoryInfos());
-            pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
+            layoutBinding.pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
             int position = pagerAdapter.getItemPosition(current);
             if (position < 0) position = 0;
-            pager.setCurrentItem(position);
+            layoutBinding.pager.setCurrentItem(position);
             PreferenceUtil.getInstance().setLastPage(position);
 
             // hide the tab bar with single tab
-            tabs.setVisibility(pagerAdapter.getCount() == 1 ? View.GONE : View.VISIBLE);
+            layoutBinding.tabs.setVisibility(pagerAdapter.getCount() == 1 ? View.GONE : View.VISIBLE);
         }
     }
 
     private void setUpToolbar() {
         final int primaryColor = ThemeStore.primaryColor(requireActivity());
-        appbar.setBackgroundColor(primaryColor);
-        toolbar.setBackgroundColor(primaryColor);
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        layoutBinding.appbar.setBackgroundColor(primaryColor);
+        layoutBinding.toolbar.setBackgroundColor(primaryColor);
+        layoutBinding.toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         requireActivity().setTitle(R.string.app_name);
-        getMainActivity().setSupportActionBar(toolbar);
+        getMainActivity().setSupportActionBar(layoutBinding.toolbar);
     }
 
     private void setUpViewPager() {
         pagerAdapter = new MusicLibraryPagerAdapter(requireActivity(), getChildFragmentManager());
-        pager.setAdapter(pagerAdapter);
-        pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
+        layoutBinding.pager.setAdapter(pagerAdapter);
+        layoutBinding.pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
 
-        tabs.setupWithViewPager(pager);
+        layoutBinding.tabs.setupWithViewPager(layoutBinding.pager);
 
         final int primaryColor = ThemeStore.primaryColor(requireActivity());
         final int normalColor = ToolbarContentTintHelper.toolbarSubtitleColor(requireActivity(), primaryColor);
         final int selectedColor = ToolbarContentTintHelper.toolbarTitleColor(requireActivity(), primaryColor);
-        TabLayoutUtil.setTabIconColors(tabs, normalColor, selectedColor);
-        tabs.setTabTextColors(normalColor, selectedColor);
-        tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(requireActivity()));
+        TabLayoutUtil.setTabIconColors(layoutBinding.tabs, normalColor, selectedColor);
+        layoutBinding.tabs.setTabTextColors(normalColor, selectedColor);
+        layoutBinding.tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(requireActivity()));
 
         updateTabVisibility();
 
         if (PreferenceUtil.getInstance().rememberLastTab()) {
-            pager.setCurrentItem(PreferenceUtil.getInstance().getLastPage());
+            layoutBinding.pager.setCurrentItem(PreferenceUtil.getInstance().getLastPage());
         }
-        pager.addOnPageChangeListener(this);
+        layoutBinding.pager.addOnPageChangeListener(this);
     }
 
     private void updateTabVisibility() {
         // hide the tab bar when only a single tab is visible
-        tabs.setVisibility(pagerAdapter.getCount() == 1 ? View.GONE : View.VISIBLE);
+        layoutBinding.tabs.setVisibility(pagerAdapter.getCount() == 1 ? View.GONE : View.VISIBLE);
     }
 
     private Fragment getCurrentFragment() {
-        return pagerAdapter.getFragment(pager.getCurrentItem());
+        return pagerAdapter.getFragment(layoutBinding.pager.getCurrentItem());
     }
 
     private boolean isPlaylistPage() {
@@ -162,26 +152,25 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
 
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabStubLibrary.getId(), menuRes, color, callbacks);
         return cab;
     }
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
-        appbar.addOnOffsetChangedListener(listener);
+        layoutBinding.appbar.addOnOffsetChangedListener(listener);
     }
 
     public void removeOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
-        appbar.removeOnOffsetChangedListener(listener);
+        layoutBinding.appbar.removeOnOffsetChangedListener(listener);
     }
 
     public int getTotalAppBarScrollingRange() {
-        return appbar.getTotalScrollRange();
+        return layoutBinding.appbar.getTotalScrollRange();
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (pager == null) {return;}
         inflater.inflate(R.menu.menu_main, menu);
         if (isPlaylistPage()) {
             menu.add(0, R.id.action_new_playlist, 0, R.string.new_playlist_title);
@@ -205,9 +194,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
             menu.removeItem(R.id.action_colored_footers);
             menu.removeItem(R.id.action_sort_order);
         }
-        final Activity activity = getActivity();
-        if (activity == null) {return;}
-        ToolbarContentTintHelper.handleOnCreateOptionsMenu(activity, toolbar, menu, ATHToolbarActivity.getToolbarBackgroundColor(toolbar));
+        ToolbarContentTintHelper.handleOnCreateOptionsMenu(
+                requireActivity(),
+                layoutBinding.toolbar,
+                menu,
+                ATHToolbarActivity.getToolbarBackgroundColor(layoutBinding.toolbar));
     }
 
     @Override
@@ -215,12 +206,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         super.onPrepareOptionsMenu(menu);
         final Activity activity = getActivity();
         if (activity == null) {return;}
-        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(activity, toolbar);
+        ToolbarContentTintHelper.handleOnPrepareOptionsMenu(activity, layoutBinding.toolbar);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
-        if (pager == null) {return false;}
         final Fragment currentFragment = getCurrentFragment();
         if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment) {
             final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
@@ -322,7 +312,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         if (gridSize > 0) {
             item.setChecked(true);
             fragment.setAndSaveGridSize(gridSize);
-            toolbar.getMenu().findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
+            layoutBinding.toolbar.getMenu().findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
             return true;
         }
         return false;

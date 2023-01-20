@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,10 +44,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     public static final String EXTRA_GENRE = "extra_genre";
 
-    RecyclerView recyclerView;
-    Toolbar toolbar;
-    TextView empty;
-    TextView titleTextView;
+    private ActivityGenreDetailBinding layoutBinding;
 
     private Genre genre;
 
@@ -79,25 +74,20 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @Override
     protected View createContentView() {
         SlidingMusicPanelLayoutBinding slidingPanelBinding = createSlidingMusicPanel();
-        ActivityGenreDetailBinding binding = ActivityGenreDetailBinding.inflate(
+        layoutBinding = ActivityGenreDetailBinding.inflate(
                 getLayoutInflater(),
                 slidingPanelBinding.contentContainer,
                 true);
-
-        recyclerView = binding.recyclerView;
-        toolbar = binding.toolbar;
-        empty = binding.empty;
-        titleTextView = binding.title;
 
         return slidingPanelBinding.getRoot();
     }
 
     private void setUpRecyclerView() {
-        ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) layoutBinding.recyclerView), ThemeStore.accentColor(this));
+        layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new SongAdapter(this, new ArrayList<>(), R.layout.item_list, false, this);
-        recyclerView.setAdapter(adapter);
+        layoutBinding.recyclerView.setAdapter(adapter);
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -109,14 +99,12 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void setUpToolBar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        setSupportActionBar(layoutBinding.toolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        titleTextView.setText(genre.getName());
-
-        titleTextView.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
+        layoutBinding.title.setText(genre.getName());
+        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     @Override
@@ -145,7 +133,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, menu, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubGenre.getId(), menu, color, callbacks);
         return cab;
     }
 
@@ -153,7 +141,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     public void onBackPressed() {
         if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
         else {
-            recyclerView.stopScroll();
+            layoutBinding.recyclerView.stopScroll();
             super.onBackPressed();
         }
     }
@@ -175,17 +163,14 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void checkIsEmpty() {
-        empty.setVisibility(
+        layoutBinding.empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE
         );
     }
 
     @Override
     protected void onDestroy() {
-        if (recyclerView != null) {
-            recyclerView.setAdapter(null);
-            recyclerView = null;
-        }
+        layoutBinding.recyclerView.setAdapter(null);
 
         if (wrappedAdapter != null) {
             WrapperAdapterUtils.releaseAll(wrappedAdapter);
