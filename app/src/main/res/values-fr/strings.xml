@@ -2,7 +2,7 @@
 <resources>
     <!-- App introduction -->
     <string name="intro_label">Introduction</string>
-    <string name="welcome_to_vinyl_music_player">"Bienvenue sur Vinyl Music Player, un lecteur de musique beau et léger pour Android. "</string>
+    <string name="welcome_to_vinyl_music_player">"Bienvenue sur Vinyl Music Player, un lecteur de musique beau et léger pour Android."</string>
     <string name="open_playing_queue_instruction">Vous pouvez glisser la carte dans l\'écran de lecture en cours pour afficher la file de lecture complète.</string>
     <string name="rearrange_playing_queue_instruction">Vous pouvez réorganiser la file de lecture en faisant glisser une chanson à partir de son numéro de piste.</string>
     <!-- Menu -->
@@ -53,12 +53,29 @@
     <string name="action_save_playing_queue">Sauvegarder la file de lecture</string>
     <string name="action_go_to_start_directory">Aller au répertoire de départ</string>
     <string name="action_show_lyrics">Afficher les paroles</string>
+    <string name="action_sort_order">Ordre de tri</string>
+    <string name="sort_order_name">Nom (A à Z)</string>
+    <string name="sort_order_name_reverse">Nom (Z à A)</string>
+    <string name="sort_order_artist">Artiste</string>
+    <string name="sort_order_album">Album</string>
+    <string name="sort_order_year">Année (croissant)</string>
+    <string name="sort_order_year_reverse">Année (décroissant)</string>
+    <string name="sort_order_date_added">Date d\'ajout (plus anciens)</string>
+    <string name="sort_order_date_added_reverse">Date d\'ajout (plus récents)</string>
+    <string name="sort_order_date_modified">Modifié (plus anciens)</string>
+    <string name="sort_order_date_modified_reverse">Modifié (plus récents)</string>
     <string name="save_playlists_title">Sauvegarder en tant que fichiers</string>
     <string name="the_audio_file">Le fichier audio</string>
     <string name="x_has_been_set_as_ringtone">%1$s a été définie comme sonnerie</string>
     <string name="added_title_to_playing_queue">"1 titre ajouté à la file de lecture"</string>
     <string name="added_x_titles_to_playing_queue">%1$d titre(s) ajouté(s) à la file de lecture</string>
     <string name="colored_footers">Bas des albums colorés</string>
+    <string name="reset_artist_image">Réinitialiser l\'image de l\'artiste</string>
+    <string name="set_artist_image">Actualiser l\'image de l\'artiste</string>
+    <string name="update_image">Actualiser l\'image</string>
+    <string name="wiki">Wiki</string>
+    <string name="biography">Biographie</string>
+    <string name="dialog_ringtone_title">Définir comme sonnerie</string>
     <!-- Audio file details labels -->
     <string name="label_details">Détails</string>
     <string name="label_file_name">Nom du fichier</string>
@@ -117,6 +134,16 @@
     <string name="no_playlists">Aucune playlist</string>
     <string name="playlist_name_empty">Nom de la playlist</string>
     <string name="playlist_is_empty">La playlist est vide</string>
+    <string name="favorites">Favoris</string>
+    <string name="last_added">Derniers ajouts</string>
+    <string name="history">Joués récemment</string>
+    <string name="my_top_tracks">Titres les plus écoutés</string>
+    <string name="not_recently_played">Titres peu écoutés</string>
+    <string name="skipped_songs">Titres ignorés</string>
+    <string name="confirm_adding_duplicates">Ajouter des pistes déjà dans la playlist sélectionnée ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="deleting_songs">Chansons en cours de suppression</string>
     <!-- Sleep timer -->
     <string name="action_sleep_timer">Minuteur de sommeil</string>
     <string name="action_set">Définir</string>
@@ -125,22 +152,6 @@
     <string name="sleep_timer_set">Arrêt de la musique dans %d minutes</string>
     <string name="time_unit_minutes">min</string>
     <string name="finish_current_music_sleep_timer">Finir le dernier titre</string>
-
-
-    <string name="what_do_you_want_to_share">Que voulez-vous partager ?</string>
-    <string name="currently_listening_to_x_by_x">Vous écoutez %1$s de %2$s</string>
-    
-
-    <string name="unplayable_file">Impossible de lire ce titre</string>
-    <string name="biography_unavailable">Impossible de trouver la biographie de l\'artiste</string>
-    <string name="wiki_unavailable">Impossible de trouver une entrée wiki pour cet album</string>
-    <string name="biography">Biographie</string>
-    <string name="wiki">Wiki</string>
-    <string name="audio_focus_denied">Accès à l\'Audio focus refusé</string>
-
-    <string name="no_results">Aucun résultat</string>
-    <string name="updating">Actualisation…</string>
-
     <!-- Parameters -->
     <string name="pref_rg_disabled">Désactivé</string>
     <string name="pref_playlist_disabled">Désactivé</string>
@@ -227,67 +238,9 @@
     <string name="accent_color">Couleur secondaire</string>
     <string name="primary_color_desc">La couleur principale du thème (indigo par défaut)</string>
     <string name="accent_color_desc">La couleur secondaire du thème (rose par défaut)</string>
-
-
-
-    <string name="no_audio_ID">"Jouer un titre d'abord, puis réessayer"</string>
-
-    <string name="delete_action">Supprimer</string>
-    <string name="clear_action">Effacer</string>
-    <string name="remove_action">Retirer</string>
-    <string name="rename_action">Renommer</string>
-    <string name="create_action">Créer</string>
-    <string name="reset_action">Réinitialiser</string>
-    <string name="x_selected">%1$d séléctionné(s)</string>
-    
-    <string name="update_image">Actualiser l\'image</string>
-    
-
-    <string name="deleting_songs">Chansons en cours de suppression</string>
-    <string name="app_shortcut_shuffle_all_short">Lecture aléatoire</string>
-    <string name="app_shortcut_top_tracks_short">Titres les plus écoutés</string>
-    <string name="app_shortcut_last_added_short">Derniers ajouts</string>
-    
-    <string name="snack_bar_action_undo">Annuler</string>
-    <string name="snack_bar_title_removed_song">Supprimer</string>
     <string name="playing_notification_description">La notification de lecture fournit des actions pour la lecture/pause, etc.</string>
     <string name="playing_notification_name">Notification de lecture</string>
-
-    
-    
-    
-
-    <string name="reset_artist_image">Réinitialiser l\'image de l\'artiste</string>
-    <string name="set_artist_image">Actualiser l\'image de l\'artiste</string>
-    
-    <string name="action_sort_order">Ordre de tri</string>
-    <string name="sort_order_name">Nom (A à Z)</string>
-    <string name="sort_order_name_reverse">Nom (Z à A)</string>
-    <string name="sort_order_artist">Artiste</string>
-    <string name="sort_order_album">Album</string>
-    <string name="sort_order_year">Année (croissant)</string>
-    <string name="sort_order_year_reverse">Année (décroissant)</string>
-    <string name="sort_order_date_added">Date d\'ajout (plus anciens)</string>
-    <string name="sort_order_date_added_reverse">Date d\'ajout (plus récents)</string>
-    <string name="sort_order_date_modified">Modifié (plus anciens)</string>
-    <string name="sort_order_date_modified_reverse">Modifié (plus récents)</string>
-    
-
-    <string name="dialog_ringtone_title">Définir comme sonnerie</string>
-    <string name="dialog_ringtone_message">Autoriser Vinyl Music Player à modifier les paramètres audio</string>
-    <string name="action_scan_directory">Scanner les dossiers</string>
-    
-    <string name="none">Aucun</string>
-    <string name="track">Piste</string>
-    <string name="label_with_rg_info">Avec les tags ReplayGain :</string>
-    <string name="label_without_rg_info">Sans les tags ReplayGain :</string>
-    
-    <string name="error_no_app_for_intent">Aucune application disponible pour ouvrir cette page.</string>
-    <string name="confirm_adding_duplicates">Ajouter des pistes déjà dans la playlist sélectionnée ?</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
-    
-    
+    <!-- Storage scan -->
     <string name="some_files_are_not_listed_in_the_media_store">Certains fichiers ne sont pas listés dans le catalogue de médias</string>
     <string name="nothing_to_scan">Rien à analyser</string>
     <string name="scanned_files">%1$d fichier(s) scanné(s) sur %2$d</string>
@@ -296,23 +249,45 @@
     <string name="scanning_x_songs_finished">%1$d titre(s) mis à jour</string>
     <string name="listing_files">Liste des fichiers</string>
     <string name="new_start_directory">%s est le nouveau répertoire de départ</string>
-
-    <string name="could_not_download_album_cover">"Impossible de télécharger la pochette correspondant à l'album"</string>
-    <string name="search_hint">Recherche dans votre bibliothèque…</string>
-    <string name="favorites">Favoris</string>
-    <string name="last_added">Derniers ajouts</string>
-    <string name="history">Joués récemment</string>
-    <string name="my_top_tracks">Titres les plus écoutés</string>
-    <string name="not_recently_played">Titres peu écoutés</string>
-    <string name="skipped_songs">Titres ignorés</string>
-    <string name="remove_cover">Supprimer la pochette</string>
-    <string name="download_from_last_fm">Télécharger depuis Last.fm</string>
-    <string name="pick_from_local_storage">Sélectionner depuis le stockage</string>
-    <string name="web_search">Recherche Internet</string>
-
     <string name="permissions_denied">Autorisations refusées</string>
     <string name="permission_external_storage_denied">Accès au stockage externe refusé</string>
-
+    <string name="could_not_download_album_cover">"Impossible de télécharger la pochette correspondant à l'album"</string>
+    <string name="search_hint">Recherche dans votre bibliothèque…</string>
+    <string name="pick_from_local_storage">Sélectionner depuis le stockage</string>
+    <string name="action_scan_directory">Scanner les dossiers</string>
+    <!-- Errors -->
+    <string name="unplayable_file">Impossible de lire ce titre</string>
+    <string name="biography_unavailable">Impossible de trouver la biographie de l\'artiste</string>
+    <string name="wiki_unavailable">Impossible de trouver une entrée wiki pour cet album</string>
+    <string name="no_results">Aucun résultat</string>
+    <string name="no_audio_ID">"Jouer un titre d'abord, puis réessayer"</string>
+    <string name="updating">Actualisation…</string>
+    <string name="audio_focus_denied">Accès à l\'Audio focus refusé</string>
+    <!-- Various -->
+    <string name="web_search">Recherche Internet</string>
+    <string name="download_from_last_fm">Télécharger depuis Last.fm</string>
+    <string name="label_with_rg_info">Avec les tags ReplayGain :</string>
+    <string name="label_without_rg_info">Sans les tags ReplayGain :</string>
+    <string name="error_no_app_for_intent">Aucune application disponible pour ouvrir cette page.</string>
+    <string name="what_do_you_want_to_share">Que voulez-vous partager ?</string>
+    <string name="currently_listening_to_x_by_x">Vous écoutez %1$s de %2$s</string>
+    <string name="dialog_ringtone_message">Autoriser Vinyl Music Player à modifier les paramètres audio</string>
+    <!-- Unknown? -->
+    <string name="delete_action">Supprimer</string>
+    <string name="clear_action">Effacer</string>
+    <string name="remove_action">Retirer</string>
+    <string name="rename_action">Renommer</string>
+    <string name="create_action">Créer</string>
+    <string name="reset_action">Réinitialiser</string>
+    <string name="x_selected">%1$d séléctionné(s)</string>
+    <string name="app_shortcut_shuffle_all_short">Lecture aléatoire</string>
+    <string name="app_shortcut_top_tracks_short">Titres les plus écoutés</string>
+    <string name="app_shortcut_last_added_short">Derniers ajouts</string>
+    <string name="snack_bar_action_undo">Annuler</string>
+    <string name="snack_bar_title_removed_song">Supprimer</string>
+    <string name="none">Aucun</string>
+    <string name="track">Piste</string>
+    <string name="remove_cover">Supprimer la pochette</string>
     <!-- About -->
     <string name="special_thanks_to">Un grand merci à</string>
     <string name="changelog">Historique des mises à jour</string>
