@@ -14,8 +14,9 @@
         tools:ignore="UnusedAttribute">
 
         <FrameLayout
+            android:id="@+id/cab_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <androidx.appcompat.widget.Toolbar
@@ -23,14 +24,7 @@
                 style="@style/Toolbar"
                 android:elevation="0dp"
                 tools:ignore="UnusedAttribute">
-
             </androidx.appcompat.widget.Toolbar>
-
-            <ViewStub
-                android:id="@+id/cab_stub_folder"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize" />
-
         </FrameLayout>
 
         <com.poupa.vinylmusicplayer.views.BreadCrumbLayout

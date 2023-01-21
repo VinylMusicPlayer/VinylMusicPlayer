@@ -347,11 +347,11 @@ public class AlbumDetailActivity
     @NonNull
     @Override
     public AttachedCab openCab(int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
+        AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = getPaletteColor();
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubAlbum.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabHolder.getId(), menuRes, color, callbacks);
         return cab;
     }
 

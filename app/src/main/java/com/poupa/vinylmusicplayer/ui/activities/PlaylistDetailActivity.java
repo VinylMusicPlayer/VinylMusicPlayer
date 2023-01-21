@@ -169,11 +169,11 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @NonNull
     @Override
     public AttachedCab openCab(final int menu, final CabCallbacks callbacks) {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
+        AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubPlaylist.getId(), menu, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabHolder.getId(), menu, color, callbacks);
         return cab;
     }
 

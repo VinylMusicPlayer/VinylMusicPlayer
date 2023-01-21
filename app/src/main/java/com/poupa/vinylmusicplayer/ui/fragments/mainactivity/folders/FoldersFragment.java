@@ -223,11 +223,11 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     @NonNull
     @Override
     public AttachedCab openCab(int menuRes, final CabCallbacks callbacks) {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
+        AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabStubFolder.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabHolder.getId(), menuRes, color, callbacks);
         return cab;
     }
 

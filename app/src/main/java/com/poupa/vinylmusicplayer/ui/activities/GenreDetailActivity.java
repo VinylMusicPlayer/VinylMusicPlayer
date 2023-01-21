@@ -129,11 +129,11 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @NonNull
     @Override
     public AttachedCab openCab(final int menu, final CabCallbacks callbacks) {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
+        AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabStubGenre.getId(), menu, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabHolder.getId(), menu, color, callbacks);
         return cab;
     }
 

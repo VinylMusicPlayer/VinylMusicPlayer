@@ -149,10 +149,10 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     @NonNull
     @Override
     public AttachedCab openCab(final int menuRes, final CabCallbacks callbacks) {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
+        AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabStubLibrary.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabHolderLibrary.getId(), menuRes, color, callbacks);
         return cab;
     }
 

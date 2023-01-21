@@ -9,8 +9,9 @@
     <include layout="@layout/status_bar" />
 
     <FrameLayout
+        android:id="@+id/cab_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
         android:elevation="@dimen/toolbar_elevation"
         tools:ignore="UnusedAttribute">
 
@@ -33,12 +34,6 @@
             </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
 
         </androidx.appcompat.widget.Toolbar>
-
-        <ViewStub
-            android:id="@+id/cab_stub_artist"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize" />
-
     </FrameLayout>
 
     <FrameLayout
