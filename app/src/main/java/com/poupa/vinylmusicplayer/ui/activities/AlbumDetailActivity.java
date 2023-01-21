@@ -116,7 +116,7 @@ public class AlbumDetailActivity
     private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
         @Override
         public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-            int y = scrollY|+ headerViewHeight;
+            int y = scrollY + headerViewHeight;
 
             // Change alpha of overlay
             final float headerAlpha = Math.max(0, Math.min(1, (float) 2 * y / headerViewHeight));
