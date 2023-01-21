@@ -16,7 +16,6 @@
 
 package com.poupa.vinylmusicplayer.util
 
-import android.Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE
 import android.Manifest.permission.MEDIA_CONTENT_CONTROL
 import android.annotation.SuppressLint
 import android.content.Context
@@ -29,6 +28,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Base64
 import android.util.Log
 import androidx.annotation.XmlRes
+import androidx.core.app.NotificationManagerCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.poupa.vinylmusicplayer.BuildConfig
 import org.xmlpull.v1.XmlPullParserException
@@ -104,7 +104,7 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
         }
 
         val callerSignature = callerPackageInfo.signature
-        val isPackageInWhitelist = certificateWhitelist[callingPackage]?.signatures?.first {
+        val isPackageInWhitelist = certificateWhitelist[callingPackage]?.signatures?.firstOrNull {
             it.signature == callerSignature
         } != null
 
@@ -125,15 +125,17 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
              */
             callerPackageInfo.permissions.contains(MEDIA_CONTENT_CONTROL) -> true
             /**
-             * This last permission can be specifically granted to apps, and, in addition to
-             * allowing them to retrieve notifications, it also allows them to connect to an
-             * active [MediaSessionCompat].
-             * As with the above, it's not required to allow apps holding this permission to
-             * connect to your [MediaBrowserServiceCompat], but it does allow easy comparability
+             * If the calling app has a notification listener it is able to retrieve notifications
+             * and can connect to an active [MediaSessionCompat].
+             *
+             * It's not required to allow apps with a notification listener to
+             * connect to your [MediaBrowserServiceCompat], but it does allow easy compatibility
              * with apps such as Wear OS.
              */
-            callerPackageInfo.permissions.contains(BIND_NOTIFICATION_LISTENER_SERVICE) -> true
-            // If none of the pervious checks succeeded, then the caller is unrecognized.
+            NotificationManagerCompat.getEnabledListenerPackages(this.context)
+                .contains(callerPackageInfo.packageName) -> true
+
+            // If none of the previous checks succeeded, then the caller is unrecognized.
             else -> false
         }
 
@@ -274,7 +276,7 @@ class PackageValidator(context: Context, @XmlRes xmlResId: Int) {
         var eventType = parser.next()
         while (eventType != XmlResourceParser.END_TAG) {
             val isRelease = parser.getAttributeBooleanValue(null, "release", false)
-            val signature = parser.nextText().replace(WHITESPACE_REGEX, "").toLowerCase()
+            val signature = parser.nextText().replace(WHITESPACE_REGEX, "").lowercase()
             callerSignatures += KnownSignature(signature, isRelease)
 
             eventType = parser.next()

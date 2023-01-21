@@ -47,7 +47,6 @@
     <string name="album_or_artist_empty">Nimi- tai artistikenttä on tyhjä.</string>
     <string name="saving_changes">Tallennetaan muutokset…</string>
     <string name="label_details">Yksityiskohdat</string>
-    <string name="label_file_name">Tiedostonimi</string>
     <string name="label_file_path">Tiedostopolku</string>
     <string name="label_file_size">Koko</string>
     <string name="label_file_format">Tyyppi</string>

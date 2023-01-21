@@ -27,9 +27,9 @@ public class AlbumSortOrder {
     private static final Comparator<Album> _BY_ARTIST_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
             a1.getArtistName(),
             a2.getArtistName());
-    private static final Comparator<Album> _BY_DATE_ADDED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateAdded(), a2.getDateAdded());
-    private static final Comparator<Album> _BY_DATE_MODIFIED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified());
-    private static final Comparator<Album> _BY_YEAR = (a1, a2) -> a1.getYear() - a2.getYear();
+    private static final Comparator<Album> _BY_DATE_ADDED = Comparator.comparingLong(Album::getDateAdded);
+    private static final Comparator<Album> _BY_DATE_MODIFIED = Comparator.comparingLong(Album::getDateModified);
+    private static final Comparator<Album> _BY_YEAR = Comparator.comparingInt(Album::getYear);
 
     private static final Comparator<Album> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM_NAME, _BY_ARTIST_NAME);
     private static final Comparator<Album> BY_ALBUM_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_ALBUM_NAME), _BY_ARTIST_NAME);

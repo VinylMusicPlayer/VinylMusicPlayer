@@ -14,7 +14,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_album_art"
         android:transitionName="@string/transition_album_art"
-        app:layout_aspectRatio="178%"
+        app:layout_aspectRatio="100%"
         app:layout_widthPercent="100%"
         tools:ignore="ContentDescription,UnusedAttribute" />
 
@@ -29,6 +29,7 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="8dp"
+        android:background="#70000000"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

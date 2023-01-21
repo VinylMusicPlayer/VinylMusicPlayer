@@ -49,7 +49,6 @@
     <string name="album_or_artist_empty">Název alba nebo interpreta je prázdný.</string>
     <string name="saving_changes">Ukládání změn…</string>
     <string name="label_details">Podrobnosti</string>
-    <string name="label_file_name">Název souboru</string>
     <string name="label_file_path">Umístění souboru</string>
     <string name="label_file_size">Velikost</string>
     <string name="label_file_format">Formát</string>

@@ -280,7 +280,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
 
-                        MenuHelper.setDeleteMenuItemRed(popupMenu.getMenu(), activity);
+                        MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
 
                         popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
                             activity, dataSet.get(getAdapterPosition()), item));

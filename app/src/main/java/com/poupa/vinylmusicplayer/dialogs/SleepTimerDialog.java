@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.DialogSleepTimerBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -194,7 +195,7 @@ public class SleepTimerDialog extends DialogFragment {
     }
 
     private PendingIntent makeTimerPendingIntent(int flag) {
-        return PendingIntent.getService(getActivity(), 0, makeTimerIntent(), flag);
+        return PendingIntentCompat.getService(getActivity(), 0, makeTimerIntent(), flag);
     }
 
     private Intent makeTimerIntent() {

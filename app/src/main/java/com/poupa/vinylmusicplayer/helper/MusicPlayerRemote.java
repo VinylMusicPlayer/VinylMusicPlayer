@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -31,7 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.WeakHashMap;
 
 /**
@@ -172,8 +172,7 @@ public class MusicPlayerRemote {
     }
 
     public static boolean isPlaying(@NonNull Song song) {
-        if (!isPlaying()) {return false;}
-        return (song.id == getCurrentSong().id);
+        return musicService != null && musicService.isPlaying(song);
     }
 
     public static void resumePlaying() {
@@ -198,14 +197,8 @@ public class MusicPlayerRemote {
      * Async
      */
     public static void openAndShuffleQueue(final ArrayList<Song> queue, boolean startPlaying) {
-        int startPosition = 0;
-        if (!queue.isEmpty()) {
-            startPosition = new Random().nextInt(queue.size());
-        }
-
-        if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
-            openQueue(queue, startPosition, startPlaying);
-            setShuffleMode(MusicService.SHUFFLE_MODE_SHUFFLE);
+        if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
+            musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
     }
 
@@ -221,11 +214,19 @@ public class MusicPlayerRemote {
         return false;
     }
 
+    @NonNull
     public static Song getCurrentSong() {
         if (musicService != null) {
             return musicService.getCurrentSong();
         }
         return Song.EMPTY_SONG;
+    }
+
+    public static IndexedSong getCurrentIndexedSong() {
+        if (musicService != null) {
+            return musicService.getCurrentIndexedSong();
+        }
+        return IndexedSong.EMPTY_INDEXED_SONG;
     }
 
     public static int getPosition() {
@@ -297,7 +298,7 @@ public class MusicPlayerRemote {
     public static void playNext(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
-                musicService.addSong(getPosition() + 1, song);
+                musicService.addSongAfter(getPosition(), song);
             } else {
                 ArrayList<Song> queue = new ArrayList<>();
                 queue.add(song);
@@ -310,7 +311,7 @@ public class MusicPlayerRemote {
     public static void playNext(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
-                musicService.addSongs(getPosition() + 1, songs);
+                musicService.addSongsAfter(getPosition(), songs);
             } else {
                 openQueue(songs, 0, false);
             }
@@ -344,12 +345,6 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void removeFromQueue(@NonNull Song song) {
-        if (musicService != null) {
-            musicService.removeSong(song);
-        }
-    }
-
     public static void removeFromQueue(@NonNull List<Song> songs) {
         if (musicService != null) {
             musicService.removeSongs(songs);
@@ -362,15 +357,22 @@ public class MusicPlayerRemote {
         }
     }
 
+    public static IndexedSong getIndexedSongAt(int position) {
+        if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
+            return musicService.getIndexedSongAt(position);
+        }
+        return IndexedSong.EMPTY_INDEXED_SONG;
+    }
+
     public static void moveSong(int from, int to) {
         if (musicService != null && from >= 0 && to >= 0 && from < getPlayingQueue().size() && to < getPlayingQueue().size()) {
             musicService.moveSong(from, to);
         }
     }
 
-    public static void addSong(int to, @NonNull Song song) {
+    public static void addSongBackTo(int to, @NonNull IndexedSong song) {
         if (musicService != null) {
-            musicService.addSong(to,song);
+            musicService.addSongBackTo(to, song);
         }
     }
 

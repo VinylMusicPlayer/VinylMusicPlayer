@@ -5,11 +5,7 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.discog.Discography;
-import com.poupa.vinylmusicplayer.model.Song;
-
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 /**
  * @author SC (soncaokim)
@@ -28,27 +24,5 @@ public class StoreLoader {
         }
 
         return ids;
-    }
-
-    @NonNull
-    public static ArrayList<Song> getSongsFromIdsAndCleanupOrphans(@NonNull ArrayList<Long> songIds, @Nullable Consumer<ArrayList<Long>> orphanIdsCleaner) {
-        Discography discography = Discography.getInstance();
-        ArrayList<Long> orphanSongIds = new ArrayList<>();
-
-        ArrayList<Song> songs = new ArrayList<>();
-        final boolean isStale = discography.isStale(); // Must capture this before the discog.getSong
-        for (Long id : songIds) {
-            Song song = discography.getSong(id);
-            if (song.equals(Song.EMPTY_SONG)) {
-                if (!isStale) {orphanSongIds.add(id);}
-            } else {
-                songs.add(song);
-            }
-        }
-
-        if (orphanIdsCleaner != null) {
-            orphanIdsCleaner.accept(orphanSongIds);
-        }
-        return songs;
     }
 }

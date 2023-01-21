@@ -50,7 +50,6 @@
     <string name="album_or_artist_empty">El títol o l\'artista estan en blanc.</string>
     <string name="saving_changes">S\'estan desant els canvis</string>
     <string name="label_details">Detalls</string>
-    <string name="label_file_name">Nom del fitxer</string>
     <string name="label_file_path">Camí del fitxer</string>
     <string name="label_file_size">Mida</string>
     <string name="label_file_format">Format</string>

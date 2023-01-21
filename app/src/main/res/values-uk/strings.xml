@@ -41,7 +41,6 @@
     <string name="album_or_artist_empty">Назва або виконавець відсутні.</string>
     <string name="saving_changes">Збереження змін</string>
     <string name="label_details">Подробиці</string>
-    <string name="label_file_name">Назва файлу</string>
     <string name="label_file_path">Шлях до файлу</string>
     <string name="label_file_size">Розмір</string>
     <string name="label_file_format">Формат</string>

@@ -12,29 +12,30 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
  * @author SC (soncaokim)
  */
 
-class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
+class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
     @NonNull
     final Discography discography;
 
     @NonNull
     final SnackbarUtil snackbar;
 
-    SyncWithMediaStoreAsyncTask(@NonNull MainActivity mainActivity, @NonNull Discography discog) {
+    final boolean resetRequested;
+
+    SyncWithMediaStoreAsyncTask(@NonNull MainActivity mainActivity, @NonNull Discography discog, boolean reset) {
         discography = discog;
         snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
+        resetRequested = reset;
     }
 
     @Override
-    protected Integer doInBackground(Boolean... params) {
-        final boolean reset = params[0];
-        if (reset) discography.clear();
-
+    protected Integer doInBackground(Void...params) {
+        if (resetRequested) discography.clear();
         return discography.syncWithMediaStore(this::publishProgress);
     }
 
     @Override
     protected void onPreExecute() {
-        discography.setStale(true);
+        discography.setCacheState(resetRequested ? MemCache.ConsistencyState.RESETTING : MemCache.ConsistencyState.REFRESHING);
         startTimeMs = System.currentTimeMillis();
     }
 
@@ -61,7 +62,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Boolean, Integer, Integer> {
     }
 
     private void onTermination(Integer value) {
-        discography.setStale(false);
+        discography.setCacheState(MemCache.ConsistencyState.OK);
         if (isUIFeedbackNeeded()) {
             if (value != 0) {
                 final String message = String.format(

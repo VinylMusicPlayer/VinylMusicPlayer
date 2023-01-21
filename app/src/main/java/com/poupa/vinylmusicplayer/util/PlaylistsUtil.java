@@ -169,11 +169,10 @@ public class PlaylistsUtil {
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final Song song, long playlistId) {
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(
                 "external", playlistId);
-        String selection = MediaStore.Audio.Playlists.Members.AUDIO_ID + " =?";
-        String[] selectionArgs = new String[]{String.valueOf(song.id)};
+        String selection = MediaStore.Audio.Playlists.Members.AUDIO_ID + " = " + song,id;
 
         try {
-            context.getContentResolver().delete(uri, selection, selectionArgs);
+            context.getContentResolver().delete(uri, selection, null);
             notifyChange(context, uri);
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -183,16 +182,12 @@ public class PlaylistsUtil {
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<PlaylistSong> songs) {
         final long playlistId = songs.get(0).playlistId;
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(MediaStore.VOLUME_EXTERNAL, playlistId);
-        String[] selectionArgs = new String[songs.size()];
-        for (int i = 0; i < selectionArgs.length; i++) {
-            selectionArgs[i] = String.valueOf(songs.get(i).idInPlayList);
-        }
         String selection = MediaStore.Audio.Playlists.Members._ID + " in (";
-        for (String selectionArg : selectionArgs) selection += "?, ";
+        for (PlaylistSong song : songs) selection += song.idInPlayList + ", ";
         selection = selection.substring(0, selection.length() - 2) + ")";
 
         try {
-            context.getContentResolver().delete(uri, selection, selectionArgs);
+            context.getContentResolver().delete(uri, selection, null);
             notifyChange(context, uri);
         } catch (SecurityException e) {
             e.printStackTrace();

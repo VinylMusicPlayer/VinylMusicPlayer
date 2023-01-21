@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class ArtistSortOrder {
     private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
-    private static final Comparator<Artist> BY_DATE_MODIFIED = (a1, a2) -> ComparatorUtil.compareLongInts(a1.getDateModified(), a2.getDateModified());
+    private static final Comparator<Artist> BY_DATE_MODIFIED = Comparator.comparingLong(Artist::getDateModified);
 
     private static final List<SortOrder<Artist>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(

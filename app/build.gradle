@@ -12,8 +12,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 177
-        versionName '1.3.0'
+        versionCode 178
+        versionName '1.4.0'
 
         multiDexEnabled true
     }
@@ -59,13 +59,9 @@ android {
         }
     }
     packagingOptions {
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-    }
-    lintOptions {
-        disable 'MissingTranslation'
-        disable 'InvalidPackage'
-        abortOnError false
+        resources {
+            excludes += ['META-INF/LICENSE', 'META-INF/NOTICE']
+        }
     }
     compileOptions {
         // Flag to enable support for the new language APIs
@@ -78,24 +74,31 @@ android {
         dataBinding = true
         viewBinding = true
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    lint {
+        abortOnError false
+        disable 'MissingTranslation', 'InvalidPackage'
+    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0"
 
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.annotation:annotation:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.core:core:1.3.2'
-    implementation 'androidx.fragment:fragment:1.3.5'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.fragment:fragment-ktx:1.3.6'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.media:media:1.3.1'
-    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
     implementation 'com.github.kabouzeid:app-theme-helper:1.3.10'
     implementation 'com.github.kabouzeid:RecyclerView-FastScroll:1.0.16-kmod'
@@ -113,8 +116,7 @@ dependencies {
         transitive = true
     }
 
-    // TODO Change this to 2.2.5 or 2.2.6 when it's released
-    implementation 'org.bitbucket.ijabz:jaudiotagger:7b004a1'
+    implementation 'org.bitbucket.ijabz:jaudiotagger:2.2.5'
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -123,6 +125,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    testImplementation 'junit:junit:4.12'
 
     implementation 'com.heinrichreimersoftware:material-intro:2.0.0'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'

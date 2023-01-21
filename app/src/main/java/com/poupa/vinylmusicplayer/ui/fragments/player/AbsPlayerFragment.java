@@ -115,7 +115,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        final Song song = MusicPlayerRemote.getCurrentSong();
+        final @NonNull Song song = MusicPlayerRemote.getCurrentSong();
         int itemId = item.getItemId();
         if (itemId == R.id.action_sleep_timer) {
             new SleepTimerDialog().show(getParentFragmentManager(), "SET_SLEEP_TIMER");

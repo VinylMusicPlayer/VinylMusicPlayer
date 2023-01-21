@@ -31,6 +31,7 @@ import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -49,7 +50,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.Playli
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.SongsFragment;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 public class LibraryFragment extends AbsMainActivityFragment implements CabHolder, MainActivity.MainActivityFragmentCallbacks, ViewPager.OnPageChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
     Toolbar toolbar;
@@ -160,12 +160,11 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
     @Override
     public MaterialCab openCab(final int menuRes, final MaterialCab.Callback callback) {
         if (cab != null && cab.isActive()) cab.finish();
-        cab = new MaterialCab(getMainActivity(), R.id.cab_stub)
-                .setMenu(menuRes)
-                .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
-                .setBackgroundColor(VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(ThemeStore.primaryColor(getActivity())))
-                .setPopupMenuTheme(PreferenceUtil.getInstance().getGeneralTheme())
+        cab = MenuHelper.setOverflowMenu(getMainActivity(), menuRes, ThemeStore.primaryColor(getMainActivity()))
                 .start(callback);
+
+        MenuHelper.decorateDestructiveItems(cab.getMenu(), this.getContext());
+
         return cab;
     }
 
@@ -242,7 +241,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
         final int id = item.getItemId();
         if (id == R.id.action_shuffle_all) {
-            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
+            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(null), true);
             return true;
         } else if (id == R.id.action_new_playlist) {
             CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");
