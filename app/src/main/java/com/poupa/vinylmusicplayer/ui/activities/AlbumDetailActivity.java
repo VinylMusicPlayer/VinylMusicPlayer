@@ -351,7 +351,7 @@ public class AlbumDetailActivity
 
         @ColorInt final int color = getPaletteColor();
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabHolder.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this, menuRes, color, callbacks);
         return cab;
     }
 

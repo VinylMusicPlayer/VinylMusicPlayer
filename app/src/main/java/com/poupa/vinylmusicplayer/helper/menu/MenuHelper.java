@@ -48,14 +48,13 @@ public class MenuHelper {
     @NonNull
     public static AttachedCab createAndOpenCab(
             @NonNull final AppCompatActivity context,
-            @IdRes final int cabRes,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,
             @NonNull final CabCallbacks callbacks)
     {
         final AttachedCab attachedCab = MaterialCabKt.createCab(
                 context,
-                cabRes,
+                R.id.cab_holder,
                 cab -> {
                     cab.menu(menuRes);
                     cab.closeDrawable(R.drawable.ic_close_white_24dp);

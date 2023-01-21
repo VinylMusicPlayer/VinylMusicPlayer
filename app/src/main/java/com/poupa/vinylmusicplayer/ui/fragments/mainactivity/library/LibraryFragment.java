@@ -152,7 +152,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabHolderLibrary.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
         return cab;
     }
 

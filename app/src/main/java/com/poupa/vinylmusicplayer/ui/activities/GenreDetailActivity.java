@@ -133,7 +133,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, layoutBinding.cabHolder.getId(), menu, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(this,menu, color, callbacks);
         return cab;
     }
 

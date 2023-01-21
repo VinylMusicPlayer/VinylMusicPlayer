@@ -227,7 +227,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), layoutBinding.cabHolder.getId(), menuRes, color, callbacks);
+        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
         return cab;
     }
 
