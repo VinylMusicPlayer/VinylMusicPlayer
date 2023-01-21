@@ -249,7 +249,7 @@ public class MusicPlayerRemote {
         };
 
         final Runnable showToastEnqueued = () -> {
-            int count = queue.size();
+            int count = songsToAdd.size();
             final String toast = (count == 1)
                     ? context.getString(R.string.added_title_to_playing_queue)
                     : context.getString(R.string.added_x_titles_to_playing_queue, count);
