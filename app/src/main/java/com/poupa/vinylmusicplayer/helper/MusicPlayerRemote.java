@@ -220,9 +220,9 @@ public class MusicPlayerRemote {
             return;
         }
 
-        // Check the positionInQueue value
         // If one tapped on the very first element of History queue, the positionInQueue will be -1
-        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(Math.max(positionInQueue, 0), queue.size()));
+        final int adjustedPositionInQueue = Math.max(positionInQueue, 0);
+        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPositionInQueue, queue.size()));
         if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(songsToAdd, 0);
         }
@@ -260,7 +260,10 @@ public class MusicPlayerRemote {
         List<Pair<String, Runnable>> possibleActions = Arrays.asList(
                 new Pair<>(
                         context.getString(R.string.action_replace_playing_queue),
-                        () -> musicService.openQueue(songsToAdd, 0, true)),
+                        () -> {
+                            musicService.openQueue(songsToAdd, 0, true);
+                            showToastEnqueued.run();
+                        }),
                 new Pair<>(
                         context.getString(R.string.action_play_next),
                         () -> {
@@ -276,16 +279,18 @@ public class MusicPlayerRemote {
                             showToastEnqueued.run();
                         })
         );
-        final int defaultActionIndex = 1; // TODO Get from pref
+        final int defaultActionIndex = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
 
-        // TODO String localization, with singular/plural variants
-        final String message = "About to add %s songs to existing playing queue.\nHow do you want to proceed?";
+        final int queueSize = queue.size();
+        final String message = (queueSize == 1)
+                ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
+                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, queueSize);
         List<String> choicesText = new ArrayList<>();
         for (Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
         new MaterialDialog.Builder(context)
                 .title(R.string.label_playing_queue)
-                .content(String.format(message, queue.size()))
+                .content(message)
                 .autoDismiss(false)
                 .items(choicesText)
                 .itemsCallbackSingleChoice(
@@ -297,10 +302,8 @@ public class MusicPlayerRemote {
                     final int chosenActionIndex = dialog.getSelectedIndex();
                     if (chosenActionIndex >= 0 && chosenActionIndex < possibleActions.size()) {
                         final Runnable action = possibleActions.get(chosenActionIndex).second;
-                        action.run();
-
-                        // TODO Save the chosenActionIndex back to pref for next time?
-
+                        action.run(); // TODO Run async
+                        PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(chosenActionIndex);
                         dialog.dismiss();
                     }
                 })
@@ -423,7 +426,9 @@ public class MusicPlayerRemote {
             } else {
                 openQueue(songs, 0, false);
             }
-            final String toast = songs.size() == 1 ? musicService.getResources().getString(R.string.added_title_to_playing_queue) : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
+            final String toast = (songs.size() == 1)
+                    ? musicService.getResources().getString(R.string.added_title_to_playing_queue)
+                    : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
             Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
         }
     }
