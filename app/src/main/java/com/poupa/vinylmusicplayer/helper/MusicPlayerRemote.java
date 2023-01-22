@@ -221,30 +221,32 @@ public class MusicPlayerRemote {
         }
 
         // If one tapped on the very first element of History queue, the positionInQueue will be -1
-        final int adjustedPositionInQueue = Math.max(positionInQueue, 0);
-        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPositionInQueue, queue.size()));
+        final int adjustedPosition = Math.max(positionInQueue, 0);
+        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPosition, queue.size()));
         if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(songsToAdd, 0);
         }
 
-        final Runnable removeDuplicateFromCurrentQueue = () -> {
+        final Runnable removeDuplicate = () -> {
             // Deduplicate songs, favoring the occurrences in the new queue
-            ArrayList<Song> songsToRemove = new ArrayList<>();
-
             final List<Song> remainingSongsInQueue = currentQueue.subList(
                     musicService.getPosition() + 1,
                     currentQueue.size()
             );
-            for (Song song : remainingSongsInQueue) {
+
+            // TODO Async execution, to avoid penalizing the UI thread
+            final ArrayList<Song> songsToRemove = new ArrayList<>();
+            for (final Song song : remainingSongsInQueue) {
                 // Dont use List.contains or Song.equals
                 // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
-                for (Song songToAdd : songsToAdd) {
+                for (final Song songToAdd : songsToAdd) {
                     if (song.isQuickEqual(songToAdd)) {
                         songsToRemove.add(song);
                         break;
                     }
                 }
             }
+
             musicService.removeSongs(songsToRemove);
         };
 
@@ -257,7 +259,7 @@ public class MusicPlayerRemote {
             Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
         };
 
-        List<Pair<String, Runnable>> possibleActions = Arrays.asList(
+        final List<Pair<String, Runnable>> possibleActions = Arrays.asList(
                 new Pair<>(
                         context.getString(R.string.action_replace_playing_queue),
                         () -> {
@@ -267,14 +269,14 @@ public class MusicPlayerRemote {
                 new Pair<>(
                         context.getString(R.string.action_play_next),
                         () -> {
-                            removeDuplicateFromCurrentQueue.run();
+                            removeDuplicate.run();
                             musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
                             showToastEnqueued.run();
                         }),
                 new Pair<>(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
-                            removeDuplicateFromCurrentQueue.run();
+                            removeDuplicate.run();
                             musicService.addSongs(songsToAdd);
                             showToastEnqueued.run();
                         })
@@ -285,8 +287,8 @@ public class MusicPlayerRemote {
         final String message = (queueSize == 1)
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
                 : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, queueSize);
-        List<String> choicesText = new ArrayList<>();
-        for (Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
+        final List<String> choicesText = new ArrayList<>();
+        for (final Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
         new MaterialDialog.Builder(context)
                 .title(R.string.label_playing_queue)
@@ -302,7 +304,7 @@ public class MusicPlayerRemote {
                     final int chosenActionIndex = dialog.getSelectedIndex();
                     if (chosenActionIndex >= 0 && chosenActionIndex < possibleActions.size()) {
                         final Runnable action = possibleActions.get(chosenActionIndex).second;
-                        action.run(); // TODO Run async
+                        action.run();
                         PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(chosenActionIndex);
                         dialog.dismiss();
                     }
