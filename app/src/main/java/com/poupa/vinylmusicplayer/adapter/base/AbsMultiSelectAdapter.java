@@ -37,7 +37,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     private int color;
 
-    protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
+    protected AbsMultiSelectAdapter(final Context context, @NonNull final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;
         checked = new ArrayList<>();
         this.menuRes = menuRes;
@@ -74,19 +74,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     }
 
     private void updateCab() {
-        if (cabHolder != null) {
-            if (cab == null || !AttachedCabKt.isActive(cab)) {
-                cab = cabHolder.openCab(menuRes, this);
-            }
-            final int size = checked.size();
-            if (size <= 0) {AttachedCabKt.destroy(cab);}
-            else if (size == 1) {
-                String name = getName(checked.get(0));
-                if (TextUtils.isEmpty(name)) {name = context.getString(R.string.x_selected, 1);}
-                cab.title(ResourcesCompat.ID_NULL, name);
-            }
-            else {cab.title(ResourcesCompat.ID_NULL, context.getString(R.string.x_selected, size));}
-        }
+        cab = CabHolder.updateCab(context, cab, () -> cabHolder.openCab(menuRes, this), checked.size());
     }
 
     private void clearChecked() {

@@ -173,7 +173,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, menu, color, callbacks);
+        cab = CabHolder.openCabImpl(this, menu, color, callbacks);
         return cab;
     }
 

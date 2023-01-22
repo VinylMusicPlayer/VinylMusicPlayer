@@ -37,7 +37,6 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -377,7 +376,7 @@ public class ArtistDetailActivity
 
         @ColorInt final int color = getPaletteColor();
         songAdapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this, menuRes, color, callbacks);
+        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
         return cab;
     }
 

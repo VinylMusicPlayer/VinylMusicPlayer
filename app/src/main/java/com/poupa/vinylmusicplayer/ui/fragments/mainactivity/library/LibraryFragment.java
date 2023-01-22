@@ -31,7 +31,6 @@ import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -52,7 +51,14 @@ import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.SongsF
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
-public class LibraryFragment extends AbsMainActivityFragment implements CabHolder, MainActivity.MainActivityFragmentCallbacks, ViewPager.OnPageChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class LibraryFragment
+        extends AbsMainActivityFragment
+        implements
+            CabHolder,
+            MainActivity.MainActivityFragmentCallbacks,
+            ViewPager.OnPageChangeListener,
+            SharedPreferences.OnSharedPreferenceChangeListener
+{
     private FragmentLibraryBinding layoutBinding;
 
     private MusicLibraryPagerAdapter pagerAdapter;
@@ -152,7 +158,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
         AttachedCabKt.destroy(cab);
 
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = MenuHelper.createAndOpenCab(getMainActivity(), menuRes, color, callbacks);
+        cab = CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
         return cab;
     }
 

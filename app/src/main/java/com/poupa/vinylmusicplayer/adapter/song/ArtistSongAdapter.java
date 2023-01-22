@@ -155,19 +155,14 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
 
     protected void toggleChecked(Song song) {
         if (cabHolder != null) {
-            openCabIfNecessary();
-
-            if (!checked.remove(song)) checked.add(song);
+            if (!checked.remove(song)) {checked.add(song);}
             notifyDataSetChanged();
 
-            final int size = checked.size();
-            if (size <= 0) {AttachedCabKt.destroy(cab);}
-            else if (size == 1) {
-                String title = checked.get(0).title;
-                if (TextUtils.isEmpty(title)) {title = activity.getString(R.string.x_selected, 1);}
-                cab.title(ResourcesCompat.ID_NULL, title);
-            }
-            else {cab.title(ResourcesCompat.ID_NULL, activity.getString(R.string.x_selected, size));}
+            cab = CabHolder.updateCab(
+                    activity,
+                    cab,
+                    () -> cabHolder.openCab(R.menu.menu_media_selection, this),
+                    checked.size());
         }
     }
 

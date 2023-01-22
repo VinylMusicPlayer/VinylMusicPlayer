@@ -24,7 +24,6 @@ import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
@@ -133,7 +132,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = MenuHelper.createAndOpenCab(this,menu, color, callbacks);
+        cab = CabHolder.openCabImpl(this,menu, color, callbacks);
         return cab;
     }
 
