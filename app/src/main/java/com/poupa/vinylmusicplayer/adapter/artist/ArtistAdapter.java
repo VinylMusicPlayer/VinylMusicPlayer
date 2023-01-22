@@ -171,11 +171,6 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     }
 
     @Override
-    protected String getName(Artist artist) {
-        return artist.getName();
-    }
-
-    @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Artist> selection) {
         SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
     }

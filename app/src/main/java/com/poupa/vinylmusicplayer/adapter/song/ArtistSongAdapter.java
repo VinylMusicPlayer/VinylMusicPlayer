@@ -166,14 +166,6 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
         }
     }
 
-    private void openCabIfNecessary() {
-        if (cabHolder != null) {
-            if (cab == null || !AttachedCabKt.isActive(cab)) {
-                cab = cabHolder.openCab(R.menu.menu_media_selection, this);
-            }
-        }
-    }
-
     private void unCheckAll() {
         checked.clear();
         notifyDataSetChanged();

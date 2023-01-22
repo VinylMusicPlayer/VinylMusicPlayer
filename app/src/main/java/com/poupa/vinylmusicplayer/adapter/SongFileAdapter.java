@@ -151,11 +151,6 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     @Override
-    protected String getName(File object) {
-        return getFileTitle(object);
-    }
-
-    @Override
     protected void onMultipleItemAction(MenuItem menuItem, ArrayList<File> selection) {
         if (callbacks == null) return;
         callbacks.onMultipleItemAction(menuItem, selection);

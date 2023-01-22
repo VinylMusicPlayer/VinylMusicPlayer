@@ -188,11 +188,6 @@ public class SongAdapter
     }
 
     @Override
-    protected String getName(Song song) {
-        return song.title;
-    }
-
-    @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
         SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
     }

@@ -118,10 +118,6 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         return true;
     }
 
-    protected String getName(@NonNull final I object) {
-        return object.toString();
-    }
-
     @Nullable
     protected abstract I getIdentifier(int position);
 
