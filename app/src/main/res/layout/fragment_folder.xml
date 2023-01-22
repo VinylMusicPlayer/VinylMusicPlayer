@@ -32,6 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height"
             android:paddingEnd="8dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="8dp"
             android:paddingStart="60dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
