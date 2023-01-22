@@ -3,13 +3,13 @@ package com.poupa.vinylmusicplayer.helper.menu;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 
 public class MenuHelper {
