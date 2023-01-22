@@ -53,7 +53,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     protected final AppCompatActivity activity;
     protected ArrayList<Playlist> dataSet;
 
-    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
+    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @NonNull CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_playlists_selection);
         this.activity = activity;
         this.dataSet = dataSet;
@@ -146,11 +146,6 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     @Override
     protected Playlist getIdentifier(int position) {
         return dataSet.get(position);
-    }
-
-    @Override
-    protected String getName(Playlist playlist) {
-        return playlist.name;
     }
 
     @Override
