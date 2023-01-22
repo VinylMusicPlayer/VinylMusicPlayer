@@ -53,7 +53,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     protected final AppCompatActivity activity;
     protected ArrayList<Playlist> dataSet;
 
-    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @NonNull CabHolder cabHolder) {
+    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_playlists_selection);
         this.activity = activity;
         this.dataSet = dataSet;

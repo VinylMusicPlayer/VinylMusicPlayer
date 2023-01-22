@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class HorizontalAlbumAdapter extends AlbumAdapter {
 
     public HorizontalAlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, boolean usePalette,
-                                  @NonNull CabHolder cabHolder) {
+                                  @Nullable CabHolder cabHolder) {
         super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, cabHolder);
     }
 

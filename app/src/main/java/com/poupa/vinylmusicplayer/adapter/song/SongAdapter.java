@@ -56,12 +56,12 @@ public class SongAdapter
     public RecyclerView recyclerView;
 
     public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
-                       boolean usePalette, @NonNull CabHolder cabHolder) {
+                       boolean usePalette, @Nullable CabHolder cabHolder) {
         this(activity, dataSet, itemLayoutRes, usePalette, cabHolder, true);
     }
 
     public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
-                       boolean usePalette, @NonNull CabHolder cabHolder, boolean showSectionName) {
+                       boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;

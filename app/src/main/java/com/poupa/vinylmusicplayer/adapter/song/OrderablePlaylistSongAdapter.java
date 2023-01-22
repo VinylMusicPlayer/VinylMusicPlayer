@@ -37,7 +37,7 @@ public class OrderablePlaylistSongAdapter
     private final OnMoveItemListener onMoveItemListener;
 
     public OrderablePlaylistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<PlaylistSong> dataSet
-            , boolean usePalette, @NonNull CabHolder cabHolder, @Nullable OnMoveItemListener onMoveItemListener) {
+            , boolean usePalette, @Nullable CabHolder cabHolder, @Nullable OnMoveItemListener onMoveItemListener) {
         super(activity, (ArrayList<Song>) (List) dataSet, usePalette, cabHolder);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
         this.onMoveItemListener = onMoveItemListener;

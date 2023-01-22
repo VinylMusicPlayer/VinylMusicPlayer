@@ -33,7 +33,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     }
 
     public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, boolean usePalette,
-                                @NonNull CabHolder cabHolder, boolean showSectionName) {
+                                @Nullable CabHolder cabHolder, boolean showSectionName) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder, showSectionName);
     }
 

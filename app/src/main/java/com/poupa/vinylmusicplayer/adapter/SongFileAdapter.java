@@ -43,7 +43,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     private final Callbacks callbacks;
 
     public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles,
-                           @Nullable Callbacks callback, @NonNull CabHolder cabHolder) {
+                           @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = songFiles;
