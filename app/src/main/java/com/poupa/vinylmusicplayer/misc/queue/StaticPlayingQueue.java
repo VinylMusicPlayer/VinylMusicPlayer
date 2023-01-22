@@ -172,8 +172,14 @@ public class StaticPlayingQueue {
      * Add songs after and including position, numbering need to be redone for every song after this position (+number of song)
      */
     public void addAllAfter(int position, @NonNull List<Song> songs) {
-        if (position >= queue.size()) {
-            position = queue.size() - 1;
+        final int queueSize = queue.size();
+        if (queueSize == 0) {
+            addAll(songs);
+            return;
+        }
+
+        if (position >= queueSize) {
+            position = queueSize - 1;
         }
         int previousPosition = queue.get(position).index + 1;
         position = position + 1;
