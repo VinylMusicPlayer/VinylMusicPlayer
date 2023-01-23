@@ -101,7 +101,7 @@ for alien_branch in ${alien_branches}; do
     branch=$(echo "${alien_branch}" | cut -d/ -f3-)
 
     echo "Add alien '${user}/${repo}'..."
-    git remote add "${user}/${repo}" "git@github.com:${user}/${repo}.git" || exit 1
+    git remote add "${user}/${repo}" "https://github.com/${user}/${repo}" || exit 1
     git remote update "${user}/${repo}" || exit 1
 
     git_merge "${alien_branch}" || exit 1
