@@ -1,4 +1,4 @@
-name: Android CI
+name: GithubActions CI
 
 on: [push, workflow_dispatch]
 
@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup JDK 11
       uses: actions/setup-java@v3
       with:
@@ -43,4 +44,21 @@ jobs:
       with:
         name: outputs-lint
         path: app/build/reports/lint-*
+
+    - name: Pre-release APKs
+      if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/ci-show-last-build-artifact')
+      # Pre-release the built apps and expose it via a static and public accessible URL
+      # Note that this step exists since artifacts (actions/upload-artifact) are neither
+      # public-accessible nor at a constant/static URL
+      # For the pre-releasing purpose, a floating tag is used and re-positioned to the tip of the branch
+      uses: pyTooling/Actions/releaser@r0
+        with:
+          tag: pre-release
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            app/build/outputs/apk/**/*.apk
+      #- uses: actions/download-artifact@v3
+      #  with:
+      #    name: outputs-apk
+      #    path: path/to/artifact
 
