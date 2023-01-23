@@ -52,11 +52,11 @@ jobs:
       # public-accessible nor at a constant/static URL
       # For the pre-releasing purpose, a floating tag is used and re-positioned to the tip of the branch
       uses: pyTooling/Actions/releaser@r0
-        with:
-          tag: pre-release
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: |
-            app/build/outputs/apk/**/*.apk
+      with:
+        tag: pre-release
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          app/build/outputs/apk/**/*.apk
       #- uses: actions/download-artifact@v3
       #  with:
       #    name: outputs-apk
