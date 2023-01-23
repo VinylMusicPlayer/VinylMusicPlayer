@@ -2,14 +2,12 @@ package com.poupa.vinylmusicplayer.adapter.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
@@ -37,7 +35,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     private int color;
 
-    protected AbsMultiSelectAdapter(final Context context, @NonNull final CabHolder cabHolder, @MenuRes int menuRes) {
+    protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;
         checked = new ArrayList<>();
         this.menuRes = menuRes;
@@ -74,7 +72,9 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     }
 
     private void updateCab() {
-        cab = CabHolder.updateCab(context, cab, () -> cabHolder.openCab(menuRes, this), checked.size());
+        if (cabHolder != null) {
+            cab = CabHolder.updateCab(context, cab, () -> cabHolder.openCab(menuRes, this), checked.size());
+        }
     }
 
     private void clearChecked() {

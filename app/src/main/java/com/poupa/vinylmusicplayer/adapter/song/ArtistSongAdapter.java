@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.util.Pair;
 
 import com.afollestad.materialcab.attached.AttachedCab;
