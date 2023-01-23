@@ -55,11 +55,6 @@ jobs:
       with:
         name: outputs-apk
         path: app/build/outputs/apk
-    - name: Unzip
-      run: |
-        ls -R
-        unzip outputs-apk.zip
-      working-directory: app/build/outputs/apk
     - name: Publish assets
       # Pre-release the built apps and expose it via a static and public accessible URL
       # Note that this step exists since artifacts (actions/upload-artifact) are neither
