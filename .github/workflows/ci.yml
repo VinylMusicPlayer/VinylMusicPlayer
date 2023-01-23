@@ -45,8 +45,19 @@ jobs:
         name: outputs-lint
         path: app/build/reports/lint-*
 
-    - name: Pre-release APKs
-      if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/ci-show-last-build-artifact')
+  pre-release:
+    if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/ci-show-last-build-artifact')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve built assets
+      uses: actions/download-artifact@v3
+      with:
+        name: outputs-apk
+        path: app/build/outputs/apk
+    - name: Unzip
+      run: unzip *.zip
+      working-directory: app/build/outputs/apk
+    - name: Publish assets
       # Pre-release the built apps and expose it via a static and public accessible URL
       # Note that this step exists since artifacts (actions/upload-artifact) are neither
       # public-accessible nor at a constant/static URL
