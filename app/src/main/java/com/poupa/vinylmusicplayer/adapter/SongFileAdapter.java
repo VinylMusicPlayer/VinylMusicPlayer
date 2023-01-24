@@ -23,8 +23,11 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.audiocover.AudioFileCover;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.sort.FileSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.io.File;
@@ -42,12 +45,12 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Nullable
     private final Callbacks callbacks;
 
-    public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles,
-                           @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
+    public SongFileAdapter(@NonNull final AppCompatActivity activity, @NonNull final List<File> songFiles,
+                           @Nullable final Callbacks callback, @Nullable final CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
-        this.dataSet = songFiles;
-        this.callbacks = callback;
+        dataSet = songFiles;
+        callbacks = callback;
         setHasStableIds(true);
     }
 
@@ -62,24 +65,24 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     public void swapDataSet(@NonNull List<File> songFiles) {
-        this.dataSet = songFiles;
+        dataSet = songFiles;
         notifyDataSetChanged();
     }
 
     @Override
     @NonNull
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         ItemListBinding binding = ItemListBinding.inflate(LayoutInflater.from(activity), parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int index) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int index) {
         final File file = dataSet.get(index);
 
         holder.itemView.setActivated(isChecked(file));
 
-        if (holder.getAdapterPosition() == getItemCount() - 1) {
+        if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
             if (holder.shortSeparator != null) {
                 holder.shortSeparator.setVisibility(View.GONE);
             }
@@ -105,22 +108,21 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
         }
     }
 
-    protected String getFileTitle(File file) {
+    private static String getFileTitle(@NonNull final File file) {
         return file.getName();
     }
 
-    protected String getFileText(File file) {
+    private static String getFileText(@NonNull final File file) {
         return file.isDirectory() ? null : readableFileSize(file.length());
     }
 
-    @SuppressWarnings("ConstantConditions")
-    protected void loadFileImage(File file, final ViewHolder holder) {
+    private void loadFileImage(@NonNull final File file, @NonNull final ViewHolder holder) {
         final int iconColor = ATHUtil.resolveColor(activity, R.attr.iconColor);
         if (file.isDirectory()) {
             holder.image.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
             holder.image.setImageResource(R.drawable.ic_folder_white_24dp);
         } else {
-            Drawable error = ImageUtil.getTintedVectorDrawable(activity, R.drawable.ic_file_music_white_24dp, iconColor);
+            final Drawable error = ImageUtil.getTintedVectorDrawable(activity, R.drawable.ic_file_music_white_24dp, iconColor);
             GlideApp.with(activity)
                     .load(new AudioFileCover(file.getPath()))
                     .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
@@ -133,8 +135,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
         }
     }
 
-    public static String readableFileSize(long size) {
-        if (size <= 0) return size + " B";
+    private static String readableFileSize(long size) {
+        if (size <= 0) {return size + " B";}
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
@@ -151,7 +153,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     @Override
-    protected void onMultipleItemAction(MenuItem menuItem, ArrayList<File> selection) {
+    protected void onMultipleItemAction(final MenuItem menuItem, final ArrayList<File> selection) {
         if (callbacks == null) return;
         callbacks.onMultipleItemAction(menuItem, selection);
     }
@@ -159,20 +161,21 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @NonNull
     @Override
     public String getSectionName(int position) {
-        return String.valueOf(dataSet.get(position).getName().charAt(0)).toUpperCase();
+        final SortOrder<File> sortOrder = FileSortOrder.fromPreference(PreferenceUtil.getInstance().getFileSortOrder());
+        return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
     public class ViewHolder extends MediaEntryViewHolder {
-        public ViewHolder(@NonNull ItemListBinding binding) {
+        public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
 
-            View itemView = binding.getRoot();
+            final View itemView = binding.getRoot();
             ThemeStyleUtil.getInstance().setHeightListItem(itemView, activity.getResources().getDisplayMetrics().density);
             imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
 
             if (menu != null && callbacks != null) {
                 menu.setOnClickListener(v -> {
-                    int position = getAdapterPosition();
+                    final int position = getAdapterPosition();
                     if (isPositionInRange(position)) {
                         callbacks.onFileMenuClicked(dataSet.get(position), v);
                     }
@@ -181,8 +184,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
         }
 
         @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
+        public void onClick(final View v) {
+            final int position = getAdapterPosition();
             if (isPositionInRange(position)) {
                 if (isInQuickSelectMode()) {
                     toggleChecked(position);
@@ -195,8 +198,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
         }
 
         @Override
-        public boolean onLongClick(View view) {
-            int position = getAdapterPosition();
+        public boolean onLongClick(final View view) {
+            final int position = getAdapterPosition();
             return isPositionInRange(position) && toggleChecked(position);
         }
 

@@ -314,7 +314,6 @@
     <string name="dialog_ringtone_title">Klingelton festlegen</string>
     <string name="dialog_ringtone_message">Bitte erlaube Vinyl Music Player im nächsten Dialog, die Systemeinstellungen zu verändern, bevor du den Klingelton festlegst.</string>
     <string name="action_scan_directory">Ordner scannen</string>
-    <string name="scan_media">Medien scannen</string>
     <string name="reset_discography">Bibliothek neu einlesen</string>
     <string name="none">Kein</string>
     <string name="track">Titel</string>

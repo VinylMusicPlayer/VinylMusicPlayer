@@ -314,7 +314,6 @@
     <string name="dialog_ringtone_title">Définir comme sonnerie</string>
     <string name="dialog_ringtone_message">Autoriser Vinyl Music Player à modifier les paramètres audio</string>
     <string name="action_scan_directory">Scanner les dossiers</string>
-    <string name="scan_media">Scanner les médias</string>
     <string name="reset_discography">Réanalyser la bibliothèque</string>
     <string name="none">Aucun</string>
     <string name="track">Piste</string>
