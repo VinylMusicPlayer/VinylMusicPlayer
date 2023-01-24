@@ -48,6 +48,12 @@ public final class PreferenceUtil {
     private static final String ARTIST_SORT_ORDER = "artist_sort_order";
     private static final String ALBUM_SORT_ORDER = "album_sort_order";
     private static final String SONG_SORT_ORDER = "song_sort_order";
+    private static final String FILE_SORT_ORDER = "file_sort_order";
+
+    public static final String SORT_ORDER_NAME = "sort_order_name";
+    public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
+    public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
+    public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
 
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
     private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
@@ -328,6 +334,16 @@ public final class PreferenceUtil {
     public void setSongSortOrder(final String sortOrder) {
         mPreferences.edit()
                 .putString(SONG_SORT_ORDER, sortOrder)
+                .apply();
+    }
+
+    public String getFileSortOrder() {
+        return mPreferences.getString(FILE_SORT_ORDER, "");
+    }
+
+    public void setFileSortOrder(final String sortOrder) {
+        mPreferences.edit()
+                .putString(FILE_SORT_ORDER, sortOrder)
                 .apply();
     }
 
