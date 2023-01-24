@@ -370,8 +370,8 @@ public class FoldersFragment
     }
 
     private Comparator<File> getFileComparator() {
-        SortOrder<File> sortOrder = FileSortOrder.fromPreference(PreferenceUtil.getInstance().getFileSortOrder());
-        return sortOrder.comparator;
+        final SortOrder<File> fileSortOrder = FileSortOrder.fromPreference(getSortOrder());
+        return fileSortOrder.comparator;
     }
 
     @Override
@@ -487,17 +487,17 @@ public class FoldersFragment
         return sortOrder;
     }
 
-    protected void setSortOrder(String sortOrder) {
+    private void setSortOrder(String sortOrder) {
         reload();
     }
 
-    protected String loadSortOrder() {return PreferenceUtil.getInstance().getFileSortOrder();}
+    private static String loadSortOrder() {return PreferenceUtil.getInstance().getFileSortOrder();}
 
-    protected void saveSortOrder(String sortOrder) {
-        PreferenceUtil.getInstance().setFileSortOrder(sortOrder);
+    private void saveSortOrder(final String newSortOrder) {
+        PreferenceUtil.getInstance().setFileSortOrder(newSortOrder);
     }
 
-    public void setAndSaveSortOrder(final String sortOrder) {
+    private void setAndSaveSortOrder(final String sortOrder) {
         this.sortOrder = sortOrder;
         saveSortOrder(sortOrder);
         setSortOrder(sortOrder);
@@ -511,14 +511,14 @@ public class FoldersFragment
     }
 
     private boolean handleSortOrderMenuItem(@NonNull final MenuItem item) {
-        String sortOrder = null;
+        String sortOrderStr = null;
         final int itemId = item.getItemId();
         final SortOrder<File> sorter = FileSortOrder.fromMenuResourceId(itemId);
-        if (sorter != null) {sortOrder = sorter.preferenceValue;}
+        if (sorter != null) {sortOrderStr = sorter.preferenceValue;}
 
-        if (sortOrder != null) {
+        if (sortOrderStr != null) {
             item.setChecked(true);
-            setAndSaveSortOrder(sortOrder);
+            setAndSaveSortOrder(sortOrderStr);
             return true;
         }
 
@@ -548,12 +548,13 @@ public class FoldersFragment
     private static class AsyncFileLoader extends WrappedAsyncTaskLoader<List<File>> {
         private final WeakReference<FoldersFragment> fragmentWeakReference;
 
-        public AsyncFileLoader(@NonNull final FoldersFragment foldersFragment) {
+        AsyncFileLoader(@NonNull final FoldersFragment foldersFragment) {
             super(foldersFragment.getActivity());
             fragmentWeakReference = new WeakReference<>(foldersFragment);
         }
 
         @Override
+        @NonNull
         public List<File> loadInBackground() {
             final FoldersFragment foldersFragment = fragmentWeakReference.get();
             File directory = null;
