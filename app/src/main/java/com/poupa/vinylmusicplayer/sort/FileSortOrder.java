@@ -48,14 +48,14 @@ public class FileSortOrder {
             ),
             Utils.build(
                     PreferenceUtil.SORT_ORDER_DATE_MODIFIED,
-                    file -> Utils.getSectionName(file.lastModified()),
+                    file -> Utils.getSectionName(file.lastModified() / 1000),
                     BY_DATE_MODIFIED,
                     R.id.action_file_sort_order_date_modified,
                     R.string.sort_order_date_modified
             ),
             Utils.build(
                     PreferenceUtil.SORT_ORDER_DATE_MODIFIED_REVERSE,
-                    file -> Utils.getSectionName(file.lastModified()),
+                    file -> Utils.getSectionName(file.lastModified() / 1000),
                     ComparatorUtil.reverse(BY_DATE_MODIFIED),
                     R.id.action_file_sort_order_date_modified_reverse,
                     R.string.sort_order_date_modified_reverse

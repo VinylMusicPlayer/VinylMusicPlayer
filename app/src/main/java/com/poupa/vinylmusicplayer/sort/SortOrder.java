@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
-import static android.view.Menu.NONE;
+import android.view.Menu;
 
 /**
  * @author SC (soncaokim)
@@ -29,20 +29,21 @@ public class SortOrder<T> {
     public Comparator<T> comparator;
 
     /** the menu resource ID that is assigned to this sort order */
-    public @IdRes int menuResourceId;
+    @IdRes int menuResourceId;
 
     /** the menu string ID that is assigned to this sort order */
-    public int menuTextId;
+    int menuTextId;
 }
 
 class Utils {
+    @NonNull
     static <T> SortOrder<T> build(
-            @NonNull String preferenceValue,
-            @NonNull Function<T, String> sectionNameBuilder,
-            @NonNull Comparator<T> comparatorFunc,
-            @IdRes int menuResourceId,
-            @StringRes int menuTextId) {
-        SortOrder<T> result = new SortOrder<>();
+            @NonNull final String preferenceValue,
+            @NonNull final Function<T, String> sectionNameBuilder,
+            @NonNull final Comparator<T> comparatorFunc,
+            @IdRes final int menuResourceId,
+            @StringRes final int menuTextId) {
+        final SortOrder<T> result = new SortOrder<>();
         result.preferenceValue = preferenceValue;
         result.sectionNameBuilder = sectionNameBuilder;
         result.comparator = comparatorFunc;
@@ -51,10 +52,10 @@ class Utils {
         return result;
     }
 
-    static @NonNull
-    String getSectionName(long seconds) {
-        final Date date = new Date(1000 * seconds);
-        final long millisOneDay = 1000 * 60 * 60 * 24;
+    @NonNull
+    static String getSectionName(long seconds) {
+        final Date date = new Date(1000L * seconds);
+        final long millisOneDay = 1000L * 60L * 60L * 24L;
         final long daysSinceToday = ((new Date()).getTime() - date.getTime()) / millisOneDay;
         String format = "yyyy";
         if (daysSinceToday >= 0) {
@@ -64,15 +65,14 @@ class Utils {
         return android.text.format.DateFormat.format(format, date).toString();
     }
 
-    static @NonNull
-    String getSectionName(@NonNull String name) {
-        // TODO This is too much, can be simplified as: charAt[0].toUpper()
-        return MusicUtil.getSectionName(name);
+    @NonNull
+    static String getSectionName(@NonNull final String name) {
+        return String.valueOf(name.charAt(0)).toUpperCase();
     }
 
-    static <T, U> T collectionSearch(@NonNull List<T> collection, U searchValue, @NonNull Function<T, U> valueExtractor) {
+    static <T, U> T collectionSearch(@NonNull final Iterable<? extends T> collection, final U searchValue, @NonNull final Function<T, U> valueExtractor) {
         T match = null;
-        for (T item : collection) {
+        for (final T item : collection) {
             if (valueExtractor.apply(item).equals(searchValue)) {
                 match = item;
                 break;
@@ -81,11 +81,11 @@ class Utils {
         return match;
     }
 
-    static <T> void buildMenu(@NonNull List<SortOrder<T>> collection, @NonNull SubMenu sortOrderMenu, String currentPreferenceValue) {
-        for (SortOrder<T> item : collection) {
+    static <T> void buildMenu(@NonNull final Iterable<? extends SortOrder<T>> collection, @NonNull final SubMenu sortOrderMenu, final String preferenceValue) {
+        for (final SortOrder<T> item : collection) {
             sortOrderMenu
-                    .add(0, item.menuResourceId, NONE, item.menuTextId)
-                    .setChecked(currentPreferenceValue.equals(item.preferenceValue));
+                    .add(0, item.menuResourceId, Menu.NONE, item.menuTextId)
+                    .setChecked(preferenceValue.equals(item.preferenceValue));
         }
     }
 }
