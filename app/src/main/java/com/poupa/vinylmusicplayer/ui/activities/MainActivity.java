@@ -30,7 +30,6 @@ import com.poupa.vinylmusicplayer.databinding.ActivityMainContentBinding;
 import com.poupa.vinylmusicplayer.databinding.ActivityMainDrawerLayoutBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
-import com.poupa.vinylmusicplayer.dialogs.ScanMediaFolderChooserDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -175,11 +174,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 new Handler().postDelayed(() -> setMusicChooser(LIBRARY), 200);
             } else if (itemId == R.id.nav_folders) {
                 new Handler().postDelayed(() -> setMusicChooser(FOLDERS), 200);
-            } else if (itemId == R.id.action_scan) {
-                new Handler().postDelayed(() -> {
-                    ScanMediaFolderChooserDialog dialog = ScanMediaFolderChooserDialog.create();
-                    dialog.show(getSupportFragmentManager(), "SCAN_MEDIA_FOLDER_CHOOSER");
-                }, 200);
             } else if (itemId == R.id.action_reset_discography) {
                 new MaterialDialog.Builder(this)
                         .title(R.string.reset_discography)

@@ -16,12 +16,8 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/action_scan"
-            android:icon="@drawable/ic_scanner_white_24dp"
-            android:title="@string/scan_media" />
-        <item
             android:id="@+id/action_reset_discography"
-            android:icon="@drawable/ic_bookmark_music_white_24dp"
+            android:icon="@drawable/ic_scanner_white_24dp"
             android:title="@string/reset_discography" />
     </group>
 

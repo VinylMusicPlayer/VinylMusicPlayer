@@ -5,8 +5,7 @@
     <item
         android:id="@+id/action_scan"
         android:icon="@drawable/ic_scanner_white_24dp"
-        android:title="@string/action_scan_directory"
-        app:showAsAction="ifRoom" />
+        android:title="@string/action_scan_directory" />
 
     <item
         android:id="@+id/action_go_to_start_directory"

@@ -256,7 +256,6 @@
     <string name="pref_summary_library_categories">配置媒体库类别可见性和顺序。</string>
     <string name="you_have_to_select_at_least_one_category">您必需选择至少一个类别。</string>
     <string name="action_scan_directory">扫描音乐</string>
-    <string name="scan_media">扫描音乐</string>
     <string name="action_sort_order">排序方式</string>
     <string name="sort_order_name">按首字符（正序）</string>
     <string name="sort_order_name_reverse">按首字符（倒序）</string>
