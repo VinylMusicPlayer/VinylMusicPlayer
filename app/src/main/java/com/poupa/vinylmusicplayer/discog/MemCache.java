@@ -105,10 +105,12 @@ class MemCache {
             if (impactedAlbumsByArtist.isEmpty()) {
                 albumsByAlbumIdAndArtistId.remove(song.albumId);
 
-                Set<Long> albumsId = albumsByName.get(song.albumName);
-                albumsId.remove(song.albumId);
-                if (albumsId.isEmpty()) {
-                    albumsByName.remove(song.albumName);
+                @Nullable final Set<Long> albumsId = albumsByName.get(song.albumName);
+                if (albumsId != null) {
+                    albumsId.remove(song.albumId);
+                    if (albumsId.isEmpty()) {
+                        albumsByName.remove(song.albumName);
+                    }
                 }
             }
 
