@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function get_last_version()
+{
+  # TODO Get the last release version
+}
+
+previous_version="$(get_last_version)"
+this_version="next-release"
+
+function build_changelog()
+{
+  local previous_version="$1"
+  local this_version="$2"
+
+  # TODO
+  # git log --oneline --merges 1.4.0..HEAD
+  # https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#generate-release-notes-content-for-a-release
+
+  echo "##Changes in ${this_version} ... ##Contributors @bidule"
+}
+changelog="$(build_changelog ${previous_version} ${this_version})"
+
+# TODO Analyze the changelog
+# - Changes not tagged with 'enhancement' -> bump patch vesion
+# - Changes tagged with 'enhancement' -> bump the minor version
+# - Unless version override is specified.
+#
+# TODO create a new 'release-vMajor.Minor.Patch' branch
+# - Apply bump on app/build.gradle file
+# - Update the CHANGELOG.md
+#
+# TODO Use Github API to release?
+# https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#create-a-release
+
