@@ -108,7 +108,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE:
-                ArrayList<Song> allSongs = Discography.getInstance().getAllSongs();
+                ArrayList<Song> allSongs = Discography.getInstance().getAllSongs(null);
                 ShuffleHelper.makeShuffleList(allSongs, -1);
                 musicService.openQueue(allSongs, 0, true);
                 break;

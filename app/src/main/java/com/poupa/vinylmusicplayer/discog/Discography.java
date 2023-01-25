@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -173,10 +174,16 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Song> getAllSongs() {
+    public ArrayList<Song> getAllSongs(@Nullable Comparator<Song> sortOrder) {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
-            return new ArrayList<>(cache.songsById.values());
+            ArrayList<Song> copy = new ArrayList<>(cache.songsById.values());
+
+            // Perform sort inside the critical section, to avoid data race
+            // (artist or album being modified while sorting)
+            if (sortOrder != null) {Collections.sort(copy, sortOrder);}
+
+            return copy;
         }
     }
 
@@ -195,10 +202,15 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Artist> getAllArtists() {
+    public ArrayList<Artist> getAllArtists(@NonNull Comparator<Artist> sortOrder) {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
-            return new ArrayList<>(cache.artistsById.values());
+            ArrayList<Artist> copy = new ArrayList<>(cache.artistsById.values());
+
+            // Perform sort inside the critical section, to avoid data race
+            // (artist or album being modified while sorting)
+            Collections.sort(copy, sortOrder);
+            return copy;
         }
     }
 
@@ -212,12 +224,17 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Album> getAllAlbums() {
+    public ArrayList<Album> getAllAlbums(@NonNull Comparator<Album> sortOrder) {
         synchronized (cache) {
             ArrayList<Album> fullAlbums = new ArrayList<>();
             for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
                 fullAlbums.add(mergeFullAlbum(albumsByArtist.values()));
             }
+
+            // Perform sort inside the critical section, to avoid data race
+            // (artist or album being modified while sorting)
+            Collections.sort(fullAlbums, sortOrder);
+
             return fullAlbums;
         }
     }
@@ -237,17 +254,29 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Genre> getAllGenres() {
+    public ArrayList<Genre> getAllGenres(@NonNull Comparator<Genre> sortOrder) {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
-            return new ArrayList<>(cache.genresByName.values());
+            ArrayList<Genre> copy = new ArrayList<>(cache.genresByName.values());
+
+            // Perform sort inside the critical section, to avoid data race
+            // (artist or album being modified while sorting)
+            Collections.sort(copy, sortOrder);
+
+            return copy;
         }
     }
 
     @Nullable
-    public Collection<Song> getSongsForGenre(long genreId) {
+    public ArrayList<Song> getSongsForGenre(long genreId, @NonNull Comparator<Song> sortOrder) {
         synchronized (cache) {
-            return cache.songsByGenreId.get(genreId);
+            ArrayList<Song> songs = new ArrayList<>(cache.songsByGenreId.get(genreId));
+
+            // Perform sort inside the critical section, to avoid data race
+            // (artist or album being modified while sorting)
+            Collections.sort(songs, sortOrder);
+
+            return songs;
         }
     }
 

@@ -241,7 +241,7 @@ public class LibraryFragment extends AbsMainActivityFragment implements CabHolde
 
         final int id = item.getItemId();
         if (id == R.id.action_shuffle_all) {
-            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(), true);
+            MusicPlayerRemote.openAndShuffleQueue(Discography.getInstance().getAllSongs(null), true);
             return true;
         } else if (id == R.id.action_new_playlist) {
             CreatePlaylistDialog.create().show(getChildFragmentManager(), "CREATE_PLAYLIST");

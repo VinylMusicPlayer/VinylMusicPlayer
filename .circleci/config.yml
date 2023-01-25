@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/vinyl
     docker:
-      - image: circleci/android:api-29
+      - image: cimg/android:2022.03
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
@@ -40,3 +40,5 @@ jobs:
           destination: outputs
       #- store_test_results:
       #    path: app/build/test-results
+    # The resource_class feature allows configuring CPU and RAM resources for each job. Different resource classes are available for different executors. https://circleci.com/docs/2.0/configuration-reference/#resourceclass
+    resource_class: large

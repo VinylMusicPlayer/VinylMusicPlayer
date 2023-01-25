@@ -196,7 +196,7 @@
     <string name="up_next">即将播放</string>
     <string name="pref_title_now_playing_screen_appearance">外观</string>
     <string name="intro_label">介绍页</string>
-    <string name="welcome_to_vinyl_music_player">"欢迎使用 Phonohraph ，这是一款精致且简洁的 Android 音乐播放器。 "</string>
+    <string name="welcome_to_vinyl_music_player">"欢迎使用 Vinyl Music Player，这是一款精致且简洁的 Android 音乐播放器。 "</string>
     <string name="open_playing_queue_instruction">上滑正在播放界面内的卡片即可展开播放队列。</string>
     <string name="rearrange_playing_queue_instruction">通过拖动歌曲名前面的序列号来调整播放队列的顺序。</string>
     <string name="library">媒体库</string>

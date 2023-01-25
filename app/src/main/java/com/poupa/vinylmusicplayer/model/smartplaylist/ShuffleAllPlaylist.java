@@ -20,7 +20,7 @@ public class ShuffleAllPlaylist extends AbsSmartPlaylist {
     @NonNull
     @Override
     public ArrayList<Song> getSongs(@NonNull Context context) {
-        return Discography.getInstance().getAllSongs();
+        return Discography.getInstance().getAllSongs(null);
     }
 
     @Override

@@ -80,7 +80,10 @@ public class StaticPlayingQueue {
             long uniqueId = getNextUniqueId();
             queue.get(i).setUniqueId(uniqueId);
 
-            originalQueue.get(queue.get(i).index).setUniqueId(uniqueId);
+            int index = queue.get(i).index;
+            if(index < originalQueue.size()) {
+                originalQueue.get(index).setUniqueId(uniqueId);
+            }
         }
     }
 
