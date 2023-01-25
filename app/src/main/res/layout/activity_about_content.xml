@@ -13,15 +13,15 @@
         android:layout_marginBottom="8dp" />
 
     <include
-        layout="@layout/card_author"
-        android:id="@+id/card_author"
+        layout="@layout/card_support_development"
+        android:id="@+id/card_support_development"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" />
 
     <include
-        layout="@layout/card_support_development"
-        android:id="@+id/card_support_development"
+        layout="@layout/card_contributors"
+        android:id="@+id/card_contributors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" />

@@ -1,13 +1,18 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import static com.poupa.vinylmusicplayer.dialogs.ChangelogDialog.colorToHex;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,12 +22,19 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
+import com.kabouzeid.appthemehelper.util.ATHUtil;
+import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import de.psdev.licensesdialog.LicensesDialog;
 
@@ -56,14 +68,14 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private static final String ADRIAN_TWITTER = "https://twitter.com/froschgames";
     private static final String ADRIAN_WEBSITE = "https://froschgames.com/";
 
+    private ActivityAboutBinding layoutBinding;
+
     private Toolbar toolbar;
     private TextView appVersion;
     private LinearLayout changelog;
     private LinearLayout intro;
     private LinearLayout licenses;
-    private LinearLayout writeAnEmail;
     private LinearLayout forkOnGitHub;
-    private LinearLayout visitWebsite;
     private LinearLayout reportBugs;
     private LinearLayout rateOnGooglePlay;
 
@@ -84,35 +96,35 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivityAboutBinding binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
-        toolbar = binding.toolbar;
+        // TODO Catch InflateException - might mean that some component - ie WebView - not available on the system.
+        layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
 
-        appVersion = binding.content.cardAboutApp.appVersion;
-        changelog = binding.content.cardAboutApp.changelog;
-        intro = binding.content.cardAboutApp.intro;
-        licenses = binding.content.cardAboutApp.licenses;
-        forkOnGitHub = binding.content.cardAboutApp.forkOnGithub;
+        // TODO Remove all these local copies
+        toolbar = layoutBinding.toolbar;
 
-        writeAnEmail = binding.content.cardAuthor.writeAnEmail;
-        visitWebsite = binding.content.cardAuthor.visitWebsite;
+        appVersion = layoutBinding.content.cardAboutApp.appVersion;
+        changelog = layoutBinding.content.cardAboutApp.changelog;
+        intro = layoutBinding.content.cardAboutApp.intro;
+        licenses = layoutBinding.content.cardAboutApp.licenses;
+        forkOnGitHub = layoutBinding.content.cardAboutApp.forkOnGithub;
 
-        reportBugs = binding.content.cardSupportDevelopment.reportBugs;
-        rateOnGooglePlay = binding.content.cardSupportDevelopment.rateOnGooglePlay;
+        reportBugs = layoutBinding.content.cardSupportDevelopment.reportBugs;
+        rateOnGooglePlay = layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay;
 
-        kabouzeidGooglePlus = binding.content.cardSpecialThanks.kabouzeidGooglePlus;
-        kabouzeidWebsite = binding.content.cardSpecialThanks.kabouzeidWebsite;
-        aidanFollestadGooglePlus = binding.content.cardSpecialThanks.aidanFollestadGooglePlus;
-        aidanFollestadGitHub = binding.content.cardSpecialThanks.aidanFollestadGitHub;
-        michaelCookGooglePlus = binding.content.cardSpecialThanks.michaelCookGooglePlus;
-        michaelCookWebsite = binding.content.cardSpecialThanks.michaelCookWebsite;
-        maartenCorpelGooglePlus = binding.content.cardSpecialThanks.maartenCorpelGooglePlus;
-        aleksandarTesicGooglePlus = binding.content.cardSpecialThanks.aleksandarTesicGooglePlus;
-        eugeneCheungGitHub = binding.content.cardSpecialThanks.eugeneCheungGitHub;
-        eugeneCheungWebsite = binding.content.cardSpecialThanks.eugeneCheungWebsite;
-        adrianTwitter = binding.content.cardSpecialThanks.adrianTwitter;
-        adrianWebsite = binding.content.cardSpecialThanks.adrianWebsite;
+        kabouzeidGooglePlus = layoutBinding.content.cardSpecialThanks.kabouzeidGooglePlus;
+        kabouzeidWebsite = layoutBinding.content.cardSpecialThanks.kabouzeidWebsite;
+        aidanFollestadGooglePlus = layoutBinding.content.cardSpecialThanks.aidanFollestadGooglePlus;
+        aidanFollestadGitHub = layoutBinding.content.cardSpecialThanks.aidanFollestadGitHub;
+        michaelCookGooglePlus = layoutBinding.content.cardSpecialThanks.michaelCookGooglePlus;
+        michaelCookWebsite = layoutBinding.content.cardSpecialThanks.michaelCookWebsite;
+        maartenCorpelGooglePlus = layoutBinding.content.cardSpecialThanks.maartenCorpelGooglePlus;
+        aleksandarTesicGooglePlus = layoutBinding.content.cardSpecialThanks.aleksandarTesicGooglePlus;
+        eugeneCheungGitHub = layoutBinding.content.cardSpecialThanks.eugeneCheungGitHub;
+        eugeneCheungWebsite = layoutBinding.content.cardSpecialThanks.eugeneCheungWebsite;
+        adrianTwitter = layoutBinding.content.cardSpecialThanks.adrianTwitter;
+        adrianWebsite = layoutBinding.content.cardSpecialThanks.adrianWebsite;
 
-        setContentView(binding.getRoot());
+        setContentView(layoutBinding.getRoot());
 
         setDrawUnderStatusbar();
 
@@ -126,6 +138,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private void setUpViews() {
         setUpToolbar();
         setUpAppVersion();
+        setUpContributorsView();
         setUpOnClickListeners();
     }
 
@@ -140,14 +153,43 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         appVersion.setText(getCurrentVersionName(this));
     }
 
+    private void setUpContributorsView()
+    {
+        final WebView webView = layoutBinding.content.cardContributors.viewContributors;
+        try {
+            StringBuilder buf = new StringBuilder();
+            InputStream json = getAssets().open("contributors.html");
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
+            String str;
+            while ((str = in.readLine()) != null) {buf.append(str);}
+            in.close();
+
+            // Inject color values for WebView body background and links
+            // TODO Mutualize with ChangelogDialog
+            final String backgroundColor = colorToHex(ATHUtil.resolveColor(this, R.attr.md_background_color,
+                    Color.parseColor(ThemeSingleton.get().darkTheme ? "#424242" : "#ffffff")));
+            final String contentColor = ThemeSingleton.get().darkTheme ? "#ffffff" : "#000000";
+            final int defaultColor = ThemeSingleton.get().positiveColor.getDefaultColor();
+            final String recoloredBuf = buf.toString()
+                    .replace("{style-placeholder}",
+                            String.format("body { background-color: %s; color: %s; }", backgroundColor, contentColor))
+                    .replace("{link-color}", colorToHex(defaultColor))
+                    .replace("{link-color-active}",
+                            colorToHex(ColorUtil.lightenColor(defaultColor)));
+
+            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+            webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
+        } catch (Throwable e) {
+            webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
+        }
+    }
+
     private void setUpOnClickListeners() {
         changelog.setOnClickListener(this);
         intro.setOnClickListener(this);
         licenses.setOnClickListener(this);
         forkOnGitHub.setOnClickListener(this);
-        visitWebsite.setOnClickListener(this);
         reportBugs.setOnClickListener(this);
-        writeAnEmail.setOnClickListener(this);
         rateOnGooglePlay.setOnClickListener(this);
         aidanFollestadGooglePlus.setOnClickListener(this);
         aidanFollestadGitHub.setOnClickListener(this);
@@ -191,16 +233,8 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             startActivity(new Intent(this, AppIntroActivity.class));
         } else if (v == forkOnGitHub) {
             openUrl(GITHUB);
-        } else if (v == visitWebsite) {
-            openUrl(WEBSITE);
         } else if (v == reportBugs) {
             startActivity(new Intent(this, BugReportActivity.class));
-        } else if (v == writeAnEmail) {
-            final Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:adrien@poupa.fr"));
-            intent.putExtra(Intent.EXTRA_EMAIL, "adrien@poupa.fr");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Vinyl Music Player");
-            startActivity(Intent.createChooser(intent, "E-Mail"));
         } else if (v == rateOnGooglePlay) {
             openUrl(RATE_ON_GOOGLE_PLAY);
         } else if (v == aidanFollestadGooglePlus) {
