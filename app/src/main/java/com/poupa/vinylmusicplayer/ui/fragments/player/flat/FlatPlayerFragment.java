@@ -419,7 +419,11 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
                 animatorSet.play(subHeaderAnimator);
             }
 
-            animatorSet.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
+            // Workaround for a bug https://github.com/AdrienPoupa/VinylMusicPlayer/issues/620
+            for (Animator animator : animatorSet.getChildAnimations()){
+                animator.setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
+            }
+
             return animatorSet;
         }
 
