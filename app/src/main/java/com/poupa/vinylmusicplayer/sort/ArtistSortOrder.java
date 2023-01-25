@@ -20,7 +20,7 @@ import java.util.List;
  * @author SC (soncaokim)
  */
 public class ArtistSortOrder {
-    private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(a1.name, a2.name);
+    private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(Utils.getSectionName(a1.getName()), Utils.getSectionName(a2.getName()));
     private static final Comparator<Artist> BY_DATE_MODIFIED = Comparator.comparingLong(Artist::getDateModified);
 
     private static final List<SortOrder<Artist>> SUPPORTED_ORDERS = Arrays.asList(
