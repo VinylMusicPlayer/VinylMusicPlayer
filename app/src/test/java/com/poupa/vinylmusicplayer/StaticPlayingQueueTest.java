@@ -245,6 +245,30 @@ public class StaticPlayingQueueTest {
     }
 
     @Test
+    public void addAllAfter_EmptyQueue() throws Exception {
+        // init, with empty queue
+        StaticPlayingQueue test = init();
+        test.clear();
+
+        // test
+        int pos = 0;
+        List<String> artistName = new ArrayList<>();
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+
+        ArrayList<Song> list = new ArrayList<>();
+        list.add(song1);
+        list.add(song2);
+
+        System.out.println("AddAll after position: "+pos);
+        test.addAllAfter(pos, list);
+        print(test);
+
+        checkQueuePosition(test);
+        checkSongs(test);
+    }
+
+    @Test
     public void move() throws Exception {
         // init
         StaticPlayingQueue test = init();
