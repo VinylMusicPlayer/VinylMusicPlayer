@@ -77,9 +77,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     LinearLayout header;
 
     private long id;
-    private int headerVariableSpace;
-    private int paletteColorPrimary;
-    private boolean isInNoImageMode;
+    int headerVariableSpace;
+    int paletteColorPrimary;
+    boolean isInNoImageMode;
     private final SimpleObservableScrollViewCallbacks observableScrollViewCallbacks = new SimpleObservableScrollViewCallbacks() {
         @Override
         public void onScrollChanged(int scrollY, boolean b, boolean b2) {
@@ -195,12 +195,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     }
 
-    protected abstract @NonNull ViewBinding getViewBinding();
+    @NonNull
+    protected abstract ViewBinding getViewBinding();
 
     @NonNull
     protected abstract List<String> getSongPaths();
 
-    protected void searchWebFor(String... keys) {
+    void searchWebFor(String... keys) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String key : keys) {
             stringBuilder.append(key);
@@ -234,7 +235,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void setNoImageMode() {
+    void setNoImageMode() {
         isInNoImageMode = true;
         image.setVisibility(View.GONE);
         image.setEnabled(false);
@@ -245,7 +246,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         toolbar.setBackgroundColor(paletteColorPrimary);
     }
 
-    protected void dataChanged() {
+    void dataChanged() {
         showFab();
     }
 
@@ -269,7 +270,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         fab.setEnabled(false);
     }
 
-    protected void setImageBitmap(@Nullable final Bitmap bitmap, int bgColor) {
+    void setImageBitmap(@Nullable final Bitmap bitmap, int bgColor) {
         if (bitmap == null) {
             image.setImageResource(R.drawable.default_album_art);
         } else {
@@ -287,7 +288,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         setTaskDescriptionColor(paletteColorPrimary);
     }
 
-    protected void writeValuesToFiles(@NonNull final Map<FieldKey, String> fieldKeyValueMap, @Nullable final ArtworkInfo artworkInfo) {
+    void writeValuesToFiles(@NonNull final Map<FieldKey, String> fieldKeyValueMap, @Nullable final ArtworkInfo artworkInfo) {
         Util.hideSoftKeyboard(this);
 
         hideFab();
@@ -333,7 +334,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private static class WriteTagsAsyncTask extends DialogAsyncTask<WriteTagsAsyncTask.LoadingInfo, Integer, String[]> {
         private final WeakReference<Activity> activity;
 
-        public WriteTagsAsyncTask(Activity activity) {
+        WriteTagsAsyncTask(Activity activity) {
             super(activity);
             this.activity = new WeakReference<>(activity);
         }
@@ -341,7 +342,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         @Override
         protected String[] doInBackground(LoadingInfo... params) {
             try {
-                LoadingInfo info = params[0];
+                final LoadingInfo info = params[0];
 
                 Artwork artwork = null;
                 File albumArtFile = null;
@@ -370,13 +371,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             safUri = Uri.parse(fragments[1]);
                         }
 
-                        AudioFile audioFile = AudioFileIO.read(new File(filePath));
-                        Tag tag = audioFile.getTagOrCreateAndSetDefault();
+                        final AudioFile audioFile = AudioFileIO.read(new File(filePath));
+                        final Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
-                            for (Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
+                            for (final Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
                                 try {
-                                    if (entry.getValue().isEmpty()) {
+                                    if (entry.getValue().trim().isEmpty()) {
                                         tag.deleteField(entry.getKey());
                                     }
                                     else if (entry.getKey() == FieldKey.ARTIST || entry.getKey() == FieldKey.ALBUM_ARTIST) {
@@ -387,7 +388,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         }
                                     }
                                     else {
-                                        tag.setField(entry.getKey(), entry.getValue());
+                                        tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -406,15 +407,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             }
                         }
 
-                        Activity activity = this.activity.get();
-
-                        SAFUtil.write(activity, audioFile, safUri);
+                        SAFUtil.write(activity.get(), audioFile, safUri);
                     } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
                         e.printStackTrace();
                     }
                 }
 
-                Context context = getContext();
+                final Context context = getContext();
                 if (context != null) {
                     if (wroteArtwork) {
                         MusicUtil.insertAlbumArt(
@@ -432,8 +431,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) { // remove SAF URI from paths
                     paths = new ArrayList<>(info.filePaths.size());
                     for (String path : info.filePaths) {
-                        if (path.contains(SAFUtil.SEPARATOR))
+                        if (path.contains(SAFUtil.SEPARATOR)) {
                             path = path.split(SAFUtil.SEPARATOR)[0];
+                        }
                         paths.add(path);
                     }
                 }
@@ -485,10 +485,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             ((MaterialDialog) dialog).setProgress(values[0]);
         }
 
-        public static class LoadingInfo {
-            public final Collection<String> filePaths;
+        static class LoadingInfo {
+            final Collection<String> filePaths;
             @Nullable
-            public final Map<FieldKey, String> fieldKeyValueMap;
+            final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
             private final ArtworkInfo artworkInfo;
 
@@ -559,7 +559,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getSongTitle() {
+    String getSongTitle() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
         } catch (Exception ignored) {
@@ -568,7 +568,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getAlbumTitle() {
+    String getAlbumTitle() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM);
         } catch (Exception ignored) {
@@ -577,7 +577,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getArtistName() {
+    String getArtistName() {
         try {
             List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
@@ -587,7 +587,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getAlbumArtistName() {
+    String getAlbumArtistName() {
         try {
             List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
@@ -597,7 +597,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getGenreName() {
+    String getGenreName() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
         } catch (Exception ignored) {
@@ -606,7 +606,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getSongYear() {
+    String getSongYear() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
         } catch (Exception ignored) {
@@ -615,7 +615,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getDiscNumber() {
+    String getDiscNumber() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
         } catch (Exception ignored) {
@@ -624,7 +624,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getTrackNumber() {
+    String getTrackNumber() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
         } catch (Exception ignored) {
@@ -633,7 +633,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected String getLyrics() {
+    String getLyrics() {
         try {
             return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.LYRICS);
         } catch (Exception ignored) {
@@ -642,11 +642,11 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    protected Bitmap getAlbumArt() {
+    Bitmap getAlbumArt() {
         try {
-            Artwork artworkTag = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirstArtwork();
+            final Artwork artworkTag = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirstArtwork();
             if (artworkTag != null) {
-                byte[] artworkBinaryData = artworkTag.getBinaryData();
+                final byte[] artworkBinaryData = artworkTag.getBinaryData();
                 return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);
             }
             return null;
