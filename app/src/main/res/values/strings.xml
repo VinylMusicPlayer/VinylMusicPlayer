@@ -294,8 +294,14 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="snack_bar_action_undo">undo</string>
     <string name="snack_bar_title_removed_song">Removed</string>
+
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
+
+    <string name="idle_notification_description">The idle notification is used where the playing queue is empty</string>
+    <string name="idle_notification_name">Idle notification</string>
+    <string name="idle_notification_title">Vinyl is running</string>
+
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>
     <string name="adrian_summary">For creating the album page design.</string>
     <string name="add_action">Add</string>

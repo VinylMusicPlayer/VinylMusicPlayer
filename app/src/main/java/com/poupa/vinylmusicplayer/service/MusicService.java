@@ -58,6 +58,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
+import com.poupa.vinylmusicplayer.service.notification.IdleNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl24;
@@ -153,7 +154,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private boolean queuesRestored;
     private boolean pausedByTransientLossOfFocus;
+
     private PlayingNotification playingNotification;
+    private IdleNotification idleNotification;
+
     private AudioManager audioManager;
     private MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
@@ -221,7 +225,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         registerReceiver(updateFavoriteReceiver, new IntentFilter(FAVORITE_STATE_CHANGED));
 
         initNotification();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android O+ requires a foreground service to post a notification asap
+            updateNotification();
+        }
         mediaStoreObserver = new MediaStoreObserver(this, playerHandler);
         throttledSeekHandler = new ThrottledSeekHandler(this, playerHandler);
         getContentResolver().registerContentObserver(
@@ -420,7 +427,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public void quit() {
         pause();
+
         playingNotification.stop();
+        idleNotification.stop();
+        stopForeground(true);
 
         closeAudioEffectSession();
         getAudioManager().abandonAudioFocus(audioFocusListener);
@@ -522,18 +532,32 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return (getAudioManager().requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
     }
 
-    public void initNotification() {
+    private void initNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !PreferenceUtil.getInstance().classicNotification()) {
             playingNotification = new PlayingNotificationImpl24();
         } else {
             playingNotification = new PlayingNotificationImpl();
         }
-        playingNotification.init(this);
+        playingNotification.init(this,
+                PlayingNotification.NOTIFICATION_CHANNEL_ID,
+                R.string.playing_notification_name,
+                R.string.playing_notification_description);
+
+        idleNotification = new IdleNotification();
+        idleNotification.init(this,
+                IdleNotification.NOTIFICATION_CHANNEL_ID,
+                R.string.idle_notification_name,
+                R.string.idle_notification_description);
     }
 
-    public void updateNotification() {
-        if (playingNotification != null && getCurrentSong().id != -1) {
+    private void updateNotification() {
+        if (getCurrentSong().id != Song.EMPTY_SONG.id) {
+            idleNotification.stop();
             playingNotification.update();
+        }
+        else {
+            playingNotification.stop();
+            idleNotification.update();
         }
     }
 
@@ -1023,7 +1047,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 if (playingQueue.size() > 0) {
                     prepareNext();
                 } else {
-                    playingNotification.stop();
+                    updateNotification();
                 }
                 break;
         }
