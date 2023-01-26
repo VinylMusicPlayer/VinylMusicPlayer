@@ -2,8 +2,33 @@
 
 #set -x
 
-[ -n "${CIRCLE_TAG}" ] && return # Building a tag, dont mess around
-[ -z "${CIRCLE_BRANCH}" ] && return # Dont have the branch name, dont go forward
+# Branches (in same repo) that we dont want to include in CI builds
+# Space separated list of branch names
+blacklist_branches="
+  internal-playlists
+  fix/489-update-material-cab
+"
+
+# Alien branches (from other repos) that we want to pull in (pull requests etc)
+# Space separated list, each following the 'login/repo/branch' format
+#  Octoton/VinylMusicPlayer/random_album_access_version_1
+alien_branches="
+"
+
+# Support for CircleCI
+[ -n "${CIRCLE_TAG}" ] && export CI_TAG="${CIRCLE_TAG}"
+[ -n "${CIRCLE_BRANCH}" ] && export CI_BRANCH="${CIRCLE_BRANCH}"
+
+# Support for Github Actions
+if [ "${GITHUB_REF_TYPE}" = 'tag' ]; then
+  export CI_TAG="${GITHUB_REF_NAME}"
+elif [ -n "${GITHUB_REF_NAME}" ]; then
+  export CI_BRANCH="${GITHUB_REF_NAME}"
+fi
+
+# Sanity checks
+[ -n "${CI_TAG}" ] && exit 0 # Building a tag, dont mess around
+[ -z "${CI_BRANCH}" ] && exit 0 # Dont have the branch name, dont go forward
 
 function git_init()
 {
@@ -11,9 +36,9 @@ function git_init()
     git config --global user.name "$0"
 }
 
-case "${CIRCLE_BRANCH}" in
+case "${CI_BRANCH}" in
     cont-integ)
-        echo "Branch '${CIRCLE_BRANCH}' detected"
+        echo "Branch '${CI_BRANCH}' detected"
         git_init
         git fetch origin
         git rebase origin/master || exit 1
@@ -31,7 +56,7 @@ function git_describe()
     object="$1"
     echo "<li><b>${object}</b><br/><code>$(git show --summary --oneline ${object})</code></li>"
 }
-last_commits="$(git_describe origin/${CIRCLE_BRANCH})"
+last_commits="$(git_describe origin/${CI_BRANCH})"
 
 # Merge with feature branches, unless black-listed
 branches=$(git branch -a | grep remotes/origin/ | cut -d/ -f3 | grep -v 'HEAD ')
@@ -48,11 +73,11 @@ function is_blacklisted()
 }
 
 for branch in ${branches}; do
-    [ "${branch}" = "${CIRCLE_BRANCH}" ] && continue
+    [ "${branch}" = "${CI_BRANCH}" ] && continue
 
     is_blacklisted "${branch}" && continue
 
-    echo "Merge '${branch}' into '${CIRCLE_BRANCH}'..."
+    echo "Merge '${branch}' into '${CI_BRANCH}'..."
     git merge --no-edit "origin/${branch}" || exit 1
     last_commits+="$(git_describe origin/${branch})"
     echo
@@ -72,7 +97,7 @@ for alien_branch in ${alien_branches}; do
     git remote add "${user}/${repo}" "git@github.com:${user}/${repo}.git" || exit 1
     git remote update "${user}/${repo}" || exit 1
 
-    echo "Merge alien '${alien_branch}' into '${CIRCLE_BRANCH}'..."
+    echo "Merge alien '${alien_branch}' into '${CI_BRANCH}'..."
     git merge --no-edit "${alien_branch}" || exit 1
     last_commits+="$(git_describe ${alien_branch})"
     echo
@@ -82,7 +107,7 @@ done
 changelog_html="app/src/main/assets/vinylmusicplayer-changelog.html"
 {
     echo "<html><body>
-        <p>Integration build from branch <code>${CIRCLE_BRANCH}</code>, with merges from the following:</p>
+        <p>Integration build from branch <code>${CI_BRANCH}</code>, with merges from the following:</p>
         <ul>
             ${last_commits}
         </ul>

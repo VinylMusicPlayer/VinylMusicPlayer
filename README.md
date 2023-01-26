@@ -1,5 +1,6 @@
 # Vinyl Music Player
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/AdrienPoupa/VinylMusicPlayer/blob/master/LICENSE.txt) [![CircleCI](https://circleci.com/gh/AdrienPoupa/VinylMusicPlayer/tree/master.svg?style=svg)](https://circleci.com/gh/AdrienPoupa/VinylMusicPlayer/tree/master)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/blob/master/LICENSE.txt) 
+[![Android CI](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml/badge.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml)
 
 <a href="https://f-droid.org/packages/com.poupa.vinylmusicplayer/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
@@ -20,3 +21,4 @@ Additional features:
 Icon made by [Nikita Golubev](https://www.flaticon.com/authors/nikita-golubev) from www.flaticon.com
 
 Album image by [Virginia State Parks](https://www.flickr.com/photos/vastateparksstaff/38645226714/) (CC BY 2.0)
+
