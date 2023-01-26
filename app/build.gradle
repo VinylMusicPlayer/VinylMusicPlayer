@@ -56,7 +56,7 @@ android {
             applicationIdSuffix ".ci"
             versionNameSuffix "-" + buildId + " CI"
             signingConfig signingConfigs.ci
-            archivesBaseName = 'vinyl2_' + buildId
+            archivesBaseName = 'vinyl_' + buildId
         }
     }
     packagingOptions {
