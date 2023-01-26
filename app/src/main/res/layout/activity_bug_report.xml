@@ -33,9 +33,14 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="8dp">
+                android:padding="8dp">
+
+                <include
+                    android:id="@+id/bug_report_card_device_info"
+                    layout="@layout/bug_report_card_device_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" />
 
                 <include
                     android:id="@+id/bug_report_card_report"
@@ -43,17 +48,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp" />
-
-                <include
-                    android:id="@+id/bug_report_card_device_info"
-                    layout="@layout/bug_report_card_device_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_margin="16dp" />
 
             </LinearLayout>
 
@@ -64,7 +58,7 @@
             style="@style/Fab"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin_top_left_right"
-            app:srcCompat="@drawable/ic_send_white_24dp" />
+            app:srcCompat="@drawable/ic_open_in_browser_white_24dp" />
 
     </FrameLayout>
 

@@ -14,6 +14,7 @@ import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialDialogsUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
@@ -24,9 +25,17 @@ import com.poupa.vinylmusicplayer.util.Util;
 public abstract class AbsThemeActivity extends ATHToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Thread.setDefaultUncaughtExceptionHandler(new OopsHandler(this));
+
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());
         super.onCreate(savedInstanceState);
         MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Thread.setDefaultUncaughtExceptionHandler(null);
+        super.onDestroy();
     }
 
     protected void setDrawUnderStatusbar() {
