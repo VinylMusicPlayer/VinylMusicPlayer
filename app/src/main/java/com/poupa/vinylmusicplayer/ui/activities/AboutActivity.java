@@ -31,7 +31,7 @@ import de.psdev.licensesdialog.LicensesDialog;
  */
 public class AboutActivity extends AbsBaseActivity implements View.OnClickListener {
 
-    private static final String GITHUB = "https://github.com/vinyl2-team/vinyl2";
+    private static final String GITHUB = "https://github.com/VinylMusicPlayer/VinylMusicPlayer";
 
     private static final String WEBSITE = "https://adrien.poupa.fr/";
 

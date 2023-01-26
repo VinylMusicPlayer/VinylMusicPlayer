@@ -27,7 +27,7 @@ public class BugReportActivity extends AbsThemeActivity {
 
     private FloatingActionButton sendFab;
 
-    private static final String ISSUE_TRACKER_LINK = "https://github.com/vinyl2-team/vinyl2/issues/new?assignees=&labels=bug&template=bug_report.md&title=";
+    private static final String ISSUE_TRACKER_LINK = "https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/new?assignees=&labels=bug&template=bug_report.md&title=";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
