@@ -8,17 +8,11 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
  */
 public abstract class SimpleObservableScrollViewCallbacks implements ObservableScrollViewCallbacks {
     @Override
-    public void onScrollChanged(int i, boolean b, boolean b2) {
-
-    }
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {}
 
     @Override
-    public void onDownMotionEvent() {
-
-    }
+    public void onDownMotionEvent() {}
 
     @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-    }
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {}
 }

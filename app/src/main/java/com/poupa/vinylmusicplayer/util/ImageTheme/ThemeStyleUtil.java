@@ -1,14 +1,16 @@
 package com.poupa.vinylmusicplayer.util.ImageTheme;
 
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 public class ThemeStyleUtil {
     private static ThemeStyle sInstance;
 
-    public static ThemeStyle updateInstance(int themeState) {
+    public static ThemeStyle updateInstance(@NonNull final String themeName) {
         synchronized (ThemeStyleUtil.class) {
-            if (themeState == PreferenceUtil.ROUNDED_THEME) {
+            if (themeName.equals(PreferenceUtil.ROUNDED_THEME)) {
                 sInstance = new MaterialTheme();
             } else {
                 sInstance = new FlatTheme();
