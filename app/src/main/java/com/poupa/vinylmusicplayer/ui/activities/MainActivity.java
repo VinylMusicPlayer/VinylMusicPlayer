@@ -68,7 +68,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     private View navigationDrawerHeader;
 
     private boolean blockRequestPermissions;
-    private boolean scanning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -353,14 +352,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             return true;
         }
         return false;
-    }
-
-    public boolean isNotScanning() {
-        return !scanning;
-    }
-
-    public void setScanning(boolean scanning) {
-        this.scanning = scanning;
     }
 
     private void showChangelog() {

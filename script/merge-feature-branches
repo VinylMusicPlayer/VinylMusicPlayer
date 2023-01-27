@@ -6,7 +6,6 @@
 # Space separated list of branch names
 blacklist_branches="
   internal-playlists
-  fix/489-update-material-cab
 "
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
@@ -72,13 +71,24 @@ function is_blacklisted()
     return 1
 }
 
+function git_merge()
+{
+    local from_branch="$1"
+
+    echo "Merge with '${from_branch}'..."
+    git merge \
+      --no-edit \
+      "${from_branch}" \
+      && return 0 \
+      || return 1
+}
+
 for branch in ${branches}; do
     [ "${branch}" = "${CI_BRANCH}" ] && continue
 
     is_blacklisted "${branch}" && continue
 
-    echo "Merge '${branch}' into '${CI_BRANCH}'..."
-    git merge --no-edit "origin/${branch}" || exit 1
+    git_merge "origin/${branch}" || exit 1
     last_commits+="$(git_describe origin/${branch})"
     echo
 done
@@ -90,11 +100,10 @@ for alien_branch in ${alien_branches}; do
     branch=$(echo "${alien_branch}" | cut -d/ -f3-)
 
     echo "Add alien '${user}/${repo}'..."
-    git remote add "${user}/${repo}" "git@github.com:${user}/${repo}.git" || exit 1
+    git remote add "${user}/${repo}" "https://github.com/${user}/${repo}" || exit 1
     git remote update "${user}/${repo}" || exit 1
 
-    echo "Merge alien '${alien_branch}' into '${CI_BRANCH}'..."
-    git merge --no-edit "${alien_branch}" || exit 1
+    git_merge "${alien_branch}" || exit 1
     last_commits+="$(git_describe ${alien_branch})"
     echo
 done
