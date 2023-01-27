@@ -5,9 +5,7 @@
 [![GithubActions CI](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml/badge.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml)
 
 [![Download](https://img.shields.io/badge/Download-@pre--release-brightgreen)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/releases/tag/pre-release)
-
 [![Get it on F-Droid](https://img.shields.io/f-droid/v/com.poupa.vinylmusicplayer)](https://f-droid.org/packages/com.poupa.vinylmusicplayer/)
-
 <!--
 Dynamic badge based on https://shields.io/endpoint (the badge service) and https://play.cuzi.workers.dev/ (play 
 store scraper)
