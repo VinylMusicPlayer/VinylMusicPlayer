@@ -4,9 +4,9 @@
 
 [![GithubActions CI](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml/badge.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml)
 
-[![Get it on Github](https://img.shields.io/badge/Download_from_Github-pre--release-brightgreen?logo=github)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/releases/tag/pre-release)
-[![Get it on F-Droid](https://img.shields.io/f-droid/v/com.poupa.vinylmusicplayer?logo=f-droid)](https://f-droid.org/packages/com.poupa.vinylmusicplayer/)
-[![Get it on Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=lightgrey&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.poupa.vinylmusicplayer%26l%3DGoogle%2520Play%2520Store%26m%3D%24version)](https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer)
+[![Get it on Github](https://img.shields.io/badge/Download_from_Github-pre--release-brightgreen?logo=github&logoColor=lightgrey)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/releases/tag/pre-release)
+[![Get it on F-Droid](https://img.shields.io/f-droid/v/com.poupa.vinylmusicplayer?color=brightgreen&logo=f-droid&logoColor=lightgrey)](https://f-droid.org/packages/com.poupa.vinylmusicplayer/)
+[![Get it on Google Play](https://img.shields.io/endpoint?color=brightgreen&logo=google-play&logoColor=lightgrey&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.poupa.vinylmusicplayer%26l%3DGoogle%2520Play%2520Store%26m%3D%24version)](https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer)
 <!--
 Above: Dynamic badge based on https://shields.io/endpoint (the badge service) and https://play.cuzi.workers.dev/ (play 
 store scraper)
