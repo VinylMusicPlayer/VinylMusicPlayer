@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.MaterialCab;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
@@ -40,7 +39,10 @@ import java.util.ArrayList;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, Song> implements MaterialCab.Callback, FastScrollRecyclerView.SectionedAdapter {
+public class SongAdapter
+        extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, Song>
+        implements FastScrollRecyclerView.SectionedAdapter
+{
 
     protected final AppCompatActivity activity;
     protected ArrayList<Song> dataSet;
@@ -53,11 +55,13 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
 
     public RecyclerView recyclerView;
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+                       boolean usePalette, @Nullable CabHolder cabHolder) {
         this(activity, dataSet, itemLayoutRes, usePalette, cabHolder, true);
     }
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
+    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+                       boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
@@ -181,11 +185,6 @@ public class SongAdapter extends AbsMultiSelectAdapter<SongAdapter.ViewHolder, S
     @Override
     protected Song getIdentifier(int position) {
         return dataSet.get(position);
-    }
-
-    @Override
-    protected String getName(Song song) {
-        return song.title;
     }
 
     @Override

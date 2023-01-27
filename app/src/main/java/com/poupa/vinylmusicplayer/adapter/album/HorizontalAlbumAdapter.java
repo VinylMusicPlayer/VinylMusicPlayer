@@ -28,7 +28,8 @@ import java.util.ArrayList;
  */
 public class HorizontalAlbumAdapter extends AlbumAdapter {
 
-    public HorizontalAlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public HorizontalAlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, boolean usePalette,
+                                  @Nullable CabHolder cabHolder) {
         super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, cabHolder);
     }
 

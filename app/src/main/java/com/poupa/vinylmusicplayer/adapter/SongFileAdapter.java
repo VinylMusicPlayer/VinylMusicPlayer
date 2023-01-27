@@ -42,7 +42,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Nullable
     private final Callbacks callbacks;
 
-    public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles, @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
+    public SongFileAdapter(@NonNull AppCompatActivity activity, @NonNull List<File> songFiles,
+                           @Nullable Callbacks callback, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = songFiles;
@@ -147,11 +148,6 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Override
     protected File getIdentifier(int position) {
         return dataSet.get(position);
-    }
-
-    @Override
-    protected String getName(File object) {
-        return getFileTitle(object);
     }
 
     @Override

@@ -241,9 +241,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final Preference themeStyle = findPreference("theme_style");
+            final Preference themeStyle = findPreference(PreferenceUtil.THEME_STYLE);
             themeStyle.setOnPreferenceChangeListener((preference, o) -> {
-                ThemeStyleUtil.updateInstance(PreferenceUtil.getThemeStyleFromPrefValue((String) o));
+                ThemeStyleUtil.updateInstance((String) o);
                 if (getActivity() != null) {
                     ThemeStore.markChanged(getActivity());
                 }
@@ -407,7 +407,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     break;
                 case PreferenceUtil.CLASSIC_NOTIFICATION:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        findPreference("colored_notification").setEnabled(sharedPreferences.getBoolean(key, false));
+                        findPreference(PreferenceUtil.COLORED_NOTIFICATION).setEnabled(sharedPreferences.getBoolean(key, false));
                     }
                     break;
                 case PreferenceUtil.RG_SOURCE_MODE_V2:
