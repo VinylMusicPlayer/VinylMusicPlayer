@@ -19,7 +19,6 @@ import java.util.List;
  * @author SC (soncaokim)
  */
 public class FileSortOrder {
-    //private static final Comparator<File> BY_NAME = (f1, f2) -> StringUtil.compareIgnoreAccent(f1.getName(),f2.getName());
     private static final Comparator<File> BY_NAME = (f1, f2) -> {
         if (f1.isDirectory() && !f2.isDirectory()) {
             return -1;
