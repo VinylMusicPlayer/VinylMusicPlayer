@@ -264,6 +264,13 @@
     <string name="app_widget_classic_name">Vinyl Music Player - Classic</string>
     <string name="app_widget_small_name">Vinyl Music Player - Small</string>
     <string name="app_widget_card_name">Vinyl Music Player - Card</string>
+
+    <string name="app_crashed">Vinyl Music Player crashed</string>
+    <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nTechnical data related to the crash
+        has been collected and may help the developers to improve this situation.\nYou are invited to submit a
+        bug report - you can review the collected data and will decide on what data to submit in the following
+        screens.</string>
+    <string name="report_a_crash">Report a crash</string>
     <string name="report_an_issue">Report an issue</string>
     <string name="bug_report_issue">Issue</string>
     <string name="login">Login</string>
@@ -271,7 +278,7 @@
     <string name="description">Description</string>
     <string name="device_info">Device info</string>
     <string name="bug_report_use_account">Send using GitHub account</string>
-    <string name="bug_report_manual">Send manually</string>
+    <string name="bug_report_manual">Submit the report manually</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="bug_report_no_title">Please enter an issue title</string>
@@ -286,7 +293,10 @@
     <string name="bug_report_failed_unknown">An unexpected error occurred. Please contact the app developer.</string>
     <string name="copied_device_info_to_clipboard">Copied device info to clipboard.</string>
     <string name="your_account_data_is_only_used_for_authentication">Your account data is only used for authentication.</string>
-    <string name="you_will_be_forwarded_to_the_issue_tracker_website">You will be forwarded to the issue tracker website.</string>
+    <string name="you_will_be_forwarded_to_the_issue_tracker_website">By clicking on the button here-under, you will be
+        forwarded to the issue tracker website.\n\nThe device info shown here will be copied to clipboard so
+        that you can paste it on the issue report.</string>
+
     <string name="deleting_songs">Deleting songs</string>
     <string name="app_shortcut_shuffle_all_short">Shuffle</string>
     <string name="app_shortcut_top_tracks_short">Top tracks</string>
@@ -294,8 +304,14 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="snack_bar_action_undo">undo</string>
     <string name="snack_bar_title_removed_song">Removed</string>
+
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
+
+    <string name="idle_notification_description">The idle notification is used where the playing queue is empty</string>
+    <string name="idle_notification_name">Idle notification</string>
+    <string name="idle_notification_title">Vinyl is running</string>
+
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>
     <string name="adrian_summary">For creating the album page design.</string>
     <string name="add_action">Add</string>
@@ -325,7 +341,6 @@
     <string name="dialog_ringtone_title">Set ringtone</string>
     <string name="dialog_ringtone_message">Please allow Vinyl Music Player to modify system settings in the next screen before setting the ringtone.</string>
     <string name="action_scan_directory">Scan directory</string>
-    <string name="scan_media">Scan media</string>
     <string name="reset_discography">Rescan library</string>
     <string name="reset_discography_warning">This will clear and rebuild the app internal song database.\n\nNo song will be deleted during this operation, but this might clear the play history.\n\nDuring a possible long duration, until the rescan is complete, you will not be able to use the app normally</string>
     <string name="none">None</string>

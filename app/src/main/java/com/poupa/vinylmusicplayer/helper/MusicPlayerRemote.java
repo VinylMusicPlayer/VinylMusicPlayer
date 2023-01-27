@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -53,14 +54,13 @@ public class MusicPlayerRemote {
             realActivity = (Activity) context;
         }
 
-        final ContextWrapper contextWrapper = new ContextWrapper(realActivity);
-        contextWrapper.startService(new Intent(contextWrapper, MusicService.class));
+        ContextCompat.startForegroundService(realActivity, new Intent(realActivity, MusicService.class));
 
         final ServiceBinder binder = new ServiceBinder(callback);
 
-        if (contextWrapper.bindService(new Intent().setClass(contextWrapper, MusicService.class), binder, Context.BIND_AUTO_CREATE)) {
-            mConnectionMap.put(contextWrapper, binder);
-            return new ServiceToken(contextWrapper);
+        if (realActivity.bindService(new Intent().setClass(realActivity, MusicService.class), binder, Context.BIND_AUTO_CREATE)) {
+            mConnectionMap.put(realActivity, binder);
+            return new ServiceToken(realActivity);
         }
         return null;
     }

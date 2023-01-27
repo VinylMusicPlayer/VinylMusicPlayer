@@ -325,7 +325,6 @@
     <string name="dialog_ringtone_title">Definir toque de chamada</string>
     <string name="dialog_ringtone_message">Por favor permita o Vinyl Music Player a modificar configurações do sistema na próxima tela antes de definir o toque de chamada.</string>
     <string name="action_scan_directory">Escanear o diretório</string>
-    <string name="scan_media">Escanear mídia</string>
     <string name="reset_discography">Escanear novamente a biblioteca</string>
     <string name="reset_discography_warning">Isto irá limpar e reconstruir a base de dados interna das músicas.\n\nNenhuma música será excluída durante esta operação, mas isto pode limpar o histórico de reprodução.\n\nPossivelmente durante um longo período, até que a nova varredura esteja completa, você não conseguirá usar o aplicativo normalmente</string>
     <string name="none">Nenhum</string>

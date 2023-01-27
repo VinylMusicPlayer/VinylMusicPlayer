@@ -314,7 +314,6 @@
     <string name="dialog_ringtone_title">벨소리로 설정</string>
     <string name="dialog_ringtone_message">벨소리를 설정하기 전에, 다음에 나타날 화면에서 Vinyl Music Player가 시스템 설정을 수정할 수 있도록 허용해 주세요.</string>
     <string name="action_scan_directory">디렉터리 스캔</string>
-    <string name="scan_media">미디어 스캔</string>
     <string name="reset_discography">라이브러리 재스캔</string>
     <string name="none">없음</string>
     <string name="track">트랙</string>

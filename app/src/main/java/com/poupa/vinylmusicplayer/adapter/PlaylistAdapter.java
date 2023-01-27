@@ -149,11 +149,6 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     @Override
-    protected String getName(Playlist playlist) {
-        return playlist.name;
-    }
-
-    @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Playlist> selection) {
         if (R.id.action_delete_playlist == menuItem.getItemId()) {
             for (int i = 0; i < selection.size(); i++) {

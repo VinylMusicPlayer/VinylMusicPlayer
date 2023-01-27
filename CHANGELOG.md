@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.1] - 2023-01-25
+### What's Changed
+* Feat: Ignore "the" and "a" prefixes when sorting artists by @louis-prudhomme in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/630
+
+### Translation updates
+* fix typo by @Longway22 in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/637
+* French translation followup by @GladiusTM in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/634
+
+### Fixes
+* Fix a crash due to #620 by @gaycodegal in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/639
+
 ## [1.4.0] - 2022-08-12
 ### What's Changed
 * Sort orders by @soncaokim in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/467

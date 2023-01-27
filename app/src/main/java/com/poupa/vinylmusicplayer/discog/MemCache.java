@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.discog;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
@@ -73,13 +74,13 @@ class MemCache {
     }
 
     synchronized void removeSongById(long songId) {
-        Song song = songsById.get(songId);
+        final Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
-            Map<Long, AlbumSlice> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
-            Set<Long> orphanArtists = new HashSet<>();
-            for (Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
-                Album album = pair.getValue();
+            final Map<Long, AlbumSlice> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+            final Set<Long> orphanArtists = new HashSet<>();
+            for (final Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
+                final Album album = pair.getValue();
                 if (album.songs.remove(song)) {
                     if (album.songs.isEmpty()) {
                         orphanArtists.add(pair.getKey());
@@ -88,13 +89,13 @@ class MemCache {
             }
 
             // ---- Check the Artist/Album link
-            for (Long artistId : orphanArtists) {
-                Artist artist = artistsById.get(artistId);
+            for (final Long artistId : orphanArtists) {
+                final Artist artist = artistsById.get(artistId);
 
-                Album album = impactedAlbumsByArtist.get(artistId);
+                final Album album = impactedAlbumsByArtist.get(artistId);
                 impactedAlbumsByArtist.remove(artistId);
 
-                if (artist == null) continue;
+                if (artist == null) {continue;}
 
                 artist.albums.remove(album);
                 if (artist.albums.isEmpty()) {
@@ -105,17 +106,19 @@ class MemCache {
             if (impactedAlbumsByArtist.isEmpty()) {
                 albumsByAlbumIdAndArtistId.remove(song.albumId);
 
-                Set<Long> albumsId = albumsByName.get(song.albumName);
-                albumsId.remove(song.albumId);
-                if (albumsId.isEmpty()) {
-                    albumsByName.remove(song.albumName);
+                @Nullable final Set<Long> albumsId = albumsByName.get(song.albumName);
+                if (albumsId != null) {
+                    albumsId.remove(song.albumId);
+                    if (albumsId.isEmpty()) {
+                        albumsByName.remove(song.albumName);
+                    }
                 }
             }
 
             // ---- Remove song from Genre cache
-            Genre genre = genresByName.get(song.genre);
+            final Genre genre = genresByName.get(song.genre);
             if (genre != null) {
-                ArrayList<Song> songs = songsByGenreId.get(genre.id);
+                final ArrayList<Song> songs = songsByGenreId.get(genre.id);
                 if (songs != null) {
                     songs.remove(song);
                     if (songs.isEmpty()) {

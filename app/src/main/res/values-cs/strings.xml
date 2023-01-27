@@ -277,7 +277,6 @@
     <string name="sort_order_album">Album</string>
     <string name="sort_order_year_reverse">Rok</string>
     <string name="action_scan_directory">Skenovat adresář</string>
-    <string name="scan_media">Skenovat média</string>
     <string name="none">Žádný</string>
     <string name="track">Skladba</string>
     <string name="error_no_app_for_intent">Žádná aplikace pro otevření této stránky.</string>

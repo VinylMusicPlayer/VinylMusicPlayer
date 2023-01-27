@@ -130,7 +130,7 @@ public class PlayingNotificationImpl extends PlayingNotification {
 
                                 if (stopped)
                                     return; // notification has been stopped before loading was finished
-                                updateNotifyModeAndPostNotification(notification);
+                                updateImpl(notification);
                             }
 
                             private void setBackgroundColor(int color) {
