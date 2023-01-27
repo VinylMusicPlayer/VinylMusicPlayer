@@ -280,7 +280,6 @@
     <string name="sort_order_album">Albüm</string>
     <string name="sort_order_year_reverse">Yıl</string>
     <string name="action_scan_directory">Dizin tarama</string>
-    <string name="scan_media">Medyayı tara</string>
     <string name="none">Yok</string>
     <string name="track">Parça</string>
     <string name="label_with_rg_info">ReplayGain ile Etiketler:</string>

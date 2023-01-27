@@ -277,10 +277,22 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="device_info">Device info</string>
+    <string name="bug_report_use_account">Send using GitHub account</string>
     <string name="bug_report_manual">Submit the report manually</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="bug_report_no_title">Please enter an issue title</string>
+    <string name="bug_report_no_description">Please enter an issue description</string>
+    <string name="bug_report_no_username">Please enter your valid GitHub username</string>
+    <string name="bug_report_no_password">Please enter your valid GitHub password</string>
+    <string name="bug_report_uploading">Uploading report to GitHub…</string>
+    <string name="bug_report_failed">Unable to send report</string>
+    <string name="bug_report_failed_wrong_credentials">Wrong username or password</string>
+    <string name="bug_report_failed_invalid_token">Invalid access token. Please contact the app developer.</string>
+    <string name="bug_report_failed_issues_not_available">Issues are not enabled for the selected repository. Please contact the app developer.</string>
+    <string name="bug_report_failed_unknown">An unexpected error occurred. Please contact the app developer.</string>
     <string name="copied_device_info_to_clipboard">Copied device info to clipboard.</string>
+    <string name="your_account_data_is_only_used_for_authentication">Your account data is only used for authentication.</string>
     <string name="you_will_be_forwarded_to_the_issue_tracker_website">By clicking on the button here-under, you will be
         forwarded to the issue tracker website.\n\nThe device info shown here will be copied to clipboard so
         that you can paste it on the issue report.</string>
@@ -329,7 +341,6 @@
     <string name="dialog_ringtone_title">Set ringtone</string>
     <string name="dialog_ringtone_message">Please allow Vinyl Music Player to modify system settings in the next screen before setting the ringtone.</string>
     <string name="action_scan_directory">Scan directory</string>
-    <string name="scan_media">Scan media</string>
     <string name="reset_discography">Rescan library</string>
     <string name="reset_discography_warning">This will clear and rebuild the app internal song database.\n\nNo song will be deleted during this operation, but this might clear the play history.\n\nDuring a possible long duration, until the rescan is complete, you will not be able to use the app normally</string>
     <string name="none">None</string>

@@ -295,7 +295,6 @@
     <string name="dialog_ringtone_title">Estableix el to de trucada</string>
     <string name="dialog_ringtone_message">Permet al Vinyl modificar els paràmetres del sistema en la pantalla següent per establir el to de trucada.</string>
     <string name="action_scan_directory">Escaneja el directori</string>
-    <string name="scan_media">Escaneja els mitjans</string>
     <string name="none">Cap</string>
     <string name="track">Pista</string>
     <string name="label_with_rg_info">Amb etiquetes ReplayGain:</string>

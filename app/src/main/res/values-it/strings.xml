@@ -311,7 +311,6 @@
     <string name="dialog_ringtone_title">Imposta come suoneria</string>
     <string name="dialog_ringtone_message">Permetti a Vinyl Music Player nella prossima schermata di modificare le impostazioni di sistema prima di impostare la suoneria.</string>
     <string name="action_scan_directory">Scansiona cartella</string>
-    <string name="scan_media">Scansiona media</string>
     <string name="reset_discography">Riscansiona libreria</string>
     <string name="none">Nessuno</string>
     <string name="track">Traccia</string>
