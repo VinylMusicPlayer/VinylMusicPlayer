@@ -17,7 +17,7 @@ Dynamic badge based on https://shields.io/endpoint (the badge service) and https
 store scraper)
 See https://github.com/badges/shields/issues/358#issuecomment-806235967
 -->
-[![Get it on Google Play]](https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=lightgrey&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.poupa.vinylmusicplayer%26l%3DGoogle%2520Play%2520Store%26m%3D%24version)
+[![Get it on Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=lightgrey&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.poupa.vinylmusicplayer%26l%3DGoogle%2520Play%2520Store%26m%3D%24version)]
 (https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer)
 
 **A material designed local music player for Android.**
