@@ -16,12 +16,16 @@ import android.os.IBinder;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
@@ -187,7 +191,7 @@ public class MusicPlayerRemote {
     public static void openQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
             musicService.openQueue(queue, startPosition, startPlaying);
-            if (!PreferenceUtil.getInstance().rememberShuffle()){
+            if (!PreferenceUtil.getInstance().rememberShuffle()) {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
             }
         }
@@ -200,6 +204,115 @@ public class MusicPlayerRemote {
         if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
             musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
+    }
+
+    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final ArrayList<Song> queue, int positionInQueue) {
+        if (musicService == null) {return;}
+
+        if (tryToHandleOpenPlayingQueue(queue, positionInQueue, true)) {
+            // User is just switching songs in the current playing queue, nothing more to do
+            return;
+        }
+
+        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        if (currentQueue.isEmpty()) {
+            openQueue(queue, positionInQueue, true);
+            return;
+        }
+
+        // If one tapped on the very first element of History queue, the positionInQueue will be -1
+        final int adjustedPosition = Math.max(positionInQueue, 0);
+        final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPosition, queue.size()));
+        if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
+            ShuffleHelper.makeShuffleList(songsToAdd, 0);
+        }
+
+        final Runnable removeDuplicate = () -> {
+            // Deduplicate songs, favoring the occurrences in the new queue
+            final List<Song> remainingSongsInQueue = currentQueue.subList(
+                    musicService.getPosition() + 1,
+                    currentQueue.size()
+            );
+
+            // TODO Async execution, to avoid penalizing the UI thread
+            final ArrayList<Song> songsToRemove = new ArrayList<>();
+            for (final Song song : remainingSongsInQueue) {
+                // Dont use List.contains or Song.equals
+                // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
+                for (final Song songToAdd : songsToAdd) {
+                    if (song.isQuickEqual(songToAdd)) {
+                        songsToRemove.add(song);
+                        break;
+                    }
+                }
+            }
+
+            musicService.removeSongs(songsToRemove);
+        };
+
+        final Runnable showToastEnqueued = () -> {
+            int count = songsToAdd.size();
+            final String toast = (count == 1)
+                    ? context.getString(R.string.added_title_to_playing_queue)
+                    : context.getString(R.string.added_x_titles_to_playing_queue, count);
+
+            Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+        };
+
+        final List<Pair<String, Runnable>> possibleActions = Arrays.asList(
+                new Pair<>(
+                        context.getString(R.string.action_replace_playing_queue),
+                        () -> {
+                            musicService.openQueue(songsToAdd, 0, true);
+                            showToastEnqueued.run();
+                        }),
+                new Pair<>(
+                        context.getString(R.string.action_play_next),
+                        () -> {
+                            removeDuplicate.run();
+                            musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
+                            showToastEnqueued.run();
+                        }),
+                new Pair<>(
+                        context.getString(R.string.action_add_to_playing_queue),
+                        () -> {
+                            removeDuplicate.run();
+                            musicService.addSongs(songsToAdd);
+                            showToastEnqueued.run();
+                        })
+        );
+        final int defaultActionIndex = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
+
+        final int queueSize = queue.size();
+        final String message = (queueSize == 1)
+                ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
+                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, queueSize);
+        final List<String> choicesText = new ArrayList<>();
+        for (final Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
+
+        new MaterialDialog.Builder(context)
+                .title(R.string.label_playing_queue)
+                .content(message)
+                .autoDismiss(false)
+                .items(choicesText)
+                .itemsCallbackSingleChoice(
+                        defaultActionIndex,
+                        (MaterialDialog dialog, View itemView, int which, CharSequence text) -> true)
+                .negativeText(android.R.string.cancel)
+                .positiveText(R.string.add_action)
+                .onPositive((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    final int chosenActionIndex = dialog.getSelectedIndex();
+                    if (chosenActionIndex >= 0 && chosenActionIndex < possibleActions.size()) {
+                        final Runnable action = possibleActions.get(chosenActionIndex).second;
+                        action.run();
+                        PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(chosenActionIndex);
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
@@ -315,7 +428,9 @@ public class MusicPlayerRemote {
             } else {
                 openQueue(songs, 0, false);
             }
-            final String toast = songs.size() == 1 ? musicService.getResources().getString(R.string.added_title_to_playing_queue) : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
+            final String toast = (songs.size() == 1)
+                    ? musicService.getResources().getString(R.string.added_title_to_playing_queue)
+                    : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
             Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
         }
     }

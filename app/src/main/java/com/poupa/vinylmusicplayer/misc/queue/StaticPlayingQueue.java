@@ -123,6 +123,9 @@ public class StaticPlayingQueue {
 
             if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
                 queue.get(i).index = queue.get(i).index + direction*(occurrence + 1);
+
+                int index = queue.get(i).index;
+                if (index < 0) {throw new IllegalArgumentException("Bad index=" + index);}
             }
         }
     }
@@ -452,7 +455,7 @@ public class StaticPlayingQueue {
                 revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:
-                ShuffleHelper.makeShuffleListWithIndexes(queue, currentPosition);
+                ShuffleHelper.makeShuffleList(queue, currentPosition);
                 songsIsStale = true;
                 currentPosition = 0;
                 break;
