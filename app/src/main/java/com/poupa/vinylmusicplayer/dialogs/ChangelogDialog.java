@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Aidan Follestad (afollestad)
@@ -64,13 +65,13 @@ public class ChangelogDialog extends DialogFragment {
 
         final WebView webView = customView.findViewById(R.id.web_view);
         try {
+            // TODO Drop the .html and load directly from .md
             // Load from vinylmusicplayer-changelog.html in the assets folder
             StringBuilder buf = new StringBuilder();
             InputStream json = activity.getAssets().open("vinylmusicplayer-changelog.html");
-            BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
             String str;
-            while ((str = in.readLine()) != null)
-                buf.append(str);
+            while ((str = in.readLine()) != null) {buf.append(str);}
             in.close();
 
             // Inject color values for WebView body background and links
@@ -83,7 +84,7 @@ public class ChangelogDialog extends DialogFragment {
                     .replace("{link-color}", colorToHex(defaultColor))
                     .replace("{link-color-active}",
                             colorToHex(ColorUtil.lightenColor(defaultColor)));
-            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(), Base64.DEFAULT);
+            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
             webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
         } catch (Throwable e) {
             webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
@@ -101,7 +102,8 @@ public class ChangelogDialog extends DialogFragment {
         }
     }
 
-    private static String colorToHex(int color) {
+    // TODO Mutualize this method with AboutActivity
+    public static String colorToHex(int color) {
         return Integer.toHexString(color).substring(2);
     }
 }

@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Fetch the list of contributors from Github, and render it in a HTML page to be included in the about dialog
+# TODO Integrate this to the build pipeline
+
+repo=vinyl2-team/vinyl2
+contributors_csv="app/src/main/assets/contributors.csv"
+contributors_html="app/src/main/assets/contributors.html"
+
+function update_contributors_csv()
+{
+  # TODO This will only fetch the top N contributors. Need to do some paging to get the whole list
+  gh api -H "Accept: application/vnd.github+json" "/repos/${repo}/contributors?per_page=100" \
+    | jq -r '.[] | [.login,.avatar_url,.html_url,.contributions] | @csv'
+}
+
+function update_contributors_html()
+{
+  cat << HEADER
+<html>
+  <head><style>
+    .contributor-login {
+      vertical-align: middle;
+    }
+    .contributor-avatar {
+      border-radius: 50% !important;
+      width: 38px;
+      height: 38px;
+      vertical-align: middle;
+    }
+    {style-placeholder}
+  </style></head>
+  <body>
+HEADER
+
+  cat "${contributors_csv}" | while read -r line; do
+    IFS=',' read -r -a tokens <<< "${line}"
+
+    login="${tokens[0]}"
+    avatar_url="${tokens[1]}"
+    html_url="${tokens[2]}"
+
+    unquoted_login="${login:1:$((${#login}-2))}"
+
+    cat << CONTRIBUTOR
+      <span style="white-space:nowrap">
+        <img class="contributor-avatar" src=${avatar_url} alt=${login}/>
+        <a class="contributor-login" href=${html_url}>${unquoted_login}</a>
+      </span>
+CONTRIBUTOR
+  done
+
+  cat << FOOTER
+  </body></html>
+FOOTER
+}
+
+echo "Getting the list of contributors from Github..."
+update_contributors_csv > ${contributors_csv} || exit 1
+echo "Building the contributor page in HTML..."
+update_contributors_html > ${contributors_html} || exit 1
