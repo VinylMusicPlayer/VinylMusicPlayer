@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -47,6 +48,8 @@ import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
+import com.poupa.vinylmusicplayer.sort.FileSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.util.FileUtil;
@@ -63,7 +66,16 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FoldersFragment extends AbsMainActivityFragment implements MainActivity.MainActivityFragmentCallbacks, CabHolder, BreadCrumbLayout.SelectionCallback, SongFileAdapter.Callbacks, AppBarLayout.OnOffsetChangedListener, LoaderManager.LoaderCallbacks<List<File>> {
+public class FoldersFragment
+        extends AbsMainActivityFragment
+        implements
+            MainActivity.MainActivityFragmentCallbacks,
+            CabHolder,
+            BreadCrumbLayout.SelectionCallback,
+            SongFileAdapter.Callbacks,
+            AppBarLayout.OnOffsetChangedListener,
+            LoaderManager.LoaderCallbacks<List<File>>
+{
 
     private static final int LOADER_ID = LoaderIds.FOLDERS_FRAGMENT;
 
@@ -75,8 +87,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
     private AttachedCab cab;
     private SongFileAdapter adapter;
 
-    public FoldersFragment() {
-    }
+    private String sortOrder;
 
     public static FoldersFragment newInstance() {
         return newInstance(PreferenceUtil.getInstance().getStartDirectory());
@@ -84,7 +95,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
 
     public static FoldersFragment newInstance(final File directory) {
         final FoldersFragment frag = new FoldersFragment();
-        Bundle bundle = new Bundle();
+        final Bundle bundle = new Bundle();
         bundle.putSerializable(PATH, directory);
         frag.setArguments(bundle);
         return frag;
@@ -239,6 +250,8 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
                 layoutBinding.toolbar,
                 menu,
                 ATHToolbarActivity.getToolbarBackgroundColor(layoutBinding.toolbar));
+
+        setUpSortOrderMenu(menu.findItem(R.id.action_sort_order).getSubMenu());
     }
 
     @Override
@@ -247,7 +260,7 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         ToolbarContentTintHelper.handleOnPrepareOptionsMenu(requireActivity(), layoutBinding.toolbar);
     }
 
-    public static final FileFilter AUDIO_FILE_FILTER = file -> !file.isHidden() && (file.isDirectory() ||
+    private static final FileFilter AUDIO_FILE_FILTER = file -> !file.isHidden() && (file.isDirectory() ||
                         FileUtil.fileIsMimeType(file, "audio/*", MimeTypeMap.getSingleton()) ||
                         FileUtil.fileIsMimeType(file, "application/opus", MimeTypeMap.getSingleton()) ||
                         FileUtil.fileIsMimeType(file, "application/ogg", MimeTypeMap.getSingleton()));
@@ -290,6 +303,10 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
             }
             return true;
         }
+        if (handleSortOrderMenuItem(item)) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -352,18 +369,9 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         return files;
     }
 
-    Comparator<File> fileComparator = (lhs, rhs) -> {
-        if (lhs.isDirectory() && !rhs.isDirectory()) {
-            return -1;
-        } else if (!lhs.isDirectory() && rhs.isDirectory()) {
-            return 1;
-        } else {
-            return lhs.getAbsolutePath().compareToIgnoreCase(rhs.getAbsolutePath());
-        }
-    };
-
     private Comparator<File> getFileComparator() {
-        return fileComparator;
+        final SortOrder<File> fileSortOrder = FileSortOrder.fromPreference(getSortOrder());
+        return fileSortOrder.comparator;
     }
 
     @Override
@@ -472,6 +480,51 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         }
     }
 
+    public final String getSortOrder() {
+        if (sortOrder == null) {
+            sortOrder = loadSortOrder();
+        }
+        return sortOrder;
+    }
+
+    private void setSortOrder(String sortOrder) {
+        reload();
+    }
+
+    private static String loadSortOrder() {return PreferenceUtil.getInstance().getFileSortOrder();}
+
+    private void saveSortOrder(final String newSortOrder) {
+        PreferenceUtil.getInstance().setFileSortOrder(newSortOrder);
+    }
+
+    private void setAndSaveSortOrder(final String sortOrder) {
+        this.sortOrder = sortOrder;
+        saveSortOrder(sortOrder);
+        setSortOrder(sortOrder);
+    }
+
+    private void setUpSortOrderMenu(@NonNull final SubMenu sortOrderMenu) {
+        final String currentSortOrder = getSortOrder();
+        sortOrderMenu.clear();
+        FileSortOrder.buildMenu(sortOrderMenu, currentSortOrder);
+        sortOrderMenu.setGroupCheckable(0, true, true);
+    }
+
+    private boolean handleSortOrderMenuItem(@NonNull final MenuItem item) {
+        String sortOrderStr = null;
+        final int itemId = item.getItemId();
+        final SortOrder<File> sorter = FileSortOrder.fromMenuResourceId(itemId);
+        if (sorter != null) {sortOrderStr = sorter.preferenceValue;}
+
+        if (sortOrderStr != null) {
+            item.setChecked(true);
+            setAndSaveSortOrder(sortOrderStr);
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     @NonNull
     public Loader<List<File>> onCreateLoader(int id, final Bundle args) {
@@ -488,15 +541,20 @@ public class FoldersFragment extends AbsMainActivityFragment implements MainActi
         updateAdapter(new LinkedList<>());
     }
 
+    public void reload() {
+        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
+    }
+
     private static class AsyncFileLoader extends WrappedAsyncTaskLoader<List<File>> {
         private final WeakReference<FoldersFragment> fragmentWeakReference;
 
-        public AsyncFileLoader(@NonNull final FoldersFragment foldersFragment) {
+        AsyncFileLoader(@NonNull final FoldersFragment foldersFragment) {
             super(foldersFragment.getActivity());
             fragmentWeakReference = new WeakReference<>(foldersFragment);
         }
 
         @Override
+        @NonNull
         public List<File> loadInBackground() {
             final FoldersFragment foldersFragment = fragmentWeakReference.get();
             File directory = null;
