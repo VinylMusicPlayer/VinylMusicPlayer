@@ -46,9 +46,11 @@ jobs:
         path: app/build/reports/lint-*
 
   pre-release:
-    if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/pre-release-permission')
+    if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to manipulate tags
     steps:
     - name: Retrieve built assets
       uses: actions/download-artifact@v3
@@ -56,8 +58,6 @@ jobs:
         name: outputs-apk
         path: app/build/outputs/apk
     - name: Publish assets
-      permissions:
-        contents: write # Needed to manipulate tags
       # Pre-release the built apps and expose it via a static and public accessible URL
       # Note that this step exists since artifacts (actions/upload-artifact) are neither
       # public-accessible nor at a constant/static URL
