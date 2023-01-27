@@ -46,7 +46,7 @@ jobs:
         path: app/build/reports/lint-*
 
   pre-release:
-    if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/pre-release-permission')
+    if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
     needs: build
     runs-on: ubuntu-latest
     permissions:
