@@ -1,11 +1,24 @@
 # Vinyl Music Player
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/blob/master/LICENSE.txt) 
-[![GithubActions CI](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml/badge.svg)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml)
 
-[![Download](https://img.shields.io/badge/Download-@pre--release-green)](https://github.com/VinylMusicPlayer/VinylMusicPlayer/releases/tag/pre-release)
-<a href="https://f-droid.org/packages/com.poupa.vinylmusicplayer/" target="_blank">
-<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
-<a href='https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="90"/></a>
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)]
+(https://github.com/VinylMusicPlayer/VinylMusicPlayer/blob/master/LICENSE.txt)
+
+[![GithubActions CI](https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml/badge.svg)]
+(https://github.com/VinylMusicPlayer/VinylMusicPlayer/actions/workflows/ci.yml)
+
+[![Download](https://img.shields.io/badge/Download-@pre--release-brightgreen)]
+(https://github.com/VinylMusicPlayer/VinylMusicPlayer/releases/tag/pre-release)
+
+[![Get it on F-Droid](https://img.shields.io/f-droid/v/com.poupa.vinylmusicplayer)]
+(https://f-droid.org/packages/com.poupa.vinylmusicplayer/)
+
+<!--
+Dynamic badge based on https://shields.io/endpoint (the badge service) and https://play.cuzi.workers.dev/ (play 
+store scraper)
+See https://github.com/badges/shields/issues/358#issuecomment-806235967
+-->
+[![Get it on Google Play]](https://img.shields.io/endpoint?color=green&logo=google-play&logoColor=lightgrey&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.poupa.vinylmusicplayer%26l%3DGoogle%2520Play%2520Store%26m%3D%24version)
+(https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer)
 
 **A material designed local music player for Android.**
 
