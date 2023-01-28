@@ -234,7 +234,6 @@ public class MusicPlayerRemote {
                     currentQueue.size()
             );
 
-            // TODO Async execution, to avoid penalizing the UI thread
             final ArrayList<Song> songsToRemove = new ArrayList<>();
             for (final Song song : remainingSongsInQueue) {
                 // Dont use List.contains or Song.equals
@@ -309,9 +308,7 @@ public class MusicPlayerRemote {
                         dialog.dismiss();
                     }
                 })
-                .onNegative((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
-                    dialog.dismiss();
-                })
+                .onNegative((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> dialog.dismiss())
                 .show();
     }
 
@@ -553,7 +550,7 @@ public class MusicPlayerRemote {
             }
 
             if (!song.equals(Song.EMPTY_SONG)) {
-                openQueue(new ArrayList<>(Arrays.asList(song)), 0, true);
+                openQueue(new ArrayList<>(List.of(song)), 0, true);
             } else {
                 Log.e(TAG, "No song found for URI: " + uri);
             }
@@ -585,7 +582,6 @@ public class MusicPlayerRemote {
         return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private static String getSongIdFromMediaProvider(Uri uri) {
         return DocumentsContract.getDocumentId(uri).split(":")[1];
     }
