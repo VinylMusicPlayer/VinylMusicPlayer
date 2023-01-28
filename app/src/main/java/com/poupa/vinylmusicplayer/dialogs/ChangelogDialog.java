@@ -83,7 +83,7 @@ public class ChangelogDialog extends DialogFragment {
                     .replace("{link-color}", colorToHex(defaultColor))
                     .replace("{link-color-active}",
                             colorToHex(ColorUtil.lightenColor(defaultColor)));
-            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes("UTF-8"), Base64.DEFAULT);
+            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(), Base64.DEFAULT);
             webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
         } catch (Throwable e) {
             webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
