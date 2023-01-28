@@ -9,8 +9,7 @@ contributors_html="app/src/main/assets/contributors.html"
 
 function update_contributors_csv()
 {
-  # TODO This will only fetch the top N contributors. Need to do some paging to get the whole list
-  gh api -H "Accept: application/vnd.github+json" "/repos/${repo}/contributors?per_page=100" \
+  gh api -H "Accept: application/vnd.github+json" "/repos/${repo}/contributors?per_page=10" \
     | jq -r '.[] | [.login,.avatar_url,.html_url,.contributions] | @csv'
 }
 
@@ -22,13 +21,16 @@ function update_contributors_html()
     .contributor-login {
       vertical-align: middle;
     }
+    a.contributor-login {
+      color: %{link-color};
+    }
     .contributor-avatar {
       border-radius: 50% !important;
       width: 38px;
       height: 38px;
       vertical-align: middle;
     }
-    {style-placeholder}
+    %{style-placeholder}
   </style></head>
   <body>
 HEADER
@@ -49,6 +51,14 @@ HEADER
       </span>
 CONTRIBUTOR
   done
+  # TODO Text localization
+  cat << MORE_CONTRIBUTORS
+      <p>
+        <a class="contributor-login" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
+          ...and more
+        </a>
+      </p>
+MORE_CONTRIBUTORS
 
   cat << FOOTER
   </body></html>

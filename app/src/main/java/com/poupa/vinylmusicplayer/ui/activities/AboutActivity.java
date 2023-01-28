@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
-import static com.poupa.vinylmusicplayer.dialogs.ChangelogDialog.colorToHex;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,7 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
-import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
@@ -165,17 +162,16 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             in.close();
 
             // Inject color values for WebView body background and links
-            // TODO Mutualize with ChangelogDialog
-            final String backgroundColor = colorToHex(ATHUtil.resolveColor(this, R.attr.md_background_color,
-                    Color.parseColor(ThemeSingleton.get().darkTheme ? "#424242" : "#ffffff")));
-            final String contentColor = ThemeSingleton.get().darkTheme ? "#ffffff" : "#000000";
-            final int defaultColor = ThemeSingleton.get().positiveColor.getDefaultColor();
+            final String backgroundColor = ChangelogDialog.colorToHex(ATHUtil.resolveColor(this,
+                    R.attr.md_background_color,
+                    Color.parseColor(ThemeSingleton.get().darkTheme ? "#000000" : "#ffffff"))); // TODO Get the color from the theme, not hardcoded
+            final String contentColor = ThemeSingleton.get().darkTheme ? "#ffffff" : "#000000"; // TODO Get the color from the theme, not hardcoded
+            final String defaultColor = ChangelogDialog.colorToHex(ThemeSingleton.get().positiveColor.getDefaultColor());
+            final String style = String.format("body { background-color: %s; color: %s; }",
+                    backgroundColor, contentColor);
             final String recoloredBuf = buf.toString()
-                    .replace("{style-placeholder}",
-                            String.format("body { background-color: %s; color: %s; }", backgroundColor, contentColor))
-                    .replace("{link-color}", colorToHex(defaultColor))
-                    .replace("{link-color-active}",
-                            colorToHex(ColorUtil.lightenColor(defaultColor)));
+                    .replace("%{style-placeholder}", style)
+                    .replace("%{link-color}", contentColor);
 
             String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
             webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
