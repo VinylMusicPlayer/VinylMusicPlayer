@@ -19,8 +19,17 @@
     <string name="action_play_pause">Play/Pause</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
+
     <string name="action_add_to_playing_queue">Add to playing queue</string>
     <string name="action_remove_from_playing_queue">Remove from playing queue</string>
+    <string name="action_clear_playing_queue">Clear playing queue</string>
+    <string name="action_replace_playing_queue">Replace playing queue</string>
+    <string name="action_save_playing_queue">Save playing queue</string>
+    <string name="about_to_add_title_to_playing_queue">"About to add 1 title to the playing queue."</string>
+    <string name="about_to_add_x_titles_to_playing_queue">About to add %1$d titles to the playing queue.</string>
+    <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
+    <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
+
     <string name="action_add_to_playlist">Add to playlist…</string>
     <string name="action_tag_editor">Tag editor</string>
     <string name="action_delete_from_device">Delete from device</string>
@@ -68,8 +77,6 @@
     <string name="label_playing_queue">Playing queue</string>
     <string name="no_results">No results</string>
     <string name="updating">Updating…</string>
-    <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
-    <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
     <string name="action_remove_from_playlist">Remove from playlist</string>
     <string name="action_grid_size">Grid size</string>
     <string name="action_grid_size_land">Grid size (land)</string>
@@ -100,8 +107,6 @@
     <string name="action_shuffle_album">Shuffle album</string>
     <string name="action_shuffle_artist">Shuffle artist</string>
     <string name="action_shuffle_playlist">Shuffle playlist</string>
-    <string name="action_clear_playing_queue">Clear playing queue</string>
-    <string name="action_save_playing_queue">Save playing queue</string>
     <string name="action_go_to_start_directory">Go to start directory</string>
     <string name="action_show_lyrics">Show lyrics</string>
     <string name="light_theme_name">Light</string>
