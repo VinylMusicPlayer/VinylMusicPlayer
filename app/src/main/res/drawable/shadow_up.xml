@@ -4,6 +4,6 @@
     <gradient
         android:angle="270"
         android:centerY="0.5"
-        android:endColor="@color/fifty_percent_black_overlay"
-        android:startColor="#00000000" />
+        android:endColor="@color/twenty_percent_black_overlay"
+        android:startColor="@color/transparent" />
 </shape>
