@@ -5,8 +5,7 @@
 # Branches (in same repo) that we dont want to include in CI builds
 # Space separated list of branch names
 blacklist_branches="
-    internal-playlists
-    fix/489-update-material-cab
+  internal-playlists
 "
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
@@ -55,7 +54,14 @@ esac
 function git_describe()
 {
     object="$1"
-    echo "<li><b>${object}</b><br/><code>$(git show --summary --oneline ${object})</code></li>"
+
+    # The blank lines below serves as .md paragraph separator
+    cat << END
+
+
+- **${object}**
+  $(git show --summary --oneline "${object}" | head -1)
+END
 }
 last_commits="$(git_describe origin/${CI_BRANCH})"
 
@@ -110,13 +116,9 @@ for alien_branch in ${alien_branches}; do
 done
 
 # Patch the changelog
-changelog_html="app/src/main/assets/vinylmusicplayer-changelog.html"
-{
-    echo "<html><body>
-        <p>Integration build from branch <code>${CI_BRANCH}</code>, with merges from the following:</p>
-        <ul>
-            ${last_commits}
-        </ul>
-        <p>This change log is auto-generated using <code>$0</code></p>
-        </body></html>"
-} > ${changelog_html}
+cat > app/src/main/assets/CHANGELOG.md << END
+Integration build from branch \`${CI_BRANCH}\`, with merges from the following:
+${last_commits}
+
+This change log is auto-generated using \`$0\`
+END
