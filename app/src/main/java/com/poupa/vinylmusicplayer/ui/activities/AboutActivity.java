@@ -3,10 +3,10 @@ package com.poupa.vinylmusicplayer.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
-import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
@@ -32,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Function;
 
 import de.psdev.licensesdialog.LicensesDialog;
 
@@ -162,21 +162,28 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             in.close();
 
             // Inject color values for WebView body background and links
-            final String backgroundColor = ChangelogDialog.colorToHex(ATHUtil.resolveColor(this,
-                    R.attr.md_background_color,
-                    Color.parseColor(ThemeSingleton.get().darkTheme ? "#000000" : "#ffffff"))); // TODO Get the color from the theme, not hardcoded
-            final String contentColor = ThemeSingleton.get().darkTheme ? "#ffffff" : "#000000"; // TODO Get the color from the theme, not hardcoded
-            final String defaultColor = ChangelogDialog.colorToHex(ThemeSingleton.get().positiveColor.getDefaultColor());
-            final String style = String.format("body { background-color: %s; color: %s; }",
-                    backgroundColor, contentColor);
+            Function<Integer, String> colorHex = (color) -> {
+                if (color == 0) {return "000000";}
+                return Integer.toHexString(color).substring(2); // strip the alpha part, keep only RGB
+            };
+
+            final TypedValue typedColor = new TypedValue();
+            getTheme().resolveAttribute(R.attr.cardBackgroundColor, typedColor, true);
+            final String backgroundColor = colorHex.apply(typedColor.data);
+            getTheme().resolveAttribute(R.attr.iconColor, typedColor, true);
+            final String contentColor = colorHex.apply(typedColor.data);
+
             final String recoloredBuf = buf.toString()
-                    .replace("%{style-placeholder}", style)
-                    .replace("%{link-color}", contentColor);
+                    .replace("%{color}", contentColor)
+                    .replace("%{background-color}", backgroundColor)
+                    .replace("%{link-color}", contentColor)
+                    // TODO Text localization
+                    .replace("%{other-contributors-label}", "+ other contributors");
 
             String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
             webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
         } catch (Throwable e) {
-            webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
+            webView.loadData("<b>Unable to load</b><br/>" + e.toString(), "text/html", "UTF-8");
         }
     }
 

@@ -18,11 +18,15 @@ function update_contributors_html()
   cat << HEADER
 <html>
   <head><style>
+    body {
+      background-color: #%{background-color};
+      color: #%{color};
+    }
     .contributor-login {
       vertical-align: middle;
     }
     a.contributor-login {
-      color: %{link-color};
+      color: #%{link-color};
     }
     .contributor-avatar {
       border-radius: 50% !important;
@@ -30,7 +34,6 @@ function update_contributors_html()
       height: 38px;
       vertical-align: middle;
     }
-    %{style-placeholder}
   </style></head>
   <body>
 HEADER
@@ -55,7 +58,7 @@ CONTRIBUTOR
   cat << MORE_CONTRIBUTORS
       <p>
         <a class="contributor-login" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
-          ...and more
+          %{other-contributors-label}
         </a>
       </p>
 MORE_CONTRIBUTORS
