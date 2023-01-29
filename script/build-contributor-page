@@ -36,6 +36,7 @@ function update_contributors_html()
     }
   </style></head>
   <body>
+    <h1>Contributors and Maintainers</h1>
 HEADER
 
   cat "${contributors_csv}" | while read -r line; do
@@ -48,22 +49,48 @@ HEADER
     unquoted_login="${login:1:$((${#login}-2))}"
 
     cat << CONTRIBUTOR
-      <span style="white-space:nowrap">
-        <img class="contributor-avatar" src=${avatar_url} alt=${login}/>
-        <a class="contributor-login" href=${html_url}>${unquoted_login}</a>
-      </span>
+    <span style="white-space:nowrap">
+      <img class="contributor-avatar" src=${avatar_url} alt=${login}/>
+      <a class="contributor-login" href=${html_url}>${unquoted_login}</a>
+    </span>
 CONTRIBUTOR
   done
-  # TODO Text localization
   cat << MORE_CONTRIBUTORS
-      <p>
-        <a class="contributor-login" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
-          %{other-contributors-label}
-        </a>
-      </p>
+    <p>
+      <a class="contributor-login" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
+        %{other-contributors-label}
+      </a>
+    </p>
 MORE_CONTRIBUTORS
 
+  # TODO Text localization
   cat << FOOTER
+    <h1>Original Author and Contributors</h1>
+    <span style="white-space:nowrap">
+      <img class="contributor-avatar" src="https://avatars.githubusercontent.com/u/7303830?v=4" alt="kabouzeid"/>
+      <a class="contributor-login" href="https://github.com/kabouzeid">Karim Abou Zeid</a>
+    </span>
+    <span style="white-space:nowrap">
+      <img class="contributor-avatar" src="https://avatars.githubusercontent.com/u/1820165?v=4" alt="afollestad"/>
+      <a class="contributor-login" href="https://github.com/afollestad">Aidan Follestad</a>
+    </span>
+    <span style="white-space:nowrap">
+      <a class="contributor-login" href="https://cookicons.co/">Michael Cook</a>
+    </span>
+    <span style="white-space:nowrap">
+      <a class="contributor-login" href="https://maartencorpel.com/">Maarten Corpel</a>
+    </span>
+    <span style="white-space:nowrap">
+      <a class="contributor-login" href="https://twitter.com/djsalezmaj">Aleksandar Tesic</a>
+    </span>
+    <span style="white-space:nowrap">
+      <img class="contributor-avatar" src="https://avatars.githubusercontent.com/u/4098258?v=4" alt="arkon"/>
+      <a class="contributor-login" href="https://github.com/arkon">Eugene Cheung</a>
+    </span>
+    <span style="white-space:nowrap">
+      <a class="contributor-login" href="https://twitter.com/froschgames">Adrian</a>
+    </span>
+
   </body></html>
 FOOTER
 }
