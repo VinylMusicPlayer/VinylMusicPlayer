@@ -101,7 +101,7 @@ public class ChangelogDialog extends DialogFragment {
         }
     }
 
-    public static String colorToHex(int color) {
+    private static String colorToHex(int color) {
         return Integer.toHexString(color).substring(2);
     }
 }
