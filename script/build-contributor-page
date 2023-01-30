@@ -64,7 +64,7 @@ CONTRIBUTOR
 MORE_CONTRIBUTORS
 
   cat << FOOTER
-    <hr>
+    <hr/>
     <h4>%{@string/special_thanks_to}</h4>
     <span style="white-space:nowrap">
       <img class="contributor-avatar" src="https://avatars.githubusercontent.com/u/7303830?v=4" alt="kabouzeid"/>
