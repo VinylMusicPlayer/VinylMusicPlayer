@@ -11,12 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -46,48 +42,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     private static final String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
 
-    private static final String KABOUZEID_GOOGLE_PLUS = "https://google.com/+KarimAbouZeid23697";
-    private static final String KABOUZEID_WEBSITE = "https://kabouzeid.com";
-
-    private static final String AIDAN_FOLLESTAD_GOOGLE_PLUS = "https://google.com/+AidanFollestad";
-    private static final String AIDAN_FOLLESTAD_GITHUB = "https://github.com/afollestad";
-
-    private static final String MICHAEL_COOK_GOOGLE_PLUS = "https://plus.google.com/102718493746376292361";
-    private static final String MICHAEL_COOK_WEBSITE = "https://cookicons.co/";
-
-    private static final String MAARTEN_CORPEL_GOOGLE_PLUS = "https://google.com/+MaartenCorpel";
-
-    private static final String ALEKSANDAR_TESIC_GOOGLE_PLUS = "https://google.com/+aleksandartešić";
-
-    private static final String EUGENE_CHEUNG_GITHUB = "https://github.com/arkon";
-    private static final String EUGENE_CHEUNG_WEBSITE = "https://echeung.me/";
-
-    private static final String ADRIAN_TWITTER = "https://twitter.com/froschgames";
-    private static final String ADRIAN_WEBSITE = "https://froschgames.com/";
-
     private ActivityAboutBinding layoutBinding;
-
-    private Toolbar toolbar;
-    private TextView appVersion;
-    private LinearLayout changelog;
-    private LinearLayout intro;
-    private LinearLayout licenses;
-    private LinearLayout forkOnGitHub;
-    private LinearLayout reportBugs;
-    private LinearLayout rateOnGooglePlay;
-
-    private AppCompatButton kabouzeidGooglePlus;
-    private AppCompatButton kabouzeidWebsite;
-    private AppCompatButton aidanFollestadGooglePlus;
-    private AppCompatButton aidanFollestadGitHub;
-    private AppCompatButton michaelCookGooglePlus;
-    private AppCompatButton michaelCookWebsite;
-    private AppCompatButton maartenCorpelGooglePlus;
-    private AppCompatButton aleksandarTesicGooglePlus;
-    private AppCompatButton eugeneCheungGitHub;
-    private AppCompatButton eugeneCheungWebsite;
-    private AppCompatButton adrianTwitter;
-    private AppCompatButton adrianWebsite;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -95,31 +50,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
         // TODO Catch InflateException - might mean that some component - ie WebView - not available on the system.
         layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
-
-        // TODO Remove all these local copies
-        toolbar = layoutBinding.toolbar;
-
-        appVersion = layoutBinding.content.cardAboutApp.appVersion;
-        changelog = layoutBinding.content.cardAboutApp.changelog;
-        intro = layoutBinding.content.cardAboutApp.intro;
-        licenses = layoutBinding.content.cardAboutApp.licenses;
-        forkOnGitHub = layoutBinding.content.cardAboutApp.forkOnGithub;
-
-        reportBugs = layoutBinding.content.cardSupportDevelopment.reportBugs;
-        rateOnGooglePlay = layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay;
-
-        kabouzeidGooglePlus = layoutBinding.content.cardSpecialThanks.kabouzeidGooglePlus;
-        kabouzeidWebsite = layoutBinding.content.cardSpecialThanks.kabouzeidWebsite;
-        aidanFollestadGooglePlus = layoutBinding.content.cardSpecialThanks.aidanFollestadGooglePlus;
-        aidanFollestadGitHub = layoutBinding.content.cardSpecialThanks.aidanFollestadGitHub;
-        michaelCookGooglePlus = layoutBinding.content.cardSpecialThanks.michaelCookGooglePlus;
-        michaelCookWebsite = layoutBinding.content.cardSpecialThanks.michaelCookWebsite;
-        maartenCorpelGooglePlus = layoutBinding.content.cardSpecialThanks.maartenCorpelGooglePlus;
-        aleksandarTesicGooglePlus = layoutBinding.content.cardSpecialThanks.aleksandarTesicGooglePlus;
-        eugeneCheungGitHub = layoutBinding.content.cardSpecialThanks.eugeneCheungGitHub;
-        eugeneCheungWebsite = layoutBinding.content.cardSpecialThanks.eugeneCheungWebsite;
-        adrianTwitter = layoutBinding.content.cardSpecialThanks.adrianTwitter;
-        adrianWebsite = layoutBinding.content.cardSpecialThanks.adrianWebsite;
 
         setContentView(layoutBinding.getRoot());
 
@@ -140,14 +70,14 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     }
 
     private void setUpToolbar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        setSupportActionBar(toolbar);
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        setSupportActionBar(layoutBinding.toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setUpAppVersion() {
-        appVersion.setText(getCurrentVersionName(this));
+        layoutBinding.content.cardAboutApp.appVersion.setText(getCurrentVersionName(this));
     }
 
     private void setUpContributorsView()
@@ -177,35 +107,39 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
                     .replace("%{color}", contentColor)
                     .replace("%{background-color}", backgroundColor)
                     .replace("%{link-color}", contentColor)
-                    // TODO Text localization
-                    .replace("%{other-contributors-label}", "+ other contributors");
+                    .replace("%{@string/maintainers_and_contributors}", getResources().getString(R.string.maintainers_and_contributors))
+                    .replace("%{@string/label_other_contributors}", getResources().getString(R.string.label_other_contributors))
+                    .replace("%{@string/special_thanks_to}", getResources().getString(R.string.special_thanks_to))
+                    .replace("%{@string/karim_abou_zeid}", getResources().getString(R.string.karim_abou_zeid))
+                    .replace("%{@string/karim_abou_zeid_summary}", getResources().getString(R.string.karim_abou_zeid_summary))
+                    .replace("%{@string/aidan_follestad}", getResources().getString(R.string.aidan_follestad))
+                    .replace("%{@string/aidan_follestad_summary}", getResources().getString(R.string.aidan_follestad_summary))
+                    .replace("%{@string/michael_cook_cookicons}", getResources().getString(R.string.michael_cook_cookicons))
+                    .replace("%{@string/michael_cook_summary}", getResources().getString(R.string.michael_cook_summary))
+                    .replace("%{@string/maarten_corpel}", getResources().getString(R.string.maarten_corpel))
+                    .replace("%{@string/maarten_corpel_summary}", getResources().getString(R.string.maarten_corpel_summary))
+                    .replace("%{@string/aleksandar_tesic}", getResources().getString(R.string.aleksandar_tesic))
+                    .replace("%{@string/aleksandar_tesic_summary}", getResources().getString(R.string.aleksandar_tesic_summary))
+                    .replace("%{@string/eugene_cheung}", getResources().getString(R.string.eugene_cheung))
+                    .replace("%{@string/eugene_cheung_summary}", getResources().getString(R.string.eugene_cheung_summary))
+                    .replace("%{@string/adrian}", getResources().getString(R.string.adrian))
+                    .replace("%{@string/adrian_summary}", getResources().getString(R.string.adrian_summary))
+                    ;
 
             String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
             webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
         } catch (Throwable e) {
-            webView.loadData("<b>Unable to load</b><br/>" + e.toString(), "text/html", "UTF-8");
+            webView.loadData("<b>Unable to load</b><br/>" + e, "text/html", "UTF-8");
         }
     }
 
     private void setUpOnClickListeners() {
-        changelog.setOnClickListener(this);
-        intro.setOnClickListener(this);
-        licenses.setOnClickListener(this);
-        forkOnGitHub.setOnClickListener(this);
-        reportBugs.setOnClickListener(this);
-        rateOnGooglePlay.setOnClickListener(this);
-        aidanFollestadGooglePlus.setOnClickListener(this);
-        aidanFollestadGitHub.setOnClickListener(this);
-        kabouzeidGooglePlus.setOnClickListener(this);
-        kabouzeidWebsite.setOnClickListener(this);
-        michaelCookGooglePlus.setOnClickListener(this);
-        michaelCookWebsite.setOnClickListener(this);
-        maartenCorpelGooglePlus.setOnClickListener(this);
-        aleksandarTesicGooglePlus.setOnClickListener(this);
-        eugeneCheungGitHub.setOnClickListener(this);
-        eugeneCheungWebsite.setOnClickListener(this);
-        adrianTwitter.setOnClickListener(this);
-        adrianWebsite.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.changelog.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.intro.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.licenses.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.forkOnGithub.setOnClickListener(this);
+        layoutBinding.content.cardSupportDevelopment.reportBugs.setOnClickListener(this);
+        layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay.setOnClickListener(this);
     }
 
     @Override
@@ -228,42 +162,18 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(final View v) {
-        if (v == changelog) {
+        if (v == layoutBinding.content.cardAboutApp.changelog) {
             ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
-        } else if (v == licenses) {
+        } else if (v == layoutBinding.content.cardAboutApp.licenses) {
             showLicenseDialog();
-        } else if (v == intro) {
+        } else if (v == layoutBinding.content.cardAboutApp.intro) {
             startActivity(new Intent(this, AppIntroActivity.class));
-        } else if (v == forkOnGitHub) {
+        } else if (v == layoutBinding.content.cardAboutApp.forkOnGithub) {
             openUrl(GITHUB);
-        } else if (v == reportBugs) {
+        } else if (v == layoutBinding.content.cardSupportDevelopment.reportBugs) {
             startActivity(new Intent(this, BugReportActivity.class));
-        } else if (v == rateOnGooglePlay) {
+        } else if (v == layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay) {
             openUrl(RATE_ON_GOOGLE_PLAY);
-        } else if (v == aidanFollestadGooglePlus) {
-            openUrl(AIDAN_FOLLESTAD_GOOGLE_PLUS);
-        } else if (v == aidanFollestadGitHub) {
-            openUrl(AIDAN_FOLLESTAD_GITHUB);
-        } else if (v == kabouzeidGooglePlus) {
-            openUrl(KABOUZEID_GOOGLE_PLUS);
-        } else if (v == kabouzeidWebsite) {
-            openUrl(KABOUZEID_WEBSITE);
-        } else if (v == michaelCookGooglePlus) {
-            openUrl(MICHAEL_COOK_GOOGLE_PLUS);
-        } else if (v == michaelCookWebsite) {
-            openUrl(MICHAEL_COOK_WEBSITE);
-        } else if (v == maartenCorpelGooglePlus) {
-            openUrl(MAARTEN_CORPEL_GOOGLE_PLUS);
-        } else if (v == aleksandarTesicGooglePlus) {
-            openUrl(ALEKSANDAR_TESIC_GOOGLE_PLUS);
-        } else if (v == eugeneCheungGitHub) {
-            openUrl(EUGENE_CHEUNG_GITHUB);
-        } else if (v == eugeneCheungWebsite) {
-            openUrl(EUGENE_CHEUNG_WEBSITE);
-        } else if (v == adrianTwitter) {
-            openUrl(ADRIAN_TWITTER);
-        } else if (v == adrianWebsite) {
-            openUrl(ADRIAN_WEBSITE);
         }
     }
 
