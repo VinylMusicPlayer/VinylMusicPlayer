@@ -24,10 +24,8 @@ public class PlaylistLoader {
     public static Playlist getPlaylist(@NonNull final Context context, final long playlistId) {
         return getPlaylist(makePlaylistCursor(
                 context,
-                BaseColumns._ID + "=?",
-                new String[]{
-                        String.valueOf(playlistId)
-                }
+                BaseColumns._ID + "=" + playlistId,
+                null
         ));
     }
 
@@ -35,10 +33,8 @@ public class PlaylistLoader {
     public static Playlist getPlaylist(@NonNull final Context context, final String playlistName) {
         return getPlaylist(makePlaylistCursor(
                 context,
-                PlaylistsColumns.NAME + "=?",
-                new String[]{
-                        playlistName
-                }
+                PlaylistsColumns.NAME + "='" + playlistName + "'",
+                null
         ));
     }
 
