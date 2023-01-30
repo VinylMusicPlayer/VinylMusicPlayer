@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,12 +51,12 @@ public class PlaylistsUtil {
 
     public static long createPlaylist(@NonNull final Context context, @Nullable final String name) {
         long id = -1;
-        if (name != null && name.length() > 0) {
-            try {
-                Cursor cursor = context.getContentResolver().query(EXTERNAL_CONTENT_URI,
-                        new String[]{MediaStore.Audio.Playlists._ID},
-                        MediaStore.Audio.PlaylistsColumns.NAME + "=?", new String[]{name},
-                        null);
+        if (!TextUtils.isEmpty(name)) {
+            try (Cursor cursor = context.getContentResolver().query(EXTERNAL_CONTENT_URI,
+                    new String[]{MediaStore.Audio.Playlists._ID},
+                    MediaStore.Audio.PlaylistsColumns.NAME + "='" + name + "'",
+                    null, null))
+            {
                 if (cursor == null || cursor.getCount() < 1) {
                     final ContentValues values = new ContentValues(1);
                     values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
@@ -73,9 +74,6 @@ public class PlaylistsUtil {
                     if (cursor.moveToFirst()) {
                         id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists._ID));
                     }
-                }
-                if (cursor != null) {
-                    cursor.close();
                 }
             } catch (SecurityException e) {
                 e.printStackTrace();
@@ -107,8 +105,7 @@ public class PlaylistsUtil {
     }
 
     public static void addToPlaylist(@NonNull final Context context, final Song song, final long playlistId, final boolean showToastOnFinish) {
-        List<Song> helperList = new ArrayList<>();
-        helperList.add(song);
+        List<Song> helperList = List.of(song);
         addToPlaylist(context, helperList, playlistId, showToastOnFinish);
     }
 
@@ -119,26 +116,19 @@ public class PlaylistsUtil {
                 "max(" + MediaStore.Audio.Playlists.Members.PLAY_ORDER + ")",
         };
         final Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
-        Cursor cursor = null;
-        int base = 0;
 
         try {
-            try {
-                cursor = resolver.query(uri, projection, null, null, null);
-
+            int base = 0;
+            try (Cursor cursor = resolver.query(uri, projection, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     base = cursor.getInt(0) + 1;
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
                 }
             }
 
             int numInserted = 0;
-            for (int offSet = 0; offSet < size; offSet += 1000)
-                numInserted += resolver.bulkInsert(uri, makeInsertItems(songs, offSet, 1000, base));
-
+            for (int offSet=0, batchSize=1000; offSet < size; offSet += batchSize) {
+                numInserted += resolver.bulkInsert(uri, makeInsertItems(songs, offSet, batchSize, base));
+            }
             notifyChange(context, uri);
 
             if (showToastOnFinish) {
@@ -151,7 +141,7 @@ public class PlaylistsUtil {
     }
 
     @NonNull
-    public static ContentValues[] makeInsertItems(@NonNull final List<Song> songs, final int offset, int len, final int base) {
+    private static ContentValues[] makeInsertItems(@NonNull final List<Song> songs, final int offset, int len, final int base) {
         if (offset + len > songs.size()) {
             len = songs.size() - offset;
         }
@@ -243,21 +233,15 @@ public class PlaylistsUtil {
     }
 
     public static String getNameForPlaylist(@NonNull final Context context, final long id) {
-        try {
-            Cursor cursor = context.getContentResolver().query(
+        try (Cursor cursor = context.getContentResolver().query(
                     ContentUris.withAppendedId(EXTERNAL_CONTENT_URI, id),
                     new String[]{MediaStore.Audio.PlaylistsColumns.NAME},
                     null,
                     null,
-                    null);
-            if (cursor != null) {
-                try {
-                    if (cursor.moveToFirst()) {
-                        return cursor.getString(0);
-                    }
-                } finally {
-                    cursor.close();
-                }
+                    null))
+        {
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getString(0);
             }
         } catch (SecurityException e) {
             e.printStackTrace();

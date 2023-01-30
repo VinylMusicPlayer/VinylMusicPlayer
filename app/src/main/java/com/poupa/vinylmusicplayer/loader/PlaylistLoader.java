@@ -49,8 +49,9 @@ public class PlaylistLoader {
         if (cursor != null && cursor.moveToFirst()) {
             playlist = getPlaylistFromCursorImpl(cursor);
         }
-        if (cursor != null)
+        if (cursor != null) {
             cursor.close();
+        }
         return playlist;
     }
 
