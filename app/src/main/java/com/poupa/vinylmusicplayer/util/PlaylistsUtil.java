@@ -169,7 +169,7 @@ public class PlaylistsUtil {
     public static void removeFromPlaylist(@NonNull final Context context, @NonNull final Song song, long playlistId) {
         Uri uri = MediaStore.Audio.Playlists.Members.getContentUri(
                 "external", playlistId);
-        String selection = MediaStore.Audio.Playlists.Members.AUDIO_ID + " = " + song,id;
+        String selection = MediaStore.Audio.Playlists.Members.AUDIO_ID + " = " + song.id;
 
         try {
             context.getContentResolver().delete(uri, selection, null);
