@@ -5,7 +5,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
 
-    <es.dmoral.markdownview.MarkdownView
+    <TextView
         android:id="@+id/markdown_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
