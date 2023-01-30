@@ -229,6 +229,7 @@
     <string name="special_thanks_to">Special thanks to</string>
     <string name="author">Author</string>
     <string name="label_other_contributors">+ many other contributors</string>
+    <string name="missing_webview_component">"This device doesn't support WebView, which is necessary to perform the requested action.\nIt is missing a system component."</string>
 
     <string name="write_an_email">Write an email</string>
     <string name="fork_on_github">Fork on GitHub</string>
@@ -242,6 +243,8 @@
     <string name="michael_cook_summary">For the pretty material app icon.</string>
     <string name="maarten_corpel_summary">For making the Play Store illustration and the empty album cover.</string>
     <string name="aleksandar_tesic_summary">For helping me with the design.</string>
+    <string name="eugene_cheung_summary">For his contributions to the source code.</string>
+    <string name="adrian_summary">For creating the album page design.</string>
     <string name="website">Website</string>
     <string name="up_next">Up next</string>
     <string name="pref_title_now_playing_screen_appearance">Appearance</string>
@@ -316,8 +319,6 @@
     <string name="idle_notification_name">Idle notification</string>
     <string name="idle_notification_title">Vinyl is running</string>
 
-    <string name="eugene_cheung_summary">For his contributions to the source code.</string>
-    <string name="adrian_summary">For creating the album page design.</string>
     <string name="add_action">Add</string>
     <string name="blacklist">Blacklist</string>
     <string name="remove_from_blacklist">Remove from blacklist</string>

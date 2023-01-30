@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.TypedValue;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
@@ -48,8 +50,17 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO Catch InflateException - might mean that some component - ie WebView - not available on the system.
-        layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+        try {
+            layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+        } catch (InflateException e) {
+            e.printStackTrace();
+            new MaterialDialog.Builder(this)
+                    .title(android.R.string.dialog_alert_title)
+                    .content(R.string.missing_webview_component)
+                    .positiveText(android.R.string.ok)
+                    .build()
+                    .show();
+        }
 
         setContentView(layoutBinding.getRoot());
 
