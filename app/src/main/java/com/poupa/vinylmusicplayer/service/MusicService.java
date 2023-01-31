@@ -396,30 +396,32 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public synchronized void restoreQueuesAndPositionIfNecessary() {
         if (!queuesRestored && playingQueue.size()==0) {
-            ArrayList<IndexedSong> restoredQueue = MusicPlaybackQueueStore.getInstance(this).getSavedPlayingQueue();
-            ArrayList<IndexedSong> restoredOriginalQueue = MusicPlaybackQueueStore.getInstance(this).getSavedOriginalPlayingQueue();
-            int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
-            int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+            try {
+                ArrayList<IndexedSong> restoredQueue = MusicPlaybackQueueStore.getInstance(this).getSavedPlayingQueue();
+                ArrayList<IndexedSong> restoredOriginalQueue = MusicPlaybackQueueStore.getInstance(this).getSavedOriginalPlayingQueue();
+                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
+                int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
-            if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
-                try {
+                if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
                     playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode());
-                } catch (ArrayIndexOutOfBoundsException queueCopiesOutOfSync) {
-                    // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                    Log.e(TAG, "Restored queues are corrupted", queueCopiesOutOfSync);
-                    final int shuffleMode = playingQueue.getShuffleMode();
-                    playingQueue = new StaticPlayingQueue();
-                    playingQueue.setShuffle(shuffleMode);
+
+                    openCurrent();
+                    prepareNext();
+
+                    if (restoredPositionInTrack > 0) seek(restoredPositionInTrack);
+
+                    notHandledMetaChangedForCurrentTrack = true;
+                    sendChangeInternal(META_CHANGED);
+                    sendChangeInternal(QUEUE_CHANGED);
                 }
+            } catch (ArrayIndexOutOfBoundsException|IllegalArgumentException queueCopiesOutOfSync) {
+                // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
+                Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
+                Toast.makeText(this, R.string.failed_restore_playing_queue, Toast.LENGTH_LONG).show();
 
-                openCurrent();
-                prepareNext();
-
-                if (restoredPositionInTrack > 0) seek(restoredPositionInTrack);
-
-                notHandledMetaChangedForCurrentTrack = true;
-                sendChangeInternal(META_CHANGED);
-                sendChangeInternal(QUEUE_CHANGED);
+                final int shuffleMode = playingQueue.getShuffleMode();
+                playingQueue = new StaticPlayingQueue();
+                playingQueue.setShuffle(shuffleMode);
             }
         }
         queuesRestored = true;
@@ -439,17 +441,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private void releaseResources() {
         playerHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= 18) {
-            musicPlayerHandlerThread.quitSafely();
-        } else {
-            musicPlayerHandlerThread.quit();
-        }
+        musicPlayerHandlerThread.quitSafely();
         queueSaveHandler.removeCallbacksAndMessages(null);
-        if (Build.VERSION.SDK_INT >= 18) {
-            queueSaveHandlerThread.quitSafely();
-        } else {
-            queueSaveHandlerThread.quit();
-        }
+        queueSaveHandlerThread.quitSafely();
         playback.release();
         playback = null;
         mediaSession.release();
