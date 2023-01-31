@@ -260,7 +260,7 @@ public class MusicPlayerRemote {
 
         final List<Pair<String, Runnable>> possibleActions = Arrays.asList(
                 new Pair<>(
-                        context.getString(R.string.action_replace_playing_queue),
+                        context.getString(R.string.action_play),
                         () -> {
                             musicService.openQueue(songsToAdd, 0, true);
                             showToastEnqueued.run();

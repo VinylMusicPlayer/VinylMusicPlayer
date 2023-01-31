@@ -23,10 +23,9 @@
     <string name="action_add_to_playing_queue">Add to playing queue</string>
     <string name="action_remove_from_playing_queue">Remove from playing queue</string>
     <string name="action_clear_playing_queue">Clear playing queue</string>
-    <string name="action_replace_playing_queue">Replace playing queue</string>
     <string name="action_save_playing_queue">Save playing queue</string>
-    <string name="about_to_add_title_to_playing_queue">"About to add 1 title to the playing queue."</string>
-    <string name="about_to_add_x_titles_to_playing_queue">About to add %1$d titles to the playing queue.</string>
+    <string name="about_to_add_title_to_playing_queue">"About to play 1 song.\nHow do you want to proceed with this song?"</string>
+    <string name="about_to_add_x_titles_to_playing_queue">About to play %1$d titles.\nHow do you want to proceed with these songs?</string>
     <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
     <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
 
