@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.text.util.Linkify;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import io.noties.markwon.linkify.LinkifyPlugin;
 
 /**
  * @author Aidan Follestad (afollestad)
+ * @author SC (soncaokim)
  */
 public class ChangelogDialog extends DialogFragment {
 
@@ -51,7 +53,7 @@ public class ChangelogDialog extends DialogFragment {
 
         final Markwon markwon = Markwon.builder(activity)
                 .usePlugin(GlideImagesPlugin.create(activity)) // image loader
-                .usePlugin(LinkifyPlugin.create()) // make link from text
+                .usePlugin(LinkifyPlugin.create(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS)) // make link from text
                 .build();
         final TextView markdownView = customView.findViewById(R.id.markdown_view);
         try {
