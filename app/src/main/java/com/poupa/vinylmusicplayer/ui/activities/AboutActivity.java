@@ -99,7 +99,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             InputStream json = getAssets().open("credits.html");
             BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
             String str;
-            while ((str = in.readLine()) != null) {buf.append(str);}
+            while ((str = in.readLine()) != null) {buf.append(str).append("\n");}
             in.close();
 
             // Inject color values for WebView body background and links
