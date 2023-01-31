@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Fetch the list of contributors from Github, and render it in a HTML page to be included in the about dialog
-# TODO Integrate this to the build pipeline
+# Fetch the list of maintainers/contributors from Github,
+# and render it in a HTML page to be included in the about dialog
 
 org=VinylMusicPlayer
 repo=${org}/VinylMusicPlayer
