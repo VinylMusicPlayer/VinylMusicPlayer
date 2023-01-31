@@ -96,7 +96,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         final WebView webView = layoutBinding.content.cardContributors.viewContributors;
         try {
             StringBuilder buf = new StringBuilder();
-            InputStream json = getAssets().open("contributors.html");
+            InputStream json = getAssets().open("credits.html");
             BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
             String str;
             while ((str = in.readLine()) != null) {buf.append(str);}
@@ -118,7 +118,8 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
                     .replace("%{color}", contentColor)
                     .replace("%{background-color}", backgroundColor)
                     .replace("%{link-color}", contentColor)
-                    .replace("%{@string/maintainers_and_contributors}", getResources().getString(R.string.maintainers_and_contributors))
+                    .replace("%{@string/maintainers}", getResources().getString(R.string.maintainers))
+                    .replace("%{@string/contributors}", getResources().getString(R.string.contributors))
                     .replace("%{@string/label_other_contributors}", getResources().getString(R.string.label_other_contributors))
                     .replace("%{@string/special_thanks_to}", getResources().getString(R.string.special_thanks_to))
                     .replace("%{@string/karim_abou_zeid}", getResources().getString(R.string.karim_abou_zeid))

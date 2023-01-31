@@ -225,7 +225,8 @@
     <string name="support_development">Support development</string>
     <string name="version">Version</string>
 
-    <string name="maintainers_and_contributors">Maintainers and Contributors</string>
+    <string name="maintainers">Maintainers</string>
+    <string name="contributors">Contributors</string>
     <string name="special_thanks_to">Special thanks to</string>
     <string name="author">Author</string>
     <string name="label_other_contributors">+ many other contributors</string>
