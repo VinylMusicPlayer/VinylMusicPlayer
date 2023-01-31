@@ -282,10 +282,10 @@ public class MusicPlayerRemote {
         );
         final int defaultActionIndex = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
 
-        final int queueSize = queue.size();
-        final String message = (queueSize == 1)
+        final int songCount = songsToAdd.size();
+        final String message = (songCount == 1)
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
-                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, queueSize);
+                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, songCount);
         final List<String> choicesText = new ArrayList<>();
         for (final Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
