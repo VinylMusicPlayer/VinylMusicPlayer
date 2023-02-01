@@ -52,9 +52,9 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
                             return true;
                         case MotionEvent.ACTION_CANCEL:
                             if (direction ==  DIRECTION_NEXT) {
-                                MusicPlayerRemote.playNextSong();
+                                MusicPlayerRemote.playNextSong(true);
                             } else if (direction ==  DIRECTION_PREVIOUS) {
-                                MusicPlayerRemote.back();
+                                MusicPlayerRemote.back(true);
                             }
                             return true;
                     }

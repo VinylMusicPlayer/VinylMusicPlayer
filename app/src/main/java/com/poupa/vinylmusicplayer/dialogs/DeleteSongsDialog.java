@@ -76,7 +76,7 @@ public class DeleteSongsDialog extends DialogFragment {
                 .onPositive((dialog, which) -> {
                     // If song removed was the playing song, then play the next song
                     if ((songs.size() == 1) && MusicPlayerRemote.isPlaying(songs.get(0))) {
-                        MusicPlayerRemote.playNextSong();
+                        MusicPlayerRemote.playNextSong(false);
                     }
 
                     // Now remove the track in background
@@ -92,7 +92,6 @@ public class DeleteSongsDialog extends DialogFragment {
         MusicUtil.deleteTracks(getActivity(), songs, safUris, this::dismiss);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void deleteSongsKitkat() {
         if (songsToRemove.size() < 1) {
             dismiss();

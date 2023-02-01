@@ -123,9 +123,9 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void playSongAt(final int position) {
+    public static void playSongAt(final int position, boolean skippedLast) {
         if (musicService != null) {
-            musicService.playSongAt(position);
+            musicService.playSongAt(position, skippedLast);
         }
     }
 
@@ -147,27 +147,27 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void playNextSong() {
+    public static void playNextSong(boolean skippedLast) {
         if (musicService != null) {
-            musicService.playNextSong(true);
+            musicService.playNextSong(skippedLast);
         }
     }
 
     /**
      * Async
      */
-    public static void playPreviousSong() {
+    public static void playPreviousSong(boolean skippedLast) {
         if (musicService != null) {
-            musicService.playPreviousSong(true);
+            musicService.playPreviousSong(skippedLast);
         }
     }
 
     /**
      * Async
      */
-    public static void back() {
+    public static void back(boolean skippedLast) {
         if (musicService != null) {
-            musicService.back(true);
+            musicService.back(skippedLast);
         }
     }
 
@@ -314,11 +314,8 @@ public class MusicPlayerRemote {
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
-            if (startPlaying) {
-                playSongAt(startPosition);
-            } else {
-                setPosition(startPosition);
-            }
+            if (startPlaying) {playSongAt(startPosition, false);}
+            else {setPosition(startPosition);}
             return true;
         }
         return false;

@@ -188,8 +188,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private Handler uiThreadHandler;
 
-    private MediaSessionCallback mMediaSessionCallback;
-
     private PackageValidator mPackageValidator;
 
     private AutoMusicProvider mMusicProvider;
@@ -263,7 +261,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
 
-        mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
+        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
         mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
         mediaSession.setCallback(mMediaSessionCallback);
         mediaSession.setActive(true);
@@ -463,13 +461,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return playingQueue.getCurrentPosition();
     }
 
-    public void playNextSong(boolean force) {
-        if (force && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
-            final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
-            PlaylistsUtil.addToPlaylist(this, getCurrentSong(), playlistId, true);
-        }
-
-        playSongAt(playingQueue.getNextPosition(force));
+    public void playNextSong(boolean skippedLast) {
+        playSongAt(playingQueue.getNextPosition(skippedLast), skippedLast);
     }
 
     public boolean openTrackAndPrepareNextAt(int position) {
@@ -756,7 +749,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             setShuffleMode(shuffleMode);
 
             if (startPlaying) {
-                playSongAt(this.playingQueue.getCurrentPosition());
+                playSongAt(this.playingQueue.getCurrentPosition(), false);
             } else {
                 setPosition(position);
             }
@@ -798,10 +791,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         int newPosition = playingQueue.remove(position);
         if (newPosition != -1) {
-            if (isPlaying)
-                playSongAt(newPosition);
-            else
-                setPosition(newPosition);
+            if (isPlaying) {playSongAt(newPosition, false);}
+            else {setPosition(newPosition);}
         }
 
         notifyChange(QUEUE_CHANGED);
@@ -829,7 +820,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void playSongAt(final int position) {
+    public void playSongAt(final int position, boolean skippedLast) {
+        if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
+            // Mark the current song as skipped
+            // TODO From time to time, recycle the Skipped songs playlist
+            // Otherwise the add/remove operation moght take long time (seconds)
+
+            final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
+            PlaylistsUtil.addToPlaylist(this, getCurrentSong(), playlistId, true);
+        }
+
         // handle this on the handlers thread to avoid blocking the ui thread
         playerHandler.removeMessages(PLAY_SONG);
         playerHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
@@ -866,7 +866,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (requestFocus()) {
                 if (!playback.isPlaying()) {
                     if (!playback.isInitialized()) {
-                        playSongAt(getPosition());
+                        playSongAt(getPosition(), false);
                     } else {
                         playback.start();
                         if (!becomingNoisyReceiverRegistered) {
@@ -922,15 +922,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void playPreviousSong(boolean force) {
-        playSongAt(playingQueue.getPreviousPosition(force));
+    public void playPreviousSong(boolean skippedLast) {
+        playSongAt(playingQueue.getPreviousPosition(skippedLast), skippedLast);
     }
 
-    public void back(boolean force) {
+    public void back(boolean skippedLast) {
         if (getSongProgressMillis() > 5000) {
             seek(0);
         } else {
-            playPreviousSong(force);
+            playPreviousSong(skippedLast);
         }
     }
 
