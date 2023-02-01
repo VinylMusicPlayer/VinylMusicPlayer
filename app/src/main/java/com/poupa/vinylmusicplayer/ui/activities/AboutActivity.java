@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
+import com.google.android.material.resources.TextAppearance;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
@@ -91,6 +93,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         layoutBinding.content.cardAboutApp.appVersion.setText(getCurrentVersionName(this));
     }
 
+    @SuppressLint("RestrictedApi")
     private void setUpContributorsView()
     {
         final WebView webView = layoutBinding.content.cardContributors.viewContributors;
@@ -113,10 +116,27 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             final String backgroundColor = colorHex.apply(typedColor.data);
             getTheme().resolveAttribute(R.attr.iconColor, typedColor, true);
             final String contentColor = colorHex.apply(typedColor.data);
+            getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);
+            String dividerColor = colorHex.apply(typedColor.data);
+            getTheme().resolveAttribute(android.R.attr.textColorSecondary, typedColor, true);
+            //final String secondary = colorHex.apply(typedColor.data);
+            /*
+            @style/TextAppearance.AppCompat.Body2 -> ?android:textColorPrimary
+
+            @style/TextAppearance.AppCompat.Subhead -> ?android:textColorPrimary
+            @style/TextAppearance.AppCompat.Caption -> ?android:textColorPrimary
+            */
+            final TextAppearance test = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
+            String secondary = test.getTextColor().toString();
+            //cardBackground 424242 ffffff 212121
+            secondary = ThemeSingleton.get().darkTheme ? "c7c7c7" : "666666"; //bdbdbd
+            dividerColor = ThemeSingleton.get().darkTheme ? "4e4e4e" : "efefef"; //363636
 
             final String recoloredBuf = buf.toString()
                     .replace("%{color}", contentColor)
                     .replace("%{background-color}", backgroundColor)
+                    .replace("%{divider-color}", dividerColor)
+                    .replace("%{secondary-color}", secondary)
                     .replace("%{link-color}", contentColor)
                     .replace("%{@string/maintainers}", getResources().getString(R.string.maintainers))
                     .replace("%{@string/contributors}", getResources().getString(R.string.contributors))
