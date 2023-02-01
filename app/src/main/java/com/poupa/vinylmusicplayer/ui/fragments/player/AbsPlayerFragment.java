@@ -42,15 +42,13 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     private Callbacks callbacks;
     private static boolean isToolbarShown = true;
-
     protected Toolbar toolbar;
 
-    public PlayingQueueAdapter playingQueueAdapter;
-    public RecyclerView.Adapter wrappedAdapter;
-    public RecyclerViewDragDropManager recyclerViewDragDropManager;
-    public RecyclerViewSwipeManager recyclerViewSwipeManager;
-    public RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager;
-    public LinearLayoutManager layoutManager;
+    protected PlayingQueueAdapter playingQueueAdapter;
+    private RecyclerView.Adapter wrappedAdapter;
+    protected RecyclerViewDragDropManager recyclerViewDragDropManager;
+    private RecyclerViewSwipeManager recyclerViewSwipeManager;
+    protected LinearLayoutManager layoutManager;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -69,7 +67,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
     }
 
     public void setUpRecyclerView(RecyclerView recyclerView, final SlidingUpPanelLayout slidingUpPanelLayout) {
-        recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
+        RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
         recyclerViewSwipeManager = new RecyclerViewSwipeManager();
         recyclerViewDragDropManager = new RecyclerViewDragDropManager();
 
