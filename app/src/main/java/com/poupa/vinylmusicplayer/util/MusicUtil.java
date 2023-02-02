@@ -255,12 +255,10 @@ public class MusicUtil {
             activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     selection.toString(), null);
 
-            // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                for (int i = 0; i < songCount; i++) {
-                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                    SAFUtil.delete(activity, songs.get(i).data, safUri);
-                }
+            // Step 3: Remove files from card
+            for (int i = 0; i < songCount; i++) {
+                final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                SAFUtil.delete(activity, songs.get(i).data, safUri);
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -391,7 +389,7 @@ public class MusicUtil {
                     for (File f : files) {
                         try {
                             String newLyrics = FileUtil.read(f);
-                            if (newLyrics != null && !newLyrics.trim().isEmpty()) {
+                            if (!newLyrics.trim().isEmpty()) {
                                 if (AbsSynchronizedLyrics.isSynchronized(newLyrics)) {
                                     return newLyrics;
                                 }

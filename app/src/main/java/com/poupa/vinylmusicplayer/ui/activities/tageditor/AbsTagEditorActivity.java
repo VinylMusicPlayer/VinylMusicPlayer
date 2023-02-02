@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -38,7 +38,6 @@ import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
-import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
@@ -101,9 +100,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private Map<FieldKey, String> savedTags;
     private ArtworkInfo savedArtworkInfo;
 
+    private ActivityResultLauncher<Intent> safGuideActivityLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(getViewBinding().getRoot());
 
         getIntentExtras();
@@ -122,6 +124,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        safGuideActivityLauncher = SAFUtil.createSAFGuideLauncher(this);
     }
 
     private void setUpViews() {
@@ -304,7 +308,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 if (SAFUtil.isSDCardAccessGranted(this)) {
                     writeTags(savedSongPaths);
                 } else {
-                    startActivityForResult(new Intent(this, SAFGuideActivity.class), SAFGuideActivity.REQUEST_CODE_SAF_GUIDE);
+                    SAFUtil.launchSAFGuide(this, safGuideActivityLauncher);
                 }
             } else {
                 writeTagsKitkat();
@@ -316,7 +320,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(paths, savedTags, savedArtworkInfo));
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void writeTagsKitkat() {
         if (savedSongPaths.size() < 1) return;
 
@@ -527,10 +530,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 }
                 break;
 
-            case SAFGuideActivity.REQUEST_CODE_SAF_GUIDE:
-                SAFUtil.openTreePicker(this);
-                break;
-
             case SAFUtil.REQUEST_SAF_PICK_TREE:
                 if (resultCode == RESULT_OK) {
                     SAFUtil.saveTreeUri(this, intent);
@@ -540,7 +539,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
             case SAFUtil.REQUEST_SAF_PICK_FILE:
                 if (resultCode == RESULT_OK) {
-                    writeTags(Collections.singletonList(currentSongPath + SAFUtil.SEPARATOR + intent.getDataString()));
+                    writeTags(List.of(currentSongPath + SAFUtil.SEPARATOR + intent.getDataString()));
                 }
                 break;
         }

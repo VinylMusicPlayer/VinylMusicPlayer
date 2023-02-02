@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.text.Html;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -20,7 +22,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
@@ -38,6 +39,8 @@ public class DeleteSongsDialog extends DialogFragment {
     private ArrayList<Song> songsToRemove;
     private Song currentSong;
 
+    private ActivityResultLauncher<Intent> safGuideActivityLauncher;
+
     @NonNull
     public static DeleteSongsDialog create(Song song) {
         ArrayList<Song> list = new ArrayList<>();
@@ -52,6 +55,13 @@ public class DeleteSongsDialog extends DialogFragment {
         args.putParcelableArrayList("songs", songs);
         dialog.setArguments(args);
         return dialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        safGuideActivityLauncher = SAFUtil.createSAFGuideLauncher(this);
     }
 
     @NonNull
@@ -114,10 +124,6 @@ public class DeleteSongsDialog extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
-            case SAFGuideActivity.REQUEST_CODE_SAF_GUIDE:
-                SAFUtil.openTreePicker(this);
-                break;
-
             case SAFUtil.REQUEST_SAF_PICK_TREE:
             case SAFUtil.REQUEST_SAF_PICK_FILE:
                 if (deleteSongsTask != null) {
@@ -158,7 +164,7 @@ public class DeleteSongsDialog extends DialogFragment {
                             if (SAFUtil.isSDCardAccessGranted(activity)) {
                                 dialog.deleteSongs(info.songs, null);
                             } else {
-                                dialog.startActivityForResult(new Intent(activity, SAFGuideActivity.class), SAFGuideActivity.REQUEST_CODE_SAF_GUIDE);
+                                SAFUtil.launchSAFGuide(activity, dialog.safGuideActivityLauncher);
                             }
                         } else {
                             dialog.deleteSongsKitkat();
@@ -175,7 +181,7 @@ public class DeleteSongsDialog extends DialogFragment {
 
                         case SAFUtil.REQUEST_SAF_PICK_FILE:
                             if (info.resultCode == Activity.RESULT_OK) {
-                                dialog.deleteSongs(Collections.singletonList(dialog.currentSong), Collections.singletonList(info.intent.getData()));
+                                dialog.deleteSongs(List.of(dialog.currentSong), List.of(info.intent.getData()));
                             }
                             break;
                     }

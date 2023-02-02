@@ -13,12 +13,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -40,7 +45,7 @@ public class SAFUtil {
     public static final int REQUEST_SAF_PICK_TREE = 43;
 
     public static boolean isSAFRequired(File file) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !file.canWrite();
+        return !file.canWrite();
     }
 
     public static boolean isSAFRequired(String path) {
@@ -69,7 +74,6 @@ public class SAFUtil {
         return false;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void openFilePicker(Activity activity) {
         Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -78,7 +82,6 @@ public class SAFUtil {
         activity.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_FILE);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void openFilePicker(Fragment fragment) {
         Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -101,7 +104,6 @@ public class SAFUtil {
         fragment.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_TREE);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void saveTreeUri(Context context, Intent data) {
         Uri uri = data.getData();
         context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -121,7 +123,9 @@ public class SAFUtil {
 
         List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
         for (UriPermission perm : perms) {
-            if (perm.getUri().toString().equals(sdcardUri) && perm.isWritePermission()) return true;
+            if (perm.getUri().toString().equals(sdcardUri) && perm.isWritePermission()) {
+                return true;
+            }
         }
 
         return false;
@@ -246,7 +250,6 @@ public class SAFUtil {
         new File(path).delete();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void deleteSAF(Context context, String path, Uri safUri) {
         Uri uri = null;
 
@@ -278,6 +281,32 @@ public class SAFUtil {
 
             toast(context, String.format(context.getString(R.string.saf_delete_failed), e.getLocalizedMessage()));
         }
+    }
+
+    @NonNull
+    public static ActivityResultLauncher<Intent> createSAFGuideLauncher(@NonNull final Fragment fragment) {
+        return fragment.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        SAFUtil.openTreePicker(fragment);
+                    }
+                });
+    }
+
+    @NonNull
+    public static ActivityResultLauncher<Intent> createSAFGuideLauncher(@NonNull final FragmentActivity activity) {
+        return activity.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        SAFUtil.openTreePicker(activity);
+                    }
+                });
+    }
+
+    public static void launchSAFGuide(@NonNull final Context context, @NonNull final ActivityResultLauncher<Intent> launcher) {
+        launcher.launch(new Intent(context, SAFGuideActivity.class));
     }
 
     private static void toast(final Context context, final String message) {
