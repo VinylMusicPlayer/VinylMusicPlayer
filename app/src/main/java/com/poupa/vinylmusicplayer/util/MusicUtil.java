@@ -293,10 +293,6 @@ public class MusicUtil {
     }
 
     public static Playlist getOrCreateSkippedPlaylist(@NonNull final Context context) {
-        // TODO From time to time, we need to recycle the Skipped songs playlist
-        //      Otherwise add/remove song operation might take long time (seconds) on old playlists.
-        //      There is no measured value for how old this will be a problem though.
-
         return PlaylistLoader.getPlaylist(context, PlaylistsUtil.createPlaylist(context, context.getString(R.string.skipped_songs)));
     }
 
