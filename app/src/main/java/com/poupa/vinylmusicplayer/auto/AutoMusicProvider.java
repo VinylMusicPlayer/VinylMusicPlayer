@@ -10,7 +10,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;

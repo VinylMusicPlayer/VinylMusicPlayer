@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 public class MediaStoreBridge {
-    private static final String SONG_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
-    private static final String[] SONG_PROJECTION = new String[]{
+    private static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
+    private static final String[] BASE_PROJECTION = new String[]{
             BaseColumns._ID,// 0
             MediaStore.Audio.AudioColumns.TITLE,// 1
             MediaStore.Audio.AudioColumns.TRACK,// 2
@@ -87,8 +87,8 @@ public class MediaStoreBridge {
         try {
             return context.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    SONG_PROJECTION,
-                    SONG_SELECTION,
+                    BASE_PROJECTION,
+                    BASE_SELECTION,
                     null,
                     PreferenceUtil.getInstance().getSongSortOrder()
             );

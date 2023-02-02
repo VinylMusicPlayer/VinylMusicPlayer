@@ -43,6 +43,8 @@ import java.util.function.Predicate;
  */
 
 public class Discography implements MusicServiceEventListener {
+    // TODO wrap this inside the MemCache class
+    private final DB database;
     private final MemCache cache;
 
     private MainActivity mainActivity = null;
@@ -51,6 +53,7 @@ public class Discography implements MusicServiceEventListener {
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
     public Discography() {
+        database = new DB();
         cache = new MemCache();
 
         fetchAllSongs();
@@ -110,7 +113,7 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
 
-            addSong(song);
+            addSong(song, false);
 
             return song;
         }
@@ -287,14 +290,16 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private void addSong(@NonNull Song song) {
+    private void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip
             if (cache.songsById.containsKey(song.id)) {
                 return;
             }
 
-            TagExtractor.extractTags(song);
+            if (!cacheOnly) {
+                TagExtractor.extractTags(song);
+            }
 
             Consumer<List<String>> normNames = (@NonNull List<String> names) -> {
                 List<String> normalized = new ArrayList<>();
@@ -318,7 +323,11 @@ public class Discography implements MusicServiceEventListener {
                 }
             } catch (NumberFormatException ignored) {}
 
-            cache.addSong(song, false);
+            cache.addSong(song);
+
+            if (!cacheOnly) {
+                database.addSong(song);
+            }
 
             notifyDiscographyChanged();
         }
@@ -457,17 +466,24 @@ public class Discography implements MusicServiceEventListener {
 
         for (long songId : songIds) {
             cache.removeSongById(songId);
+            database.removeSongById(songId);
         }
         notifyDiscographyChanged();
     }
 
     void clear() {
+        database.clear();
         cache.clear();
     }
 
     private void fetchAllSongs() {
         setCacheState(MemCache.ConsistencyState.REFRESHING);
-        cache.loadSongs();
+
+        Collection<Song> songs = database.fetchAllSongs();
+        for (Song song : songs) {
+            addSong(song, true);
+        }
+
         setCacheState(MemCache.ConsistencyState.OK);
     }
 

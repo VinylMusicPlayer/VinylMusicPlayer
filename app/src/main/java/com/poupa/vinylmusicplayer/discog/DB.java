@@ -143,7 +143,8 @@ class DB extends SQLiteOpenHelper {
     }
 
     @NonNull
-    synchronized Collection<Song> loadSongs() {
+    synchronized Collection<Song> fetchAllSongs() {
+        ArrayList<Song> songs = new ArrayList<>();
         final SQLiteDatabase database = getReadableDatabase();
 
         try (final Cursor cursor = database.query(SongColumns.NAME,
@@ -172,8 +173,6 @@ class DB extends SQLiteOpenHelper {
                 null,
                 null))
         {
-            ArrayList<Song> songs = new ArrayList<>();
-
             if (cursor == null || !cursor.moveToFirst()) {
                 return songs;
             }
@@ -219,7 +218,6 @@ class DB extends SQLiteOpenHelper {
 
                 songs.add(song);
             } while (cursor.moveToNext());
-
             return songs;
         }
     }

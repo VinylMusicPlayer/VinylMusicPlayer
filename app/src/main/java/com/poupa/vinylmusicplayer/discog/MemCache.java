@@ -11,7 +11,6 @@ import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,18 +46,7 @@ class MemCache {
     final Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     final Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
 
-    // persistent storage
-    private final DB database = new DB();
-
-    synchronized void loadSongs() {
-        Collection<Song> songs = database.loadSongs();
-
-        for (Song song : songs) {
-            addSong(song, true);
-        }
-    }
-
-    synchronized void addSong(@NonNull final Song song, boolean cacheOnly) {
+    synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbum(song);
         for (Album album : albums.values()) {
             album.songs.add(song);
@@ -82,10 +70,6 @@ class MemCache {
         }
         for (Album album : albums.values()) {
             Collections.sort(album.songs, SongSortOrder.BY_DISC_TRACK);
-        }
-
-        if (!cacheOnly) {
-            database.addSong(song);
         }
     }
 
@@ -148,8 +132,6 @@ class MemCache {
 
             // ---- Remove the song from the memory cache
             songsById.remove(songId);
-
-            database.removeSongById(songId);
         }
     }
 
@@ -164,8 +146,6 @@ class MemCache {
 
         genresByName.clear();
         songsByGenreId.clear();
-
-        database.clear();
     }
 
     @NonNull
