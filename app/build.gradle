@@ -118,7 +118,7 @@ dependencies {
 
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar') {
