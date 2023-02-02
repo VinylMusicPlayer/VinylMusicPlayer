@@ -123,7 +123,7 @@
             android:gravity="center_vertical"
             android:minHeight="@dimen/md_listitem_height"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
+            android:paddingLeft="@dimen/default_item_margin"
             android:paddingRight="16dp">
 
             <com.poupa.vinylmusicplayer.views.IconImageView

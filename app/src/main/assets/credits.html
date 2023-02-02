@@ -8,20 +8,20 @@
     }
 
     h4 {
-      margin: 15px;
-      color: #%{color};
+      margin: %{margin}px;
+      color: #%{title-color};
     }
 
     hr {
       border: 0;
       border: 0.5px solid #%{divider-color};
+      margin: 0;
+      padding: 0;
     }
 
     .big_link {
       padding: 0;
-      padding-left: 15px;
-      padding-right: 15px;
-      width: calc( 100% - 30px );
+      width: 100%;
     }
     .big_link>a {
       text-decoration: none;
@@ -33,32 +33,38 @@
       width: 38px;
       height: 38px;
       float: left;
+      padding: calc( %{margin}px / 2 ) %{margin}px;
       //display: block;
     }
-    .big_link>a>.with_img {
-      margin-left: 38px;
-      padding-left: 15px;
+    .big_link>a>.without_img {
+      padding-left: %{margin}px;
     }
     .big_link>a>p {
-      height: 38px;
-      line-height: 38px;
-      //display: block;
+      height: calc( 38px + %{margin}px );
+      position: relative;
+    }
+    .big_link>a>p>span {
+      position: absolute;
+      top: 50%;
+      transform: translate(0%, -50%);
     }
     .big_link>p {
       color: #%{secondary-color};
       font-size: 80%;
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
     }
 
     .small_link {
       padding: 0;
-      padding-left: 15px;
-      padding-right: 15px;
       display: inline-block;
     }
     .small_link>a {
       text-decoration: none;
       color: #%{color};
       display: inline-block;
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
     }
     .small_link>a>img {
       border-radius: 50% !important;
@@ -70,12 +76,12 @@
     .small_link>a>p {
       vertical-align: middle;
       display: inline-block;
-      padding: 10px;
+      padding: calc( %{margin}px / 2 ) %{margin}px;
     }
 
     #others>a {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
       color: #%{color};
       display: block;
       height: 38px;
@@ -174,7 +180,7 @@
     <div class="big_link">
       <a href="https://github.com/kabouzeid">
         <img src="https://avatars.githubusercontent.com/u/7303830?v=4" alt="kabouzeid"/>
-        <p class="with_img">%{@string/karim_abou_zeid}</p>
+        <p><span>%{@string/karim_abou_zeid}</span></p>
       </a>
       <p>%{@string/karim_abou_zeid_summary}</p>
     </div>
@@ -182,28 +188,28 @@
     <div class="big_link">
       <a href="https://github.com/afollestad">
         <img src="https://avatars.githubusercontent.com/u/1820165?v=4" alt="afollestad"/>
-        <p class="with_img">%{@string/aidan_follestad}</p>
+        <p><span>%{@string/aidan_follestad}</span></p>
       </a>
       <p>%{@string/aidan_follestad_summary}</p>
     </div>
     <hr/>
     <div class="big_link">
       <a href="https://cookicons.co/">
-        <p>%{@string/michael_cook_cookicons}</p>
+        <p class="without_img"><span>%{@string/michael_cook_cookicons}</span></p>
       </a>
       <p>%{@string/michael_cook_summary}</p>
     </div>
     <hr/>
     <div class="big_link">
       <a href="https://maartencorpel.com/">
-        <p>%{@string/maarten_corpel}</p>
+        <p class="without_img"><span>%{@string/maarten_corpel}</span></p>
       </a>
       <p>%{@string/maarten_corpel_summary}</p>
     </div>
     <hr/>
     <div class="big_link">
       <a href="https://twitter.com/djsalezmaj">
-        <p>%{@string/aleksandar_tesic}</p>
+        <p class="without_img"><span>%{@string/aleksandar_tesic}</span></p>
       </a>
       <p>%{@string/aleksandar_tesic_summary}</p>
     </div>
@@ -211,14 +217,14 @@
     <div class="big_link">
       <a href="https://github.com/arkon">
         <img src="https://avatars.githubusercontent.com/u/4098258?v=4" alt="arkon"/>
-        <p class="with_img">%{@string/eugene_cheung}</p>
+        <p><span>%{@string/eugene_cheung}</span></p>
       </a>
       <p>%{@string/eugene_cheung_summary}</p>
     </div>
     <hr/>
     <div class="big_link">
       <a href="https://twitter.com/froschgames">
-        <p>%{@string/adrian}</p>
+        <p class="without_img"><span>%{@string/adrian}</span></p>
       </a>
       <p>%{@string/adrian_summary}</p>
     </div>

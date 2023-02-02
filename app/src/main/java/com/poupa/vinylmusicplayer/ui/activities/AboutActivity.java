@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -93,6 +94,12 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         layoutBinding.content.cardAboutApp.appVersion.setText(getCurrentVersionName(this));
     }
 
+    // Needed as webview is interpreting pixels as dp
+    public static int px2dip(Context context, float pxValue) {
+        final float scale =  context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
     @SuppressLint("RestrictedApi")
     private void setUpContributorsView()
     {
@@ -129,15 +136,21 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             final TextAppearance test = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
             String secondary = test.getTextColor().toString();
             //cardBackground 424242 ffffff 212121
+            String title = ThemeSingleton.get().darkTheme ? "c7c7c7" : "666666"; //bdbdbd
             secondary = ThemeSingleton.get().darkTheme ? "c7c7c7" : "666666"; //bdbdbd
             dividerColor = ThemeSingleton.get().darkTheme ? "4e4e4e" : "efefef"; //363636
+
+            String margin = String.valueOf(px2dip(this, getResources().getDimensionPixelSize(R.dimen.default_item_margin)));
+            Log.d("TOTO", getResources().getString(R.dimen.default_item_margin)+", "+margin+"px");
 
             final String recoloredBuf = buf.toString()
                     .replace("%{color}", contentColor)
                     .replace("%{background-color}", backgroundColor)
                     .replace("%{divider-color}", dividerColor)
                     .replace("%{secondary-color}", secondary)
+                    .replace("%{title-color}", title)
                     .replace("%{link-color}", contentColor)
+                    .replace("%{margin}", margin)
                     .replace("%{@string/maintainers}", getResources().getString(R.string.maintainers))
                     .replace("%{@string/contributors}", getResources().getString(R.string.contributors))
                     .replace("%{@string/label_other_contributors}", getResources().getString(R.string.label_other_contributors))
