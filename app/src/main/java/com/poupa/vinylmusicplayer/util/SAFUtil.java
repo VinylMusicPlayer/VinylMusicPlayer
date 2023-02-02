@@ -13,17 +13,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -40,9 +35,6 @@ public class SAFUtil {
 
     public static final String TAG = SAFUtil.class.getSimpleName();
     public static final String SEPARATOR = "###/SAF/###";
-
-    public static final int REQUEST_SAF_PICK_FILE = 42;
-    public static final int REQUEST_SAF_PICK_TREE = 43;
 
     public static boolean isSAFRequired(File file) {
         return !file.canWrite();
@@ -74,50 +66,19 @@ public class SAFUtil {
         return false;
     }
 
-    public static void openFilePicker(Activity activity) {
-        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("audio/*");
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        activity.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_FILE);
-    }
-
-    public static void openFilePicker(Fragment fragment) {
-        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("audio/*");
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        fragment.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_FILE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void openTreePicker(Activity activity) {
-        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        activity.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_TREE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void openTreePicker(Fragment fragment) {
-        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        fragment.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_TREE);
-    }
-
-    public static void saveTreeUri(Context context, Intent data) {
-        Uri uri = data.getData();
+    public static void saveTreeUri(Context context, Uri uri) {
         context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         PreferenceUtil.getInstance().setSAFSDCardUri(uri);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static boolean isTreeUriSaved(Context context) {
+    public static boolean isTreeUriSaved() {
         return !TextUtils.isEmpty(PreferenceUtil.getInstance().getSAFSDCardUri());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static boolean isSDCardAccessGranted(Context context) {
-        if (!isTreeUriSaved(context)) return false;
+        if (!isTreeUriSaved()) return false;
 
         String sdcardUri = PreferenceUtil.getInstance().getSAFSDCardUri();
 
@@ -141,7 +102,9 @@ public class SAFUtil {
      * @return URI for found file. Null if nothing found.
      */
     @Nullable
-    public static Uri findDocument(DocumentFile dir, List<String> segments) {
+    public static Uri findDocument(@Nullable DocumentFile dir, @NonNull List<String> segments) {
+        if (dir == null) {return null;}
+
         for (DocumentFile file : dir.listFiles()) {
             int index = segments.indexOf(file.getName());
             if (index == -1) {
@@ -186,7 +149,7 @@ public class SAFUtil {
             return;
         }
 
-        if (isTreeUriSaved(context)) {
+        if (isTreeUriSaved()) {
             List<String> pathSegments = new ArrayList<>(Arrays.asList(audio.getFile().getAbsolutePath().split("/")));
             Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
             uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
@@ -202,7 +165,12 @@ public class SAFUtil {
             return;
         }
 
-        try {
+        try (ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "rw")) {
+            if (pfd == null) {
+                Log.e(TAG, "writeSAF: SAF provided incorrect URI: " + uri);
+                return;
+            }
+
             // copy file to app folder to use jaudiotagger
             final File original = audio.getFile();
             File temp = File.createTempFile("tmp-media", '.' + Utils.getExtension(original));
@@ -210,12 +178,6 @@ public class SAFUtil {
             temp.deleteOnExit();
             audio.setFile(temp);
             writeFile(audio);
-
-            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "rw");
-            if (pfd == null) {
-                Log.e(TAG, "writeSAF: SAF provided incorrect URI: " + uri);
-                return;
-            }
 
             // now read persisted data and write it to real FD provided by SAF
             FileInputStream fis = new FileInputStream(temp);
@@ -258,7 +220,7 @@ public class SAFUtil {
             return;
         }
 
-        if (isTreeUriSaved(context)) {
+        if (isTreeUriSaved()) {
             List<String> pathSegments = new ArrayList<>(Arrays.asList(path.split("/")));
             Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
             uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
@@ -281,32 +243,6 @@ public class SAFUtil {
 
             toast(context, String.format(context.getString(R.string.saf_delete_failed), e.getLocalizedMessage()));
         }
-    }
-
-    @NonNull
-    public static ActivityResultLauncher<Intent> createSAFGuideLauncher(@NonNull final Fragment fragment) {
-        return fragment.registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        SAFUtil.openTreePicker(fragment);
-                    }
-                });
-    }
-
-    @NonNull
-    public static ActivityResultLauncher<Intent> createSAFGuideLauncher(@NonNull final FragmentActivity activity) {
-        return activity.registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        SAFUtil.openTreePicker(activity);
-                    }
-                });
-    }
-
-    public static void launchSAFGuide(@NonNull final Context context, @NonNull final ActivityResultLauncher<Intent> launcher) {
-        launcher.launch(new Intent(context, SAFGuideActivity.class));
     }
 
     private static void toast(final Context context, final String message) {

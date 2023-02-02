@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -38,6 +39,7 @@ import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
@@ -55,7 +57,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_PALETTE = "extra_palette";
     private static final String TAG = AbsTagEditorActivity.class.getSimpleName();
-    private static final int REQUEST_CODE_SELECT_IMAGE = 1000;
 
     FloatingActionButton fab;
     ObservableScrollView observableScrollView;
@@ -100,7 +100,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private Map<FieldKey, String> savedTags;
     private ArtworkInfo savedArtworkInfo;
 
-    private ActivityResultLauncher<Intent> safGuideActivityLauncher;
+    private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
+    private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
+    private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
+    private ActivityResultLauncher<String> imagePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +128,51 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        safGuideActivityLauncher = SAFUtil.createSAFGuideLauncher(this);
+        writeTagsKitkat_SAFFilePicker = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("audio/*") {
+                    @NonNull
+                    @Override
+                    public Intent createIntent(@NonNull Context context, @NonNull String input) {
+                        return super.createIntent(context, input)
+                                .addCategory(Intent.CATEGORY_OPENABLE)
+                                .putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    }
+                },
+                resultUri -> writeTags(List.of(currentSongPath + SAFUtil.SEPARATOR + resultUri)));
+
+        writeTagsLollipop_SAFGuide = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK)
+                    {
+                        writeTagsLollipop_SAFTreePicker.launch(null);
+                    }
+                });
+
+        writeTagsLollipop_SAFTreePicker = registerForActivityResult(
+                new ActivityResultContracts.OpenDocumentTree() {
+                    @NonNull
+                    @Override
+                    public Intent createIntent(@NonNull Context context, Uri input) {
+                        return super.createIntent(context, input)
+                                .putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    }
+                },
+                resultUri -> {
+                    SAFUtil.saveTreeUri(this, resultUri);
+                    writeTags(savedSongPaths);
+                });
+
+        imagePicker = registerForActivityResult(
+                new ActivityResultContracts.GetContent() {
+                    @NonNull
+                    @Override
+                    public Intent createIntent(@NonNull Context context, @NonNull String input) {
+                        return super.createIntent(context, input)
+                                .setType("image/*");
+                    }
+                },
+                this::loadImageFromFile);
     }
 
     private void setUpViews() {
@@ -155,7 +202,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             getImageFromLastFM();
                             break;
                         case 1:
-                            startImagePicker();
+                            imagePicker.launch(getResources().getString(R.string.pick_from_local_storage));
                             break;
                         case 2:
                             searchImageOnWeb();
@@ -165,12 +212,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             break;
                     }
                 }).show());
-    }
-
-    private void startImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_from_local_storage)), REQUEST_CODE_SELECT_IMAGE);
     }
 
     protected abstract void loadCurrentImage();
@@ -308,7 +349,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 if (SAFUtil.isSDCardAccessGranted(this)) {
                     writeTags(savedSongPaths);
                 } else {
-                    SAFUtil.launchSAFGuide(this, safGuideActivityLauncher);
+                    writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
                 }
             } else {
                 writeTagsKitkat();
@@ -326,11 +367,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         currentSongPath = savedSongPaths.remove(0);
 
         if (!SAFUtil.isSAFRequired(currentSongPath)) {
-            writeTags(Collections.singletonList(currentSongPath));
+            writeTags(List.of(currentSongPath));
             writeTagsKitkat();
         } else {
-            Toast.makeText(this, String.format(getString(R.string.saf_pick_file), currentSongPath), Toast.LENGTH_LONG).show();
-            SAFUtil.openFilePicker(this);
+            final String message = getString(R.string.saf_pick_file, currentSongPath);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            writeTagsKitkat_SAFFilePicker.launch(message);
         }
     }
 
@@ -419,12 +461,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 final Context context = getContext();
                 if (context != null) {
                     if (wroteArtwork) {
+                        if (info.artworkInfo == null) {throw new AssertionError();}
                         MusicUtil.insertAlbumArt(
                                 context,
                                 info.artworkInfo.albumId,
                                 albumArtFile.getPath(),
                                 albumArtMimeType);
                     } else if (deletedArtwork) {
+                        if (info.artworkInfo == null) {throw new AssertionError();}
                         MusicUtil.deleteAlbumArt(context, info.artworkInfo.albumId);
                     }
                 }
@@ -515,34 +559,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     protected long getId() {
         return id;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (intent == null) {return;}
-
-        switch (requestCode) {
-            case REQUEST_CODE_SELECT_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = intent.getData();
-                    loadImageFromFile(selectedImage);
-                }
-                break;
-
-            case SAFUtil.REQUEST_SAF_PICK_TREE:
-                if (resultCode == RESULT_OK) {
-                    SAFUtil.saveTreeUri(this, intent);
-                    writeTags(savedSongPaths);
-                }
-                break;
-
-            case SAFUtil.REQUEST_SAF_PICK_FILE:
-                if (resultCode == RESULT_OK) {
-                    writeTags(List.of(currentSongPath + SAFUtil.SEPARATOR + intent.getDataString()));
-                }
-                break;
-        }
     }
 
     protected abstract void loadImageFromFile(Uri selectedFile);
