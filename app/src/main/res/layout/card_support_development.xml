@@ -18,10 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="24dp"
+            android:paddingBottom="@dimen/default_item_margin"
+            android:paddingLeft="@dimen/default_item_margin"
+            android:paddingRight="@dimen/default_item_margin"
+            android:paddingTop="@dimen/title_top_margin"
             android:text="@string/support_development"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?android:textColorSecondary" />
@@ -35,8 +35,8 @@
             android:gravity="center_vertical"
             android:minHeight="@dimen/md_listitem_height"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingLeft="@dimen/default_item_margin"
+            android:paddingRight="@dimen/default_item_margin">
 
             <com.poupa.vinylmusicplayer.views.IconImageView
                 android:id="@+id/icon_bug_report"
@@ -79,8 +79,8 @@
             android:gravity="center_vertical"
             android:minHeight="@dimen/md_listitem_height"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingLeft="@dimen/default_item_margin"
+            android:paddingRight="@dimen/default_item_margin">
 
             <com.poupa.vinylmusicplayer.views.IconImageView
                 android:id="@+id/icon_rate"

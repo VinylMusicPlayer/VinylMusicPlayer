@@ -31,51 +31,94 @@ function update_credits_html()
     body {
       background-color: #%{background-color};
       color: #%{color};
+      padding: 0;
+      margin: 0;
     }
+
     h4 {
-      margin: 10px;
-      color: #c7c7c7;
+      margin: %{margin}px;
+      margin-top: %{title-top-margin}px;
+      color: #%{title-color};
     }
-    .profile {
-      vertical-align: middle;
+
+    hr {
+      border: 0;
+      border: 0.5px solid #%{divider-color};
+      margin: 0;
+      padding: 0;
     }
-    a.profile {
-      color: #%{link-color};
-      padding: 5px;
+
+    .big_link {
+      padding: 0;
+      width: 100%;
     }
-    span>a.profile {
+    .big_link>a {
       text-decoration: none;
+      color: #%{color};
     }
-    p>a.profile {
-      padding: 10px;
+    .big_link>a>img {
+      border-radius: 50% !important;
+      width: 38px;
+      height: 38px;
+      float: left;
+      padding: %{margin}px;
     }
-    img.profile {
+    .big_link>a>.without_img {
+      margin: 0;
+      padding: 0;
+      padding-left: %{margin}px;
+      height: calc( 38px + %{margin}px );
+    }
+    .big_link>a>p {
+      margin: 0;
+      padding: 0;
+      height: calc( 38px + 2 * %{margin}px );
+      position: relative;
+    }
+    .big_link>a>p>span {
+      position: absolute;
+      top: 50%;
+      transform: translate(0%, -50%);
+    }
+    .big_link>p {
+      color: #%{secondary-text-color};
+      font-size: 80%;
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
+    }
+
+    .small_link {
+      padding: 0;
+      display: inline-block;
+    }
+    .small_link>a {
+      text-decoration: none;
+      color: #%{color};
+      display: inline-block;
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
+    }
+    .small_link>a>img {
       border-radius: 50% !important;
       width: 38px;
       height: 38px;
       vertical-align: middle;
+      display: inline-block;
     }
-    .profile>img.profile {
-      margin: 10px;
+    .small_link>a>p {
+      vertical-align: middle;
+      display: inline-block;
+      padding: %{margin_4}px %{margin_2}px;
     }
-    .profile_unique>img.profile {
-      margin-left: 10px;
+
+    #others>a {
+      padding-left: %{margin}px;
+      padding-right: %{margin}px;
+      color: #%{color};
+      display: block;
+      height: 38px;
+      line-height: 38px;
     }
-    p.profile {
-      white-space:normal;
-      color: #c7c7c7;
-      font-size: 80%;
-      margin-left: 10px;
-      padding-left: 0px;
-    }
-    span.profile, span.profile_unique {
-      white-space:nowrap;
-    }
-    hr {
-      margin: 30px -20px 20px;
-      border: 0;
-      border: 1px solid #4e4e4e;
-     }
   </style></head>
   <body>
 HEADER
@@ -94,9 +137,11 @@ MAINTAINERS_PROLOGUE
     unquoted_login="${login:1:$((${#login}-2))}"
 
     cat << MAINTAINER
-    <span class="profile">
-      <img class="profile" src=${avatar_url} alt=${login}/>
-      <a class="profile" href=${html_url}>${unquoted_login}</a>
+    <span class="small_link">
+      <a href=${html_url}>
+        <img src=${avatar_url} alt=${login}/>
+        <p>${unquoted_login}</p>
+      </a>
     </span>
 MAINTAINER
   done
@@ -116,16 +161,18 @@ CONTRIBUTORS_PROLOGUE
     unquoted_login="${login:1:$((${#login}-2))}"
 
     cat << CONTRIBUTOR
-    <span class="profile">
-      <img class="profile" src=${avatar_url} alt=${login}/>
-      <a class="profile" href=${html_url}>${unquoted_login}</a>
+    <span class="small_link">
+      <a href=${html_url}>
+        <img src=${avatar_url} alt=${login}/>
+        <p>${unquoted_login}</p>
+      </a>
     </span>
 CONTRIBUTOR
   done
 
   cat << CONTRIBUTORS_EPILOGUE
-    <p>
-      <a class="profile" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
+    <p id="others">
+      <a href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
         %{@string/label_other_contributors}
       </a>
     </p>
@@ -134,43 +181,57 @@ CONTRIBUTORS_EPILOGUE
   cat << SPECIAL_THANKS
     <hr/>
     <h4>%{@string/special_thanks_to}</h4>
-    <span class="profile_unique">
-      <img class="profile" src="https://avatars.githubusercontent.com/u/7303830?v=4" alt="kabouzeid"/>
-      <a class="profile" href="https://github.com/kabouzeid">%{@string/karim_abou_zeid}</a>
-      <p class="profile">%{@string/karim_abou_zeid_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://github.com/kabouzeid">
+        <img src="https://avatars.githubusercontent.com/u/7303830?v=4" alt="kabouzeid"/>
+        <p><span>%{@string/karim_abou_zeid}</span></p>
+      </a>
+      <p>%{@string/karim_abou_zeid_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <img class="profile" src="https://avatars.githubusercontent.com/u/1820165?v=4" alt="afollestad"/>
-      <a class="profile" href="https://github.com/afollestad">%{@string/aidan_follestad}</a>
-      <p class="profile">%{@string/aidan_follestad_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://github.com/afollestad">
+        <img src="https://avatars.githubusercontent.com/u/1820165?v=4" alt="afollestad"/>
+        <p><span>%{@string/aidan_follestad}</span></p>
+      </a>
+      <p>%{@string/aidan_follestad_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <a class="profile" href="https://cookicons.co/">%{@string/michael_cook_cookicons}</a>
-      <p class="profile">%{@string/michael_cook_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://cookicons.co/">
+        <p class="without_img"><span>%{@string/michael_cook_cookicons}</span></p>
+      </a>
+      <p>%{@string/michael_cook_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <a class="profile" href="https://maartencorpel.com/">%{@string/maarten_corpel}</a>
-      <p class="profile">%{@string/maarten_corpel_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://maartencorpel.com/">
+        <p class="without_img"><span>%{@string/maarten_corpel}</span></p>
+      </a>
+      <p>%{@string/maarten_corpel_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <a class="profile" href="https://twitter.com/djsalezmaj">%{@string/aleksandar_tesic}</a>
-      <p class="profile">%{@string/aleksandar_tesic_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://twitter.com/djsalezmaj">
+        <p class="without_img"><span>%{@string/aleksandar_tesic}</span></p>
+      </a>
+      <p>%{@string/aleksandar_tesic_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <img class="profile" src="https://avatars.githubusercontent.com/u/4098258?v=4" alt="arkon"/>
-      <a class="profile" href="https://github.com/arkon">%{@string/eugene_cheung}</a>
-      <p class="profile">%{@string/eugene_cheung_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://github.com/arkon">
+        <img src="https://avatars.githubusercontent.com/u/4098258?v=4" alt="arkon"/>
+        <p><span>%{@string/eugene_cheung}</span></p>
+      </a>
+      <p>%{@string/eugene_cheung_summary}</p>
+    </div>
     <hr/>
-    <span class="profile_unique">
-      <a class="profile" href="https://twitter.com/froschgames">%{@string/adrian}</a>
-      <p class="profile">%{@string/adrian_summary}</p>
-    </span>
+    <div class="big_link">
+      <a href="https://twitter.com/froschgames">
+        <p class="without_img"><span>%{@string/adrian}</span></p>
+      </a>
+      <p>%{@string/adrian_summary}</p>
+    </div>
 SPECIAL_THANKS
 
   cat << FOOTER

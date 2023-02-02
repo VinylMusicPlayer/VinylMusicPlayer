@@ -9,6 +9,7 @@
 
     h4 {
       margin: %{margin}px;
+      margin-top: %{title-top-margin}px;
       color: #%{title-color};
     }
 
@@ -26,21 +27,24 @@
     .big_link>a {
       text-decoration: none;
       color: #%{color};
-      //display: block;
     }
     .big_link>a>img {
       border-radius: 50% !important;
       width: 38px;
       height: 38px;
       float: left;
-      padding: calc( %{margin}px / 2 ) %{margin}px;
-      //display: block;
+      padding: %{margin}px;
     }
     .big_link>a>.without_img {
+      margin: 0;
+      padding: 0;
       padding-left: %{margin}px;
+      height: calc( 38px + %{margin}px );
     }
     .big_link>a>p {
-      height: calc( 38px + %{margin}px );
+      margin: 0;
+      padding: 0;
+      height: calc( 38px + 2 * %{margin}px );
       position: relative;
     }
     .big_link>a>p>span {
@@ -49,7 +53,7 @@
       transform: translate(0%, -50%);
     }
     .big_link>p {
-      color: #%{secondary-color};
+      color: #%{secondary-text-color};
       font-size: 80%;
       padding-left: %{margin}px;
       padding-right: %{margin}px;
@@ -76,7 +80,7 @@
     .small_link>a>p {
       vertical-align: middle;
       display: inline-block;
-      padding: calc( %{margin}px / 2 ) %{margin}px;
+      padding: %{margin_4}px %{margin_2}px;
     }
 
     #others>a {
@@ -171,7 +175,7 @@
       </a>
     </span>
     <p id="others">
-      <a class="profile" href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
+      <a href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/graphs/contributors">
         %{@string/label_other_contributors}
       </a>
     </p>
