@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
+import com.google.android.material.resources.TextAppearance;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
@@ -30,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.function.Function;
 
 import de.psdev.licensesdialog.LicensesDialog;
@@ -97,6 +100,19 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         final float scale =  context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
+    // Needed as webview doesn't understand #aarrggbb
+    public static String hex2rgba(int color) {
+        /*float a = ((color >> 24) & 0xFF) / 255.0f;
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;*/
+        float a = Color.alpha(color) / 255.0f;
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+
+        return "rgba("+r+","+g+","+b+","+String.format(Locale.US, "%.02f", a)+")";
+    }
 
     @SuppressLint("RestrictedApi")
     private void setUpContributorsView()
@@ -121,22 +137,17 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             final String backgroundColor = colorHex.apply(typedColor.data);
             getTheme().resolveAttribute(R.attr.iconColor, typedColor, true);
             final String contentColor = colorHex.apply(typedColor.data);
-            //getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);
-            //String dividerColor = colorHex.apply(typedColor.data);
-            //getTheme().resolveAttribute(android.R.attr.textColorSecondary, typedColor, true);
-            //final String secondary = colorHex.apply(typedColor.data);
-            /*
-            @style/TextAppearance.AppCompat.Body2 -> ?android:textColorPrimary
 
-            @style/TextAppearance.AppCompat.Subhead -> ?android:textColorPrimary
-            @style/TextAppearance.AppCompat.Caption -> ?android:textColorPrimary
-            */
-            //final TextAppearance test = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
-            //String secondary = test.getTextColor().toString();
-            //cardBackground 424242 ffffff 212121
-            String titleColor = ThemeSingleton.get().darkTheme ? "c7c7c7" : "666666"; //bdbdbd
-            String secondaryTextColor = ThemeSingleton.get().darkTheme ? "c7c7c7" : "666666"; //bdbdbd
-            String dividerColor = ThemeSingleton.get().darkTheme ? "4e4e4e" : "efefef"; //363636
+            final TextAppearance captionStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
+            final String captionTextColor = hex2rgba(captionStyle.getTextColor().getDefaultColor());
+            final String captionSize = String.valueOf(px2dip(this, captionStyle.getTextSize()));
+
+            final String titleTextColor = hex2rgba(ThemeStore.textColorSecondary(this));
+            final TextAppearance titleStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
+            final String titleSize = String.valueOf(px2dip(this, titleStyle.getTextSize()));
+
+            getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);
+            String dividerColor = hex2rgba(typedColor.data);
 
             int margin_i = px2dip(this, getResources().getDimensionPixelSize(R.dimen.default_item_margin));
             String margin = String.valueOf(margin_i);
@@ -149,8 +160,10 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
                     .replace("%{color}", contentColor)
                     .replace("%{background-color}", backgroundColor)
                     .replace("%{divider-color}", dividerColor)
-                    .replace("%{secondary-text-color}", secondaryTextColor)
-                    .replace("%{title-color}", titleColor)
+                    .replace("%{caption-color}", captionTextColor)
+                    .replace("%{caption-size}", captionSize)
+                    .replace("%{title-color}", titleTextColor)
+                    .replace("%{title-size}", titleSize)
                     .replace("%{link-color}", contentColor)
                     .replace("%{margin}", margin)
                     .replace("%{margin_2}", margin_2)
