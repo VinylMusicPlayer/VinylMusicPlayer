@@ -7,11 +7,7 @@ import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 import com.poupa.vinylmusicplayer.R;
 
-
 public class SAFGuideActivity extends IntroActivity {
-
-    public static final int REQUEST_CODE_SAF_GUIDE = 98;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
