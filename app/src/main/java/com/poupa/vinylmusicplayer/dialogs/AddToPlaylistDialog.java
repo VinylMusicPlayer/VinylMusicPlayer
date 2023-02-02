@@ -21,6 +21,7 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
 public class AddToPlaylistDialog extends DialogFragment {
+    private static final String SONGS = "songs";
 
     @NonNull
     public static AddToPlaylistDialog create(Song song) {
@@ -33,7 +34,7 @@ public class AddToPlaylistDialog extends DialogFragment {
     public static AddToPlaylistDialog create(ArrayList<Song> songs) {
         AddToPlaylistDialog dialog = new AddToPlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("songs", songs);
+        args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
         return dialog;
     }
@@ -43,22 +44,22 @@ public class AddToPlaylistDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final List<StaticPlaylist> playlists = StaticPlaylist.getAllPlaylists();
         CharSequence[] playlistNames = new CharSequence[playlists.size() + 1];
-        playlistNames[0] = getActivity().getResources().getString(R.string.action_new_playlist);
+        playlistNames[0] = requireActivity().getResources().getString(R.string.action_new_playlist);
         for (int i = 1; i < playlistNames.length; i++) {
             playlistNames[i] = playlists.get(i - 1).asPlaylist().name;
         }
-        return new MaterialDialog.Builder(getActivity())
+        return new MaterialDialog.Builder(requireActivity())
                 .title(R.string.add_playlist_title)
                 .items(playlistNames)
                 .itemsCallback((materialDialog, view, i, charSequence) -> {
-                    final ArrayList<Song> songs = getArguments().getParcelableArrayList("songs");
+                    final ArrayList<Song> songs = requireArguments().getParcelableArrayList(SONGS);
                     if (songs == null) return;
                     if (i == 0) {
                         materialDialog.dismiss();
-                        CreatePlaylistDialog.create(songs).show(getActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
+                        CreatePlaylistDialog.create(songs).show(requireActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
                     } else {
                         materialDialog.dismiss();
-                        Context ctx = getActivity();
+                        Context ctx = requireActivity();
                         final long playlistId = playlists.get(i - 1).asPlaylist().id;
 
                         if (hasDuplicates(playlistId, songs, ctx)) {

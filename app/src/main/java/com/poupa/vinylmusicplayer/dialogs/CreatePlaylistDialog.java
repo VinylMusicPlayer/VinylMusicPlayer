@@ -20,7 +20,6 @@ import java.util.ArrayList;
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
 public class CreatePlaylistDialog extends DialogFragment {
-
     private static final String SONGS = "songs";
 
     @NonNull
@@ -48,7 +47,7 @@ public class CreatePlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new MaterialDialog.Builder(getActivity())
+        return new MaterialDialog.Builder(requireActivity())
                 .title(R.string.new_playlist_title)
                 .positiveText(R.string.create_action)
                 .negativeText(android.R.string.cancel)
@@ -63,7 +62,7 @@ public class CreatePlaylistDialog extends DialogFragment {
                         if (!PlaylistsUtil.doesPlaylistExist(getActivity(), name)) {
                             final long playlistId = PlaylistsUtil.createPlaylist(getActivity(), name);
                             if (getActivity() != null) {
-                                ArrayList<Song> songs = getArguments().getParcelableArrayList(SONGS);
+                                ArrayList<Song> songs = requireArguments().getParcelableArrayList(SONGS);
                                 if (songs != null && !songs.isEmpty()) {
                                     PlaylistsUtil.addToPlaylist(getActivity(), songs, playlistId, true);
                                 }

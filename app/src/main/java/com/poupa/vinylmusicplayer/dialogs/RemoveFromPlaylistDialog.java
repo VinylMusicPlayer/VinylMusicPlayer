@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class RemoveFromPlaylistDialog extends DialogFragment {
+    private static final String SONGS = "songs";
 
     @NonNull
     public static RemoveFromPlaylistDialog create(PlaylistSong song) {
@@ -30,7 +31,7 @@ public class RemoveFromPlaylistDialog extends DialogFragment {
     public static RemoveFromPlaylistDialog create(ArrayList<PlaylistSong> songs) {
         RemoveFromPlaylistDialog dialog = new RemoveFromPlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("songs", songs);
+        args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
         return dialog;
     }
@@ -38,7 +39,7 @@ public class RemoveFromPlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final ArrayList<PlaylistSong> songs = getArguments().getParcelableArrayList("songs");
+        final ArrayList<PlaylistSong> songs = requireArguments().getParcelableArrayList(SONGS);
         int title;
         CharSequence content;
         if (songs.size() > 1) {
@@ -48,7 +49,7 @@ public class RemoveFromPlaylistDialog extends DialogFragment {
             title = R.string.remove_song_from_playlist_title;
             content = Html.fromHtml(getString(R.string.remove_song_x_from_playlist, songs.get(0).title));
         }
-        return new MaterialDialog.Builder(getActivity())
+        return new MaterialDialog.Builder(requireActivity())
                 .title(title)
                 .content(content)
                 .positiveText(R.string.remove_action)

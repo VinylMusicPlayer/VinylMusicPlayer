@@ -102,7 +102,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
             Toast.makeText(this, getResources().getString(R.string.album_or_artist_empty), Toast.LENGTH_SHORT).show();
             return;
         }
-        lastFMRestClient.getApiService().getAlbumInfo(albumTitleStr, albumArtistNameStr, null).enqueue(new Callback<LastFmAlbum>() {
+        lastFMRestClient.getApiService().getAlbumInfo(albumTitleStr, albumArtistNameStr, null).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<LastFmAlbum> call, @NonNull Response<LastFmAlbum> response) {
                 LastFmAlbum lastFmAlbum = response.body();
@@ -169,7 +169,12 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
         fieldKeyValueMap.put(FieldKey.GENRE, genre.getText().toString());
         fieldKeyValueMap.put(FieldKey.YEAR, year.getText().toString());
 
-        writeValuesToFiles(fieldKeyValueMap, deleteAlbumArt ? new ArtworkInfo(getId(), null) : albumArtBitmap == null ? null : new ArtworkInfo(getId(), albumArtBitmap));
+        writeValuesToFiles(fieldKeyValueMap,
+                deleteAlbumArt
+                        ? new ArtworkInfo(getId(), null)
+                        : albumArtBitmap == null
+                                ? null
+                                : new ArtworkInfo(getId(), albumArtBitmap));
     }
 
     @Override
