@@ -662,7 +662,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getCurrentSong() {
-        return (Song)getCurrentIndexedSong();
+        return getCurrentIndexedSong();
     }
 
     public IndexedSong getCurrentIndexedSong() {
@@ -670,7 +670,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getSongAt(int position) {
-        return (Song)getIndexedSongAt(position);
+        return getIndexedSongAt(position);
     }
 
     public IndexedSong getIndexedSongAt(int position) {
@@ -823,9 +823,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void playSongAt(final int position, boolean skippedLast) {
         if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
             // Mark the current song as skipped
-            // TODO From time to time, recycle the Skipped songs playlist
-            // Otherwise the add/remove operation moght take long time (seconds)
-
             final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
             PlaylistsUtil.addToPlaylist(this, getCurrentSong(), playlistId, true);
         }

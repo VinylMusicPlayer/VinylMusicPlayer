@@ -38,15 +38,13 @@ public class PlaylistsUtil {
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final long playlistId) {
-        return playlistId != -1 && doesPlaylistExist(context,
-                MediaStore.Audio.Playlists._ID + "=?",
-                new String[]{String.valueOf(playlistId)});
+        return playlistId != -1 && doesPlaylistExistImpl(context,
+                MediaStore.Audio.Playlists._ID + "=" + playlistId);
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
-        return doesPlaylistExist(context,
-                MediaStore.Audio.PlaylistsColumns.NAME + "=?",
-                new String[]{name});
+        return doesPlaylistExistImpl(context,
+                MediaStore.Audio.PlaylistsColumns.NAME + "=" + name);
     }
 
     public static long createPlaylist(@NonNull final Context context, @Nullable final String name) {
@@ -253,9 +251,9 @@ public class PlaylistsUtil {
         return M3UWriter.write(context, new File(Environment.getExternalStorageDirectory(), "Playlists"), playlist);
     }
 
-    private static boolean doesPlaylistExist(@NonNull Context context, @NonNull final String selection, @NonNull final String[] values) {
+    private static boolean doesPlaylistExistImpl(@NonNull Context context, @NonNull final String selection) {
         Cursor cursor = context.getContentResolver().query(EXTERNAL_CONTENT_URI,
-                new String[]{}, selection, values, null);
+                new String[]{}, selection, null, null);
 
         boolean exists = false;
         if (cursor != null) {
