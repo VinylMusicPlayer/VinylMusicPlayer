@@ -8,7 +8,6 @@
     <!-- Menu -->
     <string name="library">Bibliothèque</string>
     <string name="folders">Dossiers</string>
-    <string name="scan_media">Scanner les médias</string>
     <string name="reset_discography">Réanalyser la bibliothèque</string>
     <string name="action_settings">"Paramètres"</string>
     <string name="action_about">À propos</string>
@@ -78,7 +77,6 @@
     <string name="dialog_ringtone_title">Définir comme sonnerie</string>
     <!-- Audio file details labels -->
     <string name="label_details">Détails</string>
-    <string name="label_file_name">Nom du fichier</string>
     <string name="label_file_path">Chemin du fichier</string>
     <string name="label_file_size">Taille</string>
     <string name="label_file_format">Format</string>
