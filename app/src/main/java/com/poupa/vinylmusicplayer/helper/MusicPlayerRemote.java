@@ -79,7 +79,7 @@ public class MusicPlayerRemote {
             return;
         }
         mContextWrapper.unbindService(mBinder);
-        if (mConnectionMap.isEmpty()) {
+        if (mConnectionMap.isEmpty() && musicService != null) {
             if (!musicService.isPlaying()) {
                 musicService.quit();
             }
@@ -314,7 +314,7 @@ public class MusicPlayerRemote {
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
-            if (startPlaying) {playSongAt(startPosition, false);}
+            if (startPlaying) {playSongAt(startPosition, true);}
             else {setPosition(startPosition);}
             return true;
         }
