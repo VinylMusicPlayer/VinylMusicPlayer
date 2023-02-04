@@ -118,7 +118,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         });
 
         // for some reason the xml attribute doesn't get applied here.
-        playingQueueCard.setCardBackgroundColor(ATHUtil.resolveColor(getActivity(), R.attr.cardBackgroundColor));
+        playingQueueCard.setCardBackgroundColor(ATHUtil.resolveColor(requireActivity(), R.attr.cardBackgroundColor));
     }
 
     @Override
@@ -178,7 +178,8 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
     @Override
     public void onMediaStoreChanged() {
-        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
+        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue until restart
+        // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
         updateQueue();
     }
 
@@ -198,7 +199,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
 
@@ -210,20 +210,21 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         playbackControlsFragment = (CardPlayerPlaybackControlsFragment) getChildFragmentManager().findFragmentById(R.id.playback_controls_fragment);
         playerAlbumCoverFragment = (PlayerAlbumCoverFragment) getChildFragmentManager().findFragmentById(R.id.player_album_cover_fragment);
 
+        if (playerAlbumCoverFragment == null) {throw new AssertionError("No fragment with id=" + R.id.player_album_cover_fragment);}
         playerAlbumCoverFragment.setCallbacks(this);
     }
 
     protected void setUpPlayerToolbar() {
         toolbar.inflateMenu(R.menu.menu_player);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
         toolbar.setOnMenuItemClickListener(this);
 
         super.setUpPlayerToolbar();
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_show_lyrics) {
             if (lyrics != null)
                 LyricsDialog.create(lyrics).show(getParentFragmentManager(), "LYRICS");
@@ -328,7 +329,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     protected void toggleFavorite(Song song) {
         super.toggleFavorite(song);
         if (song.id == MusicPlayerRemote.getCurrentSong().id) {
-            if (MusicUtil.isFavorite(getActivity(), song)) {
+            if (MusicUtil.isFavorite(requireActivity(), song)) {
                 playerAlbumCoverFragment.showHeartAnimation();
             }
             updateIsFavorite();
@@ -443,7 +444,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             animatorSet.play(backgroundAnimator);
 
-            if (!ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
+            if (!ATHUtil.isWindowBackgroundDark(fragment.requireActivity())) {
                 int adjustedLastColor = ColorUtil.isColorLight(fragment.lastColor) ? ColorUtil.darkenColor(fragment.lastColor) : fragment.lastColor;
                 int adjustedNewColor = ColorUtil.isColorLight(newColor) ? ColorUtil.darkenColor(newColor) : newColor;
                 Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
@@ -460,8 +461,8 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            if (ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.getActivity()));
+            if (ATHUtil.isWindowBackgroundDark(fragment.requireActivity())) {
+                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.requireActivity()));
             }
         }
     }
