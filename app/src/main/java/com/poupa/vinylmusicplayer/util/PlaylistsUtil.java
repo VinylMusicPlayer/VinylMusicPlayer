@@ -44,7 +44,7 @@ public class PlaylistsUtil {
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
         return doesPlaylistExistImpl(context,
-                MediaStore.Audio.PlaylistsColumns.NAME + "=" + name);
+                MediaStore.Audio.PlaylistsColumns.NAME + "='" + name + "'");
     }
 
     public static long createPlaylist(@NonNull final Context context, @Nullable final String name) {
