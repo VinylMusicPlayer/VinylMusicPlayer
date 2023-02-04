@@ -314,7 +314,7 @@ public class MusicPlayerRemote {
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
-            if (startPlaying) {playSongAt(startPosition, true);}
+            if (startPlaying) {playSongAt(startPosition, isPlaying());}
             else {setPosition(startPosition);}
             return true;
         }
