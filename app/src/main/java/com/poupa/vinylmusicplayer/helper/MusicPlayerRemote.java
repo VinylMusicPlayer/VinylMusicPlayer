@@ -219,9 +219,6 @@ public class MusicPlayerRemote {
         // If one tapped on the very first element of History queue, the positionInQueue will be -1
         final int adjustedPosition = Math.max(positionInQueue, 0);
         final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPosition, queue.size()));
-        if (musicService.getShuffleMode() == MusicService.SHUFFLE_MODE_SHUFFLE) {
-            ShuffleHelper.makeShuffleList(songsToAdd, 0);
-        }
 
         final Runnable removeDuplicate = () -> {
             // Deduplicate songs, favoring the occurrences in the new queue

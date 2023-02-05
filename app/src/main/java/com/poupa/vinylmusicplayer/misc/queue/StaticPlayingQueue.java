@@ -112,9 +112,13 @@ public class StaticPlayingQueue {
      * Add list of song at the end of both list
      */
     public void addAll(@NonNull List<Song> songs) {
+        int position = size();
         for (Song song : songs) {
             add(song);
         }
+
+        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE)
+            ShuffleHelper.makeShuffleList(queue.subList(position, queue.size()), 0);
     }
 
     private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int previousPosition, int direction) {
@@ -194,12 +198,14 @@ public class StaticPlayingQueue {
             originalQueue.add(previousPosition, new IndexedSong(songs.get(i), newPosition, uniqueId));
             queue.add(position, new IndexedSong(songs.get(i), newPosition, uniqueId));
 
-            if (position < this.currentPosition) {
+            if (position <= this.currentPosition) {
                 this.currentPosition++;
             }
         }
 
         updateQueueIndexesAfterSongsModification(position, n, previousPosition, +1);
+        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE)
+            ShuffleHelper.makeShuffleList(queue.subList(position, position+songs.size()), 0);
 
         songsIsStale = true;
     }
