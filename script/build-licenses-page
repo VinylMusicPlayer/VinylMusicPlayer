@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Fetch the licenses of code under VCS and licenses of dependencies
+# and render it in a HTML page to be included in the about dialog
+
+app_license='{
+  "name": "Vinyl Music Player",
+  "copyright": "?",
+  "license": "GNU General Public License v3"
+}'
+
+function known_licensed_code()
+{
+  path="$1"
+  case "${path}" in
+    "app/src/main/java/com/poupa/vinylmusicplayer/helper/StackBlur.java")
+      echo '{
+        "name": "StackBlur",
+        "copyright": "Enrique López Mañas",
+        "license": "Apache License 2.0"
+      }'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/loader/TopAndRecentlyPlayedTracksLoader.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/HistoryStore.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/MusicPlaybackQueueStore.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/SongPlayCountStore.java")
+      echo '{
+        "name": "?",
+        "copyright": "The CyanogenMod Project",
+        "license": "Apache License 2.0"
+      }'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/misc/CustomFragmentStatePagerAdapter.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/service/MediaButtonIntentReceiver.java"|\
+    "app/src/main/res/layout/notification.xml"|\
+    "app/src/main/res/layout/notification_big.xml"|\
+    "app/src/main/res/xml/allowed_media_browser_callers.xml")
+      echo '{
+        "name": "?",
+        "copyright": "The Android Open Source Project",
+        "license": "Apache License 2.0"
+      }'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/util/PackageValidator.kt")
+      echo '{
+        "name": "?",
+        "copyright": "Google Inc",
+        "license": "Apache License 2.0"
+      }'
+      ;;
+
+    *)
+      echo '{
+         "name": "?",
+         "copyright": "?",
+         "license": "?"
+       }'
+      ;;
+  esac
+}
+
+licensed_code=( $(grep --recursive --files-with-matches "License" app/src) )
+
+./gradlew --no-configuration-cache --refresh-dependencies licenseCiDebugReport
+
+licensed_dependencies="app/src/main/asset/dependencies-licenses.json"
