@@ -255,7 +255,7 @@ public class MusicPlayerRemote {
                 new EnqueueSongsBottomSheetDialog.Item(
                         context.getString(R.string.action_play),
                         () -> {
-                            musicService.openQueue(songsToAdd, 0, true);
+                            openQueue(queue, positionInQueue, true);
                             showToastEnqueued.run();
                         }),
                 new EnqueueSongsBottomSheetDialog.Item(
