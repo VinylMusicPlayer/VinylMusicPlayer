@@ -1,5 +1,6 @@
 <resources>
 
+    <dimen name="default_item_padding">8dp</dimen>
     <dimen name="default_item_margin">16dp</dimen>
 
     <dimen name="detail_header_height">176dp</dimen>

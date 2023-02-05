@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.helper;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -10,23 +9,20 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.EnqueueSongsBottomSheetDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -258,21 +254,21 @@ public class MusicPlayerRemote {
             Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
         };
 
-        final List<Pair<String, Runnable>> possibleActions = Arrays.asList(
-                new Pair<>(
+        final List<EnqueueSongsBottomSheetDialog.Item> possibleActions = Arrays.asList(
+                new EnqueueSongsBottomSheetDialog.Item(
                         context.getString(R.string.action_play),
                         () -> {
                             musicService.openQueue(songsToAdd, 0, true);
                             showToastEnqueued.run();
                         }),
-                new Pair<>(
+                new EnqueueSongsBottomSheetDialog.Item(
                         context.getString(R.string.action_play_next),
                         () -> {
                             removeDuplicate.run();
                             musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
                             showToastEnqueued.run();
                         }),
-                new Pair<>(
+                new EnqueueSongsBottomSheetDialog.Item(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
                             removeDuplicate.run();
@@ -286,30 +282,13 @@ public class MusicPlayerRemote {
         final String message = (songCount == 1)
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
                 : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, songCount);
-        final List<String> choicesText = new ArrayList<>();
-        for (final Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
-        new MaterialDialog.Builder(context)
-                .title(R.string.label_playing_queue)
-                .content(message)
-                .autoDismiss(false)
-                .items(choicesText)
-                .itemsCallbackSingleChoice(
-                        defaultActionIndex,
-                        (MaterialDialog dialog, View itemView, int which, CharSequence text) -> true)
-                .negativeText(android.R.string.cancel)
-                .positiveText(R.string.add_action)
-                .onPositive((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> {
-                    final int chosenActionIndex = dialog.getSelectedIndex();
-                    if (chosenActionIndex >= 0 && chosenActionIndex < possibleActions.size()) {
-                        final Runnable action = possibleActions.get(chosenActionIndex).second;
-                        action.run();
-                        PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(chosenActionIndex);
-                        dialog.dismiss();
-                    }
-                })
-                .onNegative((@NonNull MaterialDialog dialog, @NonNull DialogAction which) -> dialog.dismiss())
-                .show();
+        EnqueueSongsBottomSheetDialog songActionDialog = EnqueueSongsBottomSheetDialog.newInstance();
+        songActionDialog.setTitle(message)
+                .setButtonList(possibleActions)
+                .setDefaultChoice(defaultActionIndex)
+                .show( ((AppCompatActivity) context).getSupportFragmentManager(), "songActionDialog");
+
     }
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
