@@ -19,8 +19,17 @@
     <string name="action_play_pause">Play/Pause</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
+
     <string name="action_add_to_playing_queue">Add to playing queue</string>
     <string name="action_remove_from_playing_queue">Remove from playing queue</string>
+    <string name="action_clear_playing_queue">Clear playing queue</string>
+    <string name="action_save_playing_queue">Save playing queue</string>
+    <string name="about_to_add_title_to_playing_queue">"About to play 1 song.\nHow do you want to proceed with this song?"</string>
+    <string name="about_to_add_x_titles_to_playing_queue">About to play %1$d titles.\nHow do you want to proceed with these songs?</string>
+    <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
+    <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
+    <string name="failed_restore_playing_queue">Cannot restore, previous queue is corrupted</string>
+
     <string name="action_add_to_playlist">Add to playlist…</string>
     <string name="action_tag_editor">Tag editor</string>
     <string name="action_delete_from_device">Delete from device</string>
@@ -68,8 +77,6 @@
     <string name="label_playing_queue">Playing queue</string>
     <string name="no_results">No results</string>
     <string name="updating">Updating…</string>
-    <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
-    <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
     <string name="action_remove_from_playlist">Remove from playlist</string>
     <string name="action_grid_size">Grid size</string>
     <string name="action_grid_size_land">Grid size (land)</string>
@@ -100,8 +107,6 @@
     <string name="action_shuffle_album">Shuffle album</string>
     <string name="action_shuffle_artist">Shuffle artist</string>
     <string name="action_shuffle_playlist">Shuffle playlist</string>
-    <string name="action_clear_playing_queue">Clear playing queue</string>
-    <string name="action_save_playing_queue">Save playing queue</string>
     <string name="action_go_to_start_directory">Go to start directory</string>
     <string name="action_show_lyrics">Show lyrics</string>
     <string name="light_theme_name">Light</string>
@@ -218,14 +223,20 @@
     <string name="grid_size_7" translatable="false">7</string>
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Colored footers</string>
-    <string name="special_thanks_to">Special thanks to</string>
     <string name="changelog">Changelog</string>
     <string name="licenses">Licenses</string>
     <string name="permissions_denied">Permissions denied.</string>
     <string name="permission_external_storage_denied">Permission to access external storage denied.</string>
     <string name="support_development">Support development</string>
     <string name="version">Version</string>
+
+    <string name="maintainers">Maintainers</string>
+    <string name="contributors">Contributors</string>
+    <string name="special_thanks_to">Special thanks to</string>
     <string name="author">Author</string>
+    <string name="label_other_contributors">+ many other contributors</string>
+    <string name="missing_webview_component">"This device doesn't support WebView, which is necessary to perform the requested action.\nIt is missing a system component."</string>
+
     <string name="write_an_email">Write an email</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="visit_website">Visit website</string>
@@ -238,6 +249,8 @@
     <string name="michael_cook_summary">For the pretty material app icon.</string>
     <string name="maarten_corpel_summary">For making the Play Store illustration and the empty album cover.</string>
     <string name="aleksandar_tesic_summary">For helping me with the design.</string>
+    <string name="eugene_cheung_summary">For his contributions to the source code.</string>
+    <string name="adrian_summary">For creating the album page design.</string>
     <string name="website">Website</string>
     <string name="up_next">Up next</string>
     <string name="pref_title_now_playing_screen_appearance">Appearance</string>
@@ -312,8 +325,6 @@
     <string name="idle_notification_name">Idle notification</string>
     <string name="idle_notification_title">Vinyl is running</string>
 
-    <string name="eugene_cheung_summary">For his contributions to the source code.</string>
-    <string name="adrian_summary">For creating the album page design.</string>
     <string name="add_action">Add</string>
     <string name="blacklist">Blacklist</string>
     <string name="remove_from_blacklist">Remove from blacklist</string>

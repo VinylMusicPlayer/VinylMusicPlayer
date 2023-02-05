@@ -1,8 +1,6 @@
 package com.poupa.vinylmusicplayer.misc.queue;
 
-
 import com.poupa.vinylmusicplayer.model.Song;
-
 
 public class IndexedSong extends Song {
 
@@ -14,6 +12,10 @@ public class IndexedSong extends Song {
 
     public IndexedSong(Song song, int index, long uniqueId) {
         super(song);
+
+        if (index < 0 && !song.equals(Song.EMPTY_SONG)) {
+            throw new IllegalArgumentException("Bad index=" + index);
+        }
         this.index = index;
 
         this.uniqueId = uniqueId;

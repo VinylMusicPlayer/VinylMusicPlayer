@@ -4,6 +4,7 @@
 
     <color name="twenty_percent_black_overlay">#34000000</color>
     <color name="fifty_percent_black_overlay">#88000000</color>
+    <color name="seventy_percent_black_overlay">#b2000000</color>
 
     <color name="app_shortcut_default_foreground">@color/md_blue_grey_500</color>
     <color name="app_shortcut_default_background">@color/md_grey_50</color>

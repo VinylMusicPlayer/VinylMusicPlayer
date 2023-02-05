@@ -8,8 +8,8 @@
     <!-- Menu -->
     <string name="library">Bibliothèque</string>
     <string name="folders">Dossiers</string>
-    <string name="scan_media">Scanner les médias</string>
     <string name="reset_discography">Réanalyser la bibliothèque</string>
+    <string name="reset_discography_warning">Cette action va effacer et reconstruire la database interne de l\'application.\n\nAucune chanson ne sera supprimée pendant cette opération, mais cela va supprimer l\'historique de lecture.\n\nVous ne pourrez pas utiliser l\'application normalement pendant jusqu\'a la fin de l\'analyse, c’est-à-dire une durée potentiellement longue.</string>
     <string name="action_settings">"Paramètres"</string>
     <string name="action_about">À propos</string>
     <string name="no_albums">Aucun album</string>
@@ -51,6 +51,9 @@
     <string name="action_shuffle_playlist">Lecture aléatoire des playlists</string>
     <string name="action_clear_playing_queue">Vider la file de lecture</string>
     <string name="action_save_playing_queue">Sauvegarder la file de lecture</string>
+    <string name="about_to_add_title_to_playing_queue">Vous allez ajouter 1 titre. Que voulez faire avec ?</string>
+    <string name="about_to_add_x_titles_to_playing_queue">Vous allez ajouter %1$d titres. Que voulez faire avec ?</string>
+    <string name="failed_restore_playing_queue">Restoration impossible, la précedente file de lecture est corrompue</string>
     <string name="action_go_to_start_directory">Aller au répertoire de départ</string>
     <string name="action_show_lyrics">Afficher les paroles</string>
     <string name="action_sort_order">Ordre de tri</string>
@@ -78,13 +81,14 @@
     <string name="dialog_ringtone_title">Définir comme sonnerie</string>
     <!-- Audio file details labels -->
     <string name="label_details">Détails</string>
-    <string name="label_file_name">Nom du fichier</string>
     <string name="label_file_path">Chemin du fichier</string>
     <string name="label_file_size">Taille</string>
     <string name="label_file_format">Format</string>
     <string name="label_track_length">Durée</string>
     <string name="label_bit_rate">Débit</string>
     <string name="label_sampling_rate">Taux d\'échantillonnage</string>
+    <string name="label_date_added">Ajouté</string>
+    <string name="label_date_modified">Modifié</string>
     <string name="label_playing_queue">File de lecture</string>
     <!-- Library tabs -->
     <string name="albums">Albums</string>
@@ -240,6 +244,9 @@
     <string name="accent_color_desc">La couleur secondaire du thème (rose par défaut)</string>
     <string name="playing_notification_description">La notification de lecture fournit des actions pour la lecture/pause, etc.</string>
     <string name="playing_notification_name">Notification de lecture</string>
+    <string name="idle_notification_description">La notification d\'inactivité est utilisé quand la file de lecture est vide</string>
+    <string name="idle_notification_name">Notification d\'inactivité</string>
+    <string name="idle_notification_title">Vinyl est en cours d\'éxecution</string>
     <!-- Storage scan -->
     <string name="some_files_are_not_listed_in_the_media_store">Certains fichiers ne sont pas listés dans le catalogue de médias</string>
     <string name="nothing_to_scan">Rien à analyser</string>

@@ -1,21 +1,25 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.TypedValue;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.ThemeSingleton;
+import com.google.android.material.resources.TextAppearance;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
@@ -23,6 +27,13 @@ import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.function.Function;
 
 import de.psdev.licensesdialog.LicensesDialog;
 
@@ -37,82 +48,25 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     private static final String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
 
-    private static final String KABOUZEID_GOOGLE_PLUS = "https://google.com/+KarimAbouZeid23697";
-    private static final String KABOUZEID_WEBSITE = "https://kabouzeid.com";
-
-    private static final String AIDAN_FOLLESTAD_GOOGLE_PLUS = "https://google.com/+AidanFollestad";
-    private static final String AIDAN_FOLLESTAD_GITHUB = "https://github.com/afollestad";
-
-    private static final String MICHAEL_COOK_GOOGLE_PLUS = "https://plus.google.com/102718493746376292361";
-    private static final String MICHAEL_COOK_WEBSITE = "https://cookicons.co/";
-
-    private static final String MAARTEN_CORPEL_GOOGLE_PLUS = "https://google.com/+MaartenCorpel";
-
-    private static final String ALEKSANDAR_TESIC_GOOGLE_PLUS = "https://google.com/+aleksandartešić";
-
-    private static final String EUGENE_CHEUNG_GITHUB = "https://github.com/arkon";
-    private static final String EUGENE_CHEUNG_WEBSITE = "https://echeung.me/";
-
-    private static final String ADRIAN_TWITTER = "https://twitter.com/froschgames";
-    private static final String ADRIAN_WEBSITE = "https://froschgames.com/";
-
-    private Toolbar toolbar;
-    private TextView appVersion;
-    private LinearLayout changelog;
-    private LinearLayout intro;
-    private LinearLayout licenses;
-    private LinearLayout writeAnEmail;
-    private LinearLayout forkOnGitHub;
-    private LinearLayout visitWebsite;
-    private LinearLayout reportBugs;
-    private LinearLayout rateOnGooglePlay;
-
-    private AppCompatButton kabouzeidGooglePlus;
-    private AppCompatButton kabouzeidWebsite;
-    private AppCompatButton aidanFollestadGooglePlus;
-    private AppCompatButton aidanFollestadGitHub;
-    private AppCompatButton michaelCookGooglePlus;
-    private AppCompatButton michaelCookWebsite;
-    private AppCompatButton maartenCorpelGooglePlus;
-    private AppCompatButton aleksandarTesicGooglePlus;
-    private AppCompatButton eugeneCheungGitHub;
-    private AppCompatButton eugeneCheungWebsite;
-    private AppCompatButton adrianTwitter;
-    private AppCompatButton adrianWebsite;
+    private ActivityAboutBinding layoutBinding;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivityAboutBinding binding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
-        toolbar = binding.toolbar;
+        try {
+            layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
+        } catch (InflateException e) {
+            e.printStackTrace();
+            new MaterialDialog.Builder(this)
+                    .title(android.R.string.dialog_alert_title)
+                    .content(R.string.missing_webview_component)
+                    .positiveText(android.R.string.ok)
+                    .build()
+                    .show();
+        }
 
-        appVersion = binding.content.cardAboutApp.appVersion;
-        changelog = binding.content.cardAboutApp.changelog;
-        intro = binding.content.cardAboutApp.intro;
-        licenses = binding.content.cardAboutApp.licenses;
-        forkOnGitHub = binding.content.cardAboutApp.forkOnGithub;
-
-        writeAnEmail = binding.content.cardAuthor.writeAnEmail;
-        visitWebsite = binding.content.cardAuthor.visitWebsite;
-
-        reportBugs = binding.content.cardSupportDevelopment.reportBugs;
-        rateOnGooglePlay = binding.content.cardSupportDevelopment.rateOnGooglePlay;
-
-        kabouzeidGooglePlus = binding.content.cardSpecialThanks.kabouzeidGooglePlus;
-        kabouzeidWebsite = binding.content.cardSpecialThanks.kabouzeidWebsite;
-        aidanFollestadGooglePlus = binding.content.cardSpecialThanks.aidanFollestadGooglePlus;
-        aidanFollestadGitHub = binding.content.cardSpecialThanks.aidanFollestadGitHub;
-        michaelCookGooglePlus = binding.content.cardSpecialThanks.michaelCookGooglePlus;
-        michaelCookWebsite = binding.content.cardSpecialThanks.michaelCookWebsite;
-        maartenCorpelGooglePlus = binding.content.cardSpecialThanks.maartenCorpelGooglePlus;
-        aleksandarTesicGooglePlus = binding.content.cardSpecialThanks.aleksandarTesicGooglePlus;
-        eugeneCheungGitHub = binding.content.cardSpecialThanks.eugeneCheungGitHub;
-        eugeneCheungWebsite = binding.content.cardSpecialThanks.eugeneCheungWebsite;
-        adrianTwitter = binding.content.cardSpecialThanks.adrianTwitter;
-        adrianWebsite = binding.content.cardSpecialThanks.adrianWebsite;
-
-        setContentView(binding.getRoot());
+        setContentView(layoutBinding.getRoot());
 
         setDrawUnderStatusbar();
 
@@ -126,41 +80,129 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private void setUpViews() {
         setUpToolbar();
         setUpAppVersion();
+        setUpContributorsView();
         setUpOnClickListeners();
     }
 
     private void setUpToolbar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        setSupportActionBar(toolbar);
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        setSupportActionBar(layoutBinding.toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setUpAppVersion() {
-        appVersion.setText(getCurrentVersionName(this));
+        layoutBinding.content.cardAboutApp.appVersion.setText(getCurrentVersionName(this));
+    }
+
+    // Needed as webview is interpreting pixels as dp
+    public static int px2dip(Context context, float pxValue) {
+        final float scale =  context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+    // Needed as webview doesn't understand #aarrggbb
+    public static String hex2rgba(int color) {
+        /*float a = ((color >> 24) & 0xFF) / 255.0f;
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;*/
+        float a = Color.alpha(color) / 255.0f;
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+
+        return "rgba("+r+","+g+","+b+","+String.format(Locale.US, "%.02f", a)+")";
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setUpContributorsView()
+    {
+        final WebView webView = layoutBinding.content.cardContributors.viewContributors;
+        try {
+            StringBuilder buf = new StringBuilder();
+            InputStream json = getAssets().open("credits.html");
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
+            String str;
+            while ((str = in.readLine()) != null) {buf.append(str).append("\n");}
+            in.close();
+
+            // Inject color values for WebView body background and links
+            Function<Integer, String> colorHex = (color) -> {
+                if (color == 0) {return "000000";}
+                return Integer.toHexString(color).substring(2); // strip the alpha part, keep only RGB
+            };
+
+            final TypedValue typedColor = new TypedValue();
+            getTheme().resolveAttribute(R.attr.cardBackgroundColor, typedColor, true);
+            final String backgroundColor = colorHex.apply(typedColor.data);
+            getTheme().resolveAttribute(R.attr.iconColor, typedColor, true);
+            final String contentColor = colorHex.apply(typedColor.data);
+
+            final TextAppearance captionStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
+            final String captionTextColor = hex2rgba(captionStyle.getTextColor().getDefaultColor());
+            final String captionSize = String.valueOf(px2dip(this, captionStyle.getTextSize()));
+
+            final String titleTextColor = hex2rgba(ThemeStore.textColorSecondary(this));
+            final TextAppearance titleStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
+            final String titleSize = String.valueOf(px2dip(this, titleStyle.getTextSize()));
+
+            getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);
+            String dividerColor = hex2rgba(typedColor.data);
+
+            int margin_i = px2dip(this, getResources().getDimensionPixelSize(R.dimen.default_item_margin));
+            String margin = String.valueOf(margin_i);
+            String margin_2 = String.valueOf(margin_i/2);
+            String margin_4 = String.valueOf(margin_i/4);
+
+            String titleTopMargin = String.valueOf(px2dip(this, getResources().getDimensionPixelSize(R.dimen.title_top_margin)));
+
+            final String recoloredBuf = buf.toString()
+                    .replace("%{color}", contentColor)
+                    .replace("%{background-color}", backgroundColor)
+                    .replace("%{divider-color}", dividerColor)
+                    .replace("%{caption-color}", captionTextColor)
+                    .replace("%{caption-size}", captionSize)
+                    .replace("%{title-color}", titleTextColor)
+                    .replace("%{title-size}", titleSize)
+                    .replace("%{link-color}", contentColor)
+                    .replace("%{margin}", margin)
+                    .replace("%{margin_2}", margin_2)
+                    .replace("%{margin_4}", margin_4)
+                    .replace("%{title-top-margin}", titleTopMargin)
+                    .replace("%{@string/maintainers}", getResources().getString(R.string.maintainers))
+                    .replace("%{@string/contributors}", getResources().getString(R.string.contributors))
+                    .replace("%{@string/label_other_contributors}", getResources().getString(R.string.label_other_contributors))
+                    .replace("%{@string/special_thanks_to}", getResources().getString(R.string.special_thanks_to))
+                    .replace("%{@string/karim_abou_zeid}", getResources().getString(R.string.karim_abou_zeid))
+                    .replace("%{@string/karim_abou_zeid_summary}", getResources().getString(R.string.karim_abou_zeid_summary))
+                    .replace("%{@string/aidan_follestad}", getResources().getString(R.string.aidan_follestad))
+                    .replace("%{@string/aidan_follestad_summary}", getResources().getString(R.string.aidan_follestad_summary))
+                    .replace("%{@string/michael_cook_cookicons}", getResources().getString(R.string.michael_cook_cookicons))
+                    .replace("%{@string/michael_cook_summary}", getResources().getString(R.string.michael_cook_summary))
+                    .replace("%{@string/maarten_corpel}", getResources().getString(R.string.maarten_corpel))
+                    .replace("%{@string/maarten_corpel_summary}", getResources().getString(R.string.maarten_corpel_summary))
+                    .replace("%{@string/aleksandar_tesic}", getResources().getString(R.string.aleksandar_tesic))
+                    .replace("%{@string/aleksandar_tesic_summary}", getResources().getString(R.string.aleksandar_tesic_summary))
+                    .replace("%{@string/eugene_cheung}", getResources().getString(R.string.eugene_cheung))
+                    .replace("%{@string/eugene_cheung_summary}", getResources().getString(R.string.eugene_cheung_summary))
+                    .replace("%{@string/adrian}", getResources().getString(R.string.adrian))
+                    .replace("%{@string/adrian_summary}", getResources().getString(R.string.adrian_summary))
+                    ;
+
+            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
+            webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
+        } catch (Throwable e) {
+            webView.loadData("<b>Unable to load</b><br/>" + e, "text/html", "UTF-8");
+        }
     }
 
     private void setUpOnClickListeners() {
-        changelog.setOnClickListener(this);
-        intro.setOnClickListener(this);
-        licenses.setOnClickListener(this);
-        forkOnGitHub.setOnClickListener(this);
-        visitWebsite.setOnClickListener(this);
-        reportBugs.setOnClickListener(this);
-        writeAnEmail.setOnClickListener(this);
-        rateOnGooglePlay.setOnClickListener(this);
-        aidanFollestadGooglePlus.setOnClickListener(this);
-        aidanFollestadGitHub.setOnClickListener(this);
-        kabouzeidGooglePlus.setOnClickListener(this);
-        kabouzeidWebsite.setOnClickListener(this);
-        michaelCookGooglePlus.setOnClickListener(this);
-        michaelCookWebsite.setOnClickListener(this);
-        maartenCorpelGooglePlus.setOnClickListener(this);
-        aleksandarTesicGooglePlus.setOnClickListener(this);
-        eugeneCheungGitHub.setOnClickListener(this);
-        eugeneCheungWebsite.setOnClickListener(this);
-        adrianTwitter.setOnClickListener(this);
-        adrianWebsite.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.changelog.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.intro.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.licenses.setOnClickListener(this);
+        layoutBinding.content.cardAboutApp.forkOnGithub.setOnClickListener(this);
+        layoutBinding.content.cardSupportDevelopment.reportBugs.setOnClickListener(this);
+        layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay.setOnClickListener(this);
     }
 
     @Override
@@ -183,50 +225,18 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(final View v) {
-        if (v == changelog) {
+        if (v == layoutBinding.content.cardAboutApp.changelog) {
             ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
-        } else if (v == licenses) {
+        } else if (v == layoutBinding.content.cardAboutApp.licenses) {
             showLicenseDialog();
-        } else if (v == intro) {
+        } else if (v == layoutBinding.content.cardAboutApp.intro) {
             startActivity(new Intent(this, AppIntroActivity.class));
-        } else if (v == forkOnGitHub) {
+        } else if (v == layoutBinding.content.cardAboutApp.forkOnGithub) {
             openUrl(GITHUB);
-        } else if (v == visitWebsite) {
-            openUrl(WEBSITE);
-        } else if (v == reportBugs) {
+        } else if (v == layoutBinding.content.cardSupportDevelopment.reportBugs) {
             startActivity(new Intent(this, BugReportActivity.class));
-        } else if (v == writeAnEmail) {
-            final Intent intent = new Intent(Intent.ACTION_SENDTO);
-            intent.setData(Uri.parse("mailto:adrien@poupa.fr"));
-            intent.putExtra(Intent.EXTRA_EMAIL, "adrien@poupa.fr");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Vinyl Music Player");
-            startActivity(Intent.createChooser(intent, "E-Mail"));
-        } else if (v == rateOnGooglePlay) {
+        } else if (v == layoutBinding.content.cardSupportDevelopment.rateOnGooglePlay) {
             openUrl(RATE_ON_GOOGLE_PLAY);
-        } else if (v == aidanFollestadGooglePlus) {
-            openUrl(AIDAN_FOLLESTAD_GOOGLE_PLUS);
-        } else if (v == aidanFollestadGitHub) {
-            openUrl(AIDAN_FOLLESTAD_GITHUB);
-        } else if (v == kabouzeidGooglePlus) {
-            openUrl(KABOUZEID_GOOGLE_PLUS);
-        } else if (v == kabouzeidWebsite) {
-            openUrl(KABOUZEID_WEBSITE);
-        } else if (v == michaelCookGooglePlus) {
-            openUrl(MICHAEL_COOK_GOOGLE_PLUS);
-        } else if (v == michaelCookWebsite) {
-            openUrl(MICHAEL_COOK_WEBSITE);
-        } else if (v == maartenCorpelGooglePlus) {
-            openUrl(MAARTEN_CORPEL_GOOGLE_PLUS);
-        } else if (v == aleksandarTesicGooglePlus) {
-            openUrl(ALEKSANDAR_TESIC_GOOGLE_PLUS);
-        } else if (v == eugeneCheungGitHub) {
-            openUrl(EUGENE_CHEUNG_GITHUB);
-        } else if (v == eugeneCheungWebsite) {
-            openUrl(EUGENE_CHEUNG_WEBSITE);
-        } else if (v == adrianTwitter) {
-            openUrl(ADRIAN_TWITTER);
-        } else if (v == adrianWebsite) {
-            openUrl(ADRIAN_WEBSITE);
         }
     }
 

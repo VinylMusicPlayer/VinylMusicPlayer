@@ -152,7 +152,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu(activity) {
                         @Override
                         public Song getSong() {
-                            return (Song) dataSet.get(getAdapterPosition());
+                            return (Song) dataSet.get(getBindingAdapterPosition());
                         }
 
                         @Override
@@ -191,7 +191,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            Object item = dataSet.get(getAdapterPosition());
+            Object item = dataSet.get(getBindingAdapterPosition());
             switch (getItemViewType()) {
                 case ALBUM:
                     NavigationUtil.goToAlbum(activity,
@@ -210,7 +210,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 case SONG:
                     ArrayList<Song> playList = new ArrayList<>();
                     playList.add((Song) item);
-                    MusicPlayerRemote.openQueue(playList, 0, true);
+                    MusicPlayerRemote.enqueueSongsWithConfirmation(activity, playList, 0);
                     break;
             }
         }

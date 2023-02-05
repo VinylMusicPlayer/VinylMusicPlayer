@@ -5,31 +5,31 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Base64;
-import android.view.InflateException;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebView;
+import android.text.util.Linkify;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.ThemeSingleton;
-import com.kabouzeid.appthemehelper.util.ATHUtil;
-import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+import io.noties.markwon.Markwon;
+import io.noties.markwon.image.glide.GlideImagesPlugin;
+import io.noties.markwon.linkify.LinkifyPlugin;
 
 /**
  * @author Aidan Follestad (afollestad)
+ * @author SC (soncaokim)
  */
 public class ChangelogDialog extends DialogFragment {
 
@@ -44,49 +44,33 @@ public class ChangelogDialog extends DialogFragment {
         final FragmentActivity activity = getActivity();
         assert(activity != null);
 
-        final View customView;
-        try {
-            customView = LayoutInflater.from(activity).inflate(R.layout.dialog_web_view, null);
-        } catch (InflateException e) {
-            e.printStackTrace();
-            return new MaterialDialog.Builder(activity)
-                    .title(android.R.string.dialog_alert_title)
-                    .content("This device doesn't support web view, which is necessary to view the change log. It is missing a system component.")
-                    .positiveText(android.R.string.ok)
-                    .build();
-        }
+        final View customView = getLayoutInflater().inflate(R.layout.dialog_changelog_view, null);
         MaterialDialog dialog = new MaterialDialog.Builder(activity)
-                .title(R.string.changelog)
                 .customView(customView, false)
                 .positiveText(android.R.string.ok)
                 .showListener(dialog1 -> setChangelogRead(activity))
                 .build();
 
-        final WebView webView = customView.findViewById(R.id.web_view);
+        final Markwon markwon = Markwon.builder(activity)
+                .usePlugin(GlideImagesPlugin.create(activity)) // image loader
+                .usePlugin(LinkifyPlugin.create(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS)) // make link from text
+                .build();
+        final TextView markdownView = customView.findViewById(R.id.markdown_view);
         try {
-            // Load from vinylmusicplayer-changelog.html in the assets folder
+            // Load from CHANGELOG.md in the assets folder
             StringBuilder buf = new StringBuilder();
-            InputStream json = activity.getAssets().open("vinylmusicplayer-changelog.html");
-            BufferedReader in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+            InputStream json = activity.getAssets().open("CHANGELOG.md");
+            BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
             String str;
-            while ((str = in.readLine()) != null)
+            while ((str = in.readLine()) != null) {
                 buf.append(str);
+                buf.append('\n');
+            }
             in.close();
 
-            // Inject color values for WebView body background and links
-            final String backgroundColor = colorToHex(ATHUtil.resolveColor(activity, R.attr.md_background_color, Color.parseColor(ThemeSingleton.get().darkTheme ? "#424242" : "#ffffff")));
-            final String contentColor = ThemeSingleton.get().darkTheme ? "#ffffff" : "#000000";
-            final int defaultColor = ThemeSingleton.get().positiveColor.getDefaultColor();
-            String recoloredBuf = buf.toString()
-                    .replace("{style-placeholder}",
-                            String.format("body { background-color: %s; color: %s; }", backgroundColor, contentColor))
-                    .replace("{link-color}", colorToHex(defaultColor))
-                    .replace("{link-color-active}",
-                            colorToHex(ColorUtil.lightenColor(defaultColor)));
-            String base64Buf = Base64.encodeToString(recoloredBuf.getBytes(), Base64.DEFAULT);
-            webView.loadData(base64Buf, "text/html; charset=UTF-8", "base64");
+            markwon.setMarkdown(markdownView, buf.toString());
         } catch (Throwable e) {
-            webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
+            markdownView.setText("Unable to load change log\n" + e.getLocalizedMessage());
         }
         return dialog;
     }
@@ -99,9 +83,5 @@ public class ChangelogDialog extends DialogFragment {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private static String colorToHex(int color) {
-        return Integer.toHexString(color).substring(2);
     }
 }
