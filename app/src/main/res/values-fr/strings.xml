@@ -51,8 +51,8 @@
     <string name="action_shuffle_playlist">Lecture aléatoire des playlists</string>
     <string name="action_clear_playing_queue">Vider la file de lecture</string>
     <string name="action_save_playing_queue">Sauvegarder la file de lecture</string>
-    <string name="about_to_add_title_to_playing_queue">Vous allez ajouter 1 titre. Que voulez faire avec ?</string>
-    <string name="about_to_add_x_titles_to_playing_queue">Vous allez ajouter %1$d titres. Que voulez faire avec ?</string>
+    <string name="about_to_add_title_to_playing_queue">Vous allez ajouter 1 titre dans la liste de lecture.\nQue voulez faire avec ?</string>
+    <string name="about_to_add_x_titles_to_playing_queue">Vous allez ajouter %1$d titres dans la list de lecture.\nQue voulez faire avec ?</string>
     <string name="failed_restore_playing_queue">Restoration impossible, la précedente file de lecture est corrompue</string>
     <string name="action_go_to_start_directory">Aller au répertoire de départ</string>
     <string name="action_show_lyrics">Afficher les paroles</string>
