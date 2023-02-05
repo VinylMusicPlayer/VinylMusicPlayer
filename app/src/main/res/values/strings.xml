@@ -28,7 +28,7 @@
     <string name="about_to_add_x_titles_to_playing_queue">About to play %1$d titles.\nHow do you want to proceed with these songs?</string>
     <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
     <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
-    <string name="failed_restore_playing_queue">Cannot restore, queues are corrupted</string>
+    <string name="failed_restore_playing_queue">Cannot restore, previous queue is corrupted</string>
 
     <string name="action_add_to_playlist">Add to playlist…</string>
     <string name="action_tag_editor">Tag editor</string>
