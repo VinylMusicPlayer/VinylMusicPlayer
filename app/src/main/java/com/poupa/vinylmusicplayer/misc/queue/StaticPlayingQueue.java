@@ -322,10 +322,10 @@ public class StaticPlayingQueue {
         }
 
         clear();
+        this.shuffleMode = SHUFFLE_MODE_NONE;
         addAll(playingQueue);
 
         this.currentPosition = startPosition;
-
         setShuffle(shuffleMode);
 
         return true;
