@@ -245,10 +245,10 @@ public class MusicPlayerRemote {
         final Runnable showToastEnqueued = () -> {
             int count = songsToAdd.size();
             final String toast = (count == 1)
-                    ? context.getString(R.string.added_title_to_playing_queue)
-                    : context.getString(R.string.added_x_titles_to_playing_queue, count);
+                    ? musicService.getResources().getString(R.string.added_title_to_playing_queue)
+                    : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, count);
 
-            Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
         };
 
         final List<EnqueueSongsBottomSheetDialog.Item> possibleActions = Arrays.asList(
