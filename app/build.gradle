@@ -7,15 +7,27 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.cmgapps.licenses'
 licenses {
     reports {
+        // Enable this JSON generation to get the full data structure
+        // json {
+        //    enabled = true
+        //    destination = file("$buildDir/reports/licenses/dependencies-licenses.json")
+        //}
+
         html.enabled = false // html is enabled by default
-        json {
-            enabled = true
-            destination = file("$buildDir/dependencies-licenses.json")
-        }
+
+        // Generate CSV format
         custom {
-            enabled = false
-            destination = file("$buildDir/dependencies-licenses.csv")
-            generate { list -> list.collect{ it.name }.join(';') }
+            enabled = true
+            destination = file("$buildDir/reports/licenses/dependencies-licenses.csv")
+            generate {
+                list -> list.collect{
+                    [
+                        it.name != null ? it.name : (it.mavenCoordinates.groupId+'.'+it.mavenCoordinates.artifactId),
+                        it.description != null ? it.description.replaceAll("[;\\n\\r]+"," ") : "",
+                        it.licenses[0] != null ? it.licenses[0].name : "",
+                        it.licenses[0] != null ? it.licenses[0].url : "",
+                    ].join(';')
+                }.join('\n') }
         }
     }
 }
