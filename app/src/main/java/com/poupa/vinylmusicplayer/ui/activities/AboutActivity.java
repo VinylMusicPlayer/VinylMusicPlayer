@@ -18,12 +18,12 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.google.android.material.resources.TextAppearance;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityAboutBinding;
 import com.poupa.vinylmusicplayer.dialogs.ChangelogDialog;
+import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
@@ -226,9 +226,9 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     @Override
     public void onClick(final View v) {
         if (v == layoutBinding.content.cardAboutApp.changelog) {
-            ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
+            new ChangelogDialog().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
         } else if (v == layoutBinding.content.cardAboutApp.licenses) {
-            showLicenseDialog();
+            new MarkdownViewDialog("LICENSES.md").show(getSupportFragmentManager(), "LICENSES_DIALOG");
         } else if (v == layoutBinding.content.cardAboutApp.intro) {
             startActivity(new Intent(this, AppIntroActivity.class));
         } else if (v == layoutBinding.content.cardAboutApp.forkOnGithub) {
@@ -245,19 +245,5 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         i.setData(Uri.parse(url));
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
-    }
-
-    private void showLicenseDialog() {
-        new LicensesDialog.Builder(this)
-                .setNotices(R.raw.notices)
-                .setTitle(R.string.licenses)
-                .setNoticesCssStyle(getString(R.string.license_dialog_style)
-                        .replace("{bg-color}", ThemeSingleton.get().darkTheme ? "424242" : "ffffff")
-                        .replace("{text-color}", ThemeSingleton.get().darkTheme ? "ffffff" : "000000")
-                        .replace("{license-bg-color}", ThemeSingleton.get().darkTheme ? "535353" : "eeeeee")
-                )
-                .setIncludeOwnLicense(true)
-                .build()
-                .show();
     }
 }

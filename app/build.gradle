@@ -22,7 +22,7 @@ licenses {
             generate {
                 list -> list.collect{
                     [
-                        it.name != null ? it.name : (it.mavenCoordinates.groupId+'.'+it.mavenCoordinates.artifactId),
+                        (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? " - " + it.name : ""),
                         it.description != null ? it.description.replaceAll("[;\\n\\r]+"," ") : "",
                         it.licenses[0] != null ? it.licenses[0].name : "",
                         it.licenses[0] != null ? it.licenses[0].url : "",
@@ -164,8 +164,6 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
 
     implementation "io.noties.markwon:core:4.6.2"
     implementation "io.noties.markwon:image-glide:4.6.2"

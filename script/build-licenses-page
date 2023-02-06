@@ -95,7 +95,7 @@ done
 # ---- Now build the license page
 licenses_md="app/src/main/assets/LICENSES.md"
 {
-  echo "#Licenses"
+  echo "# Licenses"
 
   cat "${all_licenses}" | while read -r line; do
     IFS=';' read -r -a tokens <<< "${line}"
