@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,11 +21,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
-import io.noties.markwon.LinkResolverDef;
 import io.noties.markwon.Markwon;
-import io.noties.markwon.MarkwonConfiguration;
 import io.noties.markwon.image.glide.GlideImagesPlugin;
-import io.noties.markwon.linkify.LinkifyPlugin;
 
 /**
  * @author SC (soncaokim)
@@ -54,15 +50,7 @@ public class MarkdownViewDialog extends DialogFragment {
 
         final Markwon markwon = Markwon.builder(activity)
                 .usePlugin(GlideImagesPlugin.create(activity)) // image loader
-                .usePlugin(LinkifyPlugin.create(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS)) // make link from text
-                // TODO Github link shortener plugin (issue link, pull request link)
-                .usePlugin(new AbstractMarkwonPlugin() {
-                    @Override
-                    public void configureConfiguration(@NonNull MarkwonConfiguration.Builder builder) {
-                        super.configureConfiguration(builder);
-                        builder.linkResolver(new LinkResolverDef());
-                    }
-                })
+                .usePlugin(new GithubLinkify())
                 .build();
         final TextView markdownView = customView.findViewById(R.id.markdown_view);
         StringBuilder buf = loadFileFromAssets(activity, assetName);
@@ -90,5 +78,20 @@ public class MarkdownViewDialog extends DialogFragment {
                 .append(ioe.getLocalizedMessage());
         }
         return buf;
+    }
+
+    // Github link shortener plugin
+    private static class GithubLinkify extends AbstractMarkwonPlugin {
+        @NonNull
+        @Override
+        public String processMarkdown(@NonNull String markdown) {
+            return markdown
+                    .replaceAll(
+                            "(https://github.com/AdrienPoupa/VinylMusicPlayer/pull/)([0-9]+)",
+                            "[PR #$2]($1$2)")
+                    .replaceAll(
+                            "(https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/)([0-9]+)",
+                            "[PR #$2]($1$2)");
+        }
     }
 }
