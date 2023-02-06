@@ -27,6 +27,10 @@ jobs:
       if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
       run: ./script/build-credits-page
 
+    - name: Build the licenses page
+      if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
+      run: ./script/build-licenses-page
+
     - name: Build application
       run: ./gradlew assembleCiRelease
     - name: Archive APKs
