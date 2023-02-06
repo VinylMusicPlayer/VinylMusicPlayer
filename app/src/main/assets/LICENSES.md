@@ -215,13 +215,13 @@ Shared library between Data Binding runtime lib and compiler
 
 [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-## com.github.kabouzeid.RecyclerView-FastScroll
+## RecyclerView-FastScroll
 
-A simple FastScroller for Android's RecyclerView.
+A simple FastScroller for Android's RecyclerView. Copyright (C) 2016 Tim Malseed
 
-[The Apache Software License, Version 2.0](https://github.com/kabouzeid/RecyclerView-FastScroll/blob/master/NOTICE)
+[The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-## com.github.kabouzeid.SeekArc
+## SeekArc
 
 Copyright (c) 2013 Triggertrap Ltd, Author Neil Davies
 

@@ -24,7 +24,7 @@ function known_licensed_source_code()
     "app/src/main/java/com/poupa/vinylmusicplayer/provider/HistoryStore.java"|\
     "app/src/main/java/com/poupa/vinylmusicplayer/provider/MusicPlaybackQueueStore.java"|\
     "app/src/main/java/com/poupa/vinylmusicplayer/provider/SongPlayCountStore.java")
-      echo 'The CyanogenMod Project;Copyright The CyanogenMod Project;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
+      echo 'Eleven;Copyright The CyanogenMod Project;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
       ;;
     "app/src/main/java/com/poupa/vinylmusicplayer/misc/CustomFragmentStatePagerAdapter.java"|\
     "app/src/main/java/com/poupa/vinylmusicplayer/service/MediaButtonIntentReceiver.java"|\
@@ -61,11 +61,10 @@ function known_licensed_library()
   name="$1"
   case "${name}" in
     "com.github.kabouzeid.RecyclerView-FastScroll")
-      echo "${name};A simple FastScroller for Android's RecyclerView.;The Apache Software License, Version 2.0;https://github.com/kabouzeid/RecyclerView-FastScroll/blob/master/NOTICE"
+      echo "RecyclerView-FastScroll;A simple FastScroller for Android's RecyclerView. Copyright (C) 2016 Tim Malseed;The Apache Software License, Version 2.0;http://www.apache.org/licenses/LICENSE-2.0"
       ;;
     "com.github.kabouzeid.SeekArc")
-      # TODO Not very sure about this
-      echo "${name};Copyright (c) 2013 Triggertrap Ltd, Author Neil Davies;MIT License;https://api.github.com/licenses/mit"
+      echo "SeekArc;Copyright (c) 2013 Triggertrap Ltd, Author Neil Davies;MIT License;https://api.github.com/licenses/mit"
       ;;
     *)
       echo ''
@@ -117,4 +116,4 @@ ITEM
   done
 } > ${licenses_md}
 
-echo "Done"
+echo "Wrote license to ${licenses_md}"
