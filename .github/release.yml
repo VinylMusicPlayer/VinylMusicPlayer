@@ -1,0 +1,20 @@
+# Configuration on how the Github release behave.
+
+# How the change log is collected
+changelog:
+  #exclude:
+  #  labels:
+  #    - ignore-for-release
+  #  authors:
+  #    - octocat
+  categories:
+    - title: What's changed
+      labels:
+        - enhancement
+        - feature request
+    - title: Fixes
+      labels:
+        - bug
+    - title: Other Changes
+      labels:
+        - "*"
