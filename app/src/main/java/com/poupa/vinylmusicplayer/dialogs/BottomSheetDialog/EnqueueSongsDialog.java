@@ -6,24 +6,24 @@ import java.util.List;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 
-public class EnqueueSongsBottomSheetDialog extends ButtonListBottomSheetDialog {
-    public static EnqueueSongsBottomSheetDialog newInstance() { return new EnqueueSongsBottomSheetDialog(); }
+public class EnqueueSongsDialog extends BottomSheetDialogWithButtons {
+    public static EnqueueSongsDialog newInstance() { return new EnqueueSongsDialog(); }
 
     int defaultChoice;
 
-    public EnqueueSongsBottomSheetDialog setDefaultChoice(int defaultIndex) {
+    public EnqueueSongsDialog setDefaultChoice(int defaultIndex) {
         this.defaultChoice = defaultIndex;
         return this;
     }
 
     @Override
-    public EnqueueSongsBottomSheetDialog setTitle(String title) {
+    public EnqueueSongsDialog setTitle(String title) {
         super.setTitle(title);
         return this;
     }
 
     @Override
-    public EnqueueSongsBottomSheetDialog setButtonList(List<Item> buttonList) {
+    public EnqueueSongsDialog setButtonList(List<Item> buttonList) {
         super.setButtonList(buttonList);
         return this;
     }

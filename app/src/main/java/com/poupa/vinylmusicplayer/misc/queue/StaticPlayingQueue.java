@@ -117,8 +117,9 @@ public class StaticPlayingQueue {
             add(song);
         }
 
-        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE)
+        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(queue.subList(position, queue.size()), 0);
+        }
     }
 
     private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int previousPosition, int direction) {
@@ -204,8 +205,9 @@ public class StaticPlayingQueue {
         }
 
         updateQueueIndexesAfterSongsModification(position, n, previousPosition, +1);
-        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE)
-            ShuffleHelper.makeShuffleList(queue.subList(position, position+songs.size()), 0);
+        if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE) {
+            ShuffleHelper.makeShuffleList(queue.subList(position, position + songs.size()), 0);
+        }
 
         songsIsStale = true;
     }

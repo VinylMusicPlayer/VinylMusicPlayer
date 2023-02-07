@@ -19,17 +19,17 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 
 
-public class ButtonListBottomSheetDialog extends BottomSheetDialog {
-    public static ButtonListBottomSheetDialog newInstance() { return new ButtonListBottomSheetDialog(); }
+public class BottomSheetDialogWithButtons extends BottomSheetDialog {
+    public static BottomSheetDialogWithButtons newInstance() { return new BottomSheetDialogWithButtons(); }
 
     String title;
     List<Item> buttonList;
 
-    public ButtonListBottomSheetDialog setTitle(String title) {
+    public BottomSheetDialogWithButtons setTitle(String title) {
         this.title = title;
         return this;
     }
-    public ButtonListBottomSheetDialog setButtonList(List<Item> buttonList) {
+    public BottomSheetDialogWithButtons setButtonList(List<Item> buttonList) {
         this.buttonList = buttonList;
         return this;
     }
@@ -54,6 +54,9 @@ public class ButtonListBottomSheetDialog extends BottomSheetDialog {
             button.setPadding(px_horizontal, px_vertical, px_horizontal, px_vertical);
 
             button.setText(buttonList.get(i).title);
+            // TODO: make color the undo one, for know this is not working
+            button.setTextColor(ThemeStore.textColorSecondary(getActivity())); //PlayingQueueAdapter.getBackgroundColor((AppCompatActivity)getActivity()));
+
             button.setTag(i);
 
             button.setOnClickListener(new View.OnClickListener() {
