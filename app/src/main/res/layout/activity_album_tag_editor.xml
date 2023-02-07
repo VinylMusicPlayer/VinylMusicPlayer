@@ -139,7 +139,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@drawable/shadow_down" />
+        android:background="@drawable/shadow_down_strong" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
