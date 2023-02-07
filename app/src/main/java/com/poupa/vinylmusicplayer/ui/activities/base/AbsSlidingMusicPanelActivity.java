@@ -13,6 +13,8 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.kabouzeid.appthemehelper.ThemeStore;
+import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -241,12 +243,19 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     @Override
-    public void onPaletteColorChanged() {
+    public void onPaletteColorChanged(@ColorInt int newColor) {
         if (getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            int playerFragmentColor = playerFragment.getPaletteColor();
-            super.setTaskDescriptionColor(playerFragmentColor);
-            animateNavigationBarColor(playerFragmentColor);
+            super.setTaskDescriptionColor(newColor);
+            animateNavigationBarColor(newColor);
         }
+
+        // Propagate to the current theme
+        ThemeStore.editTheme(this)
+                .primaryColor(newColor)
+                .accentColor(ColorUtil.darkenColor(newColor))
+                .commit();
+        // Refresh the front activity
+        onThemeColorsChanged();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter.album;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -201,6 +203,12 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         SortOrder<Album> sortOrder = AlbumSortOrder.fromPreference(PreferenceUtil.getInstance().getAlbumSortOrder());
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
+
+    //@Override
+    //public void onThemeColorsChanged() {
+        // We want to follow the album colors, not the theme color
+        //AbsThemeActivity.static_setStatusbarColor(activity, color);
+    //}
 
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {

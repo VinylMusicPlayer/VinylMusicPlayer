@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -41,7 +42,10 @@ import java.util.List;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolder, Artist> implements FastScrollRecyclerView.SectionedAdapter {
+public class ArtistAdapter
+        extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolder, Artist>
+        implements FastScrollRecyclerView.SectionedAdapter
+{
 
     protected final AppCompatActivity activity;
     protected ArrayList<Artist> dataSet;
@@ -190,6 +194,12 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
         SortOrder<Artist> sortOrder = ArtistSortOrder.fromPreference(PreferenceUtil.getInstance().getArtistSortOrder());
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
+
+    //@Override
+    //public void onThemeColorsChanged() {
+        // We want to follow the album colors, not the theme color
+        // AbsThemeActivity.static_setStatusbarColor(activity, color);
+    //}
 
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {

@@ -68,10 +68,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
         setDrawUnderStatusbar();
 
-        setStatusbarColorAuto();
-        setNavigationbarColorAuto();
-        setTaskDescriptionColorAuto();
-
         setUpViews();
     }
 
@@ -83,7 +79,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     }
 
     private void setUpToolbar() {
-        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(layoutBinding.toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -241,5 +236,12 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         i.setData(Uri.parse(url));
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+    }
+
+    @Override
+    public void onThemeColorsChanged() {
+        super.onThemeColorsChanged();
+
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
     }
 }

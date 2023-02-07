@@ -388,7 +388,19 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     protected void reload() {
     }
 
-    public interface MainActivityFragmentCallbacks {
+    @Override
+    public void onThemeColorsChanged() {
+        super.onThemeColorsChanged();
+
+        int accentColor = ThemeStore.accentColor(this);
+        NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
+        NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
+
+        currentFragment.onThemeColorsChanged();
+    }
+
+    public interface MainActivityFragmentCallbacks  {
         boolean handleBackPress();
+        void onThemeColorsChanged();
     }
 }

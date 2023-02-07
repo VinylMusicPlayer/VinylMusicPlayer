@@ -357,7 +357,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     public void onColorChanged(int color) {
         animateColorChange(color);
         playbackControlsFragment.setDark(ColorUtil.isColorLight(color));
-        getCallbacks().onPaletteColorChanged();
+        getCallbacks().onPaletteColorChanged(color);
     }
 
     @Override

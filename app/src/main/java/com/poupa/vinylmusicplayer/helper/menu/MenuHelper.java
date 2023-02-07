@@ -11,10 +11,11 @@ import androidx.annotation.NonNull;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 
 public class MenuHelper {
     public static void decorateDestructiveItems(@NonNull final Menu menu, final Context context) {
-        // All delete element inside of menu should have emphasis colored (ie. red) text to better differentiate them
+        // All destructive element inside of menu should have emphasis colored (ie. red) text to better differentiate them
         MenuItem liveItem = menu.findItem(R.id.action_delete_playlist);
         if (liveItem == null) {
             liveItem = menu.findItem(R.id.action_delete_from_device);

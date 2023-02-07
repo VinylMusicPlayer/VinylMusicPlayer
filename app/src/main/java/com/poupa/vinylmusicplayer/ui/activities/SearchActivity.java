@@ -67,18 +67,9 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
 
         setDrawUnderStatusbar();
 
-        setStatusbarColorAuto();
-        setNavigationbarColorAuto();
-        setTaskDescriptionColorAuto();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ThemeStyleUtil.getInstance().setHeaderPadding(recyclerView, getResources().getDisplayMetrics().density);
-
-        //change scrollbar color to follow secondary color
-        Drawable unwrappedDrawable = AppCompatResources.getDrawable(this, R.drawable.scrollbar_vertical_thumb);
-        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-        DrawableCompat.setTint(wrappedDrawable, ThemeStore.accentColor(this));
 
         adapter = new SearchAdapter(this, Collections.emptyList());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -111,7 +102,6 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     }
 
     private void setUpToolBar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -214,6 +204,18 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     @Override
     public void onLoaderReset(@NonNull Loader<List<Object>> loader) {
         adapter.swapDataSet(Collections.emptyList());
+    }
+
+    @Override
+    public void onThemeColorsChanged() {
+        super.onThemeColorsChanged();
+
+        //change scrollbar color to follow secondary color
+        Drawable unwrappedDrawable = AppCompatResources.getDrawable(this, R.drawable.scrollbar_vertical_thumb);
+        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+        DrawableCompat.setTint(wrappedDrawable, ThemeStore.accentColor(this));
+
+        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
     }
 
     private static class AsyncSearchResultLoader extends WrappedAsyncTaskLoader<List<Object>> {

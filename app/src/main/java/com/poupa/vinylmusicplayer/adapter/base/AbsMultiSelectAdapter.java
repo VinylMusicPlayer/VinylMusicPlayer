@@ -33,7 +33,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     private int menuRes;
     private final Context context;
 
-    private int color;
+    protected int color;
 
     protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;
@@ -122,4 +122,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     protected abstract I getIdentifier(int position);
 
     protected abstract void onMultipleItemAction(MenuItem menuItem, ArrayList<I> selection);
+
+    //public void onThemeColorsChanged() {
+    //}
 }

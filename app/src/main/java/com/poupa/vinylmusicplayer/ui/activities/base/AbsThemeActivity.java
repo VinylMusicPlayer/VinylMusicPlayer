@@ -25,11 +25,18 @@ import com.poupa.vinylmusicplayer.util.Util;
 public abstract class AbsThemeActivity extends ATHToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         Thread.setDefaultUncaughtExceptionHandler(new OopsHandler(this));
 
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());
-        super.onCreate(savedInstanceState);
-        MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        onThemeColorsChanged();
     }
 
     @Override
@@ -39,13 +46,16 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
     }
 
     protected void setDrawUnderStatusbar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Util.setAllowDrawUnderStatusBar(getWindow());
-        else Util.setStatusBarTranslucent(getWindow());
+        }
+        else {
+            Util.setStatusBarTranslucent(getWindow());
+        }
     }
 
     /**
-     * This will set the color of the view with the id "status_bar" on KitKat and Lollipop.
+     * This will set the color of the view with the id "status_bar".
      * On Lollipop if no such view is found it will set the statusbar color using the native method.
      *
      * @param color the new statusbar color (will be shifted down on Lollipop and above)
@@ -65,7 +75,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         }
     }
 
-    public void setStatusbarColor(int color) {
+    protected void setStatusbarColor(int color) {
         final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
         if (statusBar != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -85,7 +95,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         setStatusbarColor(ThemeStore.primaryColor(this));
     }
 
-    public void setTaskDescriptionColor(@ColorInt int color) {
+    protected void setTaskDescriptionColor(@ColorInt int color) {
         ATH.setTaskDescriptionColor(this, color);
     }
 
@@ -93,7 +103,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         setTaskDescriptionColor(ThemeStore.primaryColor(this));
     }
 
-    public void setNavigationbarColor(int color) {
+    protected void setNavigationbarColor(int color) {
         if (ThemeStore.coloredNavigationBar(this)) {
             ATH.setNavigationbarColor(this, color);
         } else {
@@ -105,11 +115,20 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         setNavigationbarColor(ThemeStore.navigationBarColor(this));
     }
 
-    public void setLightStatusbar(boolean enabled) {
+    protected void setLightStatusbar(boolean enabled) {
         ATH.setLightStatusbar(this, enabled);
     }
 
-    public void setLightStatusbarAuto(int bgColor) {
+    protected void setLightStatusbarAuto(int bgColor) {
         setLightStatusbar(ColorUtil.isColorLight(bgColor));
+    }
+
+    public void onThemeColorsChanged()
+    {
+        MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
+
+        setStatusbarColorAuto();
+        setNavigationbarColorAuto();
+        setTaskDescriptionColorAuto();
     }
 }

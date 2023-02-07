@@ -18,4 +18,6 @@ public class AbsLibraryPagerFragment extends AbsMusicServiceFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+    public void onThemeColorsChanged() {}
 }

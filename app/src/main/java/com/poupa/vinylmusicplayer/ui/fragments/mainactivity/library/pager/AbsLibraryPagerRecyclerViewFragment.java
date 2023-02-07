@@ -16,6 +16,9 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.album.AlbumAdapter;
+import com.poupa.vinylmusicplayer.adapter.artist.ArtistAdapter;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.FragmentMainActivityRecyclerViewBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
@@ -54,6 +57,8 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         initLayoutManager();
         initAdapter();
         setUpRecyclerView();
+
+        onThemeColorsChanged();
     }
 
     @Override
@@ -154,4 +159,18 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
     }
 
     public abstract void reload();
+
+    @Override
+    public void onThemeColorsChanged() {
+        super.onThemeColorsChanged();
+
+        if (recyclerView instanceof FastScrollRecyclerView) {
+            ViewUtil.setUpFastScrollRecyclerViewColor(getActivity(), ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(getActivity()));
+        }
+
+        // TODO Beurk, manual polymorphism
+        //if (adapter instanceof AbsMultiSelectAdapter) {
+        //    ((AbsMultiSelectAdapter)adapter).onThemeColorsChanged();
+        //}
+    }
 }

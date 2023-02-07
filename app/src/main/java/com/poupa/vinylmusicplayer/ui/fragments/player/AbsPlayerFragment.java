@@ -8,6 +8,7 @@ import android.media.audiofx.AudioEffect;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -253,6 +254,6 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
     }
 
     public interface Callbacks {
-        void onPaletteColorChanged();
+        void onPaletteColorChanged(@ColorInt int newColor);
     }
 }

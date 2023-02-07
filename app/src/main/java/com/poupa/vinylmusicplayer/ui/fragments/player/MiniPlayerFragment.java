@@ -31,6 +31,9 @@ import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MiniPlayerFragment extends AbsMusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
+    // TODO Show more information on the current song
+    // TODO Follow the same color as the NowPlaying card
+
     TextView miniPlayerTitle;
     ImageView miniPlayerPlayPauseButton;
     MaterialProgressBar progressBar;

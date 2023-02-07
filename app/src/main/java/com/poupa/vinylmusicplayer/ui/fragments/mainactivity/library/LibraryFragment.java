@@ -44,6 +44,7 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AbsLibraryPagerRecyclerViewCustomGridSizeFragment;
+import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AbsLibraryPagerRecyclerViewFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AlbumsFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.ArtistsFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.PlaylistsFragment;
@@ -84,12 +85,10 @@ public class LibraryFragment
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
-        getMainActivity().setStatusbarColorAuto();
-        getMainActivity().setNavigationbarColorAuto();
-        getMainActivity().setTaskDescriptionColorAuto();
-
         setUpToolbar();
         setUpViewPager();
+
+        onThemeColorsChanged();
     }
 
     @Override
@@ -109,9 +108,6 @@ public class LibraryFragment
     }
 
     private void setUpToolbar() {
-        final int primaryColor = ThemeStore.primaryColor(requireActivity());
-        layoutBinding.appbar.setBackgroundColor(primaryColor);
-        layoutBinding.toolbar.setBackgroundColor(primaryColor);
         layoutBinding.toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         requireActivity().setTitle(R.string.app_name);
         getMainActivity().setSupportActionBar(layoutBinding.toolbar);
@@ -123,13 +119,6 @@ public class LibraryFragment
         layoutBinding.pager.setOffscreenPageLimit(pagerAdapter.getCount() - 1);
 
         layoutBinding.tabs.setupWithViewPager(layoutBinding.pager);
-
-        final int primaryColor = ThemeStore.primaryColor(requireActivity());
-        final int normalColor = ToolbarContentTintHelper.toolbarSubtitleColor(requireActivity(), primaryColor);
-        final int selectedColor = ToolbarContentTintHelper.toolbarTitleColor(requireActivity(), primaryColor);
-        TabLayoutUtil.setTabIconColors(layoutBinding.tabs, normalColor, selectedColor);
-        layoutBinding.tabs.setTabTextColors(normalColor, selectedColor);
-        layoutBinding.tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(requireActivity()));
 
         updateTabVisibility();
 
@@ -369,6 +358,25 @@ public class LibraryFragment
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onThemeColorsChanged() {
+        final int primaryColor = ThemeStore.primaryColor(requireActivity());
+        layoutBinding.appbar.setBackgroundColor(primaryColor);
+        layoutBinding.toolbar.setBackgroundColor(primaryColor);
+
+        final int normalColor = ToolbarContentTintHelper.toolbarSubtitleColor(requireActivity(), primaryColor);
+        final int selectedColor = ToolbarContentTintHelper.toolbarTitleColor(requireActivity(), primaryColor);
+        TabLayoutUtil.setTabIconColors(layoutBinding.tabs, normalColor, selectedColor);
+        layoutBinding.tabs.setTabTextColors(normalColor, selectedColor);
+        layoutBinding.tabs.setSelectedTabIndicatorColor(ThemeStore.accentColor(requireActivity()));
+
+        final Fragment currentFragment = getCurrentFragment();
+        if (currentFragment instanceof AbsLibraryPagerRecyclerViewFragment && currentFragment.isAdded()) {
+            final AbsLibraryPagerRecyclerViewFragment fragment = (AbsLibraryPagerRecyclerViewFragment) currentFragment;
+            fragment.onThemeColorsChanged();
+        }
     }
 
     @Override

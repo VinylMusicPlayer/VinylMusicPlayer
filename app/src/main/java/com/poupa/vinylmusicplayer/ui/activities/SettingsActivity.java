@@ -73,11 +73,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
         setDrawUnderStatusbar();
 
-        setStatusbarColorAuto();
-        setNavigationbarColorAuto();
-        setTaskDescriptionColorAuto();
-
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,7 +101,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             new DynamicShortcutManager(this).updateDynamicShortcuts();
         }
-        recreate();
+        //recreate();
+        onThemeColorsChanged();
     }
 
     @Override
@@ -120,6 +116,14 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onThemeColorsChanged()
+    {
+        super.onThemeColorsChanged();
+
+        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -282,7 +286,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            // TODO Option to use static primary4accent colors, or dynamic from the playing song (a la now playing screen), or dynamic from OS (MaterialMe only)
+            // TODO Option to use static primary accent colors, or dynamic from the playing song (a la now playing screen), or dynamic from OS (MaterialMe only)
             // TODO Apply the colors to the Auto  screen as well (i.e. the play/pause button)
 
             final ATEColorPreference primaryColorPref = findPreference("primary_color");

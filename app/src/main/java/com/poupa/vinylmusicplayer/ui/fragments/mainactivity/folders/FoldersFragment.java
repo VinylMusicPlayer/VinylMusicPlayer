@@ -152,15 +152,12 @@ public class FoldersFragment
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
-        getMainActivity().setStatusbarColorAuto();
-        getMainActivity().setNavigationbarColorAuto();
-        getMainActivity().setTaskDescriptionColorAuto();
-
-        setUpAppbarColor();
         setUpToolbar();
         setUpBreadCrumbs();
         setUpRecyclerView();
         setUpAdapter();
+
+        onThemeColorsChanged();
     }
 
     private void setUpAppbarColor() {
@@ -183,11 +180,6 @@ public class FoldersFragment
     }
 
     private void setUpRecyclerView() {
-        ViewUtil.setUpFastScrollRecyclerViewColor(
-                getActivity(),
-                layoutBinding.recyclerView,
-                ThemeStore.accentColor(requireActivity()));
-
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         layoutBinding.appbar.addOnOffsetChangedListener(this);
@@ -229,6 +221,15 @@ public class FoldersFragment
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onThemeColorsChanged() {
+        setUpAppbarColor();
+        ViewUtil.setUpFastScrollRecyclerViewColor(
+                getActivity(),
+                layoutBinding.recyclerView,
+                ThemeStore.accentColor(requireActivity()));
     }
 
     @NonNull
