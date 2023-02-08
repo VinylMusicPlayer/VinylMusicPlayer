@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.Arrays;
@@ -20,20 +21,23 @@ import java.util.List;
  * @author SC (soncaokim)
  */
 public class ArtistSortOrder {
-    private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(Utils.getSectionName(a1.getName()), Utils.getSectionName(a2.getName()));
+    private static final Comparator<Artist> BY_ARTIST = (a1, a2) -> StringUtil.compareIgnoreAccent(
+            MusicUtil.getNameWithoutArticle(a1.getName()),
+            MusicUtil.getNameWithoutArticle(a2.getName())
+    );
     private static final Comparator<Artist> BY_DATE_MODIFIED = Comparator.comparingLong(Artist::getDateModified);
 
     private static final List<SortOrder<Artist>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(
                     MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
-                    artist -> Utils.getSectionName(artist.getName()),
+                    artist -> Utils.getSectionName(MusicUtil.getNameWithoutArticle(artist.getName())),
                     BY_ARTIST,
                     R.id.action_artist_sort_order_name,
                     R.string.sort_order_name
             ),
             Utils.build(
                     MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + " DESC",
-                    artist -> Utils.getSectionName(artist.getName()),
+                    artist -> Utils.getSectionName(MusicUtil.getNameWithoutArticle(artist.getName())),
                     ComparatorUtil.reverse(BY_ARTIST),
                     R.id.action_artist_sort_order_name_reverse,
                     R.string.sort_order_name_reverse
