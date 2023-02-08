@@ -116,6 +116,7 @@ public final class PreferenceUtil {
 
     @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
+    public static final String RG_PREAMP = "replaygain_preamp";
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
