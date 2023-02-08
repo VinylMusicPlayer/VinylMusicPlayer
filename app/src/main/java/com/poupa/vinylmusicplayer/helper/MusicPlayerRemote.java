@@ -273,7 +273,6 @@ public class MusicPlayerRemote {
                             showToastEnqueued.run();
                         })
         );
-        final int defaultActionIndex = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
 
         final int songCount = songsToAdd.size();
         final String message = (songCount == 1)
