@@ -109,12 +109,14 @@ for alien_branch in ${alien_branches}; do
     repo=$(echo "${alien_branch}" | cut -d/ -f2)
     branch=$(echo "${alien_branch}" | cut -d/ -f3-)
 
-    # For debug
-    git remote
-
-    echo "Add alien '${user}/${repo}'..."
-    git remote add "${user}/${repo}" "https://github.com/${user}/${repo}" || exit 1
-    git remote update "${user}/${repo}" || exit 1
+    git remote | grep --quiet "${user}/${repo}"
+    if [ $? -eq 0 ]; then
+      echo "Alien remote '${user}/${repo}' already added"
+    else
+      echo "Add alien '${user}/${repo}'..."
+      git remote add "${user}/${repo}" "https://github.com/${user}/${repo}" || exit 1
+      git remote update "${user}/${repo}" || exit 1
+    fi
 
     git_merge "${alien_branch}" || exit 1
     last_commits+="$(git_describe ${alien_branch})"
