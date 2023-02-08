@@ -23,13 +23,13 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public static BottomSheetDialogWithButtons newInstance() { return new BottomSheetDialogWithButtons(); }
 
     String title;
-    List<Item> buttonList;
+    List<ButtonInfo> buttonList;
 
     public BottomSheetDialogWithButtons setTitle(String title) {
         this.title = title;
         return this;
     }
-    public BottomSheetDialogWithButtons setButtonList(List<Item> buttonList) {
+    public BottomSheetDialogWithButtons setButtonList(List<ButtonInfo> buttonList) {
         this.buttonList = buttonList;
         return this;
     }
@@ -91,11 +91,11 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
         dismiss();
     }
 
-    public static class Item {
+    public static class ButtonInfo {
         public String title;
         public Runnable action;
 
-        public Item(String title, Runnable action) {
+        public ButtonInfo(String title, Runnable action) {
             this.title = title;
             this.action = action;
         }

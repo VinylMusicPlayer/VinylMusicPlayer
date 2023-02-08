@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.EnqueueSongsDialog;
+import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -251,21 +251,21 @@ public class MusicPlayerRemote {
             Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
         };
 
-        final List<EnqueueSongsDialog.Item> possibleActions = Arrays.asList(
-                new EnqueueSongsDialog.Item(
+        final List<BottomSheetDialogWithButtons.ButtonInfo> possibleActions = Arrays.asList(
+                new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_play),
                         () -> {
                             openQueue(queue, positionInQueue, true);
                             showToastEnqueued.run();
                         }),
-                new EnqueueSongsDialog.Item(
+                new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_play_next),
                         () -> {
                             removeDuplicate.run();
                             musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
                             showToastEnqueued.run();
                         }),
-                new EnqueueSongsDialog.Item(
+                new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
                             removeDuplicate.run();
@@ -280,10 +280,9 @@ public class MusicPlayerRemote {
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
                 : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, songCount);
 
-        EnqueueSongsDialog songActionDialog = EnqueueSongsDialog.newInstance();
+        BottomSheetDialogWithButtons songActionDialog = BottomSheetDialogWithButtons.newInstance();
         songActionDialog.setTitle(message)
                 .setButtonList(possibleActions)
-                .setDefaultChoice(defaultActionIndex)
                 .show( ((AppCompatActivity) context).getSupportFragmentManager(), "songActionDialog");
 
     }
