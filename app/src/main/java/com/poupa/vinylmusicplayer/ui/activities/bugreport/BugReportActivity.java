@@ -88,8 +88,7 @@ public class BugReportActivity extends AbsThemeActivity {
     }
 
     @Override
-    public void onThemeColorsChanged()
-    {
+    public void onThemeColorsChanged() {
         super.onThemeColorsChanged();
 
         final int accentColor = ThemeStore.accentColor(this);

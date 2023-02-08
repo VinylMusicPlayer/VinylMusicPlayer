@@ -90,4 +90,10 @@ public class AbsMusicServiceFragment extends Fragment
 
     @Override
     public void onThemeColorsChanged() {}
+
+    @Override
+    public boolean overrideThemeColorsForStatusBar() {
+        // By default, the status bar should follow the theme
+        return false;
+    }
 }

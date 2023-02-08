@@ -14,6 +14,7 @@ import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialDialogsUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.interfaces.ThemeEventListener;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
@@ -22,7 +23,7 @@ import com.poupa.vinylmusicplayer.util.Util;
  * @author Karim Abou Zeid (kabouzeid)
  */
 
-public abstract class AbsThemeActivity extends ATHToolbarActivity {
+public abstract class AbsThemeActivity extends ATHToolbarActivity implements ThemeEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,12 +124,21 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         setLightStatusbar(ColorUtil.isColorLight(bgColor));
     }
 
+    @Override
     public void onThemeColorsChanged()
     {
         MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
 
-        setStatusbarColorAuto();
+        // Some activities, ie ArtistDetails and AlbumDetails, have the status bar colored in the same
+        // palette as the covert art
+        if (!overrideThemeColorsForStatusBar()) {setStatusbarColorAuto();}
+
         setNavigationbarColorAuto();
         setTaskDescriptionColorAuto();
+    }
+
+    @Override
+    public boolean overrideThemeColorsForStatusBar() {
+        return false;
     }
 }

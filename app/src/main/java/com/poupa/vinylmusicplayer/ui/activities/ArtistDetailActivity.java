@@ -447,6 +447,11 @@ public class ArtistDetailActivity
         albumAdapter.swapDataSet(artist.albums);
     }
 
+    @Override
+    public boolean overrideThemeColorsForStatusBar() {
+        return true;
+    }
+
     private static class AsyncArtistDataLoader extends WrappedAsyncTaskLoader<Artist> {
         private final long artistId;
 

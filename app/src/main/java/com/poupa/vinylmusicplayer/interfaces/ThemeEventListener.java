@@ -5,4 +5,5 @@ package com.poupa.vinylmusicplayer.interfaces;
  */
 public interface ThemeEventListener {
     void onThemeColorsChanged();
+    boolean overrideThemeColorsForStatusBar();
 }
