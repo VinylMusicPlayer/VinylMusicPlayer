@@ -11,6 +11,7 @@
     tools:ignore="UnusedAttribute">
 
     <LinearLayout
+        android:id="@+id/mini_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -25,18 +26,36 @@
             app:srcCompat="@drawable/ic_expand_less_white_24dp"
             tools:ignore="ContentDescription" />
 
-        <TextView
-            android:id="@+id/mini_player_title"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical"
+            android:paddingEnd="0dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="0dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:id="@+id/mini_player_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <TextView
+                android:id="@+id/mini_player_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="?android:textColorSecondary" />
+
+        </LinearLayout>
 
         <com.poupa.vinylmusicplayer.views.IconImageView
             android:id="@+id/mini_player_play_pause_button"

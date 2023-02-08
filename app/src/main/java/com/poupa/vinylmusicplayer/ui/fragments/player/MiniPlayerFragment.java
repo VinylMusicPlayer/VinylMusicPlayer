@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.fragments.player;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
@@ -9,37 +10,27 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
-import com.kabouzeid.appthemehelper.util.ATHUtil;
-import com.poupa.vinylmusicplayer.R;
+import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.databinding.FragmentMiniPlayerBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
 import com.poupa.vinylmusicplayer.helper.PlayPauseButtonOnClickHandler;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.views.PlayPauseDrawable;
-
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MiniPlayerFragment extends AbsMusicServiceFragment implements MusicProgressViewUpdateHelper.Callback {
-    // TODO Show more information on the current song
-    // TODO Follow the same color as the NowPlaying card
-
-    TextView miniPlayerTitle;
-    ImageView miniPlayerPlayPauseButton;
-    MaterialProgressBar progressBar;
-
+    private FragmentMiniPlayerBinding layoutBinding;
     private PlayPauseDrawable miniPlayerPlayPauseDrawable;
-
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
 
     @Override
@@ -51,12 +42,9 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentMiniPlayerBinding binding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
-        miniPlayerTitle = binding.miniPlayerTitle;
-        miniPlayerPlayPauseButton = binding.miniPlayerPlayPauseButton;
-        progressBar = binding.progressBar;
+        layoutBinding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
 
-        return binding.getRoot();
+        return layoutBinding.getRoot();
     }
 
     @Override
@@ -74,18 +62,18 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
 
     private void setUpMiniPlayer() {
         setUpPlayPauseButton();
-        progressBar.setSupportProgressTintList(ColorStateList.valueOf(ThemeStore.accentColor(getActivity())));
     }
 
     private void setUpPlayPauseButton() {
-        miniPlayerPlayPauseDrawable = new PlayPauseDrawable(getActivity());
-        miniPlayerPlayPauseButton.setImageDrawable(miniPlayerPlayPauseDrawable);
-        miniPlayerPlayPauseButton.setColorFilter(ATHUtil.resolveColor(getActivity(), R.attr.iconColor, ThemeStore.textColorSecondary(getActivity())), PorterDuff.Mode.SRC_IN);
-        miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
+        // TODO Make this a FAB
+        miniPlayerPlayPauseDrawable = new PlayPauseDrawable(requireActivity());
+        layoutBinding.miniPlayerPlayPauseButton.setImageDrawable(miniPlayerPlayPauseDrawable);
+        layoutBinding.miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
     }
 
     private void updateSongTitle() {
-        miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().title);
+        layoutBinding.miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().title);
+        layoutBinding.miniPlayerText.setText(MusicUtil.getSongInfoString(MusicPlayerRemote.getCurrentSong()));
     }
 
     @Override
@@ -106,20 +94,46 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
 
     @Override
     public void onUpdateProgressViews(int progress, int total) {
-        progressBar.setMax(total);
-        progressBar.setProgress(progress);
+        layoutBinding.progressBar.setMax(total);
+        layoutBinding.progressBar.setProgress(progress);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         progressViewUpdateHelper.start();
+        onThemeColorsChanged();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         progressViewUpdateHelper.stop();
+    }
+
+    @Override
+    public void onThemeColorsChanged() {
+        @NonNull final Activity activity = requireActivity();
+
+        @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
+        @ColorInt final int accentColor = ThemeStore.accentColor(activity);
+        @ColorInt final int textPrimaryColor = ColorUtil.isColorLight(primaryColor)
+                ? ThemeStore.textColorPrimary(activity)
+                : ThemeStore.textColorPrimaryInverse(activity);
+        @ColorInt final int textSecondaryColor = ColorUtil.isColorLight(primaryColor)
+                ? ThemeStore.textColorSecondary(activity)
+                : ThemeStore.textColorSecondaryInverse(activity);
+        @ColorInt final int iconColor = textPrimaryColor; // ATHUtil.resolveColor(requireActivity(), R.attr.iconColor, textSecondaryColor);
+
+        layoutBinding.miniPlayerContainer.setBackgroundColor(primaryColor);
+
+        layoutBinding.miniPlayerTitle.setTextColor(textPrimaryColor);
+        layoutBinding.miniPlayerText.setTextColor(textSecondaryColor);
+
+        layoutBinding.progressBar.setSupportProgressTintList(ColorStateList.valueOf(accentColor));
+
+        layoutBinding.miniPlayerImage.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+        layoutBinding.miniPlayerPlayPauseButton.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
     }
 
     private static class FlingPlayBackController implements View.OnTouchListener {

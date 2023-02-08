@@ -249,13 +249,22 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
             animateNavigationBarColor(newColor);
         }
 
-        // Propagate to the current theme
-        ThemeStore.editTheme(this)
-                .primaryColor(newColor)
-                .accentColor(ColorUtil.darkenColor(newColor))
-                .commit();
-        // Refresh the front activity
-        onThemeColorsChanged();
+        final boolean themeFollowsPlayingSong = true; // TODO Get from prefs
+        if (themeFollowsPlayingSong) {
+            // Propagate to the current theme
+            ThemeStore.editTheme(this)
+                    .primaryColor(newColor)
+                    .accentColor(ColorUtil.isColorLight(newColor)
+                            ? ColorUtil.shiftColor(newColor, 0.1F) // darken
+                            : ColorUtil.shiftColor(newColor, 1.9F)) // lighten
+                    .commit();
+
+            // Refresh the front activity
+            onThemeColorsChanged();
+
+            // Refresh the mini player
+            miniPlayerFragment.onThemeColorsChanged();
+        }
     }
 
     @Override

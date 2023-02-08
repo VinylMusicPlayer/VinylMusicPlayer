@@ -9,12 +9,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
+import com.poupa.vinylmusicplayer.interfaces.ThemeEventListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class AbsMusicServiceFragment extends Fragment implements MusicServiceEventListener {
+public class AbsMusicServiceFragment extends Fragment
+        implements MusicServiceEventListener, ThemeEventListener
+{
     private AbsMusicServiceActivity activity;
 
     @Override
@@ -84,4 +87,7 @@ public class AbsMusicServiceFragment extends Fragment implements MusicServiceEve
     public void onMediaStoreChanged() {
 
     }
+
+    @Override
+    public void onThemeColorsChanged() {}
 }
