@@ -3,8 +3,17 @@
 # Fetch the licenses of code under VCS and licenses of dependencies
 # and render it in a HTML page to be included in the about dialog
 
+function log_error()
+{
+  local message="$*"
+  echo "$0: Error: ${message}" > /dev/stderr
+}
+
+workdir="app/build/reports/licenses"
+mkdir -p "${workdir}"
+
 # ---- Each 'license record' is a CSV line with four fields: name, description; license name; license URL
-all_licenses="app/build/reports/licenses/all-licenses.csv"
+all_licenses="${workdir}/all-licenses.csv"
 cat /dev/null > "${all_licenses}"
 
 # ---- The license of the app itself
@@ -37,23 +46,29 @@ function known_licensed_source_code()
       echo 'Universal Android Music Player Sample;The goal of this sample is to show how to implement an audio media app that works across multiple form factors and provides a consistent user experience on Android phones, tablets, Android Auto, Android Wear, Android TV, Google Cast devices, and with the Google Assistant.;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
       ;;
 
+    # Skip these files
+    "app/src/main/res/values/strings.xml"|\
+    "app/src/main/assets/LICENSES.md")
+      echo ''
+      ;;
+
     *)
+      log_error "Unknown license for source code: ${path}"
       echo ''
       ;;
   esac
 }
-for source_code in ${licensed_source_code}; do
-  license=$(known_licensed_source_code "${source_code}")
-  if [ -z "${license}" ]; then
-    echo "$0: Error: Unknown license for source code: ${source_code}"
-    exit 1
-  else
-    echo "${license}" >> "${all_licenses}"
-  fi
-done
+{
+  for source_code in "${licensed_source_code[@]}"; do
+    license=$(known_licensed_source_code "${source_code}")
+    if [ -n "${license}" ]; then
+      echo "${license}"
+    fi
+  done
+} | sort | uniq >> "${all_licenses}"
 
 # ---- The licenses of used libraries
-licensed_dependencies="app/build/reports/licenses/dependencies-licenses.csv"
+licensed_dependencies="${workdir}/dependencies-licenses.csv"
 ./gradlew --no-configuration-cache --rerun-tasks licenseCiDebugReport
 
 function known_licensed_library()
@@ -80,12 +95,12 @@ cat "${licensed_dependencies}" | while read -r line; do
   dep_license_url="${tokens[3]}"
 
   if [ -z "${dep_name}" ]; then
-    echo "$0: Error: Cannot unnamed dependencies: ${line}"
+    log_error "Cannot unnamed dependencies: ${line}"
     exit 1
   elif [ -z "${dep_license}" ] || [ -z "${dep_license_url}" ]; then
     line="$(known_licensed_library ${dep_name})"
     if [ -z "${line}" ]; then
-      echo "$0: Error: Unknown license for dependency: ${dep_name}"
+      log_error "Unknown license for dependency: ${dep_name}"
       exit 1
     fi
   fi

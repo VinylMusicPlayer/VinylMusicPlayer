@@ -5,9 +5,27 @@
 
 [GNU General Public License v3](https://github.com/VinylMusicPlayer/VinylMusicPlayer/blob/master/LICENSE.txt)
 
+## Eleven
+
+Copyright The CyanogenMod Project
+
+[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+## StackBlur
+
+Copyright Enrique López Mañas
+
+[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
 ## The Android Open Source Project
 
 Copyright The Android Open Source Project
+
+[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+## Universal Android Music Player Sample
+
+The goal of this sample is to show how to implement an audio media app that works across multiple form factors and provides a consistent user experience on Android phones, tablets, Android Auto, Android Wear, Android TV, Google Cast devices, and with the Google Assistant.
 
 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
