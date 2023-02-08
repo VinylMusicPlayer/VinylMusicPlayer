@@ -3,7 +3,10 @@ package com.poupa.vinylmusicplayer.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;
+import io.noties.markwon.core.MarkwonTheme;
 import io.noties.markwon.image.glide.GlideImagesPlugin;
 
 /**
@@ -48,9 +52,24 @@ public class MarkdownViewDialog extends DialogFragment {
                 .positiveText(android.R.string.ok)
                 .build();
 
+        final TypedValue typedColor = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);
+
         final Markwon markwon = Markwon.builder(activity)
                 .usePlugin(GlideImagesPlugin.create(activity)) // image loader
                 .usePlugin(new GithubLinkify())
+                .usePlugin(new AbstractMarkwonPlugin() {
+                    @Override
+                    public void configureTheme(@NonNull MarkwonTheme.Builder builder) {
+                        builder
+                                .headingBreakColor(Color.parseColor("#00ffffff"))
+                                .thematicBreakColor(typedColor.data)
+                                .thematicBreakHeight(2)
+                                .bulletWidth(12)
+                                .headingTextSizeMultipliers(
+                                        new float[] { 2.F, 1.5F, 1F, .83F, .67F, .55F });
+                    }
+                })
                 .build();
         final TextView markdownView = customView.findViewById(R.id.markdown_view);
         StringBuilder buf = loadFileFromAssets(activity, assetName);

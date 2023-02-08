@@ -125,8 +125,9 @@ licenses_md="app/src/main/assets/LICENSES.md"
 
 ${dep_desc}
 
-[${dep_license}](${dep_license_url})
+ - [${dep_license}](${dep_license_url})
 
+---
 ITEM
   done
 } > ${licenses_md}
