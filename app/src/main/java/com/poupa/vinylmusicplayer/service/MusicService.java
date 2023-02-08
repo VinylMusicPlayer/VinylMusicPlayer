@@ -103,7 +103,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final String QUEUE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".queuechanged";
     public static final String PLAY_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".playstatechanged";
 
-    public static final String FAVORITE_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + "favoritestatechanged";
+    public static final String FAVORITE_STATE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".favoritestatechanged";
 
     public static final String REPEAT_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".repeatmodechanged";
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
@@ -138,6 +138,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int REPEAT_MODE_THIS = StaticPlayingQueue.REPEAT_MODE_THIS;
 
     public static final int SAVE_QUEUES = 0;
+    private static final int SKIP_THRESHOLD_MS = 5000;
 
     private final IBinder musicBind = new MusicBinder();
 
@@ -822,11 +823,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public void playSongAt(final int position, boolean skippedLast) {
         if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
-            // Mark the current song as skipped
-            final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
-            final Song song = getCurrentSong();
-            if (!PlaylistsUtil.doesPlaylistContain(this, playlistId, song.id)) {
-                PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
+            final int songProgressMs = getSongProgressMillis();
+            final int songDurationMs = getSongDurationMillis();
+            if ((songProgressMs > SKIP_THRESHOLD_MS) // not just started
+                && (songDurationMs - songProgressMs > SKIP_THRESHOLD_MS) // not about to end
+            ) {
+                // Mark the current song as skipped
+                final Song song = getCurrentSong();
+                final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
+                if (!PlaylistsUtil.doesPlaylistContain(this, playlistId, song.id)) {
+                    PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
+                }
             }
         }
 
@@ -927,7 +934,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void back(boolean skippedLast) {
-        if (getSongProgressMillis() > 5000) {
+        if (getSongProgressMillis() > SKIP_THRESHOLD_MS) {
             seek(0);
         } else {
             playPreviousSong(skippedLast);

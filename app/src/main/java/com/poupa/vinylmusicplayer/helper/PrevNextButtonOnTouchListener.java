@@ -10,7 +10,7 @@ public class PrevNextButtonOnTouchListener implements View.OnTouchListener {
     private static final int SKIP_TRIGGER_INITIAL_INTERVAL_MILLIS = 1000;
     private static final int SKIP_TRIGGER_NORMAL_INTERVAL_MILLIS = 250;
 
-    private final int PLAYBACK_SKIP_AMOUNT_MILLI = 3500;
+    private static final int PLAYBACK_SKIP_AMOUNT_MILLI = 3500;
 
     private final View.OnGenericMotionListener genericMotionListener;
     private View touchedView;
