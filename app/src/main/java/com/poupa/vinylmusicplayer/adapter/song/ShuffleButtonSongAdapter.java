@@ -49,10 +49,10 @@ public class ShuffleButtonSongAdapter extends AbsOffsetSongAdapter {
     @Override
     public void onBindViewHolder(@NonNull final SongAdapter.ViewHolder holder, int position) {
         if (holder.getItemViewType() == OFFSET_ITEM) {
-            int accentColor = ThemeStore.accentColor(activity);
+            int color = ThemeStore.primaryColor(activity);
             if (holder.title != null) {
                 holder.title.setText(activity.getResources().getString(R.string.action_shuffle_all).toUpperCase());
-                holder.title.setTextColor(accentColor);
+                holder.title.setTextColor(color);
                 holder.title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
             }
             if (holder.text != null) {
@@ -64,7 +64,7 @@ public class ShuffleButtonSongAdapter extends AbsOffsetSongAdapter {
             if (holder.image != null) {
                 final int padding = activity.getResources().getDimensionPixelSize(R.dimen.default_item_margin) / 2;
                 holder.image.setPadding(padding, padding, padding, padding);
-                holder.image.setColorFilter(accentColor);
+                holder.image.setColorFilter(color);
                 holder.image.setImageResource(R.drawable.ic_shuffle_white_24dp);
             }
             if (holder.separator != null) {
