@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_item_margin"
-        android:textIsSelectable="true"
+        android:textIsSelectable="false"
         android:layout_margin="@dimen/default_item_margin"
         android:scrollbars="vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
