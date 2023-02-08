@@ -330,16 +330,23 @@ public class MusicUtil {
     }
 
     @NonNull
-    public static String getSectionName(@Nullable String musicMediaTitle) {
-        if ((musicMediaTitle == null) || (musicMediaTitle.length() == 0)) return "";
-        musicMediaTitle = musicMediaTitle.trim().toLowerCase();
-        if (musicMediaTitle.startsWith("the ")) {
-            musicMediaTitle = musicMediaTitle.substring(4);
-        } else if (musicMediaTitle.startsWith("a ")) {
-            musicMediaTitle = musicMediaTitle.substring(2);
+    public static String getNameWithoutArticle(@Nullable final String title) {
+        if (TextUtils.isEmpty(title)) {return "";}
+
+        String strippedTitle = title.trim();
+
+        final List<String> articles = List.of(
+                "a ", "an ", "the ", // English ones
+                "l'", "le ", "la ", "les " // French ones
+        );
+        String lowerCaseTitle = strippedTitle.toLowerCase();
+        for (final String article : articles) {
+            if (lowerCaseTitle.startsWith(article)) {
+                strippedTitle = strippedTitle.substring(article.length());
+                break;
+            }
         }
-        if (musicMediaTitle.isEmpty()) return "";
-        return String.valueOf(musicMediaTitle.charAt(0)).toUpperCase();
+        return strippedTitle;
     }
 
     public static int indexOfSongInList(List<Song> songs, long songId) {
