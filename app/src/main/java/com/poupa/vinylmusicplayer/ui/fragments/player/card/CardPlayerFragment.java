@@ -203,7 +203,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
 
         // give the adapter a chance to update the decoration
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyItemChanged(MusicPlayerRemote.getPosition());
     }
 
     private void setUpSubFragments() {
