@@ -42,14 +42,12 @@ abstract class SongList {
      }
 
      @NonNull
-     public ArrayList<Song> asSongs() {
+     ArrayList<Song> asSongs() {
           ArrayList<Song> result = new ArrayList<>();
           ArrayList<Long> orphanIds = new ArrayList<>();
 
           // Since the song list is decoupled from Discography, we need to check its content
           // against the valid songs in discog
-          // TODO Find a way to cache this, probably by embedding the playlists in Discog?
-
           final Map<Long, Song> availableSongsById = Discography.getInstance().getAllSongsById();
           for (Long id : songIds) {
                final Song matchingSong = availableSongsById.get(id);
