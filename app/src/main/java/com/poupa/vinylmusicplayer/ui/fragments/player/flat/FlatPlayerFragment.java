@@ -173,6 +173,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     @Override
     public void onMediaStoreChanged() {
         // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
+        // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
         updateQueue();
     }
 
@@ -210,7 +211,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     protected void setUpPlayerToolbar() {
         toolbar.inflateMenu(R.menu.menu_player);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
         toolbar.setOnMenuItemClickListener(this);
 
         super.setUpPlayerToolbar();
@@ -322,7 +323,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     protected void toggleFavorite(Song song) {
         super.toggleFavorite(song);
         if (song.id == MusicPlayerRemote.getCurrentSong().id) {
-            if (MusicUtil.isFavorite(getActivity(), song)) {
+            if (MusicUtil.isFavorite(requireActivity(), song)) {
                 playerAlbumCoverFragment.showHeartAnimation();
             }
             updateIsFavorite();
@@ -412,7 +413,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(backgroundAnimator, statusBarAnimator);
 
-            if (!ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
+            if (!ATHUtil.isWindowBackgroundDark(fragment.requireActivity())) {
                 int adjustedLastColor = ColorUtil.isColorLight(fragment.lastColor) ? ColorUtil.darkenColor(fragment.lastColor) : fragment.lastColor;
                 int adjustedNewColor = ColorUtil.isColorLight(newColor) ? ColorUtil.darkenColor(newColor) : newColor;
                 Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
@@ -429,8 +430,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            if (ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.getActivity()));
+            @NonNull final Activity activity = fragment.requireActivity();
+            if (ATHUtil.isWindowBackgroundDark(activity)) {
+                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(activity));
             }
         }
     }

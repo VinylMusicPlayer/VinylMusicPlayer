@@ -90,8 +90,7 @@ class DB extends SQLiteOpenHelper {
                     break;
             }
         } else {
-            // Downgrade path
-            // TODO Review this implementation - downgrading is often impossible
+            // Downgrade path - downgrading is often impossible
             migrateResetAll.accept(dbase);
         }
     }

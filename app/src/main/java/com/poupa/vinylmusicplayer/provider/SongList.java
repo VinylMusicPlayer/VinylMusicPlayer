@@ -23,7 +23,7 @@ import java.util.Map;
  * @author SC (soncaokim)
  */
 abstract class SongList {
-     @NonNull String name;
+     @NonNull public String name;
      final List<Long> songIds = new ArrayList<>();
 
      SongList(@NonNull String name) {
