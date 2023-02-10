@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
+import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.databinding.FragmentMiniPlayerBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.MusicProgressViewUpdateHelper;
@@ -117,13 +118,9 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
 
         @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
         @ColorInt final int accentColor = ThemeStore.accentColor(activity);
-        @ColorInt final int textPrimaryColor = ColorUtil.isColorLight(primaryColor)
-                ? ThemeStore.textColorPrimary(activity)
-                : ThemeStore.textColorPrimaryInverse(activity);
-        @ColorInt final int textSecondaryColor = ColorUtil.isColorLight(primaryColor)
-                ? ThemeStore.textColorSecondary(activity)
-                : ThemeStore.textColorSecondaryInverse(activity);
-        @ColorInt final int iconColor = textPrimaryColor; // ATHUtil.resolveColor(requireActivity(), R.attr.iconColor, textSecondaryColor);
+        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        @ColorInt final int textSecondaryColor = MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        @ColorInt final int iconColor = textPrimaryColor;
 
         layoutBinding.miniPlayerContainer.setBackgroundColor(primaryColor);
 

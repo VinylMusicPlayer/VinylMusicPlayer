@@ -254,6 +254,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
             // Propagate to the current theme
             ThemeStore.editTheme(this)
                     .primaryColor(newColor)
+                    // TODO If the primary color is a vibrant red or blue, the auto-generated accent color is the same as primary one
                     .accentColor(ColorUtil.isColorLight(newColor)
                             ? ColorUtil.shiftColor(newColor, 0.1F) // darken
                             : ColorUtil.shiftColor(newColor, 1.9F)) // lighten
