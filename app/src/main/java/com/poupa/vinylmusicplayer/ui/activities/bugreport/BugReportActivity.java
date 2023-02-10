@@ -7,9 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,6 +54,15 @@ public class BugReportActivity extends AbsThemeActivity {
         final DeviceInfo deviceInfo = new DeviceInfo(this);
         final String extraInfo = getIntent().getStringExtra(Intent.EXTRA_TEXT);
         textDeviceInfo.setText(deviceInfo + (extraInfo != null ? ("\n\n" + extraInfo) : ""));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initViews() {

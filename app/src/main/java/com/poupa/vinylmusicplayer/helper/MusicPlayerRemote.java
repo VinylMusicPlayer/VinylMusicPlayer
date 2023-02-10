@@ -79,7 +79,7 @@ public class MusicPlayerRemote {
             return;
         }
         mContextWrapper.unbindService(mBinder);
-        if (mConnectionMap.isEmpty()) {
+        if (mConnectionMap.isEmpty() && musicService != null) {
             if (!musicService.isPlaying()) {
                 musicService.quit();
             }
@@ -123,9 +123,9 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void playSongAt(final int position) {
+    public static void playSongAt(final int position, boolean skippedLast) {
         if (musicService != null) {
-            musicService.playSongAt(position);
+            musicService.playSongAt(position, skippedLast);
         }
     }
 
@@ -147,27 +147,27 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void playNextSong() {
+    public static void playNextSong(boolean skippedLast) {
         if (musicService != null) {
-            musicService.playNextSong(true);
+            musicService.playNextSong(skippedLast);
         }
     }
 
     /**
      * Async
      */
-    public static void playPreviousSong() {
+    public static void playPreviousSong(boolean skippedLast) {
         if (musicService != null) {
-            musicService.playPreviousSong(true);
+            musicService.playPreviousSong(skippedLast);
         }
     }
 
     /**
      * Async
      */
-    public static void back() {
+    public static void back(boolean skippedLast) {
         if (musicService != null) {
-            musicService.back(true);
+            musicService.back(skippedLast);
         }
     }
 
@@ -260,7 +260,7 @@ public class MusicPlayerRemote {
 
         final List<Pair<String, Runnable>> possibleActions = Arrays.asList(
                 new Pair<>(
-                        context.getString(R.string.action_replace_playing_queue),
+                        context.getString(R.string.action_play),
                         () -> {
                             musicService.openQueue(songsToAdd, 0, true);
                             showToastEnqueued.run();
@@ -282,10 +282,10 @@ public class MusicPlayerRemote {
         );
         final int defaultActionIndex = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
 
-        final int queueSize = queue.size();
-        final String message = (queueSize == 1)
+        final int songCount = songsToAdd.size();
+        final String message = (songCount == 1)
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
-                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, queueSize);
+                : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, songCount);
         final List<String> choicesText = new ArrayList<>();
         for (final Pair<String, Runnable> namedAction : possibleActions) {choicesText.add(namedAction.first);}
 
@@ -314,11 +314,8 @@ public class MusicPlayerRemote {
 
     private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
-            if (startPlaying) {
-                playSongAt(startPosition);
-            } else {
-                setPosition(startPosition);
-            }
+            if (startPlaying) {playSongAt(startPosition, isPlaying());}
+            else {setPosition(startPosition);}
             return true;
         }
         return false;

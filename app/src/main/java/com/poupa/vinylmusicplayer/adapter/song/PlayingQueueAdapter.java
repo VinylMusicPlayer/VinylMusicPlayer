@@ -309,7 +309,7 @@ public class PlayingQueueAdapter extends SongAdapter
             //If playing and currently playing song is removed, then added back, then play it at
             //current song progress
             if (isPlayingSongToRemove) {
-                MusicPlayerRemote.playSongAt(position);
+                MusicPlayerRemote.playSongAt(position, false);
             }
         });
         snackbar.setActionTextColor(getBackgroundColor(activity));

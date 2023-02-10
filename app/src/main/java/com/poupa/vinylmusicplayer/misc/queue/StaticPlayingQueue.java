@@ -380,7 +380,7 @@ public class StaticPlayingQueue {
         return getCurrentPosition() == queue.size() - 1;
     }
 
-    public int getNextPosition(boolean force) {
+    public int getNextPosition(boolean skippedLast) {
         int position = getCurrentPosition() + 1;
         switch (getRepeatMode()) {
             case REPEAT_MODE_ALL:
@@ -389,7 +389,7 @@ public class StaticPlayingQueue {
                 }
                 break;
             case REPEAT_MODE_THIS:
-                if (force) {
+                if (skippedLast) {
                     if (isLastTrack()) {
                         position = 0;
                     }
@@ -407,7 +407,7 @@ public class StaticPlayingQueue {
         return position;
     }
 
-    public int getPreviousPosition(boolean force) {
+    public int getPreviousPosition(boolean skippedLast) {
         int newPosition = getCurrentPosition() - 1;
         switch (repeatMode) {
             case REPEAT_MODE_ALL:
@@ -416,7 +416,7 @@ public class StaticPlayingQueue {
                 }
                 break;
             case REPEAT_MODE_THIS:
-                if (force) {
+                if (skippedLast) {
                     if (newPosition < 0) {
                         newPosition = queue.size() - 1;
                     }
