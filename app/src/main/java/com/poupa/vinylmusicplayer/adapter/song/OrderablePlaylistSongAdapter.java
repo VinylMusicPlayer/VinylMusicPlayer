@@ -59,6 +59,8 @@ public class OrderablePlaylistSongAdapter
     public long getItemId(int position) {
         position--;
         if (position < 0) return -2;
+
+        // TODO Ugly cast. Why this needs to be PlaylistSong.idInPlaylist?
         return ((ArrayList<PlaylistSong>) (List) dataSet).get(position).idInPlayList; // important!
     }
 
