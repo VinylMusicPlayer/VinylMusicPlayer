@@ -157,9 +157,9 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
 
     public abstract void reload();
 
-    @Override
+    //@Override
     public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
+        //super.onThemeColorsChanged();
 
         if (recyclerView instanceof FastScrollRecyclerView) {
             ViewUtil.setUpFastScrollRecyclerViewColor(getActivity(), ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(getActivity()));

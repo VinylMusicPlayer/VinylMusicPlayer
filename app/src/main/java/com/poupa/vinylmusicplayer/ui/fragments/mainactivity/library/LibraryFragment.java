@@ -360,7 +360,7 @@ public class LibraryFragment
         return false;
     }
 
-    @Override
+    //@Override
     public void onThemeColorsChanged() {
         final int primaryColor = ThemeStore.primaryColor(requireActivity());
         layoutBinding.appbar.setBackgroundColor(primaryColor);

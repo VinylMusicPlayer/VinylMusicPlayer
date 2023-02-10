@@ -88,6 +88,8 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
 
         setUpToolBar();
 
+        onThemeColorsChanged();
+
         if (savedInstanceState != null) {
             query = savedInstanceState.getString(QUERY);
         }
@@ -208,7 +210,7 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
 
     @Override
     public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
+        //super.onThemeColorsChanged();
 
         //change scrollbar color to follow secondary color
         Drawable unwrappedDrawable = AppCompatResources.getDrawable(this, R.drawable.scrollbar_vertical_thumb);

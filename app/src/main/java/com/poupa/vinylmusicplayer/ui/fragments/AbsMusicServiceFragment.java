@@ -88,8 +88,8 @@ public class AbsMusicServiceFragment extends Fragment
 
     }
 
-    @Override
-    public void onThemeColorsChanged() {}
+    //@Override
+    //public void onThemeColorsChanged() {}
 
     @Override
     public boolean overrideThemeColorsForStatusBar() {

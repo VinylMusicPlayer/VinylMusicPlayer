@@ -46,6 +46,8 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutBinding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
 
+        onThemeColorsChanged();
+
         return layoutBinding.getRoot();
     }
 
@@ -105,7 +107,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     public void onResume() {
         super.onResume();
         progressViewUpdateHelper.start();
-        onThemeColorsChanged();
+        //onThemeColorsChanged();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
         progressViewUpdateHelper.stop();
     }
 
-    @Override
+    //@Override
     public void onThemeColorsChanged() {
         @NonNull final Activity activity = requireActivity();
 

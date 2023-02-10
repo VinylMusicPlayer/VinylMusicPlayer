@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 
 import com.kabouzeid.appthemehelper.ATH;
+import com.kabouzeid.appthemehelper.ATHActivity;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
@@ -33,12 +35,12 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity implements The
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        onThemeColorsChanged();
-    }
+    //@Override
+    //protected void onResume() {
+    //    super.onResume();
+    //
+    //    onThemeColorsChanged();
+    //}
 
     @Override
     protected void onDestroy() {
@@ -124,7 +126,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity implements The
         setLightStatusbar(ColorUtil.isColorLight(bgColor));
     }
 
-    @Override
+    //@Override
     public void onThemeColorsChanged()
     {
         MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);

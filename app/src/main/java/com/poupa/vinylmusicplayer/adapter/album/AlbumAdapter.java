@@ -204,12 +204,6 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         return sortOrder.sectionNameBuilder.apply(dataSet.get(position));
     }
 
-    //@Override
-    //public void onThemeColorsChanged() {
-        // We want to follow the album colors, not the theme color
-        //AbsThemeActivity.static_setStatusbarColor(activity, color);
-    //}
-
     public class ViewHolder extends MediaEntryViewHolder {
         public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);

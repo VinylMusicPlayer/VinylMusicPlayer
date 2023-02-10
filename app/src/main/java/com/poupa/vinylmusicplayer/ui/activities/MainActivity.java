@@ -169,6 +169,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 true);
         drawerContent.addView(slidingPanelBinding.getRoot());
 
+        onThemeColorsChanged();
+
         return binding.getRoot();
     }
 
@@ -392,15 +394,16 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     public void onThemeColorsChanged() {
         super.onThemeColorsChanged();
 
-        int accentColor = ThemeStore.accentColor(this);
-        NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
-        NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
-
-        currentFragment.onThemeColorsChanged();
+        if (navigationView != null) {
+            int accentColor = ThemeStore.accentColor(this);
+            NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
+            NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
+        }
+        //currentFragment.onThemeColorsChanged();
     }
 
     public interface MainActivityFragmentCallbacks  {
         boolean handleBackPress();
-        void onThemeColorsChanged();
+        //void onThemeColorsChanged();
     }
 }

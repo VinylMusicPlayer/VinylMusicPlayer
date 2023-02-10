@@ -83,6 +83,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (frag != null) frag.invalidateSettings();
         }
+
+        onThemeColorsChanged();
     }
 
     @Override
@@ -101,8 +103,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             new DynamicShortcutManager(this).updateDynamicShortcuts();
         }
-        //recreate();
-        onThemeColorsChanged();
+
+        recreate();
+        //onThemeColorsChanged();
+        //onThemeChanged();
     }
 
     @Override
@@ -121,7 +125,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     @Override
     public void onThemeColorsChanged()
     {
-        super.onThemeColorsChanged();
+        //super.onThemeColorsChanged();
 
         toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
     }

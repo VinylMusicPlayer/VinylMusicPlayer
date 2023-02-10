@@ -13,6 +13,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.kabouzeid.appthemehelper.ATHActivity;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
@@ -251,21 +252,27 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
         final boolean themeFollowsPlayingSong = true; // TODO Get from prefs
         if (themeFollowsPlayingSong) {
+            // TODO If the primary color is a vibrant red or blue, the auto-generated accent color is the same as primary one
+            // TODO If the primary color is yellow, the auto-generated accent will be black -> not visible for a menu item on dark theme
+            @ColorInt final int newPrimaryColor = newColor;
+            @ColorInt final int newAccentColor = ColorUtil.isColorLight(newColor)
+                    ? ColorUtil.shiftColor(newColor, 0.1F) // darken
+                    : ColorUtil.shiftColor(newColor, 1.9F); // lighten
+
             // Propagate to the current theme
-            ThemeStore.editTheme(this)
-                    .primaryColor(newColor)
-                    // TODO If the primary color is a vibrant red or blue, the auto-generated accent color is the same as primary one
-                    .accentColor(ColorUtil.isColorLight(newColor)
-                            ? ColorUtil.shiftColor(newColor, 0.1F) // darken
-                            : ColorUtil.shiftColor(newColor, 1.9F)) // lighten
-                    .commit();
+            if (newAccentColor != ThemeStore.accentColor(this) || newPrimaryColor != ThemeStore.primaryColor(this)
+            ) {
+                ThemeStore.editTheme(this)
+                        .primaryColor(newPrimaryColor)
+                        .accentColor(newAccentColor)
+                        .commit();
 
-            // Refresh the front activity
-            // TODO Review the theme change handling in ATHActivity. Might want to reuse that.
-            onThemeColorsChanged();
-
-            // Refresh the mini player
-            miniPlayerFragment.onThemeColorsChanged();
+                // Refresh the front activity
+                // TODO Review the theme change handling in ATHActivity. Might want to reuse that.
+                onThemeChanged();
+                //onThemeColorsChanged();
+                //miniPlayerFragment.onThemeColorsChanged();
+            }
         }
     }
 

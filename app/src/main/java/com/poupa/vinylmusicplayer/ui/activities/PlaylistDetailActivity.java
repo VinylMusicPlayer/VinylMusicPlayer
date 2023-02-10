@@ -80,6 +80,8 @@ public class PlaylistDetailActivity
 
         setUpToolbar();
 
+        onThemeColorsChanged();
+
         LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
     }
 
@@ -283,7 +285,7 @@ public class PlaylistDetailActivity
 
     @Override
     public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
+        //super.onThemeColorsChanged();
 
         layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));

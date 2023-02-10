@@ -223,7 +223,7 @@ public class FoldersFragment
         return false;
     }
 
-    @Override
+    //@Override
     public void onThemeColorsChanged() {
         setUpAppbarColor();
         ViewUtil.setUpFastScrollRecyclerViewColor(
