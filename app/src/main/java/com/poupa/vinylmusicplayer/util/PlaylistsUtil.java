@@ -29,7 +29,7 @@ public class PlaylistsUtil {
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 
-    public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
+    public static boolean doesPlaylistExist(final String name) {
         return (StaticPlaylist.getPlaylist(name) != null);
     }
 
@@ -124,11 +124,7 @@ public class PlaylistsUtil {
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return false;}
 
-        if (!list.moveSong(from, to)) {return false;}
-
-        // TODO NOTE: actually for now lets disable this because it messes with the animation (tested on Android 11)
-        // notifyChange(context);
-        return true;
+        return list.moveSong(from, to);
     }
 
     public static void renamePlaylist(@NonNull final Context context, final long id, final String newName) {
