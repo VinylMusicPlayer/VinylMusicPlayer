@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -91,6 +92,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     @Override
     public void onPlayStateChanged() {
         updatePlayPauseDrawableState(true);
+        layoutBinding.miniPlayerTitle.setTypeface(null, MusicPlayerRemote.isPlaying() ? Typeface.BOLD : Typeface.NORMAL);
     }
 
     @Override
