@@ -35,6 +35,7 @@ public class PlaylistSong extends Song {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return super.toString() +
                 "PlaylistSong{" +
@@ -61,7 +62,7 @@ public class PlaylistSong extends Song {
         this.idInPlayList = in.readLong();
     }
 
-    public static final Creator<PlaylistSong> CREATOR = new Creator<PlaylistSong>() {
+    public static final Creator<PlaylistSong> CREATOR = new Creator<>() {
         public PlaylistSong createFromParcel(Parcel source) {
             return new PlaylistSong(source);
         }

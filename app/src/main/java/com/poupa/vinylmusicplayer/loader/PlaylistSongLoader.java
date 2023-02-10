@@ -44,7 +44,6 @@ public class PlaylistSongLoader {
      */
     @NonNull
     public static ArrayList<Song> getPlaylistSongList(
-            @NonNull final Context context,
             @NonNull final String playlistNameSearchTerm)
     {
         // Find closest match
