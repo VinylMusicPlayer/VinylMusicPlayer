@@ -260,6 +260,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
                     .commit();
 
             // Refresh the front activity
+            // TODO Review the theme change handling in ATHActivity. Might want to reuse that.
             onThemeColorsChanged();
 
             // Refresh the mini player
