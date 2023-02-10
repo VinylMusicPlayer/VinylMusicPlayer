@@ -393,7 +393,7 @@ public class MusicUtil {
                     for (File f : files) {
                         try {
                             String newLyrics = FileUtil.read(f);
-                            if (newLyrics != null && !newLyrics.trim().isEmpty()) {
+                            if (!newLyrics.trim().isEmpty()) {
                                 if (AbsSynchronizedLyrics.isSynchronized(newLyrics)) {
                                     return newLyrics;
                                 }

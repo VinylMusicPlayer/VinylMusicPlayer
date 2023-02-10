@@ -42,15 +42,13 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     private Callbacks callbacks;
     private static boolean isToolbarShown = true;
-
     protected Toolbar toolbar;
 
-    public PlayingQueueAdapter playingQueueAdapter;
-    public RecyclerView.Adapter wrappedAdapter;
-    public RecyclerViewDragDropManager recyclerViewDragDropManager;
-    public RecyclerViewSwipeManager recyclerViewSwipeManager;
-    public RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager;
-    public LinearLayoutManager layoutManager;
+    protected PlayingQueueAdapter playingQueueAdapter;
+    private RecyclerView.Adapter wrappedAdapter;
+    protected RecyclerViewDragDropManager recyclerViewDragDropManager;
+    private RecyclerViewSwipeManager recyclerViewSwipeManager;
+    protected LinearLayoutManager layoutManager;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -69,7 +67,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
     }
 
     public void setUpRecyclerView(RecyclerView recyclerView, final SlidingUpPanelLayout slidingUpPanelLayout) {
-        recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
+        RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
         recyclerViewSwipeManager = new RecyclerViewSwipeManager();
         recyclerViewDragDropManager = new RecyclerViewDragDropManager();
 
@@ -127,7 +125,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
             SongShareDialog.create(song).show(getParentFragmentManager(), "SHARE_SONG");
             return true;
         } else if (itemId == R.id.action_equalizer) {
-            NavigationUtil.openEqualizer(getActivity());
+            NavigationUtil.openEqualizer(requireActivity());
             return true;
         } else if (itemId == R.id.action_add_to_playlist) {
             AddToPlaylistDialog.create(song).show(getParentFragmentManager(), "ADD_PLAYLIST");
@@ -136,10 +134,10 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
             MusicPlayerRemote.clearQueue();
             return true;
         } else if (itemId == R.id.action_save_playing_queue) {
-            CreatePlaylistDialog.create(MusicPlayerRemote.getPlayingQueue()).show(getActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
+            CreatePlaylistDialog.create(MusicPlayerRemote.getPlayingQueue()).show(requireActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
             return true;
         } else if (itemId == R.id.action_tag_editor) {
-            Intent intent = new Intent(getActivity(), SongTagEditorActivity.class);
+            Intent intent = new Intent(requireActivity(), SongTagEditorActivity.class);
             intent.putExtra(AbsTagEditorActivity.EXTRA_ID, song.id);
             startActivity(intent);
             return true;
@@ -147,17 +145,17 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
             SongDetailDialog.create(song).show(getParentFragmentManager(), "SONG_DETAIL");
             return true;
         } else if (itemId == R.id.action_go_to_album) {
-            NavigationUtil.goToAlbum(getActivity(), song.albumId);
+            NavigationUtil.goToAlbum(requireActivity(), song.albumId);
             return true;
         } else if (itemId == R.id.action_go_to_artist) {
-            NavigationUtil.goToArtist(getActivity(), song.artistId);
+            NavigationUtil.goToArtist(requireActivity(), song.artistId);
             return true;
         }
         return false;
     }
 
     protected void toggleFavorite(Song song) {
-        MusicUtil.toggleFavorite(getActivity(), song);
+        MusicUtil.toggleFavorite(requireActivity(), song);
     }
 
     protected boolean isToolbarShown() {
@@ -205,7 +203,7 @@ public abstract class AbsPlayerFragment extends AbsMusicServiceFragment implemen
 
     protected boolean hasEqualizer() {
         final Intent effects = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-        PackageManager pm = getActivity().getPackageManager();
+        PackageManager pm = requireActivity().getPackageManager();
         ResolveInfo ri = pm.resolveActivity(effects, 0);
         return ri != null;
     }
