@@ -22,14 +22,11 @@ import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
+ * @author SC (soncaokim)
  */
 public class PlaylistsUtil {
     private static void notifyChange(@NonNull final Context context) {
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
-    }
-
-    public static boolean doesPlaylistExist(@NonNull final Context context, final long playlistId) {
-        return (StaticPlaylist.getPlaylist(playlistId) != null);
     }
 
     public static boolean doesPlaylistExist(@NonNull final Context context, final String name) {
