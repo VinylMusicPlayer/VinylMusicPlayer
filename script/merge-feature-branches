@@ -32,8 +32,8 @@ fi
 
 function git_init()
 {
-    git config --global user.email "$0@ci-bot"
-    git config --global user.name "$0"
+    [ -z "$(git config --global --get user.email)" ] && git config --global user.email "$0@ci-bot"
+    [ -z "$(git config --global --get user.name)" ] && git config --global user.name "$0"
 }
 
 case "${CI_BRANCH}" in
