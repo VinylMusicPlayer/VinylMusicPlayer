@@ -95,6 +95,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     private void updateSongTitle() {
         layoutBinding.miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().title);
         layoutBinding.miniPlayerText.setText(MusicUtil.getSongInfoString(MusicPlayerRemote.getCurrentSong()));
+        layoutBinding.miniPlayerTitle.setTypeface(null, MusicPlayerRemote.isPlaying() ? Typeface.BOLD : Typeface.NORMAL);
     }
 
     @Override
