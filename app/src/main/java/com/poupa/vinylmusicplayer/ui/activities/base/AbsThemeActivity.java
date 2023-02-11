@@ -63,7 +63,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
                 statusBar.setBackgroundColor(color);
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            pActivity.getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
+            pActivity.getWindow().setStatusBarColor(color);
             ATH.setLightStatusbar(pActivity, ColorUtil.isColorLight(color));
         }
     }
@@ -78,7 +78,7 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
                 statusBar.setBackgroundColor(color);
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
+            getWindow().setStatusBarColor(color);
             setLightStatusbarAuto(color);
         }
     }
