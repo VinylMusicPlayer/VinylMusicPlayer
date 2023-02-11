@@ -4,6 +4,7 @@ package com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog;
 import java.util.List;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 
@@ -76,11 +78,18 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             buttonParams.setMargins(0, 0, 0, 0);
 
+            int colorPrimary = ThemeStore.textColorPrimary(getActivity());
             button.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
             button.setTypeface(null, Typeface.NORMAL);
             button.setTransformationMethod(null);
-            button.setTextColor(ThemeStore.textColorPrimary(getActivity()));
+            button.setTextColor(colorPrimary);
 
+            Drawable icon = buttonList.get(i).icon;
+            if (icon != null) {
+                DrawableCompat.setTint(icon, colorPrimary);
+                button.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
+                button.setCompoundDrawablePadding((int)(1.5*px_horizontal));
+            }
             linearlayout.addView(button, buttonParams);
         }
 
@@ -94,10 +103,18 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public static class ButtonInfo {
         public String title;
         public Runnable action;
+        public Drawable icon;
 
         public ButtonInfo(String title, Runnable action) {
             this.title = title;
             this.action = action;
+            this.icon = null;
+        }
+
+        public ButtonInfo(String title, Runnable action, Drawable icon) {
+            this.title = title;
+            this.action = action;
+            this.icon = icon;
         }
     }
 
