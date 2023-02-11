@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomBottomSheetDialog"
+        parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">?cardBackgroundColor</item>
+    </style>
+</resources>

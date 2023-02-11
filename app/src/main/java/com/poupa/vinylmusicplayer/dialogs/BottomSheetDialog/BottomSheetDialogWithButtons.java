@@ -48,19 +48,8 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             final Button button;
 
             button = new Button(view.getContext(), null);
-            TypedValue outValue = new TypedValue();
-            getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
-            button.setBackgroundResource(outValue.resourceId);
-            int px_vertical = getContext().getResources().getDimensionPixelSize(R.dimen.default_item_padding);
-            int px_horizontal = getContext().getResources().getDimensionPixelSize(R.dimen.default_item_margin);
-            button.setPadding(px_horizontal, px_vertical, px_horizontal, px_vertical);
-
-            button.setText(buttonList.get(i).title);
-            // TODO: make color the undo one, for know this is not working
-            button.setTextColor(ThemeStore.textColorSecondary(getActivity())); //PlayingQueueAdapter.getBackgroundColor((AppCompatActivity)getActivity()));
 
             button.setTag(i);
-
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -69,6 +58,13 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
                     afterClickOn(i);
                 }
             });
+
+            TypedValue outValue = new TypedValue();
+            getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
+            button.setBackgroundResource(outValue.resourceId);
+            int px_vertical = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_vertical_divided_margin);
+            int px_horizontal = getContext().getResources().getDimensionPixelSize(R.dimen.default_item_margin);
+            button.setPadding(px_horizontal, px_vertical, px_horizontal, px_vertical);
 
             LinearLayout linearlayout = (LinearLayout) view.findViewById(R.id.buttonList);
             linearlayout.setOrientation(LinearLayout.VERTICAL);
@@ -83,6 +79,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             button.setTypeface(null, Typeface.NORMAL);
             button.setTransformationMethod(null);
             button.setTextColor(colorPrimary);
+            button.setText(buttonList.get(i).title);
 
             Drawable icon = buttonList.get(i).icon;
             if (icon != null) {

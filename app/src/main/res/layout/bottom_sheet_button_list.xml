@@ -9,15 +9,16 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/default_item_margin"
         android:paddingLeft="@dimen/default_item_margin"
         android:paddingRight="@dimen/default_item_margin"
-        android:paddingBottom="@dimen/default_item_padding" />
+        android:paddingTop="@dimen/bottom_sheet_vertical_margin"
+        android:paddingBottom="@dimen/bottom_sheet_vertical_divided_margin" />
 
     <LinearLayout
         android:id="@+id/buttonList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/bottom_sheet_vertical_divided_margin"/>
 
 </LinearLayout>
