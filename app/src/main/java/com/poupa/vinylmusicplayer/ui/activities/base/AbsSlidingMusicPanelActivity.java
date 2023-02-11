@@ -13,7 +13,6 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.kabouzeid.appthemehelper.ATHActivity;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
@@ -267,11 +266,8 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
                         .accentColor(newAccentColor)
                         .commit();
 
-                // Refresh the front activity
-                // TODO Review the theme change handling in ATHActivity. Might want to reuse that.
+                // See ATHActivity.onThemeChanged. This will recreate the current activity
                 onThemeChanged();
-                //onThemeColorsChanged();
-                //miniPlayerFragment.onThemeColorsChanged();
             }
         }
     }

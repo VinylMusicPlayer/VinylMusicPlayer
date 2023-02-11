@@ -33,7 +33,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     private int menuRes;
     private final Context context;
 
-    protected int color;
+    private int color;
 
     protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;

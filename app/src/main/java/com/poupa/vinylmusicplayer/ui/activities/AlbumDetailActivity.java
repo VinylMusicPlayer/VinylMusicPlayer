@@ -420,8 +420,8 @@ public class AlbumDetailActivity
     }
 
     @Override
-    public boolean overrideThemeColorsForStatusBar() {
-        return true;
+    public boolean applyThemeColorsForStatusBar() {
+        return false;
     }
 
     private static class AsyncAlbumLoader extends WrappedAsyncTaskLoader<Album> {

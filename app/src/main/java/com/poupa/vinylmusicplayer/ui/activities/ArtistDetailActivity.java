@@ -448,8 +448,8 @@ public class ArtistDetailActivity
     }
 
     @Override
-    public boolean overrideThemeColorsForStatusBar() {
-        return true;
+    public boolean applyThemeColorsForStatusBar() {
+        return false;
     }
 
     private static class AsyncArtistDataLoader extends WrappedAsyncTaskLoader<Artist> {

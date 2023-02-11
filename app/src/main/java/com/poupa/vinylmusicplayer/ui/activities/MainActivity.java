@@ -169,7 +169,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 true);
         drawerContent.addView(slidingPanelBinding.getRoot());
 
-        onThemeColorsChanged();
+        applyThemeColors();
 
         return binding.getRoot();
     }
@@ -390,20 +390,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     protected void reload() {
     }
 
-    @Override
-    public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
-
-        if (navigationView != null) {
-            int accentColor = ThemeStore.accentColor(this);
-            NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
-            NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
-        }
-        //currentFragment.onThemeColorsChanged();
-    }
-
-    public interface MainActivityFragmentCallbacks  {
+    public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();
-        //void onThemeColorsChanged();
     }
 }

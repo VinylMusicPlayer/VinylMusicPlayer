@@ -42,6 +42,8 @@ public class BugReportActivity extends AbsThemeActivity {
 
         textDeviceInfo = binding.bugReportCardDeviceInfo.airTextDeviceInfo;
 
+        applyThemeColors();
+
         initViews();
 
         if (TextUtils.isEmpty(getTitle()))
@@ -62,11 +64,15 @@ public class BugReportActivity extends AbsThemeActivity {
     }
 
     private void initViews() {
+        final int accentColor = ThemeStore.accentColor(this);
+        final int primaryColor = ThemeStore.primaryColor(this);
+        toolbar.setBackgroundColor(primaryColor);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         textDeviceInfo.setOnClickListener(v -> copyDeviceInfoToClipBoard());
 
+        TintHelper.setTintAuto(sendFab, accentColor, true);
         sendFab.setOnClickListener(v -> reportIssue());
     }
 
@@ -85,15 +91,5 @@ public class BugReportActivity extends AbsThemeActivity {
         clipboard.setPrimaryClip(clip);
 
         SafeToast.show(this, R.string.copied_device_info_to_clipboard);
-    }
-
-    @Override
-    public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
-
-        final int accentColor = ThemeStore.accentColor(this);
-        final int primaryColor = ThemeStore.primaryColor(this);
-        if (toolbar != null) {toolbar.setBackgroundColor(primaryColor);}
-        TintHelper.setTintAuto(sendFab, accentColor, true);
     }
 }

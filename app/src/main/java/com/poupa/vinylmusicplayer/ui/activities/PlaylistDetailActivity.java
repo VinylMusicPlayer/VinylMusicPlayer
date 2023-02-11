@@ -74,13 +74,13 @@ public class PlaylistDetailActivity
 
         setDrawUnderStatusbar();
 
+        applyThemeColors();
+
         playlist = getIntent().getExtras().getParcelable(EXTRA_PLAYLIST);
 
         setUpRecyclerView();
 
         setUpToolbar();
-
-        onThemeColorsChanged();
 
         LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
     }
@@ -135,10 +135,12 @@ public class PlaylistDetailActivity
     }
 
     private void setUpToolbar() {
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(layoutBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setToolbarTitle(null);
         layoutBinding.title.setText(playlist.name);
+        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     private void setToolbarTitle(final String title) {
@@ -281,14 +283,6 @@ public class PlaylistDetailActivity
     @Override
     protected void reload() {
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
-    public void onThemeColorsChanged() {
-        //super.onThemeColorsChanged();
-
-        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {

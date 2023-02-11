@@ -9,15 +9,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
-import com.poupa.vinylmusicplayer.interfaces.ThemeEventListener;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class AbsMusicServiceFragment extends Fragment
-        implements MusicServiceEventListener, ThemeEventListener
-{
+public class AbsMusicServiceFragment extends Fragment implements MusicServiceEventListener {
     private AbsMusicServiceActivity activity;
 
     @Override
@@ -86,14 +83,5 @@ public class AbsMusicServiceFragment extends Fragment
     @Override
     public void onMediaStoreChanged() {
 
-    }
-
-    //@Override
-    //public void onThemeColorsChanged() {}
-
-    @Override
-    public boolean overrideThemeColorsForStatusBar() {
-        // By default, the status bar should follow the theme
-        return false;
     }
 }

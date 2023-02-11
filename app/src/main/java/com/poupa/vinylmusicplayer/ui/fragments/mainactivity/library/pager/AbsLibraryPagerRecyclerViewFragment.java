@@ -54,8 +54,6 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         initLayoutManager();
         initAdapter();
         setUpRecyclerView();
-
-        onThemeColorsChanged();
     }
 
     @Override
@@ -156,18 +154,4 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
     }
 
     public abstract void reload();
-
-    //@Override
-    public void onThemeColorsChanged() {
-        //super.onThemeColorsChanged();
-
-        if (recyclerView instanceof FastScrollRecyclerView) {
-            ViewUtil.setUpFastScrollRecyclerViewColor(getActivity(), ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(getActivity()));
-        }
-
-        // TODO Beurk, manual polymorphism
-        //if (adapter instanceof AbsMultiSelectAdapter) {
-        //    ((AbsMultiSelectAdapter)adapter).onThemeColorsChanged();
-        //}
-    }
 }

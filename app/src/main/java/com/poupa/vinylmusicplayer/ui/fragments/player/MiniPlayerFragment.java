@@ -46,7 +46,17 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutBinding = FragmentMiniPlayerBinding.inflate(inflater, container, false);
 
-        onThemeColorsChanged();
+        @NonNull final Activity activity = requireActivity();
+
+        @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
+        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        @ColorInt final int textSecondaryColor = MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        @ColorInt final int iconColor = textPrimaryColor;
+
+        layoutBinding.miniPlayerContainer.setBackgroundColor(primaryColor);
+        layoutBinding.miniPlayerTitle.setTextColor(textPrimaryColor);
+        layoutBinding.miniPlayerText.setTextColor(textSecondaryColor);
+        layoutBinding.miniPlayerPlayPauseButton.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
 
         return layoutBinding.getRoot();
     }
@@ -66,12 +76,19 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
 
     private void setUpMiniPlayer() {
         setUpPlayPauseButton();
+        layoutBinding.progressBar.setSupportProgressTintList(ColorStateList.valueOf(ThemeStore.accentColor(requireActivity())));
     }
 
     private void setUpPlayPauseButton() {
+        @NonNull final Activity activity = requireActivity();
+        @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
+        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        @ColorInt final int iconColor = textPrimaryColor;
+
         // TODO Make this a FAB
-        miniPlayerPlayPauseDrawable = new PlayPauseDrawable(requireActivity());
+        miniPlayerPlayPauseDrawable = new PlayPauseDrawable(activity);
         layoutBinding.miniPlayerPlayPauseButton.setImageDrawable(miniPlayerPlayPauseDrawable);
+        layoutBinding.miniPlayerImage.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.miniPlayerPlayPauseButton.setOnClickListener(new PlayPauseButtonOnClickHandler());
     }
 
@@ -107,34 +124,12 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     public void onResume() {
         super.onResume();
         progressViewUpdateHelper.start();
-        //onThemeColorsChanged();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         progressViewUpdateHelper.stop();
-    }
-
-    //@Override
-    public void onThemeColorsChanged() {
-        @NonNull final Activity activity = requireActivity();
-
-        @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
-        @ColorInt final int accentColor = ThemeStore.accentColor(activity);
-        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
-        @ColorInt final int textSecondaryColor = MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
-        @ColorInt final int iconColor = textPrimaryColor;
-
-        layoutBinding.miniPlayerContainer.setBackgroundColor(primaryColor);
-
-        layoutBinding.miniPlayerTitle.setTextColor(textPrimaryColor);
-        layoutBinding.miniPlayerText.setTextColor(textSecondaryColor);
-
-        layoutBinding.progressBar.setSupportProgressTintList(ColorStateList.valueOf(accentColor));
-
-        layoutBinding.miniPlayerImage.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
-        layoutBinding.miniPlayerPlayPauseButton.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
     }
 
     private static class FlingPlayBackController implements View.OnTouchListener {

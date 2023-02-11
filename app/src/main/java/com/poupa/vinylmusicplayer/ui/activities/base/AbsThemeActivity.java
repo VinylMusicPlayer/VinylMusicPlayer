@@ -4,19 +4,16 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 
 import com.kabouzeid.appthemehelper.ATH;
-import com.kabouzeid.appthemehelper.ATHActivity;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialDialogsUtil;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.interfaces.ThemeEventListener;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
@@ -25,22 +22,15 @@ import com.poupa.vinylmusicplayer.util.Util;
  * @author Karim Abou Zeid (kabouzeid)
  */
 
-public abstract class AbsThemeActivity extends ATHToolbarActivity implements ThemeEventListener {
+public abstract class AbsThemeActivity extends ATHToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         Thread.setDefaultUncaughtExceptionHandler(new OopsHandler(this));
 
         setTheme(PreferenceUtil.getInstance().getGeneralTheme());
+        super.onCreate(savedInstanceState);
+        MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
     }
-
-    //@Override
-    //protected void onResume() {
-    //    super.onResume();
-    //
-    //    onThemeColorsChanged();
-    //}
 
     @Override
     protected void onDestroy() {
@@ -126,21 +116,17 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity implements The
         setLightStatusbar(ColorUtil.isColorLight(bgColor));
     }
 
-    //@Override
-    public void onThemeColorsChanged()
+    public void applyThemeColors()
     {
-        MaterialDialogsUtil.updateMaterialDialogsThemeSingleton(this);
-
         // Some activities, ie ArtistDetails and AlbumDetails, have the status bar colored in the same
         // palette as the covert art
-        if (!overrideThemeColorsForStatusBar()) {setStatusbarColorAuto();}
+        if (applyThemeColorsForStatusBar()) {setStatusbarColorAuto();}
 
         setNavigationbarColorAuto();
         setTaskDescriptionColorAuto();
     }
 
-    @Override
-    public boolean overrideThemeColorsForStatusBar() {
-        return false;
+    public boolean applyThemeColorsForStatusBar() {
+        return true;
     }
 }

@@ -33,7 +33,6 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
@@ -57,6 +56,8 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         super.onCreate(savedInstanceState);
         setDrawUnderStatusbar();
 
+        applyThemeColors();
+
         genre = getIntent().getExtras().getParcelable(EXTRA_GENRE);
 
         setUpRecyclerView();
@@ -78,6 +79,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void setUpRecyclerView() {
+        ViewUtil.setUpFastScrollRecyclerViewColor(this, layoutBinding.recyclerView, ThemeStore.accentColor(this));
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new SongAdapter(this, new ArrayList<>(), R.layout.item_list, false, this);
@@ -93,10 +95,12 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     }
 
     private void setUpToolBar() {
+        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(layoutBinding.toolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         layoutBinding.title.setText(genre.getName());
+        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     @Override
@@ -194,15 +198,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @Override
     protected void reload() {
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
-    }
-
-    @Override
-    public void onThemeColorsChanged() {
-        super.onThemeColorsChanged();
-
-        ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) layoutBinding.recyclerView), ThemeStore.accentColor(this));
-        layoutBinding.toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
-        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(ThemeStore.primaryColor(this))));
     }
 
     private static class AsyncGenreSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {

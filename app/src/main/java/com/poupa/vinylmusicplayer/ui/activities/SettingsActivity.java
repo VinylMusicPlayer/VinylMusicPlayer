@@ -73,6 +73,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
         setDrawUnderStatusbar();
 
+        applyThemeColors();
+
+        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,8 +86,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (frag != null) frag.invalidateSettings();
         }
-
-        onThemeColorsChanged();
     }
 
     @Override
@@ -103,10 +104,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             new DynamicShortcutManager(this).updateDynamicShortcuts();
         }
-
         recreate();
-        //onThemeColorsChanged();
-        //onThemeChanged();
     }
 
     @Override
@@ -120,14 +118,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onThemeColorsChanged()
-    {
-        //super.onThemeColorsChanged();
-
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
