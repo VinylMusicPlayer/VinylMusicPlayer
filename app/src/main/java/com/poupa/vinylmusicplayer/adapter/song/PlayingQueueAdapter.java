@@ -24,6 +24,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionRemoveItem;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.annotation.SwipeableItemResults;
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
@@ -332,10 +333,9 @@ public class PlayingQueueAdapter extends SongAdapter
             if (isPlayingSongToRemove) {
                 MusicPlayerRemote.playSongAt(position, false);
             }
-        })
-        .setActionTextColor(color)
-        .show();
-
+        });
+        snackbar.setActionTextColor(ThemeStore.accentColor(activity));
+        snackbar.show();
 
         //Fixes Snackbar not showing when it replaces another Snackbar
         //See: https://stackoverflow.com/questions/43680655/snackbar-sometimes-doesnt-show-up-when-it-replaces-another-one
