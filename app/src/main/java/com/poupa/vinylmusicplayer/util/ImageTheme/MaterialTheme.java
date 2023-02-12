@@ -73,4 +73,6 @@ class MaterialTheme implements ThemeStyle {
     public int getShortSeparatorVisibilityState() {
         return View.GONE;
     }
+
+    public int getBottomSheetStyle() { return R.style.BottomSheetDialog_Rounded; }
 }

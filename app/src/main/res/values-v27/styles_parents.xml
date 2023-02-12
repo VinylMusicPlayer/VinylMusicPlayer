@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="CustomBottomSheetDialog"
-        parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="BottomSheetDialog_Rounded" parent="@style/CustomBottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet_Rounded</item>
 
         <item name="android:windowIsFloating">false</item>
         <item name="android:navigationBarColor">?cardBackgroundColor</item>
+        <item name="android:elevation">@dimen/bottom_sheet_elevation</item>
     </style>
+
+    <style name="BottomSheetDialog_Flat" parent="@style/CustomBottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet_Flat</item>
+
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:navigationBarColor">?cardBackgroundColor</item>
+        <item name="android:elevation">@dimen/bottom_sheet_elevation</item>
+    </style>
+
+
 </resources>

@@ -80,6 +80,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             button.setTransformationMethod(null);
             button.setTextColor(colorPrimary);
             button.setText(buttonList.get(i).title);
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
 
             Drawable icon = buttonList.get(i).icon;
             if (icon != null) {

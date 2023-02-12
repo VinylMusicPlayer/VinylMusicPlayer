@@ -12,6 +12,7 @@
         android:paddingLeft="@dimen/default_item_margin"
         android:paddingRight="@dimen/default_item_margin"
         android:paddingTop="@dimen/bottom_sheet_vertical_margin"
+        android:textSize="15sp"
         android:paddingBottom="@dimen/bottom_sheet_vertical_divided_margin" />
 
     <LinearLayout

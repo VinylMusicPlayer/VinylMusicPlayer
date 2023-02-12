@@ -266,7 +266,7 @@ public class MusicPlayerRemote {
                             musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
                             showToastEnqueued.run();
                         },
-                        ContextCompat.getDrawable(context, R.drawable.ic_skip_next_white_24dp)), // ic_redo_white_24dp)),
+                        ContextCompat.getDrawable(context, R.drawable.ic_redo_white_24dp)),
                 new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
@@ -274,7 +274,7 @@ public class MusicPlayerRemote {
                             musicService.addSongs(songsToAdd);
                             showToastEnqueued.run();
                         },
-                        ContextCompat.getDrawable(context, R.drawable.ic_playlist_play_white_24dp))
+                        ContextCompat.getDrawable(context, R.drawable.ic_library_add_white_24dp))
         );
 
         final int songCount = songsToAdd.size();
