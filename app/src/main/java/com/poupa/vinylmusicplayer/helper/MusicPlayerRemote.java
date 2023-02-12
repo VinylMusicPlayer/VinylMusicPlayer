@@ -32,6 +32,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -202,6 +203,39 @@ public class MusicPlayerRemote {
         }
     }
 
+    private static void removeDuplicateBeforeQueuing (final Song song) {
+        removeDuplicateBeforeQueuing(new ArrayList<>(Collections.singletonList(song)));
+    }
+
+    private static void removeDuplicateBeforeQueuing (final ArrayList<Song> songsToAdd) {
+        // Deduplicate songs, favoring the occurrences in the new queue
+        if (musicService == null) {return;}
+        
+        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        if (currentQueue.isEmpty()) {
+            return;
+        }
+
+        final List<Song> remainingSongsInQueue = currentQueue.subList(
+                musicService.getPosition() + 1,
+                currentQueue.size()
+        );
+
+        final ArrayList<Song> songsToRemove = new ArrayList<>();
+        for (final Song song : remainingSongsInQueue) {
+            // Dont use List.contains or Song.equals
+            // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
+            for (final Song songToAdd : songsToAdd) {
+                if (song.isQuickEqual(songToAdd)) {
+                    songsToRemove.add(song);
+                    break;
+                }
+            }
+        }
+
+        musicService.removeSongs(songsToRemove);
+    }
+
     public static void enqueueSongsWithConfirmation(final @NonNull Context context, final ArrayList<Song> queue, int positionInQueue) {
         if (musicService == null) {return;}
 
@@ -220,28 +254,6 @@ public class MusicPlayerRemote {
         final int adjustedPosition = Math.max(positionInQueue, 0);
         final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPosition, queue.size()));
 
-        final Runnable removeDuplicate = () -> {
-            // Deduplicate songs, favoring the occurrences in the new queue
-            final List<Song> remainingSongsInQueue = currentQueue.subList(
-                    musicService.getPosition() + 1,
-                    currentQueue.size()
-            );
-
-            final ArrayList<Song> songsToRemove = new ArrayList<>();
-            for (final Song song : remainingSongsInQueue) {
-                // Dont use List.contains or Song.equals
-                // since the current queue hosts IndexedSongs, not equal-comparable to Song objects
-                for (final Song songToAdd : songsToAdd) {
-                    if (song.isQuickEqual(songToAdd)) {
-                        songsToRemove.add(song);
-                        break;
-                    }
-                }
-            }
-
-            musicService.removeSongs(songsToRemove);
-        };
-
         final Runnable showToastEnqueued = () -> {
             int count = songsToAdd.size();
             final String toast = (count == 1)
@@ -256,23 +268,18 @@ public class MusicPlayerRemote {
                         context.getString(R.string.action_play),
                         () -> {
                             openQueue(queue, positionInQueue, true);
-                            showToastEnqueued.run();
                         },
                         ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_white_24dp)),
                 new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_play_next),
                         () -> {
-                            removeDuplicate.run();
-                            musicService.addSongsAfter(musicService.getPosition(), songsToAdd);
-                            showToastEnqueued.run();
+                            playNext(songsToAdd);
                         },
                         ContextCompat.getDrawable(context, R.drawable.ic_redo_white_24dp)),
                 new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_add_to_playing_queue),
                         () -> {
-                            removeDuplicate.run();
-                            musicService.addSongs(songsToAdd);
-                            showToastEnqueued.run();
+                            enqueue(songsToAdd);
                         },
                         ContextCompat.getDrawable(context, R.drawable.ic_library_add_white_24dp))
         );
@@ -385,6 +392,7 @@ public class MusicPlayerRemote {
     public static void playNext(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
+                removeDuplicateBeforeQueuing(song);
                 musicService.addSongAfter(getPosition(), song);
             } else {
                 ArrayList<Song> queue = new ArrayList<>();
@@ -398,6 +406,7 @@ public class MusicPlayerRemote {
     public static void playNext(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
+                removeDuplicateBeforeQueuing(songs);
                 musicService.addSongsAfter(getPosition(), songs);
             } else {
                 openQueue(songs, 0, false);
@@ -412,6 +421,7 @@ public class MusicPlayerRemote {
     public static void enqueue(Song song) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
+                removeDuplicateBeforeQueuing(song);
                 musicService.addSong(song);
             } else {
                 ArrayList<Song> queue = new ArrayList<>();
@@ -425,6 +435,7 @@ public class MusicPlayerRemote {
     public static void enqueue(@NonNull ArrayList<Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
+                removeDuplicateBeforeQueuing(songs);
                 musicService.addSongs(songs);
             } else {
                 openQueue(songs, 0, false);
