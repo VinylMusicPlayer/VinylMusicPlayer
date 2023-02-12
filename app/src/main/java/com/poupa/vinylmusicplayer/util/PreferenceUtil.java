@@ -212,6 +212,10 @@ public final class PreferenceUtil {
         }
     }
 
+    public boolean isGeneralThemeDark() {
+        return (getGeneralTheme() != R.style.Theme_VinylMusicPlayer_Light);
+    }
+
     public boolean rememberLastTab() {
         return mPreferences.getBoolean(REMEMBER_LAST_TAB, true);
     }

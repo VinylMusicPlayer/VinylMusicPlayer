@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
-import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -27,6 +26,7 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.card.CardPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.flat.FlatPlayerFragment;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -251,12 +251,9 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
         final boolean themeFollowsPlayingSong = true; // TODO Get from prefs
         if (themeFollowsPlayingSong) {
-            // TODO If the primary color is a vibrant red or blue, the auto-generated accent color is the same as primary one
-            // TODO If the primary color is yellow, the auto-generated accent will be black -> not visible for a menu item on dark theme
             @ColorInt final int newPrimaryColor = newColor;
-            @ColorInt final int newAccentColor = ColorUtil.isColorLight(newColor)
-                    ? ColorUtil.shiftColor(newColor, 0.1F) // darken
-                    : ColorUtil.shiftColor(newColor, 1.9F); // lighten
+            @ColorInt final int newAccentColor =
+                    VinylMusicPlayerColorUtil.deriveAccentColorFromPrimaryColor(this, newPrimaryColor);
 
             // Propagate to the current theme
             if (newAccentColor != ThemeStore.accentColor(this) || newPrimaryColor != ThemeStore.primaryColor(this)

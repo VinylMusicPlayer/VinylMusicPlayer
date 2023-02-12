@@ -24,8 +24,6 @@ public class MenuHelper {
         if (liveItem != null) {
             final SpannableString span = new SpannableString(liveItem.getTitle().toString());
 
-            // TODO the primary color used for menu text/shuffle item is not chosen with
-            //      consideration of dark/light theme (ie not visible on the theme background)
             @ColorInt int color = ThemeStore.accentColor(context);
 
             span.setSpan(new ForegroundColorSpan(color), 0, span.length(), 0);

@@ -3,18 +3,22 @@ package com.poupa.vinylmusicplayer.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 
 import com.kabouzeid.appthemehelper.util.ColorUtil;
+import com.poupa.vinylmusicplayer.R;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -110,8 +114,8 @@ public class VinylMusicPlayerColorUtil {
             float maxLight = 2.2f; //same
 
             // create a linear curve to try to better the contrast
-            int darkenColor = adjustLightness(foreground, 1.0f + (maxDark - 1.0f)*(4.5f - (float)contrast)/(4.5f - 1.0f));
-            int lighterColor = adjustLightness(foreground, 1.0f + (maxLight - 1.0f)*(4.5f - (float)contrast)/(4.5f - 1.0f));
+            int darkenColor = adjustLightness(foreground, 1.0f + (maxDark - 1.0f) * (4.5f - (float) contrast) / (4.5f - 1.0f));
+            int lighterColor = adjustLightness(foreground, 1.0f + (maxLight - 1.0f) * (4.5f - (float) contrast) / (4.5f - 1.0f));
 
             double darkerContrast = ColorUtils.calculateContrast(darkenColor, background);
             double lighterContrast = ColorUtils.calculateContrast(lighterColor, background);
@@ -120,5 +124,33 @@ public class VinylMusicPlayerColorUtil {
         } else {
             return foreground;
         }
+    }
+
+    @ColorInt
+    public static int deriveAccentColorFromPrimaryColor(@NonNull final Context context, @ColorInt int primaryColor) {
+        // Choice of accent color w.r.t the primary color
+        // _____________
+        //              \ General theme | Dark    | Light
+        // Primary color \______________|_________|_______
+        //   Dark                       | Lighten | Black
+        //   Light                      | White   | Darken
+
+        Function<Integer, Boolean> isColorDark = (@ColorInt Integer color) -> {
+            double darkness = 1.0 -
+                    (
+                            0.299 * (double) Color.red(color) +
+                            0.587 * (double)Color.green(color) +
+                            0.114 * (double)Color.blue(color)
+                    ) / 255.0;
+            return darkness > 0.5;
+        };
+
+        final boolean themeDark = PreferenceUtil.getInstance().isGeneralThemeDark();
+        final boolean primaryDark = isColorDark.apply(primaryColor);
+
+        if (themeDark && primaryDark) {return ColorUtil.shiftColor(primaryColor, 1.8F);} // lighten
+        else if (!themeDark && !primaryDark) {return ColorUtil.shiftColor(primaryColor, 0.2F);} // darken
+        else if (themeDark && !primaryDark) {return ContextCompat.getColor(context, R.color.md_white_1000);}
+        else /*if (!themeDark && primaryDark)*/ {return ContextCompat.getColor(context, R.color.md_black_1000);}
     }
 }
