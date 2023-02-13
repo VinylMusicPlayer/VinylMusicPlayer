@@ -133,10 +133,10 @@
     <string name="rename_action">名前を変更</string>
     <string name="create_action">作成</string>
     <string name="x_selected">%1$dつ選択中</string>
-    <string name="primary_color">メインカラー</string>
-    <string name="accent_color">アクセントカラー</string>
-    <string name="primary_color_desc">ツールバーなどの色を設定します(デフォルトではインディゴ)</string>
-    <string name="accent_color_desc">コントロールキーやシークバーなどの色を設定します(デフォルトではピンク)</string>
+    <string name="pref_title_primary_color">メインカラー</string>
+    <string name="pref_title_accent_color">アクセントカラー</string>
+    <string name="pref_summary_primary_color">ツールバーなどの色を設定します(デフォルトではインディゴ)</string>
+    <string name="pref_summary_accent_color">コントロールキーやシークバーなどの色を設定します(デフォルトではピンク)</string>
     <string name="update_image">アルバムアートを更新</string>
     <string name="playlist_empty_text">空のプレイリストです</string>
     <string name="no_playlists">プレイリストなし</string>

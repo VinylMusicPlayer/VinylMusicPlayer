@@ -159,10 +159,10 @@
     <string name="create_action">Crea</string>
     <string name="reset_action">Reimposta</string>
     <string name="x_selected">%1$d selezionati</string>
-    <string name="primary_color">Colore principale</string>
-    <string name="accent_color">Colore secondario</string>
-    <string name="primary_color_desc">Colore principale, predefinito impostato su indaco</string>
-    <string name="accent_color_desc">Colore secondario, predefinito impostato su rosa</string>
+    <string name="pref_title_primary_color">Colore principale</string>
+    <string name="pref_title_accent_color">Colore secondario</string>
+    <string name="pref_summary_primary_color">Colore principale, predefinito impostato su indaco</string>
+    <string name="pref_summary_accent_color">Colore secondario, predefinito impostato su rosa</string>
     <string name="update_image">Aggiorna immagine</string>
     <string name="playlist_empty_text">Playlist vuota</string>
     <string name="no_playlists">Nessuna playlist</string>

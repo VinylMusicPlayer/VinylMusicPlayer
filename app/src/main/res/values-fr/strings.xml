@@ -241,10 +241,10 @@
     <string name="classic_theme_style_name">Classique</string>
     <string name="pref_title_theme_style">Style du thème</string>
     <string name="rounded_theme_style_name">Arrondi</string>
-    <string name="primary_color">Couleur principale</string>
-    <string name="accent_color">Couleur secondaire</string>
-    <string name="primary_color_desc">La couleur principale du thème (indigo par défaut)</string>
-    <string name="accent_color_desc">La couleur secondaire du thème (rose par défaut)</string>
+    <string name="pref_title_primary_color">Couleur principale</string>
+    <string name="pref_title_accent_color">Couleur secondaire</string>
+    <string name="pref_summary_primary_color">La couleur principale du thème (indigo par défaut)</string>
+    <string name="pref_summary_accent_color">La couleur secondaire du thème (rose par défaut)</string>
     <string name="playing_notification_description">La notification de lecture fournit des actions pour la lecture/pause, etc.</string>
     <string name="playing_notification_name">Notification de lecture</string>
     <string name="idle_notification_description">La notification d\'inactivité est utilisé quand la file de lecture est vide</string>

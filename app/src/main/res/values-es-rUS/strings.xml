@@ -133,10 +133,10 @@
     <string name="rename_action">Renombrar</string>
     <string name="create_action">Crear</string>
     <string name="x_selected">%1$d seleccionado(s)</string>
-    <string name="primary_color">Color principal</string>
-    <string name="accent_color">Color de énfasis</string>
-    <string name="primary_color_desc">El color principal, índigo por defecto</string>
-    <string name="accent_color_desc">El color de énfasis, rosa por defecto</string>
+    <string name="pref_title_primary_color">Color principal</string>
+    <string name="pref_title_accent_color">Color de énfasis</string>
+    <string name="pref_summary_primary_color">El color principal, índigo por defecto</string>
+    <string name="pref_summary_accent_color">El color de énfasis, rosa por defecto</string>
     <string name="update_image">Actualizar imagen</string>
     <string name="playlist_empty_text">Lista de reproducción vacía</string>
     <string name="no_playlists">No hay listas de reproducción</string>

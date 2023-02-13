@@ -113,10 +113,10 @@
     <string name="rename_action">Перейменувати</string>
     <string name="create_action">Створити</string>
     <string name="x_selected">Вибрано {%1$d}</string>
-    <string name="primary_color">Основний колір</string>
-    <string name="accent_color">Колір підкреслення</string>
-    <string name="primary_color_desc">Основний колір теми, стандартно синій</string>
-    <string name="accent_color_desc">Акцентований колір теми, стандартно рожевий</string>
+    <string name="pref_title_primary_color">Основний колір</string>
+    <string name="pref_title_accent_color">Колір підкреслення</string>
+    <string name="pref_summary_primary_color">Основний колір теми, стандартно синій</string>
+    <string name="pref_summary_accent_color">Акцентований колір теми, стандартно рожевий</string>
     <string name="update_image">Оновити зображення</string>
     <string name="playlist_empty_text">Порожній список відтворення</string>
     <string name="no_playlists">Немає списків відтворення</string>

@@ -67,10 +67,10 @@
     <string name="no_audio_ID">"Ingen audio-ID, spel noko og prøv igjen"</string>
     <string name="delete_action">Slett</string>
     <string name="rename_action">Gje nytt namn</string>
-    <string name="primary_color">Primærfarge</string>
-    <string name="accent_color">Fokusfarge</string>
-    <string name="primary_color_desc">Primær temafarge, standard er indigo</string>
-    <string name="accent_color_desc">Fokustemafarge, standard er rosa</string>
+    <string name="pref_title_primary_color">Primærfarge</string>
+    <string name="pref_title_accent_color">Fokusfarge</string>
+    <string name="pref_summary_primary_color">Primær temafarge, standard er indigo</string>
+    <string name="pref_summary_accent_color">Fokustemafarge, standard er rosa</string>
     <string name="update_image">Oppdater bilete</string>
     <string name="playlist_empty_text">Spelelista er tom</string>
     <string name="no_playlists">Ingen spelelister</string>

@@ -111,10 +111,10 @@
     <string name="rename_action">إعادة التسمية</string>
     <string name="create_action">إنشاء</string>
     <string name="x_selected">%1$d محددة</string>
-    <string name="primary_color">اللون الأساسي</string>
-    <string name="accent_color">اللون الثانوي</string>
-    <string name="primary_color_desc">تحديد لون أساسي. الأزرق النيلي هو اللون الافتراضي.</string>
-    <string name="accent_color_desc">تحديد اللون الثانوي. الوردي هو اللون الثانوي الافتراضي.</string>
+    <string name="pref_title_primary_color">اللون الأساسي</string>
+    <string name="pref_title_accent_color">اللون الثانوي</string>
+    <string name="pref_summary_primary_color">تحديد لون أساسي. الأزرق النيلي هو اللون الافتراضي.</string>
+    <string name="pref_summary_accent_color">تحديد اللون الثانوي. الوردي هو اللون الثانوي الافتراضي.</string>
     <string name="update_image">تحديث الصورة</string>
     <string name="playlist_empty_text">قائمة التشغيل فارغة</string>
     <string name="no_playlists">لا توجد قوائم تشغيل</string>

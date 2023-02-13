@@ -132,10 +132,10 @@
     <string name="rename_action">Đổi tên</string>
     <string name="create_action">Tạo</string>
     <string name="x_selected">Đã chọn %1$d</string>
-    <string name="primary_color">Màu chính</string>
-    <string name="accent_color">Màu phụ</string>
-    <string name="primary_color_desc">Màu sắc chính, mặc định là màu chàm</string>
-    <string name="accent_color_desc">Màu sắc chủ đề, mặc định là màu hồng</string>
+    <string name="pref_title_primary_color">Màu chính</string>
+    <string name="pref_title_accent_color">Màu phụ</string>
+    <string name="pref_summary_primary_color">Màu sắc chính, mặc định là màu chàm</string>
+    <string name="pref_summary_accent_color">Màu sắc phụ, mặc định là màu hồng</string>
     <string name="update_image">Cập nhật hình ảnh</string>
     <string name="playlist_empty_text">Danh sách nhạc trống</string>
     <string name="no_playlists">Không có danh sách nhạc</string>

@@ -137,10 +137,10 @@
     <string name="create_action">Creați</string>
     <string name="reset_action">Resetaţi</string>
     <string name="x_selected">%1$d selectat/ă</string>
-    <string name="primary_color">Culoare primară</string>
-    <string name="accent_color">Culoare de accent</string>
-    <string name="primary_color_desc">Culoarea primară temei, originalul este indigo</string>
-    <string name="accent_color_desc">Culoarea de accent a temei, originalul este roz</string>
+    <string name="pref_title_primary_color">Culoare primară</string>
+    <string name="pref_title_accent_color">Culoare de accent</string>
+    <string name="pref_summary_primary_color">Culoarea primară temei, originalul este indigo</string>
+    <string name="pref_summary_accent_color">Culoarea de accent a temei, originalul este roz</string>
     <string name="update_image">Actualizare imagine</string>
     <string name="playlist_empty_text">Listă goală</string>
     <string name="no_playlists">Nu sunt liste de redare</string>

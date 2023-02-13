@@ -158,10 +158,10 @@
     <string name="create_action">만들기</string>
     <string name="reset_action">초기화</string>
     <string name="x_selected">%1$d개 항목 선택됨</string>
-    <string name="primary_color">주 색상</string>
-    <string name="accent_color">강조 색상</string>
-    <string name="primary_color_desc">앱에서 주로 사용되는 색상입니다. 기본값은 남색입니다.</string>
-    <string name="accent_color_desc">앱에서 강조 영역에 사용되는 색상입니다. 기본값은 핑크색입니다.</string>
+    <string name="pref_title_primary_color">주 색상</string>
+    <string name="pref_title_accent_color">강조 색상</string>
+    <string name="pref_summary_primary_color">앱에서 주로 사용되는 색상입니다. 기본값은 남색입니다.</string>
+    <string name="pref_summary_accent_color">앱에서 강조 영역에 사용되는 색상입니다. 기본값은 핑크색입니다.</string>
     <string name="update_image">이미지 업데이트</string>
     <string name="playlist_empty_text">빈 재생 목록</string>
     <string name="no_playlists">재생 목록 없음</string>

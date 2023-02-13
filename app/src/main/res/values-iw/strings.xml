@@ -136,10 +136,10 @@
     <string name="create_action">יצירה</string>
     <string name="reset_action">אפס</string>
     <string name="x_selected">%1$d נבחר</string>
-    <string name="primary_color">צבע ראשי</string>
-    <string name="accent_color">צבע הדגשה</string>
-    <string name="primary_color_desc">צבע הנושא העיקרי, ברירת המחדל הוא אינדיגו.</string>
-    <string name="accent_color_desc">צבע ההדגשה של ערכת הנושא, ברירת המחדל הוא ורוד.</string>
+    <string name="pref_title_primary_color">צבע ראשי</string>
+    <string name="pref_title_accent_color">צבע הדגשה</string>
+    <string name="pref_summary_primary_color">צבע הנושא העיקרי, ברירת המחדל הוא אינדיגו.</string>
+    <string name="pref_summary_accent_color">צבע ההדגשה של ערכת הנושא, ברירת המחדל הוא ורוד.</string>
     <string name="update_image">עדכון תמונה</string>
     <string name="playlist_empty_text">רשימת השמעה ריקה</string>
     <string name="no_playlists">אין רשימות השמעה</string>

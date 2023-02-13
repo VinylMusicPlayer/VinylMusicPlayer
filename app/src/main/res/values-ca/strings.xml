@@ -151,10 +151,10 @@
     <string name="create_action">Crea</string>
     <string name="reset_action">Restableix</string>
     <string name="x_selected">%1$d seleccionats</string>
-    <string name="primary_color">Color primari</string>
-    <string name="accent_color">Color d\'accentuació</string>
-    <string name="primary_color_desc">El color primari del tema, predeterminat a indi</string>
-    <string name="accent_color_desc">El color d\'accentuació del tema, predeterminat a rosa</string>
+    <string name="pref_title_primary_color">Color primari</string>
+    <string name="pref_title_accent_color">Color d\'accentuació</string>
+    <string name="pref_summary_primary_color">El color primari del tema, predeterminat a indi</string>
+    <string name="pref_summary_accent_color">El color d\'accentuació del tema, predeterminat a rosa</string>
     <string name="update_image">Actualitza la imatge</string>
     <string name="playlist_empty_text">La llista està buida</string>
     <string name="no_playlists">No hi ha llistes de reproducció</string>

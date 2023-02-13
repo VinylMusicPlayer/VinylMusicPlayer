@@ -160,10 +160,10 @@
     <string name="create_action">Erstellen</string>
     <string name="reset_action">Zurücksetzen</string>
     <string name="x_selected">%1$d ausgewählt</string>
-    <string name="primary_color">Hauptfarbe</string>
-    <string name="accent_color">Akzentfarbe</string>
-    <string name="primary_color_desc">Die primäre Farbe, Standard ist Indigo</string>
-    <string name="accent_color_desc">Die Akzentfarbe, Standard ist Pink</string>
+    <string name="pref_title_primary_color">Hauptfarbe</string>
+    <string name="pref_title_accent_color">Akzentfarbe</string>
+    <string name="pref_summary_primary_color">Die primäre Farbe, Standard ist Indigo</string>
+    <string name="pref_summary_accent_color">Die Akzentfarbe, Standard ist Pink</string>
     <string name="update_image">Bild aktualisieren</string>
     <string name="playlist_empty_text">Die Wiedergabeliste ist leer</string>
     <string name="no_playlists">Keine Wiedergabelisten</string>

@@ -133,10 +133,10 @@
     <string name="rename_action">Nimeä uudelleen</string>
     <string name="create_action">Luo</string>
     <string name="x_selected">%1$d valittu</string>
-    <string name="primary_color">Ensisijainen väri</string>
-    <string name="accent_color">Aksenttiväri</string>
-    <string name="primary_color_desc">Ensisijainen teemaväri, oletuksena indigo</string>
-    <string name="accent_color_desc">Aksentti teemaväri, oletuksena pinkki</string>
+    <string name="pref_title_primary_color">Ensisijainen väri</string>
+    <string name="pref_title_accent_color">Aksenttiväri</string>
+    <string name="pref_summary_primary_color">Ensisijainen teemaväri, oletuksena indigo</string>
+    <string name="pref_summary_accent_color">Aksentti teemaväri, oletuksena pinkki</string>
     <string name="update_image">Päivitä kuva</string>
     <string name="playlist_empty_text">Tyhjä soittolista</string>
     <string name="no_playlists">Ei soittolistoja</string>

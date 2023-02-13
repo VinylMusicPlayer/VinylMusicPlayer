@@ -117,10 +117,10 @@
     <string name="rename_action">Ubah nama</string>
     <string name="create_action">Buat</string>
     <string name="x_selected">%1$d terpilih</string>
-    <string name="primary_color">Warna utama</string>
-    <string name="accent_color">Warna aksen</string>
-    <string name="primary_color_desc">Warna tema utama, distandarkan ke biru tua</string>
-    <string name="accent_color_desc">Warna aksen tema, distandarkan ke merah muda</string>
+    <string name="pref_title_primary_color">Warna utama</string>
+    <string name="pref_title_accent_color">Warna aksen</string>
+    <string name="pref_summary_primary_color">Warna tema utama, distandarkan ke biru tua</string>
+    <string name="pref_summary_accent_color">Warna aksen tema, distandarkan ke merah muda</string>
     <string name="update_image">Perbaharui gambar</string>
     <string name="playlist_empty_text">Daftar putar kosong</string>
     <string name="no_playlists">Tidak ada daftar putar</string>

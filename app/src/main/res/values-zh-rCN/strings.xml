@@ -132,10 +132,10 @@
     <string name="rename_action">重命名</string>
     <string name="create_action">创建</string>
     <string name="x_selected">已选择 %1$d</string>
-    <string name="primary_color">主色调</string>
-    <string name="accent_color">强调色</string>
-    <string name="primary_color_desc">主题主色调，默认为靛蓝色。</string>
-    <string name="accent_color_desc">主题强调色，默认为粉色。</string>
+    <string name="pref_title_primary_color">主色调</string>
+    <string name="pref_title_accent_color">强调色</string>
+    <string name="pref_summary_primary_color">主题主色调，默认为靛蓝色。</string>
+    <string name="pref_summary_accent_color">主题强调色，默认为粉色。</string>
     <string name="update_image">更新图片</string>
     <string name="playlist_empty_text">播放列表为空</string>
     <string name="no_playlists">没有播放列表</string>

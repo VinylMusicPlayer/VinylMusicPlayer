@@ -36,8 +36,8 @@
             app:iconSpaceReserved="false"
             android:key="primary_color"
             android:persistent="false"
-            android:summary="@string/primary_color_desc"
-            android:title="@string/primary_color" />
+            android:summary="@string/pref_summary_primary_color"
+            android:title="@string/pref_title_primary_color" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference
             app:allowDividerAbove="false"
@@ -45,8 +45,8 @@
             app:iconSpaceReserved="false"
             android:key="accent_color"
             android:persistent="false"
-            android:summary="@string/accent_color_desc"
-            android:title="@string/accent_color" />
+            android:summary="@string/pref_summary_accent_color"
+            android:title="@string/pref_title_accent_color" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
             app:iconSpaceReserved="false"

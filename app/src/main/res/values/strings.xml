@@ -111,14 +111,6 @@
     <string name="action_shuffle_artist">Shuffle artist</string>
     <string name="action_shuffle_playlist">Shuffle playlist</string>
     <string name="action_go_to_start_directory">Go to start directory</string>
-    <string name="action_show_lyrics">Show lyrics</string>
-    <string name="light_theme_name">Light</string>
-    <string name="dark_theme_name">Dark</string>
-    <string name="black_theme_name">Black (AMOLED)</string>
-    <string name="follow_system_theme_name">Follow system theme</string>
-    <string name="always">Always</string>
-    <string name="only_on_wifi">Only on Wi-Fi</string>
-    <string name="never">Never</string>
     <string name="today">Today</string>
     <string name="this_week">This week</string>
     <string name="this_month">This month</string>
@@ -130,7 +122,38 @@
     <string name="day">Day</string>
     <string name="week">Week</string>
     <string name="month">Month</string>
+
     <string name="equalizer">Equalizer</string>
+    <string name="no_equalizer">No equalizer found.</string>
+
+    <string name="no_audio_ID">"Play a song first, then try again."</string>
+    <string name="delete_action">Delete</string>
+    <string name="clear_action">Clear</string>
+    <string name="remove_action">Remove</string>
+    <string name="rename_action">Rename</string>
+    <string name="create_action">Create</string>
+    <string name="reset_action">Reset</string>
+    <string name="x_selected">%1$d selected</string>
+    <string name="update_image">Update image</string>
+    <string name="playlist_empty_text">Empty playlist</string>
+    <string name="no_playlists">No playlists</string>
+    <string name="no_albums">No albums</string>
+    <string name="no_songs">No songs</string>
+    <string name="no_artists">No artists</string>
+    <string name="no_genres">No genres</string>
+    <string name="empty">Empty</string>
+    <string name="playlist_name_empty">Playlist name</string>
+    <string name="song">Song</string>
+
+    <!-- Preferences -->
+    <string name="action_show_lyrics">Show lyrics</string>
+    <string name="light_theme_name">Light</string>
+    <string name="dark_theme_name">Dark</string>
+    <string name="black_theme_name">Black (AMOLED)</string>
+    <string name="follow_system_theme_name">Follow system theme</string>
+    <string name="always">Always</string>
+    <string name="only_on_wifi">Only on Wi-Fi</string>
+    <string name="never">Never</string>
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>
     <string name="pref_title_general_theme">General theme</string>
@@ -157,29 +180,13 @@
     <string name="pref_title_animate_playing_song_icon">Animate playing song icon</string>
     <string name="pref_title_remember_last_tab">Remember last tab</string>
     <string name="pref_title_remember_shuffle">Remember shuffle</string>
-    <string name="no_equalizer">No equalizer found.</string>
-    <string name="no_audio_ID">"Play a song first, then try again."</string>
-    <string name="delete_action">Delete</string>
-    <string name="clear_action">Clear</string>
-    <string name="remove_action">Remove</string>
-    <string name="rename_action">Rename</string>
-    <string name="create_action">Create</string>
-    <string name="reset_action">Reset</string>
-    <string name="x_selected">%1$d selected</string>
-    <string name="primary_color">Primary color</string>
-    <string name="accent_color">Accent color</string>
-    <string name="primary_color_desc">The primary theme color, defaults to indigo</string>
-    <string name="accent_color_desc">The accent theme color, defaults to pink</string>
-    <string name="update_image">Update image</string>
-    <string name="playlist_empty_text">Empty playlist</string>
-    <string name="no_playlists">No playlists</string>
-    <string name="no_albums">No albums</string>
-    <string name="no_songs">No songs</string>
-    <string name="no_artists">No artists</string>
-    <string name="no_genres">No genres</string>
-    <string name="empty">Empty</string>
-    <string name="playlist_name_empty">Playlist name</string>
-    <string name="song">Song</string>
+    <string name="pref_title_theme_style">Theme style</string>
+    <string name="classic_theme_style_name">Classic</string>
+    <string name="rounded_theme_style_name">Rounded</string>
+    <string name="pref_title_primary_color">Primary color</string>
+    <string name="pref_title_accent_color">Accent color</string>
+    <string name="pref_summary_primary_color">The primary theme color, defaults to indigo</string>
+    <string name="pref_summary_accent_color">The accent theme color, defaults to pink</string>
     <string name="pref_title_dynamic_theme_color_based_on_playing_song_cover_art">Dynamic theme color</string>
     <string name="pref_summary_dynamic_theme_color_based_on_playing_song_cover_art">Theme colors are based on playing song cover art</string>
     <string name="pref_summary_static_theme_color">Theme colors are defined here</string>
@@ -196,6 +203,17 @@
     <string name="pref_summary_animate_playing_song_icon">Animate the icon of the playing song in different song-related views</string>
     <string name="pref_summary_remember_last_tab">Go to the last opened tab on launch</string>
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
+    <string name="pref_title_now_playing_screen_appearance">Appearance</string>
+    <string name="pref_summary_blacklist">The content of blacklisted folders is hidden from your library</string>
+    <string name="library_categories">Library categories</string>
+    <string name="pref_summary_library_categories">Configure visibility and order of library categories</string>
+    <string name="you_have_to_select_at_least_one_category">You have to select at least one category.</string>
+    <string name="pref_title_rg_source_mode">ReplayGain source mode</string>
+    <string name="pref_title_rg_preamp">ReplayGain preamp</string>
+    <string name="pref_summary_rg_preamp">Set preamp when ReplayGain is enabled</string>
+    <string name="pref_rg_disabled">Disabled</string>
+    <string name="pref_playlist_disabled">Disabled</string>
+
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>
@@ -225,20 +243,20 @@
     <string name="grid_size_7" translatable="false">7</string>
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Colored footers</string>
+
+    <!-- About dialogs -->
     <string name="changelog">Changelog</string>
     <string name="licenses">Licenses</string>
     <string name="permissions_denied">Permissions denied.</string>
     <string name="permission_external_storage_denied">Permission to access external storage denied.</string>
     <string name="support_development">Support development</string>
     <string name="version">Version</string>
-
     <string name="maintainers">Maintainers</string>
     <string name="contributors">Contributors</string>
     <string name="special_thanks_to">Special thanks to</string>
     <string name="author">Author</string>
     <string name="label_other_contributors">+ many other contributors</string>
     <string name="missing_webview_component">"This device doesn't support WebView, which is necessary to perform the requested action.\nIt is missing a system component."</string>
-
     <string name="write_an_email">Write an email</string>
     <string name="fork_on_github">Fork on GitHub</string>
     <string name="visit_website">Visit website</string>
@@ -254,12 +272,15 @@
     <string name="eugene_cheung_summary">For his contributions to the source code.</string>
     <string name="adrian_summary">For creating the album page design.</string>
     <string name="website">Website</string>
+
     <string name="up_next">Up next</string>
-    <string name="pref_title_now_playing_screen_appearance">Appearance</string>
+
+    <!-- Introduction -->
     <string name="intro_label">Introduction</string>
     <string name="welcome_to_vinyl_music_player">"Welcome to Vinyl Music Player, a beautiful and lightweight music player for Android. "</string>
     <string name="open_playing_queue_instruction">Swipe the card in the now playing screen up to reveal the full playing queue.</string>
     <string name="rearrange_playing_queue_instruction">Rearrange the playing queue by dragging a song from its track number.</string>
+
     <string name="library">Library</string>
     <string name="folders">Folders</string>
     <string name="sd_card">SD card</string>
@@ -283,6 +304,7 @@
     <string name="app_widget_small_name">Vinyl Music Player - Small</string>
     <string name="app_widget_card_name">Vinyl Music Player - Card</string>
 
+    <!-- Bug report -->
     <string name="app_crashed">Vinyl Music Player crashed</string>
     <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nTechnical data related to the crash
         has been collected and may help the developers to improve this situation.\nYou are invited to submit a
@@ -336,12 +358,8 @@
     <string name="do_you_want_to_remove_from_the_blacklist"><![CDATA[Do you want to remove <b>%1$s</b> from the blacklist?]]></string>
     <string name="clear_blacklist">Clear blacklist</string>
     <string name="do_you_want_to_clear_the_blacklist">Do you want to clear the blacklist?</string>
-    <string name="pref_summary_blacklist">The content of blacklisted folders is hidden from your library</string>
     <string name="reset_artist_image">Reset artist image</string>
     <string name="set_artist_image">Set artist image</string>
-    <string name="library_categories">Library categories</string>
-    <string name="pref_summary_library_categories">Configure visibility and order of library categories</string>
-    <string name="you_have_to_select_at_least_one_category">You have to select at least one category.</string>
     <string name="action_sort_order">Sort order</string>
     <string name="sort_order_name">Name</string>
     <string name="sort_order_name_reverse">Name - Z to A</string>
@@ -363,18 +381,10 @@
     <string name="track">Track</string>
     <string name="label_with_rg_info">With ReplayGain Tags :</string>
     <string name="label_without_rg_info">Without ReplayGain Tags :</string>
-    <string name="pref_title_rg_source_mode">ReplayGain source mode</string>
-    <string name="pref_title_rg_preamp">ReplayGain preamp</string>
-    <string name="pref_summary_rg_preamp">Set preamp when ReplayGain is enabled</string>
-    <string name="pref_rg_disabled">Disabled</string>
-    <string name="pref_playlist_disabled">Disabled</string>
     <string name="error_no_app_for_intent">No application is available to open this page.</string>
     <string name="confirm_adding_duplicates">Add tracks already in selected playlist?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="classic_theme_style_name">Classic</string>
-    <string name="pref_title_theme_style">Theme style</string>
-    <string name="rounded_theme_style_name">Rounded</string>
     <!-- SAF -->
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>

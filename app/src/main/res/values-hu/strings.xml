@@ -132,10 +132,10 @@
     <string name="rename_action">Átnevezés</string>
     <string name="create_action">Létrehozás</string>
     <string name="x_selected">%1$d kiválasztva</string>
-    <string name="primary_color">Elsődleges szín</string>
-    <string name="accent_color">Másodlagos szín</string>
-    <string name="primary_color_desc">Az elsődleges szín, alapértelmezetten indigó</string>
-    <string name="accent_color_desc">A másodlagos szín, alapértelmezetten rózsaszín</string>
+    <string name="pref_title_primary_color">Elsődleges szín</string>
+    <string name="pref_title_accent_color">Másodlagos szín</string>
+    <string name="pref_summary_primary_color">Az elsődleges szín, alapértelmezetten indigó</string>
+    <string name="pref_summary_accent_color">A másodlagos szín, alapértelmezetten rózsaszín</string>
     <string name="update_image">Kép frissítése</string>
     <string name="playlist_empty_text">Üres lejátszási lista</string>
     <string name="no_playlists">Nincsenek lejátszási listák</string>

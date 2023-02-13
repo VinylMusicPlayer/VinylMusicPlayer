@@ -151,10 +151,10 @@
     <string name="create_action">Создать</string>
     <string name="reset_action">Сброс</string>
     <string name="x_selected">%1$d выбрано</string>
-    <string name="primary_color">Основной цвет</string>
-    <string name="accent_color">Акцентный цвет</string>
-    <string name="primary_color_desc">Основной цвет темы, по умолчанию — индиго</string>
-    <string name="accent_color_desc">Акцентный цвет, по умолчанию — розовый</string>
+    <string name="pref_title_primary_color">Основной цвет</string>
+    <string name="pref_title_accent_color">Акцентный цвет</string>
+    <string name="pref_summary_primary_color">Основной цвет темы, по умолчанию — индиго</string>
+    <string name="pref_summary_accent_color">Акцентный цвет, по умолчанию — розовый</string>
     <string name="update_image">Обновить изображение</string>
     <string name="playlist_empty_text">Пустой плейлист</string>
     <string name="no_playlists">Нет плейлистов для отображения</string>

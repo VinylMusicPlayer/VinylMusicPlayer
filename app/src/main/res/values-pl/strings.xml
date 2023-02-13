@@ -133,10 +133,10 @@
     <string name="rename_action">Zmień</string>
     <string name="create_action">Utwórz</string>
     <string name="x_selected">%1$d zaznaczono</string>
-    <string name="primary_color">Kolor podstawowy</string>
-    <string name="accent_color">Kolor dodatków</string>
-    <string name="primary_color_desc">Główny kolor motywu, domyślnie indygo</string>
-    <string name="accent_color_desc">Kolor akcentów motywu, domyślnie różowy</string>
+    <string name="pref_title_primary_color">Kolor podstawowy</string>
+    <string name="pref_title_accent_color">Kolor dodatków</string>
+    <string name="pref_summary_primary_color">Główny kolor motywu, domyślnie indygo</string>
+    <string name="pref_summary_accent_color">Kolor akcentów motywu, domyślnie różowy</string>
     <string name="update_image">Zmiana obrazu</string>
     <string name="playlist_empty_text">Lista odtwarzania jest pusta</string>
     <string name="no_playlists">Brak list odtwarzania</string>

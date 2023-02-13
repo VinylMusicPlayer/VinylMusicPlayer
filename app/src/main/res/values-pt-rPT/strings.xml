@@ -112,10 +112,10 @@
     <string name="rename_action">Mudar nome</string>
     <string name="create_action">Criar</string>
     <string name="x_selected">%1$d selecionados</string>
-    <string name="primary_color">Cor principal</string>
-    <string name="accent_color">Cor de realce</string>
-    <string name="primary_color_desc">Cor de tema primária, predefine para anil</string>
-    <string name="accent_color_desc">Cor de tema de realce, predefine para cor-de-rosa</string>
+    <string name="pref_title_primary_color">Cor principal</string>
+    <string name="pref_title_accent_color">Cor de realce</string>
+    <string name="pref_summary_primary_color">Cor de tema primária, predefine para anil</string>
+    <string name="pref_summary_accent_color">Cor de tema de realce, predefine para cor-de-rosa</string>
     <string name="update_image">Atualizar imagem</string>
     <string name="playlist_empty_text">Lista de reprodução vazia</string>
     <string name="no_playlists">Sem listas de reprodução</string>

@@ -141,10 +141,10 @@
     <string name="create_action">Oluştur</string>
     <string name="reset_action">Sıfırla</string>
     <string name="x_selected">%1$d seçildi</string>
-    <string name="primary_color">Ana renk</string>
-    <string name="accent_color">Vurgu rengi</string>
-    <string name="primary_color_desc">Varsayılan tema ana rengi mavi</string>
-    <string name="accent_color_desc">Varsayılan tema vurgu rengi pembe</string>
+    <string name="pref_title_primary_color">Ana renk</string>
+    <string name="pref_title_accent_color">Vurgu rengi</string>
+    <string name="pref_summary_primary_color">Varsayılan tema ana rengi mavi</string>
+    <string name="pref_summary_accent_color">Varsayılan tema vurgu rengi pembe</string>
     <string name="update_image">Resimleri güncelle</string>
     <string name="playlist_empty_text">Bu çalma listesi boş</string>
     <string name="no_playlists">Çalma listesi yok</string>

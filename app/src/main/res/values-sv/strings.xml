@@ -77,7 +77,7 @@ Vill du radera <b>%1$d</b> låtar?
     <string name="no_audio_ID">"Inget ljud-ID, spela något annat och försök igen."</string>
     <string name="delete_action">Radera</string>
     <string name="rename_action">Döp om</string>
-    <string name="primary_color">Grundfärg</string>
+    <string name="pref_title_primary_color">Grundfärg</string>
     <string name="update_image">Uppdatera bild</string>
     <string name="playlist_empty_text">Spellistan är tom</string>
     <string name="no_playlists">Inga spellistor</string>

@@ -91,11 +91,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         final int title = dialog.getTitle();
-        if (title == R.string.primary_color) {
+        if (title == R.string.pref_title_primary_color) {
             ThemeStore.editTheme(this)
                     .primaryColor(selectedColor)
                     .commit();
-        } else if (title == R.string.accent_color) {
+        } else if (title == R.string.pref_title_accent_color) {
             ThemeStore.editTheme(this)
                     .accentColor(selectedColor)
                     .commit();
@@ -293,7 +293,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 final int primaryColor = ThemeStore.primaryColor(getActivity());
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
                 primaryColorPref.setOnPreferenceClickListener(preference -> {
-                    new ColorChooserDialog.Builder(getActivity(), R.string.primary_color)
+                    new ColorChooserDialog.Builder(getActivity(), R.string.pref_title_primary_color)
                             .accentMode(false)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
@@ -310,7 +310,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 final int accentColor = ThemeStore.accentColor(getActivity());
                 accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
                 accentColorPref.setOnPreferenceClickListener(preference -> {
-                    new ColorChooserDialog.Builder(getActivity(), R.string.accent_color)
+                    new ColorChooserDialog.Builder(getActivity(), R.string.pref_title_accent_color)
                             .accentMode(true)
                             .allowUserColorInput(true)
                             .allowUserColorInputAlpha(false)
