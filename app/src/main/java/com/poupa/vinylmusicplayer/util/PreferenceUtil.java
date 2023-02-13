@@ -41,6 +41,11 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
+    public static final String PRIMARY_COLOR = "primary_color";
+    public static final String ACCENT_COLOR = "accent_color";
+
+    public static final String DYNAMIC_THEME_COLOR = "dynamic_theme_color_based_on_playing_song_cover_art";
+
     private static final String REMEMBER_LAST_TAB = "remember_last_tab";
     private static final String LAST_PAGE = "last_start_page";
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
@@ -214,6 +219,10 @@ public final class PreferenceUtil {
 
     public boolean isGeneralThemeDark() {
         return (getGeneralTheme() != R.style.Theme_VinylMusicPlayer_Light);
+    }
+
+    public boolean useDynamicThemeColor() {
+        return mPreferences.getBoolean(DYNAMIC_THEME_COLOR, false);
     }
 
     public boolean rememberLastTab() {

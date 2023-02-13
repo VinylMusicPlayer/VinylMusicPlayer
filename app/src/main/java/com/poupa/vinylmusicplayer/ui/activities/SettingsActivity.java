@@ -280,10 +280,15 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            // TODO Option to use static primary accent colors, or dynamic from the playing song (a la now playing screen), or dynamic from OS (MaterialMe only)
+            final boolean dynamicThemeColorValue = PreferenceUtil.getInstance().useDynamicThemeColor();
+            TwoStatePreference dynamicThemeColor = findPreference(PreferenceUtil.DYNAMIC_THEME_COLOR);
+            if (dynamicThemeColor != null) {
+                dynamicThemeColor.setChecked(dynamicThemeColorValue);
+            }
+
             // TODO Apply the colors to the Auto  screen as well (i.e. the play/pause button)
 
-            final ATEColorPreference primaryColorPref = findPreference("primary_color");
+            final ATEColorPreference primaryColorPref = findPreference(PreferenceUtil.PRIMARY_COLOR);
             if (getActivity() != null && primaryColorPref != null) {
                 final int primaryColor = ThemeStore.primaryColor(getActivity());
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
@@ -296,9 +301,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                             .show(getActivity());
                     return true;
                 });
+                primaryColorPref.setEnabled(!dynamicThemeColorValue);
+                primaryColorPref.setVisible(!dynamicThemeColorValue);
             }
 
-            final ATEColorPreference accentColorPref = findPreference("accent_color");
+            final ATEColorPreference accentColorPref = findPreference(PreferenceUtil.ACCENT_COLOR);
             if (getActivity() != null && accentColorPref != null) {
                 final int accentColor = ThemeStore.accentColor(getActivity());
                 accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
@@ -311,6 +318,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                             .show(getActivity());
                     return true;
                 });
+                accentColorPref.setEnabled(!dynamicThemeColorValue);
+                accentColorPref.setVisible(!dynamicThemeColorValue);
             }
             TwoStatePreference colorNavBar = findPreference("should_color_navigation_bar");
             if (colorNavBar != null) {
@@ -412,6 +421,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             updateNowPlayingScreenSummary();
             updatePlaylistsSummary();
             updateConfirmationSongSummary();
+            updateThemeColorSummary();
         }
 
         private boolean hasEqualizer() {
@@ -457,6 +467,19 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     break;
                 case PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE:
                     updateConfirmationSongSummary();
+                case PreferenceUtil.DYNAMIC_THEME_COLOR:
+                    final boolean dynamicThemeColorValue = sharedPreferences.getBoolean(PreferenceUtil.DYNAMIC_THEME_COLOR, false);
+                    Preference primaryColorPref = findPreference(PreferenceUtil.PRIMARY_COLOR);
+                    if (primaryColorPref != null) {
+                        primaryColorPref.setEnabled(!dynamicThemeColorValue);
+                        primaryColorPref.setVisible(!dynamicThemeColorValue);
+                    }
+                    Preference accentColorPref = findPreference(PreferenceUtil.ACCENT_COLOR);
+                    if (accentColorPref != null) {
+                        accentColorPref.setEnabled(!dynamicThemeColorValue);
+                        accentColorPref.setVisible(!dynamicThemeColorValue);
+                    }
+                    updateThemeColorSummary();
                     break;
             }
         }
@@ -486,6 +509,14 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 }
             }
             findPreference(PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE).setSummary(R.string.action_always_ask_for_confirmation);
+        }
+
+        private void updateThemeColorSummary() {
+            findPreference(PreferenceUtil.DYNAMIC_THEME_COLOR).setSummary(
+                    getResources().getString(PreferenceUtil.getInstance().useDynamicThemeColor()
+                        ? R.string.pref_summary_dynamic_theme_color_based_on_playing_song_cover_art
+                        : R.string.pref_summary_static_theme_color)
+            );
         }
     }
 }

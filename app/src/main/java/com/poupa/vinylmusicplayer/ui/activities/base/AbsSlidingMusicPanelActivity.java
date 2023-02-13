@@ -249,8 +249,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
             animateNavigationBarColor(newColor);
         }
 
-        final boolean themeFollowsPlayingSong = true; // TODO Get from prefs
-        if (themeFollowsPlayingSong) {
+        if (PreferenceUtil.getInstance().useDynamicThemeColor()) {
             @ColorInt final int newPrimaryColor = newColor;
             @ColorInt final int newAccentColor =
                     VinylMusicPlayerColorUtil.deriveAccentColorFromPrimaryColor(this, newPrimaryColor);

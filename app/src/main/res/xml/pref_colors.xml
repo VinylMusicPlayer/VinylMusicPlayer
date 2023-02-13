@@ -23,15 +23,25 @@
             android:positiveButtonText="@null"
             android:title="@string/pref_title_theme_style" />
 
+        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="dynamic_theme_color_based_on_playing_song_cover_art"
+            android:summary="@string/pref_summary_dynamic_theme_color_based_on_playing_song_cover_art"
+            android:title="@string/pref_title_dynamic_theme_color_based_on_playing_song_cover_art" />
+
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference
+            app:allowDividerAbove="false"
+            app:allowDividerBelow="false"
             app:iconSpaceReserved="false"
             android:key="primary_color"
             android:persistent="false"
-            app:allowDividerBelow="false"
             android:summary="@string/primary_color_desc"
             android:title="@string/primary_color" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference
+            app:allowDividerAbove="false"
+            app:allowDividerBelow="false"
             app:iconSpaceReserved="false"
             android:key="accent_color"
             android:persistent="false"
