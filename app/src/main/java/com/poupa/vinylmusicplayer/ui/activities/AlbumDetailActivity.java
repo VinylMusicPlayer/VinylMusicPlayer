@@ -167,16 +167,18 @@ public class AlbumDetailActivity
         setSupportActionBar(layoutBinding.toolbar); // needed to auto readjust the toolbar content color
         setStatusbarColor(color);
 
-        final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
+        final boolean isBackgroundLight = ColorUtil.isColorLight(color);
+        final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, isBackgroundLight);
+        final int primaryTextColor = MaterialValueHelper.getPrimaryTextColor(this, isBackgroundLight);
         layoutBinding.artistIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.durationIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.songCountIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.albumYearIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
-        layoutBinding.artistText.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
+        layoutBinding.artistText.setTextColor(primaryTextColor);
         layoutBinding.durationText.setTextColor(secondaryTextColor);
         layoutBinding.songCountText.setTextColor(secondaryTextColor);
         layoutBinding.albumYearText.setTextColor(secondaryTextColor);
-        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
+        layoutBinding.title.setTextColor(primaryTextColor);
     }
 
     @Override

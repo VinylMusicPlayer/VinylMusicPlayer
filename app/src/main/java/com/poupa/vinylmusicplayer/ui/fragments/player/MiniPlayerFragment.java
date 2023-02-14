@@ -49,8 +49,9 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
         @NonNull final Activity activity = requireActivity();
 
         @ColorInt final int primaryColor = ThemeStore.primaryColor(activity);
-        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
-        @ColorInt final int textSecondaryColor = MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(primaryColor));
+        final boolean isBackgroundLight = ColorUtil.isColorLight(primaryColor);
+        @ColorInt final int textPrimaryColor = MaterialValueHelper.getPrimaryTextColor(activity, isBackgroundLight);
+        @ColorInt final int textSecondaryColor = MaterialValueHelper.getSecondaryTextColor(activity, isBackgroundLight);
         @ColorInt final int iconColor = textPrimaryColor;
 
         layoutBinding.miniPlayerContainer.setBackgroundColor(primaryColor);

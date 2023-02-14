@@ -280,14 +280,16 @@ public class ArtistDetailActivity
         setSupportActionBar(layoutBinding.toolbar); // needed to auto readjust the toolbar content color
         setStatusbarColor(color);
 
-        final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
+        final boolean isBackgroundLight = ColorUtil.isColorLight(color);
+        final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, isBackgroundLight);
+        final int primaryTextColor = MaterialValueHelper.getPrimaryTextColor(this, isBackgroundLight);
         layoutBinding.durationIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.songCountIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.albumCountIcon.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_IN);
         layoutBinding.durationText.setTextColor(secondaryTextColor);
         layoutBinding.songCountText.setTextColor(secondaryTextColor);
         layoutBinding.albumCountText.setTextColor(secondaryTextColor);
-        layoutBinding.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(this, ColorUtil.isColorLight(color)));
+        layoutBinding.title.setTextColor(primaryTextColor);
     }
 
     private void setUpToolbar() {
