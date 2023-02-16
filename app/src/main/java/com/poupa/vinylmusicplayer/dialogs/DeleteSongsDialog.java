@@ -129,6 +129,8 @@ public class DeleteSongsDialog extends DialogFragment {
                 .negativeText(android.R.string.cancel)
                 .autoDismiss(false)
                 .onPositive((dialog, which) -> {
+                    dismiss();
+
                     // If song removed was the playing song, then play the next song
                     if ((songs.size() == 1) && MusicPlayerRemote.isPlaying(songs.get(0))) {
                         MusicPlayerRemote.playNextSong(false);
@@ -144,7 +146,7 @@ public class DeleteSongsDialog extends DialogFragment {
     }
 
     private void deleteSongs(List<Song> songs, List<Uri> safUris) {
-        MusicUtil.deleteTracks(requireActivity(), songs, safUris, this::dismiss);
+        MusicUtil.deleteTracks(requireActivity(), songs, safUris, null);
     }
 
     private void deleteSongsKitkat() {
