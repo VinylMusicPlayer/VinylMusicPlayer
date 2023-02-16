@@ -413,6 +413,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     sendChangeInternal(META_CHANGED);
                     sendChangeInternal(QUEUE_CHANGED);
                 }
+                else {
+                    Toast.makeText(
+                            this, String.format(
+                                    "Nothing to restore: queue=%s:%s position=%s",
+                                    restoredQueue.size(),
+                                    restoredOriginalQueue.size(), restoredPosition
+                            ),
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
             } catch (ArrayIndexOutOfBoundsException|IllegalArgumentException queueCopiesOutOfSync) {
                 // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
                 Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
