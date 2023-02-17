@@ -27,4 +27,6 @@ public interface ThemeStyle {
 
     SearchAdapter.ViewHolder HeaderViewHolder(SearchAdapter adapter, LayoutInflater inflater, @NonNull ViewGroup parent, boolean attachToParent);
     int getShortSeparatorVisibilityState();
+
+    int getBottomSheetStyle();
 }
