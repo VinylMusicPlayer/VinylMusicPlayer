@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.5.0] - 2023-02-17
+
+### What's changed
+* Make song detail info selectable and copyable by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/645
+* Folders view sort options by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/657
+* Queue change confirmation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/658
+* Make the drawer and now playing screen shadow over the cover image darker (improve for white/bright cover image) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/664
+* Cleaner markdown visualisation by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/684
+* Tag editor: Use darker shadow for toolbar to improve button visibility on white cover art by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/682
+* Visual song action by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/679
+
+### Fixes
+* Fix start service crash by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/644
+* Fix bug in StaticQueue implementation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/651
+* Fix NPE on Discog by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/656
+* Fix crash unfavorite songs by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/666
+* Broader exception catch on restoring saved queue by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/669
+* Fix artist sorting by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/686
+* The back navigation button on the bug report screen was not responding by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/687
+* Refactor Skipped songs implementation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/672
+
+### Other Changes
+* GitHub actions by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/642
+* Oops handler by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/646
+* Tag editor trim spaces by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/647
+* Upgrade jaudiotagger + java by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/648
+* Upgrade MaterialCab by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/649
+* New About dialog by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/660
+* Missing french translation by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/678
+* Misc changes by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/673
+* Refactor Licenses dialog by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/680
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.4.1...1.5.0
+
 ## [1.4.1] - 2023-01-25
 ### What's Changed
 * Feat: Ignore "the" and "a" prefixes when sorting artists by @louis-prudhomme in https://github.com/AdrienPoupa/VinylMusicPlayer/pull/630
