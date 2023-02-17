@@ -45,12 +45,14 @@ public class StaticPlaylist extends PreferencesBackedSongList {
                 result.add(importedPlaylist);
             }
 
-            // Note: Dont delete migrated playlists here, for two reasons:
+            // Note: Don't delete migrated playlists here, for two reasons:
             // - since playlist can be shared with other apps, this will be a destructive action
-            // - this *would* require extra priviledge (see https://github.com/AdrienPoupa/VinylMusicPlayer/pull/298)
+            // - this *would* require extra privilege (see https://github.com/AdrienPoupa/VinylMusicPlayer/pull/298)
 
             // Set a persistent marker in prefs, to avoid doing this again
-            // Otherwise the MediaStore playlists will be reimported whence there is no static playlist in the prefs
+            // Otherwise the MediaStore playlists will be re-imported whence there is no static playlist in the prefs
+            // TODO Put the migrated playlists instead?
+            //      So that we can still import new playlists created after the first import
             preferences.edit().putBoolean(PREF_STATIC_PLAYLISTS_MIGRATED, true).apply();
 
             return result;
