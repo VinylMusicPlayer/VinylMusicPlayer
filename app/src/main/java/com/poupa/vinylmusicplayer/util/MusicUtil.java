@@ -235,7 +235,6 @@ public class MusicUtil {
 
     public static void deleteTracks(@NonNull final Activity activity, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris, @Nullable final Runnable callback) {
         final int songCount = songs.size();
-        final Discography discography = Discography.getInstance();
 
         try {
             // Step 1: Remove selected tracks from the current playlist
@@ -255,10 +254,12 @@ public class MusicUtil {
             activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     selection.toString(), null);
 
-            // Step 3: Remove files from card
-            for (int i = 0; i < songCount; i++) {
-                final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                SAFUtil.delete(activity, songs.get(i).data, safUri);
+            // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                for (int i = 0; i < songCount; i++) {
+                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                    SAFUtil.delete(activity, songs.get(i).data, safUri);
+                }
             }
         } catch (SecurityException e) {
             e.printStackTrace();
