@@ -361,7 +361,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             int currentVersion = pInfo.versionCode;
             if (currentVersion != PreferenceUtil.getInstance().getLastChangelogVersion()) {
-                ChangelogDialog.create().show(getSupportFragmentManager(), "CHANGE_LOG_DIALOG");
+                new ChangelogDialog().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
             }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

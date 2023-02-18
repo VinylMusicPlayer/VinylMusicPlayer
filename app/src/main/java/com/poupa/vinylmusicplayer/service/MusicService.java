@@ -745,10 +745,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             position = new Random().nextInt(playingQueue.size());
         }
 
-        if (this.playingQueue.openQueue(playingQueue, position, startPlaying, MusicService.SHUFFLE_MODE_NONE)) {
-
-            setShuffleMode(shuffleMode);
-
+        if (this.playingQueue.openQueue(playingQueue, position, startPlaying, shuffleMode)) {
             if (startPlaying) {
                 playSongAt(this.playingQueue.getCurrentPosition(), false);
             } else {

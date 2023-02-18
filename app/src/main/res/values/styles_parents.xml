@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.VinylMusicPlayer.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
 
@@ -72,6 +72,45 @@
         <item name="md_background_color">@color/md_grey_900</item>
 
         <item name="md_delete">@color/delete</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="Base.ThemeOverlay.MaterialComponents.Dialog">
+        <!--<item name="bottomSheetStyle">@style/Widget.MaterialComponents.BottomSheet.Modal</item>-->
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="enableEdgeToEdge">true</item>
+        <item name="paddingBottomSystemWindowInsets">true</item>
+        <item name="paddingLeftSystemWindowInsets">true</item>
+        <item name="paddingRightSystemWindowInsets">true</item>
+        <item name="paddingTopSystemWindowInsets">true</item>
+    </style>
+
+    <style name="BottomSheetDialog_Rounded" parent="@style/CustomBottomSheetDialog"> <!-- parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog" -->
+        <item name="bottomSheetStyle">@style/BottomSheet_Rounded</item>
+    </style>
+
+    <style name="BottomSheet_Rounded" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/border_top_separator_rounded</item>
+
+        <item name="enforceMaterialTheme">true</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MaterialComponents.BottomSheet</item>
+        <item name="android:maxWidth">@dimen/bottom_sheet_max_width</item>
+    </style>
+
+    <style name="BottomSheetDialog_Flat" parent="@style/CustomBottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet_Flat</item>
+    </style>
+
+    <style name="BottomSheet_Flat" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/border_top_separator</item>
+
+        <item name="enforceMaterialTheme">true</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MaterialComponents.BottomSheet</item>
+        <item name="android:maxWidth" tools:ignore="PrivateResource">@dimen/material_bottom_sheet_max_width</item>
+
     </style>
 
     <style name="FabParent">

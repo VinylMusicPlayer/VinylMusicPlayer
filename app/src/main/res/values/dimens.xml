@@ -3,6 +3,12 @@
     <dimen name="default_item_margin">16dp</dimen>
     <dimen name="title_top_margin">24dp</dimen>
 
+    <dimen name="bottom_sheet_vertical_divided_margin">12dp</dimen>
+    <dimen name="bottom_sheet_vertical_margin">24dp</dimen>
+
+    <dimen name="bottom_sheet_elevation">8dp</dimen>
+    <dimen name="bottom_sheet_max_width">640dp</dimen>
+
     <dimen name="detail_header_height">176dp</dimen>
     <dimen name="detail_header_image_height">144dp</dimen>
     <dimen name="title_view_height">72dp</dimen>

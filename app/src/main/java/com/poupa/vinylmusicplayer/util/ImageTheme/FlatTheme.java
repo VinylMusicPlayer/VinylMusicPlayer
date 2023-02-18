@@ -65,4 +65,6 @@ class FlatTheme implements ThemeStyle {
     public int getShortSeparatorVisibilityState() {
         return View.VISIBLE;
     }
+
+    public int getBottomSheetStyle() { return R.style.BottomSheetDialog_Flat; }
 }

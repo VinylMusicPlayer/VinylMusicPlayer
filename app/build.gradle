@@ -2,6 +2,36 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+// For dependencies license report
+// To use: ./gradlew license<BuildVariant>Report
+apply plugin: 'com.cmgapps.licenses'
+licenses {
+    reports {
+        // Enable this JSON generation to get the full data structure
+        // json {
+        //    enabled = true
+        //    destination = file("$buildDir/reports/licenses/dependencies-licenses.json")
+        //}
+
+        html.enabled = false // html is enabled by default
+
+        // Generate CSV format
+        custom {
+            enabled = true
+            destination = file("$buildDir/reports/licenses/dependencies-licenses.csv")
+            generate {
+                list -> list.collect{
+                    [
+                        (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? " - " + it.name : ""),
+                        it.description != null ? it.description.replaceAll("[;\\n\\r]+"," ") : "",
+                        it.licenses[0] != null ? it.licenses[0].name : "",
+                        it.licenses[0] != null ? it.licenses[0].url : "",
+                    ].join(';')
+                }.join('\n') }
+        }
+    }
+}
+
 android {
     compileSdkVersion 33
     namespace 'com.poupa.vinylmusicplayer'
@@ -134,8 +164,6 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-
-    implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
 
     implementation "io.noties.markwon:core:4.6.2"
     implementation "io.noties.markwon:image-glide:4.6.2"

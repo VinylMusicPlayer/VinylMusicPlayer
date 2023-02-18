@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Fetch the licenses of code under VCS and licenses of dependencies
+# and render it in a HTML page to be included in the about dialog
+
+function log_error()
+{
+  local message="$*"
+  echo "$0: Error: ${message}" > /dev/stderr
+}
+
+workdir="app/build/reports/licenses"
+mkdir -p "${workdir}"
+
+# ---- Each 'license record' is a CSV line with four fields: name, description; license name; license URL
+all_licenses="${workdir}/all-licenses.csv"
+cat /dev/null > "${all_licenses}"
+
+# ---- The license of the app itself
+app_license='Vinyl Music Player;;GNU General Public License v3;https://github.com/VinylMusicPlayer/VinylMusicPlayer/blob/master/LICENSE.txt'
+echo "${app_license}" >> "${all_licenses}"
+
+# ---- The license of the imported source code
+licensed_source_code=( $(grep --recursive --files-with-matches "License" app/src) )
+function known_licensed_source_code()
+{
+  path="$1"
+  case "${path}" in
+    "app/src/main/java/com/poupa/vinylmusicplayer/helper/StackBlur.java")
+      echo 'StackBlur;Copyright Enrique López Mañas;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/loader/TopAndRecentlyPlayedTracksLoader.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/HistoryStore.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/MusicPlaybackQueueStore.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/provider/SongPlayCountStore.java")
+      echo 'Eleven;Copyright The CyanogenMod Project;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/misc/CustomFragmentStatePagerAdapter.java"|\
+    "app/src/main/java/com/poupa/vinylmusicplayer/service/MediaButtonIntentReceiver.java"|\
+    "app/src/main/res/layout/notification.xml"|\
+    "app/src/main/res/layout/notification_big.xml"|\
+    "app/src/main/res/xml/allowed_media_browser_callers.xml")
+      echo 'The Android Open Source Project;Copyright The Android Open Source Project;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
+      ;;
+    "app/src/main/java/com/poupa/vinylmusicplayer/util/PackageValidator.kt")
+      echo 'Universal Android Music Player Sample;The goal of this sample is to show how to implement an audio media app that works across multiple form factors and provides a consistent user experience on Android phones, tablets, Android Auto, Android Wear, Android TV, Google Cast devices, and with the Google Assistant.;Apache License 2.0;http://www.apache.org/licenses/LICENSE-2.0'
+      ;;
+
+    # Skip these files
+    "app/src/main/res/values/strings.xml"|\
+    "app/src/main/assets/LICENSES.md")
+      echo ''
+      ;;
+
+    *)
+      log_error "Unknown license for source code: ${path}"
+      echo ''
+      ;;
+  esac
+}
+{
+  for source_code in "${licensed_source_code[@]}"; do
+    license=$(known_licensed_source_code "${source_code}")
+    if [ -n "${license}" ]; then
+      echo "${license}"
+    fi
+  done
+} | sort | uniq >> "${all_licenses}"
+
+# ---- The licenses of used libraries
+licensed_dependencies="${workdir}/dependencies-licenses.csv"
+./gradlew --no-configuration-cache --rerun-tasks licenseCiDebugReport
+
+function known_licensed_library()
+{
+  name="$1"
+  case "${name}" in
+    "com.github.kabouzeid.RecyclerView-FastScroll")
+      echo "RecyclerView-FastScroll;A simple FastScroller for Android's RecyclerView. Copyright (C) 2016 Tim Malseed;The Apache Software License, Version 2.0;http://www.apache.org/licenses/LICENSE-2.0"
+      ;;
+    "com.github.kabouzeid.SeekArc")
+      echo "SeekArc;Copyright (c) 2013 Triggertrap Ltd, Author Neil Davies;MIT License;https://api.github.com/licenses/mit"
+      ;;
+    *)
+      echo ''
+      ;;
+  esac
+}
+cat "${licensed_dependencies}" | while read -r line; do
+  IFS=';' read -r -a tokens <<< "${line}"
+
+  dep_name="${tokens[0]}"
+  dep_desc="${tokens[1]}"
+  dep_license="${tokens[2]}"
+  dep_license_url="${tokens[3]}"
+
+  if [ -z "${dep_name}" ]; then
+    log_error "Cannot unnamed dependencies: ${line}"
+    exit 1
+  elif [ -z "${dep_license}" ] || [ -z "${dep_license_url}" ]; then
+    line="$(known_licensed_library ${dep_name})"
+    if [ -z "${line}" ]; then
+      log_error "Unknown license for dependency: ${dep_name}"
+      exit 1
+    fi
+  fi
+  echo "${line}" >> "${all_licenses}"
+done
+
+# ---- Now build the license page
+licenses_md="app/src/main/assets/LICENSES.md"
+{
+  echo "# Licenses"
+
+  cat "${all_licenses}" | while read -r line; do
+    IFS=';' read -r -a tokens <<< "${line}"
+
+    dep_name="${tokens[0]}"
+    dep_desc="${tokens[1]}"
+    dep_license="${tokens[2]}"
+    dep_license_url="${tokens[3]}"
+
+    cat << ITEM
+## ${dep_name}
+
+${dep_desc}
+
+ - [${dep_license}](${dep_license_url})
+
+---
+ITEM
+  done
+} > ${licenses_md}
+
+echo "Wrote license to ${licenses_md}"

@@ -3,9 +3,13 @@ buildscript {
     repositories {
         mavenCentral()
         google()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'com.cmgapps:gradle-licenses-plugin:4.7.0' // For dependencies license report
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -21,3 +25,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
