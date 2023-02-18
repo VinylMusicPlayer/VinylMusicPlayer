@@ -17,29 +17,31 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
-import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-@SuppressWarnings("unchecked")
 public class OrderablePlaylistSongAdapter
         extends PlaylistSongAdapter
         implements DraggableItemAdapter<AbsOffsetSongAdapter.ViewHolder>
 {
-
+    private final long playlistId;
     private final OnMoveItemListener onMoveItemListener;
 
-    public OrderablePlaylistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<PlaylistSong> dataSet
-            , boolean usePalette, @Nullable CabHolder cabHolder, @Nullable OnMoveItemListener onMoveItemListener) {
-        super(activity, (ArrayList<Song>) (List) dataSet, usePalette, cabHolder);
+    public OrderablePlaylistSongAdapter(
+            @NonNull AppCompatActivity activity,
+            long playlistId, @NonNull ArrayList<Song> dataSet,
+            boolean usePalette, @Nullable CabHolder cabHolder,
+            @Nullable OnMoveItemListener onMoveItemListener)
+    {
+        super(activity, dataSet, usePalette, cabHolder);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
+        this.playlistId = playlistId;
         this.onMoveItemListener = onMoveItemListener;
     }
 
@@ -56,18 +58,9 @@ public class OrderablePlaylistSongAdapter
     }
 
     @Override
-    public long getItemId(int position) {
-        position--;
-        if (position < 0) return -2;
-
-        // TODO Ugly cast. Why this needs to be PlaylistSong.idInPlaylist?
-        return ((ArrayList<PlaylistSong>) (List) dataSet).get(position).idInPlayList; // important!
-    }
-
-    @Override
     protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
         if (menuItem.getItemId() == R.id.action_remove_from_playlist) {
-            RemoveFromPlaylistDialog.create((ArrayList<PlaylistSong>) (List) selection).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");
+            RemoveFromPlaylistDialog.create(playlistId, selection).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");
             return;
         }
         super.onMultipleItemAction(menuItem, selection);
@@ -141,7 +134,7 @@ public class OrderablePlaylistSongAdapter
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_remove_from_playlist) {
-                RemoveFromPlaylistDialog.create((PlaylistSong) getSong()).show(activity.getSupportFragmentManager(), "REMOVE_FROM_PLAYLIST");
+                RemoveFromPlaylistDialog.create(playlistId, getSong()).show(activity.getSupportFragmentManager(), "REMOVE_FROM_PLAYLIST");
                 return true;
             }
             return super.onSongMenuItemClick(item);

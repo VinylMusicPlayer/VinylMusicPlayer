@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.M3UWriter;
 import com.poupa.vinylmusicplayer.model.Playlist;
-import com.poupa.vinylmusicplayer.model.PlaylistSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -97,17 +96,15 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<PlaylistSong> songs) {
+    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<Song> songs, long playlistId) {
         if (songs.size() == 0) {return;}
 
-        final long playlistId = songs.get(0).playlistId;
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return;}
 
         List<Long> songIds = new ArrayList<>();
-        for (PlaylistSong song : songs) {
-            if (song.playlistId == playlistId) {songIds.add(song.id);}
-            else {throw new IllegalArgumentException("Must remove songs from the same playlist");}
+        for (Song song : songs) {
+            songIds.add(song.id);
         }
 
         list.removeSongs(songIds);

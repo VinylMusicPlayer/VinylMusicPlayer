@@ -42,7 +42,7 @@ abstract class SongList {
     }
 
     @NonNull
-    ArrayList<Song> asSongs() {
+    public ArrayList<Song> asSongs() {
         ArrayList<Song> result = new ArrayList<>();
         ArrayList<Long> orphanIds = new ArrayList<>();
 

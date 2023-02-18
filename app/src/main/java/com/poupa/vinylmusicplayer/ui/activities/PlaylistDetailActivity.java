@@ -43,7 +43,6 @@ import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
@@ -96,7 +95,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     private void setUpRecyclerView() {
         ViewUtil.setUpFastScrollRecyclerViewColor(
                 this,
-                ((FastScrollRecyclerView) layoutBinding.recyclerView),
+                layoutBinding.recyclerView,
                 ThemeStore.accentColor(this));
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if (playlist instanceof AbsCustomPlaylist) {
@@ -107,6 +106,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
             final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
             adapter = new OrderablePlaylistSongAdapter(
                     this,
+                    playlist.id,
                     new ArrayList<>(),
                     false,
                     this,
