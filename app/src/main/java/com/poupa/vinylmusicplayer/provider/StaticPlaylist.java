@@ -14,6 +14,7 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author SC (soncaokim)
@@ -95,7 +96,10 @@ public class StaticPlaylist extends PreferencesBackedSongList {
     }
 
     public Playlist asPlaylist() {
-        // TODO Dont use hashcode as a substitude for id
-        return new Playlist(name.hashCode(), name);
+        return new Playlist(
+                // MD5-based algo, supposed to yield more unique ID than String.hash
+                UUID.nameUUIDFromBytes(name.getBytes()).getMostSignificantBits(),
+                name
+        );
     }
 }
