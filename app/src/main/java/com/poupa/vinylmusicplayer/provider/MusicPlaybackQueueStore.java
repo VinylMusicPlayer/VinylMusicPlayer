@@ -32,7 +32,6 @@ import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Andrew Neal, modified by Karim Abou Zeid

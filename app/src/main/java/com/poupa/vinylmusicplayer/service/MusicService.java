@@ -407,7 +407,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     openCurrent();
                     prepareNext();
 
-                    if (restoredPositionInTrack > 0) seek(restoredPositionInTrack);
+                    if (restoredPositionInTrack > 0) {seek(restoredPositionInTrack);}
 
                     notHandledMetaChangedForCurrentTrack = true;
                     sendChangeInternal(META_CHANGED);

@@ -72,7 +72,6 @@ abstract class MutableSongList extends SongList {
     }
 
     public void addSongs(@NonNull List<Song> songs) {
-        // TODO Add handler for duplicate detection
         for (Song song : songs) {
             songIds.add(song.id);
         }
@@ -177,5 +176,3 @@ class PreferencesBackedSongList extends MutableSongList {
         preferences.edit().putString(PREF_NAME_PREFIX + name, values.toString()).apply();
     }
 }
-
-// TODO SongListFromPlayHistory
