@@ -259,7 +259,8 @@ public class ArtistDetailActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if (resultCode == RESULT_OK) {
-                CustomArtistImageUtil.getInstance(this).setCustomArtistImage(artist, data.getData());
+                CustomArtistImageUtil.getInstance(this)
+                        .setCustomArtistImage(artist, data.getData(), this::loadArtistImage);
             }
         } else {
             if (resultCode == RESULT_OK) {
