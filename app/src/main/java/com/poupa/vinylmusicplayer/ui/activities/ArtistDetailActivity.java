@@ -358,7 +358,8 @@ public class ArtistDetailActivity
             return true;
         } else if (id == R.id.action_reset_artist_image) {
             Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.updating), Toast.LENGTH_SHORT).show();
-            CustomArtistImageUtil.getInstance(ArtistDetailActivity.this).resetCustomArtistImage(artist);
+            CustomArtistImageUtil.getInstance(ArtistDetailActivity.this)
+                    .resetCustomArtistImage(artist, this::loadArtistImage);
             forceDownload = true;
             return true;
         } else if (id == R.id.action_colored_footers) {
