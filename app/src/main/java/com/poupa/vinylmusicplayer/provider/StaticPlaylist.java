@@ -13,49 +13,52 @@ import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * @author SC (soncaokim)
  */
 public class StaticPlaylist extends PreferencesBackedSongList {
-    private static final String PREF_STATIC_PLAYLISTS_MIGRATED = "static_playlists_migrated";
+    public static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
 
     @NonNull
     public static List<StaticPlaylist> getAllPlaylists() {
+        List<StaticPlaylist> migratedPlaylists = new ArrayList<>();
+        Set<String> migratedNames = new HashSet<>();
+        for (PreferencesBackedSongList playlist : PreferencesBackedSongList.loadAll()) {
+            migratedNames.add(playlist.name);
+            migratedPlaylists.add(new StaticPlaylist(playlist.name));
+        }
+
+        final Context context = App.getStaticContext();
+        List<Playlist> playlistsToMigrate = PlaylistLoader.getAllPlaylists(context);
+
         final SharedPreferences preferences = getPreferences();
-        if (preferences.getBoolean(PREF_STATIC_PLAYLISTS_MIGRATED, false)) {
-            List<StaticPlaylist> result = new ArrayList<>();
-            for (PreferencesBackedSongList playlist : PreferencesBackedSongList.loadAll()) {
-                result.add(new StaticPlaylist(playlist.name));
-            }
-            return result;
-        } else {
-            // Migrate from MediaStore
-            final Context context = App.getStaticContext();
-            List<Playlist> playlistsToMigrate = PlaylistLoader.getAllPlaylists(context);
+        migratedNames.addAll(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
 
-            List<StaticPlaylist> result = new ArrayList<>();
-            for (Playlist playlist : playlistsToMigrate) {
-                StaticPlaylist importedPlaylist = new StaticPlaylist(playlist.name);
-                importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
+        for (Playlist playlist : playlistsToMigrate) {
+            if (migratedNames.contains(playlist.name)) {continue;}
 
-                result.add(importedPlaylist);
-            }
+            StaticPlaylist importedPlaylist = new StaticPlaylist(playlist.name);
+            importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
+
+            migratedPlaylists.add(importedPlaylist);
+            migratedNames.add(playlist.name);
 
             // Note: Don't delete migrated playlists here, for two reasons:
             // - since playlist can be shared with other apps, this will be a destructive action
             // - this *would* require extra privilege (see https://github.com/AdrienPoupa/VinylMusicPlayer/pull/298)
-
-            // Set a persistent marker in prefs, to avoid doing this again
-            // Otherwise the MediaStore playlists will be re-imported whence there is no static playlist in the prefs
-            // TODO Put the migrated playlists instead?
-            //      So that we can still import new playlists created after the first import
-            preferences.edit().putBoolean(PREF_STATIC_PLAYLISTS_MIGRATED, true).apply();
-
-            return result;
         }
+
+        // Set a persistent marker in prefs, to avoid doing this again
+        if (!migratedNames.isEmpty()) {
+            preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, migratedNames).apply();
+        }
+
+        return migratedPlaylists;
     }
 
     @Nullable

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -180,6 +181,21 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                         .autoDismiss(true)
                         .onPositive((dialog, which) -> Discography.getInstance().triggerSyncWithMediaStore(true))
                         .positiveText(R.string.reset_discography)
+                        .negativeText(android.R.string.cancel)
+                        .show();
+            } else if (itemId == R.id.action_reset_mediastore_playlist) {
+                new MaterialDialog.Builder(this)
+                        .title(R.string.reset_mediastore_playlist)
+                        .content(R.string.reset_mediastore_playlist_warning)
+                        .autoDismiss(true)
+                        .onPositive((dialog, which) -> {
+                            PreferenceManager.getDefaultSharedPreferences(this)
+                                    .edit()
+                                    .remove(StaticPlaylist.PREF_MIGRATED_STATIC_PLAYLISTS)
+                                    .apply();
+                            // TODO Force refresh, by Activity.recreate()?
+                        })
+                        .positiveText(R.string.reset_mediastore_playlist)
                         .negativeText(android.R.string.cancel)
                         .show();
             } else if (itemId == R.id.nav_settings) {
