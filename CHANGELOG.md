@@ -22,14 +22,12 @@
 * Refactor Skipped songs implementation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/672
 
 ### Other Changes
-* GitHub actions by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/642
 * Oops handler by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/646
 * Tag editor trim spaces by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/647
 * Upgrade jaudiotagger + java by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/648
 * Upgrade MaterialCab by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/649
 * New About dialog by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/660
 * Missing french translation by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/678
-* Misc changes by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/673
 * Refactor Licenses dialog by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/680
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.4.1...1.5.0
