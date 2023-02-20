@@ -14,6 +14,10 @@
 
         <item name="cardBackgroundColor">@color/md_grey_800</item>
 
+        <!-- Necessary for CAB popup menu -->
+        <item name="android:textColor">@color/ate_primary_text_dark</item>
+        <item name="android:itemBackground">@color/md_grey_800</item>
+
         <item name="defaultFooterColor">@color/md_grey_900</item>
 
         <item name="dividerColor">@color/md_divider_white</item>
@@ -45,6 +49,10 @@
 
         <item name="cardBackgroundColor">@color/md_white_1000</item>
 
+        <!-- Necessary for CAB popup menu -->
+        <item name="android:textColor">@color/ate_primary_text_light</item>
+        <item name="android:itemBackground">@color/md_white_1000</item>
+
         <item name="defaultFooterColor">@color/md_grey_300</item>
 
         <item name="dividerColor">@color/md_divider_black</item>
@@ -69,6 +77,10 @@
         <item name="dividerColor">#18FFFFFF</item>
         <item name="defaultFooterColor">@color/md_grey_800</item>
         <item name="cardBackgroundColor">@color/md_black_1000</item>
+
+        <!-- Necessary for CAB popup menu -->
+        <item name="android:itemBackground">@color/md_black_1000</item>
+
         <item name="md_background_color">@color/md_grey_900</item>
 
         <item name="md_delete">@color/delete</item>
