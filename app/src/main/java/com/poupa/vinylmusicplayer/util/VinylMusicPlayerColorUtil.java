@@ -3,8 +3,8 @@ package com.poupa.vinylmusicplayer.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
+import android.util.TypedValue;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -20,7 +20,7 @@ import com.poupa.vinylmusicplayer.R;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -69,14 +69,6 @@ public class VinylMusicPlayerColorUtil {
         public int compare(Palette.Swatch lhs, Palette.Swatch rhs) {
             return lhs.getPopulation() - rhs.getPopulation();
         }
-    }
-
-    @ColorInt
-    public static int shiftBackgroundColorForLightText(@ColorInt int backgroundColor) {
-        while (ColorUtil.isColorLight(backgroundColor)) {
-            backgroundColor = ColorUtil.darkenColor(backgroundColor);
-        }
-        return backgroundColor;
     }
 
     public static boolean isSystemThemeSupported() {
@@ -129,44 +121,18 @@ public class VinylMusicPlayerColorUtil {
     }
 
     @ColorInt
-    private static int deriveAccentColorFromPrimaryColor_ImplByRule(@NonNull final Context context, @ColorInt int primaryColor) {
-        // Choice of accent color w.r.t the primary color
-        // _____________
-        //              \ General theme | Dark    | Light
-        // Primary color \______________|_________|_______
-        //   Dark                       | Lighten | Black
-        //   Light                      | White   | Darken
-
-        Function<Integer, Boolean> isColorDark = (@ColorInt Integer color) -> {
-            double darkness = 1.0 -
-                    (
-                            0.299 * (double)Color.red(color) +
-                            0.587 * (double)Color.green(color) +
-                            0.114 * (double)Color.blue(color)
-                    ) / 255.0;
-            return darkness > 0.5;
-        };
-
-        final boolean themeDark = PreferenceUtil.getInstance().isGeneralThemeDark();
-        final boolean primaryDark = isColorDark.apply(primaryColor);
-
-        if (themeDark && primaryDark) {return ColorUtil.shiftColor(primaryColor, 1.8F);} // lighten
-        else if (!themeDark && !primaryDark) {return ColorUtil.shiftColor(primaryColor, 0.2F);} // darken
-        else if (themeDark && !primaryDark) {return ContextCompat.getColor(context, R.color.md_white_1000);}
-        else /*if (!themeDark && primaryDark)*/ {return ContextCompat.getColor(context, R.color.md_black_1000);}
-    }
-
-    @ColorInt
     private static int deriveAccentColorFromPrimaryColor_ImplByContrast(@NonNull final Context context, @ColorInt final int primaryColor) {
         final BiFunction<Integer, Integer, Boolean> isContrastedEnough = (@ColorInt Integer color, @ColorInt Integer background) -> {
-            final float minContrastRatioVsBackground = 1.7f;
-            final float minContrastRatioVsPrimary = 1.7f;
+            final float minContrastRatioVsBackground = 2f;
+            final float minContrastRatioVsPrimary = 2f;
 
             return (ColorUtils.calculateContrast(color, background) > minContrastRatioVsBackground)
                     && (ColorUtils.calculateContrast(color, primaryColor) > minContrastRatioVsPrimary);
         };
 
         final BiFunction<Integer, Integer, Integer> deriveColorByContrast = (@ColorInt Integer color, @ColorInt Integer background) -> {
+            // TODO The derived color should stand out from the foreground color as well, to have an accent effect
+
             for (float step=0.1f; step < 1.0; step += 0.1) {
                 int lighten = ColorUtil.shiftColor(color, 1.0f + step);
                 if (isContrastedEnough.apply(lighten, background)) {return lighten;}
@@ -179,11 +145,13 @@ public class VinylMusicPlayerColorUtil {
             return ContextCompat.getColor(context, R.color.md_grey_500);
         };
 
-        final boolean themeDark = PreferenceUtil.getInstance().isGeneralThemeDark();
-        @ColorInt final int themeBackgroundColor = ContextCompat.getColor(
-                context,
-                themeDark ? R.color.md_black_1000 : R.color.md_white_1000);
+        final Supplier<Integer> getBackgroundColor = () -> {
+            final TypedValue typedColor = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.cardBackgroundColor, typedColor, true);
+            return typedColor.data;
+        };
 
+        @ColorInt final int themeBackgroundColor = getBackgroundColor.get();
         return deriveColorByContrast.apply(primaryColor, themeBackgroundColor);
     }
 

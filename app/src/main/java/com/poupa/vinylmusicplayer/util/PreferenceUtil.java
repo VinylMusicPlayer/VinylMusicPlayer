@@ -218,6 +218,7 @@ public final class PreferenceUtil {
     }
 
     public boolean isGeneralThemeDark() {
+        // TODO Use the 'isLightTheme' attribute? Or 'md_dark_theme' attribute?
         return (getGeneralTheme() != R.style.Theme_VinylMusicPlayer_Light);
     }
 
