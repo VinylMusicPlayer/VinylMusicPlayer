@@ -14,7 +14,6 @@ import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.function.Supplier;
 
@@ -40,9 +39,7 @@ public interface CabHolder {
                 cab -> {
                     cab.menu(menuRes);
                     cab.closeDrawable(R.drawable.ic_close_white_24dp);
-                    cab.backgroundColor(
-                            ResourcesCompat.ID_NULL,
-                            VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor));
+                    cab.backgroundColor(ResourcesCompat.ID_NULL, backgroundColor);
                     cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
 
                     cab.onCreate((attachedCab1, menu) -> {

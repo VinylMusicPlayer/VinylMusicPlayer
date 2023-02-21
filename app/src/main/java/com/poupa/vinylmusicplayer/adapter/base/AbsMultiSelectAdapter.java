@@ -16,7 +16,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 
@@ -96,7 +95,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     @Override
     public void onCabCreate(final AttachedCab cab, final Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor((Activity) context, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
+        AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
     }
 
     @Override

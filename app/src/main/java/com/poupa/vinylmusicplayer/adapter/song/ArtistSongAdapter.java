@@ -31,7 +31,6 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 
@@ -183,7 +182,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
 
     @Override
     public void onCabCreate(AttachedCab materialCab, Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
+        AbsThemeActivity.static_setStatusbarColor(activity, color);
     }
 
     @Override
