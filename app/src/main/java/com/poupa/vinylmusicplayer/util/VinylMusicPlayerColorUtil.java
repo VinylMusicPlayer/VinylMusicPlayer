@@ -19,8 +19,9 @@ import com.poupa.vinylmusicplayer.R;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
+
+import kotlin.jvm.functions.Function3;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -122,37 +123,44 @@ public class VinylMusicPlayerColorUtil {
 
     @ColorInt
     private static int deriveAccentColorFromPrimaryColor_ImplByContrast(@NonNull final Context context, @ColorInt final int primaryColor) {
-        final BiFunction<Integer, Integer, Boolean> isContrastedEnough = (@ColorInt Integer color, @ColorInt Integer background) -> {
-            final float minContrastRatioVsBackground = 2f;
-            final float minContrastRatioVsPrimary = 2f;
+        final Function3<Integer, Integer, Integer, Boolean> isContrastedEnough =
+                (@ColorInt Integer color, @ColorInt Integer foreground, @ColorInt Integer background) -> {
+                    final float minContrastRatioVsForeground = 2.3f;
+                    final float minContrastRatioVsBackground = 2f;
+                    final float minContrastRatioVsPrimary = 1.7f;
 
-            return (ColorUtils.calculateContrast(color, background) > minContrastRatioVsBackground)
-                    && (ColorUtils.calculateContrast(color, primaryColor) > minContrastRatioVsPrimary);
-        };
+                    return ((ColorUtils.calculateContrast(color, foreground) > minContrastRatioVsForeground)
+                            && (ColorUtils.calculateContrast(color, background) > minContrastRatioVsBackground)
+                            && (ColorUtils.calculateContrast(color, primaryColor) > minContrastRatioVsPrimary));
+                };
 
-        final BiFunction<Integer, Integer, Integer> deriveColorByContrast = (@ColorInt Integer color, @ColorInt Integer background) -> {
-            // TODO The derived color should stand out from the foreground color as well, to have an accent effect
+        final Function3<Integer, Integer, Integer, Integer> deriveColorByContrast =
+                (@ColorInt Integer color, @ColorInt Integer foreground, @ColorInt Integer background) -> {
+                    for (float step=0.1f; step < 1.0; step += 0.1) {
+                        int lighten = ColorUtil.shiftColor(color, 1.0f + step);
+                        if (isContrastedEnough.invoke(lighten, foreground, background)) {return lighten;}
 
-            for (float step=0.1f; step < 1.0; step += 0.1) {
-                int lighten = ColorUtil.shiftColor(color, 1.0f + step);
-                if (isContrastedEnough.apply(lighten, background)) {return lighten;}
+                        int darken = ColorUtil.shiftColor(color, 1.0f - step);
+                        if (isContrastedEnough.invoke(darken, foreground, background)) {return darken;}
+                    }
 
-                int darken = ColorUtil.shiftColor(color, 1.0f - step);
-                if (isContrastedEnough.apply(darken, background)) {return darken;}
-            }
+                    // fallback, use a neutral color
+                    return ContextCompat.getColor(context, R.color.md_grey_500);
+                };
 
-            // fallback, use a neutral color
-            return ContextCompat.getColor(context, R.color.md_grey_500);
-        };
-
-        final Supplier<Integer> getBackgroundColor = () -> {
+        final Supplier<Integer> foregroundColor = () -> {
             final TypedValue typedColor = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.cardBackgroundColor, typedColor, true);
-            return typedColor.data;
+            context.getTheme().resolveAttribute(android.R.attr.textColor, typedColor, true);
+            return ColorUtils.setAlphaComponent(typedColor.data, 255);
         };
 
-        @ColorInt final int themeBackgroundColor = getBackgroundColor.get();
-        return deriveColorByContrast.apply(primaryColor, themeBackgroundColor);
+        final Supplier<Integer> backgroundColor = () -> {
+            final TypedValue typedColor = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.itemBackground, typedColor, true);
+            return ColorUtils.setAlphaComponent(typedColor.data, 255);
+        };
+
+        return deriveColorByContrast.invoke(primaryColor, foregroundColor.get(), backgroundColor.get());
     }
 
     @ColorInt
