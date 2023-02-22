@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -32,6 +29,7 @@ import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityArtistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
+import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
@@ -62,9 +60,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Be careful when changing things in this Activity!
- */
 public class ArtistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Artist> {
@@ -85,8 +80,8 @@ public class ArtistDetailActivity
 
     private Artist artist;
     @Nullable
-    private Spanned biography;
-    private MaterialDialog biographyDialog;
+    private String biography;
+    private MarkdownViewDialog biographyDialog;
     private HorizontalAlbumAdapter albumAdapter;
     private ArtistSongAdapter songAdapter;
 
@@ -209,7 +204,7 @@ public class ArtistDetailActivity
                         if (lastFmArtist != null && lastFmArtist.getArtist() != null && lastFmArtist.getArtist().getBio() != null) {
                             final String bioContent = lastFmArtist.getArtist().getBio().getContent();
                             if (bioContent != null && !bioContent.trim().isEmpty()) {
-                                biography = Html.fromHtml(bioContent);
+                                biography = bioContent;
                             }
                         }
 
@@ -221,7 +216,7 @@ public class ArtistDetailActivity
 
                         if (!PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) {
                             if (biography != null) {
-                                biographyDialog.setContent(biography);
+                                biographyDialog.setMarkdownContent(ArtistDetailActivity.this, biography);
                             } else {
                                 biographyDialog.dismiss();
                                 Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
@@ -334,14 +329,13 @@ public class ArtistDetailActivity
             return true;
         } else if (id == R.id.action_biography) {
             if (biographyDialog == null) {
-                biographyDialog = new MaterialDialog.Builder(this)
+                biographyDialog = new MarkdownViewDialog.Builder(this)
                         .title(artist.getName())
-                        .positiveText(android.R.string.ok)
                         .build();
             }
             if (PreferenceUtil.isAllowedToDownloadMetadata(this)) { // wiki should've been already downloaded
                 if (biography != null) {
-                    biographyDialog.setContent(biography);
+                    biographyDialog.setMarkdownContent(this, biography);
                     biographyDialog.show();
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();

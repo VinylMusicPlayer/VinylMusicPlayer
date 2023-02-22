@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -31,6 +28,7 @@ import com.poupa.vinylmusicplayer.databinding.ActivityAlbumDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
+import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
@@ -63,9 +61,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Be careful when changing things in this Activity!
- */
 public class AlbumDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Album> {
@@ -84,8 +79,8 @@ public class AlbumDetailActivity
     private int toolbarColor;
 
     @Nullable
-    private Spanned wiki;
-    private MaterialDialog wikiDialog;
+    private String wiki;
+    private MarkdownViewDialog wikiDialog;
     private LastFMRestClient lastFMRestClient;
 
     @Override
@@ -242,14 +237,14 @@ public class AlbumDetailActivity
 
         lastFMRestClient.getApiService()
                 .getAlbumInfo(getAlbum().getTitle(), getAlbum().getArtistName(), lang)
-                .enqueue(new Callback<LastFmAlbum>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<LastFmAlbum> call, @NonNull Response<LastFmAlbum> response) {
                         final LastFmAlbum lastFmAlbum = response.body();
                         if (lastFmAlbum != null && lastFmAlbum.getAlbum() != null && lastFmAlbum.getAlbum().getWiki() != null) {
                             final String wikiContent = lastFmAlbum.getAlbum().getWiki().getContent();
                             if (wikiContent != null && !wikiContent.trim().isEmpty()) {
-                                wiki = Html.fromHtml(wikiContent);
+                                wiki = wikiContent;
                             }
                         }
 
@@ -261,7 +256,7 @@ public class AlbumDetailActivity
 
                         if (!PreferenceUtil.isAllowedToDownloadMetadata(AlbumDetailActivity.this)) {
                             if (wiki != null) {
-                                wikiDialog.setContent(wiki);
+                                wikiDialog.setMarkdownContent(AlbumDetailActivity.this, wiki);
                             } else {
                                 wikiDialog.dismiss();
                                 Toast.makeText(AlbumDetailActivity.this, getResources().getString(R.string.wiki_unavailable), Toast.LENGTH_SHORT).show();
@@ -314,14 +309,13 @@ public class AlbumDetailActivity
             return true;
         } else if (id == R.id.action_wiki) {
             if (wikiDialog == null) {
-                wikiDialog = new MaterialDialog.Builder(this)
+                wikiDialog = new MarkdownViewDialog.Builder(this)
                         .title(album.getTitle())
-                        .positiveText(android.R.string.ok)
                         .build();
             }
             if (PreferenceUtil.isAllowedToDownloadMetadata(this)) {
                 if (wiki != null) {
-                    wikiDialog.setContent(wiki);
+                    wikiDialog.setMarkdownContent(this, wiki);
                     wikiDialog.show();
                 } else {
                     Toast.makeText(this, getResources().getString(R.string.wiki_unavailable), Toast.LENGTH_SHORT).show();
@@ -410,7 +404,7 @@ public class AlbumDetailActivity
 
     @Override
     @NonNull
-    public Loader<Album> onCreateLoader(int id, @NonNull final Bundle args) {
+    public Loader<Album> onCreateLoader(int id, @Nullable final Bundle args) {
         return new AsyncAlbumLoader(this, args.getLong(EXTRA_ALBUM_ID));
     }
 

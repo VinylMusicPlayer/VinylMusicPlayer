@@ -86,6 +86,12 @@ public class MarkdownViewDialog extends MaterialDialog {
         }
 
         @Override
+        public Builder title(@NonNull final CharSequence title) {
+            super.title(title);
+            return this;
+        }
+
+        @Override
         @UiThread
         public MarkdownViewDialog build() {
             final View customView = LayoutInflater.from(context).inflate(R.layout.dialog_markdown_view, null);
