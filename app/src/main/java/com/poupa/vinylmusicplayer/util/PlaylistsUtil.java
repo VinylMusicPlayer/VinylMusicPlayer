@@ -24,7 +24,7 @@ import java.util.List;
  * @author SC (soncaokim)
  */
 public class PlaylistsUtil {
-    private static void notifyChange(@NonNull final Context context) {
+    public static void notifyChange(@NonNull final Context context) {
         context.sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
     }
 

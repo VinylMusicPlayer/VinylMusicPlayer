@@ -46,6 +46,7 @@ import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -193,7 +194,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                                     .edit()
                                     .remove(StaticPlaylist.PREF_MIGRATED_STATIC_PLAYLISTS)
                                     .apply();
-                            // TODO Force refresh, by Activity.recreate()?
+                            PlaylistsUtil.notifyChange(this); // to refresh
                         })
                         .positiveText(R.string.reset_mediastore_playlist)
                         .negativeText(android.R.string.cancel)
