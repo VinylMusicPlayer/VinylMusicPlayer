@@ -39,6 +39,14 @@ public interface CabHolder {
                 cab -> {
                     cab.menu(menuRes);
                     cab.closeDrawable(R.drawable.ic_close_white_24dp);
+
+                    // TODO The CAB action buttons color cannot be set
+                    //      For now, to avoid inconsistency between the title and the buttons,
+                    //      refrain from setting the title color
+                    //final boolean isBackgroundLight = ColorUtil.isColorLight(backgroundColor);
+                    //final int primaryTextColor = MaterialValueHelper.getPrimaryTextColor(context, isBackgroundLight);
+                    //cab.titleColor(ResourcesCompat.ID_NULL, primaryTextColor);
+
                     cab.backgroundColor(ResourcesCompat.ID_NULL, backgroundColor);
                     cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
 
