@@ -33,6 +33,11 @@ public class PlaylistLoader {
                     final long id = cursor.getLong(0);
                     final String name = cursor.getString(1);
 
+                    // There are occasions where the playlist name is not filled -> just skip.
+                    // This happens right after a save to .m3u operation,
+                    // looks like the playlist name is not yet filled in.
+                    if (name == null) {continue;}
+
                     playlists.add(new Playlist(id, name));
                 } while (cursor.moveToNext());
             }
