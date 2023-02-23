@@ -254,15 +254,6 @@ public class MusicPlayerRemote {
         final int adjustedPosition = Math.max(positionInQueue, 0);
         final ArrayList<Song> songsToAdd = new ArrayList<>(queue.subList(adjustedPosition, queue.size()));
 
-        final Runnable showToastEnqueued = () -> {
-            int count = songsToAdd.size();
-            final String toast = (count == 1)
-                    ? musicService.getResources().getString(R.string.added_title_to_playing_queue)
-                    : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, count);
-
-            Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
-        };
-
         final List<BottomSheetDialogWithButtons.ButtonInfo> possibleActions = Arrays.asList(
                 new BottomSheetDialogWithButtons.ButtonInfo(
                         context.getString(R.string.action_play),
