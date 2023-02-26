@@ -52,9 +52,9 @@ public class SAFUtil {
         return isSAFRequired(song.data);
     }
 
-    public static boolean isSAFRequired(List<String> paths) {
-        for (String path : paths) {
-            if (isSAFRequired(path)) return true;
+    public static boolean isSAFRequired(List<Song> songs) {
+        for (Song song : songs) {
+            if (isSAFRequired(song.data)) return true;
         }
         return false;
     }
