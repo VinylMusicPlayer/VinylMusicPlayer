@@ -4,11 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -50,7 +50,7 @@ public class CustomArtistImageUtil {
         return sInstance;
     }
 
-    public void setCustomArtistImage(final Artist artist, Uri uri) {
+    public void setCustomArtistImage(final Artist artist, Uri uri, @Nullable Runnable postExec) {
         GlideApp.with(App.getInstance())
                 .asBitmap()
                 .load(uri)
@@ -59,11 +59,7 @@ public class CustomArtistImageUtil {
                         .skipMemoryCache(true)
                 )
                 .into(new VinylSimpleTarget<Bitmap>() {
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                    }
-
+                    @SuppressLint("StaticFieldLeak")
                     @Override
                     public void onResourceReady(@NonNull final Bitmap resource, Transition<? super Bitmap> glideAnimation) {
                         new AsyncTask<Void, Void, Void>() {
@@ -76,45 +72,57 @@ public class CustomArtistImageUtil {
                                         return null;
                                     }
                                 }
-                                File file = new File(dir, getFileName(artist));
 
                                 boolean succesful = false;
                                 try {
+                                    File file = new File(dir, getFileName(artist));
                                     OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-                                    succesful = ImageUtil.resizeBitmap(resource, 2048).compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                    succesful = ImageUtil
+                                            .resizeBitmap(resource, 2048)
+                                            .compress(Bitmap.CompressFormat.JPEG, 100, os);
                                     os.close();
                                 } catch (IOException e) {
                                     Toast.makeText(App.getInstance(), e.toString(), Toast.LENGTH_LONG).show();
                                 }
 
                                 if (succesful) {
-                                    mPreferences.edit().putBoolean(getFileName(artist), true).commit();
+                                    mPreferences.edit().putBoolean(getFileName(artist), true).apply();
                                     ArtistSignatureUtil.getInstance().updateArtistSignature(artist.getName());
-                                    App.getInstance().getContentResolver().notifyChange(Uri.parse("content://media"), null); // trigger media store changed to force artist image reload
+                                    // trigger media store changed to force artist image reload
+                                    App.getInstance().getContentResolver().notifyChange(Uri.parse("content://media"), null);
                                 }
                                 return null;
+                            }
+
+                            @MainThread
+                            protected void onPostExecute(Void result) {
+                                if (postExec != null) {postExec.run();}
                             }
                         }.execute();
                     }
                 });
     }
 
-    public void resetCustomArtistImage(final Artist artist) {
+    @SuppressLint("StaticFieldLeak")
+    public void resetCustomArtistImage(@NonNull final Artist artist, @Nullable Runnable postExec) {
         new AsyncTask<Void, Void, Void>() {
-            @SuppressLint("ApplySharedPref")
             @Override
             protected Void doInBackground(Void... params) {
-                mPreferences.edit().putBoolean(getFileName(artist), false).commit();
+                mPreferences.edit().putBoolean(getFileName(artist), false).apply();
                 ArtistSignatureUtil.getInstance().updateArtistSignature(artist.getName());
-                App.getInstance().getContentResolver().notifyChange(Uri.parse("content://media"), null); // trigger media store changed to force artist image reload
+                // trigger media store changed to force artist image reload
+                App.getInstance().getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
                 File file = getFile(artist);
-                if (!file.exists()) {
-                    return null;
-                } else {
+                if (file.exists()) {
                     file.delete();
                 }
                 return null;
+            }
+
+            @MainThread
+            protected void onPostExecute(Void result) {
+                if (postExec != null) {postExec.run();}
             }
         }.execute();
     }

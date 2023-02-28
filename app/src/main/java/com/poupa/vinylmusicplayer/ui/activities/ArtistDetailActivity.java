@@ -259,7 +259,8 @@ public class ArtistDetailActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if (resultCode == RESULT_OK) {
-                CustomArtistImageUtil.getInstance(this).setCustomArtistImage(artist, data.getData());
+                CustomArtistImageUtil.getInstance(this)
+                        .setCustomArtistImage(artist, data.getData(), this::loadArtistImage);
             }
         } else {
             if (resultCode == RESULT_OK) {
@@ -358,7 +359,8 @@ public class ArtistDetailActivity
             return true;
         } else if (id == R.id.action_reset_artist_image) {
             Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.updating), Toast.LENGTH_SHORT).show();
-            CustomArtistImageUtil.getInstance(ArtistDetailActivity.this).resetCustomArtistImage(artist);
+            CustomArtistImageUtil.getInstance(ArtistDetailActivity.this)
+                    .resetCustomArtistImage(artist, this::loadArtistImage);
             forceDownload = true;
             return true;
         } else if (id == R.id.action_colored_footers) {
