@@ -95,7 +95,7 @@ public class MarkdownViewDialog extends MaterialDialog {
         @UiThread
         public MarkdownViewDialog build() {
             final View customView = LayoutInflater.from(context).inflate(R.layout.dialog_markdown_view, null);
-            customView(customView, false);
+            customView(customView, true);
             positiveText(android.R.string.ok);
 
             return new MarkdownViewDialog(this);

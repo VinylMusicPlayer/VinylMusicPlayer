@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/markdown_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/markdown_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_item_margin"
-        android:textIsSelectable="false"
-        android:layout_margin="@dimen/default_item_margin"
-        android:scrollbars="vertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
-
-
-</ScrollView>
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/default_item_margin"
+    android:textIsSelectable="false"
+    android:layout_margin="@dimen/default_item_margin"
+    android:scrollbars="vertical"
+    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
