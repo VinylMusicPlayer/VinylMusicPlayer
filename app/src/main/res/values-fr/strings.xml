@@ -33,6 +33,8 @@
     <string name="action_add_to_playing_queue">Ajouter à la file de lecture</string>
     <string name="action_remove_from_playing_queue">Retirer de la file de lecture</string>
     <string name="action_add_to_playlist">Ajouter à une playlist</string>
+    <string name="pref_title_enqueue_song_default_choice">Action après un appuis sur un titre</string>
+    <string name="action_always_ask_for_confirmation">Toujours demander la confirmation de l\'action</string>
     <string name="action_tag_editor">Éditeur d\'informations</string>
     <string name="action_delete_from_device">Supprimer de l\'appareil</string>
     <string name="action_details">Détails</string>

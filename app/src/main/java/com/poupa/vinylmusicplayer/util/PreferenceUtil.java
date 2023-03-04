@@ -134,6 +134,12 @@ public final class PreferenceUtil {
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
 
     private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
+    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
+
+    public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
+    public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
+    public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
+    public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
 
     private static PreferenceUtil sInstance;
 
@@ -758,6 +764,16 @@ public final class PreferenceUtil {
     public void setSAFSDCardUri(@NonNull final Uri uri) {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
+                .apply();
+    }
+
+    public int getEnqueueSongsDefaultChoice() {
+        return mPreferences.getInt(ENQUEUE_SONGS_DEFAULT_CHOICE, ENQUEUE_SONGS_CHOICE_REPLACE);
+    }
+
+    public void setEnqueueSongsDefaultChoice(int choice) {
+        mPreferences.edit()
+                .putInt(ENQUEUE_SONGS_DEFAULT_CHOICE, choice)
                 .apply();
     }
 }

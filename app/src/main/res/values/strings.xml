@@ -20,6 +20,8 @@
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
 
+    <string name="pref_title_enqueue_song_default_choice">Enqueue song default action</string>
+    <string name="action_always_ask_for_confirmation">Always ask for actions</string>
     <string name="action_add_to_playing_queue">Add to playing queue</string>
     <string name="action_remove_from_playing_queue">Remove from playing queue</string>
     <string name="action_clear_playing_queue">Clear playing queue</string>

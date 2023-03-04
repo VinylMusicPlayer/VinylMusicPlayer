@@ -30,6 +30,12 @@
             android:summary="@string/pref_summary_show_song_number"
             android:title="@string/pref_title_show_song_number" />
 
+        <com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference
+            app:iconSpaceReserved="false"
+            android:key="enqueue_songs_default_choice"
+            android:title="@string/pref_title_enqueue_song_default_choice"
+            />
+
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
