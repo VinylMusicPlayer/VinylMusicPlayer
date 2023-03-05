@@ -16,7 +16,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -120,7 +122,9 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
 
     public static class ButtonInfo {
         public int id;
+        @StringRes
         public int titleId;
+        @DrawableRes
         public Integer iconId;
         public Runnable action;
 

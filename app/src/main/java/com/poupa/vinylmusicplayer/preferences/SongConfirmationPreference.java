@@ -15,7 +15,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 
 public class SongConfirmationPreference extends ATEDialogPreference {
-   public static BottomSheetDialogWithButtons.ButtonInfo ASK = new ButtonInfo(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK, R.string.action_always_ask_for_confirmation, R.drawable.ic_close_white_24dp, null);
+   public static BottomSheetDialogWithButtons.ButtonInfo ASK = new ButtonInfo(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK, R.string.action_always_ask_for_confirmation, R.drawable.ic_playlist_play_white_24dp, null);
    public static BottomSheetDialogWithButtons.ButtonInfo REPLACE = new ButtonInfo(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE, R.string.action_play, R.drawable.ic_play_arrow_white_24dp, null);
    public static BottomSheetDialogWithButtons.ButtonInfo NEXT = new ButtonInfo(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT, R.string.action_play_next, R.drawable.ic_redo_white_24dp, null);
    public static BottomSheetDialogWithButtons.ButtonInfo ADD = new ButtonInfo(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD, R.string.action_add_to_playing_queue, R.drawable.ic_library_add_white_24dp, null);
