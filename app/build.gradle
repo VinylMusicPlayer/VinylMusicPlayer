@@ -167,6 +167,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation "io.noties.markwon:core:4.6.2"
+    implementation "io.noties.markwon:html:4.6.2"
     implementation "io.noties.markwon:image-glide:4.6.2"
     implementation "io.noties.markwon:linkify:4.6.2"
 

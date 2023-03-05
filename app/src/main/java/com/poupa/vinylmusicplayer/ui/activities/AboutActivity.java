@@ -220,9 +220,11 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     @Override
     public void onClick(final View v) {
         if (v == layoutBinding.content.cardAboutApp.changelog) {
-            new ChangelogDialog().show(getSupportFragmentManager(), "CHANGELOG_DIALOG");
+            new ChangelogDialog.Builder(this).show();
         } else if (v == layoutBinding.content.cardAboutApp.licenses) {
-            new MarkdownViewDialog("LICENSES.md").show(getSupportFragmentManager(), "LICENSES_DIALOG");
+            new MarkdownViewDialog.Builder(this).build()
+                    .setMarkdownContentFromAsset(this,"LICENSES.md")
+                    .show();
         } else if (v == layoutBinding.content.cardAboutApp.intro) {
             startActivity(new Intent(this, AppIntroActivity.class));
         } else if (v == layoutBinding.content.cardAboutApp.forkOnGithub) {
