@@ -23,7 +23,7 @@
         <item name="dividerColor">@color/md_divider_white</item>
         <item name="iconColor">@color/ate_secondary_text_dark</item>
 
-        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+        <item name="snackbarStyle">@style/Snackbar</item>
         <item name="snackbarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Snackbar</item>
         <item name="snackbarTextViewStyle">@style/Widget.MaterialComponents.Snackbar.TextView</item>
 
@@ -62,7 +62,7 @@
         <item name="dividerColor">@color/md_divider_black</item>
         <item name="iconColor">@color/ate_secondary_text_light</item>
 
-        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+        <item name="snackbarStyle">@style/Snackbar</item>
         <item name="snackbarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Snackbar</item>
         <item name="snackbarTextViewStyle">@style/Widget.MaterialComponents.Snackbar.TextView</item>
 
