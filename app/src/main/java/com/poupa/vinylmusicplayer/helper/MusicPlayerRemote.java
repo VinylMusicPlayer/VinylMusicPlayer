@@ -26,6 +26,7 @@ import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWit
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -264,24 +265,15 @@ public class MusicPlayerRemote {
         };
 
         final List<BottomSheetDialogWithButtons.ButtonInfo> possibleActions = Arrays.asList(
-                new BottomSheetDialogWithButtons.ButtonInfo(
-                        context.getString(R.string.action_play),
-                        () -> {
-                            openQueue(queue, positionInQueue, true);
-                        },
-                        ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_white_24dp)),
-                new BottomSheetDialogWithButtons.ButtonInfo(
-                        context.getString(R.string.action_play_next),
-                        () -> {
-                            playNext(songsToAdd);
-                        },
-                        ContextCompat.getDrawable(context, R.drawable.ic_redo_white_24dp)),
-                new BottomSheetDialogWithButtons.ButtonInfo(
-                        context.getString(R.string.action_add_to_playing_queue),
-                        () -> {
-                            enqueue(songsToAdd);
-                        },
-                        ContextCompat.getDrawable(context, R.drawable.ic_library_add_white_24dp))
+                SongConfirmationPreference.REPLACE.setAction(() -> {
+                    openQueue(queue, positionInQueue, true);
+                }),
+                SongConfirmationPreference.NEXT.setAction(() -> {
+                    playNext(songsToAdd);
+                }),
+                SongConfirmationPreference.ADD.setAction(() -> {
+                    enqueue(songsToAdd);
+                })
         );
 
         final int songCount = songsToAdd.size();
@@ -289,10 +281,20 @@ public class MusicPlayerRemote {
                 ? context.getResources().getString(R.string.about_to_add_title_to_playing_queue)
                 : context.getResources().getString(R.string.about_to_add_x_titles_to_playing_queue, songCount);
 
-        BottomSheetDialogWithButtons songActionDialog = BottomSheetDialogWithButtons.newInstance();
-        songActionDialog.setTitle(message)
-                .setButtonList(possibleActions)
-                .show( ((AppCompatActivity) context).getSupportFragmentManager(), "songActionDialog");
+        int defaultChoice = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
+        if (defaultChoice == PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK) {
+            BottomSheetDialogWithButtons songActionDialog = BottomSheetDialogWithButtons.newInstance();
+            songActionDialog.setTitle(message)
+                    .setButtonList(possibleActions)
+                    .show(((AppCompatActivity) context).getSupportFragmentManager(),
+                            "songActionDialog");
+        } else {
+            for (BottomSheetDialogWithButtons.ButtonInfo action: possibleActions) {
+                if (defaultChoice == action.id) {
+                    action.action.run();
+                }
+            }
+        }
 
     }
 
