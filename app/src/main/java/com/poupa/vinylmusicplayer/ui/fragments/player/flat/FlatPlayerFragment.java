@@ -411,13 +411,15 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(backgroundAnimator, statusBarAnimator);
+            // If this is not called: no album color shown in previously or in cancel snackbar
+            int adjustedLastColor = fragment.lastColor;
+            int adjustedNewColor = newColor;
 
-            if (!ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                int adjustedLastColor = ColorUtil.isColorLight(fragment.lastColor) ? ColorUtil.darkenColor(fragment.lastColor) : fragment.lastColor;
-                int adjustedNewColor = ColorUtil.isColorLight(newColor) ? ColorUtil.darkenColor(newColor) : newColor;
-                Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
-                animatorSet.play(subHeaderAnimator);
-            }
+            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
+            adjustedLastColor = getContrastedColor(adjustedLastColor, backgroundColor);
+            adjustedNewColor = getContrastedColor(adjustedNewColor, backgroundColor);
+            Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
+            animatorSet.play(subHeaderAnimator);
 
             // Workaround for a bug https://github.com/AdrienPoupa/VinylMusicPlayer/issues/620
             for (Animator animator : animatorSet.getChildAnimations()){
@@ -429,9 +431,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            if (ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.getActivity()));
-            }
         }
     }
 

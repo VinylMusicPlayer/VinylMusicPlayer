@@ -312,6 +312,7 @@ public class PlayingQueueAdapter extends SongAdapter
                 MusicPlayerRemote.playSongAt(position, false);
             }
         });
+        snackbar.setActionTextColor(getBackgroundColor(activity));
         snackbar.show();
 
 
