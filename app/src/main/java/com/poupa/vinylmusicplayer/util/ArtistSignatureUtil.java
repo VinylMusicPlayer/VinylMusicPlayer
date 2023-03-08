@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -28,12 +27,11 @@ public class ArtistSignatureUtil {
         return sInstance;
     }
 
-    @SuppressLint({"CommitPrefEdits", "ApplySharedPref"})
     public void updateArtistSignature(String artistName) {
-        mPreferences.edit().putLong(artistName, System.currentTimeMillis()).commit();
+        mPreferences.edit().putLong(artistName, System.currentTimeMillis()).apply();
     }
 
-    public long getArtistSignatureRaw(String artistName) {
+    private long getArtistSignatureRaw(String artistName) {
         return mPreferences.getLong(artistName, 0);
     }
 

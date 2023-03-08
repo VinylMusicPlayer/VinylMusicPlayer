@@ -28,7 +28,7 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this);
     }
 
     @NonNull
@@ -68,7 +68,7 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
 
     @Override
     protected int loadGridSize() {
-        return PreferenceUtil.getInstance().getArtistGridSize(getActivity());
+        return PreferenceUtil.getInstance().getArtistGridSize(requireActivity());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
 
     @Override
     protected int loadGridSizeLand() {
-        return PreferenceUtil.getInstance().getArtistGridSizeLand(getActivity());
+        return PreferenceUtil.getInstance().getArtistGridSizeLand(requireActivity());
     }
 
     @Override

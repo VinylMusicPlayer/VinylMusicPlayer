@@ -33,6 +33,8 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
 import com.poupa.vinylmusicplayer.databinding.ActivityPreferencesBinding;
+import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons;
+import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons.ButtonInfo;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
@@ -43,6 +45,7 @@ import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
@@ -53,6 +56,8 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.io.File;
+import java.util.List;
+
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
@@ -172,6 +177,33 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return PreAmpPreferenceDialog.newInstance();
             } else if (preference instanceof SmartPlaylistPreference) {
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
+            } else if (preference instanceof SongConfirmationPreference) {
+                final List<ButtonInfo> possibleActions = Arrays.asList(
+                        SongConfirmationPreference.ASK.setAction(() -> {
+                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK);
+                        }),
+                        SongConfirmationPreference.REPLACE.setAction(() -> {
+                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE);
+                        }),
+                        SongConfirmationPreference.NEXT.setAction(() -> {
+                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT);
+                        }),
+                        SongConfirmationPreference.ADD.setAction(() -> {
+                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD);
+                        })
+                );
+                int defaultValue = -1;
+                int id = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
+                for (int i = 0; i < possibleActions.size(); i++) {
+                    if (id == possibleActions.get(i).id) {
+                        defaultValue = i;
+                    }
+                }
+                BottomSheetDialogWithButtons songActionDialog = BottomSheetDialogWithButtons.newInstance();
+                songActionDialog.setTitle(getContext().getResources().getString(R.string.pref_title_enqueue_song_default_choice))
+                        .setButtonList(possibleActions)
+                        .setDefaultButtonIndex(defaultValue);
+                return songActionDialog;
             }
             return super.onCreatePreferenceDialog(preference);
         }
@@ -387,6 +419,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
             updateNowPlayingScreenSummary();
             updatePlaylistsSummary();
+            updateConfirmationSongSummary();
         }
 
         private boolean hasEqualizer() {
@@ -430,6 +463,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
                     updatePlaylistsSummary();
                     break;
+                case PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE:
+                    updateConfirmationSongSummary();
+                    break;
             }
         }
 
@@ -447,6 +483,17 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     .setSummary(preferenceUtil.getNotRecentlyPlayedCutoffText(context));
             findPreference(PreferenceUtil.LAST_ADDED_CUTOFF_V2)
                     .setSummary(preferenceUtil.getLastAddedCutoffText(context));
+        }
+
+        private void updateConfirmationSongSummary() {
+            final int id = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();
+            for (final BottomSheetDialogWithButtons.ButtonInfo info : SongConfirmationPreference.possibleActions) {
+                if (info.id == id) {
+                    findPreference(PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE).setSummary(info.titleId);
+                    return;
+                }
+            }
+            findPreference(PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE).setSummary(R.string.action_always_ask_for_confirmation);
         }
     }
 }

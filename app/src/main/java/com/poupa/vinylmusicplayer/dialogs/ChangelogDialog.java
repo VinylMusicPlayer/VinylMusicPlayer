@@ -1,12 +1,11 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -15,17 +14,12 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
  * @author SC (soncaokim)
  */
 public class ChangelogDialog extends MarkdownViewDialog {
-    public ChangelogDialog() {
-        super("CHANGELOG.md");
-    }
+    public ChangelogDialog(Builder builder) {
+        super(builder);
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog( savedInstanceState);
-        dialog.setOnShowListener(dialog1 -> setChangelogRead(requireActivity()));
-
-        return dialog;
+        final Context context = builder.getContext();
+        setMarkdownContentFromAsset(context, "CHANGELOG.md");
+        setOnDismissListener(dialog -> setChangelogRead(context));
     }
 
     public static void setChangelogRead(@NonNull Context context) {
@@ -35,6 +29,20 @@ public class ChangelogDialog extends MarkdownViewDialog {
             PreferenceUtil.getInstance().setLastChangeLogVersion(currentVersion);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static class Builder extends MarkdownViewDialog.Builder {
+        public Builder(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        @UiThread
+        public ChangelogDialog build() {
+            super.build();
+
+            return new ChangelogDialog(this);
         }
     }
 }
