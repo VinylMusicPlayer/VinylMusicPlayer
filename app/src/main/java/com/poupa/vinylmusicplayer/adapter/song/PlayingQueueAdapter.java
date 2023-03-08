@@ -278,7 +278,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
     }
 
-    public static int getBackgroundColor(AppCompatActivity activity){
+    private static int getBackgroundColor(AppCompatActivity activity){
         //TODO: Find a better way to get the album background color
         TextView tV = activity.findViewById(R.id.player_queue_sub_header);
         if(tV != null){
@@ -288,7 +288,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
     }
 
-    public static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
+    private static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
                                           final AppCompatActivity activity,
                                           final boolean isPlayingSongToRemove) {
 
@@ -312,7 +312,6 @@ public class PlayingQueueAdapter extends SongAdapter
                 MusicPlayerRemote.playSongAt(position, false);
             }
         });
-        snackbar.setActionTextColor(getBackgroundColor(activity));
         snackbar.show();
 
 

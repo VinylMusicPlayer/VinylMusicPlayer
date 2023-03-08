@@ -1,10 +1,14 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -16,6 +20,7 @@ import com.poupa.vinylmusicplayer.R;
  */
 
 public class SnackbarUtil {
+    @DrawableRes
     public static final int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
     private Snackbar progressBar = null;
@@ -26,13 +31,29 @@ public class SnackbarUtil {
     }
 
     @NonNull
-    private static CharSequence buildMessageWithIcon(@NonNull final CharSequence message) {
+    private static Drawable tintedIcon(@NonNull Snackbar snackbar) {
+        final Context context = App.getInstance().getApplicationContext();
+
+        // Pick the color from the text view...
+        TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+        final int color = tv.getCurrentTextColor();
+
+        // ... and apply the color on the icon
+        final Drawable icon = context.getDrawable(ICON);
+        icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+        icon.setTint(color);
+
+        return icon;
+    }
+
+    @NonNull
+    private static CharSequence buildMessageWithIcon(@NonNull final CharSequence message, @NonNull Snackbar snackbar) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {return message;}
 
         SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
         messageWithIcon.append(
                 " ",
-                new ImageSpan(App.getInstance().getApplicationContext(), ICON),
+                new ImageSpan(tintedIcon(snackbar)),
                 0);
         messageWithIcon.append(" "); // some extra space before the text message
         messageWithIcon.append(message);
@@ -41,18 +62,16 @@ public class SnackbarUtil {
     }
 
     public void showProgress(@NonNull final CharSequence text) {
-        final CharSequence message = buildMessageWithIcon(text);
         if (progressBar == null) {
             progressBar = Snackbar.make(
                     viewContainer,
-                    message,
+                    "",
                     Snackbar.LENGTH_INDEFINITE);
+        }
+
+        progressBar.setText(buildMessageWithIcon(text, progressBar));
+        if (!progressBar.isShownOrQueued()) {
             progressBar.show();
-        } else {
-            progressBar.setText(message);
-            if (!progressBar.isShownOrQueued()) {
-                progressBar.show();
-            }
         }
     }
 
@@ -61,8 +80,9 @@ public class SnackbarUtil {
 
         progressBar = Snackbar.make(
                 viewContainer,
-                buildMessageWithIcon(message),
+                "",
                 Snackbar.LENGTH_LONG);
+        progressBar.setText(buildMessageWithIcon(message, progressBar));
         progressBar.show();
     }
 
