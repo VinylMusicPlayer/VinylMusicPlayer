@@ -54,6 +54,7 @@ import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -446,13 +447,12 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             animatorSet.play(backgroundAnimator);
 
-            // If this is not called: no album color shown in previously or in cancel snackbar
             int adjustedLastColor = fragment.lastColor;
             int adjustedNewColor = newColor;
 
             int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
-            adjustedLastColor = getContrastedColor(adjustedLastColor, backgroundColor);
-            adjustedNewColor = getContrastedColor(adjustedNewColor, backgroundColor);
+            adjustedLastColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedLastColor, backgroundColor);
+            adjustedNewColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedNewColor, backgroundColor);
 
             Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
             animatorSet.play(subHeaderAnimator);
@@ -463,10 +463,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             }
 
             return animatorSet;
-        }
-
-        @Override
-        public void animateColorChange(int newColor) {
         }
     }
 
@@ -556,8 +552,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
-
             fragment.slidingUpPanelLayout.setBackgroundColor(fragment.lastColor);
 
             createDefaultColorChangeAnimatorSet(newColor).start();
@@ -591,8 +585,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
-
             fragment.slidingUpPanelLayout.setBackgroundColor(fragment.lastColor);
 
             AnimatorSet animatorSet = createDefaultColorChangeAnimatorSet(newColor);

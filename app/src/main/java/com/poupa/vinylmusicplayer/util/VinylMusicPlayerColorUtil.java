@@ -8,6 +8,7 @@ import android.os.Build;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.ColorUtils;
 import androidx.palette.graphics.Palette;
 
 import com.kabouzeid.appthemehelper.util.ColorUtil;
@@ -91,5 +92,28 @@ public class VinylMusicPlayerColorUtil {
             return context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         }
         return Configuration.UI_MODE_NIGHT_UNDEFINED;
+    }
+
+    public static int adjustLightness(int color, float lightnessFactor) {
+        float[] outHsl = new float[3];
+        ColorUtils.colorToHSL(color, outHsl);
+
+        outHsl[2] = outHsl[2] * lightnessFactor;
+        return ColorUtils.HSLToColor(outHsl);
+    }
+
+    public static int getContrastedColor(int foreground, int background) {
+        int darkenColor = adjustLightness(foreground, 0.9f); // empiric value
+        int lighterColor = adjustLightness(foreground, 1.4f); // same
+
+        double contrast = ColorUtils.calculateContrast(foreground, background);
+        double darkerContrast = ColorUtils.calculateContrast(darkenColor, background);
+        double lighterContrast = ColorUtils.calculateContrast(lighterColor, background);
+
+        if (contrast < 4.5) {
+            return (darkerContrast > lighterContrast) ? darkenColor : lighterColor;
+        } else {
+            return foreground;
+        }
     }
 }
