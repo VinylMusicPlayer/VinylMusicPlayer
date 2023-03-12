@@ -454,7 +454,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             e.printStackTrace();
         }
 
-        return (SAFUtil.getUriFromAudio(this, test, null) != null && Build.VERSION.SDK_INT > VERSION_CODES.Q);
+        return (SAFUtil.getUriFromAudio(this, test, null) != null && Build.VERSION.SDK_INT >= VERSION_CODES.R);
     }
 
 

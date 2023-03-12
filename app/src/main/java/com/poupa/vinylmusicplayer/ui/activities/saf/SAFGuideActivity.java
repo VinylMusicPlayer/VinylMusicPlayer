@@ -22,7 +22,7 @@ public class SAFGuideActivity extends IntroActivity {
 
         String title = String.format(getString(R.string.saf_guide_slide1_title), getString(R.string.app_name));
 
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             setButtonCtaVisible(false);
             setButtonNextVisible(false);
             setButtonBackVisible(false);

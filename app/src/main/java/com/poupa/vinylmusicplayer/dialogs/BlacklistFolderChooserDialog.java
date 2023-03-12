@@ -74,7 +74,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT > VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
                 return new MaterialDialog.Builder(getActivity())

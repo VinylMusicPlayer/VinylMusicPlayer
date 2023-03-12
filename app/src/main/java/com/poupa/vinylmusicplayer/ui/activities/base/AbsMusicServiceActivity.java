@@ -217,7 +217,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
     @Nullable
     @Override
     protected String[] getPermissionsToRequest() {
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) { // API less or equal to 29
             return new String[] { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
         } else if (Build.VERSION.SDK_INT < VERSION_CODES.TIRAMISU) { // API less than 33
             return new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };

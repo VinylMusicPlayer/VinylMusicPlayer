@@ -264,7 +264,12 @@ public class MusicUtil {
                     selection.toString(), null);
 
             // Step 3: Remove files from card
-            if (Build.VERSION.SDK_INT > VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+                for (int i = 0; i < songCount; i++) {
+                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
+                    SAFUtil.delete(activity, songs.get(i).data, safUri);
+                }
+            } else if (Build.VERSION.SDK_INT >= VERSION_CODES.R) { // Android Q takes care of this if the element is remove via MediaStore
                 List<Uri> urisToDelete = new ArrayList<>();
                 for (Song song: songs) {
                     // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
@@ -275,18 +280,13 @@ public class MusicUtil {
 
                 deleteRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
 
-            } else if (Build.VERSION.SDK_INT < VERSION_CODES.Q) { // Android Q takes care of this if the element is remove via MediaStore
-                for (int i = 0; i < songCount; i++) {
-                    final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
-                    SAFUtil.delete(activity, songs.get(i).data, safUri);
-                }
             }
         } catch (SecurityException e) { // | SendIntentException e) {
             Log.d("TOTO", "exception");
             e.printStackTrace();
         }
 
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
             activity.runOnUiThread(() -> {

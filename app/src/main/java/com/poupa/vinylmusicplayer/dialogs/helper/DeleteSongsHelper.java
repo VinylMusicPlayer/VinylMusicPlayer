@@ -13,7 +13,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 public class DeleteSongsHelper {
 
     public static void delete(Song song, @NonNull FragmentManager manager, @Nullable String tag) {
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             DeleteSongsDialogKitKat.create(song).show(manager, tag);
         } else {
             DeleteSongsDialogAndroidR.create(song).show(manager, tag);
@@ -21,7 +21,7 @@ public class DeleteSongsHelper {
     }
 
     public static void delete(ArrayList<Song> songs, @NonNull FragmentManager manager, @Nullable String tag) {
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) { // API less or equal to 29
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             DeleteSongsDialogKitKat.create(songs).show(manager, tag);
         } else {
             DeleteSongsDialogAndroidR.create(songs).show(manager, tag);

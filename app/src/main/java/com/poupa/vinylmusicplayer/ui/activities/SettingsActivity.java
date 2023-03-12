@@ -420,7 +420,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
             TwoStatePreference alwaysAsked = findPreference("always_ask_write_permission");
             if (alwaysAsked != null) {
-                if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
                     alwaysAsked.setVisible(false);
                 }
             }

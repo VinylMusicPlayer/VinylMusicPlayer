@@ -690,7 +690,7 @@ public final class PreferenceUtil {
     }
 
     public boolean getAlwaysAskWritePermission() {
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             return false;
         } else {
             return mPreferences.getBoolean(ALWAYS_ASK_WRITE_PERMISSION, false);
