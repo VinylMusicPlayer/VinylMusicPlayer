@@ -103,14 +103,19 @@ public class VinylMusicPlayerColorUtil {
     }
 
     public static int getContrastedColor(int foreground, int background) {
-        int darkenColor = adjustLightness(foreground, 0.9f); // empiric value
-        int lighterColor = adjustLightness(foreground, 1.4f); // same
-
         double contrast = ColorUtils.calculateContrast(foreground, background);
-        double darkerContrast = ColorUtils.calculateContrast(darkenColor, background);
-        double lighterContrast = ColorUtils.calculateContrast(lighterColor, background);
 
         if (contrast < 4.5) {
+            float maxDark = 0.5f;  //empirical value
+            float maxLight = 2.2f; //same
+
+            // create a linear curve to try to better the contrast
+            int darkenColor = adjustLightness(foreground, 1.0f + (maxDark - 1.0f)*(4.5f - (float)contrast)/(4.5f - 1.0f));
+            int lighterColor = adjustLightness(foreground, 1.0f + (maxLight - 1.0f)*(4.5f - (float)contrast)/(4.5f - 1.0f));
+
+            double darkerContrast = ColorUtils.calculateContrast(darkenColor, background);
+            double lighterContrast = ColorUtils.calculateContrast(lighterColor, background);
+
             return (darkerContrast > lighterContrast) ? darkenColor : lighterColor;
         } else {
             return foreground;
