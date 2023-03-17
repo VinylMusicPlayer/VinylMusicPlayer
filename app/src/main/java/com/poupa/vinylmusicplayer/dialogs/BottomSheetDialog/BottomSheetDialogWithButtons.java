@@ -24,7 +24,6 @@ import com.poupa.vinylmusicplayer.R;
 
 import java.util.List;
 
-
 public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public static BottomSheetDialogWithButtons newInstance() { return new BottomSheetDialogWithButtons(); }
 
@@ -36,6 +35,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
         this.title = title;
         return this;
     }
+
     public BottomSheetDialogWithButtons setButtonList(List<ButtonInfo> buttonList) {
         this.buttonList = buttonList;
         return this;
@@ -48,7 +48,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_button_list, container, false);
         Context context = getContext();
 
@@ -63,13 +63,10 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             button = new Button(context, null);
 
             button.setTag(i);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int i = (Integer)v.getTag();
-                    buttonList.get(i).action.run();
-                    afterClickOn(i);
-                }
+            button.setOnClickListener(v -> {
+                int i1 = (Integer)v.getTag();
+                buttonList.get(i1).action.run();
+                afterClickOn(i1);
             });
 
             TypedValue outValue = new TypedValue();
@@ -79,7 +76,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             int px_horizontal = context.getResources().getDimensionPixelSize(R.dimen.default_item_margin);
             button.setPadding(px_horizontal, px_vertical, px_horizontal, px_vertical);
 
-            LinearLayout linearlayout = (LinearLayout) view.findViewById(R.id.buttonList);
+            LinearLayout linearlayout = view.findViewById(R.id.buttonList);
             linearlayout.setOrientation(LinearLayout.VERTICAL);
 
             LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
@@ -129,13 +126,6 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
         @DrawableRes
         public Integer iconId;
         public Runnable action;
-
-        public ButtonInfo(int id, int titleId, Runnable action) {
-            this.id = id;
-            this.titleId = titleId;
-            this.action = action;
-            this.iconId = null;
-        }
 
         public ButtonInfo(int id, int titleId, int iconId, Runnable action) {
             this.id = id;

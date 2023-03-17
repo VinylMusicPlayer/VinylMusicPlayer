@@ -7,10 +7,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 
 
@@ -21,7 +20,7 @@ public abstract class BottomSheetDialog extends BottomSheetDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         com.google.android.material.bottomsheet.BottomSheetDialog
-                dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(getActivity(), ThemeStyleUtil.getInstance().getBottomSheetStyle());
+                dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(requireActivity(), ThemeStyleUtil.getInstance().getBottomSheetStyle());
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
