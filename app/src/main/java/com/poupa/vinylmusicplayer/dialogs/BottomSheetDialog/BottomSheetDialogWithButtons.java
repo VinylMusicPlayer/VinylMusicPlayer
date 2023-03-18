@@ -1,8 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog;
 
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -22,8 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+
+import java.util.List;
 
 public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public static BottomSheetDialogWithButtons newInstance() { return new BottomSheetDialogWithButtons(); }
@@ -85,8 +86,8 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             buttonParams.setMargins(0, 0, 0, 0);
 
-            int colorPrimary = ThemeStore.textColorPrimary(getActivity());
-            int accentColor = ThemeStore.accentColor(getActivity());
+            int colorPrimary = ThemeStore.textColorPrimary(requireActivity());
+            int accentColor = ThemeStore.accentColor(requireActivity());
             button.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
             button.setTypeface(null, Typeface.NORMAL);
             button.setTransformationMethod(null);
@@ -100,6 +101,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
 
             if (buttonList.get(i).iconId != null) {
                 Drawable icon = ContextCompat.getDrawable(context, buttonList.get(i).iconId);
+                icon.mutate(); // make own copy, so that the tint effect wont contaminate other (shared) use of this same icon
                 if (i == defaultIndex) {
                     DrawableCompat.setTint(icon, accentColor);
                 } else {
