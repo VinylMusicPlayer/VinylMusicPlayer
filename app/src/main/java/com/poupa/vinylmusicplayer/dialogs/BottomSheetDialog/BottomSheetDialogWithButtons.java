@@ -1,5 +1,8 @@
 package com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog;
 
+
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -18,11 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
-
+import androidx.core.graphics.drawable.DrawableCompat;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
-
-import java.util.List;
 
 public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public static BottomSheetDialogWithButtons newInstance() { return new BottomSheetDialogWithButtons(); }
@@ -99,13 +100,11 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
 
             if (buttonList.get(i).iconId != null) {
                 Drawable icon = ContextCompat.getDrawable(context, buttonList.get(i).iconId);
-                // TODO Decorate the default item (ex: bold text)
-                //if (i == defaultIndex) {
-                //    DrawableCompat.setTint(icon, accentColor);
-                //    button.getText(context.getString(buttonList.get(i).titleId));
-                //} else {
-                //    DrawableCompat.setTint(icon, colorPrimary);
-                //}
+                if (i == defaultIndex) {
+                    DrawableCompat.setTint(icon, accentColor);
+                } else {
+                    DrawableCompat.setTint(icon, colorPrimary);
+                }
                 button.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                 button.setCompoundDrawablePadding((int)(1.5*px_horizontal));
             }
