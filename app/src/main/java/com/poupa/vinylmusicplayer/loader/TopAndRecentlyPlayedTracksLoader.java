@@ -18,6 +18,7 @@ package com.poupa.vinylmusicplayer.loader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 
 import androidx.annotation.NonNull;
 
@@ -79,6 +80,9 @@ public class TopAndRecentlyPlayedTracksLoader {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
             Discography discography = Discography.getInstance();
             return discography.getSongsFromIdsAndCleanupOrphans(songIds, null);
+        } catch (SQLiteException exception) {
+            exception.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
