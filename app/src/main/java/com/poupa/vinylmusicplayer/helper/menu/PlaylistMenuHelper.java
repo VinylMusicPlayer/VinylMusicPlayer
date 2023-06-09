@@ -19,6 +19,7 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -60,8 +61,13 @@ public class PlaylistMenuHelper {
         @Override
         protected String doInBackground(Playlist... params) {
             final Context context = getContext();
+            final Playlist playlist = params[0];
+            if (playlist.getSongs(context).isEmpty()) {
+                return context.getString(R.string.playlist_is_empty);
+            }
             try {
-                return context.getString(R.string.saved_playlist_to, PlaylistsUtil.savePlaylist(context, params[0]));
+                final File file = PlaylistsUtil.savePlaylist(context, playlist);
+                return context.getString(R.string.saved_playlist_to, file);
             } catch (IOException e) {
                 // Copy the exception to clipboard
                 final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

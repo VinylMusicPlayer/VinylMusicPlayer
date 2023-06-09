@@ -1,6 +1,8 @@
 package com.poupa.vinylmusicplayer.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
@@ -32,10 +34,11 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
-import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.io.IOException;
@@ -194,8 +197,13 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     dir = PlaylistsUtil.savePlaylist(App.getInstance().getApplicationContext(), playlist).getParent();
                     successes++;
                 } catch (IOException e) {
+                    // Copy the exception to clipboard
+                    final Context context = getContext();
+                    final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(e));
+                    clipboard.setPrimaryClip(clip);
+
                     failures++;
-                    e.printStackTrace();
                 }
             }
 
