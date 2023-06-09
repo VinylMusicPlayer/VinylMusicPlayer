@@ -5,7 +5,6 @@
 # Branches (in same repo) that we dont want to include in CI builds
 # Space separated list of branch names
 blacklist_branches="
-  internal-playlists
   upstream-contrib/theme-experiment
 "
 
@@ -14,7 +13,6 @@ blacklist_branches="
 #  Octoton/VinylMusicPlayer/random_album_access_version_1
 #  Octoton/VinylMusicPlayer/android13
 alien_branches="
-  Octoton/VinylMusicPlayer/play_next_color
 "
 
 # Support for CircleCI
