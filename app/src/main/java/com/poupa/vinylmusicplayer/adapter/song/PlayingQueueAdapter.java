@@ -1,6 +1,9 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -193,7 +196,13 @@ public class PlayingQueueAdapter extends SongAdapter
 
     @Override
     public void onSetSwipeBackground(ViewHolder holder, int i, int i1) {
-        holder.itemView.setBackgroundColor(getBackgroundColor(activity));
+        Integer color = getBackgroundColor(activity);
+
+        if (color != null) {
+            holder.itemView.setBackgroundColor(color);
+        } else {
+            holder.itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        }
         holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
     }
 
@@ -278,13 +287,17 @@ public class PlayingQueueAdapter extends SongAdapter
         }
     }
 
-    private static int getBackgroundColor(AppCompatActivity activity){
-        //TODO: Find a better way to get the album background color
-        TextView tV = activity.findViewById(R.id.player_queue_sub_header);
-        if(tV != null){
-            return tV.getCurrentTextColor();
+    private static Integer getBackgroundColor(AppCompatActivity activity){
+        View view = activity.findViewById(R.id.color_background); // cardPlayerFragment
+        if (view == null) {
+            view = activity.findViewById(R.id.player_status_bar); // flatPlayerFragment
+        }
+
+        Drawable background = view.getBackground();
+        if (background instanceof ColorDrawable) {
+            return ((ColorDrawable) background).getColor();
         } else {
-            return ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor);
+            return null;
         }
     }
 
@@ -304,6 +317,14 @@ public class PlayingQueueAdapter extends SongAdapter
         songTitle.setEllipsize(TextUtils.TruncateAt.END);
         songTitle.setText(adapter.dataSet.get(position).title + " " + snackBarTitle);
 
+        Integer color = getBackgroundColor(activity);
+        if (color == null) {
+            if (ATHUtil.isWindowBackgroundDark(activity)) {
+                color = Color.BLACK;
+            } else {
+                color = Color.WHITE;
+            }
+        }
         snackbar.setAction(R.string.snack_bar_action_undo, v -> {
             MusicPlayerRemote.addSongBackTo(position, adapter.getSongToRemove());
             //If playing and currently playing song is removed, then added back, then play it at
@@ -311,8 +332,9 @@ public class PlayingQueueAdapter extends SongAdapter
             if (isPlayingSongToRemove) {
                 MusicPlayerRemote.playSongAt(position, false);
             }
-        });
-        snackbar.show();
+        })
+        .setActionTextColor(color)
+        .show();
 
 
         //Fixes Snackbar not showing when it replaces another Snackbar

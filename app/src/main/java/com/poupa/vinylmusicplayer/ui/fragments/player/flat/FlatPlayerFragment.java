@@ -49,6 +49,7 @@ import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -412,12 +413,14 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(backgroundAnimator, statusBarAnimator);
 
-            if (!ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                int adjustedLastColor = ColorUtil.isColorLight(fragment.lastColor) ? ColorUtil.darkenColor(fragment.lastColor) : fragment.lastColor;
-                int adjustedNewColor = ColorUtil.isColorLight(newColor) ? ColorUtil.darkenColor(newColor) : newColor;
-                Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
-                animatorSet.play(subHeaderAnimator);
-            }
+            int adjustedLastColor = fragment.lastColor;
+            int adjustedNewColor = newColor;
+
+            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
+            adjustedLastColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedLastColor, backgroundColor);
+            adjustedNewColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedNewColor, backgroundColor);
+            Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
+            animatorSet.play(subHeaderAnimator);
 
             // Workaround for a bug https://github.com/AdrienPoupa/VinylMusicPlayer/issues/620
             for (Animator animator : animatorSet.getChildAnimations()){
@@ -425,13 +428,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             }
 
             return animatorSet;
-        }
-
-        @Override
-        public void animateColorChange(int newColor) {
-            if (ATHUtil.isWindowBackgroundDark(fragment.getActivity())) {
-                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.getActivity()));
-            }
         }
     }
 
@@ -521,7 +517,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
             createDefaultColorChangeAnimatorSet(newColor).start();
         }
     }
@@ -549,8 +544,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
-
             AnimatorSet animatorSet = createDefaultColorChangeAnimatorSet(newColor);
             animatorSet.play(ViewUtil.createBackgroundColorTransition(fragment.toolbar, fragment.lastColor, newColor));
             animatorSet.start();

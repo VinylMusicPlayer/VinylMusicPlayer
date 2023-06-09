@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -52,6 +54,7 @@ import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -444,12 +447,15 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             animatorSet.play(backgroundAnimator);
 
-            if (!ATHUtil.isWindowBackgroundDark(fragment.requireActivity())) {
-                int adjustedLastColor = ColorUtil.isColorLight(fragment.lastColor) ? ColorUtil.darkenColor(fragment.lastColor) : fragment.lastColor;
-                int adjustedNewColor = ColorUtil.isColorLight(newColor) ? ColorUtil.darkenColor(newColor) : newColor;
-                Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
-                animatorSet.play(subHeaderAnimator);
-            }
+            int adjustedLastColor = fragment.lastColor;
+            int adjustedNewColor = newColor;
+
+            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
+            adjustedLastColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedLastColor, backgroundColor);
+            adjustedNewColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedNewColor, backgroundColor);
+
+            Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
+            animatorSet.play(subHeaderAnimator);
 
             // Workaround for a bug https://github.com/AdrienPoupa/VinylMusicPlayer/issues/620
             for (Animator animator : animatorSet.getChildAnimations()){
@@ -457,13 +463,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             }
 
             return animatorSet;
-        }
-
-        @Override
-        public void animateColorChange(int newColor) {
-            if (ATHUtil.isWindowBackgroundDark(fragment.requireActivity())) {
-                fragment.playerQueueSubHeader.setTextColor(ThemeStore.textColorSecondary(fragment.requireActivity()));
-            }
         }
     }
 
@@ -553,8 +552,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
-
             fragment.slidingUpPanelLayout.setBackgroundColor(fragment.lastColor);
 
             createDefaultColorChangeAnimatorSet(newColor).start();
@@ -588,8 +585,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
         @Override
         public void animateColorChange(int newColor) {
-            super.animateColorChange(newColor);
-
             fragment.slidingUpPanelLayout.setBackgroundColor(fragment.lastColor);
 
             AnimatorSet animatorSet = createDefaultColorChangeAnimatorSet(newColor);
