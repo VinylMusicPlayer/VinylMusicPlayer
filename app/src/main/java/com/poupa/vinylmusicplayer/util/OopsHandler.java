@@ -1,10 +1,5 @@
 package com.poupa.vinylmusicplayer.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.Date;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
@@ -15,6 +10,12 @@ import androidx.annotation.NonNull;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Date;
 
 public class OopsHandler implements UncaughtExceptionHandler {
     private final Context context;
@@ -28,11 +29,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
             final StringBuilder report = new StringBuilder();
             report.append("Time: ").append(new Date()).append("\n\n");
             report.append("Stack:\n");
-            final Writer result = new StringWriter();
-            final PrintWriter printWriter = new PrintWriter(result);
-            e.printStackTrace(printWriter);
-            report.append(result);
-            printWriter.close();
+            report.append(getStackTrace(e));
             report.append('\n');
             Log.e(OopsHandler.class.getName(), "Submitting crash report");
 
@@ -66,5 +63,14 @@ public class OopsHandler implements UncaughtExceptionHandler {
                 Looper.loop();
             }
         }.start();
+    }
+
+    public static String getStackTrace(@NonNull final Throwable exception) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        exception.printStackTrace(printWriter);
+        printWriter.close();
+
+        return result.toString();
     }
 }

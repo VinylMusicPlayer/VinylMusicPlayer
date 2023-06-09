@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.helper.menu;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -7,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
@@ -15,6 +16,7 @@ import com.poupa.vinylmusicplayer.dialogs.RenamePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.io.IOException;
@@ -57,11 +59,16 @@ public class PlaylistMenuHelper {
 
         @Override
         protected String doInBackground(Playlist... params) {
+            final Context context = getContext();
             try {
-                return String.format(App.getInstance().getApplicationContext().getString(R.string.saved_playlist_to), PlaylistsUtil.savePlaylist(App.getInstance().getApplicationContext(), params[0]));
+                return context.getString(R.string.saved_playlist_to, PlaylistsUtil.savePlaylist(context, params[0]));
             } catch (IOException e) {
-                e.printStackTrace();
-                return String.format(App.getInstance().getApplicationContext().getString(R.string.failed_to_save_playlist), e);
+                // Copy the exception to clipboard
+                final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(e));
+                clipboard.setPrimaryClip(clip);
+
+                return context.getString(R.string.failed_to_save_playlist, e);
             }
         }
 
