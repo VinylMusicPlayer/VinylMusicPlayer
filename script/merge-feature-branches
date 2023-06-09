@@ -5,16 +5,14 @@
 # Branches (in same repo) that we dont want to include in CI builds
 # Space separated list of branch names
 blacklist_branches="
-  internal-playlists
   upstream-contrib/theme-experiment
 "
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
 # Space separated list, each following the 'login/repo/branch' format
 #  Octoton/VinylMusicPlayer/random_album_access_version_1
-#  Octoton/VinylMusicPlayer/markdown_visual
+#  Octoton/VinylMusicPlayer/android13
 alien_branches="
-  Octoton/VinylMusicPlayer/visual_song_action
 "
 
 # Support for CircleCI
@@ -34,8 +32,8 @@ fi
 
 function git_init()
 {
-    git config --global user.email "$0@ci-bot"
-    git config --global user.name "$0"
+    [ -z "$(git config --global --get user.email)" ] && git config --global user.email "$0@ci-bot"
+    [ -z "$(git config --global --get user.name)" ] && git config --global user.name "$0"
 }
 
 case "${CI_BRANCH}" in
@@ -93,6 +91,21 @@ function git_merge()
       || return 1
 }
 
+function git_add_remote()
+{
+    local alien_remote="$1"
+
+    git remote | grep --quiet "${alien_remote}"
+    if [ $? -eq 0 ]; then
+      echo "Alien remote '${alien_remote}' already added"
+    else
+      echo "Add alien '${alien_remote}'..."
+      git remote add "${alien_remote}" "https://github.com/${alien_remote}" || return 1
+      git remote update "${alien_remote}" || return 1
+    fi
+    return 0
+}
+
 for branch in ${branches}; do
     [ "${branch}" = "${CI_BRANCH}" ] && continue
 
@@ -107,18 +120,10 @@ done
 for alien_branch in ${alien_branches}; do
     user=$(echo "${alien_branch}" | cut -d/ -f1)
     repo=$(echo "${alien_branch}" | cut -d/ -f2)
-    branch=$(echo "${alien_branch}" | cut -d/ -f3-)
-
-    git remote | grep --quiet "${user}/${repo}"
-    if [ $? -eq 0 ]; then
-      echo "Alien remote '${user}/${repo}' already added"
-    else
-      echo "Add alien '${user}/${repo}'..."
-      git remote add "${user}/${repo}" "https://github.com/${user}/${repo}" || exit 1
-      git remote update "${user}/${repo}" || exit 1
-    fi
+    git_add_remote "${user}/${repo}" || exit 1
 
     git_merge "${alien_branch}" || exit 1
+
     last_commits+="$(git_describe ${alien_branch})"
     echo
 done
