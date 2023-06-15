@@ -317,6 +317,8 @@ public class PlaylistDetailActivity
 
     @MainThread
     public void onAttachFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment) {
-        this.fragment = (AbsMusicServiceFragment) fragment;
+        if (fragment instanceof AbsMusicServiceFragment) {
+            this.fragment = (AbsMusicServiceFragment) fragment;
+        }
     }
 }
