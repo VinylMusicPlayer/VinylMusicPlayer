@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.dialogs.RenamePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
@@ -26,7 +27,7 @@ import java.io.IOException;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class PlaylistMenuHelper {
-    public static boolean handleMenuClick(@NonNull AppCompatActivity activity, @NonNull final Playlist playlist, @NonNull MenuItem item) {
+    public static boolean handleMenuClick(@NonNull AppCompatActivity activity, @NonNull AbsMusicServiceFragment fragment, @NonNull final Playlist playlist, @NonNull MenuItem item) {
         final int itemId = item.getItemId();
         if (itemId == R.id.action_play) {
             MusicPlayerRemote.openQueue(playlist.getSongs(activity), 0, true);
@@ -47,15 +48,18 @@ public class PlaylistMenuHelper {
             DeletePlaylistDialog.create(playlist).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
             return true;
         } else if (itemId == R.id.action_save_playlist) {
-            new SavePlaylistAsyncTask(activity).execute(playlist);
+            new SavePlaylistAsyncTask(activity, fragment).execute(playlist);
             return true;
         }
         return false;
     }
 
     private static class SavePlaylistAsyncTask extends WeakContextAsyncTask<Playlist, String, String> {
-        public SavePlaylistAsyncTask(Context context) {
+        final AbsMusicServiceFragment fragment;
+
+        public SavePlaylistAsyncTask(Context context, @NonNull final AbsMusicServiceFragment fragment) {
             super(context);
+            this.fragment = fragment;
         }
 
         @Override
@@ -66,7 +70,7 @@ public class PlaylistMenuHelper {
                 return context.getString(R.string.playlist_is_empty);
             }
             try {
-                final File file = PlaylistsUtil.savePlaylist(context, playlist);
+                final File file = PlaylistsUtil.savePlaylist(context, fragment, playlist);
                 return context.getString(R.string.saved_playlist_to, file);
             } catch (IOException e) {
                 // Copy the exception to clipboard

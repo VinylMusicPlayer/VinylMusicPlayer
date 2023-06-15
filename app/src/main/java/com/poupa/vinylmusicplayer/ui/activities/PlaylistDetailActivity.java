@@ -8,7 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentOnAttachListener;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,12 +45,19 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
+import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
 
-public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
+public class PlaylistDetailActivity
+        extends AbsSlidingMusicPanelActivity
+        implements
+            CabHolder,
+            LoaderManager.LoaderCallbacks<ArrayList<Song>>,
+            FragmentOnAttachListener
+{
 
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
 
@@ -54,6 +65,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     public static final String EXTRA_PLAYLIST = "extra_playlist";
 
     private ActivityPlaylistDetailBinding layoutBinding;
+    AbsMusicServiceFragment fragment;
 
     private Playlist playlist;
 
@@ -66,6 +78,9 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportFragmentManager().addFragmentOnAttachListener(this);
+
         setDrawUnderStatusbar();
 
         setStatusbarColorAuto();
@@ -164,7 +179,7 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
             onBackPressed();
             return true;
         }
-        return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
+        return PlaylistMenuHelper.handleMenuClick(this, fragment, playlist, item);
     }
 
     @NonNull
@@ -298,5 +313,10 @@ public class PlaylistDetailActivity extends AbsSlidingMusicPanelActivity impleme
         public ArrayList<Song> loadInBackground() {
             return playlist.getSongs(getContext());
         }
+    }
+
+    @MainThread
+    public void onAttachFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment) {
+        this.fragment = (AbsMusicServiceFragment) fragment;
     }
 }
