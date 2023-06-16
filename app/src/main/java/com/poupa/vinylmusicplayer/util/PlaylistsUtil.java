@@ -145,7 +145,7 @@ public class PlaylistsUtil {
     public static String savePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
         @NonNull ContentValues values = new ContentValues();
         values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/x-mpegurl");
-        //TODO Why cannot obtain the permission to "Playlists" folder???
+        //Note: Cannot obtain the permission to "Playlists" folder - Android 13 simply disallows non-standard ones
         values.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, playlist.name);
 
@@ -161,6 +161,7 @@ public class PlaylistsUtil {
         try (final OutputStream stream = resolver.openOutputStream(uri, "wt")) {
             M3UWriter.write(context, stream, playlist);
         }
-        return uri.getPath();
+
+        return Environment.DIRECTORY_MUSIC + "/" + playlist.name;
     }
 }
