@@ -26,31 +26,32 @@ public class StaticPlaylist extends PreferencesBackedSongList {
 
     @NonNull
     public static List<StaticPlaylist> getAllPlaylists() {
-        List<StaticPlaylist> migratedPlaylists = new ArrayList<>();
-        Set<String> migratedNames = new HashSet<>();
+        List<StaticPlaylist> internalPlaylists = new ArrayList<>();
+        Set<String> internalNames = new HashSet<>();
         for (PreferencesBackedSongList playlist : PreferencesBackedSongList.loadAll()) {
-            migratedNames.add(playlist.name);
-            migratedPlaylists.add(new StaticPlaylist(playlist.name));
+            internalNames.add(playlist.name);
+            internalPlaylists.add(new StaticPlaylist(playlist.name));
         }
 
         final Context context = App.getStaticContext();
         List<Playlist> playlistsToMigrate = PlaylistLoader.getAllPlaylists(context);
 
         final SharedPreferences preferences = getPreferences();
+        Set<String> migratedNames = new HashSet<>();
         migratedNames.addAll(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
 
         for (Playlist playlist : playlistsToMigrate) {
-            if (migratedNames.contains(playlist.name)) {continue;}
+            if (internalNames.contains(playlist.name)) {continue;} // dont overwrite internal ones
+            if (migratedNames.contains(playlist.name)) {continue;} // dont migrate again
 
             StaticPlaylist importedPlaylist = new StaticPlaylist(playlist.name);
             importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
 
-            migratedPlaylists.add(importedPlaylist);
+            internalPlaylists.add(importedPlaylist);
             migratedNames.add(playlist.name);
 
-            // Note: Don't delete migrated playlists here, for two reasons:
-            // - since playlist can be shared with other apps, this will be a destructive action
-            // - this *would* require extra privilege (see https://github.com/AdrienPoupa/VinylMusicPlayer/pull/298)
+            // Note: Don't delete migrated playlists here,
+            // since playlist can be shared with other apps, this will be a destructive action
         }
 
         // Set a persistent marker in prefs, to avoid doing this again
@@ -58,7 +59,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
             preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, migratedNames).apply();
         }
 
-        return migratedPlaylists;
+        return internalPlaylists;
     }
 
     @Nullable

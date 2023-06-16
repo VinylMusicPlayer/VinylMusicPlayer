@@ -1,6 +1,9 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import static com.poupa.vinylmusicplayer.provider.StaticPlaylist.PREF_MIGRATED_STATIC_PLAYLISTS;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -51,6 +54,8 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AbsSlidingMusicPanelActivity {
 
@@ -190,11 +195,21 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                         .content(R.string.reset_mediastore_playlist_warning)
                         .autoDismiss(true)
                         .onPositive((dialog, which) -> {
-                            PreferenceManager.getDefaultSharedPreferences(this)
-                                    .edit()
-                                    .remove(StaticPlaylist.PREF_MIGRATED_STATIC_PLAYLISTS)
-                                    .apply();
-                            PlaylistsUtil.notifyChange(this); // to refresh
+                            // Remove all migrated playlists
+                            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                            Set<String> migratedNames = new HashSet<>();
+                            migratedNames.addAll(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
+                            for (StaticPlaylist playlist : StaticPlaylist.getAllPlaylists()) {
+                                if (migratedNames.contains(playlist.name)) {
+                                    migratedNames.remove(playlist.name);
+                                    StaticPlaylist.removePlaylist(playlist.name);
+                                }
+                            }
+
+                            // Clear the migrated marker
+                            preferences.edit().remove(PREF_MIGRATED_STATIC_PLAYLISTS).apply();
+
+                            PlaylistsUtil.notifyChange(this); // refresh
                         })
                         .positiveText(R.string.reset_mediastore_playlist)
                         .negativeText(android.R.string.cancel)
