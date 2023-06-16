@@ -34,7 +34,6 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
-import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -54,13 +53,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     private static final int DEFAULT_PLAYLIST = 1;
 
     protected final AppCompatActivity activity;
-    @NonNull final AbsMusicServiceFragment fragment;
     protected ArrayList<Playlist> dataSet;
 
-    public PlaylistAdapter(AppCompatActivity activity, @NonNull AbsMusicServiceFragment fragment, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
+    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_playlists_selection);
         this.activity = activity;
-        this.fragment = fragment;
         this.dataSet = dataSet;
         setHasStableIds(true);
     }
@@ -172,9 +169,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             }
         } else if (R.id.action_save_playlist == menuItem.getItemId()) {
             if (selection.size() == 1) {
-                PlaylistMenuHelper.handleMenuClick(activity, fragment, selection.get(0), menuItem);
+                PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
             } else {
-                new SavePlaylistsAsyncTask(activity, fragment).execute(selection);
+                new SavePlaylistsAsyncTask(activity).execute(selection);
             }
         } else {
             SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
@@ -182,11 +179,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     private static class SavePlaylistsAsyncTask extends WeakContextAsyncTask<ArrayList<Playlist>, String, String> {
-        @NonNull final AbsMusicServiceFragment fragment;
-
-        public SavePlaylistsAsyncTask(Context context, @NonNull final AbsMusicServiceFragment fragment) {
+        public SavePlaylistsAsyncTask(Context context) {
             super(context);
-            this.fragment = fragment;
         }
 
         @SafeVarargs
@@ -200,7 +194,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
             for (Playlist playlist : params[0]) {
                 try {
-                    dir = PlaylistsUtil.savePlaylist(context, fragment, playlist).getParent();
+                    dir = PlaylistsUtil.savePlaylist(context, playlist);
                     successes++;
                 } catch (IOException e) {
                     // Copy the exception to clipboard
@@ -283,7 +277,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                                 return true;
                             }
                             return PlaylistMenuHelper.handleMenuClick(
-                                activity, fragment, dataSet.get(getAdapterPosition()), item);
+                                activity, dataSet.get(getAdapterPosition()), item);
                         });
                     }
                     else {
@@ -292,7 +286,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                         MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
 
                         popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
-                            activity, fragment, dataSet.get(getAdapterPosition()), item));
+                            activity, dataSet.get(getAdapterPosition()), item));
                     }
                     popupMenu.show();
                 });

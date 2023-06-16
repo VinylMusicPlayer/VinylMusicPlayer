@@ -1,9 +1,12 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,11 +17,9 @@ import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
-import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
-import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,38 +142,25 @@ public class PlaylistsUtil {
         return playlist.getName();
     }
 
-    public static File savePlaylist(Context context, @NonNull final AbsMusicServiceFragment fragment, Playlist playlist) throws IOException {
-        File destination;
+    public static String savePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
+        @NonNull ContentValues values = new ContentValues();
+        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/x-mpegurl");
+        //TODO Why cannot obtain the permission to "Playlists" folder???
+        values.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
+        values.put(MediaStore.Audio.Media.DISPLAY_NAME, playlist.name);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            //TODO Why cannot obtain the permission to "Playlists" folder???
-            //     final String folder = "Playlists";
-            final String folder = Environment.DIRECTORY_MUSIC;
-            destination = Environment.getExternalStoragePublicDirectory(folder);
+        @NonNull final ContentResolver resolver = context.getContentResolver();
 
-            if (!SAFUtil.isStorageAccessGranted(context, destination.getAbsolutePath())) {
-                fragment.LollipopSAFGuide.launch(new Intent(context, SAFGuideActivity.class));
-            }
+        // Delete existing, if any
+        resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                MediaStore.Audio.Playlists.NAME + "='" + playlist.name + "'",
+                null);
+        // Now create a new one
+        @NonNull final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+
+        try (final OutputStream stream = resolver.openOutputStream(uri, "wt")) {
+            M3UWriter.write(context, stream, playlist);
         }
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            destination = new File(Environment.getExternalStorageDirectory(), "Playlists");
-
-            if (!SAFUtil.isSDCardAccessGranted(context)) {
-                fragment.LollipopSAFGuide.launch(new Intent(context, SAFGuideActivity.class));
-            }
-        }
-        else {
-            destination = new File(Environment.getExternalStorageDirectory(), "Playlists");
-
-            if (SAFUtil.isSAFRequired(destination)) {
-                final String message = context.getString(R.string.saf_pick_file, destination);
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                fragment.KitkatSAFFilePicker.launch(message);
-            }
-        }
-
-        // TODO If SAF guides are started, it will be async
-        //      Call this as the result of the SAF screen, ie. not synchronously
-        return M3UWriter.write(context, destination, playlist);
+        return uri.getPath();
     }
 }
