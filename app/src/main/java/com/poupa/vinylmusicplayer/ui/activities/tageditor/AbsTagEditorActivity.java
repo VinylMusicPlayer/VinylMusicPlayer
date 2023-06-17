@@ -38,6 +38,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.TintHelper;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
@@ -681,7 +682,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     String getSongTitle() {
         try {
             return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
             return null;
         }
     }
