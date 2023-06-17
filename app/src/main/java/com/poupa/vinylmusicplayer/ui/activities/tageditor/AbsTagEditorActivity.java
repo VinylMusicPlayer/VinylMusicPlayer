@@ -179,54 +179,56 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     writeTags(savedSongs, false);
                 });
 
-        writeTagsAndroidR_SAFGuide = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
-                            writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
-                        } else if (!checkForWritingAccessForAndroid11()) {
-                            askForWritingAccessForAndroid11();
-                        }
-                    } else {
-                        showFab();
-                    }
-                });
-
-        writeTagsAndroidR_SAFTreePicker = registerForActivityResult(
-                new ActivityResultContracts.OpenDocumentTree() {
-                    @NonNull
-                    @Override
-                    public Intent createIntent(@NonNull Context context, Uri input) {
-                        return super.createIntent(context, input)
-                                .putExtra("android.content.extra.SHOW_ADVANCED", true);
-                    }
-                },
-                resultUri -> {
-                    if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
-                        SAFUtil.saveTreeUri(this, resultUri);
-                        writeTags(savedSongs, false);
-                        if (!checkForWritingAccessForAndroid11()) {
-                            askForWritingAccessForAndroid11();
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
+            writeTagsAndroidR_SAFGuide = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
+                                writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
+                            } else if (!checkForWritingAccessForAndroid11()) {
+                                askForWritingAccessForAndroid11();
+                            }
                         } else {
-                            writeTags(savedSongs, false);
+                            showFab();
                         }
-                    } else {
-                        showFab();
-                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_LONG).show();
-                    }
-                });
+                    });
 
-        writeRequestAndroidR = registerForActivityResult(
-                new ActivityResultContracts.StartIntentSenderForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        writeTags(savedSongs, false);
-                    } else {
-                        showFab();
-                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            writeTagsAndroidR_SAFTreePicker = registerForActivityResult(
+                    new ActivityResultContracts.OpenDocumentTree() {
+                        @NonNull
+                        @Override
+                        public Intent createIntent(@NonNull Context context, Uri input) {
+                            return super.createIntent(context, input)
+                                    .putExtra("android.content.extra.SHOW_ADVANCED", true);
+                        }
+                    },
+                    resultUri -> {
+                        if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
+                            SAFUtil.saveTreeUri(this, resultUri);
+                            writeTags(savedSongs, false);
+                            if (!checkForWritingAccessForAndroid11()) {
+                                askForWritingAccessForAndroid11();
+                            } else {
+                                writeTags(savedSongs, false);
+                            }
+                        } else {
+                            showFab();
+                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            writeRequestAndroidR = registerForActivityResult(
+                    new ActivityResultContracts.StartIntentSenderForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            writeTags(savedSongs, false);
+                        } else {
+                            showFab();
+                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
 
         imagePicker = registerForActivityResult(
                 new ActivityResultContracts.GetContent() {
