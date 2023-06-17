@@ -7,7 +7,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -15,7 +14,6 @@ import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,10 +21,9 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
-
 import androidx.fragment.app.Fragment;
+
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.model.Album;
@@ -282,8 +279,7 @@ public class MusicUtil {
 
             }
         } catch (SecurityException e) { // | SendIntentException e) {
-            Log.d("TOTO", "exception");
-            e.printStackTrace();
+            OopsHandler.copyStackTraceToClipboard(activity, e);
         }
 
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
