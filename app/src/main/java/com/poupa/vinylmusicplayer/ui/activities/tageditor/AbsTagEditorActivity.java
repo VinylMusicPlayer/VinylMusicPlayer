@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -673,7 +672,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         try {
             return AudioFileIO.read(new File(path));
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            Log.e(TAG, "Could not read audio file " + path, e);
+            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
             return new AudioFile();
         }
     }
