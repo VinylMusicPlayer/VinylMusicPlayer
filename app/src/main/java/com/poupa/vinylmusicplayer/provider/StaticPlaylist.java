@@ -2,12 +2,16 @@ package com.poupa.vinylmusicplayer.provider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -22,7 +26,75 @@ import java.util.UUID;
  * @author SC (soncaokim)
  */
 public class StaticPlaylist extends PreferencesBackedSongList {
-    public static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
+    static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
+
+    @NonNull
+    private static List<StaticPlaylist> importDevicePlaylists(@NonNull final Context context, @NonNull final Set<String> internalNames) {
+        List<StaticPlaylist> importedPlaylists = new ArrayList<>();
+
+        final SharedPreferences preferences = getPreferences();
+        final boolean noMigrationMarker = !preferences.contains(PREF_MIGRATED_STATIC_PLAYLISTS);
+
+        Set<String> previouslyMigratedNames = new HashSet<>(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
+        Set<String> skippedNames = new HashSet<>();
+        Set<String> nowMigratedNames = new HashSet<>();
+
+        for (Playlist playlist : PlaylistLoader.getAllPlaylists(context)) {
+            final String name = playlist.name;
+            if (internalNames.contains(name)) {
+                // dont overwrite internal ones
+                skippedNames.add(name);
+                continue;
+            }
+            if (previouslyMigratedNames.contains(name)) {
+                // dont migrate again
+                nowMigratedNames.add(name);
+                continue;
+            }
+
+            StaticPlaylist importedPlaylist = new StaticPlaylist(name);
+            importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
+
+            importedPlaylists.add(importedPlaylist);
+            nowMigratedNames.add(name);
+
+            // Note: Don't delete migrated playlists here,
+            // since playlist can be shared with other apps, this will be a destructive action
+        }
+
+        // Set a persistent marker in prefs, to avoid doing this again
+        final boolean changed = !previouslyMigratedNames.containsAll(nowMigratedNames) || !nowMigratedNames.containsAll(previouslyMigratedNames);
+        if (noMigrationMarker || changed) {
+            preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, nowMigratedNames).apply();
+        }
+
+        if (noMigrationMarker) {
+            new Handler(context.getMainLooper()).post(() -> {
+                final String message = !skippedNames.isEmpty()
+                    ? context.getResources().getString(R.string.imported_x_skipped_x_playlists, nowMigratedNames.size(), skippedNames.size())
+                    : context.getResources().getString(R.string.imported_x_playlists, nowMigratedNames.size());
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            });
+        }
+
+        return importedPlaylists;
+    }
+
+    public static void resetImportedPlaylists(@NonNull final Context context) {
+        // Remove all migrated playlists
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> migratedNames = new HashSet<>(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
+
+        for (StaticPlaylist playlist : StaticPlaylist.getAllPlaylists()) {
+            if (migratedNames.contains(playlist.name)) {
+                migratedNames.remove(playlist.name);
+                StaticPlaylist.removePlaylist(playlist.name);
+            }
+        }
+
+        // Clear the migrated marker
+        preferences.edit().remove(PREF_MIGRATED_STATIC_PLAYLISTS).apply();
+    }
 
     @NonNull
     public static List<StaticPlaylist> getAllPlaylists() {
@@ -33,31 +105,8 @@ public class StaticPlaylist extends PreferencesBackedSongList {
             internalPlaylists.add(new StaticPlaylist(playlist.name));
         }
 
-        final Context context = App.getStaticContext();
-        List<Playlist> playlistsToMigrate = PlaylistLoader.getAllPlaylists(context);
-
-        final SharedPreferences preferences = getPreferences();
-        Set<String> migratedNames = new HashSet<>();
-        migratedNames.addAll(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
-
-        for (Playlist playlist : playlistsToMigrate) {
-            if (internalNames.contains(playlist.name)) {continue;} // dont overwrite internal ones
-            if (migratedNames.contains(playlist.name)) {continue;} // dont migrate again
-
-            StaticPlaylist importedPlaylist = new StaticPlaylist(playlist.name);
-            importedPlaylist.addSongs(PlaylistSongLoader.getPlaylistSongList(context, playlist.id));
-
-            internalPlaylists.add(importedPlaylist);
-            migratedNames.add(playlist.name);
-
-            // Note: Don't delete migrated playlists here,
-            // since playlist can be shared with other apps, this will be a destructive action
-        }
-
-        // Set a persistent marker in prefs, to avoid doing this again
-        if (!migratedNames.isEmpty()) {
-            preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, migratedNames).apply();
-        }
+        List<StaticPlaylist> importedPlaylists = importDevicePlaylists(App.getStaticContext(), internalNames);
+        internalPlaylists.addAll(importedPlaylists);
 
         return internalPlaylists;
     }

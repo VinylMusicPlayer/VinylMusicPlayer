@@ -266,6 +266,8 @@
     <string name="failed_to_save_playlist">Failed to save playlist (%s).</string>
     <string name="saved_x_playlists_to_x">Saved %1$d playlists to %2$s.</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">Saved %1$d playlists to %2$s, failed to save %3$d.</string>
+    <string name="imported_x_playlists">"Imported %d playlists"</string>
+    <string name="imported_x_skipped_x_playlists">"Imported %d playlists, skipped %d"</string>
     <string name="not_listed_in_media_store"><![CDATA[<b>%s</b> is not listed in the media store.]]></string>
     <string name="some_files_are_not_listed_in_the_media_store">Some files are not listed in the media store.</string>
     <string name="nothing_to_scan">Nothing to scan.</string>
@@ -357,7 +359,7 @@
     <string name="reset_discography">Rescan library</string>
     <string name="reset_discography_warning">This will clear and rebuild the app internal song database.\n\nNo song will be deleted during this operation, but this might clear the play history.\n\nDuring a possible long duration, until the rescan is complete, you will not be able to use the app normally</string>
     <string name="reset_mediastore_playlist">Rescan device playlists</string>
-    <string name="reset_mediastore_playlist_warning">This will reimport device\'s playlists (and .M3U files) into the app.</string>
+    <string name="reset_mediastore_playlist_warning">This will reimport device\'s playlists (and .M3U files) into the app.\n\nThe playlists having the same name as existing ones in the app are skipped.\nYou can force-import by removing the existing ones.</string>
     <string name="none">None</string>
     <string name="track">Track</string>
     <string name="label_with_rg_info">With ReplayGain Tags :</string>
