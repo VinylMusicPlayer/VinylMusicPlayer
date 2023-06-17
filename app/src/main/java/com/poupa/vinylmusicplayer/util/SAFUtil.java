@@ -30,7 +30,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public class SAFUtil {
 
@@ -93,25 +92,6 @@ public class SAFUtil {
         return false;
     }
 
-    @TargetApi(Build.VERSION_CODES.TIRAMISU)
-    public static boolean isStorageAccessGranted(Context context, @NonNull final String folder) {
-        BiFunction<String, String, Boolean> areEquivalentFolders = (uriPermissionPath, path) -> {
-            String normalizedPath = uriPermissionPath
-                    .replaceFirst("^/tree/primary:", "/storage/emulated/0/")
-                    .replaceFirst("/tree/([^/]*):", "/storage/$1/");
-            return normalizedPath.equals(path);
-        };
-
-        List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
-        for (UriPermission perm : perms) {
-            final String path = perm.getUri().getPath();
-            if (areEquivalentFolders.apply(path, folder) && perm.isWritePermission()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
     /**
      * https://github.com/vanilla-music/vanilla-music-tag-editor/commit/e00e87fef289f463b6682674aa54be834179ccf0#diff-d436417358d5dfbb06846746d43c47a5R359
      * Finds needed file through Document API for SAF. It's not optimized yet - you can still gain wrong URI on
