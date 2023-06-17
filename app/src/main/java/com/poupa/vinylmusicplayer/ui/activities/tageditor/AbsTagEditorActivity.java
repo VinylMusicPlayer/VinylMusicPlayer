@@ -2,15 +2,21 @@ package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
@@ -38,16 +46,22 @@ import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.SimpleObservableScrollViewCallbacks;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -93,15 +107,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             image.setTranslationY(scrollY / 2.0f);
         }
     };
-    private List<String> songPaths;
-
-    private List<String> savedSongPaths;
-    private String currentSongPath;
+    private List<Song> songs;
+    private List<Song> savedSongs;
+    private Song currentSong;
     private Map<FieldKey, String> savedTags;
     private ArtworkInfo savedArtworkInfo;
 
     private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
     private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
+    private ActivityResultLauncher<Uri> writeTagsAndroidR_SAFTreePicker;
+    private ActivityResultLauncher<Intent> writeTagsAndroidR_SAFGuide;
+
+    private ActivityResultLauncher<IntentSenderRequest> writeRequestAndroidR;
     private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
 
@@ -113,8 +130,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
         getIntentExtras();
 
-        songPaths = getSongPaths();
-        if (songPaths.isEmpty()) {
+        songs = getSongs();
+        if (songs.isEmpty()) {
             finish();
             return;
         }
@@ -138,7 +155,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                 .putExtra("android.content.extra.SHOW_ADVANCED", true);
                     }
                 },
-                resultUri -> writeTags(List.of(currentSongPath + SAFUtil.SEPARATOR + resultUri)));
+                resultUri -> writeTags(List.of(currentSong), true));
 
         writeTagsLollipop_SAFGuide = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -160,7 +177,56 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 },
                 resultUri -> {
                     SAFUtil.saveTreeUri(this, resultUri);
-                    writeTags(savedSongPaths);
+                    writeTags(savedSongs, false);
+                });
+
+        writeTagsAndroidR_SAFGuide = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
+                            writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
+                        } else if (!checkForWritingAccessForAndroid11()) {
+                            askForWritingAccessForAndroid11();
+                        }
+                    } else {
+                        showFab();
+                    }
+                });
+
+        writeTagsAndroidR_SAFTreePicker = registerForActivityResult(
+                new ActivityResultContracts.OpenDocumentTree() {
+                    @NonNull
+                    @Override
+                    public Intent createIntent(@NonNull Context context, Uri input) {
+                        return super.createIntent(context, input)
+                                .putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    }
+                },
+                resultUri -> {
+                    if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
+                        SAFUtil.saveTreeUri(this, resultUri);
+                        writeTags(savedSongs, false);
+                        if (!checkForWritingAccessForAndroid11()) {
+                            askForWritingAccessForAndroid11();
+                        } else {
+                            writeTags(savedSongs, false);
+                        }
+                    } else {
+                        showFab();
+                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        writeRequestAndroidR = registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        writeTags(savedSongs, false);
+                    } else {
+                        showFab();
+                        Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
+                    }
                 });
 
         imagePicker = registerForActivityResult(
@@ -244,7 +310,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     protected abstract ViewBinding getViewBinding();
 
     @NonNull
-    protected abstract List<String> getSongPaths();
+    protected abstract List<Song> getSongs();
 
     void searchWebFor(String... keys) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -338,39 +404,89 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
         hideFab();
 
-        savedSongPaths = getSongPaths();
+        savedSongs = getSongs();
         savedTags = fieldKeyValueMap;
         savedArtworkInfo = artworkInfo;
 
-        if (!SAFUtil.isSAFRequired(savedSongPaths)) {
-            writeTags(savedSongPaths);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (SAFUtil.isSDCardAccessGranted(this)) {
-                    writeTags(savedSongPaths);
-                } else {
-                    writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
-                }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (!SAFUtil.isSAFRequired(savedSongs)) {
+                writeTags(savedSongs, false);
             } else {
                 writeTagsKitkat();
+            }
+        } else if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+            if (!SAFUtil.isSAFRequired(savedSongs)) {
+                writeTags(savedSongs, false);
+            } else if (SAFUtil.isSDCardAccessGranted(this)) {
+                writeTags(savedSongs, false);
+            } else {
+                writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
+            }
+        } else {
+            if (SAFUtil.isSDCardAccessGranted(this)) {
+                if (SAFUtil.isSAFRequired(savedSongs) && !checkForWritingAccessForAndroid11()) {
+                    askForWritingAccessForAndroid11();
+                } else {
+                    writeTags(savedSongs, false);
+                }
+            } else if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
+                writeTagsAndroidR_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
+            } else {
+                askForWritingAccessForAndroid11();
             }
         }
     }
 
-    private void writeTags(List<String> paths) {
-        new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(paths, savedTags, savedArtworkInfo));
+    private boolean checkForWritingAccessForAndroid11() {
+        // TODO: find correct function to test if file can be access and better to change SAFUtil
+        AudioFile test = null;
+        try {
+            test = AudioFileIO.read(new File(savedSongs.get(0).data));
+        } catch (CannotReadException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TagException e) {
+            e.printStackTrace();
+        } catch (ReadOnlyFileException e) {
+            e.printStackTrace();
+        } catch (InvalidAudioFrameException e) {
+            e.printStackTrace();
+        }
+
+        return (SAFUtil.getUriFromAudio(this, test, null) != null && Build.VERSION.SDK_INT >= VERSION_CODES.R);
+    }
+
+
+    @RequiresApi(api = VERSION_CODES.R)
+    private void askForWritingAccessForAndroid11() {
+        List<Uri> urisToModify = new ArrayList<>();
+
+        for (Song song : getSongs()) {
+            // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
+            urisToModify.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
+        }
+        PendingIntent editPendingIntent =
+                MediaStore.createWriteRequest(this.getContentResolver(), urisToModify);
+
+        // Launch a system prompt requesting user permission for the operation.
+        writeRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
+    }
+
+    private void writeTags(List<Song> songs, boolean kitkatPickFile) {
+        new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(songs, savedTags, savedArtworkInfo, kitkatPickFile));
     }
 
     private void writeTagsKitkat() {
-        if (savedSongPaths.size() < 1) return;
+        if (savedSongs.size() < 1) return;
 
-        currentSongPath = savedSongPaths.remove(0);
+        currentSong = savedSongs.remove(0);
 
-        if (!SAFUtil.isSAFRequired(currentSongPath)) {
-            writeTags(List.of(currentSongPath));
+        if (!SAFUtil.isSAFRequired(currentSong.data)) {
+            writeTags(List.of(currentSong), false);
             writeTagsKitkat();
         } else {
-            final String message = getString(R.string.saf_pick_file, currentSongPath);
+            final String message = getString(R.string.saf_pick_file, currentSong.data);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             writeTagsKitkat_SAFFilePicker.launch(message);
         }
@@ -405,15 +521,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 int counter = 0;
                 boolean wroteArtwork = false;
                 boolean deletedArtwork = false;
-                for (String filePath : info.filePaths) {
-                    publishProgress(++counter, info.filePaths.size());
+                for (Song song : info.songs) {
+                    String filePath = song.data;
+                    publishProgress(++counter, info.songs.size());
                     try {
                         Uri safUri = null;
 
-                        if (filePath.contains(SAFUtil.SEPARATOR)) {
-                            String[] fragments = filePath.split(SAFUtil.SEPARATOR);
-                            filePath = fragments[0];
-                            safUri = Uri.parse(fragments[1]);
+                        if (info.kitkatPickFile) {
+                            safUri = Uri.parse("audio/*");
                         }
 
                         final AudioFile audioFile = AudioFileIO.read(new File(filePath));
@@ -473,16 +588,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 }
 
-                Collection<String> paths = info.filePaths;
-
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) { // remove SAF URI from paths
-                    paths = new ArrayList<>(info.filePaths.size());
-                    for (String path : info.filePaths) {
-                        if (path.contains(SAFUtil.SEPARATOR)) {
-                            path = path.split(SAFUtil.SEPARATOR)[0];
-                        }
-                        paths.add(path);
-                    }
+                Collection<String> paths = new ArrayList<>();
+                for (Song song : info.songs) {
+                    paths.add(song.data);
                 }
 
                 return paths.toArray(new String[0]);
@@ -533,16 +641,19 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
 
         static class LoadingInfo {
-            final Collection<String> filePaths;
+            final Collection<Song> songs;
             @Nullable
             final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
             private final ArtworkInfo artworkInfo;
 
-            private LoadingInfo(Collection<String> filePaths, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
-                this.filePaths = filePaths;
+            final boolean kitkatPickFile;
+
+            private LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo, boolean kitkatPickFile) {
+                this.songs = songs;
                 this.fieldKeyValueMap = fieldKeyValueMap;
                 this.artworkInfo = artworkInfo;
+                this.kitkatPickFile = kitkatPickFile;
             }
         }
     }
@@ -576,7 +687,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getSongTitle() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
         } catch (Exception ignored) {
             return null;
         }
@@ -585,7 +696,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getAlbumTitle() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM);
         } catch (Exception ignored) {
             return null;
         }
@@ -594,7 +705,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getArtistName() {
         try {
-            List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
+            List<String> tags = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
@@ -604,7 +715,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getAlbumArtistName() {
         try {
-            List<String> tags = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
+            List<String> tags = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
@@ -614,7 +725,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getGenreName() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
         } catch (Exception ignored) {
             return null;
         }
@@ -623,7 +734,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getSongYear() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
         } catch (Exception ignored) {
             return null;
         }
@@ -632,7 +743,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getDiscNumber() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
         } catch (Exception ignored) {
             return null;
         }
@@ -641,7 +752,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getTrackNumber() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
         } catch (Exception ignored) {
             return null;
         }
@@ -650,7 +761,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     String getLyrics() {
         try {
-            return getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirst(FieldKey.LYRICS);
+            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.LYRICS);
         } catch (Exception ignored) {
             return null;
         }
@@ -659,7 +770,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     Bitmap getAlbumArt() {
         try {
-            final Artwork artworkTag = getAudioFile(songPaths.get(0)).getTagOrCreateAndSetDefault().getFirstArtwork();
+            final Artwork artworkTag = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirstArtwork();
             if (artworkTag != null) {
                 final byte[] artworkBinaryData = artworkTag.getBinaryData();
                 return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);

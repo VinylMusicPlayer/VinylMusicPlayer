@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 
+import com.poupa.vinylmusicplayer.model.Song;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.ArrayList;
@@ -131,10 +132,10 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
 
     @NonNull
     @Override
-    protected List<String> getSongPaths() {
-        ArrayList<String> paths = new ArrayList<>(1);
-        paths.add(Discography.getInstance().getSong(getId()).data);
-        return paths;
+    protected List<Song> getSongs() {
+        ArrayList<Song> songs = new ArrayList<>(1);
+        songs.add(Discography.getInstance().getSong(getId()));
+        return songs;
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -215,6 +217,13 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
     @Nullable
     @Override
     protected String[] getPermissionsToRequest() {
-        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) { // API less or equal to 29
+            return new String[] { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        } else if (Build.VERSION.SDK_INT < VERSION_CODES.TIRAMISU) { // API less than 33
+            return new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
+        } else {
+            // TODO: only audio is really necessary for the app to work, images is only useful for cover, should try with it has an option
+            return new String[] { Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES };
+        }
     }
 }

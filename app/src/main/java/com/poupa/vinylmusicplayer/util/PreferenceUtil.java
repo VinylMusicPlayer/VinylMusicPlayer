@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -112,6 +114,8 @@ public final class PreferenceUtil {
 
     private static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
     public static final String WHITELIST_ENABLED = "whitelist_enabled";
+
+    private static final String ALWAYS_ASK_WRITE_PERMISSION = "always_ask_write_permission";
 
     @NonNls
     public static final String LIBRARY_CATEGORIES = "library_categories";
@@ -683,6 +687,20 @@ public final class PreferenceUtil {
 
     public boolean getWhitelistEnabled() {
         return mPreferences.getBoolean(WHITELIST_ENABLED, false);
+    }
+
+    public boolean getAlwaysAskWritePermission() {
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+            return false;
+        } else {
+            return mPreferences.getBoolean(ALWAYS_ASK_WRITE_PERMISSION, false);
+        }
+    }
+
+    public void setAlwaysAskWritePermission(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(ALWAYS_ASK_WRITE_PERMISSION, value)
+                .apply();
     }
 
     public void setLibraryCategoryInfos(final ArrayList<CategoryInfo> categories) {

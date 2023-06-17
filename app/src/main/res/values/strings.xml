@@ -389,6 +389,8 @@
     <string name="saf_guide_slide2_description">You need to select your SD card root directory</string>
     <string name="saf_guide_slide3_title">Tap \'select\' button at the bottom of the screen</string>
     <string name="saf_guide_slide3_description">Do not open any subfolders</string>
+    <string name="access_not_granted">Access not granted - not saved</string>
+    <string name="android13_storage_perm_error">Your app has not been granted the READ_MEDIA_AUDIO permission.</string>
     <!-- Android Auto -->
     <string name="playlists_label">Playlists</string>
     <string name="history_label">History</string>
@@ -403,5 +405,12 @@
     <string name="auto_limited_listing_subtitle">Open the app to see the full list</string>
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Only show content below start folder: </string>
+
+    <string name="write_permission">Always ask for write permission</string>
+    <string name="pref_summary_write_permission">To revoke already granted permission, go to android settings for this app, then &quot;Storage &amp; cache&quot; and revoke external storage</string>
+
+    <string name="saf_guide_slide_title_android13">Grant access to music folder</string>
+    <string name="saf_guide_slide_description_android13">This will allow the app to modify or delete song when you ask for it\nGive the access right to the most important music folder\nAny file outside of it can be modify but android will ask for a temporary permission each time\n\nYou can also instead configure the app to always asked for permission before any right action\nWith a changeable settings</string>
+
 
 </resources>

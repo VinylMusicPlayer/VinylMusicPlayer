@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -414,6 +415,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 if (pref != null) {
                     pref.setEnabled(false);
                     pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
+                }
+            }
+
+            TwoStatePreference alwaysAsked = findPreference("always_ask_write_permission");
+            if (alwaysAsked != null) {
+                if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+                    alwaysAsked.setVisible(false);
                 }
             }
 

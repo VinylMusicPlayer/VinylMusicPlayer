@@ -1159,7 +1159,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         // System UI query (Android 11+)
         Predicate<Bundle> isSystemMediaQuery = (hints) -> {
             if (hints == null) {return false;}
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {return false;}
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {return false;}
             if (hints.getBoolean(BrowserRoot.EXTRA_RECENT)) {return true;}
             if (hints.getBoolean(BrowserRoot.EXTRA_SUGGESTED)) {return true;}
             if (hints.getBoolean(BrowserRoot.EXTRA_OFFLINE)) {return true;}
