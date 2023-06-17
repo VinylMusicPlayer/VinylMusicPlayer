@@ -1,7 +1,5 @@
 package com.poupa.vinylmusicplayer.helper.menu;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -68,11 +66,7 @@ public class PlaylistMenuHelper {
                 final String file = PlaylistsUtil.savePlaylist(context, playlist);
                 return context.getString(R.string.saved_playlist_to, file);
             } catch (IOException e) {
-                // Copy the exception to clipboard
-                final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(e));
-                clipboard.setPrimaryClip(clip);
-
+                OopsHandler.copyStackTraceToClipboard(context, e);
                 return context.getString(R.string.failed_to_save_playlist, e);
             }
         }

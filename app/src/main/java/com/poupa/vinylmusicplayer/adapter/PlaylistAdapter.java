@@ -1,8 +1,6 @@
 package com.poupa.vinylmusicplayer.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
@@ -197,11 +195,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     dir = PlaylistsUtil.savePlaylist(context, playlist);
                     successes++;
                 } catch (IOException e) {
-                    // Copy the exception to clipboard
-                    final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(e));
-                    clipboard.setPrimaryClip(clip);
-
+                    OopsHandler.copyStackTraceToClipboard(context, e);
                     failures++;
                 }
             }

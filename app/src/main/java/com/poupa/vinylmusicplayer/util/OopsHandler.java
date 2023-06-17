@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
@@ -65,7 +67,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
         }.start();
     }
 
-    public static String getStackTrace(@NonNull final Throwable exception) {
+    private static String getStackTrace(@NonNull final Throwable exception) {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
         exception.printStackTrace(printWriter);
@@ -73,4 +75,9 @@ public class OopsHandler implements UncaughtExceptionHandler {
 
         return result.toString();
     }
-}
+
+    public static void copyStackTraceToClipboard(@NonNull final Context context, @NonNull final Throwable exception) {
+        final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(exception));
+        clipboard.setPrimaryClip(clip);
+    }}
