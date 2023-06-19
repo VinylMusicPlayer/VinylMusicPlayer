@@ -2,7 +2,9 @@ package com.poupa.vinylmusicplayer.discog.tagging;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -52,6 +54,8 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         try {
+            // TODO Assert the file permission is granted
+
             // Override with metadata extracted from the file ourselves
             AudioFile file = AudioFileIO.read(new File(song.data));
             Tag tags = file.getTagOrCreateAndSetDefault();
@@ -77,7 +81,7 @@ public class TagExtractor {
             song.replayGainAlbum = rgValues.album;
             song.replayGainTrack = rgValues.track;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            e.printStackTrace();
+            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
         }
     }
 }
