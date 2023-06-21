@@ -121,6 +121,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
 
+    private ActivityResultLauncher<IntentSenderRequest> readRequestAndroidR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,8 +138,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
 
         headerVariableSpace = getResources().getDimensionPixelSize(R.dimen.tagEditorHeaderVariableSpace);
-
-        setUpViews();
 
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
@@ -228,6 +228,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
                         }
                     });
+
+            readRequestAndroidR = registerForActivityResult(
+                    new ActivityResultContracts.StartIntentSenderForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            setUpViews();
+                        } else {
+                            showFab();
+                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
         }
 
         imagePicker = registerForActivityResult(
@@ -240,6 +252,20 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 },
                 this::loadImageFromFile);
+
+        // TODO Refactor to reuse this version-adaptation code for read/write/delete operations
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            setUpViews();
+        }
+        else {
+            List<Uri> urisToRead = new ArrayList<>();
+            for (Song song : songs) {
+                urisToRead.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
+            }
+            PendingIntent readPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToRead);
+
+            readRequestAndroidR.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
+        }
     }
 
     private void setUpViews() {
@@ -459,8 +485,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
             urisToModify.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
         }
-        PendingIntent editPendingIntent =
-                MediaStore.createWriteRequest(this.getContentResolver(), urisToModify);
+        PendingIntent editPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToModify);
 
         // Launch a system prompt requesting user permission for the operation.
         writeRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
@@ -682,7 +707,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         try {
             return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
             return null;
         }
     }

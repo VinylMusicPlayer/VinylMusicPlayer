@@ -54,7 +54,7 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         try {
-            // TODO Assert the file permission is granted
+            // TODO Assert the read permission and launch needed UI to acquire that
 
             // Override with metadata extracted from the file ourselves
             AudioFile file = AudioFileIO.read(new File(song.data));
