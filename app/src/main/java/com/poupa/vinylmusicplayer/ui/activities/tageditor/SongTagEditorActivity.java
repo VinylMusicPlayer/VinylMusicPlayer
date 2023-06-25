@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.ArrayList;
@@ -64,14 +65,16 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     }
 
     private void fillViewsWithFileTags() {
-        songTitle.setText(getSongTitle());
-        albumTitle.setText(getAlbumTitle());
-        artist.setText(getArtistName());
-        genre.setText(getGenreName());
-        year.setText(getSongYear());
-        trackNumber.setText(getTrackNumber());
-        discNumber.setText(getDiscNumber());
-        lyrics.setText(getLyrics());
+        @NonNull final AudioFile audio = getAudioFile();
+
+        songTitle.setText(getSongTitle(audio));
+        albumTitle.setText(getAlbumTitle(audio));
+        artist.setText(getArtistName(audio));
+        genre.setText(getGenreName(audio));
+        year.setText(getSongYear(audio));
+        trackNumber.setText(getTrackNumber(audio));
+        discNumber.setText(getDiscNumber(audio));
+        lyrics.setText(getLyrics(audio));
     }
 
     @Override
@@ -97,6 +100,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     @Override
     protected void save() {
         Map<FieldKey, String> fieldKeyValueMap = new EnumMap<>(FieldKey.class);
+
         fieldKeyValueMap.put(FieldKey.TITLE, songTitle.getText().toString());
         fieldKeyValueMap.put(FieldKey.ALBUM, albumTitle.getText().toString());
         fieldKeyValueMap.put(FieldKey.ARTIST, artist.getText().toString());
@@ -105,6 +109,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
         fieldKeyValueMap.put(FieldKey.TRACK, trackNumber.getText().toString());
         fieldKeyValueMap.put(FieldKey.DISC_NO, discNumber.getText().toString());
         fieldKeyValueMap.put(FieldKey.LYRICS, lyrics.getText().toString());
+
         writeValuesToFiles(fieldKeyValueMap, null);
     }
 

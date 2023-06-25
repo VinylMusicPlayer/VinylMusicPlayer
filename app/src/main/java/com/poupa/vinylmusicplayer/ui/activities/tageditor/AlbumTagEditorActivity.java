@@ -36,6 +36,7 @@ import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.EnumMap;
@@ -81,15 +82,17 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
 
 
     private void fillViewsWithFileTags() {
-        albumTitle.setText(getAlbumTitle());
-        albumArtist.setText(getAlbumArtistName());
-        genre.setText(getGenreName());
-        year.setText(getSongYear());
+        @NonNull final AudioFile audio = getAudioFile();
+
+        albumTitle.setText(getAlbumTitle(audio));
+        albumArtist.setText(getAlbumArtistName(audio));
+        genre.setText(getGenreName(audio));
+        year.setText(getSongYear(audio));
     }
 
     @Override
     protected void loadCurrentImage() {
-        Bitmap bitmap = getAlbumArt();
+        Bitmap bitmap = getAlbumArt(getAudioFile());
         setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
         deleteAlbumArt = false;
     }

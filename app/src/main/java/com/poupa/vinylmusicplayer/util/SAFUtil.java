@@ -15,18 +15,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.arch.core.util.Function;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.generic.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -161,13 +165,44 @@ public class SAFUtil {
         return uri;
     }
 
+    public static @NonNull AudioFile loadAudioFileFromMediaStoreUri(Context context, @NonNull final Uri uri, @NonNull final String pathname) {
+        // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
+        // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
+
+        try (InputStream original = context.getContentResolver().openInputStream(uri)) {
+            // Create an app-private temp file
+            Function<String, String> getSuffix = (name) -> {
+                final int i = name.lastIndexOf(".");
+                if (i == -1) {return "";}
+                return name.substring(i + 1);
+            };
+            final String suffix = '.' + getSuffix.apply(pathname);
+            File tempFile = File.createTempFile("tmp-media", suffix);
+            tempFile.deleteOnExit();
+
+            // Copy the content of the URI to the temp file
+            try (OutputStream temp = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = original.read(buffer, 0, 1024)) >= 0) {
+                    temp.write(buffer, 0, read);
+                }
+            }
+
+            // Create a ephemeral/volatile audio file
+            return AudioFileIO.read(tempFile);
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(context, e);
+            return new AudioFile();
+        }
+    }
+
     public static void writeSAF(Context context, AudioFile audio, Uri safUri) {
         if (context == null) {
             return;
         }
 
-        Uri uri = null;
-        uri = getUriFromAudio(context, audio, safUri);
+        Uri uri = getUriFromAudio(context, audio, safUri);
 
         if (uri == null) {
             Log.e(TAG, "writeSAF: Can't get SAF URI");
@@ -181,7 +216,7 @@ public class SAFUtil {
                 return;
             }
 
-            // copy file to app folder to use jaudiotagger
+            // copy file to app folder to use JAudioTagger
             final File original = audio.getFile();
             File temp = File.createTempFile("tmp-media", '.' + Utils.getExtension(original));
             Utils.copy(original, temp);

@@ -691,10 +691,15 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     protected abstract void loadImageFromFile(Uri selectedFile);
 
+    @NonNull AudioFile getAudioFile() {
+        return getAudioFile(songs.get(0));
+    }
+
     @NonNull
-    private AudioFile getAudioFile(@NonNull String path) {
+    private AudioFile getAudioFile(@NonNull Song song) {
         try {
-            return AudioFileIO.read(new File(path));
+            final @NonNull Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
+            return SAFUtil.loadAudioFileFromMediaStoreUri(this, uri, song.data);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
             OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
             return new AudioFile();
@@ -702,27 +707,27 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    String getSongTitle() {
+    static String getSongTitle(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.TITLE);
         } catch (Exception e) {
             return null;
         }
     }
 
     @Nullable
-    String getAlbumTitle() {
+    static String getAlbumTitle(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.ALBUM);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    String getArtistName() {
+    static String getArtistName(@NonNull final AudioFile audio) {
         try {
-            List<String> tags = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
+            List<String> tags = audio.getTagOrCreateAndSetDefault().getAll(FieldKey.ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
@@ -730,9 +735,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    String getAlbumArtistName() {
+    static String getAlbumArtistName(@NonNull final AudioFile audio) {
         try {
-            List<String> tags = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
+            List<String> tags = audio.getTagOrCreateAndSetDefault().getAll(FieldKey.ALBUM_ARTIST);
             return MultiValuesTagUtil.tagEditorMerge(tags);
         } catch (Exception ignored) {
             return null;
@@ -740,54 +745,54 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     }
 
     @Nullable
-    String getGenreName() {
+    static String getGenreName(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    String getSongYear() {
+    static String getSongYear(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.YEAR);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    String getDiscNumber() {
+    static String getDiscNumber(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.DISC_NO);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    String getTrackNumber() {
+    static String getTrackNumber(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.TRACK);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    String getLyrics() {
+    static String getLyrics(@NonNull final AudioFile audio) {
         try {
-            return getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirst(FieldKey.LYRICS);
+            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.LYRICS);
         } catch (Exception ignored) {
             return null;
         }
     }
 
     @Nullable
-    Bitmap getAlbumArt() {
+    static Bitmap getAlbumArt(@NonNull final AudioFile audio) {
         try {
-            final Artwork artworkTag = getAudioFile(songs.get(0).data).getTagOrCreateAndSetDefault().getFirstArtwork();
+            final Artwork artworkTag = audio.getTagOrCreateAndSetDefault().getFirstArtwork();
             if (artworkTag != null) {
                 final byte[] artworkBinaryData = artworkTag.getBinaryData();
                 return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);
