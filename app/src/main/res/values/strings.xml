@@ -387,6 +387,7 @@
     <string name="saf_guide_slide1_description">Open navigation drawer</string>
     <string name="saf_guide_slide2_title">Select your SD card in navigation drawer</string>
     <string name="saf_guide_slide2_description">You need to select your SD card root directory</string>
+    <string name="saf_guide_slide2_description_android_r">You need to select your SD card directory that contains your music (cannot be the root directory)</string>
     <string name="saf_guide_slide3_title">Tap \'select\' button at the bottom of the screen</string>
     <string name="saf_guide_slide3_description">Do not open any subfolders</string>
     <string name="access_not_granted">Access not granted - not saved</string>

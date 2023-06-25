@@ -1,8 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -42,21 +38,23 @@ import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
-import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -415,13 +413,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 if (pref != null) {
                     pref.setEnabled(false);
                     pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
-                }
-            }
-
-            TwoStatePreference alwaysAsked = findPreference("always_ask_write_permission");
-            if (alwaysAsked != null) {
-                if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
-                    alwaysAsked.setVisible(false);
                 }
             }
 

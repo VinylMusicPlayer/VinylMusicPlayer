@@ -27,7 +27,6 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
@@ -49,18 +48,13 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -114,14 +108,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
     private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
-    private ActivityResultLauncher<Uri> writeTagsAndroidR_SAFTreePicker;
     private ActivityResultLauncher<Intent> writeTagsAndroidR_SAFGuide;
 
-    private ActivityResultLauncher<IntentSenderRequest> writeRequestAndroidR;
     private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
 
-    private ActivityResultLauncher<IntentSenderRequest> readRequestAndroidR;
+    private ActivityResultLauncher<IntentSenderRequest> tagEditRequestAndroidR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,56 +172,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 });
 
         if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            writeTagsAndroidR_SAFGuide = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
-                                writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
-                            } else if (missingWritingAccessForAndroid11()) {
-                                askForWritingAccessForAndroid11();
-                            }
-                        } else {
-                            showFab();
-                        }
-                    });
-
-            writeTagsAndroidR_SAFTreePicker = registerForActivityResult(
-                    new ActivityResultContracts.OpenDocumentTree() {
-                        @NonNull
-                        @Override
-                        public Intent createIntent(@NonNull Context context, Uri input) {
-                            return super.createIntent(context, input)
-                                    .putExtra("android.content.extra.SHOW_ADVANCED", true);
-                        }
-                    },
-                    resultUri -> {
-                        if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
-                            SAFUtil.saveTreeUri(this, resultUri);
-                            writeTags(savedSongs, false);
-                            if (missingWritingAccessForAndroid11()) {
-                                askForWritingAccessForAndroid11();
-                            } else {
-                                writeTags(savedSongs, false);
-                            }
-                        } else {
-                            showFab();
-                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-            writeRequestAndroidR = registerForActivityResult(
-                    new ActivityResultContracts.StartIntentSenderForResult(),
-                    result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            writeTags(savedSongs, false);
-                        } else {
-                            showFab();
-                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-            readRequestAndroidR = registerForActivityResult(
+            tagEditRequestAndroidR = registerForActivityResult(
                     new ActivityResultContracts.StartIntentSenderForResult(),
                     result -> {
                         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -263,7 +206,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             }
             PendingIntent readPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToRead);
 
-            readRequestAndroidR.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
+            tagEditRequestAndroidR.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
         }
     }
 
@@ -450,44 +393,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             }
         } else {
             if (SAFUtil.isSDCardAccessGranted(this)) {
-                if (SAFUtil.isSAFRequired(savedSongs) && missingWritingAccessForAndroid11()) {
-                    askForWritingAccessForAndroid11();
-                } else {
-                    writeTags(savedSongs, false);
-                }
-            } else if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
-                writeTagsAndroidR_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
-            } else {
-                askForWritingAccessForAndroid11();
+                writeTags(savedSongs, false);
             }
         }
-    }
-
-    private boolean missingWritingAccessForAndroid11() {
-        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {return false;}
-
-        // TODO: find correct function to test if file can be access and better to change SAFUtil
-        try {
-            AudioFile test = AudioFileIO.read(new File(savedSongs.get(0).data));
-            return (SAFUtil.getUriFromAudio(this, test, null) == null);
-        } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
-            OopsHandler.copyStackTraceToClipboard(this.getApplicationContext(), e);
-            return true;
-        }
-    }
-
-    @RequiresApi(api = VERSION_CODES.R)
-    private void askForWritingAccessForAndroid11() {
-        List<Uri> urisToModify = new ArrayList<>();
-
-        for (Song song : getSongs()) {
-            // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
-            urisToModify.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
-        }
-        PendingIntent editPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToModify);
-
-        // Launch a system prompt requesting user permission for the operation.
-        writeRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
     }
 
     private void writeTags(List<Song> songs, boolean kitkatPickFile) {

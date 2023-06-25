@@ -64,9 +64,6 @@ public class SAFUtil {
     }
 
     public static boolean isSAFRequiredForSongs(List<Song> songs) {
-        if (PreferenceUtil.getInstance().getAlwaysAskWritePermission())
-            return false;
-
         for (Song song : songs) {
             if (isSAFRequired(song)) return true;
         }
