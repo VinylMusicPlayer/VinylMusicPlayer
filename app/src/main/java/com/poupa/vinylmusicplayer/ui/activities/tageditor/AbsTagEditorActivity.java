@@ -186,7 +186,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             if (!PreferenceUtil.getInstance().getAlwaysAskWritePermission()) {
                                 writeTagsAndroidR_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
-                            } else if (!checkForWritingAccessForAndroid11()) {
+                            } else if (missingWritingAccessForAndroid11()) {
                                 askForWritingAccessForAndroid11();
                             }
                         } else {
@@ -207,7 +207,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (resultUri != null) { //.getResultCode() == Activity.RESULT_OK) {
                             SAFUtil.saveTreeUri(this, resultUri);
                             writeTags(savedSongs, false);
-                            if (!checkForWritingAccessForAndroid11()) {
+                            if (missingWritingAccessForAndroid11()) {
                                 askForWritingAccessForAndroid11();
                             } else {
                                 writeTags(savedSongs, false);
@@ -239,7 +239,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
                         }
                     });
-
         }
 
         imagePicker = registerForActivityResult(
@@ -268,7 +267,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     }
 
-    private void setUpViews() {
+    protected void setUpViews() {
         setUpScrollView();
         setUpFab();
         setUpImageView();
@@ -451,7 +450,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             }
         } else {
             if (SAFUtil.isSDCardAccessGranted(this)) {
-                if (SAFUtil.isSAFRequired(savedSongs) && !checkForWritingAccessForAndroid11()) {
+                if (SAFUtil.isSAFRequired(savedSongs) && missingWritingAccessForAndroid11()) {
                     askForWritingAccessForAndroid11();
                 } else {
                     writeTags(savedSongs, false);
@@ -464,18 +463,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         }
     }
 
-    private boolean checkForWritingAccessForAndroid11() {
+    private boolean missingWritingAccessForAndroid11() {
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {return false;}
+
         // TODO: find correct function to test if file can be access and better to change SAFUtil
-        AudioFile test = null;
         try {
-            test = AudioFileIO.read(new File(savedSongs.get(0).data));
+            AudioFile test = AudioFileIO.read(new File(savedSongs.get(0).data));
+            return (SAFUtil.getUriFromAudio(this, test, null) == null);
         } catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException e) {
             OopsHandler.copyStackTraceToClipboard(this.getApplicationContext(), e);
+            return true;
         }
-
-        return (SAFUtil.getUriFromAudio(this, test, null) != null && Build.VERSION.SDK_INT >= VERSION_CODES.R);
     }
-
 
     @RequiresApi(api = VERSION_CODES.R)
     private void askForWritingAccessForAndroid11() {

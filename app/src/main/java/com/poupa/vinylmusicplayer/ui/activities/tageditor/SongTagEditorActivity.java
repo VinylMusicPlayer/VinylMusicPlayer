@@ -11,12 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
-
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
-
 import com.poupa.vinylmusicplayer.model.Song;
+
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.ArrayList;
@@ -40,13 +39,15 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
         super.onCreate(savedInstanceState);
 
         setNoImageMode();
-        setUpViews();
 
         //noinspection ConstantConditions
         getSupportActionBar().setTitle(R.string.action_tag_editor);
     }
 
-    private void setUpViews() {
+    @Override
+    protected void setUpViews() {
+        super.setUpViews();
+
         fillViewsWithFileTags();
         songTitle.addTextChangedListener(this);
         albumTitle.addTextChangedListener(this);

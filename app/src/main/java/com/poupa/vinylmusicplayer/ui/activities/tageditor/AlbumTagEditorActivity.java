@@ -38,7 +38,6 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import org.jaudiotagger.tag.FieldKey;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -63,11 +62,12 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
         super.onCreate(savedInstanceState);
 
         lastFMRestClient = new LastFMRestClient(this);
-
-        setUpViews();
     }
 
-    private void setUpViews() {
+    @Override
+    protected void setUpViews() {
+        super.setUpViews();
+
         fillViewsWithFileTags();
         albumTitle.addTextChangedListener(this);
         albumArtist.addTextChangedListener(this);
