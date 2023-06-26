@@ -36,14 +36,15 @@ public class UpdateToastMediaScannerCompletionListener implements MediaScannerCo
 
     @Override
     public void onScanCompleted(final String path, final Uri uri) {
+        if (uri == null) {
+            failed++;
+        } else {
+            scanned++;
+        }
+
         Activity activity = activityWeakReference.get();
-        if (activity != null) {
+        if ((activity != null) && (failed + scanned == toBeScanned.length)){
             activity.runOnUiThread(() -> {
-                if (uri == null) {
-                    failed++;
-                } else {
-                    scanned++;
-                }
                 String text = " " + String.format(scannedFiles, scanned, toBeScanned.length) + (failed > 0 ? " " + String.format(couldNotScanFiles, failed) : "");
                 toast.setText(text);
                 toast.show();
