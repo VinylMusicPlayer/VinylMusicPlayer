@@ -15,8 +15,9 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.ArrayList;
@@ -65,16 +66,20 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     }
 
     private void fillViewsWithFileTags() {
-        @NonNull final AudioFile audio = getAudioFile();
-
-        songTitle.setText(getSongTitle(audio));
-        albumTitle.setText(getAlbumTitle(audio));
-        artist.setText(getArtistName(audio));
-        genre.setText(getGenreName(audio));
-        year.setText(getSongYear(audio));
-        trackNumber.setText(getTrackNumber(audio));
-        discNumber.setText(getDiscNumber(audio));
-        lyrics.setText(getLyrics(audio));
+        try (AutoDeleteAudioFile audio = getAudioFile()) {
+            if (audio != null) {
+                songTitle.setText(getSongTitle(audio.get()));
+                albumTitle.setText(getAlbumTitle(audio.get()));
+                artist.setText(getArtistName(audio.get()));
+                genre.setText(getGenreName(audio.get()));
+                year.setText(getSongYear(audio.get()));
+                trackNumber.setText(getTrackNumber(audio.get()));
+                discNumber.setText(getDiscNumber(audio.get()));
+                lyrics.setText(getLyrics(audio.get()));
+            }
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(this, e);
+        }
     }
 
     @Override

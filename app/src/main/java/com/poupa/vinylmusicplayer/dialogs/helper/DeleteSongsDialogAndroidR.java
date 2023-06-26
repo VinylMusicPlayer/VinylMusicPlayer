@@ -16,9 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -149,7 +149,7 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                 if (fragment == null || activity == null) {return null;}
 
                 final List<Song> songs = lists[0];
-                if (!SAFUtil.isSAFRequiredForSongs(songs)) {
+                if (!SAFUtil.isSAFRequired(songs)) {
                     fragment.deleteSongs(songs, null);
                 } else {
                     if (SAFUtil.isSDCardAccessGranted(activity)) {

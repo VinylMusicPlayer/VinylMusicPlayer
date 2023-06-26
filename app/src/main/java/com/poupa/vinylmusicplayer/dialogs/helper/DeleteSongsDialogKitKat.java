@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
@@ -202,7 +201,7 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
                 if (dialog == null || activity == null) {return null;}
 
                 final List<Song> songs = lists[0];
-                if (!SAFUtil.isSAFRequiredForSongs(songs)) {
+                if (!SAFUtil.isSAFRequired(songs)) {
                     dialog.deleteSongs(songs, null);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriPermission;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,10 +23,7 @@ import androidx.documentfile.provider.DocumentFile;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.generic.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,20 +35,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SAFUtil {
-
     public static final String TAG = SAFUtil.class.getSimpleName();
-    public static final String SEPARATOR = "###/SAF/###";
 
-    public static boolean isSAFRequired(File file) {
+    private static boolean isSAFRequired(File file) {
         return !file.canWrite();
     }
 
     public static boolean isSAFRequired(String path) {
         return isSAFRequired(new File(path));
-    }
-
-    public static boolean isSAFRequired(AudioFile audio) {
-        return isSAFRequired(audio.getFile());
     }
 
     public static boolean isSAFRequired(Song song) {
@@ -59,13 +52,6 @@ public class SAFUtil {
     public static boolean isSAFRequired(List<Song> songs) {
         for (Song song : songs) {
             if (isSAFRequired(song.data)) return true;
-        }
-        return false;
-    }
-
-    public static boolean isSAFRequiredForSongs(List<Song> songs) {
-        for (Song song : songs) {
-            if (isSAFRequired(song)) return true;
         }
         return false;
     }
@@ -106,7 +92,7 @@ public class SAFUtil {
      * @return URI for found file. Null if nothing found.
      */
     @Nullable
-    public static Uri findDocument(@Nullable DocumentFile dir, @NonNull List<String> segments) {
+    private static Uri findDocument(@Nullable DocumentFile dir, @NonNull List<String> segments) {
         if (dir == null) {return null;}
 
         for (DocumentFile file : dir.listFiles()) {
@@ -129,40 +115,19 @@ public class SAFUtil {
         return null;
     }
 
-    public static void write(Context context, AudioFile audio, Uri safUri) {
-        if (isSAFRequired(audio)) {
-            writeSAF(context, audio, safUri);
-        } else {
-            try {
-                writeFile(audio);
-            } catch (CannotWriteException e) {
-                e.printStackTrace();
-            }
-        }
+    public static void write(Context context, AutoDeleteAudioFile audio, @NonNull final Song song) {
+        writeSAF(context, audio, song);
     }
 
-    public static void writeFile(AudioFile audio) throws CannotWriteException {
-        audio.commit();
+    private static Uri getUriFromSong(@NonNull final Song song) {
+        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
     }
 
-    public static Uri getUriFromAudio(Context context, AudioFile audio, Uri safUri) {
-        Uri uri = null;
-
-        if (isTreeUriSaved()) {
-            List<String> pathSegments =
-                    new ArrayList<>(Arrays.asList(audio.getFile().getAbsolutePath().split("/")));
-            Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
-            uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
-        }
-
-        if (uri == null) {
-            uri = safUri;
-        }
-
-        return uri;
+    public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
+        return SAFUtil.loadAudioFile(context, getUriFromSong(song), song.data);
     }
 
-    public static @NonNull AudioFile loadAudioFileFromMediaStoreUri(Context context, @NonNull final Uri uri, @NonNull final String pathname) {
+    private static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Uri uri, @NonNull final String pathname) {
         // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
 
@@ -187,51 +152,32 @@ public class SAFUtil {
             }
 
             // Create a ephemeral/volatile audio file
-            return AudioFileIO.read(tempFile);
+            return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(context, e);
-            return new AudioFile();
+            return null;
         }
     }
 
-    public static void writeSAF(Context context, AudioFile audio, Uri safUri) {
+    private static void writeSAF(Context context, AutoDeleteAudioFile tempAudio, @NonNull final Song song) {
         if (context == null) {
             return;
         }
 
-        Uri uri = getUriFromAudio(context, audio, safUri);
-
-        if (uri == null) {
-            Log.e(TAG, "writeSAF: Can't get SAF URI");
-            toast(context, context.getString(R.string.saf_error_uri));
-            return;
-        }
+        Uri uri = getUriFromSong(song);
 
         try (ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "rw")) {
-            if (pfd == null) {
-                Log.e(TAG, "writeSAF: SAF provided incorrect URI: " + uri);
-                return;
-            }
-
-            // copy file to app folder to use JAudioTagger
-            final File original = audio.getFile();
-            File temp = File.createTempFile("tmp-media", '.' + Utils.getExtension(original));
-            Utils.copy(original, temp);
-            temp.deleteOnExit();
-            audio.setFile(temp);
-            writeFile(audio);
+            // Save the in-memory tags to the backing file
+            tempAudio.get().commit();
 
             // now read persisted data and write it to real FD provided by SAF
-            FileInputStream fis = new FileInputStream(temp);
+            FileInputStream fis = new FileInputStream(tempAudio.get().getFile());
             byte[] audioContent = FileUtil.readBytes(fis);
             FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
             fos.write(audioContent);
             fos.close();
-
-            temp.delete();
         } catch (final Exception e) {
-            Log.e(TAG, "writeSAF: Failed to write to file descriptor provided by SAF", e);
-
+            OopsHandler.copyStackTraceToClipboard(context, e);
             toast(context, String.format(context.getString(R.string.saf_write_failed), e.getLocalizedMessage()));
         }
     }
@@ -292,5 +238,4 @@ public class SAFUtil {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
         }
     }
-
 }

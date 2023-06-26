@@ -160,7 +160,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
             final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
             findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
-
         }
 
         @Nullable

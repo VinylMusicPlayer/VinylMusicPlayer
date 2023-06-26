@@ -36,7 +36,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.TintHelper;
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
@@ -46,13 +45,13 @@ import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.images.Artwork;
@@ -447,17 +446,15 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 boolean wroteArtwork = false;
                 boolean deletedArtwork = false;
                 for (Song song : info.songs) {
-                    String filePath = song.data;
                     publishProgress(++counter, info.songs.size());
-                    try {
+                    try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
                         Uri safUri = null;
 
                         if (info.kitkatPickFile) {
                             safUri = Uri.parse("audio/*");
                         }
 
-                        final AudioFile audioFile = AudioFileIO.read(new File(filePath));
-                        final Tag tag = audioFile.getTagOrCreateAndSetDefault();
+                        final Tag tag = audioFile.get().getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
                             for (final Map.Entry<FieldKey, String> entry : info.fieldKeyValueMap.entrySet()) {
@@ -476,7 +473,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    OopsHandler.copyStackTraceToClipboard(activity.get(), e);
                                 }
                             }
                         }
@@ -492,9 +489,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             }
                         }
 
-                        SAFUtil.write(activity.get(), audioFile, safUri);
+                        SAFUtil.write(activity.get(), audioFile, song);
                     } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-                        e.printStackTrace();
+                        OopsHandler.copyStackTraceToClipboard(activity.get(), e);
                     }
                 }
 
@@ -520,7 +517,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
                 return paths.toArray(new String[0]);
             } catch (Exception e) {
-                e.printStackTrace();
+                OopsHandler.copyStackTraceToClipboard(activity.get(), e);
                 return null;
             }
         }
@@ -599,19 +596,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     protected abstract void loadImageFromFile(Uri selectedFile);
 
-    @NonNull AudioFile getAudioFile() {
+    @Nullable AutoDeleteAudioFile getAudioFile() {
         return getAudioFile(songs.get(0));
     }
 
-    @NonNull
-    private AudioFile getAudioFile(@NonNull Song song) {
-        try {
-            final @NonNull Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
-            return SAFUtil.loadAudioFileFromMediaStoreUri(this, uri, song.data);
-        } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
-            return new AudioFile();
-        }
+    @Nullable
+    private AutoDeleteAudioFile getAudioFile(@NonNull Song song) {
+        return SAFUtil.loadAudioFile(this, song);
     }
 
     @Nullable

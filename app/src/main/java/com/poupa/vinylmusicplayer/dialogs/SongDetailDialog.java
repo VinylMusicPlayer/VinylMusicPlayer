@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,10 +17,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.SAFUtil;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
 
 import java.io.File;
@@ -104,20 +103,22 @@ public class SongDetailDialog extends DialogFragment {
             htmlBuilder.appendLine(R.string.label_file_path, songFile.getAbsolutePath())
                     .appendLine(R.string.label_file_size,
                             String.format(Locale.getDefault(), "%.2f MB", 1.0 * songFile.length() / 1024 / 1024));
-
-            try {
-                AudioFile audioFile = AudioFileIO.read(songFile);
-                AudioHeader audioHeader = audioFile.getAudioHeader();
-
-                htmlBuilder.appendLine(R.string.label_file_format, audioHeader.getFormat())
-                        .appendLine(R.string.label_bit_rate, audioHeader.getBitRate(), " kb/s")
-                        .appendLine(R.string.label_sampling_rate, audioHeader.getSampleRate(), " Hz");
-            } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-                Log.e(TAG, "error while reading the song file", e);
-            }
         } else {
             htmlBuilder.appendLine(R.string.label_file_path, "-");
         }
+
+        try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(context, song)) {
+            AudioHeader audioHeader = audioFile.get().getAudioHeader();
+
+            htmlBuilder.appendLine(R.string.label_file_format, audioHeader.getFormat())
+                    .appendLine(R.string.label_bit_rate, audioHeader.getBitRate(), " kb/s")
+                    .appendLine(R.string.label_sampling_rate, audioHeader.getSampleRate(), " Hz");
+        } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
+            htmlBuilder.appendLine(R.string.label_file_format, "-")
+                    .appendLine(R.string.label_bit_rate, "- kb/s")
+                    .appendLine(R.string.label_sampling_rate, "- Hz");
+        }
+
         filesystemInfo.setText(htmlBuilder.build());
 
         // ---- Information from the mediastore / discography

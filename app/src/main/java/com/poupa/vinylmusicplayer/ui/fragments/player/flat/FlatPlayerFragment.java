@@ -273,7 +273,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             @Override
             protected Lyrics doInBackground(Void... params) {
-                String data = MusicUtil.getLyrics(song);
+                String data = MusicUtil.getLyrics(requireContext(), song);
                 if (TextUtils.isEmpty(data)) {
                     return null;
                 }

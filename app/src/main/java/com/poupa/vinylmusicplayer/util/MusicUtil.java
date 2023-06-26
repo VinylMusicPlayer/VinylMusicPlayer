@@ -35,7 +35,6 @@ import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.io.File;
@@ -271,7 +270,7 @@ public class MusicUtil {
             else if (Build.VERSION.SDK_INT == VERSION_CODES.Q) {
                 // Android Q takes care of this if the element is remove via MediaStore
             }
-            else if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
+            else { // Android R and after
                 List<Uri> urisToDelete = new ArrayList<>();
                 for (Song song: songs) {
                     // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
@@ -383,39 +382,39 @@ public class MusicUtil {
     }
 
     @Nullable
-    public static String getLyrics(Song song) {
+    public static String getLyrics(@NonNull final Context context, Song song) {
         String lyrics = null;
 
-        File file = new File(song.data);
-
-        try {
-            lyrics = AudioFileIO.read(file).getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+            lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            e.printStackTrace();
+            OopsHandler.copyStackTraceToClipboard(context, e);
         }
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
-            File dir = file.getAbsoluteFile().getParentFile();
+            try {
+                // TODO This probably wont work due to restricted access on Android 13
+                File file = new File(song.data);
+                File dir = file.getAbsoluteFile().getParentFile();
 
-            if (dir != null && dir.exists() && dir.isDirectory()) {
-                String format = ".*%s.*\\.(lrc|txt)";
-                String filename = Pattern.quote(FileUtil.stripExtension(file.getName()));
-                String songTitle = Pattern.quote(song.title);
+                if (dir != null && dir.exists() && dir.isDirectory()) {
+                    String format = ".*%s.*\\.(lrc|txt)";
+                    String filename = Pattern.quote(FileUtil.stripExtension(file.getName()));
+                    String songTitle = Pattern.quote(song.title);
 
-                final ArrayList<Pattern> patterns = new ArrayList<>();
-                patterns.add(Pattern.compile(String.format(format, filename), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-                patterns.add(Pattern.compile(String.format(format, songTitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+                    final ArrayList<Pattern> patterns = new ArrayList<>();
+                    patterns.add(Pattern.compile(String.format(format, filename), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+                    patterns.add(Pattern.compile(String.format(format, songTitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 
-                File[] files = dir.listFiles(f -> {
-                    for (Pattern pattern : patterns) {
-                        if (pattern.matcher(f.getName()).matches()) return true;
-                    }
-                    return false;
-                });
+                    File[] files = dir.listFiles(f -> {
+                        for (Pattern pattern : patterns) {
+                            if (pattern.matcher(f.getName()).matches()) return true;
+                        }
+                        return false;
+                    });
 
-                if (files != null && files.length > 0) {
-                    for (File f : files) {
-                        try {
+                    if (files != null && files.length > 0) {
+                        for (File f : files) {
                             String newLyrics = FileUtil.read(f);
                             if (!newLyrics.trim().isEmpty()) {
                                 if (AbsSynchronizedLyrics.isSynchronized(newLyrics)) {
@@ -423,11 +422,11 @@ public class MusicUtil {
                                 }
                                 lyrics = newLyrics;
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }
+            } catch (Exception e) {
+                OopsHandler.copyStackTraceToClipboard(context, e);
             }
         }
 

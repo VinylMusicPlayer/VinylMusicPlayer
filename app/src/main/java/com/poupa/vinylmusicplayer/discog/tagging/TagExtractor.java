@@ -1,13 +1,10 @@
 package com.poupa.vinylmusicplayer.discog.tagging;
 
-import android.content.ContentUris;
-import android.content.Context;
-import android.provider.MediaStore;
-
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
@@ -56,15 +53,11 @@ public class TagExtractor {
     };
 
     public static void extractTags(@NonNull Song song) {
-        try {
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), song)){
             // TODO Assert the read permission and launch needed UI to acquire that
 
             // Override with metadata extracted from the file ourselves
-            @NonNull final Context context = App.getStaticContext();
-            AudioFile file = SAFUtil.loadAudioFileFromMediaStoreUri(
-                    context,
-                    ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id),
-                    song.data);
+            final AudioFile file = audio.get();
             Tag tags = file.getTagOrCreateAndSetDefault();
             if (tags.isEmpty() && (file instanceof MP3File)) {
                 tags = ((MP3File) file).getID3v1Tag();

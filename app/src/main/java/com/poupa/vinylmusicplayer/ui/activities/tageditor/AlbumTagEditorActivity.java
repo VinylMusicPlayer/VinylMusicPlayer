@@ -32,11 +32,12 @@ import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmAlbum;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.FieldKey;
 
 import java.util.EnumMap;
@@ -82,19 +83,27 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
 
 
     private void fillViewsWithFileTags() {
-        @NonNull final AudioFile audio = getAudioFile();
-
-        albumTitle.setText(getAlbumTitle(audio));
-        albumArtist.setText(getAlbumArtistName(audio));
-        genre.setText(getGenreName(audio));
-        year.setText(getSongYear(audio));
+        try (AutoDeleteAudioFile audio = getAudioFile()) {
+            if (audio != null) {
+                albumTitle.setText(getAlbumTitle(audio.get()));
+                albumArtist.setText(getAlbumArtistName(audio.get()));
+                genre.setText(getGenreName(audio.get()));
+                year.setText(getSongYear(audio.get()));
+            }
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(this, e);
+        }
     }
 
     @Override
     protected void loadCurrentImage() {
-        Bitmap bitmap = getAlbumArt(getAudioFile());
-        setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
-        deleteAlbumArt = false;
+        try (AutoDeleteAudioFile audio = getAudioFile()) {
+            Bitmap bitmap = getAlbumArt(audio.get());
+            setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
+            deleteAlbumArt = false;
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(this, e);
+        }
     }
 
     @Override
