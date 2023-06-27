@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ArtistSignatureUtil;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -85,11 +84,7 @@ public final class VinylGlideExtension {
         }
     }
 
-    public static Object getSongModel(Song song) {
-        return getSongModel(song, PreferenceUtil.getInstance().ignoreMediaStoreArtwork());
-    }
-
-    private static Object getSongModel(Song song, boolean ignoreMediaStore) {
+    public static Object getSongModel(@NonNull final Song song) {
         return new AudioFileCover(song.data);
     }
 
