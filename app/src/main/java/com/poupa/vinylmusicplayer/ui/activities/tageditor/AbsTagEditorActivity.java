@@ -655,18 +655,4 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             return null;
         }
     }
-
-    @Nullable
-    static Bitmap getAlbumArt(@NonNull final AudioFile audio) {
-        try {
-            final Artwork artworkTag = audio.getTagOrCreateAndSetDefault().getFirstArtwork();
-            if (artworkTag != null) {
-                final byte[] artworkBinaryData = artworkTag.getBinaryData();
-                return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);
-            }
-            return null;
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
 }
