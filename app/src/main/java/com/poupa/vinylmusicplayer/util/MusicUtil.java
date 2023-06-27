@@ -196,46 +196,6 @@ public class MusicUtil {
         return result;
     }
 
-    public static void insertAlbumArt(@NonNull Context context, long albumId, String path, @NonNull final String mimeType) {
-        ContentResolver contentResolver = context.getContentResolver();
-
-        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-        contentResolver.delete(ContentUris.withAppendedId(artworkUri, albumId), null, null);
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Audio.AlbumColumns.ALBUM_ID, albumId);
-        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
-        values.put(MediaStore.MediaColumns.DATA, path);
-
-        contentResolver.insert(artworkUri, values);
-    }
-
-    public static void deleteAlbumArt(@NonNull Context context, long albumId) {
-        ContentResolver contentResolver = context.getContentResolver();
-        Uri localUri = Uri.parse("content://media/external/audio/albumart");
-        contentResolver.delete(ContentUris.withAppendedId(localUri, albumId), null, null);
-    }
-
-    @NonNull
-    public static File createAlbumArtFile() {
-        return new File(createAlbumArtDir(), String.valueOf(System.currentTimeMillis()));
-    }
-
-    @NonNull
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static File createAlbumArtDir() {
-        File albumArtDir = new File(Environment.getExternalStorageDirectory(), "/albumthumbs/");
-        if (!albumArtDir.exists()) {
-            albumArtDir.mkdirs();
-            try {
-                new File(albumArtDir, ".nomedia").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return albumArtDir;
-    }
-
     public static void deleteTracks(@NonNull final Fragment fragment, ActivityResultLauncher<IntentSenderRequest> deleteRequestAndroidR, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris) {
         final int songCount = songs.size();
 

@@ -437,8 +437,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 }
 
                 int counter = 0;
-                boolean wroteArtwork = false;
-                boolean deletedArtwork = false;
                 for (Song song : info.songs) {
                     publishProgress(++counter, info.songs.size());
                     try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
@@ -469,11 +467,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         if (info.artworkInfo != null) {
                             if (info.artworkInfo.artwork == null) {
                                 tag.deleteArtworkField();
-                                deletedArtwork = true;
                             } else if (artwork != null) {
                                 tag.deleteArtworkField();
                                 tag.setField(artwork);
-                                wroteArtwork = true;
                             }
                         }
 
@@ -482,23 +478,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         OopsHandler.copyStackTraceToClipboard(activity.get(), e);
                     }
                 }
-
-//                // Note: Given that the artwork has been embedded in the track data,
-//                //      this is needed to only maintain MediaStore cache (useless if ignore_media_store is enabled in pref
-//                final Context context = getContext();
-//                if (context != null) {
-//                    if (wroteArtwork) {
-//                        if (info.artworkInfo == null) {throw new AssertionError();}
-//                        MusicUtil.insertAlbumArt(
-//                                context,
-//                                info.artworkInfo.albumId,
-//                                albumArtFile.getPath(),
-//                                "image/png");
-//                    } else if (deletedArtwork) {
-//                        if (info.artworkInfo == null) {throw new AssertionError();}
-//                        MusicUtil.deleteAlbumArt(context, info.artworkInfo.albumId);
-//                    }
-//                }
 
                 Collection<String> paths = new ArrayList<>();
                 for (Song song : info.songs) {
