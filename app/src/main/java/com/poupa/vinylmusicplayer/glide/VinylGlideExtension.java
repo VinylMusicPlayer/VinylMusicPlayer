@@ -85,7 +85,7 @@ public final class VinylGlideExtension {
     }
 
     public static Object getSongModel(@NonNull final Song song) {
-        return new AudioFileCover(song.data);
+        return new AudioFileCover(song);
     }
 
     public static <TranscodeType> GenericTransitionOptions<TranscodeType> getDefaultTransition() {
