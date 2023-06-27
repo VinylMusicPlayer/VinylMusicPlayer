@@ -124,13 +124,10 @@ public class SAFUtil {
     }
 
     public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
-        return SAFUtil.loadAudioFile(context, getUriFromSong(song), song.data);
-    }
-
-    private static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Uri uri, @NonNull final String pathname) {
         // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
 
+        final Uri uri = getUriFromSong(song);
         try (InputStream original = context.getContentResolver().openInputStream(uri)) {
             // Create an app-private temp file
             Function<String, String> getSuffix = (name) -> {
@@ -138,9 +135,7 @@ public class SAFUtil {
                 if (i == -1) {return "";}
                 return name.substring(i + 1);
             };
-            final String suffix = '.' + getSuffix.apply(pathname);
-            File tempFile = File.createTempFile("tmp-media", suffix);
-            tempFile.deleteOnExit();
+            File tempFile = AutoDeleteTempFile.create(String.valueOf(song.id), getSuffix.apply(song.data)).get();
 
             // Copy the content of the URI to the temp file
             try (OutputStream temp = new FileOutputStream(tempFile)) {

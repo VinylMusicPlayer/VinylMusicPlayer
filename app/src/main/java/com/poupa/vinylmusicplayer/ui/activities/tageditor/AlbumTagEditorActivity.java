@@ -77,7 +77,6 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
         year.addTextChangedListener(this);
 
         // Dont wrap text if line too long, make it scrollable
-        // https://stackoverflow.com/questions/5146207/disable-word-wrap-in-an-android-multi-line-textview
         albumArtist.setHorizontallyScrolling(true);
     }
 

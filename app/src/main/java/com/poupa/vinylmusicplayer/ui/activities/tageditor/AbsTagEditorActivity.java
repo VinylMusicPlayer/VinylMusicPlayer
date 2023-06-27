@@ -46,7 +46,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.AutoDeleteTempFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.Util;
@@ -57,7 +57,6 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -73,7 +72,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_PALETTE = "extra_palette";
-    private static final String TAG = AbsTagEditorActivity.class.getSimpleName();
 
     FloatingActionButton fab;
     ObservableScrollView observableScrollView;
@@ -107,7 +105,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
     private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
-    private ActivityResultLauncher<Intent> writeTagsAndroidR_SAFGuide;
 
     private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
@@ -430,15 +427,12 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 final LoadingInfo info = params[0];
 
                 Artwork artwork = null;
-                File albumArtFile = null;
-                final String albumArtMimeType = "image/png";
                 if (info.artworkInfo != null && info.artworkInfo.artwork != null) {
-                    try {
-                        albumArtFile = MusicUtil.createAlbumArtFile().getCanonicalFile();
-                        info.artworkInfo.artwork.compress(Bitmap.CompressFormat.PNG, 0, new FileOutputStream(albumArtFile));
-                        artwork = ArtworkFactory.createArtworkFromFile(albumArtFile);
+                    try (AutoDeleteTempFile albumArtFile = AutoDeleteTempFile.create(null, "png")){
+                        info.artworkInfo.artwork.compress(Bitmap.CompressFormat.PNG, 0, new FileOutputStream(albumArtFile.get().getCanonicalFile()));
+                        artwork = ArtworkFactory.createArtworkFromFile(albumArtFile.get());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        OopsHandler.copyStackTraceToClipboard(activity.get(), e);
                     }
                 }
 
@@ -448,12 +442,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 for (Song song : info.songs) {
                     publishProgress(++counter, info.songs.size());
                     try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
-                        Uri safUri = null;
-
-                        if (info.kitkatPickFile) {
-                            safUri = Uri.parse("audio/*");
-                        }
-
                         final Tag tag = audioFile.get().getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
@@ -495,20 +483,22 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     }
                 }
 
-                final Context context = getContext();
-                if (context != null) {
-                    if (wroteArtwork) {
-                        if (info.artworkInfo == null) {throw new AssertionError();}
-                        MusicUtil.insertAlbumArt(
-                                context,
-                                info.artworkInfo.albumId,
-                                albumArtFile.getPath(),
-                                albumArtMimeType);
-                    } else if (deletedArtwork) {
-                        if (info.artworkInfo == null) {throw new AssertionError();}
-                        MusicUtil.deleteAlbumArt(context, info.artworkInfo.albumId);
-                    }
-                }
+//                // Note: Given that the artwork has been embedded in the track data,
+//                //      this is needed to only maintain MediaStore cache (useless if ignore_media_store is enabled in pref
+//                final Context context = getContext();
+//                if (context != null) {
+//                    if (wroteArtwork) {
+//                        if (info.artworkInfo == null) {throw new AssertionError();}
+//                        MusicUtil.insertAlbumArt(
+//                                context,
+//                                info.artworkInfo.albumId,
+//                                albumArtFile.getPath(),
+//                                "image/png");
+//                    } else if (deletedArtwork) {
+//                        if (info.artworkInfo == null) {throw new AssertionError();}
+//                        MusicUtil.deleteAlbumArt(context, info.artworkInfo.albumId);
+//                    }
+//                }
 
                 Collection<String> paths = new ArrayList<>();
                 for (Song song : info.songs) {

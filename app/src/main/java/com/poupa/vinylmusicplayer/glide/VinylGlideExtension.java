@@ -90,10 +90,11 @@ public final class VinylGlideExtension {
         return getSongModel(song, PreferenceUtil.getInstance().ignoreMediaStoreArtwork());
     }
 
-    public static Object getSongModel(Song song, boolean ignoreMediaStore) {
+    private static Object getSongModel(Song song, boolean ignoreMediaStore) {
         if (ignoreMediaStore) {
             return new AudioFileCover(song.data);
         } else {
+            // TODO This wont work since we dont maintain the MediaStore cover art URIs anymore
             return MusicUtil.getMediaStoreAlbumCoverUri(song.albumId);
         }
     }

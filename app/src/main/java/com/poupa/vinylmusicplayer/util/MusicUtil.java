@@ -260,7 +260,6 @@ public class MusicUtil {
                     selection.toString(), null);
 
             // Step 3: Remove files from card
-            // TODO Refactor to reuse this version-adaptation code for read/write/delete operations
             if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
                 for (int i = 0; i < songCount; i++) {
                     final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
