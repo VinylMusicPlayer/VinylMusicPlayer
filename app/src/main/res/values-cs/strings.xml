@@ -125,7 +125,7 @@
     <string name="pref_title_blurred_album_art">Rozostřit obal alba</string>
     <string name="pref_title_colored_notification">Barevné notifikace</string>
     <string name="pref_title_classic_notification">Klasický vzhled oznámení</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignorovat obaly Media Storu</string>
+    <!--string name="pref_title_ignore_media_store_artwork">Ignorovat obaly Media Storu</string-->
     <string name="pref_title_gapless_playback">Přehrávání bez mezer</string>
     <string name="pref_title_audio_ducking">Snížit hlasitost při ztrátě priority zvuku</string>
     <string name="pref_title_last_added_interval">Období písmene v přidaných skladeb</string>
@@ -160,7 +160,7 @@
     <string name="pref_summary_classic_notification">Použije klasický vzhled oznámení</string>
     <string name="pref_summary_colored_notification">"Notifikace jsou zbarveny podle obalu alba"</string>
     <string name="pref_summary_gapless_playback">"Odstraní ticho mezi skladbami. Deaktivace může vyřešit problémy s přehráváním."</string>
-    <string name="pref_summary_ignore_media_store_artwork">"Může zvýšit kvalitu obalu alba, ale způsobí pomalejší načítání. Povolte pouze pokud máte problémy s nízkým rozlišením obalu. "</string>
+    <!--string name="pref_summary_ignore_media_store_artwork">"Může zvýšit kvalitu obalu alba, ale způsobí pomalejší načítání. Povolte pouze pokud máte problémy s nízkým rozlišením obalu. "</string-->
     <string name="pref_summary_colored_navigation_bar">Zvolte, kde se má zobrazovat barevné záhlaví</string>
     <string name="pref_summary_colored_app_shortcuts">Zbarví zkratky aplikace primární barvou</string>
     <string name="pref_summary_widget_background_transparent">Nastaví průhledné pozadí widgetů</string>

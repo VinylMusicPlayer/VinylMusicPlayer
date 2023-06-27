@@ -138,7 +138,7 @@
     <string name="pref_title_blurred_album_art">Sfoca la copertina</string>
     <string name="pref_title_colored_notification">Notifica colorata</string>
     <string name="pref_title_classic_notification">Design di notifica classico</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignora le copertine del Media Store</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">Ignora le copertine del Media Store</string>-->
     <string name="pref_title_gapless_playback">Riproduzione senza intervalli</string>
     <string name="pref_title_audio_ducking">Riduci volume in caso di perdita di focus audio</string>
     <string name="pref_title_recently_played_interval">Intervallo delle playlist riprodotte di recente</string>
@@ -178,7 +178,7 @@
     <string name="pref_summary_classic_notification">Usa il design di notifica classico</string>
     <string name="pref_summary_colored_notification">"La notifica \u00e8 colorata secondo la gamma di colori della copertina"</string>
     <string name="pref_summary_gapless_playback">"Può causare problemi di riproduzione su alcuni dispositivi"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Può incrementare la qualità delle copertine, ma causa rallentamenti nei tempi di caricamento delle immagini. Abilita soltanto se hai problemi con copertine a bassa risoluzione.</string>		   
+<!--    <string name="pref_summary_ignore_media_store_artwork">Può incrementare la qualità delle copertine, ma causa rallentamenti nei tempi di caricamento delle immagini. Abilita soltanto se hai problemi con copertine a bassa risoluzione.</string>		   -->
     <string name="pref_summary_colored_navigation_bar">Colora la barra di navigazione del colore principale</string>
     <string name="pref_summary_colored_app_shortcuts">Colora le scorciatoie dell\'app con il colore principale</string>
 	<string name="pref_summary_widget_background_transparent">Lo sfondo del widget sarà trasparente</string>

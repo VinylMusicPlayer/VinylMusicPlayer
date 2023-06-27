@@ -122,7 +122,7 @@
     <string name="pref_title_blurred_album_art">Blurează coperta de album</string>
     <string name="pref_title_colored_notification">Notificare colorată</string>
     <string name="pref_title_classic_notification">Design clasic de notificare</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignoră coperțile Media Store</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">Ignoră coperțile Media Store</string>-->
     <string name="pref_title_gapless_playback">Redare fără întreruperi</string>
     <string name="pref_title_audio_ducking">Se reduce volumul la pierderea focalizării</string>
     <string name="pref_title_last_added_interval">Ultimul interval al listei de redare adăugate</string>
@@ -156,7 +156,7 @@
     <string name="pref_summary_classic_notification">Utilizați designul clasic de notificare</string>
     <string name="pref_summary_colored_notification">"Coloreaz\u0103 bara de notificare cu cea mai vibrant\u0103 culoare a copertei de album"</string>
     <string name="pref_summary_gapless_playback">"Poate cauza probleme de redare pe unele dispozitive"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Poate mări calitatea coperții de album, dar cauzează încărcarea mai lentă a imaginilor. Activați doar dacă aveți probleme cu imaginile de rezoluție mică.</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">Poate mări calitatea coperții de album, dar cauzează încărcarea mai lentă a imaginilor. Activați doar dacă aveți probleme cu imaginile de rezoluție mică.</string>-->
     <string name="pref_summary_colored_navigation_bar">Colorare bară de navigare în culoarea primară</string>
     <string name="pref_summary_colored_app_shortcuts">Colorarea comenzilor rapide ale aplicației în culoarea primară</string>
     <string name="pref_summary_audio_ducking">Notificări, navigație etc.</string>

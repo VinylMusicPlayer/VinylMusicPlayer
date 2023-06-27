@@ -120,7 +120,7 @@
     <string name="pref_title_blurred_album_art">アルバムアートにぼかし効果をかける</string>
     <string name="pref_title_colored_notification">通知コントロールに色を付ける</string>
     <string name="pref_title_classic_notification">古典的な通知デザイン</string>
-    <string name="pref_title_ignore_media_store_artwork">アルバムアートを直接読み込む</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">アルバムアートを直接読み込む</string>-->
     <string name="pref_title_gapless_playback">ギャップレス再生</string>
     <string name="pref_title_audio_ducking">focus lossで音量を下げる</string>
     <string name="pref_title_last_added_interval">最後に追加されたプレイリストとの間隔</string>
@@ -151,7 +151,7 @@
     <string name="pref_summary_classic_notification">古典的な通知デザインを使用する。</string>
     <string name="pref_summary_colored_notification">"\u901a\u77e5\u30d0\u30fc\u306e\u518d\u751f\u30b3\u30f3\u30c8\u30ed\u30fc\u30eb\u306e\u8272\u3092\u30a2\u30eb\u30d0\u30e0\u30a2\u30fc\u30c8\u304b\u3089\u62bd\u51fa\u3057\u3066\u4f7f\u7528\u3057\u307e\u3059"</string>
     <string name="pref_summary_gapless_playback">"曲と曲の間の無音部分をスキップします(再生時に問題が生じる場合は無効にして下さい)"</string>
-    <string name="pref_summary_ignore_media_store_artwork">キャッシュを使用せずアルバムアートの画質を上げることが出来ますが、画像の読み込みは遅くなる可能性があります(アルバムアートの表示に問題がある場合に使用して下さい)</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">キャッシュを使用せずアルバムアートの画質を上げることが出来ますが、画像の読み込みは遅くなる可能性があります(アルバムアートの表示に問題がある場合に使用して下さい)</string>-->
     <string name="pref_summary_colored_navigation_bar">選択した画面で下部のナビゲーションバーをメインカラーに変更します</string>
     <string name="pref_summary_colored_app_shortcuts">アプリのショートカットの色をメインカラーの色にする。</string>
     <string name="pref_summary_audio_ducking">通知、ナビゲーション、その他</string>

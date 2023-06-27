@@ -119,7 +119,7 @@
     <string name="pref_title_auto_download_metadata">Metatietojen automaattinen lataus</string>
     <string name="pref_title_blurred_album_art">Sumenna albumin kansi</string>
     <string name="pref_title_colored_notification">Värillinen ilmoitus</string>
-    <string name="pref_title_ignore_media_store_artwork">Sivuuta Media Storen albumikannet</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">Sivuuta Media Storen albumikannet</string>-->
     <string name="pref_title_gapless_playback">Tauoton toisto</string>
     <string name="pref_title_audio_ducking">Hiljennä ääntä, kun kohdistus menetetään</string>
     <string name="pref_title_last_added_interval">Viimeksi lisätyt -soittolistan aikaväli</string>
@@ -151,7 +151,7 @@
     <string name="pref_summary_blurred_album_art">Sumentaa albumin kannen lukitusnäytöllä. Saattaa aiheuttaa ongelmia kolmannen osapuolen sovellusten ja widgettien kanssa.</string>
     <string name="pref_summary_colored_notification">"V\u00e4ritt\u00e4\u00e4 ilmoituksen albumin eloisalla v\u00e4rill\u00e4"</string>
     <string name="pref_summary_gapless_playback">"Saattaa aiheuttaa toisto-ongelmia joillain laitteilla"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Saattaa nostaa albumin kannen laatua, mutta aiheuttaa hitaampaa kuvien latausaikaa. Käytä tätä vain, jos sinulla on ongelmia huonolaatuisten taideteosten kanssa.</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">Saattaa nostaa albumin kannen laatua, mutta aiheuttaa hitaampaa kuvien latausaikaa. Käytä tätä vain, jos sinulla on ongelmia huonolaatuisten taideteosten kanssa.</string>-->
     <string name="pref_summary_colored_navigation_bar">Värittää navigointipalkin ensisijaisella värillä</string>
     <string name="pref_summary_audio_ducking">Ilmoitukset, liikkuminen jne.</string>
     <string name="pref_summary_synchronized_lyrics_show">Nykyiseltään sovellus tukee vain LRC-muodossa olevia sanoituksia, joko sulautettuna tai erillisinä tiedostoina</string>

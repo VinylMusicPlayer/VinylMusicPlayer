@@ -121,7 +121,7 @@
     <string name="pref_title_blurred_album_art">Desenfocar carátula de álbum</string>
     <string name="pref_title_colored_notification">Notificación coloreada</string>
     <string name="pref_title_classic_notification">Diseño clásico de la notificación</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignorar carátulas provenientes del almacenamiento local</string>
+    <!--string name="pref_title_ignore_media_store_artwork">Ignorar carátulas provenientes del almacenamiento local</string-->
     <string name="pref_title_gapless_playback">Reproducción sin interrupciones</string>
     <string name="pref_title_audio_ducking">Reducir volumen en la pérdida del enfoque</string>
     <string name="pref_title_last_added_interval">Intervalo de la última lista de reproducción</string>
@@ -153,7 +153,7 @@
     <string name="pref_summary_classic_notification">Utilizar el diseño clásico de notificación</string>
     <string name="pref_summary_colored_notification">"Colorea la notificaci\u00f3n con el color vibrante de la car\u00e1tula del \u00e1lbum"</string>
     <string name="pref_summary_gapless_playback">"Puede causar problemas durante la reproducción en algunos dispositivos"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Puede aumentar la calidad de la carátula del álbum pero causa que las imágenes carguen mas lento. Sólo activalo si tienes problemas con carátulas de baja resolución.</string>
+    <!--    <string name="pref_summary_ignore_media_store_artwork">Puede aumentar la calidad de la carátula del álbum pero causa que las imágenes carguen mas lento. Sólo activalo si tienes problemas con carátulas de baja resolución.</string>-->
     <string name="pref_summary_colored_navigation_bar">Colorea la barra de navegación con el color principal</string>
     <string name="pref_summary_colored_app_shortcuts">Colorea los accesos directos con el color principal</string>
     <string name="pref_summary_audio_ducking">Notificaciones, navegación etc.</string>

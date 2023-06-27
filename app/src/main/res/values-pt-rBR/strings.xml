@@ -140,7 +140,7 @@
     <string name="pref_title_blurred_album_art">Capa de álbum borrada</string>
     <string name="pref_title_colored_notification">Notificação colorida</string>
     <string name="pref_title_classic_notification">Design de notificação clássico</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignorar capas armazenadas na mídia</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">Ignorar capas armazenadas na mídia</string>-->
     <string name="pref_title_gapless_playback">Reprodução contínua</string>
     <string name="pref_title_audio_ducking">Reduzir o volume ao perder o foco</string>
     <string name="pref_title_recently_played_interval">Intervalo da lista de reprodução das tocada mais recentemente</string>
@@ -180,7 +180,7 @@
     <string name="pref_summary_classic_notification">Usar o design de notificação clássico</string>
     <string name="pref_summary_colored_notification">"Colore a notificação com a cor mais vibrante da capa do álbum"</string>
     <string name="pref_summary_gapless_playback">"Pode causar problemas de reprodução em alguns dispositivos"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Pode aumentar a qualidade da capa do álbum, mas causa um carregamento mais lento das imagens. Só habilite está opção se você tiver problemas com capas de álbuns de baixa resolução.</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">Pode aumentar a qualidade da capa do álbum, mas causa um carregamento mais lento das imagens. Só habilite está opção se você tiver problemas com capas de álbuns de baixa resolução.</string>-->
     <string name="pref_summary_colored_navigation_bar">Colore a barra de navegação na cor primária</string>
     <string name="pref_summary_colored_app_shortcuts">Colore os atalhos do aplicativo com a cor primária</string>
     <string name="pref_summary_widget_background_transparent">Deixa o fundo dos widgets transparente</string>

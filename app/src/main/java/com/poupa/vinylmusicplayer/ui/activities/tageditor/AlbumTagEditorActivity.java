@@ -35,6 +35,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
@@ -97,7 +98,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
     @Override
     protected void loadCurrentImage() {
         try (AutoDeleteAudioFile audio = getAudioFile()) {
-            Bitmap bitmap = getAlbumArt(audio.get());
+            Bitmap bitmap = MusicUtil.getMediaStoreAlbumCover(audio);
             setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
             deleteAlbumArt = false;
         } catch (Exception e) {

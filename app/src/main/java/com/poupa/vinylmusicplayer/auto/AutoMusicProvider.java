@@ -63,7 +63,7 @@ public class AutoMusicProvider {
                             .path(path, entry.getId())
                             .title(entry.getTitle())
                             .subTitle(MusicUtil.getAlbumInfoString(mContext, entry))
-                            .icon(MusicUtil.getMediaStoreAlbumCoverUri(entry.getId()))
+                            .icon(MusicUtil.getMediaStoreAlbumCover(entry.safeGetFirstSong()))
                             .asPlayable()
                             .build()
                     );
@@ -94,7 +94,7 @@ public class AutoMusicProvider {
                                 .path(path, s.id)
                                 .title(s.title)
                                 .subTitle(MusicUtil.getSongInfoString(s))
-                                .icon(MusicUtil.getMediaStoreAlbumCoverUri(s.albumId))
+                                .icon(MusicUtil.getMediaStoreAlbumCover(s))
                                 .asPlayable()
                                 .build()
                         );
@@ -289,7 +289,7 @@ public class AutoMusicProvider {
                         .path(pathPrefix, s.id)
                         .title(s.title)
                         .subTitle(MusicUtil.getSongInfoString(s))
-                        .icon(MusicUtil.getMediaStoreAlbumCoverUri(s.albumId))
+                        .icon(MusicUtil.getMediaStoreAlbumCover(s))
                         .asPlayable()
                         .build()
                 );

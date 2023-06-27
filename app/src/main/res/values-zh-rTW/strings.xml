@@ -123,7 +123,7 @@
     <string name="pref_title_blurred_album_art">將專輯圖片模糊化</string>
     <string name="pref_title_colored_notification">彩色的狀態列</string>
     <string name="pref_title_classic_notification">經典通知樣式</string>
-    <string name="pref_title_ignore_media_store_artwork">忽略音訊檔內嵌的專輯封面</string>
+    <!--string name="pref_title_ignore_media_store_artwork">忽略音訊檔內嵌的專輯封面</string-->
     <string name="pref_title_gapless_playback">無縫播放</string>
     <string name="pref_title_audio_ducking">在焦點音訊響起時降低音量</string>
     <string name="pref_title_last_added_interval">最後新增列表的時間範圍</string>
@@ -157,7 +157,7 @@
     <string name="pref_summary_classic_notification">使用經典通知樣式</string>
     <string name="pref_summary_colored_notification">"\u72c0\u614b\u5217\u984f\u8272\u8207\u5c08\u8f2f\u5716\u7247\u984f\u8272\u4e00\u81f4"</string>
     <string name="pref_summary_gapless_playback">"可能會在某些裝置上出現播放問題。"</string>
-    <string name="pref_summary_ignore_media_store_artwork">提高專輯封面的成像品質，但會造成較長的讀取時間。建議只有在您對低畫質的專輯封面有問題時才開啟此選項。</string>
+    <!--string name="pref_summary_ignore_media_store_artwork">提高專輯封面的成像品質，但會造成較長的讀取時間。建議只有在您對低畫質的專輯封面有問題時才開啟此選項。</string-->
     <string name="pref_summary_colored_navigation_bar">將專輯封面的主色調設為導航列的顏色。</string>
     <string name="pref_summary_colored_app_shortcuts">將主色調設為應用快捷方式的顏色</string>
     <string name="pref_summary_audio_ducking">通知鈴聲、導航語音等。</string>

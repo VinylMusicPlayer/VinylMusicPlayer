@@ -120,7 +120,7 @@
     <string name="pref_title_blurred_album_art">Rozmywanie okładki albumu</string>
     <string name="pref_title_colored_notification">Kolorowy odtwarzacz w pasku powiadomień</string>
     <string name="pref_title_classic_notification">Klasyczny wygląd powiadomienia</string>
-    <string name="pref_title_ignore_media_store_artwork">Ignoruj okładki z Media Store</string>
+    <!--string name="pref_title_ignore_media_store_artwork">Ignoruj okładki z Media Store</string-->
     <string name="pref_title_gapless_playback">Odtwarzanie bez przerw</string>
     <string name="pref_title_audio_ducking">Zmniejszaj głośność przy powiadomieniach</string>
     <string name="pref_title_last_added_interval">Okres ostatnio dodanych list odtwarzania</string>
@@ -151,7 +151,7 @@
     <string name="pref_summary_classic_notification">Używaj klasycznego stylu powiadomienia</string>
     <string name="pref_summary_colored_notification">"Odtwarzacz w pasku powiadomie\u0144 ma tonacj\u0119 ok\u0142adki albumu"</string>
     <string name="pref_summary_gapless_playback">"Na niektórych urządzeniach mogą wystąpić problemy z odtwarzaniem"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Polepszy to jakość okładek, ale może spowodować ich wolniejsze ładowanie. Zaznacz tylko wtedy, gdy masz kłopoty z niską jakością grafik</string>
+    <!--string name="pref_summary_ignore_media_store_artwork">Polepszy to jakość okładek, ale może spowodować ich wolniejsze ładowanie. Zaznacz tylko wtedy, gdy masz kłopoty z niską jakością grafik</string-->
     <string name="pref_summary_colored_navigation_bar">Kolory paska nawigacyjnego będą odpowiadały kolorowi podstawowemu</string>
     <string name="pref_summary_colored_app_shortcuts">Kolory skrótów aplikacji w kolorze podstawowym</string>
     <string name="pref_summary_audio_ducking">Notyfikacje, nawigacja, itp.</string>

@@ -121,7 +121,7 @@
     <string name="pref_title_blurred_album_art">טשטוש עטיפת האלבום</string>
     <string name="pref_title_colored_notification">התראה צבעונית</string>
     <string name="pref_title_classic_notification">עיצוב התראה קלאיסי</string>
-    <string name="pref_title_ignore_media_store_artwork">התעלם מעיצוב עטיפת חנות מדיה</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">התעלם מעיצוב עטיפת חנות מדיה</string>-->
     <string name="pref_title_gapless_playback">ניגון ללא מרווחים בין השירים</string>
     <string name="pref_title_audio_ducking">הפחת את עוצמת הקול באובדן מיקוד</string>
     <string name="pref_title_last_added_interval">הפסקת רשימת השמעה אחרונה שהוספה</string>
@@ -155,7 +155,7 @@
     <string name="pref_summary_classic_notification">השתמש בעיצוב התראות קלאסי.</string>
     <string name="pref_summary_colored_notification">"\u05e6\u05d5\u05d1\u05e2 \u05d0\u05ea \u05d4\u05ea\u05e8\u05d0\u05ea \u05d4\u05e0\u05d2\u05df \u05d1\u05e6\u05d1\u05e2 \u05d4\u05de\u05e8\u05db\u05d6\u05d9 \u05e9\u05dc \u05ea\u05de\u05d5\u05e0\u05ea \u05d4\u05d0\u05dc\u05d1\u05d5\u05dd."</string>
     <string name="pref_summary_gapless_playback">"עלול לגרום לבעיות בהשמעה בחלק מן המכשירים."</string>
-    <string name="pref_summary_ignore_media_store_artwork">יכול להעלות את איכות תמונות האלבומים, אך גם גורם לטעינה איטית יותר של התמונות. הפעל אפשרות זו רק אם יש לך בעיות עם תמונות באיכות נמוכה.</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">יכול להעלות את איכות תמונות האלבומים, אך גם גורם לטעינה איטית יותר של התמונות. הפעל אפשרות זו רק אם יש לך בעיות עם תמונות באיכות נמוכה.</string>-->
     <string name="pref_summary_colored_navigation_bar">צובע את שורת הניווט בצבע הראשי.</string>
     <string name="pref_summary_colored_app_shortcuts">צובע את קיצורי האפליקציה בצבע הראשי.</string>
     <string name="pref_summary_audio_ducking">התראות, ניווט וכו\'</string>

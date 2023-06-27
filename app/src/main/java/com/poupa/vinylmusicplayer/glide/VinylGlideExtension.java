@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ArtistSignatureUtil;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
-import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 /**
@@ -91,12 +90,7 @@ public final class VinylGlideExtension {
     }
 
     private static Object getSongModel(Song song, boolean ignoreMediaStore) {
-        if (ignoreMediaStore) {
-            return new AudioFileCover(song.data);
-        } else {
-            // TODO This wont work since we dont maintain the MediaStore cover art URIs anymore
-            return MusicUtil.getMediaStoreAlbumCoverUri(song.albumId);
-        }
+        return new AudioFileCover(song.data);
     }
 
     public static <TranscodeType> GenericTransitionOptions<TranscodeType> getDefaultTransition() {

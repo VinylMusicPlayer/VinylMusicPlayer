@@ -2,15 +2,14 @@ package com.poupa.vinylmusicplayer.util;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
-import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -23,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -36,9 +36,9 @@ import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -48,10 +48,30 @@ import java.util.regex.Pattern;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MusicUtil {
-    public static Uri getMediaStoreAlbumCoverUri(long albumId) {
-        final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
+        final Context context = App.getStaticContext();
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+            return getMediaStoreAlbumCover(audio);
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(context, e);
+            return null;
+        }
+    }
 
-        return ContentUris.withAppendedId(sArtworkUri, albumId);
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoDeleteAudioFile audio) {
+        try {
+            if (audio == null) {
+                return null;
+            }
+            final Artwork artworkTag = audio.get().getTagOrCreateAndSetDefault().getFirstArtwork();
+            if (artworkTag != null) {
+                final byte[] artworkBinaryData = artworkTag.getBinaryData();
+                return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);
+            }
+            return null;
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public static Uri getSongFileUri(long songId) {

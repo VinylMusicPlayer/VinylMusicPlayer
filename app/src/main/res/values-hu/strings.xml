@@ -119,7 +119,7 @@
     <string name="pref_title_blurred_album_art">Albumborító elhomályosítása</string>
     <string name="pref_title_colored_notification">Színezett értesítés</string>
     <string name="pref_title_classic_notification">Klasszikus értesítési dízájn</string>
-    <string name="pref_title_ignore_media_store_artwork">A médiatár albumborítók figyelmen kívül hagyása</string>
+<!--    <string name="pref_title_ignore_media_store_artwork">A médiatár albumborítók figyelmen kívül hagyása</string>-->
     <string name="pref_title_gapless_playback">Áttűnéses lejátszás</string>
     <string name="pref_title_audio_ducking">Hangerő csökkentése</string>
     <string name="pref_title_last_added_interval">Utoljára hozzáadott lejátszási lista intervallum</string>
@@ -150,7 +150,7 @@
     <string name="pref_summary_classic_notification">Használja a klasszikus értesítési dizájn</string>
     <string name="pref_summary_colored_notification">"\u00c9rtes\u00edt\u00e9sek sz\u00ednez\u00e9se az albumbor\u00edt\u00f3 sz\u00edn\u00e9vel"</string>
     <string name="pref_summary_gapless_playback">"Lejátszási problémákat okozhat néhány eszközön"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Növelheti az albumborítók minőségét, de lassabban tölti be a képeket. Csak akkor engedélyezze, ha az albumborítók rossz minőségben jelennek meg.</string>
+<!--    <string name="pref_summary_ignore_media_store_artwork">Növelheti az albumborítók minőségét, de lassabban tölti be a képeket. Csak akkor engedélyezze, ha az albumborítók rossz minőségben jelennek meg.</string>-->
     <string name="pref_summary_colored_navigation_bar">Navigációs sáv színezése az alapértelmezett színnel</string>
     <string name="pref_summary_colored_app_shortcuts">Az alkalmazás hivatkozások színezése az elsődleges szín szerint</string>
     <string name="pref_summary_audio_ducking">Beérkező értesítéskor a lejátszás hangereje lecsökken, majd az értesítés végén visszaáll az eredeti hangerőre</string>

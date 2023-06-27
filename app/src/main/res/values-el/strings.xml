@@ -108,7 +108,7 @@
     <string name="pref_title_album_art_on_lockscreen">Εμφάνιση album art</string>
     <string name="pref_title_blurred_album_art">Θάμπωμα πορτρέτων καλλιτεχνών</string>
     <string name="pref_title_colored_notification">Χρωματιστή πλοήγηση</string>
-    <string name="pref_title_ignore_media_store_artwork">Παράληψη των album art στην SD</string>
+    <!--string name="pref_title_ignore_media_store_artwork">Παράληψη των album art στην SD</string-->
     <string name="pref_title_gapless_playback">Εναλλαγή χωρίς παύση</string>
     <string name="pref_title_audio_ducking">Μειώστε την ένταση στην απώλεια εστίασης</string>
     <string name="no_equalizer">Δε βρέθηκε ισοσταθμιστής</string>
@@ -136,7 +136,7 @@
     <string name="pref_summary_blurred_album_art">Εμφανίζει,θωριασμένα, το album art στην οθόνη κλειδώματος.Μπορεί να δημιουργίσει πρόβλημα με εφαρμογές Τρίτων.</string>
     <string name="pref_summary_colored_notification">"\u03a7\u03c1\u03c9\u03bc\u03b1\u03c4\u03af\u03b6\u03b5\u03b9 \u03c4\u03b7\u03bd \u03bc\u03c0\u03ac\u03c1\u03b1 \u03b5\u03b9\u03b4\u03bf\u03c0\u03bf\u03b9\u03ae\u03c3\u03b5\u03c9\u03bd \u03c3\u03c4\u03bf \u03c7\u03c1\u03ce\u03bc\u03b1 \u03c4\u03bf\u03c5 album art \u03c4\u03bf\u03c5 \u03c4\u03c1\u03b1\u03b3\u03bf\u03c5\u03b4\u03b9\u03bf\u03cd"</string>
     <string name="pref_summary_gapless_playback">"Μπορεί να δημιουργίσει θέματα αναπαραγωγής σε μερικές συσκευές"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Μπορεί να αυξήσει την ποιότητα του εξώφυλλου του άλμπουμ, αλλά προκαλεί αργούς χρόνους φόρτωσης της εικόνας. Ενεργοποιήστε το μόνο αν έχετε προβλήματα με εξώφυλλα  χαμηλής ανάλυσης.</string>
+    <!--string name="pref_summary_ignore_media_store_artwork">Μπορεί να αυξήσει την ποιότητα του εξώφυλλου του άλμπουμ, αλλά προκαλεί αργούς χρόνους φόρτωσης της εικόνας. Ενεργοποιήστε το μόνο αν έχετε προβλήματα με εξώφυλλα  χαμηλής ανάλυσης.</string-->
     <string name="pref_summary_colored_navigation_bar">Χρωματίζει την μπάρα πλοήγησης στο πρωτεύον χρώμα</string>
     <string name="pref_summary_colored_app_shortcuts">Χρωματίζει τις συντομεύσεις της εφαρμογής στο κυρίως χρώμα</string>
     <string name="pref_summary_audio_ducking">Ειδοποιήσεις, πλοήγηση κ.λπ.</string>

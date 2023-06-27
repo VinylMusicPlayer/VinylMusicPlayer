@@ -54,8 +54,6 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), song)){
-            // TODO Assert the read permission and launch needed UI to acquire that
-
             // Override with metadata extracted from the file ourselves
             final AudioFile file = audio.get();
             Tag tags = file.getTagOrCreateAndSetDefault();

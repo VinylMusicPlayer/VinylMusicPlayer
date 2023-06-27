@@ -137,7 +137,7 @@
     <string name="pref_title_blurred_album_art">Album-Cover weichzeichnen</string>
     <string name="pref_title_colored_notification">Gefärbte Benachrichtigung</string>
     <string name="pref_title_classic_notification">Klassisches Benachrichtigungsdesign</string>
-    <string name="pref_title_ignore_media_store_artwork">Media Store-Cover ignorieren</string>
+    <!--string name="pref_title_ignore_media_store_artwork">Media Store-Cover ignorieren</string-->
     <string name="pref_title_gapless_playback">Lückenlose Wiedergabe</string>
     <string name="pref_title_audio_ducking">Lautstärke bei Fokusverlust verringern</string>
     <string name="pref_title_recently_played_interval">Intervall der \"Kürzlich abgespielt\"-Wiedergabeliste</string>
@@ -177,7 +177,7 @@
     <string name="pref_summary_classic_notification">Das klassische Benachrichtigungsdesign verwenden</string>
     <string name="pref_summary_colored_notification">"Die Benachrichtigung in der kräftigsten Farbe des Album-Covers färben"</string>
     <string name="pref_summary_gapless_playback">"Kann bei einigen Geräten Wiedergabeprobleme verursachen"</string>
-    <string name="pref_summary_ignore_media_store_artwork">Kann die Qualität des Album-Covers verbessern, was jedoch die Ladezeit beeinträchtigt. Nur aktivieren, falls Probleme mit niedrig aufgelösten Album-Covern auftreten.</string>
+    <!--string name="pref_summary_ignore_media_store_artwork">Kann die Qualität des Album-Covers verbessern, was jedoch die Ladezeit beeinträchtigt. Nur aktivieren, falls Probleme mit niedrig aufgelösten Album-Covern auftreten.</string-->
     <string name="pref_summary_colored_navigation_bar">Färbt die Navigationsleiste in der Hauptfarbe</string>
     <string name="pref_summary_colored_app_shortcuts">Färbt die App-Shortcuts in der Hauptfarbe</string>
     <string name="pref_summary_widget_background_transparent">Macht den Widget-Hintergrund transparent</string>
