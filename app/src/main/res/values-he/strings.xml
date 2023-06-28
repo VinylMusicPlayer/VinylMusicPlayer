@@ -116,9 +116,9 @@
     <string name="pref_header_notification">התראות</string>
     <string name="pref_title_navigation_bar">סרגל ניווט צבעוני</string>
     <string name="pref_title_app_shortcuts">קיצורי אפליקציה צבעוניים</string>
-    <string name="pref_title_album_art_on_lockscreen">הצג עטיפת אלבום</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">הצג עטיפת אלבום</string>-->
     <string name="pref_title_auto_download_metadata">הורד מידע שיר אוטומטית</string>
-    <string name="pref_title_blurred_album_art">טשטוש עטיפת האלבום</string>
+<!--    <string name="pref_title_blurred_album_art">טשטוש עטיפת האלבום</string>-->
     <string name="pref_title_colored_notification">התראה צבעונית</string>
     <string name="pref_title_classic_notification">עיצוב התראה קלאיסי</string>
 <!--    <string name="pref_title_ignore_media_store_artwork">התעלם מעיצוב עטיפת חנות מדיה</string>-->
@@ -150,8 +150,8 @@
     <string name="empty">ריק</string>
     <string name="playlist_name_empty">שם רשימת השמעה</string>
     <string name="song">שיר</string>
-    <string name="pref_summary_album_art_on_lockscreen">השתמש בתמונת האלבום של השיר הנוכחי כרקע מסך הנעילה.</string>
-    <string name="pref_summary_blurred_album_art">מטשטש את תמונת האלבום במסך הנעילה. עלול לגרום לבעיות עם ווידג\'טים ואפליקציות צד שלישי.</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">השתמש בתמונת האלבום של השיר הנוכחי כרקע מסך הנעילה.</string>-->
+<!--    <string name="pref_summary_blurred_album_art">מטשטש את תמונת האלבום במסך הנעילה. עלול לגרום לבעיות עם ווידג\'טים ואפליקציות צד שלישי.</string>-->
     <string name="pref_summary_classic_notification">השתמש בעיצוב התראות קלאסי.</string>
     <string name="pref_summary_colored_notification">"\u05e6\u05d5\u05d1\u05e2 \u05d0\u05ea \u05d4\u05ea\u05e8\u05d0\u05ea \u05d4\u05e0\u05d2\u05df \u05d1\u05e6\u05d1\u05e2 \u05d4\u05de\u05e8\u05db\u05d6\u05d9 \u05e9\u05dc \u05ea\u05de\u05d5\u05e0\u05ea \u05d4\u05d0\u05dc\u05d1\u05d5\u05dd."</string>
     <string name="pref_summary_gapless_playback">"עלול לגרום לבעיות בהשמעה בחלק מן המכשירים."</string>

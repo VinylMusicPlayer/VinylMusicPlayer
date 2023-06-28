@@ -103,8 +103,8 @@
     <string name="pref_header_lockscreen">Layar kunci</string>
     <string name="pref_title_navigation_bar">Alat Navigasi Berwarna</string>
     <string name="pref_title_app_shortcuts">Pintasan Berwarna</string>
-    <string name="pref_title_album_art_on_lockscreen">Perlihatkan sampul album pada layar kunci</string>
-    <string name="pref_title_blurred_album_art">Buramkan sampul album</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">Perlihatkan sampul album pada layar kunci</string>-->
+<!--    <string name="pref_title_blurred_album_art">Buramkan sampul album</string>-->
     <string name="pref_title_colored_notification">Notifikasi berwarna</string>
 <!--    <string name="pref_title_ignore_media_store_artwork">Abaikan sampul-sampul dari \'Media Store\' android.</string>-->
     <string name="pref_title_gapless_playback">Pemutaran tanpa jeda</string>
@@ -130,8 +130,8 @@
     <string name="empty">Kosong</string>
     <string name="playlist_name_empty">Nama daftar putar</string>
     <string name="song">Lagu</string>
-    <string name="pref_summary_album_art_on_lockscreen">Gunakan sambul album lagu yang sedang diputar sebagai wallpaper layar kunci</string>
-    <string name="pref_summary_blurred_album_art">Buramkan sampul album di layar kunci. Dapat menyebabkan masalah dengan aplikasi pihak ke tiga dan widget</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">Gunakan sambul album lagu yang sedang diputar sebagai wallpaper layar kunci</string>-->
+<!--    <string name="pref_summary_blurred_album_art">Buramkan sampul album di layar kunci. Dapat menyebabkan masalah dengan aplikasi pihak ke tiga dan widget</string>-->
     <string name="pref_summary_colored_notification">"Mewarnai notifikasi putar dengan warna yang cerah dari album"</string>
     <string name="pref_summary_gapless_playback">"Dapat menyebabkan masalah pemutaran pada beberapa perangkat"</string>
 <!--    <string name="pref_summary_ignore_media_store_artwork">"Dapat meningkatkan kualitas sampul album, namun menyebabkan waktu pemuatan lebih lambat. Aktifkan jika Anda bermasalah dengan resolusi gambar album yang rendah. "</string>-->

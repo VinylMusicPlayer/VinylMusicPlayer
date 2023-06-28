@@ -133,9 +133,9 @@
     <string name="pref_title_navigation_bar">Barra di navigazione colorata</string>
     <string name="pref_title_app_shortcuts">Scorciatoie app colorate</string>
 	<string name="pref_title_widget_background_transparent">Sfondo del widget trasparente</string>
-    <string name="pref_title_album_art_on_lockscreen">Mostra copertina album nella schermata di blocco</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">Mostra copertina album nella schermata di blocco</string>-->
     <string name="pref_title_auto_download_metadata">Scarica automaticamente i dati</string>
-    <string name="pref_title_blurred_album_art">Sfoca la copertina</string>
+<!--    <string name="pref_title_blurred_album_art">Sfoca la copertina</string>-->
     <string name="pref_title_colored_notification">Notifica colorata</string>
     <string name="pref_title_classic_notification">Design di notifica classico</string>
 <!--    <string name="pref_title_ignore_media_store_artwork">Ignora le copertine del Media Store</string>-->
@@ -173,8 +173,8 @@
     <string name="empty">Vuoto</string>
     <string name="playlist_name_empty">Nome playlist</string>
     <string name="song">Brano</string>
-    <string name="pref_summary_album_art_on_lockscreen">Usa la copertina dell\'album in riproduzione come sfondo della schermata di blocco</string>
-    <string name="pref_summary_blurred_album_art">Applica una sfocatura sulla copertina nella schermata di blocco. Può causare problemi con app e widget di terze parti.</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">Usa la copertina dell\'album in riproduzione come sfondo della schermata di blocco</string>-->
+<!--    <string name="pref_summary_blurred_album_art">Applica una sfocatura sulla copertina nella schermata di blocco. Può causare problemi con app e widget di terze parti.</string>-->
     <string name="pref_summary_classic_notification">Usa il design di notifica classico</string>
     <string name="pref_summary_colored_notification">"La notifica \u00e8 colorata secondo la gamma di colori della copertina"</string>
     <string name="pref_summary_gapless_playback">"Può causare problemi di riproduzione su alcuni dispositivi"</string>

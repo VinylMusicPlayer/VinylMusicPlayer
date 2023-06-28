@@ -45,7 +45,6 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.auto.AutoMusicProvider;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.glide.BlurTransformation;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -604,45 +603,39 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, getPosition() + 1)
-                .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year)
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null);
+                .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
         }
 
-        if (PreferenceUtil.getInstance().albumArtOnLockscreen()) {
-            final Point screenSize = Util.getScreenSize(MusicService.this);
+        // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
+        //       or similar to the MediaSession to have a hi-res cover image displayed,
+        //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
+        final Point screenSize = Util.getScreenSize(MusicService.this);
+        GlideRequest<Bitmap> request = GlideApp.with(MusicService.this)
+                .asBitmap()
+                .load(VinylGlideExtension.getSongModel(song))
+                .transition(VinylGlideExtension.getDefaultTransition())
+                .songOptions(song);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        mediaSession.setMetadata(metaData.build());
+                    }
 
-            GlideRequest<Bitmap> request = GlideApp.with(MusicService.this)
-                    .asBitmap()
-                    .load(VinylGlideExtension.getSongModel(song))
-                    .transition(VinylGlideExtension.getDefaultTransition())
-                    .songOptions(song);
-            if (PreferenceUtil.getInstance().blurredAlbumArt()) {
-                request.transform(new BlurTransformation.Builder(MusicService.this).build());
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
+                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
+                        mediaSession.setMetadata(metaData.build());
+                    }
+                });
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            mediaSession.setMetadata(metaData.build());
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-                            metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-                            mediaSession.setMetadata(metaData.build());
-                        }
-                    });
-                }
-            });
-        } else {
-            mediaSession.setMetadata(metaData.build());
-        }
+        });
     }
 
     private static Bitmap copy(Bitmap bitmap) {
@@ -692,12 +685,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public int getRepeatMode() {
         return playingQueue.getRepeatMode();
-    }
-
-    public void setRepeatMode(final int repeatMode) {
-        playingQueue.setRepeatMode(repeatMode);
-
-        propagateRepeatChange();
     }
 
     public void cycleRepeatMode() {
@@ -1078,10 +1065,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 } else {
                     playback.setNextDataSource(null);
                 }
-                break;
-            case PreferenceUtil.ALBUM_ART_ON_LOCKSCREEN:
-            case PreferenceUtil.BLURRED_ALBUM_ART:
-                updateMediaSessionMetaData();
                 break;
             case PreferenceUtil.COLORED_NOTIFICATION:
                 updateNotification();

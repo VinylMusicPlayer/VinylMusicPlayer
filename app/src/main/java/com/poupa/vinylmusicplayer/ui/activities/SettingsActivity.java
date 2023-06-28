@@ -151,7 +151,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_notification);
             addPreferencesFromResource(R.xml.pref_now_playing_screen);
             addPreferencesFromResource(R.xml.pref_images);
-            addPreferencesFromResource(R.xml.pref_lockscreen);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
 
@@ -177,18 +176,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
-                        SongConfirmationPreference.ASK.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK);
-                        }),
-                        SongConfirmationPreference.REPLACE.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE);
-                        }),
-                        SongConfirmationPreference.NEXT.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT);
-                        }),
-                        SongConfirmationPreference.ADD.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD);
-                        })
+                        SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),
+                        SongConfirmationPreference.REPLACE.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE)),
+                        SongConfirmationPreference.NEXT.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT)),
+                        SongConfirmationPreference.ADD.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD))
                 );
                 int defaultValue = -1;
                 int id = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();

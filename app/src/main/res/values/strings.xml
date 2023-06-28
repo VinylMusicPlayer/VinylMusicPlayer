@@ -142,9 +142,7 @@
     <string name="pref_title_navigation_bar">Colored navigation bar</string>
     <string name="pref_title_app_shortcuts">Colored app shortcuts</string>
     <string name="pref_title_widget_background_transparent">Transparent widget background</string>
-    <string name="pref_title_album_art_on_lockscreen">Show album cover</string>
     <string name="pref_title_auto_download_metadata">Auto download metadata</string>
-    <string name="pref_title_blurred_album_art">Blur album cover</string>
     <string name="pref_title_colored_notification">Colored notification</string>
     <string name="pref_title_classic_notification">Classic notification design</string>
     <string name="pref_title_gapless_playback">Gapless playback</string>
@@ -181,8 +179,6 @@
     <string name="empty">Empty</string>
     <string name="playlist_name_empty">Playlist name</string>
     <string name="song">Song</string>
-    <string name="pref_summary_album_art_on_lockscreen">Uses the current songs album cover as lockscreen wallpaper</string>
-    <string name="pref_summary_blurred_album_art">Blurs the album cover on the lockscreen. Can cause problems with third party apps and widgets.</string>
     <string name="pref_summary_classic_notification">Use the classic notification design</string>
     <string name="pref_summary_colored_notification">"Colors the notification in the album cover\u2019s vibrant color"</string>
     <string name="pref_summary_gapless_playback">"Can cause playback issues on some devices"</string>

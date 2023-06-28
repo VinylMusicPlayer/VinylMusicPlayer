@@ -104,8 +104,8 @@
     <string name="pref_header_lockscreen">Заключен екран</string>
     <string name="pref_title_navigation_bar">Оцветени навигационни бутони</string>
     <string name="pref_title_app_shortcuts">Оцветяване на бутоните</string>
-    <string name="pref_title_album_art_on_lockscreen">Покажи обложката на албум</string>
-    <string name="pref_title_blurred_album_art">Размажи обложката</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">Покажи обложката на албум</string>-->
+<!--    <string name="pref_title_blurred_album_art">Размажи обложката</string>-->
     <string name="pref_title_colored_notification">Оцвети известията</string>
     <!--string name="pref_title_ignore_media_store_artwork">Игнорирай вградените обложки</string-->
     <string name="pref_title_gapless_playback">Непрекъснато звучене</string>
@@ -131,8 +131,8 @@
     <string name="empty">Празен</string>
     <string name="playlist_name_empty">Име на плейлист</string>
     <string name="song">Песен</string>
-    <string name="pref_summary_album_art_on_lockscreen">Използва обложката на албума при заключен екран</string>
-    <string name="pref_summary_blurred_album_art">Замъглява обложката при заключен екран. Би могло да създаде проблеми с апликации и известия създадени от трети лица.</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">Използва обложката на албума при заключен екран</string>-->
+<!--    <string name="pref_summary_blurred_album_art">Замъглява обложката при заключен екран. Би могло да създаде проблеми с апликации и известия създадени от трети лица.</string>-->
     <string name="pref_summary_colored_notification">"\u041e\u0446\u0432\u0435\u0442\u044f\u0432\u0430 \u0438\u0437\u0432\u0435\u0441\u0442\u0438\u0435\u0442\u043e \u0432 \u0433\u043b\u0430\u0432\u043d\u0438\u044f \u0446\u0432\u044f\u0442 \u043e\u0442 \u043e\u0431\u043b\u043e\u0436\u043a\u0430\u0442\u0430"</string>
     <string name="pref_summary_gapless_playback">"Би могло да създаде проблеми с възпроизвеждането при някои устройства"</string>
     <!--string name="pref_summary_ignore_media_store_artwork">Може да увеличи качеството на обложките, но също така и забави времето за зареждане. Включете това, само ако имате проблеми с ниско качество на обложките.</string-->

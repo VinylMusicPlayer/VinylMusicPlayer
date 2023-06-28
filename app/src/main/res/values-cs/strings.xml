@@ -120,9 +120,9 @@
     <string name="pref_title_navigation_bar">Barevné záhlaví</string>
     <string name="pref_title_app_shortcuts">Barevné zkratky aplikace</string>
     <string name="pref_title_widget_background_transparent">Průhledné pozadí widgetu</string>
-    <string name="pref_title_album_art_on_lockscreen">Obal alba na odemykací obrazovce</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">Obal alba na odemykací obrazovce</string>-->
     <string name="pref_title_auto_download_metadata">Automaticky stahovat metadata</string>
-    <string name="pref_title_blurred_album_art">Rozostřit obal alba</string>
+<!--    <string name="pref_title_blurred_album_art">Rozostřit obal alba</string>-->
     <string name="pref_title_colored_notification">Barevné notifikace</string>
     <string name="pref_title_classic_notification">Klasický vzhled oznámení</string>
     <!--string name="pref_title_ignore_media_store_artwork">Ignorovat obaly Media Storu</string-->
@@ -155,8 +155,8 @@
     <string name="empty">Prázdné</string>
     <string name="playlist_name_empty">Pojmenování seznamu skladeb</string>
     <string name="song">Skladba</string>
-    <string name="pref_summary_album_art_on_lockscreen">Obaly alb se budou zobrazovat na zamykací obrazovce. Pro aplikaci může být nutné aplikaci restartovat.</string>
-    <string name="pref_summary_blurred_album_art">Rozostří obal alba na uzamčené obrazovce. Může být problematické s aplikacemi a widgety třetích stran.</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">Obaly alb se budou zobrazovat na zamykací obrazovce. Pro aplikaci může být nutné aplikaci restartovat.</string>-->
+<!--    <string name="pref_summary_blurred_album_art">Rozostří obal alba na uzamčené obrazovce. Může být problematické s aplikacemi a widgety třetích stran.</string>-->
     <string name="pref_summary_classic_notification">Použije klasický vzhled oznámení</string>
     <string name="pref_summary_colored_notification">"Notifikace jsou zbarveny podle obalu alba"</string>
     <string name="pref_summary_gapless_playback">"Odstraní ticho mezi skladbami. Deaktivace může vyřešit problémy s přehráváním."</string>

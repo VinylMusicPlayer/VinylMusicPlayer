@@ -127,9 +127,9 @@
     <string name="pref_title_navigation_bar">Barra de navegació acolorida</string>
     <string name="pref_title_app_shortcuts">Dreceres d\'aplicació acolorides</string>
     <string name="pref_title_widget_background_transparent">Fons de widget transparent</string>
-    <string name="pref_title_album_art_on_lockscreen">Mostra la portada de l\'àlbum</string>
+<!--    <string name="pref_title_album_art_on_lockscreen">Mostra la portada de l\'àlbum</string>-->
     <string name="pref_title_auto_download_metadata">Baixa les metadades automàticament</string>
-    <string name="pref_title_blurred_album_art">Difumina la portada de l\'àlbum</string>
+<!--    <string name="pref_title_blurred_album_art">Difumina la portada de l\'àlbum</string>-->
     <string name="pref_title_colored_notification">Notificacions acolorides</string>
     <string name="pref_title_classic_notification">Disseny de notificació clàssic</string>
     <!--string name="pref_title_ignore_media_store_artwork">Ignora les portades del magatzem de mitjans</string-->
@@ -165,8 +165,8 @@
     <string name="empty">Buida</string>
     <string name="playlist_name_empty">Nom de la llista</string>
     <string name="song">Cançó</string>
-    <string name="pref_summary_album_art_on_lockscreen">Mostra la portada de l\'àlbum de la cançó actual com a fons de la pantalla de bloqueig</string>
-    <string name="pref_summary_blurred_album_art">Difumina la portada de l\'àlbum a la pantalla de bloqueig. Pot causar problemes amb aplicacions o widgets de tercers.</string>
+<!--    <string name="pref_summary_album_art_on_lockscreen">Mostra la portada de l\'àlbum de la cançó actual com a fons de la pantalla de bloqueig</string>-->
+<!--    <string name="pref_summary_blurred_album_art">Difumina la portada de l\'àlbum a la pantalla de bloqueig. Pot causar problemes amb aplicacions o widgets de tercers.</string>-->
     <string name="pref_summary_classic_notification">Utilitza el disseny de notificació clàssic</string>
     <string name="pref_summary_colored_notification">Acoloreix la notificació amb el color vibrant de la portada de l\'àlbum</string>
     <string name="pref_summary_gapless_playback">Pot causar problemes de reproducció en alguns dispositius</string>
