@@ -117,8 +117,8 @@ public class DeleteSongsDialogAndroidR extends Fragment {
         //MusicUtil.deleteTracks(getActivity(), songs, null, null, this);
     }
 
-    private void deleteSongs(List<Song> songsToRemove, List<Uri> safUris) {
-        MusicUtil.deleteTracks(DeleteSongsDialogAndroidR.this, this.deleteRequestAndroidR, songsToRemove, safUris);
+    private void deleteSongs(List<Song> songsToRemove) {
+        MusicUtil.deleteTracks(DeleteSongsDialogAndroidR.this, this.deleteRequestAndroidR, songsToRemove, null);
     }
 
     public static abstract class BaseDeleteSongsAsyncTask<Params> extends
@@ -150,10 +150,10 @@ public class DeleteSongsDialogAndroidR extends Fragment {
 
                 final List<Song> songs = lists[0];
                 if (!SAFUtil.isSAFRequired(songs)) {
-                    fragment.deleteSongs(songs, null);
+                    fragment.deleteSongs(songs);
                 } else {
                     if (SAFUtil.isSDCardAccessGranted(activity)) {
-                        fragment.deleteSongs(songs, null);
+                        fragment.deleteSongs(songs);
                     } else {
                         fragment.deleteSongs_SAFGuide.launch(new Intent(activity, SAFGuideActivity.class));
                     }
@@ -182,7 +182,7 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                 if (fragment == null || activity == null) {return null;}
 
                 SAFUtil.saveTreeUri(activity, uris[0]);
-                fragment.deleteSongs(fragment.songsToRemove, null);
+                fragment.deleteSongs(fragment.songsToRemove);
             } catch (Exception e) {
                 e.printStackTrace();
             }
