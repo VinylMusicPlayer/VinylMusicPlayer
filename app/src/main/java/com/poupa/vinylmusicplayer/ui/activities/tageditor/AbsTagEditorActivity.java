@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -276,7 +277,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @NonNull
     protected abstract List<Song> getSongs();
 
-    void searchWebFor(String... keys) {
+    void searchWebFor(@NonNull String... keys) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String key : keys) {
             stringBuilder.append(key);
@@ -286,16 +287,15 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         intent.putExtra(SearchManager.QUERY, stringBuilder.toString());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        // Start search intent if possible: https://stackoverflow.com/questions/36592450/unexpected-intent-with-action-web-search
-        if (Intent.ACTION_WEB_SEARCH.equals(intent.getAction()) && intent.getExtras() != null) {
-            String query = intent.getExtras().getString(SearchManager.QUERY, null);
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+Uri.encode(query)));
-            boolean browserExists = intent.resolveActivityInfo(getPackageManager(), 0) != null;
-            if (browserExists && query != null) {
-                startActivity(browserIntent);
-                return;
-            }
-        }
+        String query = intent.getExtras().getString(SearchManager.QUERY, null);
+        Intent browserIntent = new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/search?q="+Uri.encode(query))
+        );
+        try {
+            startActivity(browserIntent);
+            return;
+        } catch (ActivityNotFoundException ignored) {}
 
         Toast.makeText(this, R.string.error_no_app_for_intent, Toast.LENGTH_LONG).show();
     }
