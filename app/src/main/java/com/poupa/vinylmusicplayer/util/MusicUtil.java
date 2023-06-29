@@ -361,9 +361,10 @@ public class MusicUtil {
     }
 
     @Nullable
-    public static String getLyrics(@NonNull final Context context, Song song) {
-        String lyrics = null;
+    public static String getLyrics(@NonNull final Context context, @NonNull final Song song) {
+        if (song.id == Song.EMPTY_SONG.id) {return null;}
 
+        String lyrics = null;
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
             lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {

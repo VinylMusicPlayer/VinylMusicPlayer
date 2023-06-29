@@ -93,7 +93,7 @@ public class FoldersFragment
         return newInstance(PreferenceUtil.getInstance().getStartDirectory());
     }
 
-    public static FoldersFragment newInstance(final File directory) {
+    private static FoldersFragment newInstance(final File directory) {
         final FoldersFragment frag = new FoldersFragment();
         final Bundle bundle = new Bundle();
         bundle.putSerializable(PATH, directory);

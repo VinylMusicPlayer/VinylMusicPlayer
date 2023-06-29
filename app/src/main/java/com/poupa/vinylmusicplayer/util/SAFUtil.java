@@ -126,6 +126,7 @@ public class SAFUtil {
     public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
         // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
+        if (song.id == Song.EMPTY_SONG.id) {return null;}
 
         final Uri uri = getUriFromSong(song);
         try (InputStream original = context.getContentResolver().openInputStream(uri)) {
