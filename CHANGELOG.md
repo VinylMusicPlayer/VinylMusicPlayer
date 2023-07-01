@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.1] - 2023-07-01
+
+### What's changed
+* Catalan translation updated by @albertgasset in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/709
+* Use MarkdownViewDialog to improve visualising LastFM artist bio and album wiki by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/703
+* Enqueue song action can now be choosen in preference by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/715
+
+### Fixes
+* Misc changes for artist cover image by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/697
+* Fix snackbar unreadable text by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/706
+* Avoid crash while loading top tracks by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/728
+* Cab icon tint by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/726
+* Play next color by @Octoton in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/723
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.0...1.5.1
+
 ## [1.5.0] - 2023-02-17
 
 ### What's changed
@@ -328,21 +344,3 @@ Thanks to [@knacky34](https://github.com/knacky34)!
 ## [0.16.4.3] - 2018-01-02
 ### Added
 - Initial version.
-
-[Unreleased]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.23.1...HEAD
-[0.23.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.23.0...0.23.1
-[0.23.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.1...0.23.0
-[0.22.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.22.0...0.22.1
-[0.22.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.1...0.22.0
-[0.21.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.21.0...0.21.1
-[0.21.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.2...0.21.0
-[0.20.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.1...0.20.2
-[0.20.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.20.0...0.20.1
-[0.20.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.2...0.20.0
-[0.19.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.1...0.19.2
-[0.19.1]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.19.0...0.19.1
-[0.19.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.18.0...0.19.0
-[0.18.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.17.0...0.18.0
-[0.17.0]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.16.5.2...0.17.0
-[0.16.5.2]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.16.4.4...0.16.5.2
-[0.16.4.4]: https://github.com/AdrienPoupa/VinylMusicPlayer/compare/0.16.4.3...0.16.4.4
