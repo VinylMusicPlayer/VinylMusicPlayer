@@ -45,7 +45,6 @@ import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
-import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -181,18 +180,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                         .autoDismiss(true)
                         .onPositive((dialog, which) -> Discography.getInstance().triggerSyncWithMediaStore(true))
                         .positiveText(R.string.reset_discography)
-                        .negativeText(android.R.string.cancel)
-                        .show();
-            } else if (itemId == R.id.action_reset_mediastore_playlist) {
-                new MaterialDialog.Builder(this)
-                        .title(R.string.reset_mediastore_playlist)
-                        .content(R.string.reset_mediastore_playlist_warning)
-                        .autoDismiss(true)
-                        .onPositive((dialog, which) -> {
-                            StaticPlaylist.resetImportedPlaylists(this);
-                            PlaylistsUtil.notifyChange(this); // refresh
-                        })
-                        .positiveText(R.string.reset_mediastore_playlist)
                         .negativeText(android.R.string.cancel)
                         .show();
             } else if (itemId == R.id.nav_settings) {

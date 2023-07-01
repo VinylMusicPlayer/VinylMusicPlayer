@@ -815,7 +815,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 // Mark the current song as skipped
                 final Song song = getCurrentSong();
                 final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
-                if (!PlaylistsUtil.doesPlaylistContain(this, playlistId, song.id)) {
+                if (!PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
                     PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
                 }
             }

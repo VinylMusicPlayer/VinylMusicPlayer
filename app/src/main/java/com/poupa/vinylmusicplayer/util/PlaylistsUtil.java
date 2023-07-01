@@ -63,9 +63,18 @@ public class PlaylistsUtil {
 
     public static void deletePlaylists(@NonNull final Context context, @NonNull final ArrayList<Playlist> playlists) {
         for (int i = 0; i < playlists.size(); i++) {
-            StaticPlaylist.removePlaylist(playlists.get(i).name);
+            final String name = playlists.get(i).name;
+            StaticPlaylist.removePlaylist(name);
+            deletePlaylistFromMediaStore(context, name);
         }
         notifyChange(context);
+    }
+
+    private static void deletePlaylistFromMediaStore(@NonNull final Context context, @NonNull final String name) {
+        @NonNull final ContentResolver resolver = context.getContentResolver();
+        resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+                MediaStore.Audio.Playlists.NAME + "='" + name + "'",
+                null);
     }
 
     public static void addToPlaylist(@NonNull final Context context, final Song song, final long playlistId, final boolean showToastOnFinish) {
@@ -115,13 +124,13 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static boolean doesPlaylistContain(@NonNull final Context context, final long playlistId, final long songId) {
+    public static boolean doesPlaylistContain(final long playlistId, final long songId) {
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return false;}
         return list.contains(songId);
     }
 
-    public static boolean moveItem(@NonNull final Context context, long playlistId, int from, int to) {
+    public static boolean moveItem(long playlistId, int from, int to) {
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return false;}
 
@@ -136,7 +145,7 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static String getNameForPlaylist(@NonNull final Context context, final long id) {
+    public static String getNameForPlaylist(final long id) {
         StaticPlaylist playlist = StaticPlaylist.getPlaylist(id);
         if (playlist == null) {return "";}
         return playlist.getName();
@@ -149,13 +158,10 @@ public class PlaylistsUtil {
         values.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, playlist.name);
 
-        @NonNull final ContentResolver resolver = context.getContentResolver();
-
         // Delete existing, if any
-        resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                MediaStore.Audio.Playlists.NAME + "='" + playlist.name + "'",
-                null);
+        deletePlaylistFromMediaStore(context, playlist.name);
         // Now create a new one
+        @NonNull final ContentResolver resolver = context.getContentResolver();
         @NonNull final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
 
         try (final OutputStream stream = resolver.openOutputStream(uri, "wt")) {

@@ -62,7 +62,7 @@ public class AddToPlaylistDialog extends DialogFragment {
                         Context ctx = requireActivity();
                         final long playlistId = playlists.get(i - 1).asPlaylist().id;
 
-                        if (hasDuplicates(playlistId, songs, ctx)) {
+                        if (hasDuplicates(playlistId, songs)) {
                             new MaterialDialog.Builder(ctx)
                                     .title(R.string.confirm_adding_duplicates)
                                     .positiveText(R.string.yes).negativeText(R.string.no)
@@ -70,10 +70,10 @@ public class AddToPlaylistDialog extends DialogFragment {
                                             PlaylistsUtil.addToPlaylist(ctx, songs, playlistId, true)
                                     ).onNegative((dialog, which) -> {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id));
+                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(playlistId, song.id));
                                         } else {
                                             for (Song song: new ArrayList<>(songs)) {
-                                                if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
+                                                if (PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
                                                     songs.remove(song);
                                                 }
                                             }
@@ -91,9 +91,9 @@ public class AddToPlaylistDialog extends DialogFragment {
                 .build();
     }
 
-    private static boolean hasDuplicates(long playlistId, ArrayList<Song> songs, Context ctx) {
+    private static boolean hasDuplicates(long playlistId, ArrayList<Song> songs) {
         for (Song song: songs) {
-            if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
+            if (PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
                 return true;
             }
         }

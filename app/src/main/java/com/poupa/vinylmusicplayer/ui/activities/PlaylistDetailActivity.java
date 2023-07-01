@@ -117,7 +117,7 @@ public class PlaylistDetailActivity
                     false,
                     this,
                     (fromPosition, toPosition) -> {
-                        if (PlaylistsUtil.moveItem(PlaylistDetailActivity.this, playlist.id, fromPosition, toPosition)) {
+                        if (PlaylistsUtil.moveItem(playlist.id, fromPosition, toPosition)) {
                             Song song = adapter.getDataSet().remove(fromPosition);
                             adapter.getDataSet().add(toPosition, song);
                             adapter.notifyItemMoved(fromPosition, toPosition);

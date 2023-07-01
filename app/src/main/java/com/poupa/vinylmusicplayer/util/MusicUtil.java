@@ -267,9 +267,7 @@ public class MusicUtil {
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-            activity.runOnUiThread(() -> {
-                Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
-            });
+            activity.runOnUiThread(() -> Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -299,7 +297,7 @@ public class MusicUtil {
     public static boolean isFavorite(@NonNull final Context context, @NonNull final Song song) {
         Playlist playlist = getFavoritesPlaylist(context);
         if (playlist == null) {return false;}
-        return PlaylistsUtil.doesPlaylistContain(context, playlist.id, song.id);
+        return PlaylistsUtil.doesPlaylistContain(playlist.id, song.id);
     }
 
     public static void toggleFavorite(@NonNull final Context context, @NonNull final Song song) {
