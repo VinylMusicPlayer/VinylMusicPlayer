@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.5.2] - 2023-07-01
+
+This version is the same as 1.5.1, but with correct versioning number.
+
 ## [1.5.1] - 2023-07-01
 
 ### What's changed
