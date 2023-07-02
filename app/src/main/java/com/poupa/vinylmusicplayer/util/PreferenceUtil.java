@@ -19,8 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
-import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
@@ -52,8 +50,8 @@ public final class PreferenceUtil {
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
 
     private static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    private static final String ALBUM_SORT_ORDER = "album_sort_order";
-    private static final String SONG_SORT_ORDER = "song_sort_order";
+    public static final String ALBUM_SORT_ORDER = "album_sort_order";
+    public static final String SONG_SORT_ORDER = "song_sort_order";
     private static final String FILE_SORT_ORDER = "file_sort_order";
 
     public static final String SORT_ORDER_NAME = "sort_order_name";
@@ -480,9 +478,12 @@ public final class PreferenceUtil {
         return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
     }
 
-    public @NonNull Comparator<Song> getNotRecentlyPlayedSortOrder(final Context context) {
-        final String value = mPreferences.getString(NOT_RECENTLY_PLAYED_SORT_ORDER, SONG_SORT_ORDER);
-        return (value.equals(ALBUM_SORT_ORDER)) ? SongSortOrder.BY_ALBUM_DATE_ADDED : SongSortOrder.BY_DATE_ADDED;
+    public @NonNull String getNotRecentlyPlayedSortOrder() {
+        return mPreferences.getString(NOT_RECENTLY_PLAYED_SORT_ORDER, SONG_SORT_ORDER);
+    }
+
+    public void setNotRecentlyPlayedSortOrder(@NonNull final String value) {
+        mPreferences.edit().putString(NOT_RECENTLY_PLAYED_SORT_ORDER, value).apply();
     }
 
     public int getLastSleepTimerValue() {

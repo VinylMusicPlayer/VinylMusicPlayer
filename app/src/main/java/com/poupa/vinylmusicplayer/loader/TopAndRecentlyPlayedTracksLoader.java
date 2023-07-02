@@ -27,10 +27,10 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.provider.StoreLoader;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
@@ -55,8 +55,8 @@ public class TopAndRecentlyPlayedTracksLoader {
         // Collect not played songs
         Discography discography = Discography.getInstance();
         ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
-        final Comparator<Song> sortOrder = PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder(context);
-        ArrayList<Song> allSongs = discography.getAllSongs(sortOrder);
+        @NonNull final String sortOrder = PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder();
+        ArrayList<Song> allSongs = discography.getAllSongs((sortOrder.equals(PreferenceUtil.ALBUM_SORT_ORDER)) ? SongSortOrder.BY_ALBUM_DATE_ADDED : SongSortOrder.BY_DATE_ADDED);
 
         for (Song song : allSongs) {
             if (!playedSongIds.contains(song.id)) {
