@@ -18,6 +18,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,11 +34,24 @@ public class SongSortOrder {
     private static final Comparator<Song> _BY_YEAR = Comparator.comparingInt(s -> s.year);
     public static final Comparator<Song> BY_DATE_ADDED = Comparator.comparingLong(s -> s.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
+
+    private static @NonNull final HashMap<Long, Long> albumId2DateAddedCache = new HashMap();
     private static final Comparator<Song> _BY_ALBUM_DATE_ADDED = Comparator.comparingLong(s -> {
-        final Album album = Discography.getInstance().getAlbum(s.albumId);
-        return album == null ? Song.EMPTY_SONG.dateAdded : album.getDateAdded();
+        // Disco.getAlbum and Album.getAdded are costly operations -> cache the result
+        synchronized (albumId2DateAddedCache) {
+            final Long boxedDate = albumId2DateAddedCache.get(s.albumId);
+            if (boxedDate != null) {
+                return boxedDate;
+            }
+
+            final Album album = Discography.getInstance().getAlbum(s.albumId);
+            final long date = (album == null) ? Song.EMPTY_SONG.dateAdded : album.getDateAdded();
+            albumId2DateAddedCache.put(s.albumId, date);
+            return date;
+        }
     });
-    public static final Comparator<Song> BY_ALBUM_DATE_ADDED = ComparatorUtil.chain(_BY_ALBUM_DATE_ADDED, _BY_ALBUM);
+    public static final Comparator<Song> BY_ALBUM_DATE_ADDED = ComparatorUtil.chain(_BY_ALBUM_DATE_ADDED, _BY_ALBUM_ID);
+
     private static final Comparator<Song> BY_DATE_MODIFIED = Comparator.comparingLong(s -> s.dateModified);
     private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
     private static final Comparator<Song> _BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
