@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -31,6 +33,10 @@ public class SongSortOrder {
     private static final Comparator<Song> _BY_YEAR = Comparator.comparingInt(s -> s.year);
     public static final Comparator<Song> BY_DATE_ADDED = Comparator.comparingLong(s -> s.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
+    public static final Comparator<Song> BY_ALBUM_DATE_ADDED = Comparator.comparingLong(s -> {
+        final Album album = Discography.getInstance().getAlbum(s.albumId);
+        return album == null ? Song.EMPTY_SONG.dateAdded : album.getDateAdded();
+    });
     private static final Comparator<Song> BY_DATE_MODIFIED = Comparator.comparingLong(s -> s.dateModified);
     private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
     private static final Comparator<Song> _BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)

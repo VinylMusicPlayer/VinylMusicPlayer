@@ -73,7 +73,7 @@ public class Album implements Parcelable {
     }
 
     public long getDateAdded() {
-        if (songs.isEmpty()) {return Song.EMPTY_SONG.dateModified;}
+        if (songs.isEmpty()) {return Song.EMPTY_SONG.dateAdded;}
 
         return Collections.min(
                 songs,

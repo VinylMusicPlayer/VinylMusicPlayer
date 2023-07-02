@@ -19,6 +19,8 @@ import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
+import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
@@ -30,6 +32,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +60,7 @@ public final class PreferenceUtil {
     public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
     public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
     public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
+    public static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
 
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
     private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
@@ -474,6 +478,11 @@ public final class PreferenceUtil {
     @NonNull
     public String getNotRecentlyPlayedCutoffText(final Context context) {
         return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
+    }
+
+    public @NonNull Comparator<Song> getNotRecentlyPlayedSortOrder(final Context context) {
+        final String value = mPreferences.getString(NOT_RECENTLY_PLAYED_SORT_ORDER, SONG_SORT_ORDER);
+        return (value.equals(ALBUM_SORT_ORDER)) ? SongSortOrder.BY_ALBUM_DATE_ADDED : SongSortOrder.BY_DATE_ADDED;
     }
 
     public int getLastSleepTimerValue() {
