@@ -40,10 +40,11 @@ public class SongSortOrder {
         // Disco.getAlbum and Album.getAdded are costly operations -> cache the result
         synchronized (albumId2DateAddedCache) {
             final Long boxedDate = albumId2DateAddedCache.get(s.albumId);
-            if (boxedDate != null) {
+            if ((boxedDate != null) && (boxedDate <= s.dateAdded)) {
                 return boxedDate;
             }
 
+            // either not cached or the cache is stale (i.e song has been added/removed from the album)
             final Album album = Discography.getInstance().getAlbum(s.albumId);
             final long date = (album == null) ? Song.EMPTY_SONG.dateAdded : album.getDateAdded();
             albumId2DateAddedCache.put(s.albumId, date);
