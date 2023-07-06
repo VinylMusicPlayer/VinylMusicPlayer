@@ -19,6 +19,8 @@
     <string name="action_play_pause">Play/Pause</string>
     <string name="action_previous">Vorheriger</string>
     <string name="action_next">Nächster</string>
+    <string name="pref_title_enqueue_song_default_choice">Standardaktion beim Auswählen eines Titels</string>
+    <string name="action_always_ask_for_confirmation">Immer nachfragen</string>
     <string name="action_add_to_playing_queue">Zur Warteschlange hinzufügen</string>
     <string name="action_remove_from_playing_queue">Von Warteschlange entfernen</string>
     <string name="action_add_to_playlist">Zu Wiedergabeliste hinzufügen…</string>
