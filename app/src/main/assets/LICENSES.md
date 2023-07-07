@@ -160,6 +160,13 @@ Gson JSON library
  - [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
+## io.noties.markwon.html - HTML
+
+Provides HTML parsing functionality
+
+ - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+---
 ## io.noties.markwon.image-glide - Image Glide
 
 Markwon image loading module (based on Glide library)
