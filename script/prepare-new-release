@@ -61,6 +61,7 @@ if (git status -sb | grep -v "## ${release_branch}" | grep -q '.' ); then
 fi
 
 # ---- Let's go
+# See https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#generate-release-notes-content-for-a-release
 log_info "Collecting change log since '${previous_version}'..." \
   && changelog=$( \
     gh api \
