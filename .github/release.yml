@@ -6,9 +6,9 @@ changelog:
   #  labels:
   #    - ignore-for-release
   #  authors:
-  #    - octocat
+  #    - github-bots
   categories:
-    - title: What's changed
+    - title: Features
       labels:
         - enhancement
         - feature request
