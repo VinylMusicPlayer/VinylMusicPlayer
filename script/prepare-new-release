@@ -142,4 +142,6 @@ if (git status -sb | grep -v "## ${release_branch}" | grep -q '.' ); then
 fi
 
 log_warn "To finalize publishing the new version: Please push the changes (including tags) + Create a Github pull request"
-log_warn "git push -u ${remote} ${new_branch} && git push ${remote} refs/tags/${new_version}"
+log_warn "> git push -u ${remote} ${new_branch}"
+log_warn "> git push ${remote} refs/tags/${new_version}"
+log_warn "> open 'https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/new/${new_branch}'"
