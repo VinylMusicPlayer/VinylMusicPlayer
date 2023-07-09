@@ -11,7 +11,6 @@ blacklist_branches="
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
 # Space separated list, each following the 'login/repo/branch' format
 #  Octoton/VinylMusicPlayer/random_album_access_version_1
-#  Octoton/VinylMusicPlayer/android13
 alien_branches="
 "
 
@@ -42,7 +41,8 @@ case "${CI_BRANCH}" in
         git_init
         git pull --unshallow # Force full history, to support rebase/merge with other branches
         git fetch origin
-        git rebase origin/master || exit 1
+        echo "Syncing with master..."
+        git merge origin/master || exit 1
         echo
         ;;
 

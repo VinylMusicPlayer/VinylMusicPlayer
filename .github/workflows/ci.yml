@@ -8,21 +8,21 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup JDK 11
+    - name: Setup JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
-        cache: gradle
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      #with:
+      #  gradle-version: 8.2.1
 
     - name: Merge feature branches
       if: (github.ref == 'refs/heads/cont-integ')
       run: ./script/merge-feature-branches
 
-      # TODO Find a balance between always rebuilding this page (i.e in gradle)
-      #      vs only rebuild this on releases (hence leaving the in-git file credits.html obsolete)
     - name: Build the credits page
       if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
       run: ./script/build-credits-page
