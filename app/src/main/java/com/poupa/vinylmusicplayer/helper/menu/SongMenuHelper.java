@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
-import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongDetailDialog;
+import com.poupa.vinylmusicplayer.dialogs.helper.DeleteSongsHelper;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -41,7 +41,7 @@ public class SongMenuHelper {
             activity.startActivity(Intent.createChooser(MusicUtil.createShareSongFileIntent(song, activity), null));
             return true;
         } else if (menuItemId == R.id.action_delete_from_device) {
-            DeleteSongsDialog.create(song).show(activity.getSupportFragmentManager(), "DELETE_SONGS");
+            DeleteSongsHelper.delete(song, activity.getSupportFragmentManager(), "DELETE_SONGS");
             return true;
         } else if (menuItemId == R.id.action_add_to_playlist) {
             AddToPlaylistDialog.create(song).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");

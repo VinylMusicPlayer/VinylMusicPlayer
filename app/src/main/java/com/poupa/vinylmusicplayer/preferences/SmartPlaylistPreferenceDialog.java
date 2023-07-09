@@ -59,7 +59,7 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Context context = getContext();
+        @NonNull final Context context = requireContext();
         final Resources resources = context.getResources();
 
         // ---- Retrieve the stored value
@@ -140,10 +140,6 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
                             .edit()
                             .putString(preferenceKey, newPrefValue)
                             .apply();
-
-                    // TODO If the playlist was enabled and now disabled, and this dialog is called
-                    //      outside the Setting activity,
-                    //      show a toast hinting the user that it can be enabled back in Settings
 
                     dismiss();
                 })

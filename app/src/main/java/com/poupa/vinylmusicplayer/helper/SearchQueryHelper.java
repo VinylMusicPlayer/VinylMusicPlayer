@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.helper;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
@@ -67,7 +66,6 @@ public class SearchQueryHelper {
 
     @NonNull
     public static ArrayList<Song> getSongs(
-            @NonNull final Context context,
             @Nullable final String focus,
             @NonNull final Bundle extras) {
         // First try known search metrics Genre and Playlist
@@ -78,8 +76,7 @@ public class SearchQueryHelper {
                 final String playlist = extras
                         .getString("android.intent.extra.playlist");
                 if (playlist != null) {
-                    return PlaylistSongLoader
-                            .getPlaylistSongList(context, playlist);
+                    return PlaylistSongLoader.getPlaylistSongList(playlist);
                 }
             } else if (focus.equals(MediaStore.Audio.Genres.ENTRY_CONTENT_TYPE)) {
                 // Ignore Android L deprecation by using direct constant as recommended by
@@ -87,8 +84,7 @@ public class SearchQueryHelper {
                 final String genre = extras
                         .getString("android.intent.extra.genre");
                 if (genre != null) {
-                    return GenreLoader
-                            .getGenreSongsByName(genre);
+                    return GenreLoader.getGenreSongsByName(genre);
                 }
             }
         }

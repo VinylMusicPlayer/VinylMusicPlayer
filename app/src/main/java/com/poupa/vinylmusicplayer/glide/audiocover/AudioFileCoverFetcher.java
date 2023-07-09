@@ -1,14 +1,14 @@
 package com.poupa.vinylmusicplayer.glide.audiocover;
 
-import android.media.MediaMetadataRetriever;
-
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
+import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.SAFUtil;
 
-import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.MissingResourceException;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -31,25 +32,18 @@ public class AudioFileCoverFetcher implements DataFetcher<InputStream> {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        InputStream data;
-        try {
-            retriever.setDataSource(model.filePath);
-            byte[] picture = retriever.getEmbeddedPicture();
-            if (picture != null) {
-                data = new ByteArrayInputStream(picture);
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), model.song)) {
+            Artwork art = audio.get().getTag().getFirstArtwork();
+            if (art != null) {
+                byte[] imageData = art.getBinaryData();
+                callback.onDataReady(new ByteArrayInputStream(imageData));
             } else {
-                data = fallback(model.filePath);
+                InputStream data = fallback(model.song.data);
+                if (data != null) {callback.onDataReady(data);}
+                else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
             }
-            callback.onDataReady(data);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             callback.onLoadFailed(e);
-        } finally {
-            try {
-                retriever.release();
-            } catch (IOException ioe) {
-                callback.onLoadFailed(ioe);
-            }
         }
     }
 
@@ -69,19 +63,8 @@ public class AudioFileCoverFetcher implements DataFetcher<InputStream> {
             {"cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.png"};
 
     private InputStream fallback(String path) throws FileNotFoundException {
-        try {
-            MP3File mp3File = new MP3File(path);
-            if (mp3File.hasID3v2Tag()) {
-                Artwork art = mp3File.getTag().getFirstArtwork();
-                if (art != null) {
-                    byte[] imageData = art.getBinaryData();
-                    return new ByteArrayInputStream(imageData);
-                }
-            }
-            // If there are any exceptions, we ignore them and continue to the other fallback method
-        } catch (Exception ignored) { }
-
-        // Method 2: look for album art in external files
+        // Look for album art in external files
+        // TODO This probably wont work on Android 13 (or at least requires explicit permission UI)
         File parent = new File(path).getParentFile();
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);

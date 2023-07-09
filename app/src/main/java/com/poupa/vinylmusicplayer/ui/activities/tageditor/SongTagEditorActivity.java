@@ -11,10 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
-
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 import org.jaudiotagger.tag.FieldKey;
 
@@ -39,13 +41,15 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
         super.onCreate(savedInstanceState);
 
         setNoImageMode();
-        setUpViews();
 
         //noinspection ConstantConditions
         getSupportActionBar().setTitle(R.string.action_tag_editor);
     }
 
-    private void setUpViews() {
+    @Override
+    protected void setUpViews() {
+        super.setUpViews();
+
         fillViewsWithFileTags();
         songTitle.addTextChangedListener(this);
         albumTitle.addTextChangedListener(this);
@@ -62,14 +66,20 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     }
 
     private void fillViewsWithFileTags() {
-        songTitle.setText(getSongTitle());
-        albumTitle.setText(getAlbumTitle());
-        artist.setText(getArtistName());
-        genre.setText(getGenreName());
-        year.setText(getSongYear());
-        trackNumber.setText(getTrackNumber());
-        discNumber.setText(getDiscNumber());
-        lyrics.setText(getLyrics());
+        try (AutoDeleteAudioFile audio = getAudioFile()) {
+            if (audio != null) {
+                songTitle.setText(getSongTitle(audio.get()));
+                albumTitle.setText(getAlbumTitle(audio.get()));
+                artist.setText(getArtistName(audio.get()));
+                genre.setText(getGenreName(audio.get()));
+                year.setText(getSongYear(audio.get()));
+                trackNumber.setText(getTrackNumber(audio.get()));
+                discNumber.setText(getDiscNumber(audio.get()));
+                lyrics.setText(getLyrics(audio.get()));
+            }
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(this, e);
+        }
     }
 
     @Override
@@ -95,6 +105,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     @Override
     protected void save() {
         Map<FieldKey, String> fieldKeyValueMap = new EnumMap<>(FieldKey.class);
+
         fieldKeyValueMap.put(FieldKey.TITLE, songTitle.getText().toString());
         fieldKeyValueMap.put(FieldKey.ALBUM, albumTitle.getText().toString());
         fieldKeyValueMap.put(FieldKey.ARTIST, artist.getText().toString());
@@ -103,6 +114,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
         fieldKeyValueMap.put(FieldKey.TRACK, trackNumber.getText().toString());
         fieldKeyValueMap.put(FieldKey.DISC_NO, discNumber.getText().toString());
         fieldKeyValueMap.put(FieldKey.LYRICS, lyrics.getText().toString());
+
         writeValuesToFiles(fieldKeyValueMap, null);
     }
 
@@ -131,10 +143,10 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
 
     @NonNull
     @Override
-    protected List<String> getSongPaths() {
-        ArrayList<String> paths = new ArrayList<>(1);
-        paths.add(Discography.getInstance().getSong(getId()).data);
-        return paths;
+    protected List<Song> getSongs() {
+        ArrayList<Song> songs = new ArrayList<>(1);
+        songs.add(Discography.getInstance().getSong(getId()));
+        return songs;
     }
 
     @Override

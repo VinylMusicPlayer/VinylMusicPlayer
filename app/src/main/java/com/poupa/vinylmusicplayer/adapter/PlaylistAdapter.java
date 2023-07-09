@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
@@ -32,10 +31,11 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
-import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.io.IOException;
@@ -188,20 +188,21 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             int failures = 0;
 
             String dir = "";
+            final Context context = getContext();
 
             for (Playlist playlist : params[0]) {
                 try {
-                    dir = PlaylistsUtil.savePlaylist(App.getInstance().getApplicationContext(), playlist).getParent();
+                    dir = PlaylistsUtil.savePlaylist(context, playlist);
                     successes++;
                 } catch (IOException e) {
+                    OopsHandler.copyStackTraceToClipboard(context, e);
                     failures++;
-                    e.printStackTrace();
                 }
             }
 
             return failures == 0
-                    ? String.format(App.getInstance().getApplicationContext().getString(R.string.saved_x_playlists_to_x), successes, dir)
-                    : String.format(App.getInstance().getApplicationContext().getString(R.string.saved_x_playlists_to_x_failed_to_save_x), successes, dir, failures);
+                    ? String.format(context.getString(R.string.saved_x_playlists_to_x), successes, dir)
+                    : String.format(context.getString(R.string.saved_x_playlists_to_x_failed_to_save_x), successes, dir, failures);
         }
 
         @Override
@@ -245,6 +246,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                 menu.setOnClickListener(view -> {
                     final Playlist playlist = dataSet.get(getAdapterPosition());
                     final PopupMenu popupMenu = new PopupMenu(activity, view);
+
                     if (playlist instanceof AbsSmartPlaylist) {
                         popupMenu.inflate(R.menu.menu_item_smart_playlist);
                         final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;

@@ -1,29 +1,30 @@
 package com.poupa.vinylmusicplayer.glide.audiocover;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.glide.artistimage.ArtistImage;
+import com.poupa.vinylmusicplayer.model.Song;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class AudioFileCover {
-    public final String filePath;
+    public final Song song;
 
-    public AudioFileCover(String filePath) {
-        this.filePath = filePath;
+    public AudioFileCover(@NonNull final Song song) {
+        this.song = song;
     }
 
     @Override
     public int hashCode() {
-        return filePath.hashCode();
+        return song.hashCode();
     }
 
     @Override
     public boolean equals(@Nullable Object object) {
         if (object instanceof AudioFileCover) {
             AudioFileCover other = (AudioFileCover) object;
-            return filePath.equals(other.filePath);
+            return song.equals(other.song);
         }
         return false;
     }

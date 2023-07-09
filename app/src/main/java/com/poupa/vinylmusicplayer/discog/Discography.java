@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -184,6 +185,14 @@ public class Discography implements MusicServiceEventListener {
             if (sortOrder != null) {Collections.sort(copy, sortOrder);}
 
             return copy;
+        }
+    }
+
+    @NonNull
+    public Map<Long, Song> getAllSongsById() {
+        synchronized (cache) {
+            // Make a copy here, to avoid error while the caller is iterating on the result
+            return new HashMap<>(cache.songsById);
         }
     }
 
@@ -361,7 +370,6 @@ public class Discography implements MusicServiceEventListener {
             }
             return false;
         };
-
 
         final int initialSongCount = getSongCount();
         ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);

@@ -32,7 +32,6 @@ import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Andrew Neal, modified by Karim Abou Zeid
@@ -169,7 +168,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
                 for (int i = position; i < queue.size() && i < position + NUM_PROCESS; i++) {
                     Song song = queue.get(i);
                     int indexInQueue = queue.get(i).index;
-                    ContentValues values = new ContentValues(4);
+                    ContentValues values = new ContentValues();
 
                     values.put(BaseColumns._ID, song.id);
                     values.put(MusicPlaybackColumns.INDEX_IN_QUEUE, indexInQueue);

@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -206,7 +204,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
 
         // give the adapter a chance to update the decoration
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyItemChanged(MusicPlayerRemote.getPosition());
     }
 
     private void setUpSubFragments() {
@@ -281,7 +279,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             @Override
             protected Lyrics doInBackground(Void... params) {
-                String data = MusicUtil.getLyrics(song);
+                String data = MusicUtil.getLyrics(requireContext(), song);
                 if (TextUtils.isEmpty(data)) {
                     return null;
                 }

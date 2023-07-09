@@ -91,12 +91,7 @@ public final class FileUtil {
             return true;
         } else {
             // get the file mime type
-            String filename = file.toURI().toString();
-            int dotPos = filename.lastIndexOf('.');
-            if (dotPos == -1) {
-                return false;
-            }
-            String fileExtension = filename.substring(dotPos + 1).toLowerCase();
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toString()).toLowerCase();
             String fileType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
             if (fileType == null) {
                 return false;

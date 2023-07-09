@@ -7,7 +7,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
@@ -15,6 +14,7 @@ import com.poupa.vinylmusicplayer.dialogs.RenamePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.io.IOException;
@@ -57,11 +57,17 @@ public class PlaylistMenuHelper {
 
         @Override
         protected String doInBackground(Playlist... params) {
+            final Context context = getContext();
+            final Playlist playlist = params[0];
+            if (playlist.getSongs(context).isEmpty()) {
+                return context.getString(R.string.playlist_is_empty);
+            }
             try {
-                return String.format(App.getInstance().getApplicationContext().getString(R.string.saved_playlist_to), PlaylistsUtil.savePlaylist(App.getInstance().getApplicationContext(), params[0]));
+                final String file = PlaylistsUtil.savePlaylist(context, playlist);
+                return context.getString(R.string.saved_playlist_to, file);
             } catch (IOException e) {
-                e.printStackTrace();
-                return String.format(App.getInstance().getApplicationContext().getString(R.string.failed_to_save_playlist), e);
+                OopsHandler.copyStackTraceToClipboard(context, e);
+                return context.getString(R.string.failed_to_save_playlist, e);
             }
         }
 

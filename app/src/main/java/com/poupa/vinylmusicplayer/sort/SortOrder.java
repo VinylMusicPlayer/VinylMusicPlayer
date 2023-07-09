@@ -1,19 +1,16 @@
 package com.poupa.vinylmusicplayer.sort;
 
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.SubMenu;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import com.poupa.vinylmusicplayer.util.MusicUtil;
-
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
-
-import android.view.Menu;
 
 /**
  * @author SC (soncaokim)
@@ -67,6 +64,7 @@ class Utils {
 
     @NonNull
     static String getSectionName(@NonNull final String name) {
+        if (TextUtils.isEmpty(name)) {return "";}
         return String.valueOf(name.charAt(0)).toUpperCase();
     }
 

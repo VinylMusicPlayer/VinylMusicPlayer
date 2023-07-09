@@ -19,7 +19,7 @@ public class AudioFileCoverLoader implements ModelLoader<AudioFileCover, InputSt
     @Override
     public LoadData<InputStream> buildLoadData(@NonNull AudioFileCover model, int width, int height,
                                                @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(model.filePath), new AudioFileCoverFetcher(model));
+        return new LoadData<>(new ObjectKey(model.song), new AudioFileCoverFetcher(model));
     }
 
     @Override

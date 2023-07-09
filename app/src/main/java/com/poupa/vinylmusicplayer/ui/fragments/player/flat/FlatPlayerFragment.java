@@ -174,6 +174,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     @Override
     public void onMediaStoreChanged() {
         // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
+        // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
         updateQueue();
     }
 
@@ -198,7 +199,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
 
         // give the adapter a chance to update the decoration
-        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyItemChanged(MusicPlayerRemote.getPosition());
     }
 
     private void setUpSubFragments() {
@@ -211,7 +212,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     protected void setUpPlayerToolbar() {
         toolbar.inflateMenu(R.menu.menu_player);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
         toolbar.setOnMenuItemClickListener(this);
 
         super.setUpPlayerToolbar();
@@ -272,7 +273,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             @Override
             protected Lyrics doInBackground(Void... params) {
-                String data = MusicUtil.getLyrics(song);
+                String data = MusicUtil.getLyrics(requireContext(), song);
                 if (TextUtils.isEmpty(data)) {
                     return null;
                 }
@@ -323,7 +324,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     protected void toggleFavorite(Song song) {
         super.toggleFavorite(song);
         if (song.id == MusicPlayerRemote.getCurrentSong().id) {
-            if (MusicUtil.isFavorite(getActivity(), song)) {
+            if (MusicUtil.isFavorite(requireActivity(), song)) {
                 playerAlbumCoverFragment.showHeartAnimation();
             }
             updateIsFavorite();

@@ -115,6 +115,7 @@ public class Album implements Parcelable {
         return songs != null ? songs.hashCode() : 0;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Album{" +
@@ -136,7 +137,7 @@ public class Album implements Parcelable {
         this.songs = in.createTypedArrayList(Song.CREATOR);
     }
 
-    public static final Creator<Album> CREATOR = new Creator<Album>() {
+    public static final Creator<Album> CREATOR = new Creator<>() {
         public Album createFromParcel(Parcel source) {
             return new Album(source);
         }
