@@ -37,14 +37,14 @@ android {
     namespace 'com.poupa.vinylmusicplayer'
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
-        renderscriptTargetApi 29
+        targetSdkVersion 33
+        renderscriptTargetApi 33
 
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 180
-        versionName '1.5.0'
+        versionCode 181
+        versionName '1.5.2'
 
         multiDexEnabled true
     }

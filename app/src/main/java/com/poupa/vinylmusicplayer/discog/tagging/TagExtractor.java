@@ -2,16 +2,18 @@ package com.poupa.vinylmusicplayer.discog.tagging;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.SAFUtil;
 
 import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -51,9 +53,9 @@ public class TagExtractor {
     };
 
     public static void extractTags(@NonNull Song song) {
-        try {
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), song)){
             // Override with metadata extracted from the file ourselves
-            AudioFile file = AudioFileIO.read(new File(song.data));
+            final AudioFile file = audio.get();
             Tag tags = file.getTagOrCreateAndSetDefault();
             if (tags.isEmpty() && (file instanceof MP3File)) {
                 tags = ((MP3File) file).getID3v1Tag();
@@ -77,7 +79,7 @@ public class TagExtractor {
             song.replayGainAlbum = rgValues.album;
             song.replayGainTrack = rgValues.track;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            e.printStackTrace();
+            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
         }
     }
 }

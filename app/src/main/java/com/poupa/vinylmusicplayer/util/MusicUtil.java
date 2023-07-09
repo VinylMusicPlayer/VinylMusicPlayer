@@ -1,41 +1,44 @@
 package com.poupa.vinylmusicplayer.util;
 
 import android.app.Activity;
-import android.content.ContentResolver;
+import android.app.PendingIntent;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Build.VERSION_CODES;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.AbsSynchronizedLyrics;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
-import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,10 +48,30 @@ import java.util.regex.Pattern;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class MusicUtil {
-    public static Uri getMediaStoreAlbumCoverUri(long albumId) {
-        final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
+        final Context context = App.getStaticContext();
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+            return getMediaStoreAlbumCover(audio);
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(context, e);
+            return null;
+        }
+    }
 
-        return ContentUris.withAppendedId(sArtworkUri, albumId);
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoDeleteAudioFile audio) {
+        try {
+            if (audio == null) {
+                return null;
+            }
+            final Artwork artworkTag = audio.get().getTagOrCreateAndSetDefault().getFirstArtwork();
+            if (artworkTag != null) {
+                final byte[] artworkBinaryData = artworkTag.getBinaryData();
+                return BitmapFactory.decodeByteArray(artworkBinaryData, 0, artworkBinaryData.length);
+            }
+            return null;
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public static Uri getSongFileUri(long songId) {
@@ -193,49 +216,10 @@ public class MusicUtil {
         return result;
     }
 
-    public static void insertAlbumArt(@NonNull Context context, long albumId, String path, @NonNull final String mimeType) {
-        ContentResolver contentResolver = context.getContentResolver();
-
-        Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-        contentResolver.delete(ContentUris.withAppendedId(artworkUri, albumId), null, null);
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Audio.AlbumColumns.ALBUM_ID, albumId);
-        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
-        values.put(MediaStore.MediaColumns.DATA, path);
-
-        contentResolver.insert(artworkUri, values);
-    }
-
-    public static void deleteAlbumArt(@NonNull Context context, long albumId) {
-        ContentResolver contentResolver = context.getContentResolver();
-        Uri localUri = Uri.parse("content://media/external/audio/albumart");
-        contentResolver.delete(ContentUris.withAppendedId(localUri, albumId), null, null);
-    }
-
-    @NonNull
-    public static File createAlbumArtFile() {
-        return new File(createAlbumArtDir(), String.valueOf(System.currentTimeMillis()));
-    }
-
-    @NonNull
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static File createAlbumArtDir() {
-        File albumArtDir = new File(Environment.getExternalStorageDirectory(), "/albumthumbs/");
-        if (!albumArtDir.exists()) {
-            albumArtDir.mkdirs();
-            try {
-                new File(albumArtDir, ".nomedia").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return albumArtDir;
-    }
-
-    public static void deleteTracks(@NonNull final Activity activity, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris, @Nullable final Runnable callback) {
+    public static void deleteTracks(@NonNull final Fragment fragment, ActivityResultLauncher<IntentSenderRequest> deleteRequestAndroidR, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris) {
         final int songCount = songs.size();
-        final Discography discography = Discography.getInstance();
+
+        Activity activity = fragment.getActivity();
 
         try {
             // Step 1: Remove selected tracks from the current playlist
@@ -255,25 +239,36 @@ public class MusicUtil {
             activity.getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     selection.toString(), null);
 
-            // Step 3: Remove files from card - Android Q takes care of this if the element is remove via MediaStore
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            // Step 3: Remove files from card
+            if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
                 for (int i = 0; i < songCount; i++) {
                     final Uri safUri = safUris == null || safUris.size() <= i ? null : safUris.get(i);
                     SAFUtil.delete(activity, songs.get(i).data, safUri);
                 }
             }
-        } catch (SecurityException e) {
-            e.printStackTrace();
+            else if (Build.VERSION.SDK_INT == VERSION_CODES.Q) {
+                // Android Q takes care of this if the element is remove via MediaStore
+            }
+            else { // Android R and after
+                List<Uri> urisToDelete = new ArrayList<>();
+                for (Song song: songs) {
+                    // See: https://stackoverflow.com/questions/64472765/java-lang-illegalargumentexception-all-requested-items-must-be-referenced-by-sp
+                    urisToDelete.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
+                }
+                PendingIntent editPendingIntent = MediaStore.createDeleteRequest(activity.getContentResolver(),
+                        urisToDelete);
+
+                deleteRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
+            }
+        } catch (SecurityException e) { // | SendIntentException e) {
+            OopsHandler.copyStackTraceToClipboard(activity, e);
         }
 
-        activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
+        if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+            activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-        activity.runOnUiThread(() -> {
-            Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show();
-            if (callback != null) {
-                callback.run();
-            }
-        });
+            activity.runOnUiThread(() -> Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show());
+        }
     }
 
     public static boolean isFavoritePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) {
@@ -284,20 +279,25 @@ public class MusicUtil {
         return playlistName.equals(context.getString(R.string.favorites));
     }
 
+    @Nullable
     public static Playlist getFavoritesPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, context.getString(R.string.favorites));
+        StaticPlaylist playlist = StaticPlaylist.getPlaylist(context.getString(R.string.favorites));
+        if (playlist != null) {return playlist.asPlaylist();}
+        return null;
     }
 
     private static Playlist getOrCreateFavoritesPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, PlaylistsUtil.createPlaylist(context, context.getString(R.string.favorites)));
+        return StaticPlaylist.getOrCreatePlaylist(context.getString(R.string.favorites)).asPlaylist();
     }
 
     public static Playlist getOrCreateSkippedPlaylist(@NonNull final Context context) {
-        return PlaylistLoader.getPlaylist(context, PlaylistsUtil.createPlaylist(context, context.getString(R.string.skipped_songs)));
+        return StaticPlaylist.getOrCreatePlaylist(context.getString(R.string.skipped_songs)).asPlaylist();
     }
 
     public static boolean isFavorite(@NonNull final Context context, @NonNull final Song song) {
-        return PlaylistsUtil.doesPlaylistContain(context, getFavoritesPlaylist(context).id, song.id);
+        Playlist playlist = getFavoritesPlaylist(context);
+        if (playlist == null) {return false;}
+        return PlaylistsUtil.doesPlaylistContain(playlist.id, song.id);
     }
 
     public static void toggleFavorite(@NonNull final Context context, @NonNull final Song song) {
@@ -359,39 +359,40 @@ public class MusicUtil {
     }
 
     @Nullable
-    public static String getLyrics(Song song) {
+    public static String getLyrics(@NonNull final Context context, @NonNull final Song song) {
+        if (song.id == Song.EMPTY_SONG.id) {return null;}
+
         String lyrics = null;
-
-        File file = new File(song.data);
-
-        try {
-            lyrics = AudioFileIO.read(file).getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+            lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            e.printStackTrace();
+            OopsHandler.copyStackTraceToClipboard(context, e);
         }
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
-            File dir = file.getAbsoluteFile().getParentFile();
+            try {
+                // TODO This probably wont work due to restricted access on Android 13
+                File file = new File(song.data);
+                File dir = file.getAbsoluteFile().getParentFile();
 
-            if (dir != null && dir.exists() && dir.isDirectory()) {
-                String format = ".*%s.*\\.(lrc|txt)";
-                String filename = Pattern.quote(FileUtil.stripExtension(file.getName()));
-                String songTitle = Pattern.quote(song.title);
+                if (dir != null && dir.exists() && dir.isDirectory()) {
+                    String format = ".*%s.*\\.(lrc|txt)";
+                    String filename = Pattern.quote(FileUtil.stripExtension(file.getName()));
+                    String songTitle = Pattern.quote(song.title);
 
-                final ArrayList<Pattern> patterns = new ArrayList<>();
-                patterns.add(Pattern.compile(String.format(format, filename), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
-                patterns.add(Pattern.compile(String.format(format, songTitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+                    final ArrayList<Pattern> patterns = new ArrayList<>();
+                    patterns.add(Pattern.compile(String.format(format, filename), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
+                    patterns.add(Pattern.compile(String.format(format, songTitle), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE));
 
-                File[] files = dir.listFiles(f -> {
-                    for (Pattern pattern : patterns) {
-                        if (pattern.matcher(f.getName()).matches()) return true;
-                    }
-                    return false;
-                });
+                    File[] files = dir.listFiles(f -> {
+                        for (Pattern pattern : patterns) {
+                            if (pattern.matcher(f.getName()).matches()) return true;
+                        }
+                        return false;
+                    });
 
-                if (files != null && files.length > 0) {
-                    for (File f : files) {
-                        try {
+                    if (files != null && files.length > 0) {
+                        for (File f : files) {
                             String newLyrics = FileUtil.read(f);
                             if (!newLyrics.trim().isEmpty()) {
                                 if (AbsSynchronizedLyrics.isSynchronized(newLyrics)) {
@@ -399,11 +400,11 @@ public class MusicUtil {
                                 }
                                 lyrics = newLyrics;
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }
+            } catch (Exception e) {
+                OopsHandler.copyStackTraceToClipboard(context, e);
             }
         }
 

@@ -13,6 +13,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author SC (soncaokim)
@@ -53,14 +54,45 @@ class DB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + SongColumns.NAME);
-        onCreate(db);
+        migrateDB(db, oldVersion, newVersion);
     }
 
     @Override
     public void onDowngrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + SongColumns.NAME);
-        onCreate(db);
+        migrateDB(db, oldVersion, newVersion);
+    }
+
+    public void migrateDB(@NonNull SQLiteDatabase dbase, int oldVersion, int newVersion) {
+        final Consumer<SQLiteDatabase> migrateResetAll = (db) -> {
+            db.execSQL(String.format("DROP TABLE IF EXISTS %s", SongColumns.NAME));
+            onCreate(db);
+        };
+        final Consumer<SQLiteDatabase> migrateUnsupported = (db) -> {
+            final String message = String.format("Unsupported migration version %s -> %s of database %s", oldVersion, newVersion, DATABASE_NAME);
+            throw new IllegalStateException(message);
+        };
+
+        if (oldVersion < newVersion)
+        {
+            // Upgrade path
+            switch (oldVersion) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case VERSION: // At target. This case is here for consistency check
+                    migrateResetAll.accept(dbase);
+                    break;
+
+                default:
+                    migrateUnsupported.accept(dbase);
+                    break;
+            }
+        } else {
+            // Downgrade path - downgrading is often impossible
+            migrateResetAll.accept(dbase);
+        }
     }
 
     synchronized void addSong(@NonNull Song song) {
@@ -102,10 +134,8 @@ class DB extends SQLiteOpenHelper {
         try (final SQLiteDatabase db = getWritableDatabase()) {
             db.delete(
                     SongColumns.NAME,
-                    SongColumns.ID + " = ?",
-                    new String[]{
-                            String.valueOf(songId)
-                    });
+                    SongColumns.ID + " = " + songId,
+                    null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jetbrains.annotations.NonNls;
@@ -58,6 +58,7 @@ public class Playlist implements Parcelable {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "Playlist{" +
                 "id=" + id +
@@ -68,7 +69,8 @@ public class Playlist implements Parcelable {
     @NonNull
     public ArrayList<Song> getSongs(Context context) {
         // this default implementation covers static playlists
-        return PlaylistSongLoader.getPlaylistSongList(context, id);
+        StaticPlaylist staticPlaylist = new StaticPlaylist(name);
+        return staticPlaylist.asSongs();
     }
 
     @Override
@@ -87,7 +89,7 @@ public class Playlist implements Parcelable {
         this.name = in.readString();
     }
 
-    public static final Creator<Playlist> CREATOR = new Creator<Playlist>() {
+    public static final Creator<Playlist> CREATOR = new Creator<>() {
         public Playlist createFromParcel(Parcel source) {
             return new Playlist(source);
         }

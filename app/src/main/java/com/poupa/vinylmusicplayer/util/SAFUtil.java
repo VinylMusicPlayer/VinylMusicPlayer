@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriPermission;
@@ -9,119 +10,73 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.arch.core.util.Function;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.fragment.app.Fragment;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.audio.AudioFileIO;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SAFUtil {
-
     public static final String TAG = SAFUtil.class.getSimpleName();
-    public static final String SEPARATOR = "###/SAF/###";
 
-    public static final int REQUEST_SAF_PICK_FILE = 42;
-    public static final int REQUEST_SAF_PICK_TREE = 43;
-
-    public static boolean isSAFRequired(File file) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !file.canWrite();
+    private static boolean isSAFRequired(File file) {
+        return !file.canWrite();
     }
 
     public static boolean isSAFRequired(String path) {
         return isSAFRequired(new File(path));
     }
 
-    public static boolean isSAFRequired(AudioFile audio) {
-        return isSAFRequired(audio.getFile());
-    }
-
     public static boolean isSAFRequired(Song song) {
         return isSAFRequired(song.data);
     }
 
-    public static boolean isSAFRequired(List<String> paths) {
-        for (String path : paths) {
-            if (isSAFRequired(path)) return true;
-        }
-        return false;
-    }
-
-    public static boolean isSAFRequiredForSongs(List<Song> songs) {
+    public static boolean isSAFRequired(List<Song> songs) {
         for (Song song : songs) {
-            if (isSAFRequired(song)) return true;
+            if (isSAFRequired(song.data)) return true;
         }
         return false;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void openFilePicker(Activity activity) {
-        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("audio/*");
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        activity.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_FILE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void openFilePicker(Fragment fragment) {
-        Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("audio/*");
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        fragment.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_FILE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void openTreePicker(Activity activity) {
-        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        activity.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_TREE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void openTreePicker(Fragment fragment) {
-        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        i.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        fragment.startActivityForResult(i, SAFUtil.REQUEST_SAF_PICK_TREE);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static void saveTreeUri(Context context, Intent data) {
-        Uri uri = data.getData();
+    public static void saveTreeUri(Context context, Uri uri) {
         context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         PreferenceUtil.getInstance().setSAFSDCardUri(uri);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static boolean isTreeUriSaved(Context context) {
+    public static boolean isTreeUriSaved() {
         return !TextUtils.isEmpty(PreferenceUtil.getInstance().getSAFSDCardUri());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static boolean isSDCardAccessGranted(Context context) {
-        if (!isTreeUriSaved(context)) return false;
+        if (!isTreeUriSaved()) return false;
 
         String sdcardUri = PreferenceUtil.getInstance().getSAFSDCardUri();
 
         List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
         for (UriPermission perm : perms) {
-            if (perm.getUri().toString().equals(sdcardUri) && perm.isWritePermission()) return true;
+            if (perm.getUri().toString().equals(sdcardUri) && perm.isWritePermission()) {
+                return true;
+            }
         }
 
         return false;
@@ -137,7 +92,9 @@ public class SAFUtil {
      * @return URI for found file. Null if nothing found.
      */
     @Nullable
-    public static Uri findDocument(DocumentFile dir, List<String> segments) {
+    private static Uri findDocument(@Nullable DocumentFile dir, @NonNull List<String> segments) {
+        if (dir == null) {return null;}
+
         for (DocumentFile file : dir.listFiles()) {
             int index = segments.indexOf(file.getName());
             if (index == -1) {
@@ -158,72 +115,65 @@ public class SAFUtil {
         return null;
     }
 
-    public static void write(Context context, AudioFile audio, Uri safUri) {
-        if (isSAFRequired(audio)) {
-            writeSAF(context, audio, safUri);
-        } else {
-            try {
-                writeFile(audio);
-            } catch (CannotWriteException e) {
-                e.printStackTrace();
+    public static void write(Context context, AutoDeleteAudioFile audio, @NonNull final Song song) {
+        writeSAF(context, audio, song);
+    }
+
+    private static Uri getUriFromSong(@NonNull final Song song) {
+        return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
+    }
+
+    public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
+        // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
+        // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
+        if (song.id == Song.EMPTY_SONG.id) {return null;}
+
+        final Uri uri = getUriFromSong(song);
+        try (InputStream original = context.getContentResolver().openInputStream(uri)) {
+            // Create an app-private temp file
+            Function<String, String> getSuffix = (name) -> {
+                final int i = name.lastIndexOf(".");
+                if (i == -1) {return "";}
+                return name.substring(i + 1);
+            };
+            File tempFile = AutoDeleteTempFile.create(String.valueOf(song.id), getSuffix.apply(song.data)).get();
+
+            // Copy the content of the URI to the temp file
+            try (OutputStream temp = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = original.read(buffer, 0, 1024)) >= 0) {
+                    temp.write(buffer, 0, read);
+                }
             }
+
+            // Create a ephemeral/volatile audio file
+            return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(context, e);
+            return null;
         }
     }
 
-    public static void writeFile(AudioFile audio) throws CannotWriteException {
-        audio.commit();
-    }
-
-    public static void writeSAF(Context context, AudioFile audio, Uri safUri) {
-        Uri uri = null;
-
+    private static void writeSAF(Context context, AutoDeleteAudioFile tempAudio, @NonNull final Song song) {
         if (context == null) {
-            Log.e(TAG, "writeSAF: context == null");
             return;
         }
 
-        if (isTreeUriSaved(context)) {
-            List<String> pathSegments = new ArrayList<>(Arrays.asList(audio.getFile().getAbsolutePath().split("/")));
-            Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
-            uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
-        }
+        Uri uri = getUriFromSong(song);
 
-        if (uri == null) {
-            uri = safUri;
-        }
-
-        if (uri == null) {
-            Log.e(TAG, "writeSAF: Can't get SAF URI");
-            toast(context, context.getString(R.string.saf_error_uri));
-            return;
-        }
-
-        try {
-            // copy file to app folder to use jaudiotagger
-            final File original = audio.getFile();
-            File temp = File.createTempFile("tmp-media", '.' + Utils.getExtension(original));
-            Utils.copy(original, temp);
-            temp.deleteOnExit();
-            audio.setFile(temp);
-            writeFile(audio);
-
-            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "rw");
-            if (pfd == null) {
-                Log.e(TAG, "writeSAF: SAF provided incorrect URI: " + uri);
-                return;
-            }
+        try (ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "rw")) {
+            // Save the in-memory tags to the backing file
+            tempAudio.get().commit();
 
             // now read persisted data and write it to real FD provided by SAF
-            FileInputStream fis = new FileInputStream(temp);
+            FileInputStream fis = new FileInputStream(tempAudio.get().getFile());
             byte[] audioContent = FileUtil.readBytes(fis);
             FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
             fos.write(audioContent);
             fos.close();
-
-            temp.delete();
         } catch (final Exception e) {
-            Log.e(TAG, "writeSAF: Failed to write to file descriptor provided by SAF", e);
-
+            OopsHandler.copyStackTraceToClipboard(context, e);
             toast(context, String.format(context.getString(R.string.saf_write_failed), e.getLocalizedMessage()));
         }
     }
@@ -246,7 +196,6 @@ public class SAFUtil {
         new File(path).delete();
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     public static void deleteSAF(Context context, String path, Uri safUri) {
         Uri uri = null;
 
@@ -255,7 +204,7 @@ public class SAFUtil {
             return;
         }
 
-        if (isTreeUriSaved(context)) {
+        if (isTreeUriSaved()) {
             List<String> pathSegments = new ArrayList<>(Arrays.asList(path.split("/")));
             Uri sdcard = Uri.parse(PreferenceUtil.getInstance().getSAFSDCardUri());
             uri = findDocument(DocumentFile.fromTreeUri(context, sdcard), pathSegments);
@@ -285,5 +234,4 @@ public class SAFUtil {
             ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
         }
     }
-
 }

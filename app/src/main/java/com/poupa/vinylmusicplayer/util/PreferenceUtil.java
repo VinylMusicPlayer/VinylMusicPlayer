@@ -87,14 +87,9 @@ public final class PreferenceUtil {
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
-    public static final String ALBUM_ART_ON_LOCKSCREEN = "album_art_on_lockscreen";
-    public static final String BLURRED_ALBUM_ART = "blurred_album_art";
-
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
     private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
-
-    private static final String IGNORE_MEDIA_STORE_ARTWORK = "ignore_media_store_artwork";
 
     private static final String LAST_CHANGELOG_VERSION = "last_changelog_version";
     private static final String INTRO_SHOWN = "intro_shown";
@@ -299,18 +294,6 @@ public final class PreferenceUtil {
 
     public boolean audioDucking() {
         return mPreferences.getBoolean(AUDIO_DUCKING, true);
-    }
-
-    public boolean albumArtOnLockscreen() {
-        return mPreferences.getBoolean(ALBUM_ART_ON_LOCKSCREEN, true);
-    }
-
-    public boolean blurredAlbumArt() {
-        return mPreferences.getBoolean(BLURRED_ALBUM_ART, false);
-    }
-
-    public boolean ignoreMediaStoreArtwork() {
-        return mPreferences.getBoolean(IGNORE_MEDIA_STORE_ARTWORK, false);
     }
 
     public String getArtistSortOrder() {

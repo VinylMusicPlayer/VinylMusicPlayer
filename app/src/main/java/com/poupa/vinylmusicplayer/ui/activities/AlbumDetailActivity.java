@@ -27,9 +27,9 @@ import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityAlbumDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
-import com.poupa.vinylmusicplayer.dialogs.DeleteSongsDialog;
 import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
+import com.poupa.vinylmusicplayer.dialogs.helper.DeleteSongsHelper;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -294,7 +294,7 @@ public class AlbumDetailActivity
             AddToPlaylistDialog.create(songs).show(getSupportFragmentManager(), "ADD_PLAYLIST");
             return true;
         } else if (id == R.id.action_delete_from_device) {
-            DeleteSongsDialog.create(songs).show(getSupportFragmentManager(), "DELETE_SONGS");
+            DeleteSongsHelper.delete(songs, getSupportFragmentManager(), "DELETE_SONGS");
             return true;
         } else if (id == android.R.id.home) {
             super.onBackPressed();

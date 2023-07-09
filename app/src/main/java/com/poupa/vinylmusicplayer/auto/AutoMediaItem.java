@@ -1,11 +1,12 @@
 package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.util.ImageUtil;
@@ -54,18 +55,19 @@ class AutoMediaItem {
         }
 
         @NonNull
-        Builder icon(Uri uri) {
-            mBuilder.setIconUri(uri);
-            return this;
+        Builder icon(@DrawableRes int iconDrawableId) {
+            return icon(ImageUtil.createBitmap(
+                    ImageUtil.getVectorDrawable(
+                        mContext.getResources(),
+                        iconDrawableId,
+                        mContext.getTheme()
+                    )
+            ));
         }
 
         @NonNull
-        Builder icon(int iconDrawableId) {
-            mBuilder.setIconBitmap(ImageUtil.createBitmap(ImageUtil.getVectorDrawable(
-                    mContext.getResources(),
-                    iconDrawableId,
-                    mContext.getTheme()
-            )));
+        Builder icon(@NonNull Bitmap bitmap) {
+            mBuilder.setIconBitmap(bitmap);
             return this;
         }
 

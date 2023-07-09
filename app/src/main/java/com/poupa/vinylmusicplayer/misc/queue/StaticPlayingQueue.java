@@ -1,12 +1,13 @@
 package com.poupa.vinylmusicplayer.misc.queue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StaticPlayingQueue {
 

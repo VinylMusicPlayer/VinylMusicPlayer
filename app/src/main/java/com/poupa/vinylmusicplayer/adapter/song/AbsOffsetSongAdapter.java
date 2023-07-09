@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
@@ -27,6 +28,9 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     protected static final int OFFSET_ITEM = 0;
     protected static final int SONG = 1;
+
+    // Need to be different from RecyclerView.NO_ID to not to upset the base class
+    protected static final long OFFSET_ITEM_ID = RecyclerView.NO_ID - 1;
 
     public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
@@ -67,9 +71,10 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     @Override
     public long getItemId(int position) {
+        // Shifting by -1, since the very first item is the OFFSET_ITEM
         position--;
-        if (position < 0) return -2;
-        return super.getItemId(position);
+
+        return (position < 0 ? OFFSET_ITEM_ID : super.getItemId(position));
     }
 
     @Nullable

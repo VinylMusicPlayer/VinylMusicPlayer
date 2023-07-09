@@ -10,9 +10,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
-import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
 public class AddToPlaylistDialog extends DialogFragment {
+    private static final String SONGS = "songs";
 
     @NonNull
     public static AddToPlaylistDialog create(Song song) {
@@ -34,7 +34,7 @@ public class AddToPlaylistDialog extends DialogFragment {
     public static AddToPlaylistDialog create(ArrayList<Song> songs) {
         AddToPlaylistDialog dialog = new AddToPlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("songs", songs);
+        args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
         return dialog;
     }
@@ -42,27 +42,27 @@ public class AddToPlaylistDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final List<Playlist> playlists = PlaylistLoader.getAllPlaylists(getActivity());
+        final List<StaticPlaylist> playlists = StaticPlaylist.getAllPlaylists();
         CharSequence[] playlistNames = new CharSequence[playlists.size() + 1];
-        playlistNames[0] = getActivity().getResources().getString(R.string.action_new_playlist);
+        playlistNames[0] = requireActivity().getResources().getString(R.string.action_new_playlist);
         for (int i = 1; i < playlistNames.length; i++) {
-            playlistNames[i] = playlists.get(i - 1).name;
+            playlistNames[i] = playlists.get(i - 1).asPlaylist().name;
         }
-        return new MaterialDialog.Builder(getActivity())
+        return new MaterialDialog.Builder(requireActivity())
                 .title(R.string.add_playlist_title)
                 .items(playlistNames)
                 .itemsCallback((materialDialog, view, i, charSequence) -> {
-                    final ArrayList<Song> songs = getArguments().getParcelableArrayList("songs");
+                    final ArrayList<Song> songs = requireArguments().getParcelableArrayList(SONGS);
                     if (songs == null) return;
                     if (i == 0) {
                         materialDialog.dismiss();
-                        CreatePlaylistDialog.create(songs).show(getActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
+                        CreatePlaylistDialog.create(songs).show(requireActivity().getSupportFragmentManager(), "ADD_TO_PLAYLIST");
                     } else {
                         materialDialog.dismiss();
-                        Context ctx = getActivity();
-                        final long playlistId = playlists.get(i - 1).id;
+                        Context ctx = requireActivity();
+                        final long playlistId = playlists.get(i - 1).asPlaylist().id;
 
-                        if (hasDuplicates(playlistId, songs, ctx)) {
+                        if (hasDuplicates(playlistId, songs)) {
                             new MaterialDialog.Builder(ctx)
                                     .title(R.string.confirm_adding_duplicates)
                                     .positiveText(R.string.yes).negativeText(R.string.no)
@@ -70,10 +70,10 @@ public class AddToPlaylistDialog extends DialogFragment {
                                             PlaylistsUtil.addToPlaylist(ctx, songs, playlistId, true)
                                     ).onNegative((dialog, which) -> {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id));
+                                            songs.removeIf(song -> PlaylistsUtil.doesPlaylistContain(playlistId, song.id));
                                         } else {
                                             for (Song song: new ArrayList<>(songs)) {
-                                                if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
+                                                if (PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
                                                     songs.remove(song);
                                                 }
                                             }
@@ -91,9 +91,9 @@ public class AddToPlaylistDialog extends DialogFragment {
                 .build();
     }
 
-    private static boolean hasDuplicates(long playlistId, ArrayList<Song> songs, Context ctx) {
+    private static boolean hasDuplicates(long playlistId, ArrayList<Song> songs) {
         for (Song song: songs) {
-            if (PlaylistsUtil.doesPlaylistContain(ctx, playlistId, song.id)) {
+            if (PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
                 return true;
             }
         }

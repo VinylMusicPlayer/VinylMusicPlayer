@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.PlaylistAdapter;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.HistoryPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -105,8 +105,9 @@ public class PlaylistsFragment
                 playlists.add(new MyTopTracksPlaylist(context));
             }
 
-            playlists.addAll(PlaylistLoader.getAllPlaylists(context));
-
+            for (StaticPlaylist playlist : StaticPlaylist.getAllPlaylists()) {
+                playlists.add(playlist.asPlaylist());
+            }
             return playlists;
         }
 

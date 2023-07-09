@@ -1,8 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,21 +38,23 @@ import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
-import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -152,7 +151,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_notification);
             addPreferencesFromResource(R.xml.pref_now_playing_screen);
             addPreferencesFromResource(R.xml.pref_images);
-            addPreferencesFromResource(R.xml.pref_lockscreen);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
 
@@ -161,7 +159,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
             final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
             findPreference(PreferenceUtil.WHITELIST_ENABLED).setSummary(strSummaryWhitelist+startPath);
-
         }
 
         @Nullable
@@ -179,18 +176,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
-                        SongConfirmationPreference.ASK.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK);
-                        }),
-                        SongConfirmationPreference.REPLACE.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE);
-                        }),
-                        SongConfirmationPreference.NEXT.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT);
-                        }),
-                        SongConfirmationPreference.ADD.setAction(() -> {
-                            PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD);
-                        })
+                        SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),
+                        SongConfirmationPreference.REPLACE.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_REPLACE)),
+                        SongConfirmationPreference.NEXT.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_NEXT)),
+                        SongConfirmationPreference.ADD.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ADD))
                 );
                 int defaultValue = -1;
                 int id = PreferenceUtil.getInstance().getEnqueueSongsDefaultChoice();

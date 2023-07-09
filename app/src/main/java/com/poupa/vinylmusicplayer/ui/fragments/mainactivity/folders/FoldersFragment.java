@@ -93,7 +93,7 @@ public class FoldersFragment
         return newInstance(PreferenceUtil.getInstance().getStartDirectory());
     }
 
-    public static FoldersFragment newInstance(final File directory) {
+    private static FoldersFragment newInstance(final File directory) {
         final FoldersFragment frag = new FoldersFragment();
         final Bundle bundle = new Bundle();
         bundle.putSerializable(PATH, directory);
@@ -333,7 +333,7 @@ public class FoldersFragment
                             .setActionTextColor(ThemeStore.accentColor(requireActivity()))
                             .show();
                 }
-            }).execute(new ListSongsAsyncTask.LoadingInfo(toList(canonicalFile.getParentFile()), fileFilter, getFileComparator()));
+            }).execute(new ListSongsAsyncTask.LoadingInfo(canonicalFile.getParentFile(), fileFilter, getFileComparator()));
         }
     }
 
@@ -360,12 +360,6 @@ public class FoldersFragment
         }).execute(new ListSongsAsyncTask.LoadingInfo(files, AUDIO_FILE_FILTER, getFileComparator()));
     }
 
-    private static ArrayList<File> toList(final File file) {
-        final ArrayList<File> files = new ArrayList<>(1);
-        files.add(file);
-        return files;
-    }
-
     private Comparator<File> getFileComparator() {
         final SortOrder<File> fileSortOrder = FileSortOrder.fromPreference(getSortOrder());
         return fileSortOrder.comparator;
@@ -385,9 +379,9 @@ public class FoldersFragment
                 {
                     new ListSongsAsyncTask(getActivity(), null, (songs, extra) -> {
                         if (!songs.isEmpty()) {
-                            SongsMenuHelper.handleMenuClick(getActivity(), songs, itemId);
+                            SongsMenuHelper.handleMenuClick(requireActivity(), songs, itemId);
                         }
-                    }).execute(new ListSongsAsyncTask.LoadingInfo(toList(file), AUDIO_FILE_FILTER, getFileComparator()));
+                    }).execute(new ListSongsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER, getFileComparator()));
                     return true;
                 } else if (itemId == R.id.action_set_as_start_directory) {
                     PreferenceUtil.getInstance().setStartDirectory(file);
@@ -432,7 +426,7 @@ public class FoldersFragment
                                     .setActionTextColor(ThemeStore.accentColor(requireActivity()))
                                     .show();
                         }
-                    }).execute(new ListSongsAsyncTask.LoadingInfo(toList(file), AUDIO_FILE_FILTER, getFileComparator()));
+                    }).execute(new ListSongsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER, getFileComparator()));
                     return true;
                 } else if (itemId == R.id.action_scan) {
                     scanPaths(new String[]{FileUtil.safeGetCanonicalPath(file)});
@@ -641,6 +635,10 @@ public class FoldersFragment
             final Comparator<File> fileComparator;
             final FileFilter fileFilter;
             public final List<File> files;
+
+            LoadingInfo(@NonNull final File file, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
+                this(Collections.singletonList(file), fileFilter, fileComparator);
+            }
 
             LoadingInfo(@NonNull final List<File> files, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
                 this.fileComparator = fileComparator;

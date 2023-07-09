@@ -16,13 +16,12 @@ import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.LastAddedLoader;
-import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
-import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -71,9 +70,11 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
-                Playlist playlist = PlaylistLoader.getPlaylist(context, itemId);
-                songs.addAll(playlist.getSongs(context));
-                musicService.openQueue(songs, 0, true);
+                final StaticPlaylist playlist = StaticPlaylist.getPlaylist(itemId);
+                if (playlist != null) {
+                    songs.addAll(playlist.asSongs());
+                    musicService.openQueue(songs, 0, true);
+                }
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
