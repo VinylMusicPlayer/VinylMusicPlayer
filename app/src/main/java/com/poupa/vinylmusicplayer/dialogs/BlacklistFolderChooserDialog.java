@@ -78,7 +78,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
                 return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.md_error_label)
+                        .title(com.afollestad.materialdialogs.commons.R.string.md_error_label)
                         .content(R.string.android13_storage_perm_error)
                         .positiveText(android.R.string.ok)
                         .build();
@@ -88,8 +88,8 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
                 getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
                 return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.md_error_label)
-                        .content(R.string.md_storage_perm_error)
+                        .title(com.afollestad.materialdialogs.commons.R.string.md_error_label)
+                        .content(com.afollestad.materialdialogs.commons.R.string.md_storage_perm_error)
                         .positiveText(android.R.string.ok)
                         .build();
         }

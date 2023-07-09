@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
@@ -44,7 +45,7 @@ class FlatTheme implements ThemeStyle {
     }
 
     public void setSearchCardItemStyle(View itemView, AppCompatActivity activity) {
-        itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        itemView.setBackgroundColor(ATHUtil.resolveColor(activity, androidx.cardview.R.attr.cardBackgroundColor));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             itemView.setElevation(activity.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }

@@ -201,9 +201,9 @@ public class PlayingQueueAdapter extends SongAdapter
         if (color != null) {
             holder.itemView.setBackgroundColor(color);
         } else {
-            holder.itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+            holder.itemView.setBackgroundColor(ATHUtil.resolveColor(activity, androidx.cardview.R.attr.cardBackgroundColor));
         }
-        holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        holder.dummyContainer.setBackgroundColor(ATHUtil.resolveColor(activity, androidx.cardview.R.attr.cardBackgroundColor));
     }
 
     @Override
@@ -311,7 +311,7 @@ public class PlayingQueueAdapter extends SongAdapter
                 snackBarTitle,
                 Snackbar.LENGTH_LONG);
 
-        TextView songTitle = snackbar.getView().findViewById(R.id.snackbar_text);
+        TextView songTitle = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
 
         songTitle.setSingleLine();
         songTitle.setEllipsize(TextUtils.TruncateAt.END);

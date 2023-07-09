@@ -27,8 +27,8 @@ public class SAFGuideActivity extends IntroActivity {
                         R.string.saf_guide_slide1_description_before_o :
                         R.string.saf_guide_slide1_description)
                 .image(R.drawable.saf_guide_1)
-                .background(R.color.md_indigo_300)
-                .backgroundDark(R.color.md_indigo_400)
+                .background(com.kabouzeid.appthemehelper.R.color.md_indigo_300)
+                .backgroundDark(com.kabouzeid.appthemehelper.R.color.md_indigo_400)
                 .layout(R.layout.fragment_simple_slide_large_image)
                 .build());
 
@@ -37,8 +37,8 @@ public class SAFGuideActivity extends IntroActivity {
                     .title(R.string.saf_guide_slide2_title)
                     .description(R.string.saf_guide_slide2_description)
                     .image(R.drawable.saf_guide_2)
-                    .background(R.color.md_indigo_500)
-                    .backgroundDark(R.color.md_indigo_600)
+                    .background(com.kabouzeid.appthemehelper.R.color.md_indigo_500)
+                    .backgroundDark(com.kabouzeid.appthemehelper.R.color.md_indigo_600)
                     .layout(R.layout.fragment_simple_slide_large_image)
                     .build());
         } else {
@@ -46,8 +46,8 @@ public class SAFGuideActivity extends IntroActivity {
                     .title(R.string.saf_guide_slide2_title)
                     .description(R.string.saf_guide_slide2_description_android_r)
                     .image(R.drawable.saf_guide_2)
-                    .background(R.color.md_indigo_500)
-                    .backgroundDark(R.color.md_indigo_600)
+                    .background(com.kabouzeid.appthemehelper.R.color.md_indigo_500)
+                    .backgroundDark(com.kabouzeid.appthemehelper.R.color.md_indigo_600)
                     .layout(R.layout.fragment_simple_slide_large_image)
                     .build());
         }
@@ -55,8 +55,8 @@ public class SAFGuideActivity extends IntroActivity {
                 .title(R.string.saf_guide_slide3_title)
                 .description(R.string.saf_guide_slide3_description)
                 .image(R.drawable.saf_guide_3)
-                .background(R.color.md_indigo_700)
-                .backgroundDark(R.color.md_indigo_800)
+                .background(com.kabouzeid.appthemehelper.R.color.md_indigo_700)
+                .backgroundDark(com.kabouzeid.appthemehelper.R.color.md_indigo_800)
                 .layout(R.layout.fragment_simple_slide_large_image)
                 .build());
     }

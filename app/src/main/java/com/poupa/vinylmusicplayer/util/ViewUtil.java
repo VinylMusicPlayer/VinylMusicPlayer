@@ -17,7 +17,6 @@ import androidx.annotation.ColorInt;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
-import com.poupa.vinylmusicplayer.R;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 /**
@@ -67,7 +66,7 @@ public class ViewUtil {
         recyclerView.setPopupBgColor(accentColor);
         recyclerView.setPopupTextColor(MaterialValueHelper.getPrimaryTextColor(context, ColorUtil.isColorLight(accentColor)));
         recyclerView.setThumbColor(accentColor);
-        recyclerView.setTrackColor(ColorUtil.withAlpha(ATHUtil.resolveColor(context, R.attr.colorControlNormal), 0.12f));
+        recyclerView.setTrackColor(ColorUtil.withAlpha(ATHUtil.resolveColor(context, androidx.appcompat.R.attr.colorControlNormal), 0.12f));
     }
 
     public static float convertDpToPixel(float dp, Resources resources) {

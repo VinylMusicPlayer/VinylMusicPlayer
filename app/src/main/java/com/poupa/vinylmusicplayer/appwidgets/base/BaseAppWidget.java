@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.appwidgets.base;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -146,7 +148,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return PendingIntent.getForegroundService(context, 0, intent, 0);
         } else {
-            return PendingIntent.getService(context, 0, intent, 0);
+            return PendingIntent.getService(context, 0, intent, FLAG_IMMUTABLE);
         }
     }
 
@@ -210,13 +212,13 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         } else {
             int currentTheme = PreferenceUtil.getInstance().getGeneralTheme();
             if(currentTheme == R.style.Theme_VinylMusicPlayer || currentTheme == R.style.Theme_VinylMusicPlayer_Black){
-                appWidgetView.setInt(getId(), "setBackgroundResource", R.color.cardview_dark_background);
-                appWidgetView.setTextColor(R.id.title, resources.getColor(R.color.ate_primary_text_dark));
-                appWidgetView.setTextColor(R.id.text, resources.getColor(R.color.ate_primary_text_dark));
+                appWidgetView.setInt(getId(), "setBackgroundResource", androidx.cardview.R.color.cardview_dark_background);
+                appWidgetView.setTextColor(R.id.title, resources.getColor(com.kabouzeid.appthemehelper.R.color.ate_primary_text_dark));
+                appWidgetView.setTextColor(R.id.text, resources.getColor(com.kabouzeid.appthemehelper.R.color.ate_primary_text_dark));
             }else{
-                appWidgetView.setInt(getId(), "setBackgroundResource", R.color.md_grey_50);
-                appWidgetView.setTextColor(R.id.title, resources.getColor(R.color.ate_primary_text_light));
-                appWidgetView.setTextColor(R.id.text, resources.getColor(R.color.ate_primary_text_light));
+                appWidgetView.setInt(getId(), "setBackgroundResource", com.kabouzeid.appthemehelper.R.color.md_grey_50);
+                appWidgetView.setTextColor(R.id.title, resources.getColor(com.kabouzeid.appthemehelper.R.color.ate_primary_text_light));
+                appWidgetView.setTextColor(R.id.text, resources.getColor(com.kabouzeid.appthemehelper.R.color.ate_primary_text_light));
             }
         }
     }

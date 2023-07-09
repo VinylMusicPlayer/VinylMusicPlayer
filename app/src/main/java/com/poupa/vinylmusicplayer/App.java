@@ -32,8 +32,8 @@ public class App extends MultiDexApplication {
         // default theme
         if (!ThemeStore.isConfigured(this, 1)) {
             ThemeStore.editTheme(this)
-                    .primaryColorRes(R.color.md_indigo_500)
-                    .accentColorRes(R.color.md_pink_A400)
+                    .primaryColorRes(com.kabouzeid.appthemehelper.R.color.md_indigo_500)
+                    .accentColorRes(com.kabouzeid.appthemehelper.R.color.md_pink_A400)
                     .commit();
         }
 

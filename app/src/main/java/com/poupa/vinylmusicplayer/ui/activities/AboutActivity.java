@@ -127,17 +127,17 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
             };
 
             final TypedValue typedColor = new TypedValue();
-            getTheme().resolveAttribute(R.attr.cardBackgroundColor, typedColor, true);
+            getTheme().resolveAttribute(androidx.cardview.R.attr.cardBackgroundColor, typedColor, true);
             final String backgroundColor = colorHex.apply(typedColor.data);
             getTheme().resolveAttribute(R.attr.iconColor, typedColor, true);
             final String contentColor = colorHex.apply(typedColor.data);
 
-            final TextAppearance captionStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Caption);
+            final TextAppearance captionStyle = new TextAppearance(this, androidx.appcompat.R.style.TextAppearance_AppCompat_Caption);
             final String captionTextColor = hex2rgba(captionStyle.getTextColor().getDefaultColor());
             final String captionSize = String.valueOf(px2dip(this, captionStyle.getTextSize()));
 
             final String titleTextColor = hex2rgba(ThemeStore.textColorSecondary(this));
-            final TextAppearance titleStyle = new TextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
+            final TextAppearance titleStyle = new TextAppearance(this, androidx.appcompat.R.style.TextAppearance_AppCompat_Body2);
             final String titleSize = String.valueOf(px2dip(this, titleStyle.getTextSize()));
 
             getTheme().resolveAttribute(R.attr.dividerColor, typedColor, true);

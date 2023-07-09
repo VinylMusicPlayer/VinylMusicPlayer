@@ -72,7 +72,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
             });
 
             TypedValue outValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
+            context.getTheme().resolveAttribute(androidx.appcompat.R.attr.selectableItemBackground, outValue, true);
             button.setBackgroundResource(outValue.resourceId);
             int px_vertical = context.getResources().getDimensionPixelSize(R.dimen.bottom_sheet_vertical_divided_margin);
             int px_horizontal = context.getResources().getDimensionPixelSize(R.dimen.default_item_margin);

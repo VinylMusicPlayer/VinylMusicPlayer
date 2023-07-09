@@ -18,8 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.R;
-
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
@@ -27,7 +25,7 @@ public class Util {
 
     public static int getActionBarSize(@NonNull Context context) {
         TypedValue typedValue = new TypedValue();
-        int[] textSizeAttr = new int[]{R.attr.actionBarSize};
+        int[] textSizeAttr = new int[]{androidx.appcompat.R.attr.actionBarSize};
         int indexOfAttrTextSize = 0;
         TypedArray a = context.obtainStyledAttributes(typedValue.data, textSizeAttr);
         int actionBarSize = a.getDimensionPixelSize(indexOfAttrTextSize, -1);

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
@@ -57,7 +58,7 @@ class MaterialTheme implements ThemeStyle {
     }
 
     public void setPlaylistCardItemStyle(View itemView, AppCompatActivity activity) {
-        itemView.setBackgroundColor(ATHUtil.resolveColor(activity, R.attr.cardBackgroundColor));
+        itemView.setBackgroundColor(ATHUtil.resolveColor(activity, androidx.cardview.R.attr.cardBackgroundColor));
     }
 
     public void setDragView(AppCompatImageView dragView) {

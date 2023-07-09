@@ -119,7 +119,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         });
 
         // for some reason the xml attribute doesn't get applied here.
-        playingQueueCard.setCardBackgroundColor(ATHUtil.resolveColor(requireActivity(), R.attr.cardBackgroundColor));
+        playingQueueCard.setCardBackgroundColor(ATHUtil.resolveColor(requireActivity(), androidx.cardview.R.attr.cardBackgroundColor));
     }
 
     @Override
@@ -448,7 +448,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             int adjustedLastColor = fragment.lastColor;
             int adjustedNewColor = newColor;
 
-            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
+            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), androidx.cardview.R.attr.cardBackgroundColor);
             adjustedLastColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedLastColor, backgroundColor);
             adjustedNewColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedNewColor, backgroundColor);
 

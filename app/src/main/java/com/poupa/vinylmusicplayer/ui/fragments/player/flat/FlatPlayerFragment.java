@@ -417,7 +417,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
             int adjustedLastColor = fragment.lastColor;
             int adjustedNewColor = newColor;
 
-            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), R.attr.cardBackgroundColor);
+            int backgroundColor = ATHUtil.resolveColor(fragment.requireActivity(), androidx.cardview.R.attr.cardBackgroundColor);
             adjustedLastColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedLastColor, backgroundColor);
             adjustedNewColor = VinylMusicPlayerColorUtil.getContrastedColor(adjustedNewColor, backgroundColor);
             Animator subHeaderAnimator = ViewUtil.createTextColorTransition(fragment.playerQueueSubHeader, adjustedLastColor, adjustedNewColor);
