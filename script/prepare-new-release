@@ -1,0 +1,147 @@
+#!/bin/bash
+
+readonly self="$0"
+
+# ---- Settings
+readonly gh_release_yml=".github/release.yml"
+readonly build_specs="./app/build.gradle"
+readonly changelog_md="./CHANGELOG.md"
+
+readonly md_section_title="# Changelog" # This must match the changelog_md content
+readonly md_section_sub_title="## What's Changed" # This must match whatever Github puts in the generated .md
+readonly md_section_feature="### Features" # This must match the gh_release_yml content
+readonly md_section_comment="<!-- Release notes generated " # This must match whatever Github puts in the generated .md
+readonly md_section_full_changelog="**Full Changelog**:" # This must match whatever Github puts in the generated .md
+
+readonly remote=origin
+readonly release_branch="master"
+readonly previous_version="$(grep -w versionName ${build_specs} | sed "s/'//g" | awk '{print $2;}')"
+readonly previous_version_code="$(grep -w versionCode ${build_specs} | awk '{print $2;}')"
+readonly new_branch_prefix="next-release-"
+new_version="${previous_version}-next" # Just a random tag for now
+readonly new_version_code=$(( previous_version_code + 1 ))
+readonly new_version_date="$(date +%Y-%m-%d)"
+
+# ---- Logging utilities
+log_impl()
+{
+  echo "$(tput bold)$*$(tput sgr0)" > /dev/stderr
+}
+log_info()
+{
+  log_impl "${self} $(tput setaf 2)INFO$(tput sgr0) $*"
+}
+log_warn()
+{
+  log_impl "${self} $(tput setaf 3)WARN$(tput sgr0) $*"
+}
+log_error()
+{
+  log_impl "${self} $(tput setaf 1)ERROR$(tput sgr0) $*"
+}
+
+# ---- Sanity checks
+# Assert that we are in the interactive mode
+if [[ -t 0 ]]; then
+  echo -n "" # no-op, cannot leave the if empty
+else
+  log_error "This script must be ran interactively"
+  exit 1
+fi
+
+# Assert that we are clean
+log_info "Fetching the latest from remote..." && git fetch && log_info "...done" || exit 1
+if [[ "$(git status -sb | grep '## ')" != "## ${release_branch}" ]]; then
+  log_error "You must be on the '${release_branch}' branch and synchronized with remote"
+  exit 1
+fi
+if (git status -sb | grep -v "## ${release_branch}" | grep -q '.' ); then
+  log_error "You must not have any pending change - commit and push first"
+  exit 1
+fi
+
+# ---- Let's go
+# See https://docs.github.com/en/rest/releases/releases?apiVersion=2022-11-28#generate-release-notes-content-for-a-release
+log_info "Collecting change log since '${previous_version}'..." \
+  && changelog=$( \
+    gh api \
+      --method POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      /repos/VinylMusicPlayer/VinylMusicPlayer/releases/generate-notes \
+      -f tag_name="${new_version}" \
+      -f target_commitish="${release_branch}" \
+      -f previous_tag_name="${previous_version}" \
+      -f configuration_file_path="${gh_release_yml}" \
+    | jq .body \
+  ) \
+  && log_info "...done" || exit 1
+
+changelog=$( \
+  printf "${changelog}" \
+  | grep -v "${md_section_sub_title}" \
+  | grep -v -F "${md_section_comment}" \
+  | grep -v -F "${md_section_full_changelog}" \
+)
+echo "${changelog}"
+
+# If the change log contains enhancement -> suggest to bump minor number, otherwise bump the patch number
+previous_version_major="$(echo ${previous_version} | cut -d. -f1)"
+previous_version_minor="$(echo ${previous_version} | cut -d. -f2)"
+previous_version_patch="$(echo ${previous_version} | cut -d. -f3)"
+if (echo "${changelog}" | grep -q "${md_section_feature}"); then
+  new_version="${previous_version_major}.$(( previous_version_minor + 1 )).0"
+else
+  new_version="${previous_version_major}.${previous_version_minor}.$(( previous_version_patch + 1 ))"
+fi
+read -p "Please enter the new version - or Enter to accept the '${new_version}' suggestion:" new_version_input || exit 1
+[[ -n "${new_version_input}" ]] && new_version="${new_version_input}"
+
+# TODO sed expressions are MacOS only for now, make it portable across MacOS/Linux
+log_info "Update the version in '${build_specs}'..." \
+  && log_info "... versionName: ${previous_version} -> ${new_version} ..." \
+  && sed -i '' -e "s/versionName '${previous_version}'/versionName '${new_version}'/g" ${build_specs} \
+  && log_info "... versionCode: ${previous_version_code} -> ${new_version_code} ..." \
+  && sed -i '' -e "s/versionCode ${previous_version_code}/versionCode ${new_version_code}/g" ${build_specs} \
+  && log_info "...done" || exit 1
+
+log_info "Update the '${changelog_md}'..." \
+  && new_changelog_md="$(mktemp ${changelog_md}.XXXX)" \
+  && ( \
+    echo "${md_section_title}"; \
+    echo "## [${new_version}] - ${new_version_date}"; \
+    printf "${changelog}"; \
+    echo; echo; \
+    echo "${md_section_full_changelog} https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/${previous_version}...${new_version}"
+    cat "${changelog_md}" | grep -v "${md_section_title}" \
+    ) > "${new_changelog_md}" \
+  && cp "${new_changelog_md}" "${changelog_md}" \
+  && rm "${new_changelog_md}" \
+  && log_info "...done" || exit 1
+
+log_info "Updating credits page..." && ./script/build-credits-page && log_info "...done" || exit 1
+log_info "Updating licenses page..." && ./script/build-licenses-page && log_info "...done" || exit 1
+
+readonly new_branch="${new_branch_prefix}${new_version}"
+log_info "Creating new '${new_branch}' branch and '${new_version}' tag..." \
+  && git checkout -b "${new_branch}" \
+  && git add \
+    "${build_specs}" \
+    "${changelog_md}" \
+    "./app/src/main/assets/contributors.csv" \
+    "./app/src/main/assets/credits.html" \
+    "./app/src/main/assets/LICENSES.md" \
+  && git commit -m "New release" \
+  && git tag -a "${new_version}" \
+  && log_info "...done" || exit 1
+
+# ---- Sanity checks
+if (git status -sb | grep -v "## ${release_branch}" | grep -q '.' ); then
+  log_error "You must not have any pending change - please check the '${self}' script for possible issue"
+  exit 1
+fi
+
+log_warn "To finalize publishing the new version: Please push the changes (including tags) + Create a Github pull request"
+log_warn "> git push -u ${remote} ${new_branch}"
+log_warn "> git push ${remote} refs/tags/${new_version}"
+log_warn "> open 'https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/new/${new_branch}'"
