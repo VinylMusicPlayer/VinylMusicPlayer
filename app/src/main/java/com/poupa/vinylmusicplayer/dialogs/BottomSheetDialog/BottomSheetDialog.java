@@ -14,14 +14,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public abstract class BottomSheetDialog extends BottomSheetDialogFragment {
     public static BottomSheetDialog newInstance() { return null; }
 
     /**
-     * Not null after {@link #onCreateDialog(Bundle)} was called.
+     * Not null after {@link #onCreateDialog(Bundle)} was called. <br>
+     * You can add a listener to {@link #onBottomSheetCreated}.
      */
     public FrameLayout bottomSheet = null;
+
+    public CopyOnWriteArrayList<Runnable> onBottomSheetCreated = new CopyOnWriteArrayList<>();
 
     @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -39,6 +44,10 @@ public abstract class BottomSheetDialog extends BottomSheetDialogFragment {
                 BottomSheetBehavior behaviour = BottomSheetBehavior.from(bottomSheet);
                 behaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 behaviour.setDraggable(false);
+
+                for (Runnable code : onBottomSheetCreated) {
+                    code.run();
+                }
             }
         });
 
@@ -52,7 +61,7 @@ public abstract class BottomSheetDialog extends BottomSheetDialogFragment {
             behaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
         };
         if(bottomSheet != null) code.run();
-        else runWhenBottomSheetAvailable(code);
+        else onBottomSheetCreated.add(code);
     }
 
     public void collapse(){
@@ -62,24 +71,7 @@ public abstract class BottomSheetDialog extends BottomSheetDialogFragment {
             behaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
         };
         if(bottomSheet != null) code.run();
-        else runWhenBottomSheetAvailable(code);
-    }
-
-    private void runWhenBottomSheetAvailable(Runnable code) {
-        Handler ui = new Handler();
-        new Thread(() -> {
-            try{
-                while(true){
-                    if(bottomSheet != null){
-                        ui.post(code);
-                        break;
-                    }
-                    Thread.sleep(100);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+        else onBottomSheetCreated.add(code);
     }
 
 }
