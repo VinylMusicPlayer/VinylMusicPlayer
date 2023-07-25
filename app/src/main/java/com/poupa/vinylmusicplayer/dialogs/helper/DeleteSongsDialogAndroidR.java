@@ -102,19 +102,16 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         DeleteSongsHelper.managePlayingSong(songsToRemove);
-
-                            //getContentResolver().notifyChange(Uri.parse("content://media"), null);
-                            Toast.makeText(getActivity(), getString(R.string.deleted_x_songs, songsToRemove.size()), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Failed to delete!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                        Toast.makeText(getActivity(), getString(R.string.deleted_x_songs, songsToRemove.size()), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Failed to delete!", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         songsToRemove = getArguments().getParcelableArrayList(SONGS);
 
         deleteSongsTask = new DeleteSongsAsyncTask(this);
         ((DeleteSongsAsyncTask)deleteSongsTask).execute(songsToRemove);
-        //MusicUtil.deleteTracks(getActivity(), songs, null, null, this);
     }
 
     private void deleteSongs(List<Song> songsToRemove) {
