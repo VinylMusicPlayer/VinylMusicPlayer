@@ -53,6 +53,7 @@ public class BottomSheetDialogWithButtons extends BottomSheetDialog {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_button_list, container, false);
         Context context = getContext();
+        expand();
 
         if (buttonList == null || context == null) { dismiss(); return view; }
 
