@@ -332,7 +332,7 @@
     <string name="saf_guide_slide2_title">Seleccioneu la targeta SD al tauler de navegació</string>
     <string name="saf_guide_slide2_description">Heu de seleccionar el directori arrel de la targeta SD</string>
     <string name="saf_guide_slide3_title">Toqueu el botó \"Selecciona\" a la part inferior de la pantalla</string>
-    <string name="saf_guide_slide3_description">No obriu cap subdirectori</string>
+    <string name="saf_guide_slide3_description">No obriu cap subcarpeta</string>
     <!-- Android Auto -->
     <string name="playlists_label">Llistes de reproducció</string>
     <string name="history_label">Historial de reproducció</string>
@@ -374,4 +374,11 @@
     <string name="sort_order_date_modified">Modificació</string>
     <string name="sort_order_date_modified_reverse">Modificació - Recents primer</string>
     <string name="sort_order_date_added">Addició</string>
+    <string name="pref_title_enqueue_song_default_choice">Acció predeterminada en triar una cançó</string>
+    <string name="action_always_ask_for_confirmation">Demana l\'acció cada vegada</string>
+    <string name="imported_x_playlists">S\'han importat %d llistes de reproducció</string>
+    <string name="imported_x_skipped_x_playlists">S\'han importat %d llistes de reproducció, se n\'han omès %d</string>
+    <string name="saf_guide_slide2_description_android_r">Heu de seleccionar el directori de la targeta SD que conté la música (no pot ser el directori arrel)</string>
+    <string name="access_not_granted">No s\'ha permès l\'accés, no s\'ha desat</string>
+    <string name="android13_storage_perm_error">No s\'ha concedit el permís de lectura de fitxers d\'àudio a l\'aplicació.</string>
 </resources>
