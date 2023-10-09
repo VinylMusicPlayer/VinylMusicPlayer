@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "$KEYSTORE_PROPERTIES" > keystore.properties
+echo -n "$STORE_FILE" | base64 --decode > ./app/vinyl.jks
+
+./gradlew $GRADLEW_COMMAND

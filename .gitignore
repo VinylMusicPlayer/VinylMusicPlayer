@@ -45,3 +45,5 @@ tags
 .DS_Store
 
 app/release/
+
+keystore.properties
