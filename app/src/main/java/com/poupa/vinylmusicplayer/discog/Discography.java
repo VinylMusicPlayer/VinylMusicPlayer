@@ -341,7 +341,7 @@ public class Discography implements MusicServiceEventListener {
                 mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
                 mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
-        } else {
+        } else if (mainActivity != null) {
             (new SyncWithMediaStoreAsyncTask(mainActivity, this, reset)).execute();
         }
     }

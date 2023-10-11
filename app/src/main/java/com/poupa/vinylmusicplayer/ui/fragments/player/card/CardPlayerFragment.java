@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.ui.fragments.player.card;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -279,7 +280,11 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
 
             @Override
             protected Lyrics doInBackground(Void... params) {
-                String data = MusicUtil.getLyrics(requireContext(), song);
+                Context context = getContext();
+                if (context == null) {
+                    return null;
+                }
+                String data = MusicUtil.getLyrics(context, song);
                 if (TextUtils.isEmpty(data)) {
                     return null;
                 }

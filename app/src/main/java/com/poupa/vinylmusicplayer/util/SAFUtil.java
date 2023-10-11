@@ -192,11 +192,11 @@ public class SAFUtil {
         }
     }
 
-    public static void deleteFile(String path) {
+    private static void deleteFile(String path) {
         new File(path).delete();
     }
 
-    public static void deleteSAF(Context context, String path, Uri safUri) {
+    private static void deleteSAF(Context context, String path, Uri safUri) {
         Uri uri = null;
 
         if (context == null) {
