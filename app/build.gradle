@@ -33,7 +33,7 @@ licenses {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     namespace 'com.poupa.vinylmusicplayer'
     defaultConfig {
         minSdkVersion 19
@@ -43,8 +43,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 181
-        versionName '1.5.2'
+        versionCode 182
+        versionName '1.5.3'
 
         multiDexEnabled true
     }
@@ -61,17 +61,21 @@ android {
     }
     signingConfigs {
         ci {
-            storeFile file("../script/ci-unsecured.jks")
-            // TODO Update password to drop 'phono'
-            keyAlias = "phono-unsecured"
-            storePassword = "phono-unsecured"
-            keyPassword = "phono-unsecured"
+            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
-    flavorDimensions "default"
+    flavorDimensions = ["default"]
     productFlavors {
         playStore {
             dimension "default"
+            signingConfig signingConfigs.ci
         }
         fdroid {
             dimension "default"

@@ -31,8 +31,22 @@ jobs:
       if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
       run: ./script/build-licenses-page
 
-    - name: Build application
-      run: ./gradlew assembleCiRelease
+    - name: Build CI application
+      if: (!contains(github.ref, 'refs/tags/'))
+      run: ./script/build-release
+      env:
+        KEYSTORE_PROPERTIES: ${{secrets.KEYSTORE_PROPERTIES}}
+        STORE_FILE: ${{secrets.STORE_FILE}}
+        GRADLEW_COMMAND: assembleCiRelease
+
+    - name: Build Play Store application
+      if: (contains(github.ref, 'refs/tags/'))
+      run: ./script/build-release
+      env:
+        KEYSTORE_PROPERTIES: ${{secrets.KEYSTORE_PROPERTIES}}
+        STORE_FILE: ${{secrets.STORE_FILE}}
+        GRADLEW_COMMAND: assemblePlayStoreRelease
+
     - name: Archive APKs
       uses: actions/upload-artifact@v3
       with:
@@ -41,7 +55,9 @@ jobs:
 
     - name: Run tests
       run: ./gradlew testCiRelease
+      if: (!contains(github.ref, 'refs/tags/'))
     - name: Archive test results
+      if: (!contains(github.ref, 'refs/tags/'))
       uses: actions/upload-artifact@v3
       with:
         name: outputs-tests
@@ -49,13 +65,15 @@ jobs:
 
     - name: Static analysis
       run: ./gradlew lint
+      if: (!contains(github.ref, 'refs/tags/'))
     - name: Archive lint results
+      if: (!contains(github.ref, 'refs/tags/'))
       uses: actions/upload-artifact@v3
       with:
         name: outputs-lint
         path: app/build/reports/lint-*
 
-  pre-release:
+  publish:
     if: (github.ref == 'refs/heads/master' || contains(github.ref, 'refs/tags/'))
     needs: build
     runs-on: ubuntu-latest
@@ -67,15 +85,25 @@ jobs:
       with:
         name: outputs-apk
         path: app/build/outputs/apk
-    - name: Publish assets
+    - name: Publish pre-release assets
       # Pre-release the built apps and expose it via a static and public accessible URL
       # Note that this step exists since artifacts (actions/upload-artifact) are neither
       # public-accessible nor at a constant/static URL
       # For the pre-releasing purpose, a floating tag is used and re-positioned to the tip of the branch
+      if: (github.ref == 'refs/heads/master')
       uses: pyTooling/Actions/releaser@r0
       with:
         tag: pre-release
         token: ${{ secrets.GITHUB_TOKEN }}
         rm: true # clean past assets
         files: |
-          app/build/outputs/apk/**/*.apk
+          app/build/outputs/apk/ci/release/*.apk
+    - name: Release to Play Store
+      if: (contains(github.ref, 'refs/tags/') && !contains(github.ref, 'refs/tags/pre-release'))
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{secrets.SERVICE_ACCOUNT}}
+        packageName: com.poupa.vinylmusicplayer
+        releaseName: ${{  github.ref_name }}
+        track: production
+        releaseFiles: app/build/outputs/apk/playStore/release/*.apk
