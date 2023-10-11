@@ -261,7 +261,7 @@
     <string name="saved_x_playlists_to_x">Saved %1$d playlists to %2$s.</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">Saved %1$d playlists to %2$s, failed to save %3$d.</string>
     <string name="imported_x_playlists">"Imported %d playlists"</string>
-    <string name="imported_x_skipped_x_playlists">"Imported %d playlists, skipped %d"</string>
+    <string name="imported_x_skipped_x_playlists">"Imported %1$d playlists, skipped %2$d"</string>
     <string name="not_listed_in_media_store"><![CDATA[<b>%s</b> is not listed in the media store.]]></string>
     <string name="some_files_are_not_listed_in_the_media_store">Some files are not listed in the media store.</string>
     <string name="nothing_to_scan">Nothing to scan.</string>
