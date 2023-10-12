@@ -44,6 +44,8 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 public abstract class BaseAppWidget extends AppWidgetProvider {
     public static final String NAME = "app_widget";
 
+    private static final int PENDING_INTENT_FLAGS = PendingIntent.FLAG_IMMUTABLE;
+
     protected Target target; // for cancellation
     protected RemoteViews appWidgetView;
 
@@ -144,9 +146,9 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return PendingIntent.getForegroundService(context, 0, intent, 0);
+            return PendingIntent.getForegroundService(context, 0, intent, PENDING_INTENT_FLAGS);
         } else {
-            return PendingIntent.getService(context, 0, intent, 0);
+            return PendingIntent.getService(context, 0, intent, PENDING_INTENT_FLAGS);
         }
     }
 
