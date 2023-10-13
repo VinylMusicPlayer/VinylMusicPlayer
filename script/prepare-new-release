@@ -51,7 +51,7 @@ fi
 
 # Assert that we are clean
 log_info "Fetching the latest from remote..." && git fetch && log_info "...done" || exit 1
-if [[ "$(git status -sb | grep '## ')" != "## ${release_branch}" ]]; then
+if [[ "$(git status -sb | grep '## ')" != "## ${release_branch}...${remote}/${release_branch}" ]]; then
   log_error "You must be on the '${release_branch}' branch and synchronized with remote"
   exit 1
 fi
