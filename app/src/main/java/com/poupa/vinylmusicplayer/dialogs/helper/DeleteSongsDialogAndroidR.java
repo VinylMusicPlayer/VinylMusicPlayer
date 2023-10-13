@@ -90,7 +90,6 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                     @Override
                     public Intent createIntent(@NonNull Context context, Uri input) {
                         return super.createIntent(context, input)
-                                .addCategory(Intent.CATEGORY_OPENABLE)
                                 .putExtra("android.content.extra.SHOW_ADVANCED", true);
                     }
                 },
