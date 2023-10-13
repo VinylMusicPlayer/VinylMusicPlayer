@@ -136,7 +136,7 @@ log_info "Creating new '${new_branch}' branch and '${new_version}' tag..." \
   && log_info "...done" || exit 1
 
 # ---- Sanity checks
-if (git status -sb | grep -v "## ${release_branch}" | grep -q '.' ); then
+if (git status -sb | grep -v "## ${release_branch}...${remote}/${release_branch}" | grep -q '.' ); then
   log_error "You must not have any pending change - please check the '${self}' script for possible issue"
   exit 1
 fi
