@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
@@ -75,7 +76,11 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        deleteSongs_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
+                        try {
+                            deleteSongs_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
+                        } catch (android.content.ActivityNotFoundException noActivity) {
+                            Toast.makeText(getActivity(), R.string.android13_no_file_browser_error, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -104,7 +109,7 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                         DeleteSongsHelper.managePlayingSong(songsToRemove);
                         Toast.makeText(getActivity(), getString(R.string.deleted_x_songs, songsToRemove.size()), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "Failed to delete!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.saf_delete_failed, Integer.toString(songsToRemove.size())), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -139,10 +144,10 @@ public class DeleteSongsDialogAndroidR extends Fragment {
         @SafeVarargs
         @Override
         protected final Void doInBackground(List<Song>... lists) {
-            try {
-                DeleteSongsDialogAndroidR fragment = this.fragment.get();
-                FragmentActivity activity = this.activity.get();
+            DeleteSongsDialogAndroidR fragment = this.fragment.get();
+            FragmentActivity activity = this.activity.get();
 
+            try {
                 if (fragment == null || activity == null) {return null;}
 
                 final List<Song> songs = lists[0];
@@ -156,7 +161,7 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                OopsHandler.copyStackTraceToClipboard(activity, e);
             }
 
             return null;
