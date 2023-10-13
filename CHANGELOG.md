@@ -1,4 +1,8 @@
 # Changelog
+## [1.5.4] - 2023-10-13
+null
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.3...1.5.4
 
 ## [1.5.2] - 2023-07-01
 
