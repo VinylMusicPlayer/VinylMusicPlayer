@@ -1,4 +1,34 @@
 # Changelog
+## [1.5.4] - 2023-10-13
+
+### What's changed
+None, this is a bug fix release
+
+### Fixes
+* Fix crash by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/766
+* Fix crashes that occur when the user has a widget set up by @Darandos in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/786
+* Fix exception report spam on unsupported file type by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/795
+* Fix permission request music folder crash by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/793
+* Fix Folder view, where files with non-latin characters not showing by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/796
+
+### Other Changes
+* Tools update by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/763
+* feat(ci): Setup PlayStore build by @AdrienPoupa in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/783
+* Fix local build by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/791
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.3-test-ci.3...1.5.4
+
+## [1.5.3] - 2023-10-09
+
+### What's changed
+* Major change to support Android 13, by @soncaokim and @Octoton
+* Catalan translation updated by @albertgasset
+* German translation updated by @tschlegeldigos
+
+### Fixes
+* Fix orientation bug by @Osiris-Team
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.2...1.5.3-test-ci.3
 
 ## [1.5.2] - 2023-07-01
 
