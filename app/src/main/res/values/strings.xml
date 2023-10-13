@@ -385,6 +385,7 @@
     <string name="saf_guide_slide3_description">Do not open any subfolders</string>
     <string name="access_not_granted">Access not granted - not saved</string>
     <string name="android13_storage_perm_error">Your app has not been granted the READ_MEDIA_AUDIO permission.</string>
+    <string name="android13_no_file_browser_error">Your system doesn\'t appear to have a file browser to handle OPEN_DOCUMENT_TREE.</string>
     <!-- Android Auto -->
     <string name="playlists_label">Playlists</string>
     <string name="history_label">History</string>
