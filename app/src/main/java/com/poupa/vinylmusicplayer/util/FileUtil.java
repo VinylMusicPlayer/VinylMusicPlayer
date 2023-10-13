@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -91,8 +92,15 @@ public final class FileUtil {
             return true;
         } else {
             // get the file mime type
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toString()).toLowerCase();
-            String fileType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
+            // Dont use MimeTypeMap.getFileExtensionFromUrl since it fails to process URI with non-Latin characters
+            Function<File, String> getFileExtension = (theFile) -> {
+                final String uri = theFile.toURI().toString();
+                int dotPos = uri.lastIndexOf('.');
+                if (dotPos < 0) {return "";}
+                return uri.substring(dotPos + 1).toLowerCase();
+            };
+            final String fileExtension = getFileExtension.apply(file);
+            final String fileType = mimeTypeMap.getMimeTypeFromExtension(fileExtension);
             if (fileType == null) {
                 return false;
             }
