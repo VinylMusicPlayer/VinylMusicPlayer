@@ -371,6 +371,7 @@
     <!-- SAF -->
     <string name="saf_error_uri">Can\'t get SAF URI</string>
     <string name="saf_write_failed">File write failed: %s</string>
+    <string name="saf_read_failed">File read failed: %s</string>
     <string name="saf_delete_failed">File delete failed: %s</string>
     <string name="saf_pick_file">File access required. Pick %s</string>
     <!-- SAF guide -->

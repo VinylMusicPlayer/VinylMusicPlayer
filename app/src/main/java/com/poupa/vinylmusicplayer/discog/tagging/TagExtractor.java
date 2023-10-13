@@ -1,8 +1,12 @@
 package com.poupa.vinylmusicplayer.discog.tagging;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
@@ -30,8 +34,7 @@ public class TagExtractor {
             final String value = tags.getFirst(tag).trim();
             return (value.isEmpty()) ? defaultValue : value;
         }
-        catch (KeyNotFoundException ignored) {return defaultValue;}
-        catch (UnsupportedOperationException ignored){ return defaultValue;}
+        catch (KeyNotFoundException | UnsupportedOperationException ignored) {return defaultValue;}
     };
     private static final Func3Args<Tag, FieldKey, Integer, Integer> safeGetTagAsInteger = (tags, tag, defaultValue) -> {
         try {return Integer.parseInt(safeGetTag.apply(tags, tag, String.valueOf(defaultValue)));}
@@ -53,7 +56,13 @@ public class TagExtractor {
     };
 
     public static void extractTags(@NonNull Song song) {
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), song)){
+        final Context context = App.getStaticContext();
+        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)){
+            if (audio == null) {
+                // Cannot get the audio content
+                Toast.makeText(context, context.getString(R.string.saf_read_failed, song.data), Toast.LENGTH_LONG).show();
+                return;
+            }
             // Override with metadata extracted from the file ourselves
             final AudioFile file = audio.get();
             Tag tags = file.getTagOrCreateAndSetDefault();
@@ -62,7 +71,7 @@ public class TagExtractor {
             }
 
             song.albumName = safeGetTag.apply(tags, FieldKey.ALBUM, song.albumName);
-            song.artistNames  = safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames);
+            song.artistNames = safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames);
             song.albumArtistNames = safeGetTagAsList.apply(tags, FieldKey.ALBUM_ARTIST, song.albumArtistNames);
             song.title = safeGetTag.apply(tags, FieldKey.TITLE, song.title);
             if (song.title.isEmpty()) {

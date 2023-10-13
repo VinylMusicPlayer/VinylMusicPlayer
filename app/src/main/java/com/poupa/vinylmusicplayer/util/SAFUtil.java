@@ -149,6 +149,9 @@ public class SAFUtil {
 
             // Create a ephemeral/volatile audio file
             return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
+        } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
+            // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
+            return null;
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(context, e);
             return null;
