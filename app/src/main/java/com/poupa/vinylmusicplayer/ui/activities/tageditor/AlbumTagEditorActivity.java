@@ -91,7 +91,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
                 year.setText(getSongYear(audio.get()));
             }
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(this, e);
+            OopsHandler.copyStackTraceToClipboard(e);
         }
     }
 
@@ -102,7 +102,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
             setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
             deleteAlbumArt = false;
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(this, e);
+            OopsHandler.copyStackTraceToClipboard(e);
         }
     }
 

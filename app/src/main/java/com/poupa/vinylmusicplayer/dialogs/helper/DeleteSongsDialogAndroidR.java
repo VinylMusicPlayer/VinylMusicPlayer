@@ -160,7 +160,7 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                     }
                 }
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(activity, e);
+                OopsHandler.copyStackTraceToClipboard(e);
             }
 
             return null;

@@ -53,7 +53,7 @@ public class MusicUtil {
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
             return getMediaStoreAlbumCover(audio);
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(context, e);
+            OopsHandler.copyStackTraceToClipboard(e);
             return null;
         }
     }
@@ -261,7 +261,7 @@ public class MusicUtil {
                 deleteRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
             }
         } catch (SecurityException e) { // | SendIntentException e) {
-            OopsHandler.copyStackTraceToClipboard(activity, e);
+            OopsHandler.copyStackTraceToClipboard(e);
         }
 
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
@@ -366,7 +366,7 @@ public class MusicUtil {
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
             lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(context, e);
+            OopsHandler.copyStackTraceToClipboard(e);
         }
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
@@ -404,7 +404,7 @@ public class MusicUtil {
                     }
                 }
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(context, e);
+                OopsHandler.copyStackTraceToClipboard(e);
             }
         }
 

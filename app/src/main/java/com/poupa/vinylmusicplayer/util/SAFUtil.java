@@ -153,7 +153,7 @@ public class SAFUtil {
             // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
             return null;
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(context, e);
+            OopsHandler.copyStackTraceToClipboard(e);
             return null;
         }
     }
@@ -176,7 +176,7 @@ public class SAFUtil {
             fos.write(audioContent);
             fos.close();
         } catch (final Exception e) {
-            OopsHandler.copyStackTraceToClipboard(context, e);
+            OopsHandler.copyStackTraceToClipboard(e);
             toast(context, String.format(context.getString(R.string.saf_write_failed), e.getLocalizedMessage()));
         }
     }
