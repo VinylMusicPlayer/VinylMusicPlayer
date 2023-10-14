@@ -912,7 +912,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
 
             float rgResult = ((float) Math.pow(10, (adjust / 20)));
-            rgResult = Math.max(0, Math.min(1, rgResult));
 
             playback.setReplayGain(rgResult);
         } else {

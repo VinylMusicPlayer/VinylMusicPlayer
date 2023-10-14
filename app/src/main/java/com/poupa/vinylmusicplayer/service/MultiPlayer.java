@@ -298,7 +298,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     }
 
     public void setReplayGain(float replaygain) {
-        this.replaygain = replaygain;
+        if (Float.isNaN(replaygain)) {
+            this.replaygain = Float.NaN;
+        } else {
+            this.replaygain = Math.max(0, Math.min(1, replaygain));
+        }
         updateVolume();
     }
 
