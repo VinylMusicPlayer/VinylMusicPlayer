@@ -48,10 +48,11 @@ public class StaticPlayingQueue {
         restoreUniqueId();
     }
 
-    public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode) {
+    public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode, int repeatMode) {
         this.queue = new ArrayList<>(restoreQueue);
         this.originalQueue = new ArrayList<>(restoreOriginalQueue);
         this.shuffleMode = shuffleMode;
+        this.repeatMode = repeatMode;
 
         currentPosition = restoredPosition;
 
