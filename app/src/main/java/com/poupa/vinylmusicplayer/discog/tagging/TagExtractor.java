@@ -88,7 +88,7 @@ public class TagExtractor {
             song.replayGainAlbum = rgValues.album;
             song.replayGainTrack = rgValues.track;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(App.getStaticContext(), e);
+            OopsHandler.copyStackTraceToClipboard(e);
         }
     }
 }

@@ -431,7 +431,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         info.artworkInfo.artwork.compress(Bitmap.CompressFormat.PNG, 0, new FileOutputStream(albumArtFile.get().getCanonicalFile()));
                         artwork = ArtworkFactory.createArtworkFromFile(albumArtFile.get());
                     } catch (IOException e) {
-                        OopsHandler.copyStackTraceToClipboard(activity.get(), e);
+                        OopsHandler.copyStackTraceToClipboard(e);
                     }
                 }
 
@@ -458,7 +458,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
                                 } catch (Exception e) {
-                                    OopsHandler.copyStackTraceToClipboard(activity.get(), e);
+                                    OopsHandler.copyStackTraceToClipboard(e);
                                 }
                             }
                         }
@@ -474,7 +474,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
                         SAFUtil.write(activity.get(), audioFile, song);
                     } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-                        OopsHandler.copyStackTraceToClipboard(activity.get(), e);
+                        OopsHandler.copyStackTraceToClipboard(e);
                     }
                 }
 
@@ -485,7 +485,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
                 return paths.toArray(new String[0]);
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(activity.get(), e);
+                OopsHandler.copyStackTraceToClipboard(e);
                 return null;
             }
         }

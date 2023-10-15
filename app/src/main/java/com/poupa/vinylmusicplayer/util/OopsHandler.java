@@ -4,12 +4,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 
@@ -76,8 +78,15 @@ public class OopsHandler implements UncaughtExceptionHandler {
         return result.toString();
     }
 
-    public static void copyStackTraceToClipboard(@NonNull final Context context, @NonNull final Throwable exception) {
-        final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        final ClipData clip = ClipData.newPlainText(context.getString(R.string.failed_to_save_playlist), OopsHandler.getStackTrace(exception));
-        clipboard.setPrimaryClip(clip);
-    }}
+    public static void copyStackTraceToClipboard(@NonNull final Throwable exception) {
+        final String stackTrace = OopsHandler.getStackTrace(exception);
+        final Context context = App.getStaticContext();
+
+        // Post the clipboard manipulation task to the main thread, since this method may be called from a non-UI thread
+        new Handler(context.getMainLooper()).post(() -> {
+            final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            final ClipData clip = ClipData.newPlainText(context.getString(R.string.app_crashed), stackTrace);
+            clipboard.setPrimaryClip(clip);
+        });
+    }
+}
