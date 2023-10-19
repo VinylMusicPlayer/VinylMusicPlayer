@@ -123,7 +123,7 @@ log_info "Updating credits page..." && ./script/build-credits-page && log_info "
 log_info "Updating licenses page..." && ./script/build-licenses-page && log_info "...done" || exit 1
 
 readonly new_branch="${new_branch_prefix}${new_version}"
-log_info "Creating new '${new_branch}' branch and '${new_version}' tag..." \
+log_info "Creating new '${new_branch}' branch..." \
   && git checkout -b "${new_branch}" \
   && git add \
     "${build_specs}" \
@@ -132,7 +132,6 @@ log_info "Creating new '${new_branch}' branch and '${new_version}' tag..." \
     "./app/src/main/assets/credits.html" \
     "./app/src/main/assets/LICENSES.md" \
   && git commit -m "New release" \
-  && git tag -a "${new_version}" \
   && log_info "...done" || exit 1
 
 # ---- Sanity checks
@@ -143,5 +142,8 @@ fi
 
 log_warn "To finalize publishing the new version: Please push the changes (including tags) + Create a Github pull request"
 log_warn "> git push -u ${remote} ${new_branch}"
-log_warn "> git push ${remote} refs/tags/${new_version}"
 log_warn "> open 'https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/new/${new_branch}'"
+log_warn "Then create a new tag on master, i.e:"
+log_warn "> git tag -a ${new_version}"
+log_warn "> git push ${remote} refs/tags/${new_version}"
+log_warn "The new tag will trigger build and delivery on Play Store"
