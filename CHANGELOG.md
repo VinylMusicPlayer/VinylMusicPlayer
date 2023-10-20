@@ -1,4 +1,18 @@
 # Changelog
+## [1.5.5] - 2023-10-20
+
+### Fixes
+* Dont crash if OopsHandler is called from a background (non-UI) thread by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/808
+### Other Changes
+* Next release 1.5.4 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/801
+* Fix repeat setting not being restored by @toolstack in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/811
+* Attempt to fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/707 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/821
+* Refrain from rushing out a new release on every new tag by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/820
+
+## New Contributors
+* @toolstack made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/811
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.4...1.5.5
 ## [1.5.4] - 2023-10-13
 
 ### What's changed
