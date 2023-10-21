@@ -107,12 +107,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     }
 
     private void setMusicChooser(int key) {
-        final File cardPath = FoldersFragment.getSDCardDirectory(this);
-        if ((cardPath == null) && (key == SD_FOLDERS)) {
-            // No SD card, fallback to folders
-            key = FOLDERS;
-        }
-
         PreferenceUtil.getInstance().setLastMusicChooser(key);
         switch (key) {
             case LIBRARY:
@@ -120,9 +114,14 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 setCurrentFragment(LibraryFragment.newInstance());
                 break;
             case SD_FOLDERS:
-                navigationView.setCheckedItem(R.id.nav_sd_folders);
-                setCurrentFragment(FoldersFragment.newInstance(cardPath));
-                break;
+                final File cardPath = FoldersFragment.getSDCardDirectory(this);
+                if (cardPath != null) {
+                    navigationView.setCheckedItem(R.id.nav_sd_folders);
+                    setCurrentFragment(FoldersFragment.newInstance(cardPath));
+                    break;
+                }
+                // else fall-though to the case FOLDERS
+                // unlikely to have this case, since the SD_FOLDERS choice is only available if the cardPath exists
             case FOLDERS:
                 navigationView.setCheckedItem(R.id.nav_folders);
                 setCurrentFragment(FoldersFragment.newInstance());
