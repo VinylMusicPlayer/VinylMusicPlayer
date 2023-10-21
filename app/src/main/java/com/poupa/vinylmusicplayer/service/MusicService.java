@@ -63,6 +63,7 @@ import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl24;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -165,7 +166,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private final AudioManager.OnAudioFocusChangeListener audioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(final int focusChange) {
-            playerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget();
+            if (musicPlayerHandlerThread.isAlive()) {
+                playerHandler.obtainMessage(FOCUS_CHANGE, focusChange, 0).sendToTarget();
+            }
         }
     };
     private QueueSaveHandler queueSaveHandler;
@@ -448,7 +451,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public boolean isPlaying() {
-        return playback != null && playback.isPlaying();
+        return (playback != null) && playback.isPlaying();
     }
 
     public boolean isPlaying(@NonNull Song song) {
@@ -481,15 +484,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             try {
                 return playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
-                e.printStackTrace();
+                OopsHandler.copyStackTraceToClipboard(e);
                 return false;
             }
         }
     }
 
     private void prepareNext() {
-        playerHandler.removeMessages(PREPARE_NEXT);
-        playerHandler.obtainMessage(PREPARE_NEXT).sendToTarget();
+        if (musicPlayerHandlerThread.isAlive()) {
+            playerHandler.removeMessages(PREPARE_NEXT);
+            playerHandler.obtainMessage(PREPARE_NEXT).sendToTarget();
+        }
     }
 
     public void prepareNextImpl() {
@@ -503,7 +508,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 playingQueue.setNextPosition(nextPosition);
             } catch (Exception e) {
-                e.printStackTrace();
+                OopsHandler.copyStackTraceToClipboard(e);
             }
         }
     }
@@ -821,15 +826,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
 
-        // handle this on the handlers thread to avoid blocking the ui thread
-        playerHandler.removeMessages(PLAY_SONG);
-        playerHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
+        if (musicPlayerHandlerThread.isAlive()) {
+            playerHandler.removeMessages(PLAY_SONG);
+            playerHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
+        }
     }
 
     public void setPosition(final int position) {
-        // handle this on the handlers thread to avoid blocking the ui thread
-        playerHandler.removeMessages(SET_POSITION);
-        playerHandler.obtainMessage(SET_POSITION, position, 0).sendToTarget();
+        if (musicPlayerHandlerThread.isAlive()) {
+            playerHandler.removeMessages(SET_POSITION);
+            playerHandler.obtainMessage(SET_POSITION, position, 0).sendToTarget();
+        }
     }
 
     public void setPositionToNextPosition() {
@@ -871,8 +878,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         notifyChange(PLAY_STATE_CHANGED);
 
                         // fixes a bug where the volume would stay ducked because the AudioManager.AUDIOFOCUS_GAIN event is not sent
-                        playerHandler.removeMessages(DUCK);
-                        playerHandler.sendEmptyMessage(UNDUCK);
+                        if (musicPlayerHandlerThread.isAlive()) {
+                            playerHandler.removeMessages(DUCK);
+                            playerHandler.sendEmptyMessage(UNDUCK);
+                        }
                     }
                 }
             } else {
@@ -943,7 +952,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 playback.seek(millis);
                 throttledSeekHandler.notifySeek();
             } catch (Exception e) {
-                e.printStackTrace();
+                OopsHandler.copyStackTraceToClipboard(e);
             }
         }
     }
@@ -1086,13 +1095,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onTrackWentToNext() {
-        playerHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
+        if (musicPlayerHandlerThread.isAlive()) {
+            playerHandler.sendEmptyMessage(TRACK_WENT_TO_NEXT);
+        }
     }
 
     @Override
     public void onTrackEnded() {
-        acquireWakeLock(30000);
-        playerHandler.sendEmptyMessage(TRACK_ENDED);
+        if (musicPlayerHandlerThread.isAlive()) {
+            acquireWakeLock(30000);
+            playerHandler.sendEmptyMessage(TRACK_ENDED);
+        }
     }
 
     public class MusicBinder extends Binder {
