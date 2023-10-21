@@ -99,6 +99,7 @@ jobs:
         files: |
           app/build/outputs/apk/ci/release/*.apk
     - name: Release to Play Store
+      # TODO Dont publish to PlayStore any tag, must follow M.m.u convention
       if: (contains(github.ref, 'refs/tags/') && !contains(github.ref, 'refs/tags/pre-release'))
       uses: r0adkll/upload-google-play@v1
       with:

@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,16 +50,33 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         super.onViewCreated(view, savedInstanceState);
 
         getLibraryFragment().addOnAppBarOffsetChangedListener(this);
-        Discography.getInstance().addChangedListener(onDiscographyChanged);
 
         initLayoutManager();
         initAdapter();
         setUpRecyclerView();
     }
 
+    @Override
+    public void onAttach(@NonNull Context context)
+    {
+        super.onAttach(context);
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
+    }
+
     private void setUpRecyclerView() {
         if (recyclerView instanceof FastScrollRecyclerView) {
-            ViewUtil.setUpFastScrollRecyclerViewColor(getActivity(), ((FastScrollRecyclerView) recyclerView), ThemeStore.accentColor(getActivity()));
+            @NonNull final Activity activity = requireActivity();
+            ViewUtil.setUpFastScrollRecyclerViewColor(
+                    activity,
+                    ((FastScrollRecyclerView) recyclerView),
+                    ThemeStore.accentColor(activity)
+            );
         }
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
