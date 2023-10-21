@@ -48,6 +48,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AbsSlidingMusicPanelActivity {
@@ -57,6 +58,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     private static final int LIBRARY = 0;
     private static final int FOLDERS = 1;
+    private static final int SD_FOLDERS = 2;
 
     NavigationView navigationView;
     DrawerLayout drawerLayout;
@@ -105,11 +107,21 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     }
 
     private void setMusicChooser(int key) {
+        final File cardPath = FoldersFragment.getSDCardDirectory(this);
+        if (cardPath == null) {
+            // No SD card, fallback to folders
+            key = FOLDERS;
+        }
+
         PreferenceUtil.getInstance().setLastMusicChooser(key);
         switch (key) {
             case LIBRARY:
                 navigationView.setCheckedItem(R.id.nav_library);
                 setCurrentFragment(LibraryFragment.newInstance());
+                break;
+            case SD_FOLDERS:
+                navigationView.setCheckedItem(R.id.nav_sd_folders);
+                setCurrentFragment(FoldersFragment.newInstance(cardPath));
                 break;
             case FOLDERS:
                 navigationView.setCheckedItem(R.id.nav_folders);
@@ -165,6 +177,9 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         int accentColor = ThemeStore.accentColor(this);
         NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
         NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
+        if(FoldersFragment.getSDCardDirectory(this) != null){
+            navigationView.getMenu().findItem(R.id.nav_sd_folders).setVisible(true);
+        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
@@ -173,6 +188,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 new Handler().postDelayed(() -> setMusicChooser(LIBRARY), 200);
             } else if (itemId == R.id.nav_folders) {
                 new Handler().postDelayed(() -> setMusicChooser(FOLDERS), 200);
+            } else if (itemId == R.id.nav_sd_folders) {
+                new Handler().postDelayed(() -> setMusicChooser(SD_FOLDERS), 200);
             } else if (itemId == R.id.action_reset_discography) {
                 new MaterialDialog.Builder(this)
                         .title(R.string.reset_discography)
