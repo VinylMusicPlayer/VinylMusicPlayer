@@ -108,7 +108,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     private void setMusicChooser(int key) {
         final File cardPath = FoldersFragment.getSDCardDirectory(this);
-        if (cardPath == null) {
+        if ((cardPath == null) && (key == SD_FOLDERS)) {
             // No SD card, fallback to folders
             key = FOLDERS;
         }
