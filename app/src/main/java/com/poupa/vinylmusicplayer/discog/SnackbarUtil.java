@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
