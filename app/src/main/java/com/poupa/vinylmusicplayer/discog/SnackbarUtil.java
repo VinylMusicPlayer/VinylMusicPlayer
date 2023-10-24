@@ -30,6 +30,7 @@ public class SnackbarUtil {
         viewContainer = view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
     private static Drawable tintedIcon(@NonNull Snackbar snackbar) {
         final Context context = App.getInstance().getApplicationContext();
@@ -39,10 +40,11 @@ public class SnackbarUtil {
         final int color = tv.getCurrentTextColor();
 
         // ... and apply the color on the icon
-        final Drawable icon = context.getDrawable(ICON);
-        icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-        icon.setTint(color);
-
+        final Drawable icon = AppCompatResources.getDrawable(context, ICON);
+        if (icon != null) {
+            icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+            icon.setTint(color);
+        }
         return icon;
     }
 
