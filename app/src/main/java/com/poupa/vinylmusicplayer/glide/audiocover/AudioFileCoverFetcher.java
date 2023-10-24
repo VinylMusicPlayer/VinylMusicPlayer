@@ -64,7 +64,6 @@ public class AudioFileCoverFetcher implements DataFetcher<InputStream> {
 
     private InputStream fallback(String path) throws FileNotFoundException {
         // Look for album art in external files
-        // TODO This probably wont work on Android 13 (or at least requires explicit permission UI)
         File parent = new File(path).getParentFile();
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);
