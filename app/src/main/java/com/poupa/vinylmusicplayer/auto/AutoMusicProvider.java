@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.auto;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
@@ -59,14 +60,18 @@ public class AutoMusicProvider {
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
                 for (Album entry : AlbumLoader.getAllAlbums()) {
-                    mediaItems.add(AutoMediaItem.with(mContext)
+                    AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
                             .path(path, entry.getId())
                             .title(entry.getTitle())
                             .subTitle(MusicUtil.getAlbumInfoString(mContext, entry))
-                            .icon(MusicUtil.getMediaStoreAlbumCover(entry.safeGetFirstSong()))
-                            .asPlayable()
-                            .build()
-                    );
+                            .asPlayable();
+                    final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(entry.safeGetFirstSong());
+                    if (icon != null) {
+                        builder = builder.icon(icon);
+                    } else {
+                        builder = builder.icon(R.drawable.ic_album_white_24dp);
+                    }
+                    mediaItems.add(builder.build());
                 }
                 break;
 
@@ -90,14 +95,18 @@ public class AutoMusicProvider {
                     final List<Song> songs = service.getPlayingQueue();
                     final List<Song> limitedSongs = truncatedList(songs, service.getPosition());
                     for (Song s : limitedSongs) {
-                        mediaItems.add(AutoMediaItem.with(mContext)
+                        AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
                                 .path(path, s.id)
                                 .title(s.title)
                                 .subTitle(MusicUtil.getSongInfoString(s))
-                                .icon(MusicUtil.getMediaStoreAlbumCover(s))
-                                .asPlayable()
-                                .build()
-                        );
+                                .asPlayable();
+                        final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(s);
+                        if (icon != null) {
+                            builder = builder.icon(icon);
+                        } else {
+                            builder = builder.icon(R.drawable.ic_music_note_white_24dp);
+                        }
+                        mediaItems.add(builder.build());
                     }
                     if (songs.size() > limitedSongs.size()) {
                         mediaItems.add(truncatedListIndicator(resources, path));
@@ -285,14 +294,18 @@ public class AutoMusicProvider {
             final List<Song> limitedSongs = truncatedList(songs, 0);
             final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
             for (Song s : limitedSongs) {
-                mediaItems.add(AutoMediaItem.with(mContext)
+                AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
                         .path(pathPrefix, s.id)
                         .title(s.title)
                         .subTitle(MusicUtil.getSongInfoString(s))
-                        .icon(MusicUtil.getMediaStoreAlbumCover(s))
-                        .asPlayable()
-                        .build()
-                );
+                        .asPlayable();
+                final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(s);
+                if (icon != null) {
+                    builder = builder.icon(icon);
+                } else {
+                    builder = builder.icon(R.drawable.ic_music_note_white_24dp);
+                }
+                mediaItems.add(builder.build());
             }
             if (songs.size() > limitedSongs.size()) {
                 mediaItems.add(truncatedListIndicator(resources, pathPrefix));
