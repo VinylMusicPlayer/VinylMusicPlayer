@@ -5,7 +5,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v4.media.MediaBrowserCompat;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -30,6 +32,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Beesham Sarendranauth (Beesham)
@@ -59,58 +62,50 @@ public class AutoMusicProvider {
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                for (Album entry : AlbumLoader.getAllAlbums()) {
-                    AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
-                            .path(path, entry.getId())
-                            .title(entry.getTitle())
-                            .subTitle(MusicUtil.getAlbumInfoString(mContext, entry))
-                            .asPlayable();
-                    final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(entry.safeGetFirstSong());
-                    if (icon != null) {
-                        builder = builder.icon(icon);
-                    } else {
-                        builder = builder.icon(R.drawable.ic_album_white_24dp);
-                    }
-                    mediaItems.add(builder.build());
-                }
+                buildMediaItemsFromList(
+                        mediaItems,
+                        AlbumLoader.getAllAlbums(),
+                        0,
+                        path,
+                        Album::getId,
+                        Album::getTitle,
+                        (Album a) -> MusicUtil.getAlbumInfoString(mContext, a),
+                        (Album a) -> MusicUtil.getMediaStoreAlbumCover(a.safeGetFirstSong()),
+                        R.drawable.ic_album_white_24dp,
+                        true, // TODO Support browsing
+                        resources);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
-                // TODO Provide artist cover image - this requires exposing the custom images via a ContentProvider
-                for (Artist entry : ArtistLoader.getAllArtists()) {
-                    mediaItems.add(AutoMediaItem.with(mContext)
-                            .path(path, entry.getId())
-                            .title(entry.getName())
-                            .subTitle(MusicUtil.getArtistInfoString(mContext, entry))
-                            .asPlayable()
-                            .build()
-                    );
-                }
+                buildMediaItemsFromList(
+                        mediaItems,
+                        ArtistLoader.getAllArtists(),
+                        0,
+                        path,
+                        Artist::getId,
+                        Artist::getName,
+                        (Artist a) -> MusicUtil.getArtistInfoString(mContext, a),
+                        (Artist a) -> null, // TODO Provide artist cover image - this requires exposing the custom images via a ContentProvider
+                        R.drawable.ic_person_white_24dp,
+                        true, // TODO Support browsing
+                        resources);
                 break;
 
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                 final MusicService service = mMusicService.get();
                 if (service != null) {
-                    // Only show the queue starting from the currently played song
-                    final List<Song> songs = service.getPlayingQueue();
-                    final List<Song> limitedSongs = truncatedList(songs, service.getPosition());
-                    for (Song s : limitedSongs) {
-                        AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
-                                .path(path, s.id)
-                                .title(s.title)
-                                .subTitle(MusicUtil.getSongInfoString(s))
-                                .asPlayable();
-                        final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(s);
-                        if (icon != null) {
-                            builder = builder.icon(icon);
-                        } else {
-                            builder = builder.icon(R.drawable.ic_music_note_white_24dp);
-                        }
-                        mediaItems.add(builder.build());
-                    }
-                    if (songs.size() > limitedSongs.size()) {
-                        mediaItems.add(truncatedListIndicator(resources, path));
-                    }
+                    buildMediaItemsFromList(
+                            mediaItems,
+                            service.getPlayingQueue(),
+                            service.getPosition(), // Only show the queue starting from the currently played song
+                            path,
+                            (Song s) -> s.id,
+                            (Song s) -> s.title,
+                            MusicUtil::getSongInfoString,
+                            MusicUtil::getMediaStoreAlbumCover,
+                            R.drawable.ic_music_note_white_24dp,
+                            true,
+                            resources);
                 }
                 break;
 
@@ -260,8 +255,6 @@ public class AutoMusicProvider {
 
     @NonNull
     private List<MediaBrowserCompat.MediaItem> getSpecificPlaylistChildren(@NonNull Resources resources, @NonNull String path) {
-        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-
         List<Song> songs = null;
         switch (path) {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
@@ -290,33 +283,64 @@ public class AutoMusicProvider {
                 }
                 break;
         }
-        if (songs != null) {
-            final List<Song> limitedSongs = truncatedList(songs, 0);
-            final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
-            for (Song s : limitedSongs) {
-                AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
-                        .path(pathPrefix, s.id)
-                        .title(s.title)
-                        .subTitle(MusicUtil.getSongInfoString(s))
-                        .asPlayable();
-                final Bitmap icon = MusicUtil.getMediaStoreAlbumCover(s);
-                if (icon != null) {
-                    builder = builder.icon(icon);
-                } else {
-                    builder = builder.icon(R.drawable.ic_music_note_white_24dp);
-                }
-                mediaItems.add(builder.build());
-            }
-            if (songs.size() > limitedSongs.size()) {
-                mediaItems.add(truncatedListIndicator(resources, pathPrefix));
-            }
-        }
 
+        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+        buildMediaItemsFromList(
+                mediaItems,
+                songs,
+                0,
+                AutoMediaIDHelper.extractCategory(path),
+                (Song s) -> s.id,
+                (Song s) -> s.title,
+                MusicUtil::getSongInfoString,
+                MusicUtil::getMediaStoreAlbumCover,
+                R.drawable.ic_music_note_white_24dp,
+                true,
+                resources);
         return mediaItems;
     }
 
+    private <T> void buildMediaItemsFromList(
+            @NonNull List<MediaBrowserCompat.MediaItem> destination,
+            @Nullable List<T> source,
+            int startPosition,
+            String pathPrefix,
+            Function<T, Long> pathIdExtractor,
+            Function<T, String> titleExtractor,
+            Function<T, String> subTitleExtractor,
+            Function<T, Bitmap> coverImageExtractor,
+            @DrawableRes int fallbackCoverImage,
+            boolean isPlayable,
+            @NonNull Resources resources
+    ) {
+        if (source == null) {return;}
+
+        final List<T> truncatedSource = truncatedList(source, startPosition);
+        for (T item : truncatedSource) {
+            AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
+                    .path(pathPrefix, pathIdExtractor.apply(item))
+                    .title(titleExtractor.apply(item))
+                    .subTitle(subTitleExtractor.apply(item));
+            if (isPlayable) {
+                builder = builder.asPlayable();
+            } else {
+                builder = builder.asBrowsable();
+            }
+            final Bitmap icon = coverImageExtractor.apply(item);
+            if (icon != null) {
+                builder = builder.icon(icon);
+            } else {
+                builder = builder.icon(fallbackCoverImage);
+            }
+            destination.add(builder.build());
+        }
+        if (source.size() > truncatedSource.size()) {
+            destination.add(truncatedListIndicator(resources, pathPrefix));
+        }
+    }
+
     @NonNull
-    private List<Song> truncatedList(@NonNull List<Song> songs, int startPosition) {
+    private static <T> List<T> truncatedList(@NonNull List<T> songs, int startPosition) {
         // As per https://developer.android.com/training/cars/media
         // Android Auto and Android Automotive OS have strict limits on how many media items they can display in each level of the menu
         final int LISTING_SIZE_LIMIT = 100;
