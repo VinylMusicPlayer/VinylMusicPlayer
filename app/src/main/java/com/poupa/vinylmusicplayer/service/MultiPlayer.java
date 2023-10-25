@@ -311,6 +311,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
      *
      * @param replaygain gain in dB, or NaN for no replay gain (equivalent to 0dB)
      */
+    @Override
     public void setReplayGain(float replaygain) {
         this.replaygain = replaygain;
         updateVolume();
@@ -321,6 +322,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
      *
      * @param duckingFactor gain as a linear factor, between 0.0 and 1.0.
      */
+    @Override
     public void setDuckingFactor(float duckingFactor) {
         this.duckingFactor = duckingFactor;
         updateVolume();
