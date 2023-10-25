@@ -9,7 +9,6 @@ public class AutoMediaIDHelper {
 
     // Media IDs used on browseable items of MediaBrowser
     public static final String MEDIA_ID_ROOT = "__ROOT__";
-    public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";  // TODO
     public static final String MEDIA_ID_MUSICS_BY_LAST_ADDED = "__BY_LAST_ADDED__";
     public static final String MEDIA_ID_MUSICS_BY_HISTORY = "__BY_HISTORY__";
     public static final String MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED = "__BY_NOT_RECENTLY_PLAYED__";
