@@ -297,15 +297,21 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         return mCurrentMediaPlayer.getAudioSessionId();
     }
 
+    /**
+     * Set the replay gain to be applied immediately. It should match the tags of the current song.
+     *
+     * @param replaygain gain in dB, or NaN for no replay gain (equivalent to 0dB)
+     */
     public void setReplayGain(float replaygain) {
-        if (Float.isNaN(replaygain)) {
-            this.replaygain = Float.NaN;
-        } else {
-            this.replaygain = Math.max(0, Math.min(1, replaygain));
-        }
+        this.replaygain = replaygain;
         updateVolume();
     }
 
+    /**
+     * Set the ducking factor to be applied immediately.
+     *
+     * @param duckingFactor gain as a linear factor, between 0.0 and 1.0.
+     */
     public void setDuckingFactor(float duckingFactor) {
         this.duckingFactor = duckingFactor;
         updateVolume();
@@ -314,7 +320,9 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     private void updateVolume() {
         float volume = 1.0f;
         if (!Float.isNaN(replaygain)) {
-            volume = replaygain;
+            // setVolume uses a linear scale
+            float rgResult = ((float) Math.pow(10, (replaygain / 20)));
+            volume = Math.max(0, Math.min(1, rgResult));
         }
 
         volume *= duckingFactor;

@@ -911,9 +911,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 adjust += PreferenceUtil.getInstance().getRgPreampWithTag();
             }
 
-            float rgResult = ((float) Math.pow(10, (adjust / 20)));
-
-            playback.setReplayGain(rgResult);
+            playback.setReplayGain(adjust);
         } else {
             playback.setReplayGain(Float.NaN);
         }
