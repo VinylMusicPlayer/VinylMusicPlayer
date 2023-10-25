@@ -87,6 +87,8 @@ public class TagExtractor {
             ReplayGainTagExtractor.ReplayGainValues rgValues = ReplayGainTagExtractor.setReplayGainValues(file);
             song.replayGainAlbum = rgValues.album;
             song.replayGainTrack = rgValues.track;
+            song.replayGainPeakAlbum = rgValues.peakAlbum;
+            song.replayGainPeakTrack = rgValues.peakTrack;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
             OopsHandler.copyStackTraceToClipboard(e);
         }
