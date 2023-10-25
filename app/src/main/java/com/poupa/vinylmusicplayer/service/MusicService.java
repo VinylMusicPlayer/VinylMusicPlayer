@@ -893,25 +893,36 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
             Song song = getCurrentSong();
 
-            float adjust = 0f;
+            float adjustDB = 0f;
+            float peak = 1.0f;
+
             float rgTrack = song.replayGainTrack;
             float rgAlbum = song.replayGainAlbum;
+            float rgpTrack = song.replayGainPeakTrack;
+            float rgpAlbum = song.replayGainPeakAlbum;
 
             if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
-                adjust = (rgTrack != 0 ? rgTrack : adjust);
-                adjust = (rgAlbum != 0 ? rgAlbum : adjust);
+                adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
+                adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
+                peak = (rgpTrack != 1.0f ? rgpTrack : peak);
+                peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
             } else if (mode == PreferenceUtil.RG_SOURCE_MODE_TRACK) {
-                adjust = (rgAlbum != 0 ? rgAlbum : adjust);
-                adjust = (rgTrack != 0 ? rgTrack : adjust);
+                adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
+                adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
+                peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
+                peak = (rgpTrack != 1.0f ? rgpTrack : peak);
             }
 
-            if (adjust == 0) {
-                adjust = PreferenceUtil.getInstance().getRgPreampWithoutTag();
+            if (adjustDB == 0) {
+                adjustDB = PreferenceUtil.getInstance().getRgPreampWithoutTag();
             } else {
-                adjust += PreferenceUtil.getInstance().getRgPreampWithTag();
+                adjustDB += PreferenceUtil.getInstance().getRgPreampWithTag();
+
+                float peakDB = -20.0f * ((float) Math.log10(peak));
+                adjustDB = Math.min(adjustDB, peakDB);
             }
 
-            playback.setReplayGain(adjust);
+            playback.setReplayGain(adjustDB);
         } else {
             playback.setReplayGain(Float.NaN);
         }
