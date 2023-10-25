@@ -1,11 +1,14 @@
 package com.poupa.vinylmusicplayer.service;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
+import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -25,6 +28,8 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
 
     private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
     private MediaPlayer mNextMediaPlayer;
+
+    private DynamicsProcessing mDynamicsProcessing;
 
     private final Context context;
     @Nullable
@@ -79,6 +84,10 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
                 player.setDataSource(path);
             }
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && mDynamicsProcessing == null) {
+                mDynamicsProcessing = new DynamicsProcessing(player.getAudioSessionId());
+                mDynamicsProcessing.setEnabled(true);
+            }
             player.prepare();
         } catch (Exception e) {
             return false;
@@ -317,9 +326,18 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         updateVolume();
     }
 
+    @SuppressLint("NewApi") // mDynamicsProcessing will remain null if the API level is too low
     private void updateVolume() {
         float volume = 1.0f;
-        if (!Float.isNaN(replaygain)) {
+
+        if (mDynamicsProcessing != null) {
+            // setInputGainAllChannelsTo uses a dB scale
+            if (Float.isNaN(replaygain)) {
+                mDynamicsProcessing.setInputGainAllChannelsTo(0.0f);
+            } else {
+                mDynamicsProcessing.setInputGainAllChannelsTo(replaygain);
+            }
+        } else if (!Float.isNaN(replaygain)) {
             // setVolume uses a linear scale
             float rgResult = ((float) Math.pow(10, (replaygain / 20)));
             volume = Math.max(0, Math.min(1, rgResult));
