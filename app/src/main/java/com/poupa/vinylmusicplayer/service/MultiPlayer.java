@@ -200,6 +200,10 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         if (mNextMediaPlayer != null) {
             mNextMediaPlayer.release();
         }
+        if (mDynamicsProcessing != null) {
+            mDynamicsProcessing.release();
+            mDynamicsProcessing = null;
+        }
     }
 
     /**
