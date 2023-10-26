@@ -23,6 +23,7 @@ import androidx.documentfile.provider.DocumentFile;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 
 import java.io.File;
@@ -123,12 +124,11 @@ public class SAFUtil {
         return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
     }
 
-    public static @Nullable AutoDeleteAudioFile loadAudioFile(@NonNull final File file) {
-        // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
+    public static @Nullable AudioFile loadAudioFile(@NonNull final File file) {
+        // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
         try {
-            // Create a ephemeral/volatile audio file
-            return new AutoDeleteAudioFile(AudioFileIO.read(file));
+            return AudioFileIO.read(file);
         } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
             // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
             return null;
@@ -138,7 +138,7 @@ public class SAFUtil {
         }
     }
     public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
-        // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
+        // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
         if (song.id == Song.EMPTY_SONG.id) {return null;}
 
@@ -161,7 +161,8 @@ public class SAFUtil {
                 }
             }
 
-            return loadAudioFile(tempFile);
+            // Create a ephemeral/volatile audio file
+            return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(e);
             return null;

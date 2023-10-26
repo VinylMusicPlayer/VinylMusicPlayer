@@ -3,9 +3,9 @@ package com.poupa.vinylmusicplayer.glide.audiocover;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
@@ -25,8 +25,9 @@ public class FileCoverFetcher extends AbsCoverFetcher {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(model.file)) {
-            Artwork art = audio.get().getTag().getFirstArtwork();
+        try {
+            final AudioFile audio = SAFUtil.loadAudioFile(model.file);
+            final Artwork art = audio.getTag().getFirstArtwork();
             if (art != null) {
                 byte[] imageData = art.getBinaryData();
                 callback.onDataReady(new ByteArrayInputStream(imageData));
