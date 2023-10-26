@@ -15,7 +15,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
@@ -50,36 +49,36 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
     public void onPlayFromMediaId(String mediaId, Bundle extras) {
         super.onPlayFromMediaId(mediaId, extras);
 
-        final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
+        final String musicId = BrowsableMediaIDHelper.extractMusicID(mediaId);
         final long itemId = !TextUtils.isEmpty(musicId) ? Long.parseLong(musicId) : -1;
-        final String category = AutoMediaIDHelper.extractCategory(mediaId);
+        final String category = BrowsableMediaIDHelper.extractCategory(mediaId);
 
         final ArrayList<Song> songs = new ArrayList<>();
         int startPosition = 0;
 
-        if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)) {
+        if (category.equals(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)) {
             songs.addAll(Discography.getInstance().getAllSongs(null));
             ShuffleHelper.makeShuffleList(songs, -1);
         } else {
-            if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)) {
+            if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)) {
                 songs.addAll(musicService.getPlayingQueue());
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
                 songs.addAll(LastAddedLoader.getLastAddedSongs());
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
                 songs.addAll(TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context));
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
                 songs.addAll(TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context));
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
                 songs.addAll(TopAndRecentlyPlayedTracksLoader.getTopTracks(context));
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
-                final String playlistIdStr = AutoMediaIDHelper.extractSubCategoryFromCategory(category);
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
+                final String playlistIdStr = BrowsableMediaIDHelper.extractSubCategoryFromCategory(category);
                 final long playlistId = !TextUtils.isEmpty(playlistIdStr) ? Long.parseLong(playlistIdStr) : -1;
                 final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistId);
                 if (playlist != null) {
                     songs.addAll(playlist.asSongs());
                 }
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
-                final String albumIdStr = AutoMediaIDHelper.extractSubCategoryFromCategory(category);
+            } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
+                final String albumIdStr = BrowsableMediaIDHelper.extractSubCategoryFromCategory(category);
                 final long albumId = !TextUtils.isEmpty(albumIdStr) ? Long.parseLong(albumIdStr) : -1;
                 Album album = AlbumLoader.getAlbum(albumId);
                 songs.addAll(album.songs);

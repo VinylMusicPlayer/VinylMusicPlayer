@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.auto;
+package com.poupa.vinylmusicplayer.service;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,7 +26,6 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.MyTopTracksPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.ShuffleAllPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
-import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -40,29 +39,29 @@ import java.util.function.Function;
  * @author SC (soncaokim)
  */
 
-public class AutoMusicProvider {
+public class BrowsableMusicProvider {
     private final WeakReference<MusicService> mMusicService;
     private final Context mContext;
 
-    public AutoMusicProvider(MusicService musicService) {
+    BrowsableMusicProvider(MusicService musicService) {
         mContext = musicService;
         mMusicService = new WeakReference<>(musicService);
     }
 
     @NonNull
-    public List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String path, @NonNull Resources resources) {
+    List<MediaBrowserCompat.MediaItem> getChildren(@NonNull String path, @NonNull Resources resources) {
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         switch (path) {
-            case AutoMediaIDHelper.MEDIA_ID_ROOT:
+            case BrowsableMediaIDHelper.MEDIA_ID_ROOT:
                 mediaItems.addAll(getRootChildren(resources));
                 break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
                 mediaItems.addAll(getAllPlaylistsChildren(resources));
                 break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
                 buildMediaItemsFromList(
                         mediaItems,
                         AlbumLoader.getAllAlbums(),
@@ -77,7 +76,7 @@ public class AutoMusicProvider {
                         resources);
                 break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
                 buildMediaItemsFromList(
                         mediaItems,
                         ArtistLoader.getAllArtists(),
@@ -92,7 +91,7 @@ public class AutoMusicProvider {
                         resources);
                 break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
                 final MusicService service = mMusicService.get();
                 if (service != null) {
                     buildMediaItemsFromList(
@@ -111,13 +110,13 @@ public class AutoMusicProvider {
                 break;
 
             default: // We get to the case of (smart/dumb) playlists and browse by album/artist here
-                final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
-                if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)) {
-                    final String artistIdStr = AutoMediaIDHelper.extractMusicID(path);
+                final String pathPrefix = BrowsableMediaIDHelper.extractCategory(path);
+                if (pathPrefix.equals(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)) {
+                    final String artistIdStr = BrowsableMediaIDHelper.extractMusicID(path);
                     final long artistId = !TextUtils.isEmpty(artistIdStr) ? Long.parseLong(artistIdStr) : -1;
                     mediaItems.addAll(getArtistChildren(resources, artistId));
-                } else if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
-                    final String albumIdStr = AutoMediaIDHelper.extractMusicID(path);
+                } else if (pathPrefix.equals(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
+                    final String albumIdStr = BrowsableMediaIDHelper.extractMusicID(path);
                     final long albumId = !TextUtils.isEmpty(albumIdStr) ? Long.parseLong(albumIdStr) : -1;
                     mediaItems.addAll(getAlbumChildren(resources, albumId));
                 } else {
@@ -130,7 +129,7 @@ public class AutoMusicProvider {
     }
 
     @NonNull
-    public List<MediaBrowserCompat.MediaItem> getRootChildren(@NonNull Resources resources) {
+    List<MediaBrowserCompat.MediaItem> getRootChildren(@NonNull Resources resources) {
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
         // Library sections - Follow the same order as the full app
@@ -140,8 +139,8 @@ public class AutoMusicProvider {
                 switch (categoryInfo.category) {
                     case ALBUMS:
                         boolean albumGrid = PreferenceUtil.getInstance().getAlbumGridSize(mContext) > 1;
-                        mediaItems.add(AutoMediaItem.with(mContext)
-                                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)
+                        mediaItems.add(BrowsableMediaItem.with(mContext)
+                                .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)
                                 .title(resources.getString(R.string.albums))
                                 .icon(R.drawable.ic_album_white_24dp)
                                 .asBrowsable()
@@ -150,8 +149,8 @@ public class AutoMusicProvider {
                         );
                         break;
                     case ARTISTS:
-                        mediaItems.add(AutoMediaItem.with(mContext)
-                                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)
+                        mediaItems.add(BrowsableMediaItem.with(mContext)
+                                .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)
                                 .title(resources.getString(R.string.artists))
                                 .icon(R.drawable.ic_people_white_24dp)
                                 .asBrowsable()
@@ -159,8 +158,8 @@ public class AutoMusicProvider {
                         );
                         break;
                     case PLAYLISTS:
-                        mediaItems.add(AutoMediaItem.with(mContext)
-                                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)
+                        mediaItems.add(BrowsableMediaItem.with(mContext)
+                                .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)
                                 .title(resources.getString(R.string.playlists_label))
                                 .icon(R.drawable.ic_queue_music_white_24dp)
                                 .asBrowsable()
@@ -168,8 +167,8 @@ public class AutoMusicProvider {
                         );
                         break;
                     case SONGS:
-                        mediaItems.add(AutoMediaItem.with(mContext)
-                                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)
+                        mediaItems.add(BrowsableMediaItem.with(mContext)
+                                .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)
                                 .title(resources.getString(R.string.action_shuffle_all))
                                 .subTitle(new ShuffleAllPlaylist(mContext).getInfoString(mContext))
                                 .icon(R.drawable.ic_shuffle_white_24dp)
@@ -189,8 +188,8 @@ public class AutoMusicProvider {
 
     @NonNull
     private MediaBrowserCompat.MediaItem getQueueChild(@NonNull Resources resources) {
-        return AutoMediaItem.with(mContext)
-                .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)
+        return BrowsableMediaItem.with(mContext)
+                .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)
                 .title(resources.getString(R.string.queue_label))
                 .subTitle(mMusicService.get() != null ? mMusicService.get().getQueueInfoString() : "")
                 .icon(R.drawable.ic_playlist_play_white_24dp)
@@ -205,8 +204,8 @@ public class AutoMusicProvider {
         // Smart playlists
         PreferenceUtil prefs = PreferenceUtil.getInstance();
         if (prefs.getLastAddedCutoffTimeSecs() > 0) {
-            mediaItems.add(AutoMediaItem.with(mContext)
-                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)
+            mediaItems.add(BrowsableMediaItem.with(mContext)
+                    .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)
                     .title(resources.getString(R.string.last_added))
                     .subTitle(new LastAddedPlaylist(mContext).getInfoString(mContext))
                     .icon(R.drawable.ic_library_add_white_24dp)
@@ -215,8 +214,8 @@ public class AutoMusicProvider {
             );
         }
         if (prefs.getRecentlyPlayedCutoffTimeMillis() > 0) {
-            mediaItems.add(AutoMediaItem.with(mContext)
-                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)
+            mediaItems.add(BrowsableMediaItem.with(mContext)
+                    .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)
                     .title(resources.getString(R.string.history_label))
                     .subTitle(new HistoryPlaylist(mContext).getInfoString(mContext))
                     .icon(R.drawable.ic_access_time_white_24dp)
@@ -225,8 +224,8 @@ public class AutoMusicProvider {
             );
         }
         if (prefs.getNotRecentlyPlayedCutoffTimeMillis() > 0) {
-            mediaItems.add(AutoMediaItem.with(mContext)
-                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)
+            mediaItems.add(BrowsableMediaItem.with(mContext)
+                    .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)
                     .title(resources.getString(R.string.not_recently_played))
                     .subTitle(new NotRecentlyPlayedPlaylist(mContext).getInfoString(mContext))
                     .icon(R.drawable.ic_watch_later_white_24dp)
@@ -235,8 +234,8 @@ public class AutoMusicProvider {
             );
         }
         if (prefs.maintainTopTrackPlaylist()) {
-            mediaItems.add(AutoMediaItem.with(mContext)
-                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)
+            mediaItems.add(BrowsableMediaItem.with(mContext)
+                    .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)
                     .title(resources.getString(R.string.top_tracks_label))
                     .subTitle(new MyTopTracksPlaylist(mContext).getInfoString(mContext))
                     .icon(R.drawable.ic_trending_up_white_24dp)
@@ -250,8 +249,8 @@ public class AutoMusicProvider {
             Playlist entry = staticPlaylist.asPlaylist();
             // Here we are appending playlist ID to the MEDIA_ID_MUSICS_BY_PLAYLIST category.
             // Upon browsing event, this will be handled as per the case of other playlists
-            mediaItems.add(AutoMediaItem.with(mContext)
-                    .path(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, entry.id)
+            mediaItems.add(BrowsableMediaItem.with(mContext)
+                    .path(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST, entry.id)
                     .title(entry.name)
                     .subTitle(entry.getInfoString(mContext))
                     .icon(MusicUtil.isFavoritePlaylist(mContext, entry)
@@ -274,7 +273,7 @@ public class AutoMusicProvider {
                 mediaItems,
                 artist.albums,
                 0,
-                new String[]{AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM},
+                new String[]{BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM},
                 Album::getId,
                 Album::getTitle,
                 (Album a) -> MusicUtil.getAlbumInfoString(mContext, a),
@@ -294,7 +293,7 @@ public class AutoMusicProvider {
                 mediaItems,
                 album.songs,
                 0,
-                new String[]{AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, String.valueOf(albumId)},
+                new String[]{BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, String.valueOf(albumId)},
                 (Song s) -> s.id,
                 (Song s) -> s.title,
                 MusicUtil::getSongInfoString,
@@ -310,26 +309,26 @@ public class AutoMusicProvider {
         List<Song> songs = null;
         String[] pathParts = null;
         switch (path) {
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
                 songs = LastAddedLoader.getLastAddedSongs();
                 pathParts = new String[]{path};
                 break;
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
                 songs = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
                 pathParts = new String[]{path};
                 break;
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
                 songs = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
                 pathParts = new String[]{path};
                 break;
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
+            case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
                 songs = TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
                 pathParts = new String[]{path};
                 break;
             default:
-                final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
-                if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
-                    final String playlistIdStr = AutoMediaIDHelper.extractMusicID(path);
+                final String pathPrefix = BrowsableMediaIDHelper.extractCategory(path);
+                if (pathPrefix.equals(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
+                    final String playlistIdStr = BrowsableMediaIDHelper.extractMusicID(path);
                     final long playListId = !TextUtils.isEmpty(playlistIdStr) ? Long.parseLong(playlistIdStr) : -1;
                     final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playListId);
                     if (playlist != null) {
@@ -373,7 +372,7 @@ public class AutoMusicProvider {
 
         final List<T> truncatedSource = truncatedList(source, startPosition);
         for (T item : truncatedSource) {
-            AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
+            BrowsableMediaItem.Builder builder = BrowsableMediaItem.with(mContext)
                     .path(pathParts, pathIdExtractor.apply(item))
                     .title(titleExtractor.apply(item))
                     .subTitle(subTitleExtractor.apply(item));
@@ -409,7 +408,7 @@ public class AutoMusicProvider {
 
     @NonNull
     private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull Resources resources, @NonNull final String[] pathParts) {
-        return AutoMediaItem.with(mContext)
+        return BrowsableMediaItem.with(mContext)
                 .path(pathParts, Song.EMPTY_SONG.id)
                 .title(resources.getString(R.string.auto_limited_listing_title))
                 .subTitle(resources.getString(R.string.auto_limited_listing_subtitle))
