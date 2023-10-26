@@ -360,5 +360,6 @@
     <string name="auto_limited_listing_subtitle">Öffne die App, um die ganze Liste zu sehen</string>
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Zeige nur Einträge ab dem Startordner: </string>
+    <string name="sd_card">SD-Karte</string>
 
 </resources>
