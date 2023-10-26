@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.auto;
+package com.poupa.vinylmusicplayer.service;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,7 +15,7 @@ import com.poupa.vinylmusicplayer.util.ImageUtil;
  * @author SC (soncaokim)
  */
 
-class AutoMediaItem {
+class BrowsableMediaItem {
     @NonNull
     static Builder with(@NonNull Context context) {
         return new Builder(context);
@@ -39,7 +39,12 @@ class AutoMediaItem {
 
         @NonNull
         Builder path(@NonNull String path, long id) {
-            return path(AutoMediaIDHelper.createMediaID(String.valueOf(id), path));
+            return path(BrowsableMediaIDHelper.createMediaID(String.valueOf(id), path));
+        }
+
+        @NonNull
+        Builder path(@NonNull String[] pathParts, long id) {
+            return path(BrowsableMediaIDHelper.createMediaID(String.valueOf(id), pathParts));
         }
 
         @NonNull

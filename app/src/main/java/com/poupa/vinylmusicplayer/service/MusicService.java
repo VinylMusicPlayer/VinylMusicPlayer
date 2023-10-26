@@ -42,8 +42,6 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
-import com.poupa.vinylmusicplayer.auto.AutoMediaIDHelper;
-import com.poupa.vinylmusicplayer.auto.AutoMusicProvider;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.GlideRequest;
@@ -192,8 +190,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private Handler uiThreadHandler;
 
     private PackageValidator mPackageValidator;
-
-    private AutoMusicProvider mMusicProvider;
+    private BrowsableMusicProvider mBrowsableMusicProvider;
 
     private static String getTrackUri(@NonNull Song song) {
         return MusicUtil.getSongFileUri(song.id).toString();
@@ -242,7 +239,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         restoreState();
 
         mPackageValidator = new PackageValidator(this, R.xml.allowed_media_browser_callers);
-        mMusicProvider = new AutoMusicProvider(this);
+        mBrowsableMusicProvider = new BrowsableMusicProvider(this);
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
 
@@ -737,7 +734,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             position = new Random().nextInt(playingQueue.size());
         }
 
-        if (this.playingQueue.openQueue(playingQueue, position, startPlaying, shuffleMode)) {
+        if (this.playingQueue.openQueue(playingQueue, position, shuffleMode)) {
             if (startPlaying) {
                 playSongAt(this.playingQueue.getCurrentPosition(), false);
             } else {
@@ -1143,7 +1140,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     };
 
-
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
@@ -1166,13 +1162,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             return null;
         }
 
-        // TODO Limit to Android Auto
-        return new BrowserRoot(AutoMediaIDHelper.MEDIA_ID_ROOT, null);
+        return new BrowserRoot(BrowsableMediaIDHelper.MEDIA_ID_ROOT, null);
     }
 
     @Override
     public void onLoadChildren(@NonNull final String parentId, @NonNull final Result<List<MediaBrowserCompat.MediaItem>> result) {
-        result.sendResult(mMusicProvider.getChildren(parentId, getResources()));
+        result.sendResult(mBrowsableMusicProvider.getChildren(parentId, getResources()));
     }
 
     public Playback getPlayback() {
