@@ -398,7 +398,7 @@ public class BrowsableMusicProvider {
     private static <T> List<T> truncatedList(@NonNull List<T> songs, int startPosition) {
         // As per https://developer.android.com/training/cars/media
         // Android Auto and Android Automotive OS have strict limits on how many media items they can display in each level of the menu
-        final int LISTING_SIZE_LIMIT = 100;
+        final int LISTING_SIZE_LIMIT = 50;
 
         final int fromPosition = Math.max(0, startPosition);
         final int toPosition = Math.min(songs.size(), fromPosition + LISTING_SIZE_LIMIT);
