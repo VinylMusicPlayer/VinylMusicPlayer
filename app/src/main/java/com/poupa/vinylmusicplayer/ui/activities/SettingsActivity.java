@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -315,12 +316,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     colorNavBar.setVisible(false);
                 } else {
-                    colorNavBar.setChecked(ThemeStore.coloredNavigationBar(getActivity()));
+                    final Activity activity = requireActivity();
+                    colorNavBar.setChecked(ThemeStore.coloredNavigationBar(activity));
                     colorNavBar.setOnPreferenceChangeListener((preference, newValue) -> {
-                        ThemeStore.editTheme(getActivity())
+                        ThemeStore.editTheme(activity)
                                 .coloredNavigationBar((Boolean) newValue)
                                 .commit();
-                        getActivity().recreate();
+                        activity.recreate();
                         return true;
                     });
                 }

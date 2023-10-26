@@ -103,13 +103,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     private Map<FieldKey, String> savedTags;
     private ArtworkInfo savedArtworkInfo;
 
-    private ActivityResultLauncher<String> writeTagsKitkat_SAFFilePicker;
-    private ActivityResultLauncher<Intent> writeTagsLollipop_SAFGuide;
+    private ActivityResultLauncher<String> writeTagsApi19_SAFFilePicker;
+    private ActivityResultLauncher<Intent> writeTagsApi21_SAFGuide;
 
-    private ActivityResultLauncher<Uri> writeTagsLollipop_SAFTreePicker;
+    private ActivityResultLauncher<Uri> writeTagsApi21_SAFTreePicker;
     private ActivityResultLauncher<String> imagePicker;
 
-    private ActivityResultLauncher<IntentSenderRequest> tagEditRequestAndroidR;
+    private ActivityResultLauncher<IntentSenderRequest> tagEditRequestApi30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +132,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        writeTagsKitkat_SAFFilePicker = registerForActivityResult(
+        writeTagsApi19_SAFFilePicker = registerForActivityResult(
                 new ActivityResultContracts.CreateDocument("audio/*") {
                     @NonNull
                     @Override
@@ -142,18 +142,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                 .putExtra("android.content.extra.SHOW_ADVANCED", true);
                     }
                 },
-                resultUri -> writeTags(List.of(currentSong), true));
+                resultUri -> writeTags(List.of(currentSong)));
 
-        writeTagsLollipop_SAFGuide = registerForActivityResult(
+        writeTagsApi21_SAFGuide = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK)
                     {
-                        writeTagsLollipop_SAFTreePicker.launch(null);
+                        writeTagsApi21_SAFTreePicker.launch(null);
                     }
                 });
 
-        writeTagsLollipop_SAFTreePicker = registerForActivityResult(
+        writeTagsApi21_SAFTreePicker = registerForActivityResult(
                 new ActivityResultContracts.OpenDocumentTree() {
                     @NonNull
                     @Override
@@ -164,11 +164,11 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 },
                 resultUri -> {
                     SAFUtil.saveTreeUri(this, resultUri);
-                    writeTags(savedSongs, false);
+                    writeTags(savedSongs);
                 });
 
         if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            tagEditRequestAndroidR = registerForActivityResult(
+            tagEditRequestApi30 = registerForActivityResult(
                     new ActivityResultContracts.StartIntentSenderForResult(),
                     result -> {
                         if (result.getResultCode() == Activity.RESULT_OK) {
@@ -191,7 +191,6 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 },
                 this::loadImageFromFile);
 
-        // TODO Refactor to reuse this version-adaptation code for read/write/delete operations
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
             setUpViews();
         }
@@ -202,7 +201,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             }
             PendingIntent readPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToRead);
 
-            tagEditRequestAndroidR.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
+            tagEditRequestApi30.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
         }
     }
 
@@ -374,48 +373,48 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             if (!SAFUtil.isSAFRequired(savedSongs)) {
-                writeTags(savedSongs, false);
+                writeTags(savedSongs);
             } else {
-                writeTagsKitkat();
+                writeTagsApi19();
             }
         } else if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             if (!SAFUtil.isSAFRequired(savedSongs)) {
-                writeTags(savedSongs, false);
+                writeTags(savedSongs);
             } else if (SAFUtil.isSDCardAccessGranted(this)) {
-                writeTags(savedSongs, false);
+                writeTags(savedSongs);
             } else {
-                writeTagsLollipop_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
+                writeTagsApi21_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
             }
         } else {
             if (SAFUtil.isSDCardAccessGranted(this)) {
-                writeTags(savedSongs, false);
+                writeTags(savedSongs);
             }
         }
     }
 
-    private void writeTags(List<Song> songs, boolean kitkatPickFile) {
-        new WriteTagsAsyncTask(this).execute(new WriteTagsAsyncTask.LoadingInfo(songs, savedTags, savedArtworkInfo, kitkatPickFile));
+    private void writeTags(List<Song> songs) {
+        new AsyncTask(this).execute(new AsyncTask.LoadingInfo(songs, savedTags, savedArtworkInfo));
     }
 
-    private void writeTagsKitkat() {
+    private void writeTagsApi19() {
         if (savedSongs.size() < 1) return;
 
         currentSong = savedSongs.remove(0);
 
         if (!SAFUtil.isSAFRequired(currentSong.data)) {
-            writeTags(List.of(currentSong), false);
-            writeTagsKitkat();
+            writeTags(List.of(currentSong));
+            writeTagsApi19();
         } else {
             final String message = getString(R.string.saf_pick_file, currentSong.data);
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            writeTagsKitkat_SAFFilePicker.launch(message);
+            writeTagsApi19_SAFFilePicker.launch(message);
         }
     }
 
-    private static class WriteTagsAsyncTask extends DialogAsyncTask<WriteTagsAsyncTask.LoadingInfo, Integer, String[]> {
+    private static class AsyncTask extends DialogAsyncTask<AsyncTask.LoadingInfo, Integer, String[]> {
         private final WeakReference<Activity> activity;
 
-        WriteTagsAsyncTask(Activity activity) {
+        AsyncTask(Activity activity) {
             super(activity);
             this.activity = new WeakReference<>(activity);
         }
@@ -537,13 +536,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             @Nullable
             private final ArtworkInfo artworkInfo;
 
-            final boolean kitkatPickFile;
-
-            private LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo, boolean kitkatPickFile) {
+            private LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
                 this.songs = songs;
                 this.fieldKeyValueMap = fieldKeyValueMap;
                 this.artworkInfo = artworkInfo;
-                this.kitkatPickFile = kitkatPickFile;
             }
         }
     }

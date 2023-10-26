@@ -57,8 +57,8 @@ import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.service.notification.IdleNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotification;
-import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl;
-import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImpl24;
+import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImplApi19;
+import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImplApi24;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
@@ -523,9 +523,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private void initNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !PreferenceUtil.getInstance().classicNotification()) {
-            playingNotification = new PlayingNotificationImpl24();
+            playingNotification = new PlayingNotificationImplApi24();
         } else {
-            playingNotification = new PlayingNotificationImpl();
+            playingNotification = new PlayingNotificationImplApi19();
         }
         playingNotification.init(this,
                 PlayingNotification.NOTIFICATION_CHANNEL_ID,

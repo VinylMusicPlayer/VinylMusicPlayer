@@ -35,7 +35,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-public class PlayingNotificationImpl extends PlayingNotification {
+public class PlayingNotificationImplApi19 extends PlayingNotification {
 
     private Target target;
 
