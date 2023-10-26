@@ -73,7 +73,7 @@ public class AutoMusicProvider {
                         (Album a) -> MusicUtil.getAlbumInfoString(mContext, a),
                         (Album a) -> MusicUtil.getMediaStoreAlbumCover(a.safeGetFirstSong()),
                         R.drawable.ic_album_white_24dp,
-                        true, // TODO Support browsing
+                        false,
                         resources);
                 break;
 
@@ -88,7 +88,7 @@ public class AutoMusicProvider {
                         (Artist a) -> MusicUtil.getArtistInfoString(mContext, a),
                         (Artist a) -> null, // TODO Provide artist cover image - this requires exposing the custom images via a ContentProvider
                         R.drawable.ic_person_white_24dp,
-                        true, // TODO Support browsing
+                        false,
                         resources);
                 break;
 
@@ -110,8 +110,19 @@ public class AutoMusicProvider {
                 }
                 break;
 
-            default: // We get to the case of (smart/dumb) playlists here
-                mediaItems.addAll(getSpecificPlaylistChildren(resources, path));
+            default: // We get to the case of (smart/dumb) playlists and browse by album/artist here
+                final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
+                if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)) {
+                    final String artistIdStr = AutoMediaIDHelper.extractMusicID(path);
+                    final long artistId = !TextUtils.isEmpty(artistIdStr) ? Long.parseLong(artistIdStr) : -1;
+                    mediaItems.addAll(getArtistChildren(resources, artistId));
+                } else if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
+                    final String albumIdStr = AutoMediaIDHelper.extractMusicID(path);
+                    final long albumId = !TextUtils.isEmpty(albumIdStr) ? Long.parseLong(albumIdStr) : -1;
+                    mediaItems.addAll(getAlbumChildren(resources, albumId));
+                } else {
+                    mediaItems.addAll(getSpecificPlaylistChildren(resources, path));
+                }
                 break;
         }
 
@@ -251,6 +262,46 @@ public class AutoMusicProvider {
             );
         }
 
+        return mediaItems;
+    }
+
+    @NonNull
+    private List<MediaBrowserCompat.MediaItem> getArtistChildren(@NonNull Resources resources, long artistId) {
+        Artist artist = ArtistLoader.getArtist(artistId);
+
+        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+        buildMediaItemsFromList(
+                mediaItems,
+                artist.albums,
+                0,
+                new String[]{AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM},
+                Album::getId,
+                Album::getTitle,
+                (Album a) -> MusicUtil.getAlbumInfoString(mContext, a),
+                (Album a) -> MusicUtil.getMediaStoreAlbumCover(a.safeGetFirstSong()),
+                R.drawable.ic_album_white_24dp,
+                false,
+                resources);
+        return mediaItems;
+    }
+
+    @NonNull
+    private List<MediaBrowserCompat.MediaItem> getAlbumChildren(@NonNull Resources resources, long albumId) {
+        Album album = AlbumLoader.getAlbum(albumId);
+
+        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+        buildMediaItemsFromList(
+                mediaItems,
+                album.songs,
+                0,
+                new String[]{AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, String.valueOf(albumId)},
+                (Song s) -> s.id,
+                (Song s) -> s.title,
+                MusicUtil::getSongInfoString,
+                MusicUtil::getMediaStoreAlbumCover,
+                R.drawable.ic_music_note_white_24dp,
+                true,
+                resources);
         return mediaItems;
     }
 

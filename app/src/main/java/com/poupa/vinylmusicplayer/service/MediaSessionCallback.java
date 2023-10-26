@@ -60,17 +60,10 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)) {
             songs.addAll(Discography.getInstance().getAllSongs(null));
             ShuffleHelper.makeShuffleList(songs, -1);
-        } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
-            // TODO Drop this, support album browsing
-            Album album = AlbumLoader.getAlbum(itemId);
-            songs.addAll(album.songs);
-        } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)) {
-            // TODO Drop this, support artist browsing
-            Artist artist = ArtistLoader.getArtist(itemId);
-            songs.addAll(artist.getSongs());
         } else {
-            // Play by song in a playlist
-            if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
+            if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)) {
+                songs.addAll(musicService.getPlayingQueue());
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
                 songs.addAll(LastAddedLoader.getLastAddedSongs());
             } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
                 songs.addAll(TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context));
@@ -85,8 +78,11 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 if (playlist != null) {
                     songs.addAll(playlist.asSongs());
                 }
-            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)) {
-                songs.addAll(musicService.getPlayingQueue());
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
+                final String albumIdStr = AutoMediaIDHelper.extractSubCategoryFromCategory(category);
+                final long albumId = !TextUtils.isEmpty(albumIdStr) ? Long.parseLong(albumIdStr) : -1;
+                Album album = AlbumLoader.getAlbum(albumId);
+                songs.addAll(album.songs);
             }
             startPosition = Math.max(MusicUtil.indexOfSongInList(songs, itemId), 0);
         }
