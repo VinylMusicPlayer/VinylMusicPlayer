@@ -371,7 +371,6 @@ public class MusicUtil {
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
             try {
-                // TODO This probably wont work due to restricted access on Android 13
                 File file = new File(song.data);
                 File dir = file.getAbsoluteFile().getParentFile();
 

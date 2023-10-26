@@ -123,6 +123,20 @@ public class SAFUtil {
         return ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, song.id);
     }
 
+    public static @Nullable AutoDeleteAudioFile loadAudioFile(@NonNull final File file) {
+        // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
+        // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
+        try {
+            // Create a ephemeral/volatile audio file
+            return new AutoDeleteAudioFile(AudioFileIO.read(file));
+        } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
+            // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
+            return null;
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(e);
+            return null;
+        }
+    }
     public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
         // Note: Thus function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
@@ -147,11 +161,7 @@ public class SAFUtil {
                 }
             }
 
-            // Create a ephemeral/volatile audio file
-            return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
-        } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
-            // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
-            return null;
+            return loadAudioFile(tempFile);
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(e);
             return null;
