@@ -1,24 +1,22 @@
-package com.poupa.vinylmusicplayer.auto;
+package com.poupa.vinylmusicplayer.service;
 
 import androidx.annotation.NonNull;
 
 /**
  * Created by Beesham Sarendranauth (Beesham)
  */
-public class AutoMediaIDHelper {
-
-    // Media IDs used on browseable items of MediaBrowser
-    public static final String MEDIA_ID_ROOT = "__ROOT__";
-    public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";  // TODO
-    public static final String MEDIA_ID_MUSICS_BY_LAST_ADDED = "__BY_LAST_ADDED__";
-    public static final String MEDIA_ID_MUSICS_BY_HISTORY = "__BY_HISTORY__";
-    public static final String MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED = "__BY_NOT_RECENTLY_PLAYED__";
-    public static final String MEDIA_ID_MUSICS_BY_TOP_TRACKS = "__BY_TOP_TRACKS__";
-    public static final String MEDIA_ID_MUSICS_BY_PLAYLIST = "__BY_PLAYLIST__";
-    public static final String MEDIA_ID_MUSICS_BY_ALBUM = "__BY_ALBUM__";
-    public static final String MEDIA_ID_MUSICS_BY_ARTIST = "__BY_ARTIST__";
-    public static final String MEDIA_ID_MUSICS_BY_SHUFFLE = "__BY_SHUFFLE__";
-    public static final String MEDIA_ID_MUSICS_BY_QUEUE = "__BY_QUEUE__";
+public class BrowsableMediaIDHelper {
+    // Media IDs used on browsable items of MediaBrowser
+    static final String MEDIA_ID_ROOT = "__ROOT__";
+    static final String MEDIA_ID_MUSICS_BY_LAST_ADDED = "__BY_LAST_ADDED__";
+    static final String MEDIA_ID_MUSICS_BY_HISTORY = "__BY_HISTORY__";
+    static final String MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED = "__BY_NOT_RECENTLY_PLAYED__";
+    static final String MEDIA_ID_MUSICS_BY_TOP_TRACKS = "__BY_TOP_TRACKS__";
+    static final String MEDIA_ID_MUSICS_BY_PLAYLIST = "__BY_PLAYLIST__";
+    static final String MEDIA_ID_MUSICS_BY_ALBUM = "__BY_ALBUM__";
+    static final String MEDIA_ID_MUSICS_BY_ARTIST = "__BY_ARTIST__";
+    static final String MEDIA_ID_MUSICS_BY_SHUFFLE = "__BY_SHUFFLE__";
+    static final String MEDIA_ID_MUSICS_BY_QUEUE = "__BY_QUEUE__";
 
     private static final String CATEGORY_SEPARATOR = "__/__";
     private static final String LEAF_SEPARATOR = "__|__";
@@ -39,7 +37,7 @@ public class AutoMediaIDHelper {
      * @param categories Hierarchy of categories representing this item's browsing parents.
      * @return A hierarchy-aware media ID.
      */
-    public static String createMediaID(String mediaID, String... categories) {
+    static String createMediaID(String mediaID, String... categories) {
         StringBuilder sb = new StringBuilder();
         if (categories != null) {
             for (int i = 0; i < categories.length; i++) {
@@ -57,8 +55,7 @@ public class AutoMediaIDHelper {
         }
         return sb.toString();
     }
-
-    public static String extractCategory(@NonNull String mediaID) {
+    static String extractCategory(@NonNull String mediaID) {
         int pos = mediaID.indexOf(LEAF_SEPARATOR);
         if (pos >= 0) {
             return mediaID.substring(0, pos);
@@ -66,7 +63,15 @@ public class AutoMediaIDHelper {
         return mediaID;
     }
 
-    public static String extractMusicID(@NonNull String mediaID) {
+    static String extractSubCategoryFromCategory(@NonNull String category) {
+        int pos = category.indexOf(CATEGORY_SEPARATOR);
+        if (pos >= 0) {
+            return category.substring(pos + CATEGORY_SEPARATOR.length());
+        }
+        return null;
+    }
+
+    static String extractMusicID(@NonNull String mediaID) {
         int pos = mediaID.indexOf(LEAF_SEPARATOR);
         if (pos >= 0) {
             return mediaID.substring(pos + LEAF_SEPARATOR.length());
