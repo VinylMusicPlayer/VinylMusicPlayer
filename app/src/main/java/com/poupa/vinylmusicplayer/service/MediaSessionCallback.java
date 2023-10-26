@@ -1,5 +1,10 @@
 package com.poupa.vinylmusicplayer.service;
 
+import static com.poupa.vinylmusicplayer.service.MusicService.CYCLE_REPEAT;
+import static com.poupa.vinylmusicplayer.service.MusicService.TAG;
+import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
+import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_SHUFFLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,12 +30,6 @@ import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.poupa.vinylmusicplayer.service.MusicService.CYCLE_REPEAT;
-import static com.poupa.vinylmusicplayer.service.MusicService.TAG;
-import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
-import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_SHUFFLE;
 
 public final class MediaSessionCallback extends MediaSessionCompat.Callback {
 
@@ -52,77 +51,52 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
         super.onPlayFromMediaId(mediaId, extras);
 
         final String musicId = AutoMediaIDHelper.extractMusicID(mediaId);
-        final long itemId = musicId != null ? Long.parseLong(musicId) : -1;
-        final ArrayList<Song> songs = new ArrayList<>();
-
+        final long itemId = !TextUtils.isEmpty(musicId) ? Long.parseLong(musicId) : -1;
         final String category = AutoMediaIDHelper.extractCategory(mediaId);
-        switch (category) {
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM:
-                Album album = AlbumLoader.getAlbum(itemId);
-                songs.addAll(album.songs);
-                musicService.openQueue(songs, 0, true);
-                break;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST:
-                Artist artist = ArtistLoader.getArtist(itemId);
-                songs.addAll(artist.getSongs());
-                musicService.openQueue(songs, 0, true);
-                break;
+        final ArrayList<Song> songs = new ArrayList<>();
+        int startPosition = 0;
 
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST:
-                final StaticPlaylist playlist = StaticPlaylist.getPlaylist(itemId);
+        if (category.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE)) {
+            songs.addAll(Discography.getInstance().getAllSongs(null));
+            ShuffleHelper.makeShuffleList(songs, -1);
+        } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
+            // TODO Drop this, support album browsing
+            Album album = AlbumLoader.getAlbum(itemId);
+            songs.addAll(album.songs);
+        } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST)) {
+            // TODO Drop this, support artist browsing
+            Artist artist = ArtistLoader.getArtist(itemId);
+            songs.addAll(artist.getSongs());
+        } else {
+            // Play by song in a playlist
+            if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
+                songs.addAll(LastAddedLoader.getLastAddedSongs());
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context));
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context));
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getTopTracks(context));
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
+                final String playlistIdStr = AutoMediaIDHelper.extractSubCategoryFromCategory(category);
+                final long playlistId = !TextUtils.isEmpty(playlistIdStr) ? Long.parseLong(playlistIdStr) : -1;
+                final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playlistId);
                 if (playlist != null) {
                     songs.addAll(playlist.asSongs());
-                    musicService.openQueue(songs, 0, true);
                 }
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE:
-                List<Song> tracks;
-                switch (category) {
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
-                        tracks = LastAddedLoader.getLastAddedSongs();
-                        break;
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
-                        tracks = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context);
-                        break;
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
-                        tracks = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context);
-                        break;
-                    case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
-                        tracks = TopAndRecentlyPlayedTracksLoader.getTopTracks(context);
-                        break;
-                    default:
-                        tracks = musicService.getPlayingQueue();
-                        break;
-                }
-                songs.addAll(tracks);
-                int songIndex = MusicUtil.indexOfSongInList(tracks, itemId);
-                if (songIndex == -1) {
-                    songIndex = 0;
-                }
-                musicService.openQueue(songs, songIndex, true);
-                break;
-
-            case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE:
-                ArrayList<Song> allSongs = Discography.getInstance().getAllSongs(null);
-                ShuffleHelper.makeShuffleList(allSongs, -1);
-                musicService.openQueue(allSongs, 0, true);
-                break;
-
-            default:
-                break;
+            } else if (category.startsWith(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE)) {
+                songs.addAll(musicService.getPlayingQueue());
+            }
+            startPosition = Math.max(MusicUtil.indexOfSongInList(songs, itemId), 0);
         }
 
+        musicService.openQueue(songs, startPosition, true);
         musicService.play();
     }
 
     /**
-     * Inspired by https://developer.android.com/guide/topics/media-apps/interacting-with-assistant
+     * Inspired by <a href="https://developer.android.com/guide/topics/media-apps/interacting-with-assistant">...</a>
      */
     @Override
     public void onPlayFromSearch(String query, Bundle extras) {

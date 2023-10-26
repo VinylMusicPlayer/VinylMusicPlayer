@@ -38,7 +38,7 @@ public class AutoMediaIDHelper {
      * @param categories Hierarchy of categories representing this item's browsing parents.
      * @return A hierarchy-aware media ID.
      */
-    public static String createMediaID(String mediaID, String... categories) {
+    static String createMediaID(String mediaID, String... categories) {
         StringBuilder sb = new StringBuilder();
         if (categories != null) {
             for (int i = 0; i < categories.length; i++) {
@@ -63,6 +63,14 @@ public class AutoMediaIDHelper {
             return mediaID.substring(0, pos);
         }
         return mediaID;
+    }
+
+    public static String extractSubCategoryFromCategory(@NonNull String category) {
+        int pos = category.indexOf(CATEGORY_SEPARATOR);
+        if (pos >= 0) {
+            return category.substring(pos + CATEGORY_SEPARATOR.length());
+        }
+        return null;
     }
 
     public static String extractMusicID(@NonNull String mediaID) {

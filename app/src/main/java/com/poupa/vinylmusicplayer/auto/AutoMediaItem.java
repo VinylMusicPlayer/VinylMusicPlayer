@@ -43,6 +43,11 @@ class AutoMediaItem {
         }
 
         @NonNull
+        Builder path(@NonNull String[] pathParts, long id) {
+            return path(AutoMediaIDHelper.createMediaID(String.valueOf(id), pathParts));
+        }
+
+        @NonNull
         Builder title(@NonNull String title) {
             mBuilder.setTitle(title);
             return this;

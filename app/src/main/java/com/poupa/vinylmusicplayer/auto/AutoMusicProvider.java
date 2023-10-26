@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v4.media.MediaBrowserCompat;
+import android.text.TextUtils;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -66,7 +67,7 @@ public class AutoMusicProvider {
                         mediaItems,
                         AlbumLoader.getAllAlbums(),
                         0,
-                        path,
+                        new String[]{path},
                         Album::getId,
                         Album::getTitle,
                         (Album a) -> MusicUtil.getAlbumInfoString(mContext, a),
@@ -81,7 +82,7 @@ public class AutoMusicProvider {
                         mediaItems,
                         ArtistLoader.getAllArtists(),
                         0,
-                        path,
+                        new String[]{path},
                         Artist::getId,
                         Artist::getName,
                         (Artist a) -> MusicUtil.getArtistInfoString(mContext, a),
@@ -98,7 +99,7 @@ public class AutoMusicProvider {
                             mediaItems,
                             service.getPlayingQueue(),
                             service.getPosition(), // Only show the queue starting from the currently played song
-                            path,
+                            new String[]{path},
                             (Song s) -> s.id,
                             (Song s) -> s.title,
                             MusicUtil::getSongInfoString,
@@ -256,30 +257,34 @@ public class AutoMusicProvider {
     @NonNull
     private List<MediaBrowserCompat.MediaItem> getSpecificPlaylistChildren(@NonNull Resources resources, @NonNull String path) {
         List<Song> songs = null;
+        String[] pathParts = null;
         switch (path) {
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
                 songs = LastAddedLoader.getLastAddedSongs();
+                pathParts = new String[]{path};
                 break;
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY:
                 songs = TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(mContext);
+                pathParts = new String[]{path};
                 break;
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED:
                 songs = TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(mContext);
+                pathParts = new String[]{path};
                 break;
             case AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS:
                 songs = TopAndRecentlyPlayedTracksLoader.getTopTracks(mContext);
+                pathParts = new String[]{path};
                 break;
             default:
                 final String pathPrefix = AutoMediaIDHelper.extractCategory(path);
                 if (pathPrefix.equals(AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
-                    try {
-                        long playListId = Long.parseLong(AutoMediaIDHelper.extractMusicID(path));
-                        final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playListId);
-                        if (playlist != null) {
-                            songs = playlist.asSongs();
-                        }
+                    final String playlistIdStr = AutoMediaIDHelper.extractMusicID(path);
+                    final long playListId = !TextUtils.isEmpty(playlistIdStr) ? Long.parseLong(playlistIdStr) : -1;
+                    final StaticPlaylist playlist = StaticPlaylist.getPlaylist(playListId);
+                    if (playlist != null) {
+                        songs = playlist.asSongs();
                     }
-                    catch (NumberFormatException ignored) {}
+                    pathParts = new String[]{pathPrefix, playlistIdStr};
                 }
                 break;
         }
@@ -289,7 +294,7 @@ public class AutoMusicProvider {
                 mediaItems,
                 songs,
                 0,
-                AutoMediaIDHelper.extractCategory(path),
+                pathParts,
                 (Song s) -> s.id,
                 (Song s) -> s.title,
                 MusicUtil::getSongInfoString,
@@ -304,7 +309,7 @@ public class AutoMusicProvider {
             @NonNull List<MediaBrowserCompat.MediaItem> destination,
             @Nullable List<T> source,
             int startPosition,
-            String pathPrefix,
+            String[] pathParts,
             Function<T, Long> pathIdExtractor,
             Function<T, String> titleExtractor,
             Function<T, String> subTitleExtractor,
@@ -318,7 +323,7 @@ public class AutoMusicProvider {
         final List<T> truncatedSource = truncatedList(source, startPosition);
         for (T item : truncatedSource) {
             AutoMediaItem.Builder builder = AutoMediaItem.with(mContext)
-                    .path(pathPrefix, pathIdExtractor.apply(item))
+                    .path(pathParts, pathIdExtractor.apply(item))
                     .title(titleExtractor.apply(item))
                     .subTitle(subTitleExtractor.apply(item));
             if (isPlayable) {
@@ -335,7 +340,7 @@ public class AutoMusicProvider {
             destination.add(builder.build());
         }
         if (source.size() > truncatedSource.size()) {
-            destination.add(truncatedListIndicator(resources, pathPrefix));
+            destination.add(truncatedListIndicator(resources, pathParts));
         }
     }
 
@@ -352,9 +357,9 @@ public class AutoMusicProvider {
     }
 
     @NonNull
-    private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull Resources resources, @NonNull final String pathPrefix) {
+    private MediaBrowserCompat.MediaItem truncatedListIndicator(@NonNull Resources resources, @NonNull final String[] pathParts) {
         return AutoMediaItem.with(mContext)
-                .path(pathPrefix, Song.EMPTY_SONG.id)
+                .path(pathParts, Song.EMPTY_SONG.id)
                 .title(resources.getString(R.string.auto_limited_listing_title))
                 .subTitle(resources.getString(R.string.auto_limited_listing_subtitle))
                 .build();
