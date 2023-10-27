@@ -7,11 +7,12 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
+ * @author SC (soncaokim)
  */
-public class AudioFileCover {
+public class SongCover {
     public final Song song;
 
-    public AudioFileCover(@NonNull final Song song) {
+    public SongCover(@NonNull final Song song) {
         this.song = song;
     }
 
@@ -22,8 +23,8 @@ public class AudioFileCover {
 
     @Override
     public boolean equals(@Nullable Object object) {
-        if (object instanceof AudioFileCover) {
-            AudioFileCover other = (AudioFileCover) object;
+        if (object instanceof SongCover) {
+            SongCover other = (SongCover) object;
             return song.equals(other.song);
         }
         return false;

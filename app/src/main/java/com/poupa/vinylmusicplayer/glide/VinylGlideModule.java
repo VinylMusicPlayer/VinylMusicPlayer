@@ -13,8 +13,10 @@ import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
 import com.poupa.vinylmusicplayer.glide.artistimage.ArtistImage;
 import com.poupa.vinylmusicplayer.glide.artistimage.ArtistImageLoader;
-import com.poupa.vinylmusicplayer.glide.audiocover.AudioFileCover;
-import com.poupa.vinylmusicplayer.glide.audiocover.AudioFileCoverLoader;
+import com.poupa.vinylmusicplayer.glide.audiocover.FileCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.FileCoverLoader;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverLoader;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteTranscoder;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 
@@ -29,7 +31,8 @@ public class VinylGlideModule extends AppGlideModule {
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
-        registry.append(AudioFileCover.class, InputStream.class, new AudioFileCoverLoader.Factory());
+        registry.append(FileCover.class, InputStream.class, new FileCoverLoader.Factory());
+        registry.append(SongCover.class, InputStream.class, new SongCoverLoader.Factory());
         registry.append(ArtistImage.class, InputStream.class, new ArtistImageLoader.Factory(context));
         registry.register(Bitmap.class, BitmapPaletteWrapper.class, new BitmapPaletteTranscoder());
     }
