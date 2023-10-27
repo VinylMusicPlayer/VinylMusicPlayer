@@ -1,5 +1,10 @@
 package com.poupa.vinylmusicplayer.service.notification;
 
+import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_REWIND;
+import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_SKIP;
+import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_TOGGLE_PAUSE;
+import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
+
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -28,12 +33,7 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
-import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_REWIND;
-import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_SKIP;
-import static com.poupa.vinylmusicplayer.service.MusicService.ACTION_TOGGLE_PAUSE;
-import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
-
-public class PlayingNotificationImpl24 extends PlayingNotification {
+public class PlayingNotificationImplApi24 extends PlayingNotification {
 
     @Override
     public synchronized void update() {

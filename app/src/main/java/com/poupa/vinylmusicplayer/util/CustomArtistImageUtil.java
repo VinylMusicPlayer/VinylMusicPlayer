@@ -40,7 +40,7 @@ public class CustomArtistImageUtil {
     private final SharedPreferences mPreferences;
 
     private CustomArtistImageUtil(@NonNull final Context context) {
-        mPreferences = context.getApplicationContext().getSharedPreferences(CUSTOM_ARTIST_IMAGE_PREFS, Context.MODE_PRIVATE);
+        mPreferences = context.getSharedPreferences(CUSTOM_ARTIST_IMAGE_PREFS, Context.MODE_PRIVATE);
     }
 
     public static CustomArtistImageUtil getInstance(@NonNull final Context context) {

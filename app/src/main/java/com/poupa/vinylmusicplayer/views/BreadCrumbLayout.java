@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.views;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -167,7 +166,7 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
         view.setOnClickListener(this);
 
         ImageView iv = (ImageView) view.getChildAt(1);
-        if (Build.VERSION.SDK_INT >= 19 && iv.getDrawable() != null) {
+        if (iv.getDrawable() != null) {
             iv.getDrawable().setAutoMirrored(true);
         }
         iv.setVisibility(View.GONE);

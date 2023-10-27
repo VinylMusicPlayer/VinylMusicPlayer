@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RSRuntimeException;
@@ -117,27 +116,25 @@ public class BlurTransformation extends BitmapTransformation {
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(toTransform, 0, 0, paint);
 
-        if (Build.VERSION.SDK_INT >= 17) {
-            try {
-                final RenderScript rs = RenderScript.create(context.getApplicationContext());
-                final Allocation input = Allocation.createFromBitmap(rs, out, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
-                final Allocation output = Allocation.createTyped(rs, input.getType());
-                final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        try {
+            final RenderScript rs = RenderScript.create(context.getApplicationContext());
+            final Allocation input = Allocation.createFromBitmap(rs, out, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+            final Allocation output = Allocation.createTyped(rs, input.getType());
+            final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
-                script.setRadius(blurRadius);
-                script.setInput(input);
-                script.forEach(output);
+            script.setRadius(blurRadius);
+            script.setInput(input);
+            script.forEach(output);
 
-                output.copyTo(out);
+            output.copyTo(out);
 
-                rs.destroy();
+            rs.destroy();
 
-                return out;
+            return out;
 
-            } catch (RSRuntimeException e) {
-                // on some devices RenderScript.create() throws: android.support.v8.renderscript.RSRuntimeException: Error loading libRSSupport library
-                if (BuildConfig.DEBUG) e.printStackTrace();
-            }
+        } catch (RSRuntimeException e) {
+            // on some devices RenderScript.create() throws: android.support.v8.renderscript.RSRuntimeException: Error loading libRSSupport library
+            if (BuildConfig.DEBUG) e.printStackTrace();
         }
 
         return StackBlur.blur(out, blurRadius);

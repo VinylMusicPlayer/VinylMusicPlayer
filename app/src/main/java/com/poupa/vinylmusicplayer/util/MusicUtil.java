@@ -216,10 +216,10 @@ public class MusicUtil {
         return result;
     }
 
-    public static void deleteTracks(@NonNull final Fragment fragment, ActivityResultLauncher<IntentSenderRequest> deleteRequestAndroidR, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris) {
+    public static void deleteTracks(@NonNull final Fragment fragment, ActivityResultLauncher<IntentSenderRequest> deleteRequestApi30, @NonNull final List<Song> songs, @Nullable final List<Uri> safUris) {
         final int songCount = songs.size();
 
-        Activity activity = fragment.getActivity();
+        Activity activity = fragment.requireActivity();
 
         try {
             // Step 1: Remove selected tracks from the current playlist
@@ -258,7 +258,7 @@ public class MusicUtil {
                 PendingIntent editPendingIntent = MediaStore.createDeleteRequest(activity.getContentResolver(),
                         urisToDelete);
 
-                deleteRequestAndroidR.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
+                deleteRequestApi30.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
             }
         } catch (SecurityException e) { // | SendIntentException e) {
             OopsHandler.copyStackTraceToClipboard(e);

@@ -1,10 +1,10 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
@@ -289,16 +289,14 @@ public class FoldersFragment
 
     public static File getSDCardDirectory(Context context) {
         File sdFolder = null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            for (File dir : context.getExternalFilesDirs(null)) {
-                if(dir != null) {
-                    if (!dir.equals(context.getExternalFilesDir(null))) {
-                        // first directory which is not primary storage - should be sd card
-                        String path = dir.getAbsolutePath();
-                        String base_path = path.substring(0, path.indexOf("Android/data"));
-                        sdFolder = new File(base_path);
-                        break;
-                    }
+        for (File dir : context.getExternalFilesDirs(null)) {
+            if(dir != null) {
+                if (!dir.equals(context.getExternalFilesDir(null))) {
+                    // first directory which is not primary storage - should be sd card
+                    String path = dir.getAbsolutePath();
+                    String base_path = path.substring(0, path.indexOf("Android/data"));
+                    sdFolder = new File(base_path);
+                    break;
                 }
             }
         }
@@ -343,7 +341,7 @@ public class FoldersFragment
                     }
                 }
                 if (startIndex > -1) {
-                    MusicPlayerRemote.enqueueSongsWithConfirmation(getActivity(), songs, startIndex);
+                    MusicPlayerRemote.enqueueSongsWithConfirmation(requireActivity(), songs, startIndex);
                 } else {
                     Snackbar.make(layoutBinding.coordinatorLayout,
                                     Html.fromHtml(String.format(getString(R.string.not_listed_in_media_store), canonicalFile.getName())),
@@ -471,11 +469,18 @@ public class FoldersFragment
     }
 
     private void scanPaths(@Nullable final String[] toBeScanned) {
-        if (getActivity() == null) {return;}
+        final Activity activity = getActivity();
+        if (activity == null) {return;}
+
         if (toBeScanned == null || toBeScanned.length < 1) {
-            Toast.makeText(getActivity(), R.string.nothing_to_scan, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.nothing_to_scan, Toast.LENGTH_SHORT).show();
         } else {
-            MediaScannerConnection.scanFile(getActivity().getApplicationContext(), toBeScanned, null, new UpdateToastMediaScannerCompletionListener(getActivity(), toBeScanned));
+            MediaScannerConnection.scanFile(
+                    activity,
+                    toBeScanned,
+                    null,
+                    new UpdateToastMediaScannerCompletionListener(activity, toBeScanned)
+            );
         }
     }
 

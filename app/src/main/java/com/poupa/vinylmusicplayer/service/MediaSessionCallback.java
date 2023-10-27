@@ -5,7 +5,6 @@ import static com.poupa.vinylmusicplayer.service.MusicService.TAG;
 import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_FAVORITE;
 import static com.poupa.vinylmusicplayer.service.MusicService.TOGGLE_SHUFFLE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,12 +30,9 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import java.util.ArrayList;
 
 public final class MediaSessionCallback extends MediaSessionCompat.Callback {
-
-    private final Context context;
     private final MusicService musicService;
 
-    MediaSessionCallback(MusicService musicService, Context context) {
-        this.context = context;
+    MediaSessionCallback(MusicService musicService) {
         this.musicService = musicService;
     }
 
@@ -65,11 +61,11 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
             } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED)) {
                 songs.addAll(LastAddedLoader.getLastAddedSongs());
             } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY)) {
-                songs.addAll(TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(context));
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getRecentlyPlayedTracks(musicService));
             } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_NOT_RECENTLY_PLAYED)) {
-                songs.addAll(TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(context));
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getNotRecentlyPlayedTracks(musicService));
             } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS)) {
-                songs.addAll(TopAndRecentlyPlayedTracksLoader.getTopTracks(context));
+                songs.addAll(TopAndRecentlyPlayedTracksLoader.getTopTracks(musicService));
             } else if (category.startsWith(BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST)) {
                 final String playlistIdStr = BrowsableMediaIDHelper.extractSubCategoryFromCategory(category);
                 final long playlistId = !TextUtils.isEmpty(playlistIdStr) ? Long.parseLong(playlistIdStr) : -1;
@@ -158,7 +154,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-        return MediaButtonIntentReceiver.handleIntent(context, mediaButtonEvent);
+        return MediaButtonIntentReceiver.handleIntent(musicService, mediaButtonEvent);
     }
 
     @Override
@@ -175,7 +171,7 @@ public final class MediaSessionCallback extends MediaSessionCompat.Callback {
                 break;
 
             case TOGGLE_FAVORITE:
-                MusicUtil.toggleFavorite(context, musicService.getCurrentSong());
+                MusicUtil.toggleFavorite(musicService, musicService.getCurrentSong());
                 musicService.updateMediaSessionPlaybackState();
                 break;
 
