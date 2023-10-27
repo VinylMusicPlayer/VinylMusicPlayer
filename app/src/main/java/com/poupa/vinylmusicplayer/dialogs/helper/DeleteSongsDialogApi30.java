@@ -36,7 +36,7 @@ import java.util.List;
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
 @RequiresApi(api = VERSION_CODES.R)
-public class DeleteSongsDialogAndroidR extends Fragment {
+public class DeleteSongsDialogApi30 extends Fragment {
     private static final String SONGS = "songs";
 
     private BaseDeleteSongsAsyncTask deleteSongsTask;
@@ -44,18 +44,18 @@ public class DeleteSongsDialogAndroidR extends Fragment {
     private ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
     private ActivityResultLauncher<Uri> deleteSongs_SAFTreePicker;
 
-    private ActivityResultLauncher<IntentSenderRequest> deleteRequestAndroidR;
+    private ActivityResultLauncher<IntentSenderRequest> deleteRequestApi30;
 
     @NonNull
-    public static DeleteSongsDialogAndroidR create(Song song) {
+    public static DeleteSongsDialogApi30 create(Song song) {
         ArrayList<Song> list = new ArrayList<>();
         list.add(song);
         return create(list);
     }
 
     @NonNull
-    public static DeleteSongsDialogAndroidR create(ArrayList<Song> songs) {
-        DeleteSongsDialogAndroidR dialog = new DeleteSongsDialogAndroidR();
+    public static DeleteSongsDialogApi30 create(ArrayList<Song> songs) {
+        DeleteSongsDialogApi30 dialog = new DeleteSongsDialogApi30();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
@@ -97,11 +97,11 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                     if (deleteSongsTask != null) {
                         deleteSongsTask.cancel(true);
                     }
-                    deleteSongsTask = new DeleteSongsAndroidRAsyncTask(this);
-                    ((DeleteSongsAndroidRAsyncTask)deleteSongsTask).execute(resultUri);
+                    deleteSongsTask = new AsyncTaskApi30(this);
+                    ((AsyncTaskApi30)deleteSongsTask).execute(resultUri);
                 });
 
-        deleteRequestAndroidR = registerForActivityResult(
+        deleteRequestApi30 = registerForActivityResult(
                 new ActivityResultContracts.StartIntentSenderForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -112,22 +112,22 @@ public class DeleteSongsDialogAndroidR extends Fragment {
                     }
                 });
 
-        songsToRemove = getArguments().getParcelableArrayList(SONGS);
+        songsToRemove = requireArguments().getParcelableArrayList(SONGS);
 
         deleteSongsTask = new DeleteSongsAsyncTask(this);
         ((DeleteSongsAsyncTask)deleteSongsTask).execute(songsToRemove);
     }
 
     private void deleteSongs(List<Song> songsToRemove) {
-        MusicUtil.deleteTracks(DeleteSongsDialogAndroidR.this, this.deleteRequestAndroidR, songsToRemove, null);
+        MusicUtil.deleteTracks(DeleteSongsDialogApi30.this, this.deleteRequestApi30, songsToRemove, null);
     }
 
     public static abstract class BaseDeleteSongsAsyncTask<Params> extends
             WeakContextAsyncTask<Params, Integer, Void> {
-        protected final WeakReference<DeleteSongsDialogAndroidR> fragment;
+        protected final WeakReference<DeleteSongsDialogApi30> fragment;
         protected final WeakReference<FragmentActivity> activity;
 
-        public BaseDeleteSongsAsyncTask(DeleteSongsDialogAndroidR fragment) {
+        public BaseDeleteSongsAsyncTask(DeleteSongsDialogApi30 fragment) {
             super(fragment.getActivity());
             this.fragment = new WeakReference<>(fragment);
             this.activity = new WeakReference<>(fragment.getActivity());
@@ -136,14 +136,14 @@ public class DeleteSongsDialogAndroidR extends Fragment {
 
     private static class DeleteSongsAsyncTask
             extends BaseDeleteSongsAsyncTask<List<Song>> {
-        public DeleteSongsAsyncTask(DeleteSongsDialogAndroidR fragment) {
+        public DeleteSongsAsyncTask(DeleteSongsDialogApi30 fragment) {
             super(fragment);
         }
 
         @SafeVarargs
         @Override
         protected final Void doInBackground(List<Song>... lists) {
-            DeleteSongsDialogAndroidR fragment = this.fragment.get();
+            DeleteSongsDialogApi30 fragment = this.fragment.get();
             FragmentActivity activity = this.activity.get();
 
             try {
@@ -167,17 +167,17 @@ public class DeleteSongsDialogAndroidR extends Fragment {
         }
     }
 
-    private static class DeleteSongsAndroidRAsyncTask
+    private static class AsyncTaskApi30
             extends BaseDeleteSongsAsyncTask<Uri> {
 
-        public DeleteSongsAndroidRAsyncTask(DeleteSongsDialogAndroidR dialog) {
+        public AsyncTaskApi30(DeleteSongsDialogApi30 dialog) {
             super(dialog);
         }
 
         @Override
         protected Void doInBackground(Uri... uris) {
             try {
-                DeleteSongsDialogAndroidR fragment = this.fragment.get();
+                DeleteSongsDialogApi30 fragment = this.fragment.get();
                 FragmentActivity activity = this.activity.get();
 
                 if (fragment == null || activity == null) {return null;}

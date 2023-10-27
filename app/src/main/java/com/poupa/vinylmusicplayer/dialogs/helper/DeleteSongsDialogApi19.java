@@ -33,27 +33,27 @@ import java.util.List;
 /**
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
  */
-public class DeleteSongsDialogKitKat extends DialogFragment {
+public class DeleteSongsDialogApi19 extends DialogFragment {
     private static final String SONGS = "songs";
 
     private BaseDeleteSongsAsyncTask deleteSongsTask;
     private ArrayList<Song> songsToRemove;
     private Song currentSong;
 
-    private ActivityResultLauncher<String> deleteSongsKitkat_SAFFilePicker;
+    private ActivityResultLauncher<String> deleteSongsApi19_SAFFilePicker;
     private ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
     private ActivityResultLauncher<Uri> deleteSongs_SAFTreePicker;
 
     @NonNull
-    public static DeleteSongsDialogKitKat create(Song song) {
+    public static DeleteSongsDialogApi19 create(Song song) {
         ArrayList<Song> list = new ArrayList<>();
         list.add(song);
         return create(list);
     }
 
     @NonNull
-    public static DeleteSongsDialogKitKat create(ArrayList<Song> songs) {
-        DeleteSongsDialogKitKat dialog = new DeleteSongsDialogKitKat();
+    public static DeleteSongsDialogApi19 create(ArrayList<Song> songs) {
+        DeleteSongsDialogApi19 dialog = new DeleteSongsDialogApi19();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SONGS, songs);
         dialog.setArguments(args);
@@ -85,11 +85,11 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
                     if (deleteSongsTask != null) {
                         deleteSongsTask.cancel(true);
                     }
-                    deleteSongsTask = new DeleteSongsLollipopAsyncTask(this);
-                    ((DeleteSongsLollipopAsyncTask)deleteSongsTask).execute(resultUri);
+                    deleteSongsTask = new AsyncTaskApi21(this);
+                    ((AsyncTaskApi21)deleteSongsTask).execute(resultUri);
                 });
 
-        deleteSongsKitkat_SAFFilePicker = registerForActivityResult(
+        deleteSongsApi19_SAFFilePicker = registerForActivityResult(
                 new ActivityResultContracts.CreateDocument("audio/*") {
                     @NonNull
                     @Override
@@ -103,8 +103,8 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
                     if (deleteSongsTask != null) {
                         deleteSongsTask.cancel(true);
                     }
-                    deleteSongsTask = new DeleteSongsKitkatAsyncTask(this);
-                    ((DeleteSongsKitkatAsyncTask)deleteSongsTask).execute(resultUri);
+                    deleteSongsTask = new AsyncTaskApi19(this);
+                    ((AsyncTaskApi19)deleteSongsTask).execute(resultUri);
                 });
     }
 
@@ -134,7 +134,7 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
 
                     // Now remove the track in background
                     songsToRemove = songs;
-                    deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialogKitKat.this);
+                    deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialogApi19.this);
                     ((DeleteSongsAsyncTask)deleteSongsTask).execute(songs);
                 })
                 .onNegative((materialDialog, dialogAction) -> dismiss())
@@ -142,10 +142,10 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
     }
 
     private void deleteSongs(List<Song> songs, List<Uri> safUris) {
-        MusicUtil.deleteTracks(DeleteSongsDialogKitKat.this, null, songs, safUris);
+        MusicUtil.deleteTracks(DeleteSongsDialogApi19.this, null, songs, safUris);
     }
 
-    private void deleteSongsKitkat() {
+    private void deleteSongsApi19() {
         if (songsToRemove.size() < 1) {
             dismiss();
             return;
@@ -155,21 +155,21 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
 
         if (!SAFUtil.isSAFRequired(currentSong)) {
             deleteSongs(Collections.singletonList(currentSong), null);
-            deleteSongsKitkat();
+            deleteSongsApi19();
         } else {
             final String message = getString(R.string.saf_pick_file, currentSong.data);
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-            deleteSongsKitkat_SAFFilePicker.launch(message);
+            deleteSongsApi19_SAFFilePicker.launch(message);
         }
     }
 
     private static abstract class BaseDeleteSongsAsyncTask<Params>
             extends DialogAsyncTask<Params, Integer, Void>
     {
-        protected final WeakReference<DeleteSongsDialogKitKat> dialog;
+        protected final WeakReference<DeleteSongsDialogApi19> dialog;
         protected final WeakReference<FragmentActivity> activity;
 
-        public BaseDeleteSongsAsyncTask(DeleteSongsDialogKitKat dialog) {
+        public BaseDeleteSongsAsyncTask(DeleteSongsDialogApi19 dialog) {
             super(dialog.getActivity());
             this.dialog = new WeakReference<>(dialog);
             this.activity = new WeakReference<>(dialog.getActivity());
@@ -187,7 +187,7 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
 
     private static class DeleteSongsAsyncTask
             extends BaseDeleteSongsAsyncTask<List<Song>> {
-        public DeleteSongsAsyncTask(DeleteSongsDialogKitKat dialog) {
+        public DeleteSongsAsyncTask(DeleteSongsDialogApi19 dialog) {
             super(dialog);
         }
 
@@ -195,7 +195,7 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
         @Override
         protected final Void doInBackground(List<Song>... lists) {
             try {
-                DeleteSongsDialogKitKat dialog = this.dialog.get();
+                DeleteSongsDialogApi19 dialog = this.dialog.get();
                 FragmentActivity activity = this.activity.get();
 
                 if (dialog == null || activity == null) {return null;}
@@ -211,7 +211,7 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
                             dialog.deleteSongs_SAFGuide.launch(new Intent(activity, SAFGuideActivity.class));
                         }
                     } else {
-                        dialog.deleteSongsKitkat();
+                        dialog.deleteSongsApi19();
                     }
                 }
             } catch (Exception e) {
@@ -222,17 +222,17 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
         }
     }
 
-    private static class DeleteSongsKitkatAsyncTask
+    private static class AsyncTaskApi19
             extends BaseDeleteSongsAsyncTask<Uri> {
 
-        public DeleteSongsKitkatAsyncTask(DeleteSongsDialogKitKat dialog) {
+        public AsyncTaskApi19(DeleteSongsDialogApi19 dialog) {
             super(dialog);
         }
 
         @Override
         protected Void doInBackground(Uri... uris) {
             try {
-                DeleteSongsDialogKitKat dialog = this.dialog.get();
+                DeleteSongsDialogApi19 dialog = this.dialog.get();
                 if (dialog != null) {
                     dialog.deleteSongs(List.of(dialog.currentSong), List.of(uris[0]));
                 }
@@ -244,17 +244,17 @@ public class DeleteSongsDialogKitKat extends DialogFragment {
         }
     }
 
-    private static class DeleteSongsLollipopAsyncTask
+    private static class AsyncTaskApi21
             extends BaseDeleteSongsAsyncTask<Uri> {
 
-        public DeleteSongsLollipopAsyncTask(DeleteSongsDialogKitKat dialog) {
+        public AsyncTaskApi21(DeleteSongsDialogApi19 dialog) {
             super(dialog);
         }
 
         @Override
         protected Void doInBackground(Uri... uris) {
             try {
-                DeleteSongsDialogKitKat dialog = this.dialog.get();
+                DeleteSongsDialogApi19 dialog = this.dialog.get();
                 FragmentActivity activity = this.activity.get();
 
                 if (dialog == null || activity == null) {return null;}

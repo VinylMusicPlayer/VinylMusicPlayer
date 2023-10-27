@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -74,10 +75,11 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final Activity activity = requireActivity();
         if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_AUDIO)
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
-                return new MaterialDialog.Builder(getActivity())
+                return new MaterialDialog.Builder(activity)
                         .title(R.string.md_error_label)
                         .content(R.string.android13_storage_perm_error)
                         .positiveText(android.R.string.ok)
@@ -85,9 +87,10 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
             }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ActivityCompat.checkSelfPermission(
-                getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-                return new MaterialDialog.Builder(getActivity())
+                activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+                return new MaterialDialog.Builder(activity)
                         .title(R.string.md_error_label)
                         .content(R.string.md_storage_perm_error)
                         .positiveText(android.R.string.ok)
@@ -103,7 +106,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
         checkIfCanGoUp();
         parentContents = listFiles();
         MaterialDialog.Builder builder =
-                new MaterialDialog.Builder(getActivity())
+                new MaterialDialog.Builder(activity)
                         .title(parentFolder.getAbsolutePath())
                         .items(getContentsArray())
                         .itemsCallback(this)

@@ -11,6 +11,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.kabouzeid.appthemehelper.util.TintHelper;
@@ -84,8 +85,8 @@ public class ImageUtil {
     }
 
     public static Drawable getVectorDrawable(@NonNull Resources res, @DrawableRes int resId, @Nullable Resources.Theme theme) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return res.getDrawable(resId, theme);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return ResourcesCompat.getDrawable(res, resId, theme);
         }
         return VectorDrawableCompat.create(res, resId, theme);
     }

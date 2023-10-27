@@ -222,7 +222,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         } else if (Build.VERSION.SDK_INT < VERSION_CODES.TIRAMISU) { // API less than 33
             return new String[] { Manifest.permission.READ_EXTERNAL_STORAGE };
         } else {
-            // TODO: only audio is really necessary for the app to work, images is only useful for cover, should try with it has an option
+            // Audio is really necessary for the app to work, images is only useful for cover
             return new String[] { Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_IMAGES };
         }
     }
