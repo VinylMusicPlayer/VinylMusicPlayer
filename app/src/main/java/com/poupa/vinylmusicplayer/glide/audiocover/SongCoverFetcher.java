@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Priority;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
 import org.jaudiotagger.tag.images.Artwork;
@@ -38,6 +39,7 @@ public class SongCoverFetcher extends AbsCoverFetcher {
                 else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
             }
         } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(e);
             callback.onLoadFailed(e);
         }
     }

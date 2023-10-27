@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.glide.audiocover;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -37,6 +38,7 @@ public class FileCoverFetcher extends AbsCoverFetcher {
                 else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
             }
         } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(e);
             callback.onLoadFailed(e);
         }
     }
