@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.lang.ref.WeakReference;
 
@@ -22,7 +22,6 @@ public class UpdateToastMediaScannerCompletionListener implements MediaScannerCo
     private final String scannedFiles;
     private final String couldNotScanFiles;
 
-    private final Toast toast;
     private final WeakReference<Activity> activityWeakReference;
 
     @SuppressLint("ShowToast")
@@ -30,7 +29,6 @@ public class UpdateToastMediaScannerCompletionListener implements MediaScannerCo
         this.toBeScanned = toBeScanned;
         scannedFiles = activity.getString(R.string.scanned_files);
         couldNotScanFiles = activity.getString(R.string.could_not_scan_files);
-        toast = Toast.makeText(activity.getApplicationContext(), "", Toast.LENGTH_SHORT);
         activityWeakReference = new WeakReference<>(activity);
     }
 
@@ -46,8 +44,7 @@ public class UpdateToastMediaScannerCompletionListener implements MediaScannerCo
         if ((activity != null) && (failed + scanned == toBeScanned.length)){
             activity.runOnUiThread(() -> {
                 String text = " " + String.format(scannedFiles, scanned, toBeScanned.length) + (failed > 0 ? " " + String.format(couldNotScanFiles, failed) : "");
-                toast.setText(text);
-                toast.show();
+                SafeToast.show(activity, text);
             });
         }
     }

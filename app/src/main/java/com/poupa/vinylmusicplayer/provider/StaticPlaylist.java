@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +13,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,7 +75,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
                 final String message = !skippedNames.isEmpty()
                     ? context.getResources().getString(R.string.imported_x_skipped_x_playlists, nowMigratedNames.size(), skippedNames.size())
                     : context.getResources().getString(R.string.imported_x_playlists, nowMigratedNames.size());
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                SafeToast.show(context, message);
             });
         }
 

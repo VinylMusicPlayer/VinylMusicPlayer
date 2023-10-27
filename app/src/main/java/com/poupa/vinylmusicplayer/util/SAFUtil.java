@@ -13,7 +13,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -234,7 +233,7 @@ public class SAFUtil {
 
     private static void toast(final Context context, final String message) {
         if (context instanceof Activity) {
-            ((Activity) context).runOnUiThread(() -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show());
+            SafeToast.show(context, message);
         }
     }
 }

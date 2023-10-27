@@ -10,7 +10,6 @@ import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -65,7 +64,7 @@ public class RingtoneManager {
                     cursor.moveToFirst();
                     Settings.System.putString(resolver, Settings.System.RINGTONE, uri.toString());
                     final String message = context.getString(R.string.x_has_been_set_as_ringtone, cursor.getString(0));
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    SafeToast.show(context, message);
                 }
             }
         } catch (SecurityException ignored) {

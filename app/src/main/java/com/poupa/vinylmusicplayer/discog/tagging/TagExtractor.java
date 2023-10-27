@@ -1,7 +1,6 @@
 package com.poupa.vinylmusicplayer.discog.tagging;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +10,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.mp3.MP3File;
@@ -60,7 +60,7 @@ public class TagExtractor {
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)){
             if (audio == null) {
                 // Cannot get the audio content
-                Toast.makeText(context, context.getString(R.string.saf_read_failed, song.data), Toast.LENGTH_LONG).show();
+                SafeToast.show(context, context.getString(R.string.saf_read_failed, song.data));
                 return;
             }
             // Override with metadata extracted from the file ourselves

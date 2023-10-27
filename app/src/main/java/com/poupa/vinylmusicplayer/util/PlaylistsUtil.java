@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -46,17 +45,9 @@ public class PlaylistsUtil {
         if (id != -1) {
             notifyChange(context);
 
-            Toast.makeText(
-                    context,
-                    context.getResources().getString(R.string.created_playlist_x, name),
-                    Toast.LENGTH_SHORT
-            ).show();
+            SafeToast.show(context, context.getResources().getString(R.string.created_playlist_x, name));
         } else {
-            Toast.makeText(
-                    context,
-                    context.getResources().getString(R.string.could_not_create_playlist),
-                    Toast.LENGTH_SHORT
-            ).show();
+            SafeToast.show(context, context.getResources().getString(R.string.could_not_create_playlist));
         }
         return id;
     }
@@ -90,14 +81,13 @@ public class PlaylistsUtil {
         notifyChange(context);
 
         if (showToastOnFinish) {
-            Toast.makeText(
+            SafeToast.show(
                     context,
                     context.getResources().getString(
                             R.string.inserted_x_songs_into_playlist_x,
                             songs.size(),
-                            list.getName()),
-                    Toast.LENGTH_SHORT
-            ).show();
+                            list.getName())
+            );
         }
     }
 

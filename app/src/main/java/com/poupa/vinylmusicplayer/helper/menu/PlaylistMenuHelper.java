@@ -2,7 +2,6 @@ package com.poupa.vinylmusicplayer.helper.menu;
 
 import android.content.Context;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.IOException;
 
@@ -76,7 +76,7 @@ public class PlaylistMenuHelper {
             super.onPostExecute(string);
             Context context = getContext();
             if (context != null) {
-                Toast.makeText(context, string, Toast.LENGTH_LONG).show();
+                SafeToast.show(context, string);
             }
         }
     }

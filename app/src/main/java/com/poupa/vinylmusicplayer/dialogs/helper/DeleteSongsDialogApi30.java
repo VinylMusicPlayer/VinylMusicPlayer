@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
@@ -27,6 +26,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class DeleteSongsDialogApi30 extends Fragment {
                         try {
                             deleteSongs_SAFTreePicker.launch(Uri.parse(PreferenceUtil.getInstance().getStartDirectory().getAbsolutePath()));
                         } catch (android.content.ActivityNotFoundException noActivity) {
-                            Toast.makeText(getActivity(), R.string.android13_no_file_browser_error, Toast.LENGTH_LONG).show();
+                            SafeToast.show(getActivity(), R.string.android13_no_file_browser_error);
                         }
                     }
                 });
@@ -106,9 +106,9 @@ public class DeleteSongsDialogApi30 extends Fragment {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         DeleteSongsHelper.managePlayingSong(songsToRemove);
-                        Toast.makeText(getActivity(), getString(R.string.deleted_x_songs, songsToRemove.size()), Toast.LENGTH_SHORT).show();
+                        SafeToast.show(getActivity(), getString(R.string.deleted_x_songs, songsToRemove.size()));
                     } else {
-                        Toast.makeText(getActivity(), getString(R.string.saf_delete_failed, Integer.toString(songsToRemove.size())), Toast.LENGTH_SHORT).show();
+                        SafeToast.show(getActivity(), getString(R.string.saf_delete_failed, Integer.toString(songsToRemove.size())));
                     }
                 });
 

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +23,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -158,7 +158,7 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
             deleteSongsApi19();
         } else {
             final String message = getString(R.string.saf_pick_file, currentSong.data);
-            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            SafeToast.show(getActivity(), message);
             deleteSongsApi19_SAFFilePicker.launch(message);
         }
     }
