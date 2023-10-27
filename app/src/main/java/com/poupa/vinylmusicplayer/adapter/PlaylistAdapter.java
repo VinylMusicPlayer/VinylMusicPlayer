@@ -162,7 +162,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     i--;
                 }
             }
-            if (selection.size() > 0) {
+            if (!selection.isEmpty()) {
                 DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
             }
         } else if (R.id.action_save_playlist == menuItem.getItemId()) {
