@@ -254,14 +254,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void setupMediaSession() {
-        ComponentName mediaButtonReceiverComponentName = new ComponentName(getApplicationContext(), MediaButtonIntentReceiver.class);
+        ComponentName mediaButtonReceiverComponentName = new ComponentName(this, MediaButtonIntentReceiver.class);
 
         Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
         mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
 
-        PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(getApplicationContext(), 0, mediaButtonIntent, 0);
+        PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent, 0);
 
-        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this, getApplicationContext());
+        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this);
         mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
         mediaSession.setCallback(mMediaSessionCallback);
         mediaSession.setActive(true);
@@ -293,14 +293,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
                         int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, playingQueue.getShuffleMode());
                         if (playlist != null) {
-                            ArrayList<Song> playlistSongs = playlist.getSongs(getApplicationContext());
+                            ArrayList<Song> playlistSongs = playlist.getSongs(this);
                             if (!playlistSongs.isEmpty()) {
                                 openQueue(playlistSongs, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
                         }
                         break;
                     case ACTION_REWIND:
@@ -310,7 +310,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         playNextSong(true);
                         break;
                     case TOGGLE_FAVORITE:
-                        MusicUtil.toggleFavorite(getApplicationContext(), getCurrentSong());
+                        MusicUtil.toggleFavorite(this, getCurrentSong());
                         break;
                     case ACTION_STOP:
                     case ACTION_QUIT:
@@ -395,8 +395,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public synchronized void restoreQueuesAndPositionIfNecessary() {
         if (!queuesRestored && playingQueue.size()==0) {
             try {
-                ArrayList<IndexedSong> restoredQueue = MusicPlaybackQueueStore.getInstance(this).getSavedPlayingQueue();
-                ArrayList<IndexedSong> restoredOriginalQueue = MusicPlaybackQueueStore.getInstance(this).getSavedOriginalPlayingQueue();
+                final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
+                ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
+                ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
                 int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
                 int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
@@ -584,7 +585,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
                 .build());
 
-        final int favoriteIcon = MusicUtil.isFavorite(getApplicationContext(), getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
+        final int favoriteIcon = MusicUtil.isFavorite(this, getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
         stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
                 TOGGLE_FAVORITE, getString(R.string.action_toggle_favorite), favoriteIcon)
                 .build());

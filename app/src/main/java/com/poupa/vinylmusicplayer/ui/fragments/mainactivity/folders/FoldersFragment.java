@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -468,11 +469,18 @@ public class FoldersFragment
     }
 
     private void scanPaths(@Nullable final String[] toBeScanned) {
-        if (getActivity() == null) {return;}
+        final Activity activity = getActivity();
+        if (activity == null) {return;}
+
         if (toBeScanned == null || toBeScanned.length < 1) {
-            Toast.makeText(getActivity(), R.string.nothing_to_scan, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.nothing_to_scan, Toast.LENGTH_SHORT).show();
         } else {
-            MediaScannerConnection.scanFile(getActivity().getApplicationContext(), toBeScanned, null, new UpdateToastMediaScannerCompletionListener(getActivity(), toBeScanned));
+            MediaScannerConnection.scanFile(
+                    activity,
+                    toBeScanned,
+                    null,
+                    new UpdateToastMediaScannerCompletionListener(activity, toBeScanned)
+            );
         }
     }
 
