@@ -43,6 +43,7 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);
             if (cover.exists()) {
+                // TODO FileNotFoundException: open failed EACCESS(PermissionDenied)
                 return stream = new FileInputStream(cover);
             }
         }

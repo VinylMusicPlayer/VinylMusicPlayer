@@ -128,10 +128,13 @@ SAFUtil {
         // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
         try {
+            // TODO Probably will face a permission error here on Android 13
+            //      (app cannot access to arbitrary file)
+            //      Might need to use the ACTION_OPEN_DOCUMENT/ACTION_OPEN_DOCUMENTTREE workflow here
             return AudioFileIO.read(file);
-        } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
-            // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
-            return null;
+//        } catch (org.jaudiotagger.audio.exceptions.CannotReadException ignored) {
+//            // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
+//            return null;
         } catch (Exception e) {
             OopsHandler.collectStackTrace(e);
             return null;
@@ -158,6 +161,8 @@ SAFUtil {
 
         final Uri uri = getUriFromSong(song);
         AutoDeleteTempFile tempFile = null;
+        // On Android 13, instead of asking access directly to the file (i.e. song.data)
+        // go through the ContentResolver path to avoid the permission error
         try (InputStream original = context.getContentResolver().openInputStream(uri)) {
             // Create an app-private temp file
             Function<String, String> getSuffix = (name) -> {
