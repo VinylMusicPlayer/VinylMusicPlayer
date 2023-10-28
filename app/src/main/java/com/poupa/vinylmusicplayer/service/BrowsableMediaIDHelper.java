@@ -23,11 +23,11 @@ public class BrowsableMediaIDHelper {
 
     /**
      * Create a String value that represents a playable or a browsable media.
-     * <p/>
-     * Encode the media browseable categories, if any, and the unique music ID, if any,
+     *
+     * Encode the media browsable categories, if any, and the unique music ID, if any,
      * into a single String mediaID.
-     * <p/>
-     * MediaIDs are of the form <categoryType>__/__<categoryValue>__|__<musicUniqueId>, to make it
+     *
+     * MediaIDs are of the form {categoryType}__/__{categoryValue}__|__{musicUniqueId}, to make it
      * easy to find the category (like genre) that a music was selected from, so we
      * can correctly build the playing queue. This is specially useful when
      * one music can appear in more than one list, like "by genre -> genre_1"

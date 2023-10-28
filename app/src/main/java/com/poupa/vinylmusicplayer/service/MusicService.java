@@ -29,7 +29,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,6 +64,7 @@ import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.ArrayList;
@@ -297,10 +297,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                             if (!playlistSongs.isEmpty()) {
                                 openQueue(playlistSongs, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
                             } else {
-                                Toast.makeText(this, R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
+                                SafeToast.show(this, R.string.playlist_is_empty);
                             }
                         } else {
-                            Toast.makeText(this, R.string.playlist_is_empty, Toast.LENGTH_LONG).show();
+                            SafeToast.show(this, R.string.playlist_is_empty);
                         }
                         break;
                     case ACTION_REWIND:
@@ -416,7 +416,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             } catch (ArrayIndexOutOfBoundsException|IllegalArgumentException queueCopiesOutOfSync) {
                 // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
                 Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
-                Toast.makeText(this, R.string.failed_restore_playing_queue, Toast.LENGTH_LONG).show();
+                SafeToast.show(this, R.string.failed_restore_playing_queue);
 
                 final int shuffleMode = playingQueue.getShuffleMode();
                 playingQueue = new StaticPlayingQueue();
@@ -845,7 +845,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (openTrackAndPrepareNextAt(position)) {
             play();
         } else {
-            Toast.makeText(this, getResources().getString(R.string.unplayable_file), Toast.LENGTH_SHORT).show();
+            SafeToast.show(this, getResources().getString(R.string.unplayable_file));
         }
     }
 
@@ -883,7 +883,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     }
                 }
             } else {
-                Toast.makeText(this, getResources().getString(R.string.audio_focus_denied), Toast.LENGTH_SHORT).show();
+                SafeToast.show(this, getResources().getString(R.string.audio_focus_denied));
             }
         }
     }

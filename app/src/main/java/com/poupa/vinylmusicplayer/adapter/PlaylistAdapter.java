@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +36,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -162,7 +162,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     i--;
                 }
             }
-            if (selection.size() > 0) {
+            if (!selection.isEmpty()) {
                 DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
             }
         } else if (R.id.action_save_playlist == menuItem.getItemId()) {
@@ -210,7 +210,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             super.onPostExecute(string);
             Context context = getContext();
             if (context != null) {
-                Toast.makeText(context, string, Toast.LENGTH_LONG).show();
+                SafeToast.show(context, string);
             }
         }
     }

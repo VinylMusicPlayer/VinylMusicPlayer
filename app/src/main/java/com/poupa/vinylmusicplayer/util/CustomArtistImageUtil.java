@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -82,7 +81,7 @@ public class CustomArtistImageUtil {
                                             .compress(Bitmap.CompressFormat.JPEG, 100, os);
                                     os.close();
                                 } catch (IOException e) {
-                                    Toast.makeText(App.getInstance(), e.toString(), Toast.LENGTH_LONG).show();
+                                    OopsHandler.copyStackTraceToClipboard(e);
                                 }
 
                                 if (succesful) {

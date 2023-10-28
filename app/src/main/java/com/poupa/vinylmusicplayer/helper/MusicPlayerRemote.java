@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +28,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -389,7 +389,7 @@ public class MusicPlayerRemote {
                 queue.add(song);
                 openQueue(queue, 0, false);
             }
-            Toast.makeText(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue), Toast.LENGTH_SHORT).show();
+            SafeToast.show(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue));
         }
     }
 
@@ -404,7 +404,7 @@ public class MusicPlayerRemote {
             final String toast = (songs.size() == 1)
                     ? musicService.getResources().getString(R.string.added_title_to_playing_queue)
                     : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
-            Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
+            SafeToast.show(musicService, toast);
         }
     }
 
@@ -418,7 +418,7 @@ public class MusicPlayerRemote {
                 queue.add(song);
                 openQueue(queue, 0, false);
             }
-            Toast.makeText(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue), Toast.LENGTH_SHORT).show();
+            SafeToast.show(musicService, musicService.getResources().getString(R.string.added_title_to_playing_queue));
         }
     }
 
@@ -431,7 +431,7 @@ public class MusicPlayerRemote {
                 openQueue(songs, 0, false);
             }
             final String toast = songs.size() == 1 ? musicService.getResources().getString(R.string.added_title_to_playing_queue) : musicService.getResources().getString(R.string.added_x_titles_to_playing_queue, songs.size());
-            Toast.makeText(musicService, toast, Toast.LENGTH_SHORT).show();
+            SafeToast.show(musicService, toast);
         }
     }
 

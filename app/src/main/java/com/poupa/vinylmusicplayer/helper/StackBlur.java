@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 
 /**
  * Blur using Java code.
- * <p/>
+ *
  * This is a compromise between Gaussian Blur and Box blur
  * It creates much better looking blurs than Box Blur, but is
  * 7x faster than my Gaussian Blur implementation.
- * <p/>
+ *
  * I called it Stack Blur because this describes best how this
  * filter works internally: it creates a kind of moving stack
  * of colors whilst scanning through the image. Thereby it
@@ -25,9 +25,9 @@ import java.util.concurrent.Executors;
  *
  * @author Enrique López Mañas <eenriquelopez@gmail.com>
  *         http://www.neo-tech.es
- *         <p/>
+ *
  *         Author of the original algorithm: Mario Klingemann <mario.quasimondo.com>
- *         <p/>
+ *
  *         Based heavily on http://vitiy.info/Code/stackblur.cpp
  *         See http://vitiy.info/stackblur-algorithm-multi-threaded-blur-for-cpp/
  * @copyright: Enrique López Mañas

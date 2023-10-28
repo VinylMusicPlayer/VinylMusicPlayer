@@ -8,7 +8,6 @@ import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 /**
  * @author Andrew Neal, Karim Abou Zeid (kabouzeid)
@@ -325,7 +325,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
         if (mp == mCurrentMediaPlayer) {
             if (context != null) {
-                Toast.makeText(context, context.getResources().getString(R.string.unplayable_file), Toast.LENGTH_SHORT).show();
+                SafeToast.show(context, context.getResources().getString(R.string.unplayable_file));
             }
             mIsInitialized = false;
             mCurrentMediaPlayer.release();
@@ -346,7 +346,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             mCurrentMediaPlayer = new MediaPlayer();
             mCurrentMediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
             if (context != null) {
-                Toast.makeText(context, context.getResources().getString(R.string.unplayable_file), Toast.LENGTH_SHORT).show();
+                SafeToast.show(context, context.getResources().getString(R.string.unplayable_file));
             }
         }
         return false;

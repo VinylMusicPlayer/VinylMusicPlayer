@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -53,6 +52,7 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -259,7 +259,7 @@ public class AlbumDetailActivity
                                 wikiDialog.setMarkdownContent(AlbumDetailActivity.this, wiki);
                             } else {
                                 wikiDialog.dismiss();
-                                Toast.makeText(AlbumDetailActivity.this, getResources().getString(R.string.wiki_unavailable), Toast.LENGTH_SHORT).show();
+                                SafeToast.show(AlbumDetailActivity.this, getResources().getString(R.string.wiki_unavailable));
                             }
                         }
                     }
@@ -318,7 +318,7 @@ public class AlbumDetailActivity
                     wikiDialog.setMarkdownContent(this, wiki);
                     wikiDialog.show();
                 } else {
-                    Toast.makeText(this, getResources().getString(R.string.wiki_unavailable), Toast.LENGTH_SHORT).show();
+                    SafeToast.show(this, getResources().getString(R.string.wiki_unavailable));
                 }
             } else {
                 wikiDialog.show();

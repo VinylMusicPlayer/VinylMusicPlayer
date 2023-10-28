@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +36,7 @@ import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import org.jaudiotagger.tag.FieldKey;
@@ -111,7 +111,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
         String albumTitleStr = albumTitle.getText().toString();
         String albumArtistNameStr = albumArtist.getText().toString();
         if (albumArtistNameStr.trim().equals("") || albumTitleStr.trim().equals("")) {
-            Toast.makeText(this, getResources().getString(R.string.album_or_artist_empty), Toast.LENGTH_SHORT).show();
+            SafeToast.show(this, getResources().getString(R.string.album_or_artist_empty));
             return;
         }
         lastFMRestClient.getApiService().getAlbumInfo(albumTitleStr, albumArtistNameStr, null).enqueue(new Callback<>() {
@@ -155,8 +155,8 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
             }
 
             private void toastLoadingFailed() {
-                Toast.makeText(AlbumTagEditorActivity.this,
-                        R.string.could_not_download_album_cover, Toast.LENGTH_SHORT).show();
+                SafeToast.show(AlbumTagEditorActivity.this,
+                        R.string.could_not_download_album_cover);
             }
         });
     }

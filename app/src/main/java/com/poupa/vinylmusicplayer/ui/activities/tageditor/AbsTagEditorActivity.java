@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
@@ -49,6 +48,7 @@ import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
 import com.poupa.vinylmusicplayer.util.AutoDeleteTempFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -175,7 +175,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             setUpViews();
                         } else {
                             showFab();
-                            Toast.makeText(this, getString(R.string.access_not_granted), Toast.LENGTH_SHORT).show();
+                            SafeToast.show(this, getString(R.string.access_not_granted));
                         }
                     });
         }
@@ -296,7 +296,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             return;
         } catch (ActivityNotFoundException ignored) {}
 
-        Toast.makeText(this, R.string.error_no_app_for_intent, Toast.LENGTH_LONG).show();
+        SafeToast.show(this, R.string.error_no_app_for_intent);
     }
 
     @Override
@@ -406,7 +406,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             writeTagsApi19();
         } else {
             final String message = getString(R.string.saf_pick_file, currentSong.data);
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            SafeToast.show(this, message);
             writeTagsApi19_SAFFilePicker.launch(message);
         }
     }

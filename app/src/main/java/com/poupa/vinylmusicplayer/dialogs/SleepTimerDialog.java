@@ -10,13 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
-import android.view.LayoutInflater;
-import android.widget.CheckBox;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -31,6 +30,7 @@ import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.triggertrap.seekarc.SeekArc;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,7 +68,7 @@ public class SleepTimerDialog extends DialogFragment {
                 .title(getActivity().getResources().getString(R.string.action_sleep_timer))
                 .positiveText(R.string.action_set)
                 .onPositive((dialog, which) -> {
-                    if (getActivity() == null) {
+                    if (activity == null) {
                         return;
                     }
 
@@ -80,27 +80,27 @@ public class SleepTimerDialog extends DialogFragment {
 
                     final long nextSleepTimerElapsedTime = SystemClock.elapsedRealtime() + minutes * 60 * 1000;
                     PreferenceUtil.getInstance().setNextSleepTimerElapsedRealtime(nextSleepTimerElapsedTime);
-                    AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                    AlarmManager am = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
                     am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, nextSleepTimerElapsedTime, pi);
 
-                    Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.sleep_timer_set, minutes), Toast.LENGTH_SHORT).show();
+                    SafeToast.show(activity, activity.getResources().getString(R.string.sleep_timer_set, minutes));
                 })
                 .onNeutral((dialog, which) -> {
-                    if (getActivity() == null) {
+                    if (activity == null) {
                         return;
                     }
                     final PendingIntent previous = makeTimerPendingIntent(PendingIntent.FLAG_NO_CREATE);
                     if (previous != null) {
-                        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+                        AlarmManager am = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
                         am.cancel(previous);
                         previous.cancel();
-                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.sleep_timer_canceled), Toast.LENGTH_SHORT).show();
+                        SafeToast.show(activity, activity.getResources().getString(R.string.sleep_timer_canceled));
                     }
 
                     MusicService musicService = MusicPlayerRemote.musicService;
                     if (musicService != null && musicService.pendingQuit) {
                         musicService.pendingQuit = false;
-                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.sleep_timer_canceled), Toast.LENGTH_SHORT).show();
+                        SafeToast.show(activity, activity.getResources().getString(R.string.sleep_timer_canceled));
                     }
                 })
                 .showListener(dialog -> {
@@ -111,7 +111,7 @@ public class SleepTimerDialog extends DialogFragment {
                 .customView(binding.getRoot(), false)
                 .build();
 
-        if (getActivity() == null || materialDialog.getCustomView() == null) {
+        if (activity == null || materialDialog.getCustomView() == null) {
             return materialDialog;
         }
 
