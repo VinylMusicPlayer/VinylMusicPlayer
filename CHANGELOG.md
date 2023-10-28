@@ -1,4 +1,18 @@
 # Changelog
+## [1.5.6] - 2023-10-28
+
+### Fixes
+* App context fixes by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/830
+* Restore cover art loading for songs in the Folder view by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/832
+* Thread safe toast by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/834
+### Other Changes
+* Fix race condition by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/824
+* Support SD card by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/825
+* Android auto fixes by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/829
+* Clean up Android API compat by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/833
+* Further fix for https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/707 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/838
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.5...1.5.6
 ## [1.5.5] - 2023-10-20
 
 ### Fixes
