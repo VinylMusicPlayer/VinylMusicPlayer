@@ -124,7 +124,9 @@ public class PlaylistsFragment
     }
 
     public void reload() {
-        LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
+        try {
+            LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
+        } catch (IllegalStateException ignored) {}
     }
 
     @Override
