@@ -46,8 +46,9 @@ import java.util.regex.Pattern;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class MusicUtil {
-    public static @Nullable Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
+public final class MusicUtil {
+    @Nullable
+    public static Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
         final Context context = App.getStaticContext();
         try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)) {
             return getMediaStoreAlbumCover(audio);
@@ -370,6 +371,7 @@ public class MusicUtil {
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
             try {
+                // TODO Probably on Android 13 fail since no access
                 File file = new File(song.data);
                 File dir = file.getAbsoluteFile().getParentFile();
 

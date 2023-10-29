@@ -1,15 +1,21 @@
 package com.poupa.vinylmusicplayer.glide.audiocover;
 
+import android.content.Context;
+import android.content.UriPermission;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
+import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -44,7 +50,19 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
             File cover = new File(parent, fallback);
             if (cover.exists()) {
                 // TODO FileNotFoundException: open failed EACCESS(PermissionDenied)
-                return stream = new FileInputStream(cover);
+                if (cover.canRead()) { // !SAFUtil.isSAFRequired(cover)) {
+                    return stream = new FileInputStream(cover);
+                } else {
+                    final Context context = App.getStaticContext();
+                    String message = String.format("No access to file=%s", cover.getPath());
+                    final List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
+                    for (final UriPermission perm : perms) {
+                        message += "<br/>allowed=";
+                        message += perm.getUri().toString();
+                    }
+
+                    SafeToast.show(context, message);
+                }
             }
         }
         return null;
