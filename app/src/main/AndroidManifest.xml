@@ -19,6 +19,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <queries>
+        <package android:name="com.android.musicfx" />
+    </queries>
+
     <!-- android:requestLegacyExternalStorage="true" is only used for android 10 (api 29)
     and lower if app is build for android 11 or up (>= 30, aka VERSION_CODES.R)
     => https://developer.android.com/training/data-storage/use-cases#opt-out-in-production-app -->
