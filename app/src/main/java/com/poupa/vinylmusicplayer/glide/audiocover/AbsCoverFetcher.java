@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,11 +56,10 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
                     String message = String.format("No access to file=%s", cover.getPath());
                     final List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
                     for (final UriPermission perm : perms) {
-                        message += "<br/>allowed=";
+                        message += "\nAllowed=";
                         message += perm.getUri().toString();
                     }
-
-                    SafeToast.show(context, message);
+                    throw new UnsupportedOperationException(message);
                 }
             }
         }
