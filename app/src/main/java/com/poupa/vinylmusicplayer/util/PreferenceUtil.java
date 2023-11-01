@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -725,12 +726,23 @@ public final class PreferenceUtil {
         return sourceMode;
     }
 
+    private float getDefaultPreamp() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            // Older android versions cannot use DynamicsProcessing, so MultiPlayer uses the volume instead.
+            // Use a default preamp that allows increasing the sound of the most quiet song in the DB.
+            // Kept in the range -6dB..0dB to ensure we don't make everything too quiet only because of 1 outlier song.
+            return Math.max(-6.0f, Math.min(-App.getDiscography().getMaxReplayGain(), 0f));
+        } else {
+            return 0.0f;
+        }
+    }
+
     public float getRgPreampWithTag() {
-        return mPreferences.getFloat(RG_PREAMP_WITH_TAG, 0.0f);
+        return mPreferences.getFloat(RG_PREAMP_WITH_TAG, getDefaultPreamp());
     }
 
     public float getRgPreampWithoutTag() {
-        return mPreferences.getFloat(RG_PREAMP_WITHOUT_TAG, 0.0f);
+        return mPreferences.getFloat(RG_PREAMP_WITHOUT_TAG, getDefaultPreamp());
     }
 
     public void setReplayGainPreamp(float with, float without) {
