@@ -952,14 +952,30 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return playingQueue.getQueueDurationMillis(position);
     }
 
-    public void seek(int millis) {
-        synchronized (this) {
-            try {
+    public synchronized void seek(int millis) {
+        try {
+            // The 'playback' object can be null during device restart/device turn on after long period (i.e morning).
+            // My assumption is:
+            // - the service gets created (playback object created), and posted a message to the PlaybackHandker thread
+            // - then destroyed (playback object nullified)
+            // - then the PlaybackHandler thread try to process the posted message, on a nullifiedobject
+            //
+            // Example of stack trace
+            // java.lang.NullPointerException: Attempt to invoke interface method 'void com.poupa.vinylmusicplayer.service.playback.Playback.seek(int)' on a null object reference
+            // at com.poupa.vinylmusicplayer.service.MusicService.seek(Unknown Source:3)
+            // at com.poupa.vinylmusicplayer.service.MusicService.restoreQueuesAndPositionIfNecessary(Unknown Source:94)
+            // at com.poupa.vinylmusicplayer.service.PlaybackHandler.handleMessage(Unknown Source:28)
+            // at android.os.Handler.dispatchMessage(Handler.java:106)
+            // at android.os.Looper.loopOnce(Looper.java:201)
+            // at android.os.Looper.loop(Looper.java:288)
+            // at android.os.HandlerThread.run(HandlerThread.java:67)
+
+            if (playback != null) {
                 playback.seek(millis);
                 throttledSeekHandler.notifySeek();
-            } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
             }
+        } catch (Exception e) {
+            OopsHandler.copyStackTraceToClipboard(e);
         }
     }
 
