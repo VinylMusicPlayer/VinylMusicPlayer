@@ -11,6 +11,7 @@ import com.poupa.vinylmusicplayer.util.SAFUtil;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.MissingResourceException;
 
@@ -29,6 +30,11 @@ public class SongCoverFetcher extends AbsCoverFetcher {
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
         try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), model.song)) {
+            if (audio == null) {
+                callback.onLoadFailed(new IOException("Cannot load audio file"));
+                return;
+            }
+
             Artwork art = audio.get().getTag().getFirstArtwork();
             if (art != null) {
                 byte[] imageData = art.getBinaryData();
