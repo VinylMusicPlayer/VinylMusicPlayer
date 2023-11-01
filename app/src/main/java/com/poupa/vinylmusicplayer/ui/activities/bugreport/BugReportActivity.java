@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -21,6 +20,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivityBugReportBinding;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.model.DeviceInfo;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 public class BugReportActivity extends AbsThemeActivity {
     private Toolbar toolbar;
@@ -92,6 +92,6 @@ public class BugReportActivity extends AbsThemeActivity {
         final ClipData clip = ClipData.newPlainText(getString(R.string.device_info), textDeviceInfo.getText());
         clipboard.setPrimaryClip(clip);
 
-        Toast.makeText(this, R.string.copied_device_info_to_clipboard, Toast.LENGTH_LONG).show();
+        SafeToast.show(this, R.string.copied_device_info_to_clipboard);
     }
 }

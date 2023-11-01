@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -52,6 +51,7 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -219,7 +219,7 @@ public class ArtistDetailActivity
                                 biographyDialog.setMarkdownContent(ArtistDetailActivity.this, biography);
                             } else {
                                 biographyDialog.dismiss();
-                                Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
+                                SafeToast.show(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable));
                             }
                         }
                     }
@@ -339,7 +339,7 @@ public class ArtistDetailActivity
                     biographyDialog.setMarkdownContent(this, biography);
                     biographyDialog.show();
                 } else {
-                    Toast.makeText(this, getResources().getString(R.string.biography_unavailable), Toast.LENGTH_SHORT).show();
+                    SafeToast.show(this, getResources().getString(R.string.biography_unavailable));
                 }
             } else { // force download
                 biographyDialog.show();
@@ -352,7 +352,7 @@ public class ArtistDetailActivity
             startActivityForResult(Intent.createChooser(intent, getString(R.string.pick_from_local_storage)), REQUEST_CODE_SELECT_IMAGE);
             return true;
         } else if (id == R.id.action_reset_artist_image) {
-            Toast.makeText(ArtistDetailActivity.this, getResources().getString(R.string.updating), Toast.LENGTH_SHORT).show();
+            SafeToast.show(ArtistDetailActivity.this, getResources().getString(R.string.updating));
             CustomArtistImageUtil.getInstance(ArtistDetailActivity.this)
                     .resetCustomArtistImage(artist, this::loadArtistImage);
             forceDownload = true;

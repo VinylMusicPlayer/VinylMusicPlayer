@@ -24,7 +24,7 @@ public abstract class AbsSmartPlaylist extends AbsCustomPlaylist {
     }
 
     public void clear(@NonNull Context context) {
-        // Nofity app of clear event, so that the smart playlists are refreshed
+        // Notify app of clear event, so that the smart playlists are refreshed
         if (isClearable()) context.sendBroadcast(new Intent(MusicService.META_CHANGED));
     }
 

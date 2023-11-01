@@ -13,7 +13,6 @@ import android.os.Build.VERSION_CODES;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
@@ -89,7 +88,7 @@ public class MusicUtil {
         } catch (IllegalArgumentException e) {
             // TODO the path is most likely not like /storage/emulated/0/... but something like /storage/28C7-75B0/...
             e.printStackTrace();
-            Toast.makeText(context, "Could not share this file, I'm aware of the issue.", Toast.LENGTH_SHORT).show();
+            SafeToast.show(context, "Could not share this file, I'm aware of the issue.");
             return new Intent();
         }
     }
@@ -267,7 +266,7 @@ public class MusicUtil {
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             activity.getContentResolver().notifyChange(Uri.parse("content://media"), null);
 
-            activity.runOnUiThread(() -> Toast.makeText(activity, activity.getString(R.string.deleted_x_songs, songCount), Toast.LENGTH_SHORT).show());
+            SafeToast.show(activity, activity.getString(R.string.deleted_x_songs, songCount));
         }
     }
 
@@ -371,7 +370,6 @@ public class MusicUtil {
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
             try {
-                // TODO This probably wont work due to restricted access on Android 13
                 File file = new File(song.data);
                 File dir = file.getAbsoluteFile().getParentFile();
 

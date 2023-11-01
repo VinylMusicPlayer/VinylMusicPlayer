@@ -11,11 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.MediaStoreSignature;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.glide.GlideApp;
+import com.poupa.vinylmusicplayer.glide.audiocover.FileCover;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.sort.FileSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
@@ -119,16 +125,15 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
             final Drawable error = ImageUtil.getTintedVectorDrawable(activity, R.drawable.ic_file_music_white_24dp, iconColor);
             holder.image.setImageDrawable(error);
 
-//            TODO Restore the file loading
-//            GlideApp.with(activity)
-//                    .load(new AudioFileCover(file.getPath()))
-//                    .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
-//                    .apply(new RequestOptions()
-//                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                            .error(error)
-//                            .placeholder(error)
-//                            .signature(new MediaStoreSignature("", file.lastModified(), 0)))
-//                    .into(holder.image);
+            GlideApp.with(activity)
+                    .load(new FileCover(file))
+                    .transition(GenericTransitionOptions.with(android.R.anim.fade_in))
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .error(error)
+                            .placeholder(error)
+                            .signature(new MediaStoreSignature("", file.lastModified(), 0)))
+                    .into(holder.image);
         }
     }
 

@@ -16,12 +16,15 @@ import com.bumptech.glide.signature.MediaStoreSignature;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.artistimage.ArtistImage;
-import com.poupa.vinylmusicplayer.glide.audiocover.AudioFileCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.FileCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ArtistSignatureUtil;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
+
+import java.io.File;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -85,7 +88,11 @@ public final class VinylGlideExtension {
     }
 
     public static Object getSongModel(@NonNull final Song song) {
-        return new AudioFileCover(song);
+        return new SongCover(song);
+    }
+
+    public static Object getSongModel(@NonNull final File file) {
+        return new FileCover(file);
     }
 
     public static <TranscodeType> GenericTransitionOptions<TranscodeType> getDefaultTransition() {

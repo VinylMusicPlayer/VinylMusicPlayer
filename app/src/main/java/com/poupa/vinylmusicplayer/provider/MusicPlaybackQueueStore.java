@@ -35,8 +35,8 @@ import java.util.ArrayList;
 
 /**
  * @author Andrew Neal, modified by Karim Abou Zeid
- *         <p/>
- *         This keeps track of the music playback and history state of the playback service
+ *
+ * This keeps track of the music playback and history state of the playback service
  */
 public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
     @Nullable

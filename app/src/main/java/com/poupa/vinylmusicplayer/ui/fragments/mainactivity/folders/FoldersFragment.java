@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -55,6 +54,7 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.views.BreadCrumbLayout;
 
@@ -402,7 +402,7 @@ public class FoldersFragment
                     return true;
                 } else if (itemId == R.id.action_set_as_start_directory) {
                     PreferenceUtil.getInstance().setStartDirectory(file);
-                    Toast.makeText(getActivity(), String.format(getString(R.string.new_start_directory), file.getPath()), Toast.LENGTH_SHORT).show();
+                    SafeToast.show(getActivity(), String.format(getString(R.string.new_start_directory), file.getPath()));
                     
                     // Rescan if whitelist enabled
                     if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
@@ -473,7 +473,7 @@ public class FoldersFragment
         if (activity == null) {return;}
 
         if (toBeScanned == null || toBeScanned.length < 1) {
-            Toast.makeText(activity, R.string.nothing_to_scan, Toast.LENGTH_SHORT).show();
+            SafeToast.show(activity, R.string.nothing_to_scan);
         } else {
             MediaScannerConnection.scanFile(
                     activity,
