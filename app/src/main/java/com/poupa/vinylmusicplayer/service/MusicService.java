@@ -962,9 +962,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         try {
             // The 'playback' object can be null during device restart/device turn on after long period (i.e morning).
             // My assumption is:
-            // - the service gets created (playback object created), and posted a message to the PlaybackHandker thread
-            // - then destroyed (playback object nullified)
-            // - then the PlaybackHandler thread try to process the posted message, on a nullifiedobject
+            // - the service gets created (playback object created), and posts a message to the PlaybackHandler thread
+            // - then the service gets destroyed (playback object nullified)
+            // - then the PlaybackHandler thread tries to process the posted message, on a nullified object
             //
             // Example of stack trace
             // java.lang.NullPointerException: Attempt to invoke interface method 'void com.poupa.vinylmusicplayer.service.playback.Playback.seek(int)' on a null object reference
