@@ -727,7 +727,7 @@ public final class PreferenceUtil {
     }
 
     private float getDefaultPreamp() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+        if (!App.DYNAMICS_PROCESSING_AVAILABLE) {
             // Older android versions cannot use DynamicsProcessing, so MultiPlayer uses the volume instead.
             // Use a default preamp that allows increasing the sound of the most quiet song in the DB.
             // Kept in the range -6dB..0dB to ensure we don't make everything too quiet only because of 1 outlier song.

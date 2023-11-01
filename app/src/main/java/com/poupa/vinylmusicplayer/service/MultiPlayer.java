@@ -8,13 +8,13 @@ import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
-import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -84,7 +84,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
                 player.setDataSource(path);
             }
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && mDynamicsProcessing == null) {
+            if (App.DYNAMICS_PROCESSING_AVAILABLE && mDynamicsProcessing == null) {
                 mDynamicsProcessing = new DynamicsProcessing(player.getAudioSessionId());
                 mDynamicsProcessing.setEnabled(true);
             }
