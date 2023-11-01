@@ -393,7 +393,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public synchronized void restoreQueuesAndPositionIfNecessary() {
-        if (!queuesRestored && playingQueue.size()==0) {
+        if (!queuesRestored && playingQueue.size() == 0) {
             try {
                 final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
                 ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
@@ -401,8 +401,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
                 int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
-                if (restoredQueue.size() > 0 && restoredQueue.size() == restoredOriginalQueue.size() && restoredPosition != -1) {
-                    playingQueue = new StaticPlayingQueue(restoredQueue, restoredOriginalQueue, restoredPosition, playingQueue.getShuffleMode(), playingQueue.getRepeatMode());
+                if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
+                    playingQueue = new StaticPlayingQueue(
+                            restoredQueue,
+                            restoredOriginalQueue,
+                            restoredPosition,
+                            playingQueue.getShuffleMode(),
+                            playingQueue.getRepeatMode()
+                    );
 
                     openCurrent();
                     prepareNext();
