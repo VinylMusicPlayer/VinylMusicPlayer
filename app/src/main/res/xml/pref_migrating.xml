@@ -1,39 +1,19 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_playlists">
+    <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_migrating">
 
         <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
             app:iconSpaceReserved="false"
             android:key="last_added_interval_v2"
             android:defaultValue="1m"
-            android:title="@string/pref_title_last_added_interval" />
+            android:title="@string/pref_title_export" />
 
         <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
             app:iconSpaceReserved="false"
             android:key="recently_played_interval_v2"
             android:defaultValue="1m"
-            android:title="@string/pref_title_recently_played_interval" />
-
-        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
-            app:iconSpaceReserved="false"
-            android:key="not_recently_played_interval_v2"
-            android:defaultValue="1m"
-            android:title="@string/pref_title_not_recently_played_interval" />
-
-        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="true"
-            android:key="maintain_top_tracks_playlist"
-            android:summary="@string/pref_summary_maintain_top_tracks_playlist"
-            android:title="@string/my_top_tracks" />
-
-        <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="false"
-            android:key="maintain_skipped_songs_playlist"
-            android:summary="@string/pref_summary_maintain_skipped_songs_playlist"
-            android:title="@string/skipped_songs" />
+            android:title="@string/pref_title_import" />
 
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>
 
