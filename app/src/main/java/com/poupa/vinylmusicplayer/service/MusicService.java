@@ -78,14 +78,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public static final String TAG = MusicService.class.getSimpleName();
 
-    public static final String VINYL_MUSIC_PLAYER_PACKAGE_NAME = "com.poupa.vinylmusicplayer";
-    public static final String MUSIC_PACKAGE_NAME = "com.android.music";
+    static final String VINYL_MUSIC_PLAYER_PACKAGE_NAME = "com.poupa.vinylmusicplayer";
+    private static final String MUSIC_PACKAGE_NAME = "com.android.music";
 
     public static final String ACTION_TOGGLE_PAUSE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglepause";
-    public static final String ACTION_PLAY = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".play";
+    static final String ACTION_PLAY = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".play";
     public static final String ACTION_PLAY_PLAYLIST = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".play.playlist";
-    public static final String ACTION_PAUSE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".pause";
-    public static final String ACTION_STOP = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".stop";
+    static final String ACTION_PAUSE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".pause";
+    static final String ACTION_STOP = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".stop";
     public static final String ACTION_SKIP = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".skip";
     public static final String ACTION_REWIND = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".rewind";
     public static final String ACTION_QUIT = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".quitservice";
@@ -107,25 +107,25 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final String SHUFFLE_MODE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".shufflemodechanged";
     public static final String MEDIA_STORE_CHANGED = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".mediastorechanged";
 
-    public static final String CYCLE_REPEAT = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".cyclerepeat";
-    public static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
+    static final String CYCLE_REPEAT = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".cyclerepeat";
+    static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
-    public static final String SAVED_POSITION = "POSITION";
-    public static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
-    public static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
-    public static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
+    private static final String SAVED_POSITION = "POSITION";
+    private static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
+    private static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
+    private static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
 
-    public static final int RELEASE_WAKELOCK = 0;
-    public static final int TRACK_ENDED = 1;
-    public static final int TRACK_WENT_TO_NEXT = 2;
-    public static final int PLAY_SONG = 3;
-    public static final int PREPARE_NEXT = 4;
-    public static final int SET_POSITION = 5;
-    public static final int FOCUS_CHANGE = 6;
-    public static final int DUCK = 7;
-    public static final int UNDUCK = 8;
-    public static final int RESTORE_QUEUES = 9;
+    static final int RELEASE_WAKELOCK = 0;
+    static final int TRACK_ENDED = 1;
+    static final int TRACK_WENT_TO_NEXT = 2;
+    static final int PLAY_SONG = 3;
+    static final int PREPARE_NEXT = 4;
+    static final int SET_POSITION = 5;
+    static final int FOCUS_CHANGE = 6;
+    static final int DUCK = 7;
+    static final int UNDUCK = 8;
+    static final int RESTORE_QUEUES = 9;
 
     public static final int RANDOM_START_POSITION_ON_SHUFFLE = StaticPlayingQueue.INVALID_POSITION;
     public static final int SHUFFLE_MODE_NONE = StaticPlayingQueue.SHUFFLE_MODE_NONE;
@@ -135,7 +135,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int REPEAT_MODE_ALL = StaticPlayingQueue.REPEAT_MODE_ALL;
     public static final int REPEAT_MODE_THIS = StaticPlayingQueue.REPEAT_MODE_THIS;
 
-    public static final int SAVE_QUEUES = 0;
+    static final int SAVE_QUEUES = 0;
     private static final int SKIP_THRESHOLD_MS = 5000;
 
     private final IBinder musicBind = new MusicBinder();
@@ -146,8 +146,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private final AppWidgetClassic appWidgetClassic = AppWidgetClassic.getInstance();
     private final AppWidgetSmall appWidgetSmall = AppWidgetSmall.getInstance();
     private final AppWidgetCard appWidgetCard = AppWidgetCard.getInstance();
-
-    private Playback playback;
 
     private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
 
@@ -161,6 +159,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
 
+    private Playback playback;
     private PlaybackHandler playbackHandler;
     private HandlerThread playbackHandlerThread;
     private final AudioManager.OnAudioFocusChangeListener audioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -204,25 +203,42 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onCreate() {
         super.onCreate();
+
         final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-        wakeLock.setReferenceCounted(false);
 
         synchronized (this) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+            wakeLock.setReferenceCounted(false);
+
             playbackHandlerThread = new HandlerThread("PlaybackHandler");
             playbackHandlerThread.start();
             playbackHandler = new PlaybackHandler(this, playbackHandlerThread.getLooper());
 
             playback = new MultiPlayer(this);
             playback.setCallbacks(this);
+
+            mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
+            throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
+
+            // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
+            queueSaveHandlerThread = new HandlerThread("QueueSaveHandler", Process.THREAD_PRIORITY_BACKGROUND);
+            queueSaveHandlerThread.start();
+            queueSaveHandler = new QueueSaveHandler(this, queueSaveHandlerThread.getLooper());
+
+            getContentResolver().registerContentObserver(
+                    MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                    true,
+                    mediaStoreObserver
+            );
+            getContentResolver().registerContentObserver(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    true,
+                    mediaStoreObserver
+            );
+            mediaStoreObserver.onChange(true);
         }
 
         setupMediaSession();
-
-        // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
-        queueSaveHandlerThread = new HandlerThread("QueueSaveHandler", Process.THREAD_PRIORITY_BACKGROUND);
-        queueSaveHandlerThread.start();
-        queueSaveHandler = new QueueSaveHandler(this, queueSaveHandlerThread.getLooper());
 
         uiThreadHandler = new Handler();
 
@@ -235,14 +251,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             updateNotification();
         }
 
-        // TODO Move this inside the same critical section as playbackHandler?
-        mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
-        throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
-        getContentResolver().registerContentObserver(
-                MediaStore.Audio.Media.INTERNAL_CONTENT_URI, true, mediaStoreObserver);
-        getContentResolver().registerContentObserver(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mediaStoreObserver);
-
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
 
         restoreState();
@@ -251,8 +259,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         mBrowsableMusicProvider = new BrowsableMusicProvider(this);
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
-
-        mediaStoreObserver.onChange(true);
     }
 
     private AudioManager getAudioManager() {
@@ -263,19 +269,21 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void setupMediaSession() {
-        ComponentName mediaButtonReceiverComponentName = new ComponentName(this, MediaButtonIntentReceiver.class);
+        synchronized (this) {
+            ComponentName mediaButtonReceiverComponentName = new ComponentName(this, MediaButtonIntentReceiver.class);
 
-        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-        mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
+            Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+            mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
 
-        PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent, 0);
+            PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent, 0);
 
-        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this);
-        mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
-        mediaSession.setCallback(mMediaSessionCallback);
-        mediaSession.setActive(true);
-        mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
-        setSessionToken(mediaSession.getSessionToken());
+            MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this);
+            mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
+            mediaSession.setCallback(mMediaSessionCallback);
+            mediaSession.setActive(true);
+            mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
+            setSessionToken(mediaSession.getSessionToken());
+        }
     }
 
     @Override
@@ -341,19 +349,25 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onDestroy() {
-        // TODO synchronized (this) {
         unregisterReceiver(widgetIntentReceiver);
         unregisterReceiver(updateFavoriteReceiver);
-        if (becomingNoisyReceiverRegistered) {
-            unregisterReceiver(becomingNoisyReceiver);
-            becomingNoisyReceiverRegistered = false;
+
+        synchronized (this) {
+            if (becomingNoisyReceiverRegistered) {
+                unregisterReceiver(becomingNoisyReceiver);
+                becomingNoisyReceiverRegistered = false;
+            }
+
+            getContentResolver().unregisterContentObserver(mediaStoreObserver);
+
+            mediaSession.setActive(false);
+
+            wakeLock.release();
         }
-        mediaSession.setActive(false);
+
         quit();
         releaseResources();
-        getContentResolver().unregisterContentObserver(mediaStoreObserver);
         PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
-        wakeLock.release();
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_DESTROYED"));
     }
@@ -368,78 +382,91 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return musicBind;
     }
 
-    public void saveQueuesImpl() {
-        MusicPlaybackQueueStore.getInstance(this).saveQueues(playingQueue.getPlayingQueue(), playingQueue.getOriginalPlayingQueue());
+    void saveQueuesImpl() {
+        synchronized (this) {
+            MusicPlaybackQueueStore.getInstance(this).saveQueues(
+                    playingQueue.getPlayingQueue(),
+                    playingQueue.getOriginalPlayingQueue()
+            );
+        }
     }
 
     private void savePosition() {
         PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(SAVED_POSITION, getPosition()).apply();
     }
 
-    public void savePositionInTrack() {
+    void savePositionInTrack() {
         PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(SAVED_POSITION_IN_TRACK, getSongProgressMillis()).apply();
     }
 
-    public void saveState() {
+    private void saveState() {
         saveQueues();
         savePosition();
         savePositionInTrack();
     }
 
     private void saveQueues() {
-        queueSaveHandler.removeMessages(SAVE_QUEUES);
-        queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
-    }
-
-    private synchronized void restoreState() {
-        playingQueue.restoreMode(
-                PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0),
-                PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0));
-        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
-        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
-
-        playbackHandler.removeMessages(RESTORE_QUEUES);
-        playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
-    }
-
-    public synchronized void restoreQueuesAndPositionIfNecessary() {
-        if (!queuesRestored && playingQueue.size() == 0) {
-            try {
-                final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
-                ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
-                ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
-                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
-                int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
-
-                if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
-                    playingQueue = new StaticPlayingQueue(
-                            restoredQueue,
-                            restoredOriginalQueue,
-                            restoredPosition,
-                            playingQueue.getShuffleMode(),
-                            playingQueue.getRepeatMode()
-                    );
-
-                    openCurrent();
-                    prepareNext();
-
-                    if (restoredPositionInTrack > 0) {seek(restoredPositionInTrack);}
-
-                    notHandledMetaChangedForCurrentTrack = true;
-                    sendChangeInternal(META_CHANGED);
-                    sendChangeInternal(QUEUE_CHANGED);
-                }
-            } catch (ArrayIndexOutOfBoundsException|IllegalArgumentException queueCopiesOutOfSync) {
-                // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
-                SafeToast.show(this, R.string.failed_restore_playing_queue);
-
-                final int shuffleMode = playingQueue.getShuffleMode();
-                playingQueue = new StaticPlayingQueue();
-                playingQueue.setShuffle(shuffleMode);
-            }
+        synchronized (this) {
+            queueSaveHandler.removeMessages(SAVE_QUEUES);
+            queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
         }
-        queuesRestored = true;
+    }
+
+    private void restoreState() {
+        synchronized (this) {
+            playingQueue.restoreMode(
+                    PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0),
+                    PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0));
+            handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+            handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+
+            playbackHandler.removeMessages(RESTORE_QUEUES);
+            playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
+        }
+    }
+
+    void restoreQueuesAndPositionIfNecessary() {
+        synchronized (this) {
+            if (!queuesRestored && playingQueue.size() == 0) {
+                try {
+                    final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
+                    ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
+                    ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
+                    int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
+                    int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+
+                    if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
+                        playingQueue = new StaticPlayingQueue(
+                                restoredQueue,
+                                restoredOriginalQueue,
+                                restoredPosition,
+                                playingQueue.getShuffleMode(),
+                                playingQueue.getRepeatMode()
+                        );
+
+                        openCurrent();
+                        prepareNext();
+
+                        if (restoredPositionInTrack > 0) {
+                            seek(restoredPositionInTrack);
+                        }
+
+                        notHandledMetaChangedForCurrentTrack = true;
+                        sendChangeInternal(META_CHANGED);
+                        sendChangeInternal(QUEUE_CHANGED);
+                    }
+                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
+                    // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
+                    Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
+                    SafeToast.show(this, R.string.failed_restore_playing_queue);
+
+                    final int shuffleMode = playingQueue.getShuffleMode();
+                    playingQueue = new StaticPlayingQueue();
+                    playingQueue.setShuffle(shuffleMode);
+                }
+            }
+            queuesRestored = true;
+        }
     }
 
     public void quit() {
@@ -454,78 +481,102 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         stopSelf();
     }
 
-    private synchronized void releaseResources() {
-        playbackHandler.removeCallbacksAndMessages(null);
-        playbackHandlerThread.quitSafely();
-        queueSaveHandler.removeCallbacksAndMessages(null);
-        queueSaveHandlerThread.quitSafely();
-        playback.release();
-        playback = null;
-        mediaSession.release();
+    private void releaseResources() {
+        synchronized (this) {
+            playbackHandler.removeCallbacksAndMessages(null);
+            playbackHandlerThread.quitSafely();
+            queueSaveHandler.removeCallbacksAndMessages(null);
+            queueSaveHandlerThread.quitSafely();
+
+            playback.release();
+            playback = null;
+
+            mediaSession.release();
+        }
     }
 
-    public synchronized boolean isPlaying() {
-        return (playback != null) && playback.isPlaying();
+    public boolean isPlaying() {
+        synchronized (this) {
+            return (playback != null) && playback.isPlaying();
+        }
     }
 
-    public synchronized boolean isPlaying(@NonNull Song song) {
-        if (!isPlaying()) {return false;}
+    public boolean isPlaying(@NonNull Song song) {
+        synchronized (this) {
+            if (!isPlaying()) {
+                return false;
+            }
 
-        return getCurrentIndexedSong().isQuickEqual(song);
+            return getCurrentIndexedSong().isQuickEqual(song);
+        }
     }
 
-    public synchronized int getPosition() {
-        return playingQueue.getCurrentPosition();
+    public int getPosition() {
+        synchronized (this) {
+            return playingQueue.getCurrentPosition();
+        }
     }
 
-    public synchronized void playNextSong(boolean skippedLast) {
-        playSongAt(playingQueue.getNextPosition(skippedLast), skippedLast);
+    public void playNextSong(boolean skippedLast) {
+        synchronized (this) {
+            playSongAt(playingQueue.getNextPosition(skippedLast), skippedLast);
+        }
     }
 
-    public synchronized boolean openTrackAndPrepareNextAt(int position) {
-        playingQueue.setCurrentPosition(position);
-        boolean prepared = openCurrent();
-        if (prepared) prepareNextImpl();
-        notifyChange(META_CHANGED);
-        notHandledMetaChangedForCurrentTrack = false;
-        return prepared;
+    boolean openTrackAndPrepareNextAt(int position) {
+        synchronized (this) {
+            playingQueue.setCurrentPosition(position);
+            boolean prepared = openCurrent();
+            if (prepared) prepareNextImpl();
+            notifyChange(META_CHANGED);
+            notHandledMetaChangedForCurrentTrack = false;
+            return prepared;
+        }
     }
 
-    private synchronized boolean openCurrent() {
-        try {
-            return (playback != null) && playback.setDataSource(getTrackUri(getCurrentSong()));
-        } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
-            return false;
+    private boolean openCurrent() {
+        synchronized (this) {
+            try {
+                return (playback != null) && playback.setDataSource(getTrackUri(getCurrentSong()));
+            } catch (Exception e) {
+                OopsHandler.copyStackTraceToClipboard(e);
+                return false;
+            }
         }
     }
 
     private void prepareNext() {
-        //if (playbackHandlerThread.isAlive()) {
-            playbackHandler.removeMessages(PREPARE_NEXT);
-            playbackHandler.obtainMessage(PREPARE_NEXT).sendToTarget();
-        //}
+        synchronized (this) {
+            if (playbackHandlerThread.isAlive()) {
+                playbackHandler.removeMessages(PREPARE_NEXT);
+                playbackHandler.obtainMessage(PREPARE_NEXT).sendToTarget();
+            }
+        }
     }
 
-    public synchronized void prepareNextImpl() {
-        try {
-            int nextPosition = playingQueue.getNextPosition(false);
-            if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && playingQueue.isLastTrack()) {
-                playback.setNextDataSource(null);
-            } else {
-                playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
+    void prepareNextImpl() {
+        synchronized (this) {
+            try {
+                int nextPosition = playingQueue.getNextPosition(false);
+                if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && playingQueue.isLastTrack()) {
+                    playback.setNextDataSource(null);
+                } else {
+                    playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
+                }
+                playingQueue.setNextPosition(nextPosition);
+            } catch (Exception e) {
+                OopsHandler.copyStackTraceToClipboard(e);
             }
-            playingQueue.setNextPosition(nextPosition);
-        } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
         }
     }
 
     private void closeAudioEffectSession() {
-        final Intent audioEffectsIntent = new Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
-        audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playback.getAudioSessionId());
-        audioEffectsIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
-        sendBroadcast(audioEffectsIntent);
+        synchronized (this) {
+            final Intent audioEffectsIntent = new Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
+            audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playback.getAudioSessionId());
+            audioEffectsIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
+            sendBroadcast(audioEffectsIntent);
+        }
     }
 
     private boolean requestFocus() {
@@ -568,15 +619,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     };
 
-    public void updateMediaSessionPlaybackState() {
-        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(MEDIA_SESSION_ACTIONS)
-                .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
-                        getSongProgressMillis(), 1);
+    void updateMediaSessionPlaybackState() {
+        synchronized (this) {
+            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+                    .setActions(MEDIA_SESSION_ACTIONS)
+                    .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
+                            getSongProgressMillis(), 1);
 
-        setCustomAction(stateBuilder);
+            setCustomAction(stateBuilder);
 
-        mediaSession.setPlaybackState(stateBuilder.build());
+            mediaSession.setPlaybackState(stateBuilder.build());
+        }
     }
 
     private void setCustomAction(PlaybackStateCompat.Builder stateBuilder) {
@@ -590,10 +643,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 CYCLE_REPEAT, getString(R.string.action_cycle_repeat), repeatIcon)
                 .build());
 
-        final int shuffleIcon = playingQueue.getShuffleMode() == MusicService.SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
-        stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
-                TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
-                .build());
+        synchronized (this) {
+            final int shuffleIcon = playingQueue.getShuffleMode() == MusicService.SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
+            stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+                    TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
+                    .build());
+        }
 
         final int favoriteIcon = MusicUtil.isFavorite(this, getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
         stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
@@ -605,7 +660,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         final Song song = getCurrentSong();
 
         if (song.id == -1) {
-            mediaSession.setMetadata(null);
+            synchronized (this) {
+                mediaSession.setMetadata(null);
+            }
             return;
         }
 
@@ -619,7 +676,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
+            synchronized (this) {
+                metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
+            }
         }
 
         // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
@@ -638,13 +697,18 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        mediaSession.setMetadata(metaData.build());
+
+                        synchronized (MusicService.this) {
+                            mediaSession.setMetadata(metaData.build());
+                        }
                     }
 
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-                        mediaSession.setMetadata(metaData.build());
+                        synchronized (MusicService.this) {
+                            metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
+                            mediaSession.setMetadata(metaData.build());
+                        }
                     }
                 });
             }
@@ -676,182 +740,225 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         return getIndexedSongAt(getPosition());
     }
 
-    public Song getSongAt(int position) {
+    private Song getSongAt(int position) {
         return getIndexedSongAt(position);
     }
 
     public IndexedSong getIndexedSongAt(int position) {
-        if (position >= 0 && position < playingQueue.size()) {
-            return playingQueue.getPlayingQueue().get(position);
-        } else {
-            return IndexedSong.EMPTY_INDEXED_SONG;
+        synchronized (this) {
+            if (position >= 0 && position < playingQueue.size()) {
+                return playingQueue.getPlayingQueue().get(position);
+            } else {
+                return IndexedSong.EMPTY_INDEXED_SONG;
+            }
         }
     }
 
-    public boolean isLastTrack() {
-        return playingQueue.isLastTrack();
+    boolean isLastTrack() {
+        synchronized (this) {
+            return playingQueue.isLastTrack();
+        }
     }
 
     public ArrayList<Song> getPlayingQueue() {
-        return playingQueue.getPlayingQueueSongOnly();
+        synchronized (this) {
+            return playingQueue.getPlayingQueueSongOnly();
+        }
     }
 
     public int getRepeatMode() {
-        return playingQueue.getRepeatMode();
+        synchronized (this) {
+            return playingQueue.getRepeatMode();
+        }
     }
 
     public void cycleRepeatMode() {
-        playingQueue.cycleRepeatMode();
-
+        synchronized (this) {
+            playingQueue.cycleRepeatMode();
+        }
         propagateRepeatChange();
     }
 
-
     private void propagateRepeatChange() {
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putInt(SAVED_REPEAT_MODE, playingQueue.getRepeatMode())
-                .apply();
-        prepareNext();
-        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+        synchronized (this) {
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putInt(SAVED_REPEAT_MODE, playingQueue.getRepeatMode())
+                    .apply();
+            prepareNext();
+            handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+        }
     }
 
     private void propagateShuffleChange() {
-        PreferenceManager.getDefaultSharedPreferences(this).edit()
-                .putInt(SAVED_SHUFFLE_MODE, playingQueue.getShuffleMode())
-                .apply();
-        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
-        notifyChange(QUEUE_CHANGED);
-    }
-
-    public int getShuffleMode() {
-        return playingQueue.getShuffleMode();
-    }
-
-    public void toggleShuffle() {
-        playingQueue.toggleShuffle();
-
-        propagateShuffleChange();
-    }
-
-    public void setShuffleMode(final int shuffleMode) {
-        playingQueue.setShuffle(shuffleMode);
-
-        propagateShuffleChange();
-    }
-
-    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
-        int position = startPosition;
-        if (playingQueue != null && shuffleMode != MusicService.SHUFFLE_MODE_NONE && startPosition == MusicService.RANDOM_START_POSITION_ON_SHUFFLE) {
-            position = new Random().nextInt(playingQueue.size());
-        }
-
-        if (this.playingQueue.openQueue(playingQueue, position, shuffleMode)) {
-            if (startPlaying) {
-                playSongAt(this.playingQueue.getCurrentPosition(), false);
-            } else {
-                setPosition(position);
-            }
+        synchronized (this) {
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
+                    .putInt(SAVED_SHUFFLE_MODE, playingQueue.getShuffleMode())
+                    .apply();
+            handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
             notifyChange(QUEUE_CHANGED);
         }
     }
 
+    public int getShuffleMode() {
+        synchronized (this) {
+            return playingQueue.getShuffleMode();
+        }
+    }
+
+    public void toggleShuffle() {
+        synchronized (this) {
+            playingQueue.toggleShuffle();
+            propagateShuffleChange();
+        }
+    }
+
+    public void setShuffleMode(final int shuffleMode) {
+        synchronized (this) {
+            playingQueue.setShuffle(shuffleMode);
+            propagateShuffleChange();
+        }
+    }
+
+    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+        synchronized (this) {
+            int position = startPosition;
+            if (playingQueue != null && shuffleMode != MusicService.SHUFFLE_MODE_NONE && startPosition == MusicService.RANDOM_START_POSITION_ON_SHUFFLE) {
+                position = new Random().nextInt(playingQueue.size());
+            }
+
+            if (this.playingQueue.openQueue(playingQueue, position, shuffleMode)) {
+                if (startPlaying) {
+                    playSongAt(this.playingQueue.getCurrentPosition(), false);
+                } else {
+                    setPosition(position);
+                }
+                notifyChange(QUEUE_CHANGED);
+            }
+        }
+    }
+
     public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying) {
-        openQueue(playingQueue, startPosition, startPlaying, this.playingQueue.getShuffleMode());
+        synchronized (this) {
+            openQueue(playingQueue, startPosition, startPlaying, this.playingQueue.getShuffleMode());
+        }
     }
 
     public void addSongAfter(int position, Song song) {
-        playingQueue.addAfter(position, song);
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.addAfter(position, song);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void addSongBackTo(int position, IndexedSong song) {
-        playingQueue.addSongBackTo(position, song);
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.addSongBackTo(position, song);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void addSongsAfter(int position, List<Song> songs) {
-        playingQueue.addAllAfter(position, songs);
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.addAllAfter(position, songs);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void addSong(Song song) {
-        playingQueue.add(song);
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.add(song);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void addSongs(List<Song> songs) {
-        playingQueue.addAll(songs);
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.addAll(songs);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void removeSong(int position) { // better to test is playing here and have only one signal than calling playNextSong and then removeSong (two signal need time in between to work ok)
-        boolean isPlaying = isPlaying(playingQueue.getPlayingQueue().get(position));
+        synchronized (this) {
+            boolean isPlaying = isPlaying(playingQueue.getPlayingQueue().get(position));
 
-        int newPosition = playingQueue.remove(position);
-        if (newPosition != -1) {
-            if (isPlaying) {playSongAt(newPosition, false);}
-            else {setPosition(newPosition);}
+            int newPosition = playingQueue.remove(position);
+            if (newPosition != -1) {
+                if (isPlaying) {playSongAt(newPosition, false);}
+                else {setPosition(newPosition);}
+            }
+
+            notifyChange(QUEUE_CHANGED);
         }
-
-        notifyChange(QUEUE_CHANGED);
     }
 
     public void removeSongs(@NonNull List<Song> songs) {
-        int newPosition = playingQueue.removeSongs(songs);
-        if (newPosition != -1) {
-            setPosition(newPosition);
-        }
+        synchronized (this) {
+            int newPosition = playingQueue.removeSongs(songs);
+            if (newPosition != -1) {
+                setPosition(newPosition);
+            }
 
-        notifyChange(QUEUE_CHANGED);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void moveSong(int from, int to) {
-        playingQueue.move(from, to);
-
-        notifyChange(QUEUE_CHANGED);
+        synchronized (this) {
+            playingQueue.move(from, to);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
     public void clearQueue() {
-        playingQueue.clear();
+        synchronized (this) {
+            playingQueue.clear();
 
-        setPosition(-1);
-        notifyChange(QUEUE_CHANGED);
+            setPosition(-1);
+            notifyChange(QUEUE_CHANGED);
+        }
     }
 
-    public synchronized void playSongAt(final int position, boolean skippedLast) {
-        if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
-            final int songProgressMs = getSongProgressMillis();
-            final int songDurationMs = getSongDurationMillis();
-            if ((songProgressMs > SKIP_THRESHOLD_MS) // not just started
-                && (songDurationMs - songProgressMs > SKIP_THRESHOLD_MS) // not about to end
-            ) {
-                // Mark the current song as skipped
-                final Song song = getCurrentSong();
-                final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
-                if (!PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
-                    PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
+    public void playSongAt(final int position, boolean skippedLast) {
+        synchronized (this) {
+            if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
+                final int songProgressMs = getSongProgressMillis();
+                final int songDurationMs = getSongDurationMillis();
+                if ((songProgressMs > SKIP_THRESHOLD_MS) // not just started
+                        && (songDurationMs - songProgressMs > SKIP_THRESHOLD_MS) // not about to end
+                ) {
+                    // Mark the current song as skipped
+                    final Song song = getCurrentSong();
+                    final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
+                    if (!PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
+                        PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
+                    }
                 }
             }
-        }
 
-        if (playbackHandlerThread.isAlive()) {
-            playbackHandler.removeMessages(PLAY_SONG);
-            playbackHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
-        }
-    }
-
-    public synchronized void setPosition(final int position) {
-        if (playbackHandlerThread.isAlive()) {
-            playbackHandler.removeMessages(SET_POSITION);
-            playbackHandler.obtainMessage(SET_POSITION, position, 0).sendToTarget();
+            if (playbackHandlerThread.isAlive()) {
+                playbackHandler.removeMessages(PLAY_SONG);
+                playbackHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
+            }
         }
     }
 
-    public void setPositionToNextPosition() {
-        playingQueue.setPositionToNextPosition();
+    public void setPosition(final int position) {
+        synchronized (this) {
+            if (playbackHandlerThread.isAlive()) {
+                playbackHandler.removeMessages(SET_POSITION);
+                playbackHandler.obtainMessage(SET_POSITION, position, 0).sendToTarget();
+            }
+        }
     }
 
-    public void playSongAtImpl(int position) {
+    void setPositionToNextPosition() {
+        synchronized (this) {
+            playingQueue.setPositionToNextPosition();
+        }
+    }
+
+    void playSongAtImpl(int position) {
         if (openTrackAndPrepareNextAt(position)) {
             play();
         } else {
@@ -860,84 +967,92 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void pause() {
-        pausedByTransientLossOfFocus = false;
-        if (playback.isPlaying()) {
-            playback.pause();
-            notifyChange(PLAY_STATE_CHANGED);
+        synchronized (this) {
+            pausedByTransientLossOfFocus = false;
+            if (playback.isPlaying()) {
+                playback.pause();
+                notifyChange(PLAY_STATE_CHANGED);
+            }
         }
     }
 
-    public synchronized void play() {
-        if (requestFocus()) {
-            if (!playback.isPlaying()) {
-                if (!playback.isInitialized()) {
-                    playSongAt(getPosition(), false);
-                } else {
-                    playback.start();
-                    if (!becomingNoisyReceiverRegistered) {
-                        registerReceiver(becomingNoisyReceiver, becomingNoisyReceiverIntentFilter);
-                        becomingNoisyReceiverRegistered = true;
-                    }
-                    if (notHandledMetaChangedForCurrentTrack) {
-                        handleChangeInternal(META_CHANGED);
-                        notHandledMetaChangedForCurrentTrack = false;
-                    }
-                    notifyChange(PLAY_STATE_CHANGED);
+    public void play() {
+        synchronized (this) {
+            if (requestFocus()) {
+                if (!playback.isPlaying()) {
+                    if (!playback.isInitialized()) {
+                        playSongAt(getPosition(), false);
+                    } else {
+                        playback.start();
+                        if (!becomingNoisyReceiverRegistered) {
+                            registerReceiver(becomingNoisyReceiver, becomingNoisyReceiverIntentFilter);
+                            becomingNoisyReceiverRegistered = true;
+                        }
+                        if (notHandledMetaChangedForCurrentTrack) {
+                            handleChangeInternal(META_CHANGED);
+                            notHandledMetaChangedForCurrentTrack = false;
+                        }
+                        notifyChange(PLAY_STATE_CHANGED);
 
-                    // fixes a bug where the volume would stay ducked because the AudioManager.AUDIOFOCUS_GAIN event is not sent
-                    if (playbackHandlerThread.isAlive()) {
-                        playbackHandler.removeMessages(DUCK);
-                        playbackHandler.sendEmptyMessage(UNDUCK);
+                        // fixes a bug where the volume would stay ducked because the AudioManager.AUDIOFOCUS_GAIN event is not sent
+                        if (playbackHandlerThread.isAlive()) {
+                            playbackHandler.removeMessages(DUCK);
+                            playbackHandler.sendEmptyMessage(UNDUCK);
+                        }
                     }
                 }
+            } else {
+                SafeToast.show(this, getResources().getString(R.string.audio_focus_denied));
             }
-        } else {
-            SafeToast.show(this, getResources().getString(R.string.audio_focus_denied));
         }
     }
 
     private void applyReplayGain() {
-        byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
-        if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
-            Song song = getCurrentSong();
+        synchronized (this) {
+            byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
+            if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
+                Song song = getCurrentSong();
 
-            float adjustDB = 0f;
-            float peak = 1.0f;
+                float adjustDB = 0f;
+                float peak = 1.0f;
 
-            float rgTrack = song.replayGainTrack;
-            float rgAlbum = song.replayGainAlbum;
-            float rgpTrack = song.replayGainPeakTrack;
-            float rgpAlbum = song.replayGainPeakAlbum;
+                float rgTrack = song.replayGainTrack;
+                float rgAlbum = song.replayGainAlbum;
+                float rgpTrack = song.replayGainPeakTrack;
+                float rgpAlbum = song.replayGainPeakAlbum;
 
-            if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
-                adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
-                adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
-                peak = (rgpTrack != 1.0f ? rgpTrack : peak);
-                peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
-            } else if (mode == PreferenceUtil.RG_SOURCE_MODE_TRACK) {
-                adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
-                adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
-                peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
-                peak = (rgpTrack != 1.0f ? rgpTrack : peak);
-            }
+                if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
+                    adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
+                    adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
+                    peak = (rgpTrack != 1.0f ? rgpTrack : peak);
+                    peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
+                } else if (mode == PreferenceUtil.RG_SOURCE_MODE_TRACK) {
+                    adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
+                    adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
+                    peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
+                    peak = (rgpTrack != 1.0f ? rgpTrack : peak);
+                }
 
-            if (adjustDB == 0) {
-                adjustDB = PreferenceUtil.getInstance().getRgPreampWithoutTag();
+                if (adjustDB == 0) {
+                    adjustDB = PreferenceUtil.getInstance().getRgPreampWithoutTag();
+                } else {
+                    adjustDB += PreferenceUtil.getInstance().getRgPreampWithTag();
+
+                    float peakDB = -20.0f * ((float) Math.log10(peak));
+                    adjustDB = Math.min(adjustDB, peakDB);
+                }
+
+                playback.setReplayGain(adjustDB);
             } else {
-                adjustDB += PreferenceUtil.getInstance().getRgPreampWithTag();
-
-                float peakDB = -20.0f * ((float) Math.log10(peak));
-                adjustDB = Math.min(adjustDB, peakDB);
+                playback.setReplayGain(Float.NaN);
             }
-
-            playback.setReplayGain(adjustDB);
-        } else {
-            playback.setReplayGain(Float.NaN);
         }
     }
 
     public void playPreviousSong(boolean skippedLast) {
-        playSongAt(playingQueue.getPreviousPosition(skippedLast), skippedLast);
+        synchronized (this) {
+            playSongAt(playingQueue.getPreviousPosition(skippedLast), skippedLast);
+        }
     }
 
     public void back(boolean skippedLast) {
@@ -949,46 +1064,54 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public int getSongProgressMillis() {
-        return playback.position();
-    }
-
-    public int getSongDurationMillis() {
-        return playback.duration();
-    }
-
-    public long getQueueDurationMillis(int position) {
-        return playingQueue.getQueueDurationMillis(position);
-    }
-
-    public synchronized void seek(int millis) {
-        try {
-            // The 'playback' object can be null during device restart/device turn on after long period (i.e morning).
-            // My assumption is:
-            // - the service gets created (playback object created), and posted a message to the PlaybackHandker thread
-            // - then destroyed (playback object nullified)
-            // - then the PlaybackHandler thread try to process the posted message, on a nullifiedobject
-
-            if (playback != null) {
-                playback.seek(millis);
-                throttledSeekHandler.notifySeek();
-            }
-        } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+        synchronized (this) {
+            return playback.position();
         }
     }
 
-    public void notifyChange(@NonNull final String what) {
+    public int getSongDurationMillis() {
+        synchronized (this) {
+            return playback.duration();
+        }
+    }
+
+    private long getQueueDurationMillis(int position) {
+        synchronized (this) {
+            return playingQueue.getQueueDurationMillis(position);
+        }
+    }
+
+    public void seek(int millis) {
+        synchronized (this) {
+            try {
+                // The 'playback' object can be null during device restart/device turn on after long period (i.e morning).
+                // My assumption is:
+                // - the service gets created (playback object created), and posts a message to the PlaybackHandler thread
+                // - then the service gets destroyed (playback object nullified)
+                // - then the PlaybackHandler thread tries to process the posted message, on a nullified object
+
+                if (playback != null) {
+                    playback.seek(millis);
+                    throttledSeekHandler.notifySeek();
+                }
+            } catch (Exception e) {
+                OopsHandler.copyStackTraceToClipboard(e);
+            }
+        }
+    }
+
+    void notifyChange(@NonNull final String what) {
         handleAndSendChangeInternal(what);
         sendPublicIntent(what);
     }
 
-    public void handleAndSendChangeInternal(@NonNull final String what) {
+    void handleAndSendChangeInternal(@NonNull final String what) {
         handleChangeInternal(what);
         sendChangeInternal(what);
     }
 
     // to let other apps know whats playing. i.E. last.fm (scrobbling) or musixmatch
-    public void sendPublicIntent(@NonNull final String what) {
+    void sendPublicIntent(@NonNull final String what) {
         final Intent intent = new Intent(what.replace(VINYL_MUSIC_PLAYER_PACKAGE_NAME, MUSIC_PACKAGE_NAME));
 
         final Song song = getCurrentSong();
@@ -1056,60 +1179,72 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 songPlayCountHelper.notifySongChanged(currentSong);
                 break;
             case QUEUE_CHANGED:
-                updateMediaSessionMetaData(); // because playing queue size might have changed
-                saveState();
-                if (playingQueue.size() > 0) {
-                    prepareNext();
-                } else {
-                    updateNotification();
+                synchronized (this) {
+                    updateMediaSessionMetaData(); // because playing queue size might have changed
+                    saveState();
+                    if (playingQueue.size() > 0) {
+                        prepareNext();
+                    } else {
+                        updateNotification();
+                    }
                 }
                 break;
         }
     }
 
     public int getAudioSessionId() {
-        return playback.getAudioSessionId();
-    }
-
-    public MediaSessionCompat getMediaSession() {
-        return mediaSession;
-    }
-
-    public void releaseWakeLock() {
-        if (wakeLock.isHeld()) {
-            wakeLock.release();
+        synchronized (this) {
+            return playback.getAudioSessionId();
         }
     }
 
-    public void acquireWakeLock(long milli) {
-        wakeLock.acquire(milli);
+    public MediaSessionCompat getMediaSession() {
+        synchronized (this) {
+            return mediaSession;
+        }
+    }
+
+    void releaseWakeLock() {
+        synchronized (this) {
+            if (wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+        }
+    }
+
+    private void acquireWakeLock(long milli) {
+        synchronized (this) {
+            wakeLock.acquire(milli);
+        }
     }
 
     @Override
-    public synchronized void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case PreferenceUtil.GAPLESS_PLAYBACK:
-                if (sharedPreferences.getBoolean(key, false)) {
-                    prepareNext();
-                } else {
-                    playback.setNextDataSource(null);
-                }
-                break;
-            case PreferenceUtil.COLORED_NOTIFICATION:
-                updateNotification();
-                break;
-            case PreferenceUtil.CLASSIC_NOTIFICATION:
-                initNotification();
-                updateNotification();
-                break;
-            case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
-                sendChangeInternal(MusicService.META_CHANGED);
-                break;
-            case PreferenceUtil.RG_SOURCE_MODE_V2:
-            case PreferenceUtil.RG_PREAMP_WITH_TAG:
-            case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
-                applyReplayGain();
-                break;
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        synchronized (this) {
+            switch (key) {
+                case PreferenceUtil.GAPLESS_PLAYBACK:
+                    if (sharedPreferences.getBoolean(key, false)) {
+                        prepareNext();
+                    } else {
+                        playback.setNextDataSource(null);
+                    }
+                    break;
+                case PreferenceUtil.COLORED_NOTIFICATION:
+                    updateNotification();
+                    break;
+                case PreferenceUtil.CLASSIC_NOTIFICATION:
+                    initNotification();
+                    updateNotification();
+                    break;
+                case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
+                    sendChangeInternal(MusicService.META_CHANGED);
+                    break;
+                case PreferenceUtil.RG_SOURCE_MODE_V2:
+                case PreferenceUtil.RG_PREAMP_WITH_TAG:
+                case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
+                    applyReplayGain();
+                    break;
+            }
         }
     }
 
@@ -1197,26 +1332,34 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         result.sendResult(mBrowsableMusicProvider.getChildren(parentId, getResources()));
     }
 
-    public Playback getPlayback() {
-        return playback;
+    Playback getPlayback() {
+        synchronized (this) {
+            return playback;
+        }
     }
 
-    public void setPausedByTransientLossOfFocus(boolean pausedByTransientLossOfFocus) {
-        this.pausedByTransientLossOfFocus = pausedByTransientLossOfFocus;
+    void setPausedByTransientLossOfFocus(boolean pausedByTransientLossOfFocus) {
+        synchronized (this) {
+            this.pausedByTransientLossOfFocus = pausedByTransientLossOfFocus;
+        }
     }
 
-    public boolean isPausedByTransientLossOfFocus() {
-        return pausedByTransientLossOfFocus;
+    boolean isPausedByTransientLossOfFocus() {
+        synchronized (this) {
+            return pausedByTransientLossOfFocus;
+        }
     }
 
     @NonNull
     public String getQueueInfoString() {
-        final long duration = getQueueDurationMillis(getPosition());
+        synchronized (this) {
+            final long duration = getQueueDurationMillis(getPosition());
 
-        return MusicUtil.buildInfoString(
-                getResources().getString(R.string.up_next),
-                MusicUtil.getReadableDurationString(duration),
-                (getPosition() + 1) + "/" + playingQueue.size()
-        );
+            return MusicUtil.buildInfoString(
+                    getResources().getString(R.string.up_next),
+                    MusicUtil.getReadableDurationString(duration),
+                    (getPosition() + 1) + "/" + playingQueue.size()
+            );
+        }
     }
 }
