@@ -43,6 +43,8 @@ import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.ExportSettingsDialog;
+import com.poupa.vinylmusicplayer.preferences.MigratingPreference;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
@@ -154,6 +156,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_images);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
+            addPreferencesFromResource(R.xml.pref_migrating);
 
             // set summary for whitelist, in order to indicate start directory
             final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
@@ -175,6 +178,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return PreAmpPreferenceDialog.newInstance();
             } else if (preference instanceof SmartPlaylistPreference) {
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
+            } else if (preference instanceof MigratingPreference) {
+                return ExportSettingsDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
                         SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),

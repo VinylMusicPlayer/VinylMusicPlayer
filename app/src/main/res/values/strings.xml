@@ -181,6 +181,7 @@
     <string name="no_genres">No genres</string>
     <string name="empty">Empty</string>
     <string name="playlist_name_empty">Playlist name</string>
+    <string name="settings_filename">Filename </string>
     <string name="song">Song</string>
     <string name="pref_summary_classic_notification">Use the classic notification design</string>
     <string name="pref_summary_colored_notification">"Colors the notification in the album cover\u2019s vibrant color"</string>
@@ -213,6 +214,7 @@
     <string name="time_unit_minutes">min</string>
     <string name="action_new_playlist">New playlist…</string>
     <string name="new_playlist_title">New playlist</string>
+    <string name="export_settings">Export settings</string>
     <string name="grid_size_1" translatable="false">1</string>
     <string name="grid_size_2" translatable="false">2</string>
     <string name="grid_size_3" translatable="false">3</string>

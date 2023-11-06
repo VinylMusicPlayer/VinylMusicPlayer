@@ -3,15 +3,15 @@
 
     <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_migrating">
 
-        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
+        <com.poupa.vinylmusicplayer.preferences.MigratingPreference
             app:iconSpaceReserved="false"
-            android:key="last_added_interval_v2"
+            android:key="export_settings"
             android:defaultValue="1m"
             android:title="@string/pref_title_export" />
 
-        <com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference
+        <com.poupa.vinylmusicplayer.preferences.MigratingPreference
             app:iconSpaceReserved="false"
-            android:key="recently_played_interval_v2"
+            android:key="import_settings"
             android:defaultValue="1m"
             android:title="@string/pref_title_import" />
 
