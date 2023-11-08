@@ -42,7 +42,7 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
         File parent = file.getParentFile();
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);
-            if (cover.exists()) {
+            if (cover.exists() && cover.canRead()) {
                 return stream = new FileInputStream(cover);
             }
         }
