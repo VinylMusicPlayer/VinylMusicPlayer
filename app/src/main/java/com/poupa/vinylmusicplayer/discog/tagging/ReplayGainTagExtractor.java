@@ -18,8 +18,10 @@ public class ReplayGainTagExtractor {
   // Normalize all tags using the Vorbis ones
   private static final String REPLAYGAIN_TRACK_GAIN = "REPLAYGAIN_TRACK_GAIN";
   private static final String REPLAYGAIN_ALBUM_GAIN = "REPLAYGAIN_ALBUM_GAIN";
+  private static final String REPLAYGAIN_TRACK_PEAK = "REPLAYGAIN_TRACK_PEAK";
+  private static final String REPLAYGAIN_ALBUM_PEAK = "REPLAYGAIN_ALBUM_PEAK";
 
-  public static class ReplayGainValues {float track = 0; float album = 0;}
+  public static class ReplayGainValues {float track = 0; float album = 0; float peakTrack = 1.0f; float peakAlbum = 1.0f;}
 
   static ReplayGainValues setReplayGainValues(@NonNull final AudioFile file) {
     Map<String, Float> tags = null;
@@ -43,8 +45,14 @@ public class ReplayGainTagExtractor {
       if (tags.containsKey(REPLAYGAIN_TRACK_GAIN)) {
         result.track = tags.get(REPLAYGAIN_TRACK_GAIN);
       }
+      if (tags.containsKey(REPLAYGAIN_TRACK_PEAK)) {
+        result.peakTrack = tags.get(REPLAYGAIN_TRACK_PEAK);
+      }
       if (tags.containsKey(REPLAYGAIN_ALBUM_GAIN)) {
         result.album = tags.get(REPLAYGAIN_ALBUM_GAIN);
+      }
+      if (tags.containsKey(REPLAYGAIN_ALBUM_PEAK)) {
+        result.peakAlbum = tags.get(REPLAYGAIN_ALBUM_PEAK);
       }
     }
     return result;
@@ -85,8 +93,14 @@ public class ReplayGainTagExtractor {
     if (tag.hasField(REPLAYGAIN_TRACK_GAIN)) {
       tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst(REPLAYGAIN_TRACK_GAIN)));
     }
+    if (tag.hasField(REPLAYGAIN_TRACK_PEAK)) {
+      tags.put(REPLAYGAIN_TRACK_PEAK, parseFloat(tag.getFirst(REPLAYGAIN_TRACK_PEAK)));
+    }
     if (tag.hasField(REPLAYGAIN_ALBUM_GAIN)) {
       tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst(REPLAYGAIN_ALBUM_GAIN)));
+    }
+    if (tag.hasField(REPLAYGAIN_ALBUM_PEAK)) {
+      tags.put(REPLAYGAIN_ALBUM_PEAK, parseFloat(tag.getFirst(REPLAYGAIN_ALBUM_PEAK)));
     }
 
     return tags;
@@ -99,9 +113,15 @@ public class ReplayGainTagExtractor {
     if (!tags.containsKey(REPLAYGAIN_TRACK_GAIN) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_TRACK_GAIN)) {
       tags.put(REPLAYGAIN_TRACK_GAIN, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_TRACK_GAIN)));
     }
+    if (!tags.containsKey(REPLAYGAIN_TRACK_PEAK) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_TRACK_PEAK)) {
+      tags.put(REPLAYGAIN_TRACK_PEAK, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_TRACK_PEAK)));
+    }
 
     if (!tags.containsKey(REPLAYGAIN_ALBUM_GAIN) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_ALBUM_GAIN)) {
       tags.put(REPLAYGAIN_ALBUM_GAIN, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_ALBUM_GAIN)));
+    }
+    if (!tags.containsKey(REPLAYGAIN_ALBUM_PEAK) && tag.hasField(ITUNES_PREFIX + REPLAYGAIN_ALBUM_PEAK)) {
+      tags.put(REPLAYGAIN_ALBUM_PEAK, parseFloat(tag.getFirst(ITUNES_PREFIX + REPLAYGAIN_ALBUM_PEAK)));
     }
 
     return tags;
@@ -109,6 +129,7 @@ public class ReplayGainTagExtractor {
 
   private static Map<String, Float> parseLameHeader(@NonNull final AudioFile file) throws IOException {
     // Method taken from adrian-bl/bastp library
+    // Peak values are as per http://gabriel.mp3-tech.org/mp3infotag.html
     Map<String, Float> tags = new HashMap<>();
     RandomAccessFile s = new RandomAccessFile(file.getFile(), "r");
     byte[] chunk = new byte[12];
@@ -119,7 +140,18 @@ public class ReplayGainTagExtractor {
     String lameMark = new String(chunk, 0, 4, "ISO-8859-1");
 
     if (lameMark.equals("Info") || lameMark.equals("Xing")) {
-      s.seek(0xAB);
+      s.seek(0xA7);
+      s.read(chunk);
+
+      int rawPeak =  b2be32(chunk);
+      if (rawPeak != 0) {
+        float peak = Float.intBitsToFloat(rawPeak);
+        if (!Float.isNaN(peak)) {
+          tags.put(REPLAYGAIN_TRACK_PEAK, peak);
+          tags.put(REPLAYGAIN_ALBUM_PEAK, peak);
+        }
+      }
+
       s.read(chunk);
 
       int raw = b2be32(chunk);

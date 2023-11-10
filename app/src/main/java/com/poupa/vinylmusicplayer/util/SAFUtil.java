@@ -149,7 +149,7 @@ public class SAFUtil {
                 if (i == -1) {return "";}
                 return name.substring(i + 1);
             };
-            File tempFile = AutoDeleteTempFile.create(String.valueOf(song.id), getSuffix.apply(song.data)).get();
+            File tempFile = AutoDeleteTempFile.create("song-" + song.id, getSuffix.apply(song.data)).get();
 
             // Copy the content of the URI to the temp file
             try (OutputStream temp = new FileOutputStream(tempFile)) {

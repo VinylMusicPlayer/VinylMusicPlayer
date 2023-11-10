@@ -15,6 +15,7 @@ import com.poupa.vinylmusicplayer.discog.Discography;
  */
 public class App extends MultiDexApplication {
     public static final String TAG = App.class.getSimpleName();
+    public static final boolean DYNAMICS_PROCESSING_AVAILABLE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
 
     private static App app;
 
