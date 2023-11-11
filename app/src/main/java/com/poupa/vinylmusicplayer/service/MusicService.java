@@ -159,7 +159,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
 
-    private Playback playback;
+    @Nullable private Playback playback;
     private PlaybackHandler playbackHandler;
     private HandlerThread playbackHandlerThread;
     private final AudioManager.OnAudioFocusChangeListener audioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -312,7 +312,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         if (playlist != null) {
                             ArrayList<Song> playlistSongs = playlist.getSongs(this);
                             if (!playlistSongs.isEmpty()) {
-                                openQueue(playlistSongs, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
+                                openQueue(playlistSongs, RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
                             } else {
                                 SafeToast.show(this, R.string.playlist_is_empty);
                             }
@@ -558,7 +558,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             try {
                 int nextPosition = playingQueue.getNextPosition(false);
-                if (getRepeatMode() == MusicService.REPEAT_MODE_NONE && playingQueue.isLastTrack()) {
+                if (getRepeatMode() == REPEAT_MODE_NONE && playingQueue.isLastTrack()) {
                     playback.setNextDataSource(null);
                 } else {
                     playback.setNextDataSource(getTrackUri(getSongAt(nextPosition)));
@@ -605,8 +605,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         if (getCurrentSong().id != Song.EMPTY_SONG.id) {
             idleNotification.stop();
             playingNotification.update();
-        }
-        else {
+        } else {
             playingNotification.stop();
             idleNotification.update();
         }
@@ -684,8 +683,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
         //       or similar to the MediaSession to have a hi-res cover image displayed,
         //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
-        final Point screenSize = Util.getScreenSize(MusicService.this);
-        GlideRequest<Bitmap> request = GlideApp.with(MusicService.this)
+        final Point screenSize = Util.getScreenSize(this);
+        GlideRequest<Bitmap> request = GlideApp.with(this)
                 .asBitmap()
                 .load(VinylGlideExtension.getSongModel(song))
                 .transition(VinylGlideExtension.getDefaultTransition())
@@ -1013,7 +1012,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
                 Song song = getCurrentSong();
 
-                float adjustDB = 0f;
+                float adjustDB = 0.0f;
                 float peak = 1.0f;
 
                 float rgTrack = song.replayGainTrack;
@@ -1022,15 +1021,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 float rgpAlbum = song.replayGainPeakAlbum;
 
                 if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
-                    adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
-                    adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
-                    peak = (rgpTrack != 1.0f ? rgpTrack : peak);
-                    peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
+                    adjustDB = (rgTrack == 0.0f ? adjustDB : rgTrack);
+                    adjustDB = (rgAlbum == 0.0f ? adjustDB : rgAlbum);
+                    peak = (rgpTrack == 1.0f ? peak : rgpTrack);
+                    peak = (rgpAlbum == 1.0f ? peak : rgpAlbum);
                 } else if (mode == PreferenceUtil.RG_SOURCE_MODE_TRACK) {
-                    adjustDB = (rgAlbum != 0 ? rgAlbum : adjustDB);
-                    adjustDB = (rgTrack != 0 ? rgTrack : adjustDB);
-                    peak = (rgpAlbum != 1.0f ? rgpAlbum : peak);
-                    peak = (rgpTrack != 1.0f ? rgpTrack : peak);
+                    adjustDB = (rgAlbum == 0.0f ? adjustDB : rgAlbum);
+                    adjustDB = (rgTrack == 0.0f ? adjustDB : rgTrack);
+                    peak = (rgpAlbum == 1.0f ? peak : rgpAlbum);
+                    peak = (rgpTrack == 1.0f ? peak : rgpTrack);
                 }
 
                 if (adjustDB == 0) {
