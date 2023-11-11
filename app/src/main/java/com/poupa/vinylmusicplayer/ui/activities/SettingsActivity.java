@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragmentCompat;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
 import com.poupa.vinylmusicplayer.databinding.ActivityPreferencesBinding;
@@ -35,6 +37,7 @@ import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWit
 import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons.ButtonInfo;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
@@ -43,9 +46,10 @@ import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
-import com.poupa.vinylmusicplayer.preferences.ExportSettingsDialog;
-import com.poupa.vinylmusicplayer.preferences.MigratingPreference;
+import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreference;
+import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
+import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.util.FileUtil;
@@ -55,15 +59,23 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
+import static com.poupa.vinylmusicplayer.util.SAFUtil.toast;
 
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
     Toolbar toolbar;
+    private final int SELECT_EXPORT_SETTINGS_FILE_INTENT = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +101,20 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         } else {
             SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (frag != null) frag.invalidateSettings();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_EXPORT_SETTINGS_FILE_INTENT && resultCode == Activity.RESULT_OK && data != null) {
+            OutputStream outputStream = null;
+            try {
+                outputStream = this.getContentResolver().openOutputStream(data.getData());
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            exportSettingsTo(outputStream, configItemsToExport)
         }
     }
 
@@ -122,6 +148,42 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void createFileIntent(String filename) {
+        Intent intent = null;
+        //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        //intent = new Intent(Intent.ACTION_);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        //}
+
+        //Context context = getContext();
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, filename);
+        this.startActivityForResult(intent, SELECT_EXPORT_SETTINGS_FILE_INTENT);
+    }
+
+    private String getPreferenceContent() {
+
+        String out =
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
+        Map allPreferences = sharedPreferences.getAll();
+        ArrayList<String> blacklist = BlacklistStore.getInstance(App.getStaticContext()).getPaths();//.toString();
+
+    }
+
+    private void exportSettingsTo(OutputStream outputStream) {
+        if (outputStream == null) {
+            return;
+        }
+
+        ensureBackgroundThread {
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+            writer.write(payload);
+
+            Toast.makeText(this.getApplicationContext(), "Settings exported successfully", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -178,8 +240,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return PreAmpPreferenceDialog.newInstance();
             } else if (preference instanceof SmartPlaylistPreference) {
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
-            } else if (preference instanceof MigratingPreference) {
-                return ExportSettingsDialog.newInstance(preference.getKey());
+            } else if (preference instanceof ExportSettingsPreference) {
+                return ExportSettingsPreferenceDialog.newInstance(preference.getKey());
+            } else if (preference instanceof ImportSettingsPreference) {
+                //return ExportSettingsDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
                         SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),

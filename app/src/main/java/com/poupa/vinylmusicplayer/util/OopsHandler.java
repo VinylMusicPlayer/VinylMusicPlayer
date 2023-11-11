@@ -36,6 +36,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
             report.append(getStackTrace(e));
             report.append('\n');
             Log.e(OopsHandler.class.getName(), "Submitting crash report");
+            Log.e(OopsHandler.class.getName(), report.toString());
 
             sendBugReport(report);
         } catch (final Throwable sendError) {

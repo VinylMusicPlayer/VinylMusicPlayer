@@ -3,13 +3,13 @@
 
     <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory android:title="@string/pref_header_migrating">
 
-        <com.poupa.vinylmusicplayer.preferences.MigratingPreference
+        <com.poupa.vinylmusicplayer.preferences.ExportSettingsPreference
             app:iconSpaceReserved="false"
             android:key="export_settings"
             android:defaultValue="1m"
             android:title="@string/pref_title_export" />
 
-        <com.poupa.vinylmusicplayer.preferences.MigratingPreference
+        <com.poupa.vinylmusicplayer.preferences.ImportSettingsPreference
             app:iconSpaceReserved="false"
             android:key="import_settings"
             android:defaultValue="1m"
