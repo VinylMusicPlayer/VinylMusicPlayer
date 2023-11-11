@@ -45,6 +45,7 @@ class MemCache {
 
     final Map<String, Genre> genresByName = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     final Map<Long, ArrayList<Song>> songsByGenreId = new HashMap<>();
+    private float maxReplayGain = Float.NaN; // Computed lazily when it's needed, since it's used only on some android versions
 
     synchronized void addSong(@NonNull final Song song) {
         Map<Long, AlbumSlice> albums = getOrCreateAlbum(song);
@@ -58,6 +59,14 @@ class MemCache {
         if (songs != null) {
             songs.add(song);
             genre.songCount = songs.size();
+        }
+
+        // Update the overall max replay gain value, if it's been computed already
+        if (!Float.isNaN(maxReplayGain)) {
+            float songMaxReplayGain = computeSongMaxReplayGain(song);
+            if (maxReplayGain < songMaxReplayGain){
+                maxReplayGain = songMaxReplayGain;
+            }
         }
 
         songsById.put(song.id, song);
@@ -130,6 +139,14 @@ class MemCache {
                 }
             }
 
+            // Update the overall max replay gain value, if it's been computed already
+            if (!Float.isNaN(maxReplayGain)) {
+                float songMaxReplayGain = computeSongMaxReplayGain(song);
+                if (maxReplayGain == songMaxReplayGain){
+                    maxReplayGain = Float.NaN; // Will be recomputed next time it's needed
+                }
+            }
+
             // ---- Remove the song from the memory cache
             songsById.remove(songId);
         }
@@ -146,6 +163,30 @@ class MemCache {
 
         genresByName.clear();
         songsByGenreId.clear();
+    }
+
+    private float computeSongMaxReplayGain(Song song) {
+        if (Float.isNaN(song.replayGainAlbum) && Float.isNaN(song.replayGainTrack)) {
+            return 0.0f;
+        }
+        if (Float.isNaN(song.replayGainAlbum)) {
+            return song.replayGainTrack;
+        }
+        if (Float.isNaN(song.replayGainTrack)) {
+            return song.replayGainAlbum;
+        }
+        return Math.max(song.replayGainAlbum, song.replayGainTrack);
+    }
+
+    synchronized float getMaxReplayGain() {
+        if (Float.isNaN(maxReplayGain)) {
+            maxReplayGain = songsById.values().stream()
+                    .map(this::computeSongMaxReplayGain)
+                    .max(Float::compareTo)
+                    .orElse(0.0f);
+        }
+
+        return maxReplayGain;
     }
 
     @NonNull

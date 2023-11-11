@@ -37,6 +37,8 @@ public class Song implements Parcelable {
     public String genre = "";
     public float replayGainAlbum = 0;
     public float replayGainTrack = 0;
+    public float replayGainPeakAlbum = 1.0f;
+    public float replayGainPeakTrack = 1.0f;
     public String title;
     public int trackNumber;
     public int year;
@@ -73,6 +75,8 @@ public class Song implements Parcelable {
         this.genre = song.genre;
         this.replayGainAlbum = song.replayGainAlbum;
         this.replayGainTrack = song.replayGainTrack;
+        this.replayGainPeakAlbum = song.replayGainPeakAlbum;
+        this.replayGainPeakTrack = song.replayGainPeakTrack;
         this.title = song.title;
         this.trackNumber = song.trackNumber;
         this.year = song.year;

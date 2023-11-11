@@ -146,6 +146,14 @@ public class SongDetailDialog extends DialogFragment {
                 ? String.format(Locale.getDefault(), "%s: %.2f dB ", context.getString(R.string.album), song.replayGainAlbum)
                 : "- ";
         htmlBuilder.appendLine(R.string.label_replay_gain, rgTrack, rgAlbum);
+
+        final String rgPeakTrack = song.replayGainPeakTrack != 1.0f
+                ? String.format(Locale.getDefault(), "%s: %.2f ", context.getString(R.string.song), song.replayGainPeakTrack)
+                : "- ";
+        final String rgPeakAlbum = song.replayGainPeakAlbum != 1.0f
+                ? String.format(Locale.getDefault(), "%s: %.2f ", context.getString(R.string.album), song.replayGainPeakAlbum)
+                : "- ";
+        htmlBuilder.appendLine(R.string.label_replay_gain_peak, rgPeakTrack, rgPeakAlbum);
         discographyInfo.setText(htmlBuilder.build());
 
         return dialog;

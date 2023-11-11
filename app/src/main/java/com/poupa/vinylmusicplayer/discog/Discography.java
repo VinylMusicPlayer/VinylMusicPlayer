@@ -289,6 +289,10 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
+    public float getMaxReplayGain() {
+        return cache.getMaxReplayGain();
+    }
+
     private void addSong(@NonNull Song song, boolean cacheOnly) {
         synchronized (cache) {
             // Race condition check: If the song has been added -> skip

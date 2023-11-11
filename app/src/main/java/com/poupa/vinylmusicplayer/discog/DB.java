@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 class DB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "discography.db";
-    private static final int VERSION = 6;
+    private static final int VERSION = 7;
 
     DB() {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, VERSION);
@@ -44,6 +44,8 @@ class DB extends SQLiteOpenHelper {
                         + SongColumns.GENRE +  " TEXT, "
                         + SongColumns.REPLAYGAIN_ALBUM + " REAL, "
                         + SongColumns.REPLAYGAIN_TRACK + " REAL, "
+                        + SongColumns.REPLAYGAINPEAK_ALBUM + " REAL, "
+                        + SongColumns.REPLAYGAINPEAK_TRACK + " REAL, "
                         + SongColumns.TRACK_DURATION + " LONG, "
                         + SongColumns.TRACK_NUMBER + " LONG, "
                         + SongColumns.TRACK_TITLE + " TEXT, "
@@ -81,6 +83,7 @@ class DB extends SQLiteOpenHelper {
                 case 3:
                 case 4:
                 case 5:
+                case 6:
                 case VERSION: // At target. This case is here for consistency check
                     migrateResetAll.accept(dbase);
                     break;
@@ -111,6 +114,8 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.GENRE, song.genre);
             values.put(SongColumns.REPLAYGAIN_ALBUM, song.replayGainAlbum);
             values.put(SongColumns.REPLAYGAIN_TRACK, song.replayGainTrack);
+            values.put(SongColumns.REPLAYGAINPEAK_ALBUM, song.replayGainPeakAlbum);
+            values.put(SongColumns.REPLAYGAINPEAK_TRACK, song.replayGainPeakTrack);
             values.put(SongColumns.TRACK_DURATION, song.duration);
             values.put(SongColumns.TRACK_NUMBER, song.trackNumber);
             values.put(SongColumns.TRACK_TITLE, song.title);
@@ -161,6 +166,8 @@ class DB extends SQLiteOpenHelper {
                         SongColumns.GENRE,
                         SongColumns.REPLAYGAIN_ALBUM,
                         SongColumns.REPLAYGAIN_TRACK,
+                        SongColumns.REPLAYGAINPEAK_ALBUM,
+                        SongColumns.REPLAYGAINPEAK_TRACK,
                         SongColumns.TRACK_DURATION,
                         SongColumns.TRACK_NUMBER,
                         SongColumns.TRACK_TITLE,
@@ -191,6 +198,8 @@ class DB extends SQLiteOpenHelper {
                 final String genre = cursor.getString(++columnIndex);
                 final float replayGainAlbum = cursor.getFloat(++columnIndex);
                 final float replayGainTrack = cursor.getFloat(++columnIndex);
+                final float replayGainPeakAlbum = cursor.getFloat(++columnIndex);
+                final float replayGainPeakTrack = cursor.getFloat(++columnIndex);
                 final long trackDuration = cursor.getLong(++columnIndex);
                 final int trackNumber = cursor.getInt(++columnIndex);
                 final String trackTitle = cursor.getString(++columnIndex);
@@ -214,6 +223,8 @@ class DB extends SQLiteOpenHelper {
                 song.genre = genre;
                 song.replayGainTrack = replayGainTrack;
                 song.replayGainAlbum = replayGainAlbum;
+                song.replayGainPeakTrack = replayGainPeakTrack;
+                song.replayGainPeakAlbum = replayGainPeakAlbum;
 
                 songs.add(song);
             } while (cursor.moveToNext());
@@ -237,6 +248,8 @@ class DB extends SQLiteOpenHelper {
         String GENRE = "genre";
         String REPLAYGAIN_ALBUM = "replaygain_album";
         String REPLAYGAIN_TRACK = "replaygain_track";
+        String REPLAYGAINPEAK_ALBUM = "replaygainpeak_album";
+        String REPLAYGAINPEAK_TRACK = "replaygainpeak_track";
         String TRACK_DURATION = "track_duration";
         String TRACK_TITLE = "track_title";
         String TRACK_NUMBER = "track_number";

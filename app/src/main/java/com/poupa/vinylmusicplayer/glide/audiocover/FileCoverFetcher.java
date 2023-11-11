@@ -10,6 +10,7 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.MissingResourceException;
 
@@ -28,6 +29,11 @@ public class FileCoverFetcher extends AbsCoverFetcher {
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
         try {
             final AudioFile audio = SAFUtil.loadAudioFile(model.file);
+            if (audio == null) {
+                callback.onLoadFailed(new IOException("Cannot load audio file"));
+                return;
+            }
+
             final Artwork art = audio.getTag().getFirstArtwork();
             if (art != null) {
                 byte[] imageData = art.getBinaryData();

@@ -1,10 +1,12 @@
 package com.poupa.vinylmusicplayer.service;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
+import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
 import android.os.PowerManager;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -25,6 +28,8 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
 
     private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
     private MediaPlayer mNextMediaPlayer;
+
+    private DynamicsProcessing mDynamicsProcessing;
 
     private final Context context;
     @Nullable
@@ -79,6 +84,10 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
                 player.setDataSource(path);
             }
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (App.DYNAMICS_PROCESSING_AVAILABLE && mDynamicsProcessing == null) {
+                mDynamicsProcessing = new DynamicsProcessing(player.getAudioSessionId());
+                mDynamicsProcessing.setEnabled(true);
+            }
             player.prepare();
         } catch (Exception e) {
             return false;
@@ -191,6 +200,10 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         if (mNextMediaPlayer != null) {
             mNextMediaPlayer.release();
         }
+        if (mDynamicsProcessing != null) {
+            mDynamicsProcessing.release();
+            mDynamicsProcessing = null;
+        }
     }
 
     /**
@@ -297,20 +310,43 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         return mCurrentMediaPlayer.getAudioSessionId();
     }
 
+    /**
+     * Set the replay gain to be applied immediately. It should match the tags of the current song.
+     *
+     * @param replaygain gain in dB, or NaN for no replay gain (equivalent to 0dB)
+     */
+    @Override
     public void setReplayGain(float replaygain) {
         this.replaygain = replaygain;
         updateVolume();
     }
 
+    /**
+     * Set the ducking factor to be applied immediately.
+     *
+     * @param duckingFactor gain as a linear factor, between 0.0 and 1.0.
+     */
+    @Override
     public void setDuckingFactor(float duckingFactor) {
         this.duckingFactor = duckingFactor;
         updateVolume();
     }
 
+    @SuppressLint("NewApi") // mDynamicsProcessing will remain null if the API level is too low
     private void updateVolume() {
         float volume = 1.0f;
-        if (!Float.isNaN(replaygain)) {
-            volume = replaygain;
+
+        if (mDynamicsProcessing != null) {
+            // setInputGainAllChannelsTo uses a dB scale
+            if (Float.isNaN(replaygain)) {
+                mDynamicsProcessing.setInputGainAllChannelsTo(0.0f);
+            } else {
+                mDynamicsProcessing.setInputGainAllChannelsTo(replaygain);
+            }
+        } else if (!Float.isNaN(replaygain)) {
+            // setVolume uses a linear scale
+            float rgResult = ((float) Math.pow(10, (replaygain / 20)));
+            volume = Math.max(0, Math.min(1, rgResult));
         }
 
         volume *= duckingFactor;
