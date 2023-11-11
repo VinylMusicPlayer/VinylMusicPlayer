@@ -11,7 +11,6 @@ blacklist_branches="
 # Space separated list, each following the 'login/repo/branch' format
 #  Octoton/VinylMusicPlayer/random_album_access_version_1
 alien_branches="
-  MageFroh/VinylMusicPlayer/positive-replay-gain
 "
 
 # Support for CircleCI
