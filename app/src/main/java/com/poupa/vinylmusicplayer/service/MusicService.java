@@ -1178,14 +1178,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 songPlayCountHelper.notifySongChanged(currentSong);
                 break;
             case QUEUE_CHANGED:
+                updateMediaSessionMetaData(); // because playing queue size might have changed
+                saveState();
+                int queueSize = 0;
                 synchronized (this) {
-                    updateMediaSessionMetaData(); // because playing queue size might have changed
-                    saveState();
-                    if (playingQueue.size() > 0) {
-                        prepareNext();
-                    } else {
-                        updateNotification();
-                    }
+                    queueSize = playingQueue.size();
+                }
+
+                if (queueSize > 0) {
+                    prepareNext();
+                } else {
+                    updateNotification();
                 }
                 break;
         }
