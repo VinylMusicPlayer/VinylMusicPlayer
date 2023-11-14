@@ -232,16 +232,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             // Android O+ requires a foreground service to post a notification asap
             updateNotification();
         }
-
         mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
         throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
         getContentResolver().registerContentObserver(
-                MediaStore.Audio.Media.INTERNAL_CONTENT_URI, true, mediaStoreObserver
-        );
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI, true, mediaStoreObserver);
         getContentResolver().registerContentObserver(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mediaStoreObserver
-        );
-        mediaStoreObserver.onChange(true);
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mediaStoreObserver);
 
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
 
@@ -251,6 +247,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         mBrowsableMusicProvider = new BrowsableMusicProvider(this);
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
+        mediaStoreObserver.onChange(true);
     }
 
     private AudioManager getAudioManager() {
@@ -282,7 +279,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if ((intent != null) && (intent.getAction() != null)) {
             synchronized (this) {
-                restoreQueuesAndPositionIfNecessary();
+                restoreQueuesAndPositionIfNecessary(); // TODO Not necessary? Since already called async via onCreate.restoreStates
                 String action = intent.getAction();
                 switch (action) {
                     case ACTION_TOGGLE_PAUSE:
