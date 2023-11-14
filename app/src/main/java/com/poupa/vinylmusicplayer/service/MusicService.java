@@ -567,9 +567,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void closeAudioEffectSession() {
+        int sessionId = 0;
         synchronized (this) {
+            if (playback != null) {
+                sessionId = playback.getAudioSessionId();
+            }
+        }
+        if (sessionId != 0) {
             final Intent audioEffectsIntent = new Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
-            audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playback.getAudioSessionId());
+            audioEffectsIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId);
             audioEffectsIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getPackageName());
             sendBroadcast(audioEffectsIntent);
         }
