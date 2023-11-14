@@ -810,8 +810,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void toggleShuffle() {
         synchronized (this) {
             playingQueue.toggleShuffle();
-            propagateShuffleChange();
         }
+        propagateShuffleChange();
     }
 
     public void setShuffleMode(final int shuffleMode) {
@@ -821,16 +821,18 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
-        synchronized (this) {
-            int position = startPosition;
-            if (playingQueue != null && shuffleMode != MusicService.SHUFFLE_MODE_NONE && startPosition == MusicService.RANDOM_START_POSITION_ON_SHUFFLE) {
-                position = new Random().nextInt(playingQueue.size());
-            }
+    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+        int position;
+        if (queue != null && shuffleMode != SHUFFLE_MODE_NONE && startPosition == RANDOM_START_POSITION_ON_SHUFFLE) {
+            position = new Random().nextInt(queue.size());
+        } else {
+            position = startPosition;
+        }
 
-            if (this.playingQueue.openQueue(playingQueue, position, shuffleMode)) {
+        synchronized (this) {
+            if (playingQueue.openQueue(queue, position, shuffleMode)) {
                 if (startPlaying) {
-                    playSongAt(this.playingQueue.getCurrentPosition(), false);
+                    playSongAt(playingQueue.getCurrentPosition(), false);
                 } else {
                     setPosition(position);
                 }
@@ -839,38 +841,38 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, final boolean startPlaying) {
+    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
         synchronized (this) {
-            openQueue(playingQueue, startPosition, startPlaying, this.playingQueue.getShuffleMode());
+            openQueue(queue, startPosition, startPlaying, playingQueue.getShuffleMode());
         }
     }
 
     public void addSongAfter(int position, Song song) {
         synchronized (this) {
             playingQueue.addAfter(position, song);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void addSongBackTo(int position, IndexedSong song) {
         synchronized (this) {
             playingQueue.addSongBackTo(position, song);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void addSongsAfter(int position, List<Song> songs) {
         synchronized (this) {
             playingQueue.addAllAfter(position, songs);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void addSong(Song song) {
         synchronized (this) {
             playingQueue.add(song);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void addSongs(List<Song> songs) {
