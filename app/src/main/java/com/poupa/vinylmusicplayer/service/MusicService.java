@@ -203,34 +203,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onCreate() {
         super.onCreate();
-
         final PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+        wakeLock.setReferenceCounted(false);
 
         synchronized (this) {
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-            wakeLock.setReferenceCounted(false);
-
             playbackHandlerThread = new HandlerThread("PlaybackHandler");
             playbackHandlerThread.start();
             playbackHandler = new PlaybackHandler(this, playbackHandlerThread.getLooper());
 
             playback = new MultiPlayer(this);
             playback.setCallbacks(this);
-
-            mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
-            throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
-
-            getContentResolver().registerContentObserver(
-                    MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                    true,
-                    mediaStoreObserver
-            );
-            getContentResolver().registerContentObserver(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    true,
-                    mediaStoreObserver
-            );
-            mediaStoreObserver.onChange(true);
         }
 
         // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
@@ -250,6 +233,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             // Android O+ requires a foreground service to post a notification asap
             updateNotification();
         }
+
+        mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
+        throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
+        getContentResolver().registerContentObserver(
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI, true, mediaStoreObserver
+        );
+        getContentResolver().registerContentObserver(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, mediaStoreObserver
+        );
+        mediaStoreObserver.onChange(true);
 
         PreferenceUtil.getInstance().registerOnSharedPreferenceChangedListener(this);
 
@@ -460,7 +453,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     }
                 } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
                     // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                    Log.e(TAG, "Cannot restore, queues are corrupted", queueCopiesOutOfSync);
+                    OopsHandler.copyStackTraceToClipboard(queueCopiesOutOfSync);
                     SafeToast.show(this, R.string.failed_restore_playing_queue);
 
                     final int shuffleMode = playingQueue.getShuffleMode();
@@ -1211,17 +1204,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     void releaseWakeLock() {
-        synchronized (this) {
-            if (wakeLock.isHeld()) {
-                wakeLock.release();
-            }
+        if (wakeLock.isHeld()) {
+            wakeLock.release();
         }
     }
 
     private void acquireWakeLock(long milli) {
-        synchronized (this) {
-            wakeLock.acquire(milli);
-        }
+        wakeLock.acquire(milli);
     }
 
     @Override
