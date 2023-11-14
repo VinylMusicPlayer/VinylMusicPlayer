@@ -276,8 +276,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if ((intent != null) && (intent.getAction() != null)) {
-            synchronized (this) {
+        if (intent != null) {
+            if (intent.getAction() != null) {
                 restoreQueuesAndPositionIfNecessary(); // TODO Not necessary? Since already called async via onCreate.restoreStates
                 String action = intent.getAction();
                 switch (action) {
@@ -296,11 +296,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                         break;
                     case ACTION_PLAY_PLAYLIST:
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
-                        int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, playingQueue.getShuffleMode());
                         if (playlist != null) {
                             ArrayList<Song> playlistSongs = playlist.getSongs(this);
                             if (!playlistSongs.isEmpty()) {
-                                openQueue(playlistSongs, RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
+                                synchronized (this) {
+                                    int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, playingQueue.getShuffleMode());
+                                    openQueue(playlistSongs, RANDOM_START_POSITION_ON_SHUFFLE, true, shuffleMode);
+                                }
                             } else {
                                 SafeToast.show(this, R.string.playlist_is_empty);
                             }
@@ -325,7 +327,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     case ACTION_PENDING_QUIT:
                         pendingQuit = true;
                         if (PreferenceUtil.getInstance().gaplessPlayback()) {
-                            playback.setNextDataSource(null);
+                            synchronized (this) {
+                                playback.setNextDataSource(null);
+                            }
                         }
                         break;
                 }
