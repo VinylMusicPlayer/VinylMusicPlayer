@@ -413,8 +413,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
             handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
 
-            playbackHandler.removeMessages(RESTORE_QUEUES);
-            playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
+            if (playbackHandlerThread.isAlive()) {
+                playbackHandler.removeMessages(RESTORE_QUEUES);
+                playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
+            }
         }
     }
 
