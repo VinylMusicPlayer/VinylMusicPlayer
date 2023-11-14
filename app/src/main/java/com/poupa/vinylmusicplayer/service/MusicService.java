@@ -28,7 +28,6 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -351,16 +350,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 becomingNoisyReceiverRegistered = false;
             }
 
-            getContentResolver().unregisterContentObserver(mediaStoreObserver);
-
             mediaSession.setActive(false);
-
-            wakeLock.release();
         }
 
         quit();
         releaseResources();
+        getContentResolver().unregisterContentObserver(mediaStoreObserver);
         PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
+        wakeLock.release();
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_DESTROYED"));
     }
@@ -1079,21 +1076,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public void seek(int millis) {
         synchronized (this) {
-            try {
-                // The 'playback' object can be null during device restart/device turn on after long period (i.e morning).
-                // My assumption is:
-                // - the service gets created (playback object created), and posts a message to the PlaybackHandler thread
-                // - then the service gets destroyed (playback object nullified)
-                // - then the PlaybackHandler thread tries to process the posted message, on a nullified object
-
-                if (playback != null) {
-                    playback.seek(millis);
-                    throttledSeekHandler.notifySeek();
-                }
-            } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+            if (playback != null) {
+                playback.seek(millis);
             }
         }
+        throttledSeekHandler.notifySeek();
     }
 
     void notifyChange(@NonNull final String what) {
@@ -1254,9 +1241,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onTrackEnded() {
+        acquireWakeLock(30000);
         synchronized (this) {
             if (playbackHandlerThread.isAlive()) {
-                acquireWakeLock(30000);
                 playbackHandler.sendEmptyMessage(TRACK_ENDED);
             }
         }
