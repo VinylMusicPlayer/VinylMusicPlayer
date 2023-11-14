@@ -1,28 +1,23 @@
 package com.poupa.vinylmusicplayer.glide.audiocover;
 
-import android.content.Context;
-import android.content.UriPermission;
-
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
-import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.SAFUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.MissingResourceException;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  * @author SC (soncaokim)
  */
 public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
-    private FileInputStream stream;
-
     @NonNull
     @Override
     public Class<InputStream> getDataClass() {
@@ -35,47 +30,39 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
         return DataSource.LOCAL;
     }
 
-    private static final String[] FALLBACKS =
-            {"cover.jpg", "album.jpg", "folder.jpg", "cover.png", "album.png", "folder.png"};
-
-    protected InputStream fallback(String path) throws FileNotFoundException {
-        return fallback(new File(path));
+    protected void fallback(String path, @NonNull DataCallback<? super InputStream> callback) throws FileNotFoundException {
+        fallback(new File(path), callback);
     }
 
-    protected InputStream fallback(File file) throws FileNotFoundException {
+    public void fallback(@NonNull File file, @NonNull DataFetcher.DataCallback<? super InputStream> callback) throws FileNotFoundException {
         // Look for album art in external files
+        final String[] FALLBACKS = {
+                "cover.jpg", "album.jpg", "folder.jpg",
+                "cover.png", "album.png", "folder.png"
+        };
+
         File parent = file.getParentFile();
+        boolean coverFound = false;
         for (String fallback : FALLBACKS) {
             File cover = new File(parent, fallback);
             if (cover.exists()) {
-                // TODO FileNotFoundException: open failed EACCESS(PermissionDenied)
-                if (cover.canRead()) { // !SAFUtil.isSAFRequired(cover)) {
-                    return stream = new FileInputStream(cover);
-                } else {
-                    final Context context = App.getStaticContext();
-                    String message = String.format("No access to file=%s", cover.getPath());
-                    final List<UriPermission> perms = context.getContentResolver().getPersistedUriPermissions();
-                    for (final UriPermission perm : perms) {
-                        message += "\nAllowed=";
-                        message += perm.getUri().toString();
-                    }
-                    throw new UnsupportedOperationException(message);
+                try {
+                    coverFound = true;
+                    final FileInputStream imageData = SAFUtil.loadImageFile(cover);
+                    callback.onDataReady(imageData);
+                } catch (FileNotFoundException notFound) {
+                    OopsHandler.copyStackTraceToClipboard(notFound);
+                    callback.onLoadFailed(notFound);
                 }
             }
         }
-        return null;
+        if (!coverFound) {
+            callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));
+        }
     }
 
     @Override
     public void cleanup() {
-        // already cleaned up in loadData and ByteArrayInputStream will be GC'd
-        if (stream != null) {
-            try {
-                stream.close();
-            } catch (IOException ignore) {
-                // can't do much about it
-            }
-        }
     }
 
     @Override

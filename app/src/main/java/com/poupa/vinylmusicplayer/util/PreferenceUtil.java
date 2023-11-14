@@ -757,11 +757,11 @@ public final class PreferenceUtil {
                 .apply();
     }
 
-    public String getSAFSDCardUri() {
+    String getSAFSDCardUri() {
         return mPreferences.getString(SAF_SDCARD_URI, "");
     }
 
-    public void setSAFSDCardUri(@NonNull final Uri uri) {
+    void setSAFSDCardUri(@NonNull final Uri uri) {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
                 .apply();

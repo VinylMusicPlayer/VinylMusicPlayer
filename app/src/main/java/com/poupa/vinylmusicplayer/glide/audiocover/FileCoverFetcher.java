@@ -12,7 +12,6 @@ import org.jaudiotagger.tag.images.Artwork;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.MissingResourceException;
 
 /**
  * @author SC (soncaokim)
@@ -39,12 +38,7 @@ public class FileCoverFetcher extends AbsCoverFetcher {
                 byte[] imageData = art.getBinaryData();
                 callback.onDataReady(new ByteArrayInputStream(imageData));
             } else {
-                // TODO On Android 13, instead of asking access directly to the file
-                //      go through the ContentResolver path to avoid the permission error
-                //      Might need to use the ACTION_OPEN_DOCUMENT/ACTION_OPEN_DOCUMENTTREE workflow here
-                InputStream data = fallback(model.file);
-                if (data != null) {callback.onDataReady(data);}
-                else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
+                fallback(model.file, callback);
             }
         } catch (Exception e) {
             OopsHandler.collectStackTrace(e);

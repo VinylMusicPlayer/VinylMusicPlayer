@@ -151,7 +151,6 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
 
     @Override
     protected void loadImageFromFile(Uri imageFilePath) {
-
     }
 
     @Override

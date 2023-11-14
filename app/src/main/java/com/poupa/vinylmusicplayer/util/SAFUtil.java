@@ -27,6 +27,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public class
 SAFUtil {
     public static final String TAG = SAFUtil.class.getSimpleName();
 
-    private static boolean isSAFRequired(File file) {
+    public static boolean isSAFRequired(File file) {
         return !file.canWrite();
     }
 
@@ -191,6 +192,10 @@ SAFUtil {
             }
             return null;
         }
+    }
+
+    public static @Nullable FileInputStream loadImageFile(@NonNull final File file) throws FileNotFoundException {
+        return new FileInputStream(file);
     }
 
     private static void writeSAF(Context context, AutoCloseAudioFile tempAudio, @NonNull final Song song) {
