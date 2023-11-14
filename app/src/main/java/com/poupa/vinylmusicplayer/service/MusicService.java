@@ -220,11 +220,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             mediaStoreObserver = new MediaStoreObserver(this, playbackHandler);
             throttledSeekHandler = new ThrottledSeekHandler(this, playbackHandler);
 
-            // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
-            queueSaveHandlerThread = new HandlerThread("QueueSaveHandler", Process.THREAD_PRIORITY_BACKGROUND);
-            queueSaveHandlerThread.start();
-            queueSaveHandler = new QueueSaveHandler(this, queueSaveHandlerThread.getLooper());
-
             getContentResolver().registerContentObserver(
                     MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
                     true,
@@ -237,6 +232,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             );
             mediaStoreObserver.onChange(true);
         }
+
+        // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
+        queueSaveHandlerThread = new HandlerThread("QueueSaveHandler", Process.THREAD_PRIORITY_BACKGROUND);
+        queueSaveHandlerThread.start();
+        queueSaveHandler = new QueueSaveHandler(this, queueSaveHandlerThread.getLooper());
 
         setupMediaSession();
 
@@ -411,10 +411,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void saveQueues() {
-        synchronized (this) {
-            queueSaveHandler.removeMessages(SAVE_QUEUES);
-            queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
-        }
+        queueSaveHandler.removeMessages(SAVE_QUEUES);
+        queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
     }
 
     private void restoreState() {
@@ -487,11 +485,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void releaseResources() {
+        queueSaveHandler.removeCallbacksAndMessages(null);
+        queueSaveHandlerThread.quitSafely();
+
         synchronized (this) {
             playbackHandler.removeCallbacksAndMessages(null);
             playbackHandlerThread.quitSafely();
-            queueSaveHandler.removeCallbacksAndMessages(null);
-            queueSaveHandlerThread.quitSafely();
 
             playback.release();
             playback = null;
