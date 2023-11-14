@@ -259,21 +259,19 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void setupMediaSession() {
-        synchronized (this) {
-            ComponentName mediaButtonReceiverComponentName = new ComponentName(this, MediaButtonIntentReceiver.class);
+        ComponentName mediaButtonReceiverComponentName = new ComponentName(this, MediaButtonIntentReceiver.class);
 
-            Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-            mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
+        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        mediaButtonIntent.setComponent(mediaButtonReceiverComponentName);
 
-            PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent, 0);
+        PendingIntent mediaButtonReceiverPendingIntent = PendingIntentCompat.getBroadcast(this, 0, mediaButtonIntent, 0);
 
-            MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this);
-            mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
-            mediaSession.setCallback(mMediaSessionCallback);
-            mediaSession.setActive(true);
-            mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
-            setSessionToken(mediaSession.getSessionToken());
-        }
+        MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback(this);
+        mediaSession = new MediaSessionCompat(this, "VinylMusicPlayer", mediaButtonReceiverComponentName, mediaButtonReceiverPendingIntent);
+        mediaSession.setCallback(mMediaSessionCallback);
+        mediaSession.setActive(true);
+        mediaSession.setMediaButtonReceiver(mediaButtonReceiverPendingIntent);
+        setSessionToken(mediaSession.getSessionToken());
     }
 
     @Override
@@ -347,9 +345,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 unregisterReceiver(becomingNoisyReceiver);
                 becomingNoisyReceiverRegistered = false;
             }
-
-            mediaSession.setActive(false);
         }
+        mediaSession.setActive(false);
 
         quit();
         releaseResources();
@@ -484,9 +481,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
             playback.release();
             playback = null;
-
-            mediaSession.release();
         }
+
+        mediaSession.release();
     }
 
     public boolean isPlaying() {
@@ -613,16 +610,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     };
 
     void updateMediaSessionPlaybackState() {
-        synchronized (this) {
-            PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
-                    .setActions(MEDIA_SESSION_ACTIONS)
-                    .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
-                            getSongProgressMillis(), 1);
+        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(MEDIA_SESSION_ACTIONS)
+                .setState(isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED,
+                        getSongProgressMillis(), 1);
 
-            setCustomAction(stateBuilder);
+        setCustomAction(stateBuilder);
 
-            mediaSession.setPlaybackState(stateBuilder.build());
-        }
+        mediaSession.setPlaybackState(stateBuilder.build());
     }
 
     private void setCustomAction(PlaybackStateCompat.Builder stateBuilder) {
@@ -653,9 +648,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         final Song song = getCurrentSong();
 
         if (song.id == -1) {
-            synchronized (this) {
-                mediaSession.setMetadata(null);
-            }
+            mediaSession.setMetadata(null);
             return;
         }
 
@@ -690,18 +683,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-
-                        synchronized (MusicService.this) {
-                            mediaSession.setMetadata(metaData.build());
-                        }
+                        mediaSession.setMetadata(metaData.build());
                     }
 
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-                        synchronized (MusicService.this) {
-                            metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-                            mediaSession.setMetadata(metaData.build());
-                        }
+                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
+                        mediaSession.setMetadata(metaData.build());
                     }
                 });
             }
@@ -1185,9 +1173,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public MediaSessionCompat getMediaSession() {
-        synchronized (this) {
-            return mediaSession;
-        }
+        return mediaSession;
     }
 
     void releaseWakeLock() {
