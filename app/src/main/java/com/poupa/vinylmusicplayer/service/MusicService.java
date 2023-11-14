@@ -215,12 +215,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             playback.setCallbacks(this);
         }
 
+        setupMediaSession();
+
         // queue saving needs to run on a separate thread so that it doesn't block the playback handler events
         queueSaveHandlerThread = new HandlerThread("QueueSaveHandler", Process.THREAD_PRIORITY_BACKGROUND);
         queueSaveHandlerThread.start();
         queueSaveHandler = new QueueSaveHandler(this, queueSaveHandlerThread.getLooper());
-
-        setupMediaSession();
 
         uiThreadHandler = new Handler();
 
@@ -247,6 +247,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         mBrowsableMusicProvider = new BrowsableMusicProvider(this);
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
+
         mediaStoreObserver.onChange(true);
     }
 
