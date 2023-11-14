@@ -632,24 +632,30 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void setCustomAction(PlaybackStateCompat.Builder stateBuilder) {
-        int repeatIcon = R.drawable.ic_repeat_white_nocircle_48dp;  // REPEAT_MODE_NONE
-        if (getRepeatMode() == REPEAT_MODE_THIS) {
-            repeatIcon = R.drawable.ic_repeat_one_white_circle_48dp;
-        } else if (getRepeatMode() == REPEAT_MODE_ALL) {
-            repeatIcon = R.drawable.ic_repeat_white_circle_48dp;
+        int repeatIcon;
+        int shuffleIcon;
+        int favoriteIcon;
+
+        synchronized(this) {
+            final int repeatMode = getRepeatMode();
+            if (repeatMode == REPEAT_MODE_THIS) {
+                repeatIcon = R.drawable.ic_repeat_one_white_circle_48dp;
+            } else if (repeatMode == REPEAT_MODE_ALL) {
+                repeatIcon = R.drawable.ic_repeat_white_circle_48dp;
+            } else {
+                repeatIcon = R.drawable.ic_repeat_white_nocircle_48dp;  // REPEAT_MODE_NONE
+            }
+
+            shuffleIcon = playingQueue.getShuffleMode() == SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
+            favoriteIcon = MusicUtil.isFavorite(this, getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
         }
+
         stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
                 CYCLE_REPEAT, getString(R.string.action_cycle_repeat), repeatIcon)
                 .build());
-
-        synchronized (this) {
-            final int shuffleIcon = playingQueue.getShuffleMode() == MusicService.SHUFFLE_MODE_NONE ? R.drawable.ic_shuffle_white_nocircle_48dp : R.drawable.ic_shuffle_white_circle_48dp;
-            stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
-                    TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
-                    .build());
-        }
-
-        final int favoriteIcon = MusicUtil.isFavorite(this, getCurrentSong()) ? R.drawable.ic_favorite_white_circle_48dp : R.drawable.ic_favorite_border_white_nocircle_48dp;
+        stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+                TOGGLE_SHUFFLE, getString(R.string.action_toggle_shuffle), shuffleIcon)
+                .build());
         stateBuilder.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
                 TOGGLE_FAVORITE, getString(R.string.action_toggle_favorite), favoriteIcon)
                 .build());
