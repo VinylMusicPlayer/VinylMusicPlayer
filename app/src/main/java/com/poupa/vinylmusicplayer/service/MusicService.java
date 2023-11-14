@@ -817,8 +817,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void setShuffleMode(final int shuffleMode) {
         synchronized (this) {
             playingQueue.setShuffle(shuffleMode);
-            propagateShuffleChange();
         }
+        propagateShuffleChange();
     }
 
     public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
@@ -891,9 +891,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 if (isPlaying) {playSongAt(newPosition, false);}
                 else {setPosition(newPosition);}
             }
-
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void removeSongs(@NonNull List<Song> songs) {
@@ -902,44 +901,48 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             if (newPosition != -1) {
                 setPosition(newPosition);
             }
-
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void moveSong(int from, int to) {
         synchronized (this) {
             playingQueue.move(from, to);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void clearQueue() {
         synchronized (this) {
             playingQueue.clear();
-
             setPosition(-1);
-            notifyChange(QUEUE_CHANGED);
         }
+        notifyChange(QUEUE_CHANGED);
     }
 
     public void playSongAt(final int position, boolean skippedLast) {
-        synchronized (this) {
-            if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
-                final int songProgressMs = getSongProgressMillis();
-                final int songDurationMs = getSongDurationMillis();
-                if ((songProgressMs > SKIP_THRESHOLD_MS) // not just started
-                        && (songDurationMs - songProgressMs > SKIP_THRESHOLD_MS) // not about to end
-                ) {
-                    // Mark the current song as skipped
-                    final Song song = getCurrentSong();
-                    final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
-                    if (!PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
-                        PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
-                    }
-                }
+        if (skippedLast && PreferenceUtil.getInstance().maintainSkippedSongsPlaylist()) {
+            final int songProgressMs;
+            final int songDurationMs;
+            final Song song;
+            synchronized (this) {
+                songProgressMs = getSongProgressMillis();
+                songDurationMs = getSongDurationMillis();
+                song = getCurrentSong();
             }
 
+            if ((songProgressMs > SKIP_THRESHOLD_MS) // not just started
+                    && (songDurationMs - songProgressMs > SKIP_THRESHOLD_MS) // not about to end
+            ) {
+                // Mark the current song as skipped
+                final long playlistId = MusicUtil.getOrCreateSkippedPlaylist(this).id;
+                if (!PlaylistsUtil.doesPlaylistContain(playlistId, song.id)) {
+                    PlaylistsUtil.addToPlaylist(this, song, playlistId, true);
+                }
+            }
+        }
+
+        synchronized (this) {
             if (playbackHandlerThread.isAlive()) {
                 playbackHandler.removeMessages(PLAY_SONG);
                 playbackHandler.obtainMessage(PLAY_SONG, position, 0).sendToTarget();
@@ -1013,6 +1016,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private void applyReplayGain() {
         synchronized (this) {
+            if (playback == null) {return;}
+
             byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
             if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
                 Song song = getCurrentSong();
@@ -1211,31 +1216,31 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        synchronized (this) {
-            switch (key) {
-                case PreferenceUtil.GAPLESS_PLAYBACK:
+        switch (key) {
+            case PreferenceUtil.GAPLESS_PLAYBACK:
+                synchronized (this) {
                     if (sharedPreferences.getBoolean(key, false)) {
                         prepareNext();
                     } else {
                         playback.setNextDataSource(null);
                     }
-                    break;
-                case PreferenceUtil.COLORED_NOTIFICATION:
-                    updateNotification();
-                    break;
-                case PreferenceUtil.CLASSIC_NOTIFICATION:
-                    initNotification();
-                    updateNotification();
-                    break;
-                case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
-                    sendChangeInternal(MusicService.META_CHANGED);
-                    break;
-                case PreferenceUtil.RG_SOURCE_MODE_V2:
-                case PreferenceUtil.RG_PREAMP_WITH_TAG:
-                case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
-                    applyReplayGain();
-                    break;
-            }
+                }
+                break;
+            case PreferenceUtil.COLORED_NOTIFICATION:
+                updateNotification();
+                break;
+            case PreferenceUtil.CLASSIC_NOTIFICATION:
+                initNotification();
+                updateNotification();
+                break;
+            case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
+                sendChangeInternal(MusicService.META_CHANGED);
+                break;
+            case PreferenceUtil.RG_SOURCE_MODE_V2:
+            case PreferenceUtil.RG_PREAMP_WITH_TAG:
+            case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
+                applyReplayGain();
+                break;
         }
     }
 
@@ -1343,14 +1348,18 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @NonNull
     public String getQueueInfoString() {
+        final long duration;
+        final int position;
+        final int size;
         synchronized (this) {
-            final long duration = getQueueDurationMillis(getPosition());
-
-            return MusicUtil.buildInfoString(
-                    getResources().getString(R.string.up_next),
-                    MusicUtil.getReadableDurationString(duration),
-                    (getPosition() + 1) + "/" + playingQueue.size()
-            );
+            duration = getQueueDurationMillis(getPosition());
+            position = getPosition() + 1;
+            size = playingQueue.size();
         }
+        return MusicUtil.buildInfoString(
+                getResources().getString(R.string.up_next),
+                MusicUtil.getReadableDurationString(duration),
+                position + "/" + size
+        );
     }
 }
