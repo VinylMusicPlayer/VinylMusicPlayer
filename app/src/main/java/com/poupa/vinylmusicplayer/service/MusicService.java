@@ -351,7 +351,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
         mediaSession.setActive(false);
-
         quit();
         releaseResources();
         getContentResolver().unregisterContentObserver(mediaStoreObserver);
@@ -405,18 +404,20 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void restoreState() {
+        final int shuffleMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0);
+        final int repeateMode = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0);
+
         synchronized (this) {
-            playingQueue.restoreMode(
-                    PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_SHUFFLE_MODE, 0),
-                    PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_REPEAT_MODE, 0));
-            handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
-            handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
+            playingQueue.restoreMode(shuffleMode, repeateMode);
 
             if (playbackHandlerThread.isAlive()) {
                 playbackHandler.removeMessages(RESTORE_QUEUES);
                 playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
             }
         }
+
+        handleAndSendChangeInternal(SHUFFLE_MODE_CHANGED);
+        handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
     }
 
     void restoreQueuesAndPositionIfNecessary() {
