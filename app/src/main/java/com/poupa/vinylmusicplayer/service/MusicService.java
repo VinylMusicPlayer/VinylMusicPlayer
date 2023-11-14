@@ -383,12 +383,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     void saveQueuesImpl() {
+        ArrayList<IndexedSong> queue;
+        ArrayList<IndexedSong> originalQueue;
         synchronized (this) {
-            MusicPlaybackQueueStore.getInstance(this).saveQueues(
-                    playingQueue.getPlayingQueue(),
-                    playingQueue.getOriginalPlayingQueue()
-            );
+            // Get a copy of the queues
+            queue = new ArrayList<>(playingQueue.getPlayingQueue());
+            originalQueue = new ArrayList<>(playingQueue.getOriginalPlayingQueue());
         }
+        MusicPlaybackQueueStore.getInstance(this).saveQueues(
+                queue,
+                originalQueue
+        );
     }
 
     private void savePosition() {
