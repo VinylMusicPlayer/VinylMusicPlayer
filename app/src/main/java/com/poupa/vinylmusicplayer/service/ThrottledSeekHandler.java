@@ -16,8 +16,12 @@ public class ThrottledSeekHandler implements Runnable {
     }
 
     public void notifySeek() {
-        mHandler.removeCallbacks(this);
-        mHandler.postDelayed(this, THROTTLE);
+        synchronized (mMusicService) {
+            if (mHandler.getLooper().getThread().isAlive()) {
+                mHandler.removeCallbacks(this);
+                mHandler.postDelayed(this, THROTTLE);
+            }
+        }
     }
 
     @Override
