@@ -31,7 +31,7 @@ import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
 import com.poupa.vinylmusicplayer.lastfm.rest.model.LastFmAlbum;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoAudioFile;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.LastFMUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -83,7 +83,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
 
 
     private void fillViewsWithFileTags() {
-        try (AutoDeleteAudioFile audio = getAudioFile()) {
+        try (AutoAudioFile audio = getAudioFile()) {
             if (audio != null) {
                 albumTitle.setText(getAlbumTitle(audio.get()));
                 albumArtist.setText(getAlbumArtistName(audio.get()));
@@ -97,7 +97,7 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
 
     @Override
     protected void loadCurrentImage() {
-        try (AutoDeleteAudioFile audio = getAudioFile()) {
+        try (AutoAudioFile audio = getAudioFile()) {
             Bitmap bitmap = MusicUtil.getMediaStoreAlbumCover(audio);
             setImageBitmap(bitmap, VinylMusicPlayerColorUtil.getColor(VinylMusicPlayerColorUtil.generatePalette(bitmap), ATHUtil.resolveColor(this, R.attr.defaultFooterColor)));
             deleteAlbumArt = false;

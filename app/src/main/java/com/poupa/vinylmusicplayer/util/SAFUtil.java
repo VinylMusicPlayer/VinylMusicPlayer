@@ -115,7 +115,7 @@ public class SAFUtil {
         return null;
     }
 
-    public static void write(Context context, AutoDeleteAudioFile audio, @NonNull final Song song) {
+    public static void write(Context context, AutoAudioFile audio, @NonNull final Song song) {
         writeSAF(context, audio, song);
     }
 
@@ -136,12 +136,21 @@ public class SAFUtil {
             return null;
         }
     }
-    public static @Nullable AutoDeleteAudioFile loadAudioFile(Context context, @NonNull final Song song) {
+    public static @Nullable AutoAudioFile loadAudioFile(Context context, @NonNull final Song song) {
         // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
+        // We first try accessing the File directly, since this is faster. Otherwise, we create a temp file with the InputStream contents.
         if (song.id == Song.EMPTY_SONG.id) {return null;}
 
+        final File songFile = new File(song.data);
+        try {
+            return AutoAudioFile.create(AudioFileIO.read(songFile));
+        } catch (Exception e) {
+            Log.w(TAG, "Could not read " + song.data + ". Falling back to creating a temp file", e);
+        }
+
         final Uri uri = getUriFromSong(song);
+        AutoDeleteTempFile tempFile = null;
         try (InputStream original = context.getContentResolver().openInputStream(uri)) {
             // Create an app-private temp file
             Function<String, String> getSuffix = (name) -> {
@@ -149,10 +158,11 @@ public class SAFUtil {
                 if (i == -1) {return "";}
                 return name.substring(i + 1);
             };
-            File tempFile = AutoDeleteTempFile.create("song-" + song.id, getSuffix.apply(song.data)).get();
+
+            tempFile = AutoDeleteTempFile.create("song-" + song.id, getSuffix.apply(song.data));
 
             // Copy the content of the URI to the temp file
-            try (OutputStream temp = new FileOutputStream(tempFile)) {
+            try (OutputStream temp = new FileOutputStream(tempFile.get())) {
                 byte[] buffer = new byte[1024];
                 int read;
                 while ((read = original.read(buffer, 0, 1024)) >= 0) {
@@ -161,14 +171,17 @@ public class SAFUtil {
             }
 
             // Create a ephemeral/volatile audio file
-            return new AutoDeleteAudioFile(AudioFileIO.read(tempFile));
+            return AutoAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(e);
+            if (tempFile != null) {
+                tempFile.close();
+            }
             return null;
         }
     }
 
-    private static void writeSAF(Context context, AutoDeleteAudioFile tempAudio, @NonNull final Song song) {
+    private static void writeSAF(Context context, AutoAudioFile tempAudio, @NonNull final Song song) {
         if (context == null) {
             return;
         }

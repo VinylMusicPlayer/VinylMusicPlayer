@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
 import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
@@ -29,7 +29,7 @@ public class SongCoverFetcher extends AbsCoverFetcher {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), model.song)) {
+        try (AutoAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), model.song)) {
             if (audio == null) {
                 callback.onLoadFailed(new IOException("Cannot load audio file"));
                 return;

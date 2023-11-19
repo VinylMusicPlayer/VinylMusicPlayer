@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 public class MusicUtil {
     public static @Nullable Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
         final Context context = App.getStaticContext();
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
             return getMediaStoreAlbumCover(audio);
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(e);
@@ -57,7 +57,7 @@ public class MusicUtil {
         }
     }
 
-    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoDeleteAudioFile audio) {
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoAudioFile audio) {
         try {
             if (audio == null) {
                 return null;
@@ -362,7 +362,7 @@ public class MusicUtil {
         if (song.id == Song.EMPTY_SONG.id) {return null;}
 
         String lyrics = null;
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
             lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
             OopsHandler.copyStackTraceToClipboard(e);

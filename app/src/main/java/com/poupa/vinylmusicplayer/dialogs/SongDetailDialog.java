@@ -17,7 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoAudioFile;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
@@ -107,7 +107,7 @@ public class SongDetailDialog extends DialogFragment {
             htmlBuilder.appendLine(R.string.label_file_path, "-");
         }
 
-        try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoAudioFile audioFile = SAFUtil.loadAudioFile(context, song)) {
             AudioHeader audioHeader = audioFile.get().getAudioHeader();
 
             htmlBuilder.appendLine(R.string.label_file_format, audioHeader.getFormat())

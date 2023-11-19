@@ -44,7 +44,7 @@ import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoAudioFile;
 import com.poupa.vinylmusicplayer.util.AutoDeleteTempFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
@@ -437,7 +437,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 int counter = 0;
                 for (Song song : info.songs) {
                     publishProgress(++counter, info.songs.size());
-                    try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
+                    try (AutoAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
                         final Tag tag = audioFile.get().getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
@@ -560,12 +560,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     protected abstract void loadImageFromFile(Uri selectedFile);
 
-    @Nullable AutoDeleteAudioFile getAudioFile() {
+    @Nullable
+    AutoAudioFile getAudioFile() {
         return getAudioFile(songs.get(0));
     }
 
     @Nullable
-    private AutoDeleteAudioFile getAudioFile(@NonNull Song song) {
+    private AutoAudioFile getAudioFile(@NonNull Song song) {
         return SAFUtil.loadAudioFile(this, song);
     }
 
