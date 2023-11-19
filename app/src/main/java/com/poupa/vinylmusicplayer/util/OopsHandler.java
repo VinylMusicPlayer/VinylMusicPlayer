@@ -32,8 +32,6 @@ public class OopsHandler implements UncaughtExceptionHandler {
 
     public void uncaughtException(@NonNull final Thread t, @NonNull final Throwable e) {
         try {
-            if (!PreferenceUtil.getInstance().isOopsHandlerEnabled()) {return;}
-
             sendBugReport(getStackTraceWithTime(e));
         } catch (final Throwable ignore) {}
     }
@@ -82,6 +80,8 @@ public class OopsHandler implements UncaughtExceptionHandler {
     }
 
     public static void copyStackTraceToClipboard(@NonNull final Throwable exception) {
+        if (!PreferenceUtil.getInstance().isOopsHandlerEnabled()) {return;}
+
         final String stackTrace = getStackTraceWithTime(exception);
         final Context context = App.getStaticContext();
 
