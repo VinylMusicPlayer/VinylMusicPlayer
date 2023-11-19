@@ -437,7 +437,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 int counter = 0;
                 for (Song song : info.songs) {
                     publishProgress(++counter, info.songs.size());
-                    try (AutoAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
+                    try (AutoAudioFile audioFile = SAFUtil.loadReadWriteableAudioFile(activity.get(), song)) {
                         final Tag tag = audioFile.get().getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
@@ -567,7 +567,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     @Nullable
     private AutoAudioFile getAudioFile(@NonNull Song song) {
-        return SAFUtil.loadAudioFile(this, song);
+        return SAFUtil.loadReadOnlyAudioFile(this, song);
     }
 
     @Nullable

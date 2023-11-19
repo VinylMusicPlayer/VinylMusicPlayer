@@ -136,7 +136,7 @@ public class SAFUtil {
             return null;
         }
     }
-    public static @Nullable AutoAudioFile loadAudioFile(Context context, @NonNull final Song song) {
+    public static @Nullable AutoAudioFile loadReadOnlyAudioFile(Context context, @NonNull final Song song) {
         // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
         // We first try accessing the File directly, since this is faster. Otherwise, we create a temp file with the InputStream contents.
@@ -148,6 +148,12 @@ public class SAFUtil {
         } catch (Exception e) {
             Log.w(TAG, "Could not read " + song.data + ". Falling back to creating a temp file", e);
         }
+
+        return loadReadWriteableAudioFile(context, song);
+    }
+
+    public static @Nullable AutoAudioFile loadReadWriteableAudioFile(Context context, @NonNull final Song song) {
+        // Use a temp file owned by Vinyl - this ensures we can write in it
 
         final Uri uri = getUriFromSong(song);
         AutoDeleteTempFile tempFile = null;

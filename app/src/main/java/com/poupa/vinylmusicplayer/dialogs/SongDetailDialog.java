@@ -107,7 +107,7 @@ public class SongDetailDialog extends DialogFragment {
             htmlBuilder.appendLine(R.string.label_file_path, "-");
         }
 
-        try (AutoAudioFile audioFile = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoAudioFile audioFile = SAFUtil.loadReadOnlyAudioFile(context, song)) {
             AudioHeader audioHeader = audioFile.get().getAudioHeader();
 
             htmlBuilder.appendLine(R.string.label_file_format, audioHeader.getFormat())

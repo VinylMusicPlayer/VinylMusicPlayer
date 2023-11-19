@@ -29,7 +29,7 @@ public class SongCoverFetcher extends AbsCoverFetcher {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        try (AutoAudioFile audio = SAFUtil.loadAudioFile(App.getStaticContext(), model.song)) {
+        try (AutoAudioFile audio = SAFUtil.loadReadOnlyAudioFile(App.getStaticContext(), model.song)) {
             if (audio == null) {
                 callback.onLoadFailed(new IOException("Cannot load audio file"));
                 return;

@@ -57,7 +57,7 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         final Context context = App.getStaticContext();
-        try (AutoAudioFile audio = SAFUtil.loadAudioFile(context, song)){
+        try (AutoAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)){
             if (audio == null) {
                 // Cannot get the audio content
                 SafeToast.show(context, context.getString(R.string.saf_read_failed, song.data));
