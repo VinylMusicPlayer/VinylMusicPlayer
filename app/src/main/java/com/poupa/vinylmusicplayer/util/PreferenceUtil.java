@@ -10,6 +10,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.core.util.Pair;
 
@@ -142,6 +143,8 @@ public final class PreferenceUtil {
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
+
+    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
 
     private static PreferenceUtil sInstance;
 
@@ -775,6 +778,10 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
                 .apply();
+    }
+
+    public boolean isOopsHandlerEnabled() {
+        return mPreferences.getBoolean(OOPS_HANDLER_ENABLED, false);
     }
 
     public int getEnqueueSongsDefaultChoice() {

@@ -158,6 +158,7 @@
     <string name="pref_header_now_playing_screen">Now playing</string>
     <string name="pref_title_general_theme">General theme</string>
     <string name="pref_header_audio">Audio</string>
+    <string name="pref_header_development">Development/Experimental features</string>
     <string name="pref_header_library">Library</string>
     <string name="pref_header_images">Images</string>
     <string name="pref_header_lockscreen">Lockscreen</string>
@@ -213,7 +214,8 @@
     <string name="pref_summary_rg_preamp">Set preamp when ReplayGain is enabled</string>
     <string name="pref_rg_disabled">Disabled</string>
     <string name="pref_playlist_disabled">Disabled</string>
-
+    <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
+    <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>

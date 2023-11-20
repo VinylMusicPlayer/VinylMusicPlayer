@@ -55,7 +55,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         try {
             layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
         } catch (InflateException e) {
-            e.printStackTrace();
             new MaterialDialog.Builder(this)
                     .title(android.R.string.dialog_alert_title)
                     .content(R.string.missing_webview_component)
@@ -209,10 +208,9 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
     private static String getCurrentVersionName(@NonNull final Context context) {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (final PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (final PackageManager.NameNotFoundException ignored) {
         }
-        return "Unkown";
+        return "Unknown";
     }
 
     @Override
