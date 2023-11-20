@@ -6,6 +6,7 @@
 # Space separated list of branch names
 #  upstream-contrib/theme-experiment
 blacklist_branches="
+  storage-access
 "
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
