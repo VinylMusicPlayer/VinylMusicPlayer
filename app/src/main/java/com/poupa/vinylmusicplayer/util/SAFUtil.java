@@ -34,7 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SAFUtil {
+public class
+SAFUtil {
     public static final String TAG = SAFUtil.class.getSimpleName();
 
     private static boolean isSAFRequired(File file) {
@@ -132,7 +133,7 @@ public class SAFUtil {
             // Just ignore the jaudiotagger error on unsupported file type (Opus etc)
             return null;
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
             return null;
         }
     }
@@ -179,7 +180,7 @@ public class SAFUtil {
             // Create a ephemeral/volatile audio file
             return AutoCloseAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
             if (tempFile != null) {
                 tempFile.close();
             }
@@ -205,7 +206,7 @@ public class SAFUtil {
             fos.write(audioContent);
             fos.close();
         } catch (final Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
             toast(context, String.format(context.getString(R.string.saf_write_failed), e.getLocalizedMessage()));
         }
     }

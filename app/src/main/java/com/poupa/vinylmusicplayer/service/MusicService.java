@@ -535,7 +535,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             try {
                 return (playback != null) && playback.setDataSource(getTrackUri(getCurrentSong()));
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
                 return false;
             }
         }
@@ -561,7 +561,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 playingQueue.setNextPosition(nextPosition);
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
             }
         }
     }

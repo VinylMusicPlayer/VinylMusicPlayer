@@ -78,7 +78,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
                 lyrics.setText(getLyrics(audio.get()));
             }
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
         }
     }
 

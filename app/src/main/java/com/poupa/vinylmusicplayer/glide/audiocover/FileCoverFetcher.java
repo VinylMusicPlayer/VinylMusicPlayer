@@ -44,7 +44,7 @@ public class FileCoverFetcher extends AbsCoverFetcher {
                 else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
             }
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
             callback.onLoadFailed(e);
         }
     }
