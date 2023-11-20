@@ -154,6 +154,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_images);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
+            addPreferencesFromResource(R.xml.pref_development);
 
             // set summary for whitelist, in order to indicate start directory
             final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
