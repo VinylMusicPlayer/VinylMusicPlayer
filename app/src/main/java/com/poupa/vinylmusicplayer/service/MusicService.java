@@ -53,6 +53,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
+import com.poupa.vinylmusicplayer.service.notification.CrashNotification;
 import com.poupa.vinylmusicplayer.service.notification.IdleNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotification;
 import com.poupa.vinylmusicplayer.service.notification.PlayingNotificationImplApi19;
@@ -153,6 +154,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private PlayingNotification playingNotification;
     private IdleNotification idleNotification;
+    private CrashNotification crashNotification;
 
     private AudioManager audioManager;
     private MediaSessionCompat mediaSession;
@@ -469,6 +471,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         playingNotification.stop();
         idleNotification.stop();
+        crashNotification.stop();
         stopForeground(true);
 
         closeAudioEffectSession();
@@ -601,6 +604,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 IdleNotification.NOTIFICATION_CHANNEL_ID,
                 R.string.idle_notification_name,
                 R.string.idle_notification_description);
+
+        crashNotification = new CrashNotification();
+        crashNotification.init(this,
+                CrashNotification.NOTIFICATION_CHANNEL_ID,
+                R.string.app_crashed,
+                R.string.report_a_crash_invitation);
     }
 
     private void updateNotification() {
@@ -610,6 +619,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         } else {
             playingNotification.stop();
             idleNotification.update();
+        }
+
+        final List<String> crashReports = PreferenceUtil.getInstance().getOopsHandlerReports();
+        if (crashReports != null && !crashReports.isEmpty()) {
+            crashNotification.update();
+        } else {
+            crashNotification.stop();
         }
     }
 
@@ -1227,6 +1243,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 break;
             case PreferenceUtil.COLORED_NOTIFICATION:
+            case PreferenceUtil.OOPS_HANDLER_ENABLED:
+            case PreferenceUtil.OOPS_HANDLER_EXCEPTIONS:
                 updateNotification();
                 break;
             case PreferenceUtil.CLASSIC_NOTIFICATION:
