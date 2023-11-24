@@ -4,17 +4,16 @@
 
 # Branches (in same repo) that we dont want to include in CI builds
 # Space separated list of branch names
-#  upstream-contrib/theme-experiment
 blacklist_branches="
-  storage-access
-  oops-handler-v2
+  pref-annotation
+  sliding-panel
 "
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
 # Space separated list, each following the 'login/repo/branch' format
-#  Octoton/VinylMusicPlayer/random_album_access_version_1
+#  eliehess/VinylMusicPlayer/hide-album-details-setting
+#  TheFireCircle/VinylMusicPlayer/export-import-settings
 alien_branches="
-  MageFroh/VinylMusicPlayer/speed-up-library-parsing
 "
 
 # Support for CircleCI
