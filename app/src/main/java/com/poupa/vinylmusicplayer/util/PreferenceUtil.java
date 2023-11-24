@@ -808,14 +808,12 @@ public final class PreferenceUtil {
         List<String> reports = getOopsHandlerReports();
         if (reports == null || reports.isEmpty()) {return null;}
 
-        final String result = reports.get(0);
+        final String result = reports.remove(0);
 
-        // TODO final String result = reports.remove(0);
-//
-//        final String json = new Gson().toJson(reports);
-//        mPreferences.edit()
-//                .putString(OOPS_HANDLER_EXCEPTIONS, json)
-//                .apply();
+        final String json = new Gson().toJson(reports);
+        mPreferences.edit()
+                .putString(OOPS_HANDLER_EXCEPTIONS, json)
+                .apply();
 
         return result;
     }

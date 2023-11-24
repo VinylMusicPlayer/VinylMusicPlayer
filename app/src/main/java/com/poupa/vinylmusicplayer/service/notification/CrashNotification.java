@@ -34,8 +34,7 @@ public class CrashNotification extends AbsNotification {
             final Notification notification = new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(service.getString(R.string.app_crashed))
-                    .setContentText(crashReport)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(crashReport))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(service.getString(R.string.report_a_crash_invitation) + "\n\n" + crashReport))
                     .setOngoing(false)
                     .setCategory(NotificationCompat.CATEGORY_ERROR)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -44,19 +43,8 @@ public class CrashNotification extends AbsNotification {
                             R.drawable.ic_bug_report_white_24dp,
                             service.getString(R.string.report_a_crash),
                             reportPendingIntent)
-//                    // TODO
-//                    .addAction(
-//                            R.drawable.ic_bug_report_white_24dp,
-//                            "Ignore this crash report",
-//                            pendingIntent)
-//                    // TODO
-//                    .addAction(
-//                            R.drawable.ic_bug_report_white_24dp,
-//                            "Disable crash report collection",
-//                            pendingIntent)
                     .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
-            // TODO Pop the crash report
         }
     }
 
