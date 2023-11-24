@@ -38,15 +38,17 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
     }
 
     protected InputStream fallback(File file) throws FileNotFoundException {
-        // Look for album art in external files
-        File parent = file.getParentFile();
-        for (String fallback : FALLBACKS) {
-            File cover = new File(parent, fallback);
-            if (cover.exists()) {
-                return stream = new FileInputStream(cover);
-            }
-        }
-        return null;
+        throw new FileNotFoundException("Bidule");
+
+//        // Look for album art in external files
+//        File parent = file.getParentFile();
+//        for (String fallback : FALLBACKS) {
+//            File cover = new File(parent, fallback);
+//            if (cover.exists()) {
+//                return stream = new FileInputStream(cover);
+//            }
+//        }
+//        return null;
     }
 
     @Override
