@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.AutoAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
@@ -57,7 +57,7 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         final Context context = App.getStaticContext();
-        try (AutoAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)){
+        try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)){
             if (audio == null) {
                 // Cannot get the audio content
                 SafeToast.show(context, context.getString(R.string.saf_read_failed, song.data));

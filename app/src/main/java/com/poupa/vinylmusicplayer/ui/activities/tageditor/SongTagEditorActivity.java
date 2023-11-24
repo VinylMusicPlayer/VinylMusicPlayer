@@ -15,7 +15,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ActivitySongTagEditorBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.AutoAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 import org.jaudiotagger.tag.FieldKey;
@@ -66,7 +66,7 @@ public class SongTagEditorActivity extends AbsTagEditorActivity implements TextW
     }
 
     private void fillViewsWithFileTags() {
-        try (AutoAudioFile audio = getAudioFile()) {
+        try (AutoCloseAudioFile audio = getAudioFile()) {
             if (audio != null) {
                 songTitle.setText(getSongTitle(audio.get()));
                 albumTitle.setText(getAlbumTitle(audio.get()));

@@ -115,7 +115,7 @@ public class SAFUtil {
         return null;
     }
 
-    public static void write(Context context, AutoAudioFile audio, @NonNull final Song song) {
+    public static void write(Context context, AutoCloseAudioFile audio, @NonNull final Song song) {
         writeSAF(context, audio, song);
     }
 
@@ -136,7 +136,7 @@ public class SAFUtil {
             return null;
         }
     }
-    public static @Nullable AutoAudioFile loadReadOnlyAudioFile(Context context, @NonNull final Song song) {
+    public static @Nullable AutoCloseAudioFile loadReadOnlyAudioFile(Context context, @NonNull final Song song) {
         // Note: This function works around the incompatibility between MediaStore API vs JAudioTagger lib.
         // For file access, MediaStore offers In/OutputStream, whereas JAudioTagger requires File/RandomAccessFile API.
         // We first try accessing the File directly, since this is faster. Otherwise, we create a temp file with the InputStream contents.
@@ -144,7 +144,7 @@ public class SAFUtil {
 
         final File songFile = new File(song.data);
         try {
-            return AutoAudioFile.create(AudioFileIO.read(songFile));
+            return AutoCloseAudioFile.create(AudioFileIO.read(songFile));
         } catch (Exception e) {
             Log.w(TAG, "Could not read " + song.data + ". Falling back to creating a temp file", e);
         }
@@ -152,7 +152,7 @@ public class SAFUtil {
         return loadReadWriteableAudioFile(context, song);
     }
 
-    public static @Nullable AutoAudioFile loadReadWriteableAudioFile(Context context, @NonNull final Song song) {
+    public static @Nullable AutoCloseAudioFile loadReadWriteableAudioFile(Context context, @NonNull final Song song) {
         // Use a temp file owned by Vinyl - this ensures we can write in it
 
         final Uri uri = getUriFromSong(song);
@@ -177,7 +177,7 @@ public class SAFUtil {
             }
 
             // Create a ephemeral/volatile audio file
-            return AutoAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
+            return AutoCloseAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
         } catch (Exception e) {
             OopsHandler.copyStackTraceToClipboard(e);
             if (tempFile != null) {
@@ -187,7 +187,7 @@ public class SAFUtil {
         }
     }
 
-    private static void writeSAF(Context context, AutoAudioFile tempAudio, @NonNull final Song song) {
+    private static void writeSAF(Context context, AutoCloseAudioFile tempAudio, @NonNull final Song song) {
         if (context == null) {
             return;
         }
