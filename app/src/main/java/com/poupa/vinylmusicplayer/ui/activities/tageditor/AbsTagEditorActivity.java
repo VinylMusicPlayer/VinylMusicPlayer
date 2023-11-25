@@ -386,7 +386,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 writeTagsApi21_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
             }
         } else {
-            writeTags(savedSongs);
+            if (SAFUtil.isSDCardAccessGranted(this)) {
+                writeTags(savedSongs);
+            }
         }
     }
 
