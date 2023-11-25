@@ -26,6 +26,7 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
@@ -147,8 +148,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         writeTagsApi21_SAFGuide = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK)
-                    {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         writeTagsApi21_SAFTreePicker.launch(null);
                     }
                 });
@@ -172,7 +172,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                     new ActivityResultContracts.StartIntentSenderForResult(),
                     result -> {
                         if (result.getResultCode() == Activity.RESULT_OK) {
-                            setUpViews();
+                            writeTags(savedSongs);
                         } else {
                             showFab();
                             SafeToast.show(this, getString(R.string.access_not_granted));
@@ -191,18 +191,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 },
                 this::loadImageFromFile);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            setUpViews();
-        }
-        else {
-            List<Uri> urisToRead = new ArrayList<>();
-            for (Song song : songs) {
-                urisToRead.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
-            }
-            PendingIntent readPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToRead);
-
-            tagEditRequestApi30.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
-        }
+        setUpViews();
     }
 
     protected void setUpViews() {
@@ -388,6 +377,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         } else {
             if (SAFUtil.isSDCardAccessGranted(this)) {
                 writeTags(savedSongs);
+            } else {
+                writeTagsApi30();
             }
         }
     }
@@ -409,6 +400,17 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             SafeToast.show(this, message);
             writeTagsApi19_SAFFilePicker.launch(message);
         }
+    }
+
+    @RequiresApi(api = VERSION_CODES.R)
+    private void writeTagsApi30() {
+        List<Uri> urisToRead = new ArrayList<>();
+        for (Song song : songs) {
+            urisToRead.add(ContentUris.withAppendedId(MediaStore.Audio.Media.getContentUri("external"), song.id));
+        }
+        PendingIntent readPendingIntent = MediaStore.createWriteRequest(this.getContentResolver(), urisToRead);
+
+        tagEditRequestApi30.launch(new IntentSenderRequest.Builder(readPendingIntent).build());
     }
 
     private static class AsyncTask extends DialogAsyncTask<AsyncTask.LoadingInfo, Integer, String[]> {
