@@ -360,26 +360,16 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
         savedTags = fieldKeyValueMap;
         savedArtworkInfo = artworkInfo;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            if (!SAFUtil.isSAFRequired(savedSongs)) {
-                writeTags(savedSongs);
-            } else {
-                writeTagsApi19();
-            }
+        if (!SAFUtil.isSAFRequired(savedSongs)) {
+            writeTags(savedSongs);
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            writeTagsApi19();
+        } else if (SAFUtil.isSDCardAccessGranted(this)) {
+            writeTags(savedSongs);
         } else if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
-            if (!SAFUtil.isSAFRequired(savedSongs)) {
-                writeTags(savedSongs);
-            } else if (SAFUtil.isSDCardAccessGranted(this)) {
-                writeTags(savedSongs);
-            } else {
-                writeTagsApi21_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
-            }
+            writeTagsApi21_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
         } else {
-            if (SAFUtil.isSDCardAccessGranted(this)) {
-                writeTags(savedSongs);
-            } else {
-                writeTagsApi30();
-            }
+            writeTagsApi30();
         }
     }
 
