@@ -224,6 +224,7 @@ public class AlbumDetailActivity
         getMenuInflater().inflate(R.menu.menu_album_detail, menu);
 
         MenuHelper.decorateDestructiveItems(menu, this);
+        MenuHelper.showTagEditorIfAvailable(menu);
 
         return super.onCreateOptionsMenu(menu);
     }

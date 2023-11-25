@@ -73,6 +73,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_PALETTE = "extra_palette";
+    // AudioIO crashes before Android O - Disable this editor for older versions
+    public static final boolean AVAILABLE = Build.VERSION.SDK_INT >= VERSION_CODES.O;
 
     FloatingActionButton fab;
     ObservableScrollView observableScrollView;

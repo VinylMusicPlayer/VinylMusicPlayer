@@ -90,6 +90,7 @@ public class SongMenuHelper {
             popupMenu.setOnMenuItemClickListener(this);
 
             MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), v.getContext());
+            MenuHelper.showTagEditorIfAvailable(popupMenu.getMenu());
 
             popupMenu.show();
         }

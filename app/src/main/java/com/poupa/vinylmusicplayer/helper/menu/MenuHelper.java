@@ -11,6 +11,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 
 public class MenuHelper {
     public static void decorateDestructiveItems(@NonNull final Menu menu, final Context context) {
@@ -30,6 +31,13 @@ public class MenuHelper {
 
             span.setSpan(new ForegroundColorSpan(color), 0, span.length(), 0);
             liveItem.setTitle(span);
+        }
+    }
+
+    public static void showTagEditorIfAvailable(@NonNull final Menu menu) {
+        var tagEditorItem = menu.findItem(R.id.action_tag_editor);
+        if (tagEditorItem != null) {
+            tagEditorItem.setVisible(AbsTagEditorActivity.AVAILABLE);
         }
     }
 }
