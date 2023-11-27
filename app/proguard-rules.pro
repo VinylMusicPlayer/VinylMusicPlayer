@@ -13,5 +13,6 @@
 
 -keep class !android.support.v7.internal.view.menu.*,* {*;}
 
-# javax.swing is for desktop, we are on Android -> hide this false positive
+# Desktop Java classes, we are on Android -> hide this false positive
 -dontwarn javax.swing.**
+-dontwarn java.awt.**
