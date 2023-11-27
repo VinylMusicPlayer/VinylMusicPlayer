@@ -12,7 +12,6 @@ import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -58,7 +57,7 @@ public class SleepTimerDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Activity activity = getActivity();
-        DialogSleepTimerBinding binding = DialogSleepTimerBinding.inflate(LayoutInflater.from(activity));
+        DialogSleepTimerBinding binding = DialogSleepTimerBinding.inflate(getLayoutInflater());
         seekArc = binding.seekArc;
         timerDisplay = binding.timerDisplay;
         shouldFinishLastSong = binding.shouldFinishLastSong;

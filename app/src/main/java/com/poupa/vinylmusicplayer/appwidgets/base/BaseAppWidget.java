@@ -22,6 +22,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.request.target.Target;
@@ -195,7 +196,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
     protected Drawable getAlbumArtDrawable(final Resources resources, final Bitmap bitmap) {
         Drawable image;
         if (bitmap == null) {
-            image = resources.getDrawable(R.drawable.default_album_art);
+            image = ResourcesCompat.getDrawable(resources, R.drawable.default_album_art, null);
         } else {
             image = new BitmapDrawable(resources, bitmap);
         }
