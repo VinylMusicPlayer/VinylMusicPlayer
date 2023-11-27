@@ -1,12 +1,13 @@
 # Changelog
 ## [1.6.1] - 2023-11-27
 
-### Other Changes
-* Cont integ by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/859
-* Correct and update russian translation by @developersu in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/861
-* Revert non-intended change by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/865
+### Fixes
 * Avoid copying an audio file to read its tags as much as possible by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/856
 * Oops handler v2 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/860
+
+### Other Changes
+* Correct and update russian translation by @developersu in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/861
+* Revert non-intended change by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/865
 * Oops, disable oops_handler by default by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/868
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.0...1.6.1
