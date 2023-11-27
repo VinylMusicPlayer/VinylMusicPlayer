@@ -14,5 +14,6 @@
 -keep class !android.support.v7.internal.view.menu.*,* {*;}
 
 # Desktop Java classes, we are on Android -> hide this false positive
--dontwarn javax.swing.**
 -dontwarn java.awt.**
+-dontwarn javax.imageio.**
+-dontwarn javax.swing.**
