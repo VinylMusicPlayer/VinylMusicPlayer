@@ -38,14 +38,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class SleepTimerDialog extends DialogFragment {
-    private SeekArc seekArc;
+    SeekArc seekArc;
     private EditText timerDisplay;
     private CheckBox shouldFinishLastSong;
 
-    private int seekArcProgress;
+    int seekArcProgress;
     MaterialDialog materialDialog;
     private TimerUpdater timerUpdater;
-    private final AtomicBoolean changingText = new AtomicBoolean(false);
+    final AtomicBoolean changingText = new AtomicBoolean(false);
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
@@ -182,7 +182,7 @@ public class SleepTimerDialog extends DialogFragment {
         return materialDialog;
     }
 
-    private void updateTimeDisplayTime() {
+    void updateTimeDisplayTime() {
         timerDisplay.setText(String.valueOf(seekArcProgress));
     }
 

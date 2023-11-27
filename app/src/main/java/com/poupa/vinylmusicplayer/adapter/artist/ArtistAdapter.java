@@ -124,7 +124,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
         loadArtistImage(artist, holder);
     }
 
-    private void setColors(int color, ViewHolder holder) {
+    void setColors(int color, ViewHolder holder) {
         if (holder.paletteColorContainer != null) {
             holder.paletteColorContainer.setBackgroundColor(color);
             if (holder.title != null) {

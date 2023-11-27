@@ -41,8 +41,8 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
     TextView lyricsLine1;
     TextView lyricsLine2;
 
-    private Callbacks callbacks;
-    private int currentPosition;
+    Callbacks callbacks;
+    int currentPosition;
 
     private Lyrics lyrics;
     private MusicProgressViewUpdateHelper progressViewUpdateHelper;
@@ -204,7 +204,7 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         lyricsLayout.animate().alpha(1f).setDuration(PlayerAlbumCoverFragment.VISIBILITY_ANIM_DURATION);
     }
 
-    private void notifyColorChange(int color) {
+    void notifyColorChange(int color) {
         if (callbacks != null) callbacks.onColorChanged(color);
     }
 

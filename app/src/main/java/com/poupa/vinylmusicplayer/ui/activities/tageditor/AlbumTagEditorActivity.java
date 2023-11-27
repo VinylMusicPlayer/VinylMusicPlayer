@@ -56,8 +56,8 @@ public class AlbumTagEditorActivity extends AbsTagEditorActivity implements Text
     EditText genre;
     EditText year;
 
-    private Bitmap albumArtBitmap;
-    private boolean deleteAlbumArt;
+    Bitmap albumArtBitmap;
+    boolean deleteAlbumArt;
     private LastFMRestClient lastFMRestClient;
 
     @Override

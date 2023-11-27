@@ -37,7 +37,7 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 public class PlayingNotificationImplApi19 extends PlayingNotification {
 
-    private Target target;
+    Target target;
 
     @Override
     public synchronized void update() {

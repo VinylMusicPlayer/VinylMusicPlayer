@@ -40,8 +40,8 @@ public class DeleteSongsDialogApi30 extends Fragment {
     private static final String SONGS = "songs";
 
     private BaseDeleteSongsAsyncTask deleteSongsTask;
-    private ArrayList<Song> songsToRemove;
-    private ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
+    ArrayList<Song> songsToRemove;
+    ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
     private ActivityResultLauncher<Uri> deleteSongs_SAFTreePicker;
 
     private ActivityResultLauncher<IntentSenderRequest> deleteRequestApi30;
@@ -118,7 +118,7 @@ public class DeleteSongsDialogApi30 extends Fragment {
         ((DeleteSongsAsyncTask)deleteSongsTask).execute(songsToRemove);
     }
 
-    private void deleteSongs(List<Song> songsToRemove) {
+    void deleteSongs(List<Song> songsToRemove) {
         MusicUtil.deleteTracks(DeleteSongsDialogApi30.this, this.deleteRequestApi30, songsToRemove, null);
     }
 

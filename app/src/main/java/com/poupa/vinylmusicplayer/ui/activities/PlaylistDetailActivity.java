@@ -233,7 +233,7 @@ public class PlaylistDetailActivity
         adapter.notifyDataSetChanged();
     }
 
-    private void checkIsEmpty() {
+    void checkIsEmpty() {
         layoutBinding.empty.setVisibility(
                 adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE
         );

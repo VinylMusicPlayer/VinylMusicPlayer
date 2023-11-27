@@ -20,8 +20,8 @@ import java.util.ArrayList;
 public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> implements FastScrollRecyclerView.SectionedAdapter {
 
     @NonNull
-    private final AppCompatActivity activity;
-    private ArrayList<Genre> dataSet;
+    final AppCompatActivity activity;
+    ArrayList<Genre> dataSet;
 
     public GenreAdapter(@NonNull AppCompatActivity activity, ArrayList<Genre> dataSet) {
         this.activity = activity;
