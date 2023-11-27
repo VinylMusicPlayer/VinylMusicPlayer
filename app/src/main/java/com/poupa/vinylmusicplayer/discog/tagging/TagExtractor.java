@@ -90,7 +90,7 @@ public class TagExtractor {
             song.replayGainPeakAlbum = rgValues.peakAlbum;
             song.replayGainPeakTrack = rgValues.peakTrack;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
         }
     }
 }

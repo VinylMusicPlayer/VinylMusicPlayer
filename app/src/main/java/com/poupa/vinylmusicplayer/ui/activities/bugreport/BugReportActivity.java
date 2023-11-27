@@ -48,8 +48,9 @@ public class BugReportActivity extends AbsThemeActivity {
 
         initViews();
 
-        if (TextUtils.isEmpty(getTitle()))
+        if (TextUtils.isEmpty(getTitle())) {
             setTitle(R.string.report_an_issue);
+        }
 
         final DeviceInfo deviceInfo = new DeviceInfo(this);
         final String extraInfo = getIntent().getStringExtra(Intent.EXTRA_TEXT);

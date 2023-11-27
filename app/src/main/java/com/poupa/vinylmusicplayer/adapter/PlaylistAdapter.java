@@ -195,7 +195,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     dir = PlaylistsUtil.savePlaylist(context, playlist);
                     successes++;
                 } catch (IOException e) {
-                    OopsHandler.copyStackTraceToClipboard(e);
+                    OopsHandler.collectStackTrace(e);
                     failures++;
                 }
             }

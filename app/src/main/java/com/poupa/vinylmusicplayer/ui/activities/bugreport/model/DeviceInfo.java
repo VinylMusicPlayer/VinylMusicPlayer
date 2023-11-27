@@ -51,28 +51,6 @@ public class DeviceInfo {
         }
     }
 
-    public String toMarkdown() {
-        return "Device info:\n"
-                + "---\n"
-                + "<table>\n"
-                + "<tr><td>App version</td><td>" + versionName + "</td></tr>\n"
-                + "<tr><td>App version code</td><td>" + versionCode + "</td></tr>\n"
-                + "<tr><td>Android build version</td><td>" + buildVersion + "</td></tr>\n"
-                + "<tr><td>Android release version</td><td>" + releaseVersion + "</td></tr>\n"
-                + "<tr><td>Android SDK version</td><td>" + sdkVersion + "</td></tr>\n"
-                + "<tr><td>Android build ID</td><td>" + buildID + "</td></tr>\n"
-                + "<tr><td>Device brand</td><td>" + brand + "</td></tr>\n"
-                + "<tr><td>Device manufacturer</td><td>" + manufacturer + "</td></tr>\n"
-                + "<tr><td>Device name</td><td>" + device + "</td></tr>\n"
-                + "<tr><td>Device model</td><td>" + model + "</td></tr>\n"
-                + "<tr><td>Device product name</td><td>" + product + "</td></tr>\n"
-                + "<tr><td>Device hardware name</td><td>" + hardware + "</td></tr>\n"
-                + "<tr><td>ABIs</td><td>" + Arrays.toString(abis) + "</td></tr>\n"
-                + "<tr><td>ABIs (32bit)</td><td>" + Arrays.toString(abis32Bits) + "</td></tr>\n"
-                + "<tr><td>ABIs (64bit)</td><td>" + Arrays.toString(abis64Bits) + "</td></tr>\n"
-                + "</table>\n";
-    }
-
     @Override
     public String toString() {
         return "App version: " + versionName + "\n"
