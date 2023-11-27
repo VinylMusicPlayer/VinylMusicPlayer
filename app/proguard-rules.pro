@@ -18,3 +18,4 @@
 -dontwarn javax.imageio.**
 -dontwarn javax.lang.model.**
 -dontwarn javax.swing.**
+-dontwarn org.commonmark.ext.gfm.strikethrough.**
