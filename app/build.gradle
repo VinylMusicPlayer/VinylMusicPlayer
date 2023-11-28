@@ -22,10 +22,10 @@ licenses {
             generate {
                 list -> list.collect{
                     [
-                        (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? " - " + it.name : ""),
-                        it.description != null ? it.description.replaceAll("[;\\n\\r]+"," ") : "",
-                        it.licenses[0] != null ? it.licenses[0].name : "",
-                        it.licenses[0] != null ? it.licenses[0].url : "",
+                        (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? ' - ' + it.name : ''),
+                        it.description != null ? it.description.replaceAll('[;\\n\\r]+', ' ') : '',
+                        it.licenses[0] != null ? it.licenses[0].name : '',
+                        it.licenses[0] != null ? it.licenses[0].url : '',
                     ].join(';')
                 }.join('\n') }
         }
@@ -43,8 +43,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 185
-        versionName '1.5.6'
+        versionCode 187
+        versionName '1.6.1'
 
         multiDexEnabled true
     }
@@ -61,7 +61,7 @@ android {
     }
     signingConfigs {
         ci {
-            def keystorePropertiesFile = rootProject.file("keystore.properties")
+            def keystorePropertiesFile = rootProject.file('keystore.properties')
             def keystoreProperties = new Properties()
             keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -71,25 +71,25 @@ android {
             keyPassword keystoreProperties['keyPassword']
         }
     }
-    flavorDimensions = ["default"]
+    flavorDimensions = ['default']
     productFlavors {
         playStore {
-            dimension "default"
+            dimension 'default'
             signingConfig signingConfigs.ci
         }
         fdroid {
-            dimension "default"
+            dimension 'default'
         }
         ci {
-            dimension "default"
+            dimension 'default'
 
             String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
             String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
             String buildTime = new Date().format('yyMMdd-HHmm')
-            String buildId = gitBranch + "_" + gitSha1 + "_" + buildTime
+            String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
 
-            applicationIdSuffix ".ci"
-            versionNameSuffix "-" + buildId + " CI"
+            applicationIdSuffix '.ci'
+            versionNameSuffix '-' + buildId + ' CI'
             signingConfig signingConfigs.ci
             archivesBaseName = 'vinyl_' + buildId
         }
@@ -170,10 +170,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
-    implementation "io.noties.markwon:core:4.6.2"
-    implementation "io.noties.markwon:html:4.6.2"
-    implementation "io.noties.markwon:image-glide:4.6.2"
-    implementation "io.noties.markwon:linkify:4.6.2"
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'io.noties.markwon:html:4.6.2'
+    implementation 'io.noties.markwon:image-glide:4.6.2'
+    implementation 'io.noties.markwon:linkify:4.6.2'
 
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 

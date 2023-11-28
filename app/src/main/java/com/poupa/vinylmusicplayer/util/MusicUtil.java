@@ -49,15 +49,15 @@ import java.util.regex.Pattern;
 public class MusicUtil {
     public static @Nullable Bitmap getMediaStoreAlbumCover(@NonNull final Song song) {
         final Context context = App.getStaticContext();
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)) {
             return getMediaStoreAlbumCover(audio);
         } catch (Exception e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
             return null;
         }
     }
 
-    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoDeleteAudioFile audio) {
+    public static @Nullable Bitmap getMediaStoreAlbumCover(@Nullable final AutoCloseAudioFile audio) {
         try {
             if (audio == null) {
                 return null;
@@ -260,7 +260,7 @@ public class MusicUtil {
                 deleteRequestApi30.launch(new IntentSenderRequest.Builder(editPendingIntent).build());
             }
         } catch (SecurityException e) { // | SendIntentException e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
         }
 
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
@@ -362,10 +362,10 @@ public class MusicUtil {
         if (song.id == Song.EMPTY_SONG.id) {return null;}
 
         String lyrics = null;
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)) {
+        try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)) {
             lyrics = audio.get().getTagOrCreateDefault().getFirst(FieldKey.LYRICS);
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
         }
 
         if (lyrics == null || lyrics.trim().isEmpty() || !AbsSynchronizedLyrics.isSynchronized(lyrics)) {
@@ -402,7 +402,7 @@ public class MusicUtil {
                     }
                 }
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
             }
         }
 

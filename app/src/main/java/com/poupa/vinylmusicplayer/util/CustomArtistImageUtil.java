@@ -81,7 +81,7 @@ public class CustomArtistImageUtil {
                                             .compress(Bitmap.CompressFormat.JPEG, 100, os);
                                     os.close();
                                 } catch (IOException e) {
-                                    OopsHandler.copyStackTraceToClipboard(e);
+                                    OopsHandler.collectStackTrace(e);
                                 }
 
                                 if (succesful) {

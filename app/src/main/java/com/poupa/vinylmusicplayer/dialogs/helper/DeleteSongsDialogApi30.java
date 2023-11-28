@@ -160,7 +160,7 @@ public class DeleteSongsDialogApi30 extends Fragment {
                     }
                 }
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
             }
 
             return null;

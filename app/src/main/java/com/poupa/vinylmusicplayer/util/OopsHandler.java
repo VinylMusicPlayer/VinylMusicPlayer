@@ -92,4 +92,8 @@ public class OopsHandler implements UncaughtExceptionHandler {
             clipboard.setPrimaryClip(clip);
         });
     }
+
+    public static void collectStackTrace(@NonNull final Throwable exception) {
+        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception));
+    }
 }

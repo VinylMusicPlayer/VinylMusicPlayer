@@ -66,7 +66,7 @@ public class PlaylistMenuHelper {
                 final String file = PlaylistsUtil.savePlaylist(context, playlist);
                 return context.getString(R.string.saved_playlist_to, file);
             } catch (IOException e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
                 return context.getString(R.string.failed_to_save_playlist, e);
             }
         }

@@ -308,10 +308,9 @@
 
     <!-- Bug report -->
     <string name="app_crashed">Vinyl Music Player crashed</string>
-    <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nTechnical data related to the crash
+    <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nData related to the crash
         has been collected and may help the developers to improve this situation.\nYou are invited to submit a
-        bug report - you can review the collected data and will decide on what data to submit in the following
-        screens.</string>
+        bug report - you can review the collected data and will decide on what data to submit.</string>
     <string name="report_a_crash">Report a crash</string>
     <string name="report_an_issue">Report an issue</string>
     <string name="bug_report_issue">Issue</string>

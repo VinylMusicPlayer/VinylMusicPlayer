@@ -24,7 +24,7 @@ public class AutoDeleteTempFile implements AutoCloseable {
         return new AutoDeleteTempFile(tempFile);
     }
 
-    public void close() throws Exception {
+    public void close() {
         file.delete();
     }
 

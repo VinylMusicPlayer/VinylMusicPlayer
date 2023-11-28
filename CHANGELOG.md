@@ -1,4 +1,37 @@
 # Changelog
+## [1.6.1] - 2023-11-27
+
+### Fixes
+* Avoid copying an audio file to read its tags as much as possible by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/856
+* Oops handler v2 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/860
+
+### Other Changes
+* Correct and update russian translation by @developersu in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/861
+* Revert non-intended change by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/865
+* Oops, disable oops_handler by default by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/868
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.0...1.6.1
+
+## [1.6.0] - 2023-11-20
+
+### Features
+* Use DynamicsProcessing to apply positive replay gains in a robust way by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/828
+* Add settings to opt-in for crash report by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/857
+
+### Fixes
+* Fix NPE by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/843
+* Fix race cond - 2 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/842
+* Fix equalizer settings being marked unavailable in the settings by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/840
+
+### Other Changes
+* Update russian translation by @developersu in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/850
+
+## New Contributors
+* @MageFroh made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/840
+* @developersu made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/850
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.5.6...1.6.0
+
 ## [1.5.6] - 2023-10-28
 
 ### Fixes
