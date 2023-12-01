@@ -8,11 +8,13 @@ import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
+import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
@@ -84,10 +86,6 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
                 player.setDataSource(path);
             }
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            if (App.DYNAMICS_PROCESSING_AVAILABLE && mDynamicsProcessing == null) {
-                mDynamicsProcessing = new DynamicsProcessing(player.getAudioSessionId());
-                mDynamicsProcessing.setEnabled(true);
-            }
             player.prepare();
         } catch (Exception e) {
             return false;
@@ -332,21 +330,44 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         updateVolume();
     }
 
-    @SuppressLint("NewApi") // mDynamicsProcessing will remain null if the API level is too low
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void applyReplayGainOnDynamicsProcessing() {
+        if (Float.isNaN(replaygain)) {
+            if (mDynamicsProcessing != null) {
+                mDynamicsProcessing.release();
+                mDynamicsProcessing = null;
+            }
+        } else {
+            if (mDynamicsProcessing == null) {
+                mDynamicsProcessing = new DynamicsProcessing(mCurrentMediaPlayer.getAudioSessionId());
+                mDynamicsProcessing.setEnabled(true);
+            }
+
+            // setInputGainAllChannelsTo uses a dB scale
+            mDynamicsProcessing.setInputGainAllChannelsTo(replaygain);
+        }
+    }
+
     private void updateVolume() {
         float volume = 1.0f;
 
-        if (mDynamicsProcessing != null) {
-            // setInputGainAllChannelsTo uses a dB scale
-            if (Float.isNaN(replaygain)) {
-                mDynamicsProcessing.setInputGainAllChannelsTo(0.0f);
-            } else {
-                mDynamicsProcessing.setInputGainAllChannelsTo(replaygain);
-            }
-        } else if (!Float.isNaN(replaygain)) {
+        if (!Float.isNaN(replaygain)) {
             // setVolume uses a linear scale
             float rgResult = ((float) Math.pow(10, (replaygain / 20)));
             volume = Math.max(0, Math.min(1, rgResult));
+        }
+
+        if (App.DYNAMICS_PROCESSING_AVAILABLE) {
+            try {
+                applyReplayGainOnDynamicsProcessing();
+
+                // DynamicsProcessing is in charge of replay gain, revert volume to 100%
+                volume = 1.0f;
+            } catch (UnsupportedOperationException e) {
+                // This can happen when an external equalizer is in use
+                // Fallback to volume modification in this case
+                Log.d(TAG, "Could not apply replay gain using DynamicsProcessing", e);
+            }
         }
 
         volume *= duckingFactor;
