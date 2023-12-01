@@ -124,7 +124,7 @@ public abstract class AbsLibraryPagerRecyclerViewFragment<A extends RecyclerView
         container.setPadding(container.getPaddingLeft(), container.getPaddingTop(), container.getPaddingRight(), getLibraryFragment().getTotalAppBarScrollingRange() + i);
     }
 
-    private void checkIsEmpty() {
+    void checkIsEmpty() {
         if (empty != null) {
             empty.setText(getEmptyMessage());
             empty.setVisibility(adapter == null || adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);

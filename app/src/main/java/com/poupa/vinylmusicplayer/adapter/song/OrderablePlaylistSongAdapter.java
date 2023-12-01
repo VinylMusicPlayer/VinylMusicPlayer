@@ -6,8 +6,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import androidx.appcompat.widget.AppCompatImageView;
+
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
@@ -30,8 +30,8 @@ public class OrderablePlaylistSongAdapter
         extends PlaylistSongAdapter
         implements DraggableItemAdapter<AbsOffsetSongAdapter.ViewHolder>
 {
-    private final long playlistId;
-    private final OnMoveItemListener onMoveItemListener;
+    final long playlistId;
+    final OnMoveItemListener onMoveItemListener;
 
     public OrderablePlaylistSongAdapter(
             @NonNull AppCompatActivity activity,

@@ -38,7 +38,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     private boolean lightStatusbar;
 
     private NowPlayingScreen currentNowPlayingScreen;
-    private AbsPlayerFragment playerFragment;
+    AbsPlayerFragment playerFragment;
     private MiniPlayerFragment miniPlayerFragment;
 
     private ValueAnimator navigationBarColorAnimator;

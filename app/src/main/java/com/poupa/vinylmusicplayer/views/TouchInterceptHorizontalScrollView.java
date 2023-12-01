@@ -22,20 +22,20 @@ import android.widget.HorizontalScrollView;
 public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
 
     private GestureDetector mDetector;
-    private boolean mIsScrolling = false;
+    boolean mIsScrolling = false;
 
     public static final String TAG = TouchInterceptHorizontalScrollView.class.getSimpleName();
 
     /** Delay before triggering {@link OnEndScrollListener#onEndScroll} */
     private static final int ON_END_SCROLL_DELAY = 1000;
 
-    private long lastScrollUpdate = -1;
+    long lastScrollUpdate = -1;
     private boolean scrollable;
     private Rect scrollViewRect;
-    private OnEndScrollListener onEndScrollListener;
+    OnEndScrollListener onEndScrollListener;
 
     // Whether user is interacting with this again and to cancel text retruncate
-    private boolean cancel;
+    boolean cancel;
 
     public TouchInterceptHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -151,7 +151,7 @@ public class TouchInterceptHorizontalScrollView extends HorizontalScrollView {
         void onEndScroll();
     }
 
-    private class ScrollStateHandler implements Runnable {
+    class ScrollStateHandler implements Runnable {
         @Override
         public void run() {
             if (!cancel) {

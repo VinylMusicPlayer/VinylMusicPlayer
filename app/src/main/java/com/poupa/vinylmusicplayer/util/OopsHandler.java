@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class OopsHandler implements UncaughtExceptionHandler {
-    private final Context context;
+    final Context context;
     private static final String NL = "\n";
 
     public OopsHandler(final Context ctx) {

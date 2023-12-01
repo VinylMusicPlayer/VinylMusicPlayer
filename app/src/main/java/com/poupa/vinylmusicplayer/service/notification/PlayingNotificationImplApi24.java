@@ -119,7 +119,7 @@ public class PlayingNotificationImplApi24 extends PlayingNotification {
                 }));
     }
 
-    private PendingIntent retrievePlaybackAction(final String action) {
+    PendingIntent retrievePlaybackAction(final String action) {
         final ComponentName serviceName = new ComponentName(service, MusicService.class);
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);

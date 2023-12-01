@@ -122,14 +122,14 @@ public class BreadCrumbLayout extends HorizontalScrollView implements View.OnCli
     }
 
     // Stores currently visible crumbs
-    private List<Crumb> mCrumbs;
+    List<Crumb> mCrumbs;
     // Used in setActiveOrAdd() between clearing crumbs and adding the new set, nullified afterwards
     private List<Crumb> mOldCrumbs;
     // Stores user's navigation history, like a fragment back stack
     private List<Crumb> mHistory;
 
     private LinearLayout mChildFrame;
-    private int mActive;
+    int mActive;
     private SelectionCallback mCallback;
 
     private void init() {
