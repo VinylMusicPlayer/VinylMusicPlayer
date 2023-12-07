@@ -1,4 +1,11 @@
 # Changelog
+## [1.6.2] - 2023-12-07
+
+### Other Changes
+* Upgrade dependencies and gradle by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/867
+* Fix compatibility with Poweramp by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/875
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.1...1.6.2
 ## [1.6.1] - 2023-11-27
 
 ### Fixes
