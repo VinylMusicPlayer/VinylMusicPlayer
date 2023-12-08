@@ -83,13 +83,6 @@ Android Support Grid Layout
  - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
-## androidx.annotation.annotation - Android Support Library Annotations
-
-The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs.
-
- - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
----
 ## androidx.media.media - Android Support Library media compat
 
 The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.
@@ -111,11 +104,18 @@ Android library to observe scroll events on scrollable views.
  - [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ---
+## androidx.annotation.annotation - Annotation
+
+Provides source annotations for tooling and readability.
+
+ - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+---
 ## com.squareup.retrofit2.converter-gson - Converter: Gson
 
-Type-safe HTTP client for Android and Java by Square, Inc.
+Gson JSON library
 
- - [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+ - [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
 ## io.noties.markwon.core - Core
@@ -232,9 +232,9 @@ Kotlin extensions for 'palette' artifact
 ---
 ## com.squareup.retrofit2.retrofit - Retrofit
 
-Type-safe HTTP client for Android and Java by Square, Inc.
+Gson JSON library
 
- - [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+ - [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
 ## androidx.databinding.databinding-common - androidx.databinding.databinding-common
