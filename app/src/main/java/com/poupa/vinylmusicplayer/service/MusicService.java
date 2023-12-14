@@ -1090,13 +1090,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public int getSongProgressMillis() {
         synchronized (this) {
-            return playback.position();
+            return (playback != null ? playback.position() : -1);
         }
     }
 
     public int getSongDurationMillis() {
         synchronized (this) {
-            return playback.duration();
+            return (playback != null ? playback.duration() : -1);
         }
     }
 
@@ -1212,7 +1212,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public int getAudioSessionId() {
         synchronized (this) {
-            return playback.getAudioSessionId();
+            return (playback != null ? playback.getAudioSessionId() : -1);
         }
     }
 
@@ -1238,7 +1238,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     if (sharedPreferences.getBoolean(key, false)) {
                         prepareNext();
                     } else {
-                        playback.setNextDataSource(null);
+                        if (playback != null) {playback.setNextDataSource(null);}
                     }
                 }
                 break;
