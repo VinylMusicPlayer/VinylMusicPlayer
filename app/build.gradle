@@ -20,7 +20,7 @@ licenses {
             enabled = true
             destination = file("$buildDir/reports/licenses/dependencies-licenses.csv")
             generate {
-                list -> list.collect{
+                final Collection list -> list.collect{
                     [
                         (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? ' - ' + it.name : ''),
                         it.description != null ? it.description.replaceAll('[;\\n\\r]+', ' ') : '',
@@ -61,8 +61,8 @@ android {
     }
     signingConfigs {
         ci {
-            def keystorePropertiesFile = rootProject.file('keystore.properties')
-            def keystoreProperties = new Properties()
+            final String keystorePropertiesFile = rootProject.file('keystore.properties')
+            final Properties keystoreProperties = new Properties()
             keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
             storeFile file(keystoreProperties['storeFile'])
@@ -83,10 +83,10 @@ android {
         ci {
             dimension 'default'
 
-            String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
-            String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
-            String buildTime = new Date().format('yyMMdd-HHmm')
-            String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
+            final String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+            final String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
+            final String buildTime = new Date().format('yyMMdd-HHmm')
+            final String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
 
             applicationIdSuffix '.ci'
             versionNameSuffix '-' + buildId + ' CI'
