@@ -148,6 +148,9 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
+    // TODO Right now cannot migrate KAPT to KSP, since we still use KAPT dataBinding
+    //      Not clear if KSP supports it - https://issuetracker.google.com/issues/173030256#comment10
+    //noinspection KaptUsageInsteadOfKsp
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // TODO Replace this library (not updated since years, no doc) by a modern alternative
