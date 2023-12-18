@@ -58,6 +58,7 @@ public final class PreferenceUtil {
     public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
     public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
     public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
+    public static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
     public static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
 
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
@@ -476,6 +477,14 @@ public final class PreferenceUtil {
     @NonNull
     public String getNotRecentlyPlayedCutoffText(final Context context) {
         return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
+    }
+
+    public @NonNull String getLastAddedSortOrder() {
+        return mPreferences.getString(LAST_ADDED_SORT_ORDER, SONG_SORT_ORDER);
+    }
+
+    public void setLastAddedSortOrder(@NonNull final String value) {
+        mPreferences.edit().putString(LAST_ADDED_SORT_ORDER, value).apply();
     }
 
     public @NonNull String getNotRecentlyPlayedSortOrder() {

@@ -39,6 +39,7 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
@@ -164,6 +165,10 @@ public class PlaylistDetailActivity
             final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
             item.setCheckable(true).setEnabled(true)
                     .setChecked(PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        } else if (playlist instanceof LastAddedPlaylist) {
+            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
+            item.setCheckable(true).setEnabled(true)
+                    .setChecked(PreferenceUtil.getInstance().getLastAddedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
         }
 
         MenuHelper.decorateDestructiveItems(menu, this);
@@ -181,7 +186,11 @@ public class PlaylistDetailActivity
             return true;
         } else if (id == R.id.action_song_sort_group_by_album) {
             item.setChecked(!item.isChecked()); // toggle
-            PreferenceUtil.getInstance().setNotRecentlyPlayedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            if (playlist instanceof NotRecentlyPlayedPlaylist) {
+                PreferenceUtil.getInstance().setNotRecentlyPlayedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            } else if (playlist instanceof LastAddedPlaylist) {
+                PreferenceUtil.getInstance().setLastAddedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            }
             reload();
         }
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);

@@ -71,7 +71,6 @@ public class TopAndRecentlyPlayedTracksLoader {
         // Collect not recently played songs
         ArrayList<Long> notRecentSongIds = historyStore.getRecentIds(-1 * cutoff);
         songIds.addAll(notRecentSongIds);
-        // TODO Apply the album grouping here too?
 
         return discography.getSongsFromIdsAndCleanupOrphans(songIds, historyStore::removeSongIds);
     }
