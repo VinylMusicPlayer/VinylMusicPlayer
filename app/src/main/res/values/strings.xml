@@ -407,9 +407,4 @@
 
     <string name="write_permission">Always ask for write permission</string>
     <string name="pref_summary_write_permission">To revoke already granted permission, go to android settings for this app, then &quot;Storage &amp; cache&quot; and revoke external storage</string>
-
-    <string name="saf_guide_slide_title_android13">Grant access to music folder</string>
-    <string name="saf_guide_slide_description_android13">This will allow the app to modify or delete song when you ask for it\nGive the access right to the most important music folder\nAny file outside of it can be modify but android will ask for a temporary permission each time\n\nYou can also instead configure the app to always asked for permission before any right action\nWith a changeable settings</string>
-
-
 </resources>
