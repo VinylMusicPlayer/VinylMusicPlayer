@@ -83,13 +83,6 @@ Android Support Grid Layout
  - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
-## androidx.media.media - Android Support Library media compat
-
-The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.
-
- - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
-
----
 ## androidx.recyclerview.recyclerview - Android Support RecyclerView
 
 Android Support RecyclerView
@@ -219,6 +212,13 @@ The core module for Material Dialogs.
 ## me.zhanghai.android.materialprogressbar.library - MaterialProgressBar Library
 
 A Material Design ProgressBar with consistent appearance
+
+ - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+---
+## androidx.media.media - Media
+
+The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.
 
  - [The Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
