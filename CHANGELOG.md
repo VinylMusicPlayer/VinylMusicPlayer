@@ -1,15 +1,16 @@
 # Changelog
 ## [1.6.3] - 2023-12-24
 
-### Features
-* Updated German translations by @tschlegeldigos in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/897
 ### Fixes
 * Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/884 (NPE while the app is in idle/background) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/888
-* Remove unused strings by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/900
+
 ### Other Changes
+* Updated German translations by @tschlegeldigos in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/897
+* Remove unused strings by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/900
 * Tools upgrade by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/887
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.2...1.6.3
+
 ## [1.6.2] - 2023-12-07
 
 ### Fixes
