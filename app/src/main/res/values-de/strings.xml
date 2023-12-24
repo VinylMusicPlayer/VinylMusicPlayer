@@ -400,8 +400,4 @@
     <string name="write_permission">Immer nach Berechtigung zum Schreiben fragen</string>
     <string name="pref_summary_write_permission">To revoke already granted permission, go to android settings for this app, then &quot;Storage &amp; cache&quot; and revoke external storage</string>
 
-    <string name="saf_guide_slide_title_android13">Zugriff auf Musikordner gewähren</string>
-    <string name="saf_guide_slide_description_android13">Dies wird der App erlauben, Titel auf Anfrage zu ändern oder zu löschen\nGewähre Zugriffsrecht zum wichtigsten Musikordner\nDateien außerhalb davon können geändert werden, aber Android wird jedes Mal nach einer temporären Berechtigung fragen\n\nStattdessen kannst du auch die App konfigurieren, immer nach der Berechtigung vor jeder Schreibaktion zu fragen.</string>
-
-
 </resources>
