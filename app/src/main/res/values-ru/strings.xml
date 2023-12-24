@@ -361,7 +361,6 @@
     <string name="pref_summary_whitelist">Отображать контент лишь из начальной папки:</string>
     <string name="write_permission">Всегда запрашивать разрешение на запись</string>
     <string name="pref_summary_write_permission">Чтобы отозвать предоставленное разрешение, перейдите в настройки Android для этого приложения, затем выберите &quot;Хранилище и кеш&quot; и отзовите \'внешнее хранилище\'</string>
-    <string name="saf_guide_slide_title_android13">Разрешить доступ к папке с музыкой</string>
     <string name="error_no_app_for_intent">Нет приложения, способного открыть эту страницу.</string>
     <string name="confirm_adding_duplicates">Добавить ранее добавленные треки в плейлист?</string>
     <string name="yes">Да</string>
@@ -385,7 +384,6 @@
     <string name="access_not_granted">Доступ не предоставлен. Не сохранено.</string>
     <string name="android13_storage_perm_error">У вашего приложения отсутсвует разрешение READ_MEDIA_AUDIO.</string>
     <string name="android13_no_file_browser_error">В вашей системе нет браузера файлов, поддерживающего OPEN_DOCUMENT_TREE.</string>
-    <string name="saf_guide_slide_description_android13">Это позволит приложению изменять или удалять песни по вашему запросу.\nПредоставьте права доступа к самой важной музыкальной папке. Таким образом любой файл вне её также будет можно изменить, но Android каждый раз будет запрашивать временное разрешение. Вы также можете настроить приложение чтобы разрешения всегда запрашивались перед любым подобным действием. С изменяемыми настройками.</string>
     <string name="label_replay_gain_peak">Пиковый уровень ReplayGain</string>
     <string name="pref_header_development">Разработка/Экспериментальные функции</string>
     <string name="pref_title_oops_handler_enabled">Собирать отчёты о сбоях</string>
