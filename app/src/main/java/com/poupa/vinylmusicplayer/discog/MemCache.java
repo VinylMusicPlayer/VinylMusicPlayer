@@ -294,7 +294,8 @@ class MemCache {
     @NonNull
     private synchronized List<Genre> getOrCreateGenresBySong(@NonNull final Song song) {
         List<String> genres = MultiValuesTagUtil.split(song.genre);
-        // maintains compatibility with existing behavior. unsure if desired.
+
+        // If a song has no genres, empty string is the "unknown" genre
         if (genres.isEmpty()) {
             genres = List.of("");
         }
