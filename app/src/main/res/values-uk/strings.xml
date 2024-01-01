@@ -95,6 +95,7 @@
     <string name="pref_header_colors">Кольори</string>
     <string name="pref_header_now_playing_screen">Відтворюється</string>
     <string name="pref_title_general_theme">Загальна тема</string>
+    <string name="pref_header_album">Альбом</string>
     <string name="pref_header_audio">Аудіо</string>
     <string name="pref_header_images">Зображення</string>
     <string name="pref_header_lockscreen">Екран блокування</string>
@@ -105,6 +106,7 @@
     <!--string name="pref_title_ignore_media_store_artwork">Ігнорувати обкладинки з Медіасховища.</string-->
     <string name="pref_title_gapless_playback">Безперервне відтворення</string>
     <string name="pref_title_audio_ducking">Зменшити гучнiсть при отриманнi повiдомлення</string>
+    <string name="pref_summary_show_album_details">Відображати назву, виконавця та кількість пісень під кожним альбомом у вікні альбому</string>
     <string name="no_equalizer">Еквалайзер не знайдено.</string>
     <string name="no_audio_ID">"Спочатку відтворіть пісню, потім спробуйте ще раз."</string>
     <string name="delete_action">Видалити</string>
@@ -134,6 +136,7 @@
     <string name="pref_summary_colored_navigation_bar">Фарбує панель навігації у переважний колір</string>
     <string name="pref_summary_audio_ducking">Повiдомлення, навiгацiя, т.д.</string>
     <string name="could_not_download_album_cover">"\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u0437\u0430\u0432\u0430\u043d\u0442\u0430\u0436\u0438\u0442\u0438 \u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u043d\u0443 \u043e\u0431\u043a\u043b\u0430\u0434\u0438\u043d\u043a\u0443 \u0430\u043b\u044c\u0431\u043e\u043c\u0443."</string>
+    <string name="album_details">Деталі альбому</string>
     <string name="search_hint">Пошук бібліотеки…</string>
     <string name="favorites">Улюблені</string>
     <string name="last_added">Останні додані</string>

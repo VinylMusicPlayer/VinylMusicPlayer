@@ -108,6 +108,7 @@
     <string name="pref_header_colors">配色設定</string>
     <string name="pref_header_now_playing_screen">NowPlaying画面の設定</string>
     <string name="pref_title_general_theme">テーマカラー</string>
+    <string name="pref_header_album">アルバム</string>
     <string name="pref_header_audio">オーディオ設定</string>
     <string name="pref_header_images">画像の表示設定</string>
     <string name="pref_header_lockscreen">ロックスクリーンの設定</string>
@@ -124,6 +125,7 @@
     <string name="pref_title_gapless_playback">ギャップレス再生</string>
     <string name="pref_title_audio_ducking">focus lossで音量を下げる</string>
     <string name="pref_title_last_added_interval">最後に追加されたプレイリストとの間隔</string>
+    <string name="pref_summary_show_album_details">アルバム ビューの各アルバムの下に名前、アーティスト、曲数を表示します</string>
     <string name="pref_title_synchronized_lyrics_show">同期された歌詞を表示</string>
     <string name="no_equalizer">イコライザーがインストールされていません</string>
     <string name="no_audio_ID">"オーディオIDが存在しません。何か再生してもう一度お試し下さい"</string>
@@ -157,6 +159,7 @@
     <string name="pref_summary_audio_ducking">通知、ナビゲーション、その他</string>
     <string name="pref_summary_synchronized_lyrics_show">現在、LRCフォーマットの動機済み歌詞のみがサポートされています。埋め込みと別個、どちらにも対応しています。</string>
     <string name="could_not_download_album_cover">"\u6700\u9069\u306a\u30a2\u30eb\u30d0\u30e0\u30a2\u30fc\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f"</string>
+    <string name="album_details">アルバム詳細</string>
     <string name="search_hint">ライブラリ内を検索…</string>
     <string name="favorites">お気に入り</string>
     <string name="last_added">最近追加された曲</string>

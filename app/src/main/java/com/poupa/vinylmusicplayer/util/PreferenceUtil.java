@@ -90,6 +90,8 @@ public final class PreferenceUtil {
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
+    private static final String SHOW_ALBUM_DETAILS = "show_album_details";
+
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
     private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
@@ -658,6 +660,10 @@ public final class PreferenceUtil {
 
     public boolean maintainSkippedSongsPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
+    }
+
+    public boolean showAlbumDetails() {
+        return mPreferences.getBoolean(SHOW_ALBUM_DETAILS, true);
     }
 
     public void setInitializedBlacklist() {

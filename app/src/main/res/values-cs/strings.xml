@@ -111,6 +111,7 @@
     <string name="pref_header_colors">Barvy</string>
     <string name="pref_header_now_playing_screen">Přehrávač</string>
     <string name="pref_title_general_theme">Motiv</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Zvuk</string>
     <string name="pref_header_library">Knihovna</string>
     <string name="pref_header_images">Obrázky</string>
@@ -129,6 +130,7 @@
     <string name="pref_title_gapless_playback">Přehrávání bez mezer</string>
     <string name="pref_title_audio_ducking">Snížit hlasitost při ztrátě priority zvuku</string>
     <string name="pref_title_last_added_interval">Období písmene v přidaných skladeb</string>
+    <string name="pref_summary_show_album_details">Zobrazit název, interpreta a počet skladeb pod každým albem v zobrazení alba</string>
     <string name="pref_title_synchronized_lyrics_show">Zobrazit synchronizovaný text</string>
     <string name="pref_title_remember_last_tab">Zapamatovat si posledně otevřenou obrazovku</string>
     <string name="pref_title_remember_shuffle">Zapamatovat náhodné přehrávání</string>
@@ -169,6 +171,7 @@
     <string name="pref_summary_remember_last_tab">Po spuštění přejít na posledně otevřenou záložku</string>
     <string name="pref_summary_remember_shuffle">Při vybrání nového seznamu skladeb zůstane náhodný režim zapnutý</string>
     <string name="could_not_download_album_cover">"Nelze st\\00e1hnout obal alba."</string>
+    <string name="album_details">Podrobnosti o albu</string>
     <string name="search_hint">Vyhledat zvukové soubory…</string>
     <string name="favorites">Oblíbené</string>
     <string name="last_added">Naposledy přidané</string>

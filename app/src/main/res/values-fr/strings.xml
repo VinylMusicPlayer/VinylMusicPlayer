@@ -164,6 +164,7 @@
     <string name="pref_playlist_disabled">Désactivé</string>
     <string name="pref_header_colors">Couleurs</string>
     <string name="pref_header_now_playing_screen">Lecture en cours</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_library">Bibliothèque</string>
     <string name="pref_header_images">Images</string>
@@ -186,6 +187,7 @@
     <string name="pref_title_not_recently_played_interval">Intervalle de la playlist \"Lecture non récente\"</string>
     <string name="pref_title_last_added_interval">Intervalle de la playlist \"Derniers ajouts\"</string>
     <string name="pref_title_now_playing_screen_appearance">Apparence</string>
+    <string name="pref_summary_show_album_details">Afficher le nom, l\'artiste et le nombre de chansons sous chaque album dans la vue Album</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Crée une playlist des titres les plus écoutés</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Crée une playlist des titres ignorés pendant la lecture</string>
     <string name="pref_title_synchronized_lyrics_show">Afficher les paroles synchronisées</string>
@@ -262,6 +264,7 @@
     <string name="permissions_denied">Autorisations refusées</string>
     <string name="permission_external_storage_denied">Accès au stockage externe refusé</string>
     <string name="could_not_download_album_cover">"Impossible de télécharger la pochette correspondant à l'album"</string>
+    <string name="album_details">Détails de l\'album</string>
     <string name="search_hint">Recherche dans votre bibliothèque…</string>
     <string name="pick_from_local_storage">Sélectionner depuis le stockage</string>
     <string name="action_scan_directory">Scanner les dossiers</string>

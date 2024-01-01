@@ -107,6 +107,7 @@
     <string name="pref_header_colors">颜色</string>
     <string name="pref_header_now_playing_screen">正在播放界面</string>
     <string name="pref_title_general_theme">全局主题</string>
+    <string name="pref_header_album">专辑</string>
     <string name="pref_header_audio">声音</string>
     <string name="pref_header_images">图片</string>
     <string name="pref_header_lockscreen">锁屏</string>
@@ -156,6 +157,7 @@
     <string name="pref_summary_audio_ducking">通知、导航等</string>
     <string name="pref_summary_synchronized_lyrics_show">当前仅支持 LRC 格式同步歌词。内嵌或外置均可。</string>
     <string name="could_not_download_album_cover">"\u65e0\u6cd5\u4e0b\u8f7d\u5230\u5339\u914d\u7684\u4e13\u8f91\u5c01\u9762\u3002"</string>
+    <string name="album_details">专辑详情</string>
     <string name="search_hint">正在扫描</string>
     <string name="favorites">收藏夹</string>
     <string name="last_added">最近添加</string>
@@ -284,6 +286,7 @@
     <string name="pref_title_widget_background_transparent">控件背景透明</string>
     <string name="pref_title_recently_played_interval">最近播放列表间隔</string>
     <string name="pref_title_not_recently_played_interval">最近未播放列表间隔</string>
+    <string name="pref_summary_show_album_details">在专辑视图中每个专辑下方显示名称、艺术家和歌曲数</string>
     <string name="pref_summary_maintain_top_tracks_playlist">维护一个最多播放列表</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">维护一个跳过歌曲列表</string>
     <string name="pref_title_animate_playing_song_icon">动画显示正在播放歌曲图标</string>

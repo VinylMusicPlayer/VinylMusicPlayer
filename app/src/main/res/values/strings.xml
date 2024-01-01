@@ -134,6 +134,7 @@
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>
     <string name="pref_title_general_theme">General theme</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_development">Development/Experimental features</string>
     <string name="pref_header_library">Library</string>
@@ -152,8 +153,9 @@
     <string name="pref_title_recently_played_interval">Recently played playlist interval</string>
     <string name="pref_title_not_recently_played_interval">Not recently played playlist interval</string>
     <string name="pref_title_last_added_interval">Last added playlist interval</string>
+    <string name="pref_summary_show_album_details">Show name, artist, and song count underneath each album in the album view</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Maintain a playlist of top tracks</string>
-    <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of song skipped during playback</string>
+    <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of songs skipped during playback</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
     <string name="pref_title_animate_playing_song_icon">Animate playing song icon</string>
     <string name="pref_title_remember_last_tab">Remember last tab</string>
@@ -195,6 +197,7 @@
     <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
     <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
+    <string name="album_details">Album details</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>
     <string name="last_added">Last added</string>

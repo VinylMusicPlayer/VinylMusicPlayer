@@ -129,14 +129,26 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         loadAlbumCover(album, holder);
     }
 
-    protected void setColors(int color, ViewHolder holder) {
+    protected void updateDetails(int color, ViewHolder holder) {
         if (holder.paletteColorContainer != null) {
-            holder.paletteColorContainer.setBackgroundColor(color);
-            if (holder.title != null) {
-                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
-            }
-            if (holder.text != null) {
-                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+            if (PreferenceUtil.getInstance().showAlbumDetails()) {
+                holder.paletteColorContainer.setVisibility(View.VISIBLE);
+                holder.paletteColorContainer.setLayoutParams(
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, activity.getResources().getDimensionPixelSize(R.dimen.item_grid_color_container_height))
+                );
+
+                holder.paletteColorContainer.setBackgroundColor(color);
+                if (holder.title != null) {
+                    holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+                }
+                if (holder.text != null) {
+                    holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+                }
+            } else {
+                holder.paletteColorContainer.setVisibility(View.GONE);
+                holder.paletteColorContainer.setLayoutParams(
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
+                );
             }
         }
     }
@@ -153,15 +165,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
-                        setColors(getDefaultFooterColor(), holder);
+                        updateDetails(getDefaultFooterColor(), holder);
                     }
 
                     @Override
                     public void onColorReady(int color) {
                         if (usePalette)
-                            setColors(color, holder);
+                            updateDetails(color, holder);
                         else
-                            setColors(getDefaultFooterColor(), holder);
+                            updateDetails(getDefaultFooterColor(), holder);
                     }
                 });
     }
