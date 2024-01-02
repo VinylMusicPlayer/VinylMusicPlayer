@@ -72,15 +72,15 @@ public class AlbumDetailActivity
 
     private Album album;
 
-    private ActivityAlbumDetailBinding layoutBinding;
-    private AlbumSongAdapter adapter;
+    ActivityAlbumDetailBinding layoutBinding;
+    AlbumSongAdapter adapter;
     private AttachedCab cab;
-    private int headerViewHeight;
-    private int toolbarColor;
+    int headerViewHeight;
+    int toolbarColor;
 
     @Nullable
-    private String wiki;
-    private MarkdownViewDialog wikiDialog;
+    String wiki;
+    MarkdownViewDialog wikiDialog;
     private LastFMRestClient lastFMRestClient;
 
     @Override
@@ -156,7 +156,7 @@ public class AlbumDetailActivity
         layoutBinding.imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(AlbumDetailActivity.this));
     }
 
-    private void setColors(int color) {
+    void setColors(int color) {
         toolbarColor = color;
         layoutBinding.header.setBackgroundColor(color);
 
@@ -232,7 +232,7 @@ public class AlbumDetailActivity
         loadWiki(Locale.getDefault().getLanguage());
     }
 
-    private void loadWiki(@Nullable final String lang) {
+    void loadWiki(@Nullable final String lang) {
         wiki = null;
 
         lastFMRestClient.getApiService()

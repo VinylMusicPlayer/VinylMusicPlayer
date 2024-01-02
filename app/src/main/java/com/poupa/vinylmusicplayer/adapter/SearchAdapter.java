@@ -40,8 +40,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private static final int ARTIST = 2;
     private static final int SONG = 3;
 
-    private final AppCompatActivity activity;
-    private List<Object> dataSet;
+    final AppCompatActivity activity;
+    List<Object> dataSet;
 
     public SearchAdapter(@NonNull AppCompatActivity activity, @NonNull List<Object> dataSet) {
         this.activity = activity;

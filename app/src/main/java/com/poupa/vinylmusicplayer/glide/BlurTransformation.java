@@ -40,21 +40,21 @@ public class BlurTransformation extends BitmapTransformation {
         this.sampling = builder.sampling;
     }
 
-    private BlurTransformation(Builder builder) {
+    BlurTransformation(Builder builder) {
         super();
         init(builder);
     }
 
-    private BlurTransformation(Builder builder, BitmapPool bitmapPool) {
+    BlurTransformation(Builder builder, BitmapPool bitmapPool) {
         super();
         init(builder);
     }
 
     public static class Builder {
-        private final Context context;
+        final Context context;
         private BitmapPool bitmapPool;
-        private float blurRadius = DEFAULT_BLUR_RADIUS;
-        private int sampling;
+        float blurRadius = DEFAULT_BLUR_RADIUS;
+        int sampling;
 
         public Builder(@NonNull Context context) {
             this.context = context;

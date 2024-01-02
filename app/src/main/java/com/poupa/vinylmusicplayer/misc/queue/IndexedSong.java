@@ -26,7 +26,7 @@ public class IndexedSong extends Song {
 
         if (getClass() == song.getClass()) {
             IndexedSong indexedSong = (IndexedSong) song;
-            ret &= (indexedSong.index == INVALID_INDEX) || (this.index == indexedSong.index);
+            ret = ret && ((indexedSong.index == INVALID_INDEX) || (this.index == indexedSong.index));
         }
 
         return ret;

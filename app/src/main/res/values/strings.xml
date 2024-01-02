@@ -72,6 +72,7 @@
     <string name="label_bit_rate">Bitrate</string>
     <string name="label_sampling_rate">Sampling rate</string>
     <string name="label_replay_gain" translatable="false">ReplayGain</string>
+    <string name="label_replay_gain_peak">ReplayGain peak</string>
     <string name="label_date_added">Added</string>
     <string name="label_date_modified">Modified</string>
     <string name="action_go_to_artist">Go to artist</string>
@@ -134,6 +135,7 @@
     <string name="pref_header_now_playing_screen">Now playing</string>
     <string name="pref_title_general_theme">General theme</string>
     <string name="pref_header_audio">Audio</string>
+    <string name="pref_header_development">Development/Experimental features</string>
     <string name="pref_header_library">Library</string>
     <string name="pref_header_images">Images</string>
     <string name="pref_header_lockscreen">Lockscreen</string>
@@ -194,6 +196,8 @@
     <string name="pref_summary_animate_playing_song_icon">Animate the icon of the playing song in different song-related views</string>
     <string name="pref_summary_remember_last_tab">Go to the last opened tab on launch</string>
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
+    <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
+    <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>
@@ -283,10 +287,9 @@
     <string name="app_widget_card_name">Vinyl Music Player - Card</string>
 
     <string name="app_crashed">Vinyl Music Player crashed</string>
-    <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nTechnical data related to the crash
+    <string name="report_a_crash_invitation">Sorry for the inconvenience.\n\nData related to the crash
         has been collected and may help the developers to improve this situation.\nYou are invited to submit a
-        bug report - you can review the collected data and will decide on what data to submit in the following
-        screens.</string>
+        bug report - you can review the collected data and will decide on what data to submit.</string>
     <string name="report_a_crash">Report a crash</string>
     <string name="report_an_issue">Report an issue</string>
     <string name="bug_report_issue">Issue</string>
@@ -409,9 +412,4 @@
 
     <string name="write_permission">Always ask for write permission</string>
     <string name="pref_summary_write_permission">To revoke already granted permission, go to android settings for this app, then &quot;Storage &amp; cache&quot; and revoke external storage</string>
-
-    <string name="saf_guide_slide_title_android13">Grant access to music folder</string>
-    <string name="saf_guide_slide_description_android13">This will allow the app to modify or delete song when you ask for it\nGive the access right to the most important music folder\nAny file outside of it can be modify but android will ask for a temporary permission each time\n\nYou can also instead configure the app to always asked for permission before any right action\nWith a changeable settings</string>
-
-
 </resources>

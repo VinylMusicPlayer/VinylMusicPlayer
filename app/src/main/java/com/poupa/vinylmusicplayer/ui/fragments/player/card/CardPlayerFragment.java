@@ -65,17 +65,17 @@ public class CardPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     View colorBackground;
     TextView playerQueueSubHeader;
 
-    private int lastColor;
+    int lastColor;
 
-    private CardPlayerPlaybackControlsFragment playbackControlsFragment;
-    private PlayerAlbumCoverFragment playerAlbumCoverFragment;
+    CardPlayerPlaybackControlsFragment playbackControlsFragment;
+    PlayerAlbumCoverFragment playerAlbumCoverFragment;
 
     private AsyncTask<Song, Void, Boolean> updateIsFavoriteTask;
     private AsyncTask<Void, Void, Lyrics> updateLyricsAsyncTask;
 
-    private Lyrics lyrics;
+    Lyrics lyrics;
 
-    private Impl impl;
+    Impl impl;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

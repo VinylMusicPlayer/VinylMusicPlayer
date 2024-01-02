@@ -168,7 +168,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
         void onFolderSelection(@NonNull BlacklistFolderChooserDialog dialog, @NonNull File folder);
     }
 
-    private static class FolderSorter implements Comparator<File> {
+    static class FolderSorter implements Comparator<File> {
 
         @Override
         public int compare(File lhs, File rhs) {

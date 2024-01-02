@@ -9,9 +9,9 @@ import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.poupa.vinylmusicplayer.deezer.Data;
 import com.poupa.vinylmusicplayer.deezer.DeezerApiService;
 import com.poupa.vinylmusicplayer.deezer.DeezerResponse;
-import com.poupa.vinylmusicplayer.deezer.Data;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -31,10 +31,10 @@ public class ArtistImageFetcher implements DataFetcher<InputStream> {
     private final Context context;
     private final DeezerApiService deezerRestClient;
     private final ArtistImage model;
-    private volatile boolean isCancelled;
+    volatile boolean isCancelled;
     private Call<DeezerResponse> call;
-    private final OkHttpClient okhttp;
-    private OkHttpStreamFetcher streamFetcher;
+    final OkHttpClient okhttp;
+    OkHttpStreamFetcher streamFetcher;
 
     ArtistImageFetcher(Context context, DeezerApiService deezerRestClient, OkHttpClient okhttp, ArtistImage model) {
         this.context = context;

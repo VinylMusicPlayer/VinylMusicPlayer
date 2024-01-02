@@ -60,17 +60,17 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     RecyclerView recyclerView;
     TextView playerQueueSubHeader;
 
-    private int lastColor;
+    int lastColor;
 
-    private FlatPlayerPlaybackControlsFragment playbackControlsFragment;
-    private PlayerAlbumCoverFragment playerAlbumCoverFragment;
+    FlatPlayerPlaybackControlsFragment playbackControlsFragment;
+    PlayerAlbumCoverFragment playerAlbumCoverFragment;
 
     private AsyncTask<Song, Void, Boolean> updateIsFavoriteTask;
     private AsyncTask<Void, Void, Lyrics> updateLyricsAsyncTask;
 
-    private Lyrics lyrics;
+    Lyrics lyrics;
 
-    private Impl impl;
+    Impl impl;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -259,6 +259,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
             addPreferencesFromResource(R.xml.pref_migrating);
+            addPreferencesFromResource(R.xml.pref_development);
 
             // set summary for whitelist, in order to indicate start directory
             final String strSummaryWhitelist = getString(R.string.pref_summary_whitelist);
@@ -322,7 +323,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         }
 
-        private void invalidateSettings() {
+        void invalidateSettings() {
             final Preference generalTheme = findPreference(PreferenceUtil.GENERAL_THEME);
             if (generalTheme != null) {
                 final Context context = getContext();

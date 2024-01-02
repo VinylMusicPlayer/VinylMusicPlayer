@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter;
 
+import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,6 @@ import com.poupa.vinylmusicplayer.misc.CustomFragmentStatePagerAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-
-import static com.poupa.vinylmusicplayer.util.ViewUtil.VINYL_ALBUM_ART_SCALE_TYPE;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -133,7 +133,7 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
                     });
         }
 
-        private void setColor(int color) {
+        void setColor(int color) {
             this.color = color;
             isColorReady = true;
             if (colorReceiver != null) {

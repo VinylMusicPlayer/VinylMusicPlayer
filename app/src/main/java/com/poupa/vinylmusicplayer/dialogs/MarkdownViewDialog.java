@@ -103,7 +103,7 @@ public class MarkdownViewDialog extends MaterialDialog {
     }
 
     // Github link shortener plugin
-    private static class GithubLinkify extends AbstractMarkwonPlugin {
+    static class GithubLinkify extends AbstractMarkwonPlugin {
         @NonNull
         @Override
         public String processMarkdown(@NonNull String markdown) {

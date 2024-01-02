@@ -44,7 +44,7 @@ import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
 import com.poupa.vinylmusicplayer.ui.activities.saf.SAFGuideActivity;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.AutoDeleteTempFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
@@ -430,14 +430,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                         info.artworkInfo.artwork.compress(Bitmap.CompressFormat.PNG, 0, new FileOutputStream(albumArtFile.get().getCanonicalFile()));
                         artwork = ArtworkFactory.createArtworkFromFile(albumArtFile.get());
                     } catch (IOException e) {
-                        OopsHandler.copyStackTraceToClipboard(e);
+                        OopsHandler.collectStackTrace(e);
                     }
                 }
 
                 int counter = 0;
                 for (Song song : info.songs) {
                     publishProgress(++counter, info.songs.size());
-                    try (AutoDeleteAudioFile audioFile = SAFUtil.loadAudioFile(activity.get(), song)) {
+                    try (AutoCloseAudioFile audioFile = SAFUtil.loadReadWriteableAudioFile(activity.get(), song)) {
                         final Tag tag = audioFile.get().getTagOrCreateAndSetDefault();
 
                         if (info.fieldKeyValueMap != null) {
@@ -457,7 +457,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                         tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
                                 } catch (Exception e) {
-                                    OopsHandler.copyStackTraceToClipboard(e);
+                                    OopsHandler.collectStackTrace(e);
                                 }
                             }
                         }
@@ -473,7 +473,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
                         SAFUtil.write(activity.get(), audioFile, song);
                     } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-                        OopsHandler.copyStackTraceToClipboard(e);
+                        OopsHandler.collectStackTrace(e);
                     }
                 }
 
@@ -484,7 +484,7 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
                 return paths.toArray(new String[0]);
             } catch (Exception e) {
-                OopsHandler.copyStackTraceToClipboard(e);
+                OopsHandler.collectStackTrace(e);
                 return null;
             }
         }
@@ -534,9 +534,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             @Nullable
             final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
-            private final ArtworkInfo artworkInfo;
+            final ArtworkInfo artworkInfo;
 
-            private LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
+            LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
                 this.songs = songs;
                 this.fieldKeyValueMap = fieldKeyValueMap;
                 this.artworkInfo = artworkInfo;
@@ -560,13 +560,14 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
     protected abstract void loadImageFromFile(Uri selectedFile);
 
-    @Nullable AutoDeleteAudioFile getAudioFile() {
+    @Nullable
+    AutoCloseAudioFile getAudioFile() {
         return getAudioFile(songs.get(0));
     }
 
     @Nullable
-    private AutoDeleteAudioFile getAudioFile(@NonNull Song song) {
-        return SAFUtil.loadAudioFile(this, song);
+    private AutoCloseAudioFile getAudioFile(@NonNull Song song) {
+        return SAFUtil.loadReadOnlyAudioFile(this, song);
     }
 
     @Nullable

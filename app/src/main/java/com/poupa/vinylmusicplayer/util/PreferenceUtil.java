@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.core.util.Pair;
 
@@ -27,6 +28,8 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,6 +142,9 @@ public final class PreferenceUtil {
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
+
+    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
+    public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
 
     private static PreferenceUtil sInstance;
 
@@ -729,12 +735,23 @@ public final class PreferenceUtil {
         return sourceMode;
     }
 
+    private float getDefaultPreamp() {
+        if (!App.DYNAMICS_PROCESSING_AVAILABLE) {
+            // Older android versions cannot use DynamicsProcessing, so MultiPlayer uses the volume instead.
+            // Use a default preamp that allows increasing the sound of the most quiet song in the DB.
+            // Kept in the range -6dB..0dB to ensure we don't make everything too quiet only because of 1 outlier song.
+            return Math.max(-6.0f, Math.min(-App.getDiscography().getMaxReplayGain(), 0f));
+        } else {
+            return 0.0f;
+        }
+    }
+
     public float getRgPreampWithTag() {
-        return mPreferences.getFloat(RG_PREAMP_WITH_TAG, 0.0f);
+        return mPreferences.getFloat(RG_PREAMP_WITH_TAG, getDefaultPreamp());
     }
 
     public float getRgPreampWithoutTag() {
-        return mPreferences.getFloat(RG_PREAMP_WITHOUT_TAG, 0.0f);
+        return mPreferences.getFloat(RG_PREAMP_WITHOUT_TAG, getDefaultPreamp());
     }
 
     public void setReplayGainPreamp(float with, float without) {
@@ -752,6 +769,57 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
                 .apply();
+    }
+
+    public boolean isOopsHandlerEnabled() {
+        return mPreferences.getBoolean(OOPS_HANDLER_ENABLED, false);
+    }
+
+
+    public @Nullable List<String> getOopsHandlerReports() {
+        if (!isOopsHandlerEnabled()) {return null;}
+
+        final String json = mPreferences.getString(OOPS_HANDLER_EXCEPTIONS, "");
+        if (json.isEmpty()) {return null;}
+
+        return new ArrayList<>(Arrays.asList(new Gson().fromJson(json, String[].class)));
+    }
+
+    void pushOopsHandlerReport(@NonNull String report) {
+        if (!isOopsHandlerEnabled()) {return;}
+
+        List<String> reports = getOopsHandlerReports();
+        if (reports == null) {reports = new ArrayList<>();}
+
+        // The last report sits in the first position (LIFO)
+        reports.add(0, report);
+
+        // Prune too old entries
+        final int limit = 10;
+        while (reports.size() > limit) {
+            reports.remove(reports.size() - 1);
+        }
+
+        final String json = new Gson().toJson(reports);
+        mPreferences.edit()
+                .putString(OOPS_HANDLER_EXCEPTIONS, json)
+                .apply();
+    }
+
+    public @Nullable String popOopsHandlerReport() {
+        if (!isOopsHandlerEnabled()) {return null;}
+
+        List<String> reports = getOopsHandlerReports();
+        if (reports == null || reports.isEmpty()) {return null;}
+
+        final String result = reports.remove(0);
+
+        final String json = new Gson().toJson(reports);
+        mPreferences.edit()
+                .putString(OOPS_HANDLER_EXCEPTIONS, json)
+                .apply();
+
+        return result;
     }
 
     public int getEnqueueSongsDefaultChoice() {

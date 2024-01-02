@@ -19,10 +19,19 @@
     <string name="action_play_pause">Play/Pause</string>
     <string name="action_previous">Vorheriger</string>
     <string name="action_next">Nächster</string>
+
     <string name="pref_title_enqueue_song_default_choice">Standardaktion beim Auswählen eines Titels</string>
     <string name="action_always_ask_for_confirmation">Immer nachfragen</string>
     <string name="action_add_to_playing_queue">Zur Warteschlange hinzufügen</string>
     <string name="action_remove_from_playing_queue">Von Warteschlange entfernen</string>
+    <string name="action_clear_playing_queue">Warteschlange leeren</string>
+    <string name="action_save_playing_queue">Warteschlange speichern</string>
+    <string name="about_to_add_title_to_playing_queue">1 Titel wird zur Warteschlange hinzugefügt.\nWie möchtest du damit fortfahren?</string>
+    <string name="about_to_add_x_titles_to_playing_queue">%1$d Titel werden zur Warteschlange hinzugefügt\nWie möchtest du mit ihnen fortfahren?</string>
+    <string name="added_title_to_playing_queue">"1 Titel wurde der Warteschlange hinzugefügt."</string>
+    <string name="added_x_titles_to_playing_queue">%1$d Titel wurden der Warteschlange hinzugefügt.</string>
+    <string name="failed_restore_playing_queue">Wiederherstellung fehlgeschlagen, die vorherige Warteschlange ist fehlerhaft</string>
+
     <string name="action_add_to_playlist">Zu Wiedergabeliste hinzufügen…</string>
     <string name="action_tag_editor">Tag-Editor</string>
     <string name="action_delete_from_device">Von Gerät löschen</string>
@@ -62,13 +71,14 @@
     <string name="label_track_length">Länge</string>
     <string name="label_bit_rate">Bitrate</string>
     <string name="label_sampling_rate">Abtastrate</string>
+    <string name="label_replay_gain_peak">ReplayGain Peak</string>
+    <string name="label_date_added">Hinzugefügt</string>
+    <string name="label_date_modified">Geändert</string>
     <string name="action_go_to_artist">Gehe zum Interpreten</string>
     <string name="action_go_to_album">Gehe zum Album</string>
     <string name="label_playing_queue">Warteschlange</string>
     <string name="no_results">Keine Ergebnisse</string>
     <string name="updating">Aktualisiere…</string>
-    <string name="added_title_to_playing_queue">"1 Titel wurde der Warteschlange hinzugefügt."</string>
-    <string name="added_x_titles_to_playing_queue">%1$d Titel wurden der Warteschlange hinzugefügt.</string>
     <string name="action_remove_from_playlist">Aus Wiedergabeliste entfernen</string>
     <string name="action_grid_size">Rastergröße</string>
     <string name="action_grid_size_land">Rastergröße (Querformat)</string>
@@ -99,8 +109,6 @@
     <string name="action_shuffle_album">Album zufällig wiedergeben</string>
     <string name="action_shuffle_artist">Interpret zufällig wiedergeben</string>
     <string name="action_shuffle_playlist">Wiedergabeliste zufällig wiedergeben</string>
-    <string name="action_clear_playing_queue">Warteschlange leeren</string>
-    <string name="action_save_playing_queue">Warteschlange speichern</string>
     <string name="action_go_to_start_directory">Zum Start-Verzeichnis gehen</string>
     <string name="action_show_lyrics">Songtext anzeigen</string>
     <string name="light_theme_name">Hell</string>
@@ -126,6 +134,7 @@
     <string name="pref_header_now_playing_screen">Aktuelle Wiedergabe</string>
     <string name="pref_title_general_theme">Generelles Design</string>
     <string name="pref_header_audio">Audio</string>
+    <string name="pref_header_development">Entwicklung / Experimentelle Funktionen</string>
     <string name="pref_header_library">Bibliothek</string>
     <string name="pref_header_images">Bilder</string>
     <string name="pref_header_lockscreen">Sperrbildschirm</string>
@@ -134,12 +143,9 @@
     <string name="pref_title_navigation_bar">Gefärbte Navigationsleiste</string>
     <string name="pref_title_app_shortcuts">Gefärbte App-Shortcuts</string>
     <string name="pref_title_widget_background_transparent">Transparenter Widget-Hintergrund</string>
-<!--    <string name="pref_title_album_art_on_lockscreen">Album-Cover anzeigen</string>-->
     <string name="pref_title_auto_download_metadata">Metadaten automatisch herunterladen</string>
-<!--    <string name="pref_title_blurred_album_art">Album-Cover weichzeichnen</string>-->
     <string name="pref_title_colored_notification">Gefärbte Benachrichtigung</string>
     <string name="pref_title_classic_notification">Klassisches Benachrichtigungsdesign</string>
-    <!--string name="pref_title_ignore_media_store_artwork">Media Store-Cover ignorieren</string-->
     <string name="pref_title_gapless_playback">Lückenlose Wiedergabe</string>
     <string name="pref_title_audio_ducking">Lautstärke bei Fokusverlust verringern</string>
     <string name="pref_title_recently_played_interval">Intervall der \"Kürzlich abgespielt\"-Wiedergabeliste</string>
@@ -174,12 +180,9 @@
     <string name="empty">Leer</string>
     <string name="playlist_name_empty">Name der Wiedergabeliste</string>
     <string name="song">Titel</string>
-<!--    <string name="pref_summary_album_art_on_lockscreen">Das Album-Cover des aktuellen Titels wird als Hintergrund des Sperrbildschirms verwendet</string>-->
-<!--    <string name="pref_summary_blurred_album_art">Lässt das Album-Cover auf dem Sperrbildschirm verschwommen aussehen. Kann Probleme mit Apps und Widgets von Dritten verursachen.</string>-->
     <string name="pref_summary_classic_notification">Das klassische Benachrichtigungsdesign verwenden</string>
     <string name="pref_summary_colored_notification">"Die Benachrichtigung in der kräftigsten Farbe des Album-Covers färben"</string>
     <string name="pref_summary_gapless_playback">"Kann bei einigen Geräten Wiedergabeprobleme verursachen"</string>
-    <!--string name="pref_summary_ignore_media_store_artwork">Kann die Qualität des Album-Covers verbessern, was jedoch die Ladezeit beeinträchtigt. Nur aktivieren, falls Probleme mit niedrig aufgelösten Album-Covern auftreten.</string-->
     <string name="pref_summary_colored_navigation_bar">Färbt die Navigationsleiste in der Hauptfarbe</string>
     <string name="pref_summary_colored_app_shortcuts">Färbt die App-Shortcuts in der Hauptfarbe</string>
     <string name="pref_summary_widget_background_transparent">Macht den Widget-Hintergrund transparent</string>
@@ -188,6 +191,8 @@
     <string name="pref_summary_animate_playing_song_icon">Animiere das Icon des aktuell wiedergegebenen Titels in verschiedenen titelbezogenen Ansichten</string>
     <string name="pref_summary_remember_last_tab">Zuletzt geöffneten Tab beim Start anzeigen</string>
     <string name="pref_summary_remember_shuffle">Zufällige Wiedergabe bleibt eingeschaltet, wenn eine neue Wiedergabeliste ausgewählt wird</string>
+    <string name="pref_title_oops_handler_enabled">Absturzberichte sammeln</string>
+    <string name="pref_summary_oops_handler_enabled">Hilf bei der Entwicklung durch das Erfassen und Berichten von Abstürzen</string>
     <string name="could_not_download_album_cover">"Es konnte kein passendes Album-Cover heruntergeladen werden."</string>
     <string name="search_hint">Durchsuche deine Mediathek</string>
     <string name="favorites">Favoriten</string>
@@ -209,14 +214,20 @@
     <string name="action_new_playlist">Neue Wiedergabeliste…</string>
     <string name="new_playlist_title">Neue Wiedergabeliste</string>
     <string name="colored_footers">Gefärbte Fußzeilen</string>
-    <string name="special_thanks_to">Besonderes Dankeschön an</string>
     <string name="changelog">Änderungen</string>
     <string name="licenses">Lizenzen</string>
     <string name="permissions_denied">Berechtigungen verweigert.</string>
     <string name="permission_external_storage_denied">Die Berechtigung für den Zugriff auf den externen Speicher wurde verweigert.</string>
     <string name="support_development">Unterstütze die Entwicklung</string>
     <string name="version">Version</string>
+
+    <string name="maintainers">Betreiber</string>
+    <string name="contributors">Mitwirkende</string>
+    <string name="special_thanks_to">Besonderes Dankeschön an</string>
     <string name="author">Autor</string>
+    <string name="label_other_contributors">+ viele andere Mitwirkende</string>
+    <string name="missing_webview_component">"Dieses Gerät unterstützt WebView nicht, was benötigt wird, um die geforderte Aktion auszuführen\nEs fehlt eine Systemkomponente."</string>
+
     <string name="write_an_email">Eine E-Mail schreiben</string>
     <string name="fork_on_github">Auf GitHub forken</string>
     <string name="visit_website">Website besuchen</string>
@@ -229,6 +240,8 @@
     <string name="michael_cook_summary">Für das schöne Material App Icon.</string>
     <string name="maarten_corpel_summary">Für das Erstellen der Play Store Illustration und des leeren Album-Covers.</string>
     <string name="aleksandar_tesic_summary">Für die Hilfe beim Design.</string>
+    <string name="eugene_cheung_summary">Für seinen Beitrag zum Quellcode.</string>
+    <string name="adrian_summary">Für das Erstellen des Designs der Album-Seite.</string>
     <string name="website">Website</string>
     <string name="up_next">Als Nächstes</string>
     <string name="pref_title_now_playing_screen_appearance">Aussehen</string>
@@ -238,11 +251,14 @@
     <string name="rearrange_playing_queue_instruction">Ziehe die Titelnummer eines Titels nach oben oder unten, um die Warteschlange neu anzuordnen.</string>
     <string name="library">Bibliothek</string>
     <string name="folders">Ordner</string>
+    <string name="sd_card">SD-Karte</string>
     <string name="saved_playlist_to">Wiedergabeliste wurde unter %s gespeichert.</string>
     <string name="failed_to_save_playlist">Speichern der Wiedergabeliste fehlgeschlagen (%s).</string>
     <string name="saved_x_playlists_to_x">%1$d Wiedergabelisten gespeichert unter %2$s.</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">%1$d Wiedergabelisten gespeichert unter %2$s, Speichern von %3$d Listen fehlgeschlagen.</string>
-    <string name="not_listed_in_media_store"><b>%s</b> ist nicht im Media Store gelistet.</string>
+    <string name="imported_x_playlists">"%d Wiedergabelisten wurden importiert"</string>
+    <string name="imported_x_skipped_x_playlists">"%1$d Wiedergabelisten wurden importiert, %2$d wurden übersprungen"</string>
+    <string name="not_listed_in_media_store"><![CDATA[<b>%s</b> ist nicht im Media Store gelistet.]]></string>
     <string name="some_files_are_not_listed_in_the_media_store">Einige Dateien sind nicht im Media Store gelistet.</string>
     <string name="nothing_to_scan">Nichts zu scannen.</string>
     <string name="scanned_files">%1$d von %2$d Dateien gescannt.</string>
@@ -255,6 +271,13 @@
     <string name="app_widget_classic_name">Vinyl Music Player - Klassisch</string>
     <string name="app_widget_small_name">Vinyl Music Player - Klein</string>
     <string name="app_widget_card_name">Vinyl Music Player - Karte</string>
+
+    <string name="app_crashed">Vinyl Music Player ist abgestürzt</string>
+
+    <string name="report_a_crash_invitation">Entschuldigung, das hätte nicht passieren dürfen.\n\nAbsturzrelevante Daten
+        wurden gesammelt und können den Entwicklern bei Verbesserungen helfen.\nDu kannst einen Fehlerbericht
+        einreichen - du kannst die gesammelten Daten einsehen und entscheiden, was verschickt werden soll.</string>
+    <string name="report_a_crash">Einen Absturz melden</string>
     <string name="report_an_issue">Einen Fehler melden</string>
     <string name="bug_report_issue">Fehler</string>
     <string name="login">Login</string>
@@ -277,7 +300,10 @@
     <string name="bug_report_failed_unknown">Ein unerwarteter Fehler ist aufgetreten. Bitte kontaktiere den App-Entwickler.</string>
     <string name="copied_device_info_to_clipboard">Geräteinformation wurde in die Zwischenablage kopiert.</string>
     <string name="your_account_data_is_only_used_for_authentication">Deine Konto Daten werden ausschließlich zur Authentifizierung genutzt.</string>
-    <string name="you_will_be_forwarded_to_the_issue_tracker_website">Du wirst zur Issue Tracker Webseite weitergeleitet.</string>
+    <string name="you_will_be_forwarded_to_the_issue_tracker_website">Mit dem untenstehenden Button wirst du zur Webseite
+        des Issue-Trackers weitergeleitet.\n\nDie hier angezeigten Geräteinformationen werden in die Zwischenablage kopiert,
+        damit du sie im Fehlerbericht einfügen kannst.</string>
+
     <string name="deleting_songs">Lösche Titel</string>
     <string name="app_shortcut_shuffle_all_short">Zufällig</string>
     <string name="app_shortcut_top_tracks_short">Lieblingstitel</string>
@@ -285,10 +311,14 @@
     <string name="playlist_is_empty">Die Wiedergabeliste ist leer</string>
     <string name="snack_bar_action_undo">rückgängig</string>
     <string name="snack_bar_title_removed_song">Entfernt</string>
+
     <string name="playing_notification_description">Die Benachrichtigung zur Steuerung von Play/Pause etc.</string>
     <string name="playing_notification_name">Wiedergabe-Benachrichtigung</string>
-    <string name="eugene_cheung_summary">Für seinen Beitrag zum Quellcode.</string>
-    <string name="adrian_summary">Für das Erstellen des Designs der Album-Seite.</string>
+
+    <string name="idle_notification_description">Die Leerlaufbenachrichtigung wird angezeigt, wenn die Warteschlange leer ist</string>
+    <string name="idle_notification_name">Leerlaufbenachrichtigung</string>
+    <string name="idle_notification_title">Vinyl läuft</string>
+
     <string name="add_action">Hinzufügen</string>
     <string name="blacklist">Blacklist</string>
     <string name="remove_from_blacklist">Von Blacklist entfernen</string>
@@ -317,6 +347,7 @@
     <string name="dialog_ringtone_message">Bitte erlaube Vinyl Music Player im nächsten Dialog, die Systemeinstellungen zu verändern, bevor du den Klingelton festlegst.</string>
     <string name="action_scan_directory">Ordner scannen</string>
     <string name="reset_discography">Bibliothek neu einlesen</string>
+    <string name="reset_discography_warning">Dies wird die interne Titeldatenbank der App löschen und neu erstellen.\n\nKein Titel wird durch diese Aktion gelöscht, aber der Wiedergabeverlauf könnte gelöscht werden.\n\nIm Falle eines längeren Scanvorgangs wird die App nicht wie sonst nutzbar sein</string>
     <string name="none">Kein</string>
     <string name="track">Titel</string>
     <string name="label_with_rg_info">Mit ReplayGain Tags:</string>
@@ -336,6 +367,7 @@
     <!-- SAF -->
     <string name="saf_error_uri">Kann SAF URI nicht lesen</string>
     <string name="saf_write_failed">Schreiben der Datei fehlgeschlagen: %s</string>
+    <string name="saf_read_failed">Lesen der Datei fehlgeschlagen: %s</string>
     <string name="saf_delete_failed">Löschen der Datei fehlgeschlagen: %s</string>
     <string name="saf_pick_file">Dateizugriff erforderlich. Wähle %s aus</string>
     <!-- SAF guide -->
@@ -344,8 +376,12 @@
     <string name="saf_guide_slide1_description">Öffne das Navigationsmenü</string>
     <string name="saf_guide_slide2_title">Wähle die SD-Karte im Navigationsmenü</string>
     <string name="saf_guide_slide2_description">Wähle das Stammverzeichnis der SD-Karte aus</string>
+    <string name="saf_guide_slide2_description_android_r">Wähle das Verzeichnis der SD-Karte aus, das deine Musik enthält (kann nicht das Stammverzeichnis sein)</string>
     <string name="saf_guide_slide3_title">Tippe auf \'Auswählen\' am unteren Bildschirmrand</string>
     <string name="saf_guide_slide3_description">Öffne keine Unterordner</string>
+    <string name="access_not_granted">Kein Zugriff - Speichern nicht erfolgreich</string>
+    <string name="android13_storage_perm_error">Die App hat nicht die Berechtigung READ_MEDIA_AUDIO erhalten.</string>
+    <string name="android13_no_file_browser_error">Dein System scheint keinen Dateimanager zu haben, der OPEN_DOCUMENT_TREE verarbeiten kann.</string>
     <!-- Android Auto -->
     <string name="playlists_label">Wiedergabelisten</string>
     <string name="history_label">Verlauf</string>
@@ -360,6 +396,8 @@
     <string name="auto_limited_listing_subtitle">Öffne die App, um die ganze Liste zu sehen</string>
     <string name="whitelist">Whitelist</string>
     <string name="pref_summary_whitelist">Zeige nur Einträge ab dem Startordner: </string>
-    <string name="sd_card">SD-Karte</string>
+
+    <string name="write_permission">Immer nach Berechtigung zum Schreiben fragen</string>
+    <string name="pref_summary_write_permission">To revoke already granted permission, go to android settings for this app, then &quot;Storage &amp; cache&quot; and revoke external storage</string>
 
 </resources>

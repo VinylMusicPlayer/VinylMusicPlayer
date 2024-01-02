@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.AutoDeleteAudioFile;
+import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
@@ -57,7 +57,7 @@ public class TagExtractor {
 
     public static void extractTags(@NonNull Song song) {
         final Context context = App.getStaticContext();
-        try (AutoDeleteAudioFile audio = SAFUtil.loadAudioFile(context, song)){
+        try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(context, song)){
             if (audio == null) {
                 // Cannot get the audio content
                 SafeToast.show(context, context.getString(R.string.saf_read_failed, song.data));
@@ -87,8 +87,10 @@ public class TagExtractor {
             ReplayGainTagExtractor.ReplayGainValues rgValues = ReplayGainTagExtractor.setReplayGainValues(file);
             song.replayGainAlbum = rgValues.album;
             song.replayGainTrack = rgValues.track;
+            song.replayGainPeakAlbum = rgValues.peakAlbum;
+            song.replayGainPeakTrack = rgValues.peakTrack;
         } catch (@NonNull Exception | NoSuchMethodError | VerifyError e) {
-            OopsHandler.copyStackTraceToClipboard(e);
+            OopsHandler.collectStackTrace(e);
         }
     }
 }
