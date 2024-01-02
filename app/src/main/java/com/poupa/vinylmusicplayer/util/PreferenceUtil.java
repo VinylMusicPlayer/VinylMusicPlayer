@@ -89,7 +89,7 @@ public final class PreferenceUtil {
 
     private static final String EXPORT_SETTINGS = "export_settings";
 
-    private static final String IMPORT_SETTINGS = "import_settings";
+    public static final String IMPORT_SETTINGS = "import_settings";
 
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";

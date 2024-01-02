@@ -9,11 +9,15 @@ import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+//import androidx.activity.result.ActivityResultCallerLauncher;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +42,7 @@ import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWit
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreference;
+import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
@@ -62,14 +67,15 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.poupa.vinylmusicplayer.util.SAFUtil.toast;
 
 
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
@@ -114,9 +120,22 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            exportSettingsTo(outputStream, configItemsToExport)
+            try {
+                exportSettingsTo(outputStream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
+
+    public final ActivityResultLauncher<String[]> openDocumentLauncher =
+            registerForActivityResult(new ActivityResultContracts.OpenDocument(),
+                    result -> {
+                        if (result != null) {
+                            //readFileIntent();
+                            Log.i(ImportSettingsPreferenceDialog.class.getName(), "result not null " + result);
+                        }
+                    });
 
     @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
@@ -150,7 +169,10 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         return super.onOptionsItemSelected(item);
     }
 
-    public void createFileIntent(String filename) {
+    public void exportSettings(String filename) {
+
+        //ExportSettingsPreferenceDialog()
+
         Intent intent = null;
         //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
         intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
@@ -166,24 +188,42 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
     private String getPreferenceContent() {
 
-        String out =
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
-        Map allPreferences = sharedPreferences.getAll();
+        Map<String, String> preferences = (Map<String, String>) sharedPreferences.getAll();
         ArrayList<String> blacklist = BlacklistStore.getInstance(App.getStaticContext()).getPaths();//.toString();
+        Log.i(ExportSettingsPreferenceDialog.class.getName(), preferences.toString());
+        Log.i(ExportSettingsPreferenceDialog.class.getName(), blacklist.toString());
+        StringBuilder out = new StringBuilder();
+
+        for(String key: preferences.keySet()) {
+            out.append(key+"="+preferences.get(key)+"\n");
+        }
+
+        out.append("blacklist="+blacklist.toString());
+
+        return out.toString();
 
     }
 
-    private void exportSettingsTo(OutputStream outputStream) {
+    private void exportSettingsTo(OutputStream outputStream) throws IOException {
+        String preferences = getPreferenceContent();
+
         if (outputStream == null) {
             return;
         }
 
-        ensureBackgroundThread {
+        Runnable r = () -> {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-            writer.write(payload);
+            try {
+                writer.write(preferences);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             Toast.makeText(this.getApplicationContext(), "Settings exported successfully", Toast.LENGTH_SHORT).show();
-        }
+        };
+
+        new Thread(r).start();
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -242,7 +282,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof ExportSettingsPreference) {
                 return ExportSettingsPreferenceDialog.newInstance(preference.getKey());
-            } else if (preference instanceof ImportSettingsPreference) {
+            //} else if (preference instanceof ImportSettingsPreference) {
+                //ImportSettingsPreferenceDialog.newInstance(preference.getKey()); return null;
                 //return ExportSettingsDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
@@ -347,6 +388,17 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 setSummary(autoDownloadImagesPolicy);
                 autoDownloadImagesPolicy.setOnPreferenceChangeListener((preference, o) -> {
                     setSummary(autoDownloadImagesPolicy, o);
+                    return true;
+                });
+            }
+
+            final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
+            if (importSettings != null) {
+                importSettings.setOnPreferenceClickListener((preference) -> {
+                    //ImportSettingsPreferenceDialog.newInstance(preference.getKey());
+                    //SettingsActivity.
+                    //openDocumentLauncher.launch(new String[]{"text/plain"});
+                    Log.i(SettingsActivity.class.getName(), "Import clicked");
                     return true;
                 });
             }

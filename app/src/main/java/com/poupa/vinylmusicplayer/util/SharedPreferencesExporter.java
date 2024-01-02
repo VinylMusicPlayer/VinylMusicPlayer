@@ -51,7 +51,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
 
     private final ActivityResultLauncher<String> createDocumentLauncher =
-            registerForActivityResult(new ActivityResultContracts.CreateDocument(),
+            registerForActivityResult(new ActivityResultContracts.CreateDocument("text/plain"),
                     result -> {
                         if (result != null) {
                             try {

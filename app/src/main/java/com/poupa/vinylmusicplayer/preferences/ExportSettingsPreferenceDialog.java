@@ -105,20 +105,6 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
 
     }
 
-    private String getKeyValuePair(Map<String, String> preferences, ArrayList<String> blacklist) {
-        Log.i(ExportSettingsPreferenceDialog.class.getName(), preferences.toString());
-        Log.i(ExportSettingsPreferenceDialog.class.getName(), blacklist.toString());
-        StringBuilder out = new StringBuilder();
-
-        for(String key: preferences.keySet()) {
-            out.append(key+"="+preferences.get(key)+"\n");
-        }
-
-        out.append("blacklist="+blacklist.toString());
-
-        return out.toString();
-    }
-
 
     private static String getCurrentFormattedDateTime() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault());
