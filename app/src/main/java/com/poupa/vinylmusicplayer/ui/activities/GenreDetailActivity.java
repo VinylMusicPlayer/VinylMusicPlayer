@@ -23,6 +23,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
+import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
@@ -115,8 +116,18 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
-        if (id == R.id.action_shuffle_genre) {
-            MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
+        final ArrayList<Song> songs = adapter.getDataSet();
+        if (id == R.id.action_add_to_current_playing) {
+            MusicPlayerRemote.enqueue(songs);
+            return true;
+        } else if (id == R.id.action_add_to_playlist) {
+            AddToPlaylistDialog.create(songs).show(getSupportFragmentManager(), "ADD_PLAYLIST");
+            return true;
+        } else if (id == R.id.action_play_next) {
+            MusicPlayerRemote.playNext(songs);
+            return true;
+        } else if (id == R.id.action_shuffle_genre) {
+            MusicPlayerRemote.openAndShuffleQueue(songs, true);
             return true;
         } else if (id == android.R.id.home) {
             onBackPressed();
