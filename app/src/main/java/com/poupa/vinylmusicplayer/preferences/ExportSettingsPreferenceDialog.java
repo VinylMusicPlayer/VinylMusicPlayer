@@ -77,7 +77,7 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Gson gson = new Gson(); // com.google.gson.Gson
-        //String jsonFromMap = gson.toJson(allPreferences);
+        String jsonFromMap = gson.toJson(allPreferences);
         final Activity activity = requireActivity();
         String filename = this.getExportSettingsFilename();
         Log.i(ExportSettingsPreferenceDialog.class.getName(), filename);
@@ -91,9 +91,9 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
         alert.setPositiveButton(android.R.string.ok, (dialog, id) -> {
             // User taps OK button.
             //createFile(filename);
-            //buttonCreateFile(activity, filename, jsonFromMap);
+            buttonCreateFile(activity, filename, jsonFromMap);
             //preferences;
-            SharedPreferencesExporter spe = new SharedPreferencesExporter();//App.getStaticContext());
+            //SharedPreferencesExporter spe = new SharedPreferencesExporter();//App.getStaticContext());
             //spe.export();
 
         });

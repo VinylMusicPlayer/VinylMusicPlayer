@@ -89,7 +89,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
 
 
 
-    public void export() {
+    public void export() { //Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
         String sharedPrefsString = sharedPreferences.getAll().toString();
         this.setContent(sharedPrefsString);
@@ -100,7 +100,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_TITLE, "shared_prefs.txt");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        //this.context.startActivity(intent);
+        this.context.startActivity(intent);
         this.startActivityForResult(intent, 1);
 
         //Uri uri = intent.getData();
