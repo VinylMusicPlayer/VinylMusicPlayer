@@ -22,6 +22,7 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
+import com.poupa.vinylmusicplayer.dialogs.ImportFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
@@ -253,6 +254,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                         if (!smartPlaylist.isClearable()) {
                             popupMenu.getMenu().findItem(R.id.action_clear_playlist).setVisible(false);
                         }
+                        if (!smartPlaylist.canImport()) {
+                            popupMenu.getMenu().findItem(R.id.action_import_from_playlist).setVisible(false);
+                        }
                         final String prefKey = smartPlaylist.getPlaylistPreference();
                         if (prefKey == null) {
                             popupMenu.getMenu().findItem(R.id.action_playlist_settings).setVisible(false);
@@ -260,6 +264,10 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                         popupMenu.setOnMenuItemClickListener(item -> {
                             if (item.getItemId() == R.id.action_clear_playlist) {
                                 ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
+                                return true;
+                            }
+                            else if (item.getItemId() == R.id.action_import_from_playlist) {
+                                ImportFromPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "IMPORT_SMART_PLAYLIST_" + smartPlaylist.name);
                                 return true;
                             }
                             else if (item.getItemId() == R.id.action_playlist_settings) {

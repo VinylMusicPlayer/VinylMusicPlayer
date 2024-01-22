@@ -22,4 +22,7 @@
     <item
         android:id="@+id/action_save_playlist"
         android:title="@string/save_playlist_title" />
+    <item
+        android:id="@+id/action_import_from_playlist"
+        android:title="@string/action_import_from_playlist" />
 </menu>
