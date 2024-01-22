@@ -13,6 +13,7 @@
     <string name="action_add_to_favorites">Add to favorites</string>
     <string name="action_remove_from_favorites">Remove from favorites</string>
     <string name="save_playlists_title">Save as files</string>
+    <string name="action_import_from_playlist">Import from playlist</string>
     <string name="action_search">Search</string>
     <string name="action_play_next">Play next</string>
     <string name="action_play">Play</string>
@@ -33,6 +34,7 @@
     <string name="failed_restore_playing_queue">Cannot restore, previous queue is corrupted</string>
 
     <string name="action_add_to_playlist">Add to playlist…</string>
+    <string name="added_x_titles_to_playlist">Added %1$d songs to the playlist.</string>
     <string name="action_tag_editor">Tag editor</string>
     <string name="action_delete_from_device">Delete from device</string>
     <string name="action_details">Details</string>
