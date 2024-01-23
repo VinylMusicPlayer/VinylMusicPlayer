@@ -22,7 +22,6 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
-import com.poupa.vinylmusicplayer.dialogs.ImportFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
@@ -31,7 +30,6 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -248,39 +246,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                     final Playlist playlist = dataSet.get(getAdapterPosition());
                     final PopupMenu popupMenu = new PopupMenu(activity, view);
 
-                    if (playlist instanceof AbsSmartPlaylist) {
+                    if (playlist instanceof AbsSmartPlaylist smartPlaylist) {
                         popupMenu.inflate(R.menu.menu_item_smart_playlist);
-                        final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
-                        if (!smartPlaylist.isClearable()) {
-                            popupMenu.getMenu().findItem(R.id.action_clear_playlist).setVisible(false);
-                        }
-                        if (!smartPlaylist.canImport()) {
-                            popupMenu.getMenu().findItem(R.id.action_import_from_playlist).setVisible(false);
-                        }
-                        final String prefKey = smartPlaylist.getPlaylistPreference();
-                        if (prefKey == null) {
-                            popupMenu.getMenu().findItem(R.id.action_playlist_settings).setVisible(false);
-                        }
-                        popupMenu.setOnMenuItemClickListener(item -> {
-                            if (item.getItemId() == R.id.action_clear_playlist) {
-                                ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
-                                return true;
-                            }
-                            else if (item.getItemId() == R.id.action_import_from_playlist) {
-                                ImportFromPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "IMPORT_SMART_PLAYLIST_" + smartPlaylist.name);
-                                return true;
-                            }
-                            else if (item.getItemId() == R.id.action_playlist_settings) {
-                                if (prefKey != null) {
-                                    SmartPlaylistPreferenceDialog
-                                            .newInstance(prefKey)
-                                            .show(activity.getSupportFragmentManager(), "SETTINGS_SMART_PLAYLIST_" + smartPlaylist.name);
-                                }
-                                return true;
-                            }
-                            return PlaylistMenuHelper.handleMenuClick(
-                                activity, dataSet.get(getAdapterPosition()), item);
-                        });
+                        PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(popupMenu.getMenu(), smartPlaylist);
+                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
+                            activity, dataSet.get(getBindingAdapterPosition()), item));
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
@@ -288,7 +258,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                         MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
 
                         popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
-                            activity, dataSet.get(getAdapterPosition()), item));
+                            activity, dataSet.get(getBindingAdapterPosition()), item));
                     }
                     popupMenu.show();
                 });

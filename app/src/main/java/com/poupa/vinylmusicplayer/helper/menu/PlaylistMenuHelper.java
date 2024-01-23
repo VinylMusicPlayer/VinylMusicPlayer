@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.helper.menu;
 
 import android.content.Context;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -8,13 +9,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
+import com.poupa.vinylmusicplayer.dialogs.ClearSmartPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
+import com.poupa.vinylmusicplayer.dialogs.ImportFromPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.RenamePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
+import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.IOException;
@@ -23,6 +31,33 @@ import java.io.IOException;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class PlaylistMenuHelper {
+    public static void hideShowSmartPlaylistMenuItems(final @NonNull Menu menu, final @NonNull AbsSmartPlaylist smartPlaylist) {
+        if (!smartPlaylist.isClearable()) {
+            menu.findItem(R.id.action_clear_playlist).setVisible(false);
+        }
+        if (!smartPlaylist.canImport()) {
+            menu.findItem(R.id.action_import_from_playlist).setVisible(false);
+        }
+        final String prefKey = smartPlaylist.getPlaylistPreference();
+        if (prefKey == null) {
+            menu.findItem(R.id.action_playlist_settings).setVisible(false);
+        }
+
+        // "Group by album" option
+        if (smartPlaylist instanceof NotRecentlyPlayedPlaylist) {
+            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
+            item.setCheckable(true)
+                    .setEnabled(true)
+                    .setChecked(PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        } else if (smartPlaylist instanceof LastAddedPlaylist) {
+            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
+            item.setCheckable(true)
+                    .setEnabled(true)
+                    .setChecked(PreferenceUtil.getInstance().getLastAddedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        }
+
+    }
+
     public static boolean handleMenuClick(@NonNull AppCompatActivity activity, @NonNull final Playlist playlist, @NonNull MenuItem item) {
         final int itemId = item.getItemId();
         if (itemId == R.id.action_play) {
@@ -45,6 +80,25 @@ public class PlaylistMenuHelper {
             return true;
         } else if (itemId == R.id.action_save_playlist) {
             new SavePlaylistAsyncTask(activity).execute(playlist);
+            return true;
+        } else if (itemId == R.id.action_clear_playlist) {
+            final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
+            ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
+            return true;
+        }
+        else if (itemId == R.id.action_import_from_playlist) {
+            final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
+            ImportFromPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "IMPORT_SMART_PLAYLIST_" + smartPlaylist.name);
+            return true;
+        }
+        else if (itemId == R.id.action_playlist_settings) {
+            final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
+            final String prefKey = smartPlaylist.getPlaylistPreference();
+            if (prefKey != null) {
+                SmartPlaylistPreferenceDialog
+                        .newInstance(prefKey)
+                        .show(activity.getSupportFragmentManager(), "SETTINGS_SMART_PLAYLIST_" + smartPlaylist.name);
+            }
             return true;
         }
         return false;

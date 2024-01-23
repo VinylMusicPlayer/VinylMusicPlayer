@@ -24,8 +24,17 @@
         android:id="@+id/action_add_to_playlist"
         android:title="@string/action_add_to_playlist" />
     <item
+        android:id="@+id/action_playlist_settings"
+        android:title="@string/action_settings" />
+    <item
+        android:id="@+id/action_clear_playlist"
+        android:title="@string/action_clear_playlist" />
+    <item
         android:id="@+id/action_save_playlist"
         android:title="@string/save_playlist_title"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_import_from_playlist"
+        android:title="@string/action_import_from_playlist" />
 
 </menu>
