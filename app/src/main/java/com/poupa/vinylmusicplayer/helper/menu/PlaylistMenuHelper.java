@@ -83,12 +83,16 @@ public class PlaylistMenuHelper {
             return true;
         } else if (itemId == R.id.action_clear_playlist) {
             final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
-            ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
+            if (smartPlaylist.isClearable()) {
+                ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
+            }
             return true;
         }
         else if (itemId == R.id.action_import_from_playlist) {
             final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
-            ImportFromPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "IMPORT_SMART_PLAYLIST_" + smartPlaylist.name);
+            if (smartPlaylist.canImport()) {
+                ImportFromPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "IMPORT_SMART_PLAYLIST_" + smartPlaylist.name);
+            }
             return true;
         }
         else if (itemId == R.id.action_playlist_settings) {
