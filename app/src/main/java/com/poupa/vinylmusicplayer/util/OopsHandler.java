@@ -63,12 +63,14 @@ public class OopsHandler implements UncaughtExceptionHandler {
     }
 
     @NonNull
-    private static String getStackTraceWithTime(@NonNull final Throwable exception) {
+    private static String getStackTraceWithTime(@NonNull final Throwable exception, @Nullable CharSequence extraInfo) {
         final Writer result = new StringWriter();
         try {
             final String when = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US).format(System.currentTimeMillis());
             result.append("## Time: ").append(NL).append(when).append(NL);
-
+            if (!TextUtils.isEmpty(extraInfo)) {
+                result.append("## Extra info: ").append(NL).append(extraInfo).append(NL);
+            }
             result.append("## Stack: ").append(NL);
             final PrintWriter printWriter = new PrintWriter(result);
             exception.printStackTrace(printWriter);
@@ -94,6 +96,10 @@ public class OopsHandler implements UncaughtExceptionHandler {
     }
 
     public static void collectStackTrace(@NonNull final Throwable exception) {
-        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception));
+        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception, null));
+    }
+
+    public static void collectStackTrace(@NonNull final Throwable exception, @NonNull final String extraInfo) {
+        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception, extraInfo));
     }
 }
