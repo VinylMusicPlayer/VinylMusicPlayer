@@ -76,9 +76,8 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = requireActivity();
-        if (Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 return new MaterialDialog.Builder(activity)
                         .title(R.string.md_error_label)
                         .content(R.string.android13_storage_perm_error)
