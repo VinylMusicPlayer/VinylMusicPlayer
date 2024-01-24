@@ -11,7 +11,7 @@ import android.os.Environment;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,6 +35,8 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     private FolderCallback callback;
 
     final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+    private final String KEY = "current_path";
 
     private String[] getContentsArray() {
         if (parentContents == null) {
@@ -84,10 +86,8 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
                         .positiveText(android.R.string.ok)
                         .build();
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ActivityCompat.checkSelfPermission(
-                activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
+        } else if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                && (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
         {
                 return new MaterialDialog.Builder(activity)
                         .title(R.string.md_error_label)
@@ -98,10 +98,10 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
         if (savedInstanceState == null) {
             savedInstanceState = new Bundle();
         }
-        if (!savedInstanceState.containsKey("current_path")) {
-            savedInstanceState.putString("current_path", initialPath);
+        if (!savedInstanceState.containsKey(KEY)) {
+            savedInstanceState.putString(KEY, initialPath);
         }
-        parentFolder = new File(savedInstanceState.getString("current_path", "/"));
+        parentFolder = new File(savedInstanceState.getString(KEY, "/"));
         checkIfCanGoUp();
         parentContents = listFiles();
         MaterialDialog.Builder builder =
@@ -156,7 +156,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("current_path", parentFolder.getAbsolutePath());
+        outState.putString(KEY, parentFolder.getAbsolutePath());
     }
 
     public void setCallback(FolderCallback callback) {
