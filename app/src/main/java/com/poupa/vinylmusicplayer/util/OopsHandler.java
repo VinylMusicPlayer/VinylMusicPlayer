@@ -21,10 +21,10 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class OopsHandler implements UncaughtExceptionHandler {
-    final Context context;
+    @NonNull final Context context;
     private static final String NL = "\n";
 
-    public OopsHandler(final Context ctx) {
+    public OopsHandler(@NonNull final Context ctx) {
         context = ctx;
     }
 
