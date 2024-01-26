@@ -8,6 +8,7 @@ import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SAFUtil;
 
+import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.ByteArrayInputStream;
@@ -35,15 +36,18 @@ public class SongCoverFetcher extends AbsCoverFetcher {
                 return;
             }
 
-            Artwork art = audio.get().getTag().getFirstArtwork();
-            if (art != null) {
-                byte[] imageData = art.getBinaryData();
-                callback.onDataReady(new ByteArrayInputStream(imageData));
-            } else {
-                InputStream data = fallback(model.song.data);
-                if (data != null) {callback.onDataReady(data);}
-                else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
+            Tag tags = audio.get().getTag();
+            if (tags != null) {
+                Artwork art = tags.getFirstArtwork();
+                if (art != null) {
+                    byte[] imageData = art.getBinaryData();
+                    callback.onDataReady(new ByteArrayInputStream(imageData));
+                    return;
+                }
             }
+            InputStream data = fallback(model.song.data);
+            if (data != null) {callback.onDataReady(data);}
+            else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
         } catch (Exception e) {
             OopsHandler.collectStackTrace(e);
             callback.onLoadFailed(e);
