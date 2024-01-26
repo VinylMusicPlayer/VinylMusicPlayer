@@ -243,23 +243,20 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
             if (menu != null) {
                 menu.setOnClickListener(view -> {
-                    final Playlist playlist = dataSet.get(getAdapterPosition());
+                    final Playlist playlist = dataSet.get(getBindingAdapterPosition());
                     final PopupMenu popupMenu = new PopupMenu(activity, view);
 
-                    if (playlist instanceof AbsSmartPlaylist smartPlaylist) {
+                    if (itemViewType == SMART_PLAYLIST) {
                         popupMenu.inflate(R.menu.menu_item_smart_playlist);
-                        PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(popupMenu.getMenu(), smartPlaylist);
-                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
-                            activity, dataSet.get(getBindingAdapterPosition()), item));
+                        PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(popupMenu.getMenu(), (AbsSmartPlaylist)playlist);
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
-
-                        MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
-
-                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
-                            activity, dataSet.get(getBindingAdapterPosition()), item));
                     }
+
+                    MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
+                    popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
+                            activity, dataSet.get(getBindingAdapterPosition()), item));
                     popupMenu.show();
                 });
             }
