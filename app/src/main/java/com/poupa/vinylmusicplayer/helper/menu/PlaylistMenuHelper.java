@@ -60,7 +60,10 @@ public class PlaylistMenuHelper {
 
     public static boolean handleMenuClick(@NonNull AppCompatActivity activity, @NonNull final Playlist playlist, @NonNull MenuItem item) {
         final int itemId = item.getItemId();
-        if (itemId == R.id.action_play) {
+        if (itemId == R.id.action_shuffle_playlist) {
+            MusicPlayerRemote.openAndShuffleQueue(playlist.getSongs(activity), true);
+            return true;
+        } else if (itemId == R.id.action_play) {
             MusicPlayerRemote.openQueue(playlist.getSongs(activity), 0, true);
             return true;
         } else if (itemId == R.id.action_play_next) {

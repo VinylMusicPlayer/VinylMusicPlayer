@@ -29,7 +29,6 @@ import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
-import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
@@ -160,10 +159,10 @@ public class PlaylistDetailActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         if (playlist instanceof AbsSmartPlaylist smartPlaylist) {
-            getMenuInflater().inflate(R.menu.menu_smart_playlist_detail, menu);
+            getMenuInflater().inflate(R.menu.menu_item_smart_playlist, menu);
             PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(menu, smartPlaylist);
         } else {
-            getMenuInflater().inflate(R.menu.menu_playlist_detail, menu);
+            getMenuInflater().inflate(R.menu.menu_item_playlist, menu);
         }
 
         MenuHelper.decorateDestructiveItems(menu, this);
@@ -173,10 +172,7 @@ public class PlaylistDetailActivity
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int id = item.getItemId();
-        if (id == R.id.action_shuffle_playlist) {
-            MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         } else if (id == R.id.action_song_sort_group_by_album) {
