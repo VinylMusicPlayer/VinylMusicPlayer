@@ -377,17 +377,13 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             } else {
                 writeTagsApi19();
             }
-        } else if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
+        } else {
             if (!SAFUtil.isSAFRequired(savedSongs)) {
                 writeTags(savedSongs);
             } else if (SAFUtil.isSDCardAccessGranted(this)) {
                 writeTags(savedSongs);
             } else {
                 writeTagsApi21_SAFGuide.launch(new Intent(this, SAFGuideActivity.class));
-            }
-        } else {
-            if (SAFUtil.isSDCardAccessGranted(this)) {
-                writeTags(savedSongs);
             }
         }
     }
