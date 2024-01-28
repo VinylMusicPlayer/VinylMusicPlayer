@@ -31,10 +31,12 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class TopAndRecentlyPlayedTracksLoader {
     @NonNull
-    public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull Context context) {
+    public static ArrayList<Song> getRecentlyPlayedTracks(@NonNull final Context context) {
         final long cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffTimeMillis();
         if (cutoff == 0) {return new ArrayList<>();}
 
@@ -45,7 +47,7 @@ public class TopAndRecentlyPlayedTracksLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull Context context) {
+    public static ArrayList<Song> getNotRecentlyPlayedTracks(@NonNull final Context context) {
         final long cutoff = PreferenceUtil.getInstance().getNotRecentlyPlayedCutoffTimeMillis();
         if (cutoff == 0) {return new ArrayList<>();}
 
@@ -54,12 +56,15 @@ public class TopAndRecentlyPlayedTracksLoader {
 
         // Collect not played songs
         Discography discography = Discography.getInstance();
-        ArrayList<Long> playedSongIds = historyStore.getRecentIds(0);
-        ArrayList<Song> allSongs = discography.getAllSongs(SongSortOrder.BY_DATE_ADDED);
+        HashSet<Long> playedSongIds = new HashSet<>(historyStore.getRecentIds(0));
+        @NonNull final String sortOrderStr = PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder();
+        Comparator<Song> sortOrder = sortOrderStr.equals(PreferenceUtil.ALBUM_SORT_ORDER) ? SongSortOrder.BY_ALBUM_DATE_ADDED : SongSortOrder.BY_DATE_ADDED;
+        ArrayList<Song> allSongs = discography.getAllSongs(sortOrder);
 
         for (Song song : allSongs) {
             if (!playedSongIds.contains(song.id)) {
                 songIds.add(song.id);
+                playedSongIds.remove(song.id);
             }
         }
 
@@ -71,7 +76,7 @@ public class TopAndRecentlyPlayedTracksLoader {
     }
 
     @NonNull
-    public static ArrayList<Song> getTopTracks(@NonNull Context context) {
+    public static ArrayList<Song> getTopTracks(@NonNull final Context context) {
         final boolean enabled = PreferenceUtil.getInstance().maintainTopTrackPlaylist();
         if (!enabled) {return new ArrayList<>();}
 

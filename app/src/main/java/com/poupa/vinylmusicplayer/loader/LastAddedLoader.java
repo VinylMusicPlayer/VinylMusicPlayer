@@ -8,6 +8,7 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class LastAddedLoader {
 
@@ -16,7 +17,9 @@ public class LastAddedLoader {
         long cutoff = PreferenceUtil.getInstance().getLastAddedCutoffTimeSecs();
 
         ArrayList<Song> lastAddedSongs = new ArrayList<>();
-        for (Song song : Discography.getInstance().getAllSongs(SongSortOrder.BY_DATE_ADDED_DESC)) {
+        @NonNull final String sortOrderStr = PreferenceUtil.getInstance().getLastAddedSortOrder();
+        Comparator<Song> sortOrder = sortOrderStr.equals(PreferenceUtil.ALBUM_SORT_ORDER) ? SongSortOrder.BY_ALBUM_DATE_ADDED_DESC : SongSortOrder.BY_DATE_ADDED_DESC;
+        for (Song song : Discography.getInstance().getAllSongs(sortOrder)) {
             if (song.dateAdded > cutoff) {lastAddedSongs.add(song);}
         }
         return lastAddedSongs;
