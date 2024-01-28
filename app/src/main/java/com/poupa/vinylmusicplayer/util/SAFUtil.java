@@ -182,7 +182,7 @@ SAFUtil {
             // Create a ephemeral/volatile audio file
             return AutoCloseAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
         } catch (Exception e) {
-            OopsHandler.collectStackTrace(e);
+            OopsHandler.collectStackTrace(e, "Original file: " + song.data);
             if (tempFile != null) {
                 tempFile.close();
             }
