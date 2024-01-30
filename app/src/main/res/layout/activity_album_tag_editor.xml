@@ -105,7 +105,7 @@
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
-                        android:hint="@string/album_genre_multiple"
+                        android:hint="@string/genre_multiple"
                         android:inputType="text|textCapWords|textMultiLine"
                         android:singleLine="false"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
