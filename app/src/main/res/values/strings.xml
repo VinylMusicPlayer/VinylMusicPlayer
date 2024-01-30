@@ -62,6 +62,7 @@
     <string name="lyrics">Lyrics</string>
     <string name="album_artist_multiple">Album Artists (one per line)</string>
     <string name="artist_multiple">Artists (one per line)</string>
+    <string name="genre_multiple">Genres (one per line)</string>
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
     <string name="label_details">Details</string>
