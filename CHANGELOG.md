@@ -1,4 +1,21 @@
 # Changelog
+## [1.7.0] - 2024-01-30
+
+### Features
+* Add context menu to genre activity by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/907
+* allow genre splitting based on typical split characters by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/904
+* Not recently played/Last added - group by album by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/752
+* add multi-line genre editing by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/928
+### Fixes
+* fixes #853, the system UI notification crash by @ellisonch in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+* Fixes https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/855 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/925
+* Blacklist error on android 12 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/924
+* Report original filename with error by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/923
+
+## New Contributors
+* @ellisonch made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.3...1.7.0
 ## [1.6.3] - 2023-12-24
 
 ### Fixes
