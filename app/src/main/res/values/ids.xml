@@ -26,6 +26,7 @@
     <item name="action_song_sort_order_date_added_reverse" type="id" />
     <item name="action_song_sort_order_date_modified" type="id" />
     <item name="action_song_sort_order_date_modified_reverse" type="id" />
+    <item name="action_song_sort_group_by_album" type="id" />
     <item name="action_file_sort_order_name" type="id" />
     <item name="action_file_sort_order_name_reverse" type="id" />
     <item name="action_file_sort_order_date_modified" type="id" />

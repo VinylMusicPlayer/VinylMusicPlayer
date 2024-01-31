@@ -120,7 +120,7 @@ public class FoldersFragment
     }
 
     @Nullable
-    private BreadCrumbLayout.Crumb getActiveCrumb() {
+    BreadCrumbLayout.Crumb getActiveCrumb() {
         return layoutBinding.breadCrumbs.size() > 0
                 ? layoutBinding.breadCrumbs.getCrumb(layoutBinding.breadCrumbs.getActiveIndex())
                 : null;
@@ -259,7 +259,7 @@ public class FoldersFragment
         ToolbarContentTintHelper.handleOnPrepareOptionsMenu(requireActivity(), layoutBinding.toolbar);
     }
 
-    private static final FileFilter AUDIO_FILE_FILTER = file -> !file.isHidden() && (file.isDirectory() ||
+    static final FileFilter AUDIO_FILE_FILTER = file -> !file.isHidden() && (file.isDirectory() ||
                         FileUtil.fileIsMimeType(file, "audio/*", MimeTypeMap.getSingleton()) ||
                         FileUtil.fileIsMimeType(file, "application/opus", MimeTypeMap.getSingleton()) ||
                         FileUtil.fileIsMimeType(file, "application/ogg", MimeTypeMap.getSingleton()));
@@ -375,7 +375,7 @@ public class FoldersFragment
         }).execute(new ListSongsAsyncTask.LoadingInfo(files, AUDIO_FILE_FILTER, getFileComparator()));
     }
 
-    private Comparator<File> getFileComparator() {
+    Comparator<File> getFileComparator() {
         final SortOrder<File> fileSortOrder = FileSortOrder.fromPreference(getSortOrder());
         return fileSortOrder.comparator;
     }
@@ -462,7 +462,7 @@ public class FoldersFragment
                 layoutBinding.appbar.getTotalScrollRange() + verticalOffset);
     }
 
-    private void checkIsEmpty() {
+    void checkIsEmpty() {
         layoutBinding.empty.setVisibility(adapter == null || adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 

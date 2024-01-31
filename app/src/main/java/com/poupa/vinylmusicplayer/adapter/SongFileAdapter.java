@@ -40,10 +40,10 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     private static final int FILE = 0;
     private static final int FOLDER = 1;
 
-    private final AppCompatActivity activity;
-    private List<File> dataSet;
+    final AppCompatActivity activity;
+    List<File> dataSet;
     @Nullable
-    private final Callbacks callbacks;
+    final Callbacks callbacks;
 
     public SongFileAdapter(@NonNull final AppCompatActivity activity, @NonNull final List<File> songFiles,
                            @Nullable final Callbacks callback, @Nullable final CabHolder cabHolder) {

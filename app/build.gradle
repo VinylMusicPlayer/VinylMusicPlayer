@@ -20,7 +20,7 @@ licenses {
             enabled = true
             destination = file("$buildDir/reports/licenses/dependencies-licenses.csv")
             generate {
-                list -> list.collect{
+                final Collection list -> list.collect{
                     [
                         (it.mavenCoordinates.groupId + '.' + it.mavenCoordinates.artifactId) + (it.name != null ? ' - ' + it.name : ''),
                         it.description != null ? it.description.replaceAll('[;\\n\\r]+', ' ') : '',
@@ -33,7 +33,7 @@ licenses {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     namespace 'com.poupa.vinylmusicplayer'
     defaultConfig {
         minSdkVersion 19
@@ -43,8 +43,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 187
-        versionName '1.6.1'
+        versionCode 190
+        versionName '1.7.0'
 
         multiDexEnabled true
     }
@@ -61,8 +61,8 @@ android {
     }
     signingConfigs {
         ci {
-            def keystorePropertiesFile = rootProject.file('keystore.properties')
-            def keystoreProperties = new Properties()
+            final String keystorePropertiesFile = rootProject.file('keystore.properties')
+            final Properties keystoreProperties = new Properties()
             keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
             storeFile file(keystoreProperties['storeFile'])
@@ -83,10 +83,10 @@ android {
         ci {
             dimension 'default'
 
-            String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
-            String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
-            String buildTime = new Date().format('yyMMdd-HHmm')
-            String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
+            final String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+            final String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
+            final String buildTime = new Date().format('yyMMdd-HHmm')
+            final String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
 
             applicationIdSuffix '.ci'
             versionNameSuffix '-' + buildId + ' CI'
@@ -103,16 +103,16 @@ android {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
 
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(11)
+            languageVersion = JavaLanguageVersion.of(17)
         }
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(17)
     }
     buildFeatures {
         dataBinding = true
@@ -128,18 +128,18 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.annotation:annotation:1.7.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.fragment:fragment-ktx:1.6.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.media:media:1.6.0'
+    implementation 'androidx.media:media:1.7.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.palette:palette-ktx:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
 
     // TODO Upgrade to the Kotlin version - the Java one is not maintained
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
@@ -148,6 +148,9 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
+    // TODO Right now cannot migrate KAPT to KSP, since we still use KAPT dataBinding
+    //      Not clear if KSP supports it - https://issuetracker.google.com/issues/173030256#comment10
+    //noinspection KaptUsageInsteadOfKsp
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // TODO Replace this library (not updated since years, no doc) by a modern alternative
@@ -158,7 +161,7 @@ dependencies {
 
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar') {
@@ -183,5 +186,5 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }

@@ -1,4 +1,44 @@
 # Changelog
+## [1.7.0] - 2024-01-30
+
+### Features
+* Add context menu to genre activity by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/907
+* Not recently played/Last added - group by album by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/752
+* add multi-line genre editing by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/928 and in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/904
+
+### Fixes
+* fixes #853, the system UI notification crash by @ellisonch in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+* Fixes #855 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/925
+* Blacklist error on android 12 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/924
+* Report original filename with error by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/923
+
+## New Contributors
+* @ellisonch made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.3...1.7.0
+
+## [1.6.3] - 2023-12-24
+
+### Fixes
+* Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/884 (NPE while the app is in idle/background) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/888
+
+### Other Changes
+* Updated German translations by @tschlegeldigos in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/897
+* Remove unused strings by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/900
+* Tools upgrade by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/887
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.2...1.6.3
+
+## [1.6.2] - 2023-12-07
+
+### Fixes
+* Fix compatibility with Poweramp by @MageFroh in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/875
+
+### Other Changes
+* Upgrade dependencies and gradle by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/867
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.1...1.6.2
+
 ## [1.6.1] - 2023-11-27
 
 ### Fixes

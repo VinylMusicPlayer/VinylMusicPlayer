@@ -50,7 +50,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     public IndexedSong songToRemove;
 
-    private static Snackbar currentlyShownSnackbar;
+    static Snackbar currentlyShownSnackbar;
 
     private int current;
 
@@ -302,7 +302,7 @@ public class PlayingQueueAdapter extends SongAdapter
         }
     }
 
-    private static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
+    static void initializeSnackBar(final PlayingQueueAdapter adapter,final int position,
                                           final AppCompatActivity activity,
                                           final boolean isPlayingSongToRemove) {
 
@@ -343,7 +343,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     }
 
-    private void setSongToRemove (@NonNull IndexedSong song){
+    void setSongToRemove (@NonNull IndexedSong song){
         songToRemove = song;
     }
 

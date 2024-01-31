@@ -106,8 +106,17 @@ public class PlayingNotificationImplApi24 extends PlayingNotification {
                                 .addAction(favoriteAction);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder.setStyle(new MediaStyle().setMediaSession(service.getMediaSession().getSessionToken()).setShowActionsInCompactView(0, 1, 2))
-                                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                            var session = service.getMediaSession();
+                            var controller = session.getController();
+
+                            // workaround for a bug https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/853
+                            // it's possible that the mediaSession's metadata is still null at this point,
+                            // which can lead to a system UI crash on certain versions of android
+                            if (controller != null && controller.getMetadata() != null) {
+                                builder.setStyle(new MediaStyle().setMediaSession(session.getSessionToken()).setShowActionsInCompactView(0, 1, 2))
+                                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                            }
+
                             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O && PreferenceUtil.getInstance().coloredNotification())
                                 builder.setColor(color);
                         }
@@ -119,7 +128,7 @@ public class PlayingNotificationImplApi24 extends PlayingNotification {
                 }));
     }
 
-    private PendingIntent retrievePlaybackAction(final String action) {
+    PendingIntent retrievePlaybackAction(final String action) {
         final ComponentName serviceName = new ComponentName(service, MusicService.class);
         Intent intent = new Intent(action);
         intent.setComponent(serviceName);

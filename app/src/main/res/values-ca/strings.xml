@@ -377,7 +377,7 @@
     <string name="pref_title_enqueue_song_default_choice">Acció predeterminada en triar una cançó</string>
     <string name="action_always_ask_for_confirmation">Demana l\'acció cada vegada</string>
     <string name="imported_x_playlists">S\'han importat %d llistes de reproducció</string>
-    <string name="imported_x_skipped_x_playlists">S\'han importat %d llistes de reproducció, se n\'han omès %d</string>
+    <string name="imported_x_skipped_x_playlists">S\'han importat %1$d llistes de reproducció, se n\'han omès %2$d</string>
     <string name="saf_guide_slide2_description_android_r">Heu de seleccionar el directori de la targeta SD que conté la música (no pot ser el directori arrel)</string>
     <string name="access_not_granted">No s\'ha permès l\'accés, no s\'ha desat</string>
     <string name="android13_storage_perm_error">No s\'ha concedit el permís de lectura de fitxers d\'àudio a l\'aplicació.</string>

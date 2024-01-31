@@ -180,7 +180,7 @@ public class MusicLibraryPagerAdapter extends FragmentPagerAdapter {
         }
     }
 
-    private final static class Holder {
+    final static class Holder {
         String mClassName;
         Bundle mParams;
         String title;

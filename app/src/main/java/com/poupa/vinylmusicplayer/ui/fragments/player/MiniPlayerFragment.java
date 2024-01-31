@@ -70,11 +70,6 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
         setUpMiniPlayer();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void setUpMiniPlayer() {
         setUpPlayPauseButton();
         layoutBinding.progressBar.setSupportProgressTintList(ColorStateList.valueOf(ThemeStore.accentColor(requireActivity())));

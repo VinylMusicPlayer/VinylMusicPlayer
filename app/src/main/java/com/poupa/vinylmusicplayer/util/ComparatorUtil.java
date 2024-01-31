@@ -21,4 +21,8 @@ public class ComparatorUtil {
     public static <E> Comparator<E> chain(Comparator<E> c1, Comparator<E> c2, Comparator<E> c3) {
         return chain(c1, chain(c2, c3));
     }
+
+    public static <E> Comparator<E> chain(Comparator<E> c1, Comparator<E> c2, Comparator<E> c3, Comparator<E> c4) {
+        return chain(c1, chain(c2, c3, c4));
+    }
 }

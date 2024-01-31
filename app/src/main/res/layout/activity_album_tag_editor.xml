@@ -105,9 +105,9 @@
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
                         android:gravity="center_vertical"
-                        android:hint="@string/genre"
-                        android:inputType="text|textCapWords"
-                        android:singleLine="true"
+                        android:hint="@string/genre_multiple"
+                        android:inputType="text|textCapWords|textMultiLine"
+                        android:singleLine="false"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                 </com.google.android.material.textfield.TextInputLayout>

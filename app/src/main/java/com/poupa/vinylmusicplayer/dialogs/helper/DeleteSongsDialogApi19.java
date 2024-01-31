@@ -37,11 +37,11 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
     private static final String SONGS = "songs";
 
     private BaseDeleteSongsAsyncTask deleteSongsTask;
-    private ArrayList<Song> songsToRemove;
-    private Song currentSong;
+    ArrayList<Song> songsToRemove;
+    Song currentSong;
 
     private ActivityResultLauncher<String> deleteSongsApi19_SAFFilePicker;
-    private ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
+    ActivityResultLauncher<Intent> deleteSongs_SAFGuide;
     private ActivityResultLauncher<Uri> deleteSongs_SAFTreePicker;
 
     @NonNull
@@ -141,11 +141,11 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
                 .build();
     }
 
-    private void deleteSongs(List<Song> songs, List<Uri> safUris) {
+    void deleteSongs(List<Song> songs, List<Uri> safUris) {
         MusicUtil.deleteTracks(DeleteSongsDialogApi19.this, null, songs, safUris);
     }
 
-    private void deleteSongsApi19() {
+    void deleteSongsApi19() {
         if (songsToRemove.size() < 1) {
             dismiss();
             return;

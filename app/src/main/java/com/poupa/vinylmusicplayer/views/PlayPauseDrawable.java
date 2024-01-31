@@ -47,7 +47,7 @@ public class PlayPauseDrawable extends Drawable {
     private float height;
 
     private float progress;
-    private boolean isPlay;
+    boolean isPlay;
     private boolean isPlaySet;
 
     private Animator animator;
@@ -140,12 +140,12 @@ public class PlayPauseDrawable extends Drawable {
         return anim;
     }
 
-    private void setProgress(float progress) {
+    void setProgress(float progress) {
         this.progress = progress;
         invalidateSelf();
     }
 
-    private float getProgress() {
+    float getProgress() {
         return progress;
     }
 

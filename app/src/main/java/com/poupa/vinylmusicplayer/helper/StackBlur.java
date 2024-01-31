@@ -105,7 +105,7 @@ public class StackBlur {
         return Bitmap.createBitmap(currentPixels, w, h, Bitmap.Config.ARGB_8888);
     }
 
-    private static void blurIteration(int[] src, int w, int h, int radius, int cores, int core, int step) {
+    static void blurIteration(int[] src, int w, int h, int radius, int cores, int core, int step) {
         int x, y, xp, yp, i;
         int sp;
         int stack_start;

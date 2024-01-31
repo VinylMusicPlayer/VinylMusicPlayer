@@ -47,7 +47,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     private int color;
 
     @NonNull
-    private final AppCompatActivity activity;
+    final AppCompatActivity activity;
 
     public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable CabHolder cabHolder) {
         super(activity, R.layout.item_list, dataSet);

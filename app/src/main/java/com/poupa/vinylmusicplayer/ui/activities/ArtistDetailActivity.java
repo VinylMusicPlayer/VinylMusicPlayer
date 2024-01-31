@@ -69,20 +69,20 @@ public class ArtistDetailActivity
 
     public static final String EXTRA_ARTIST_ID = "extra_artist_id";
 
-    private ActivityArtistDetailBinding layoutBinding;
+    ActivityArtistDetailBinding layoutBinding;
 
     private View songListHeader;
     private RecyclerView albumRecyclerView;
 
     private AttachedCab cab;
-    private int headerViewHeight;
-    private int toolbarColor;
+    int headerViewHeight;
+    int toolbarColor;
 
     private Artist artist;
     @Nullable
-    private String biography;
-    private MarkdownViewDialog biographyDialog;
-    private HorizontalAlbumAdapter albumAdapter;
+    String biography;
+    MarkdownViewDialog biographyDialog;
+    HorizontalAlbumAdapter albumAdapter;
     private ArtistSongAdapter songAdapter;
 
     private LastFMRestClient lastFMRestClient;
@@ -192,7 +192,7 @@ public class ArtistDetailActivity
         loadBiography(Locale.getDefault().getLanguage());
     }
 
-    private void loadBiography(@Nullable final String lang) {
+    void loadBiography(@Nullable final String lang) {
         biography = null;
 
         lastFMRestClient.getApiService()
@@ -269,7 +269,7 @@ public class ArtistDetailActivity
         return toolbarColor;
     }
 
-    private void setColors(int color) {
+    void setColors(int color) {
         toolbarColor = color;
         layoutBinding.header.setBackgroundColor(color);
 

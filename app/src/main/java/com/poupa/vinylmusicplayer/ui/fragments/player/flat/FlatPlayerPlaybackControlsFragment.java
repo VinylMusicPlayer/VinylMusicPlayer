@@ -87,11 +87,6 @@ public class FlatPlayerPlaybackControlsFragment extends AbsMusicServiceFragment 
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         progressViewUpdateHelper.start();

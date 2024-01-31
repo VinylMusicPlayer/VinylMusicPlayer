@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -16,6 +18,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,12 +34,33 @@ public class SongSortOrder {
     private static final Comparator<Song> _BY_YEAR = Comparator.comparingInt(s -> s.year);
     public static final Comparator<Song> BY_DATE_ADDED = Comparator.comparingLong(s -> s.dateAdded);
     public static final Comparator<Song> BY_DATE_ADDED_DESC = ComparatorUtil.reverse(BY_DATE_ADDED);
+
+    private static @NonNull final HashMap<Long, Long> albumId2DateAddedCache = new HashMap();
+    private static final Comparator<Song> _BY_ALBUM_DATE_ADDED = Comparator.comparingLong(s -> {
+        // Disco.getAlbum and Album.getAdded are costly operations -> cache the result
+        synchronized (albumId2DateAddedCache) {
+            final Long boxedDate = albumId2DateAddedCache.get(s.albumId);
+            if ((boxedDate != null) && (boxedDate <= s.dateAdded)) {
+                return boxedDate;
+            }
+
+            // either not cached or the cache is stale (i.e song has been added/removed from the album)
+            final Album album = Discography.getInstance().getAlbum(s.albumId);
+            final long date = (album == null) ? Song.EMPTY_SONG.dateAdded : album.getDateAdded();
+            albumId2DateAddedCache.put(s.albumId, date);
+            return date;
+        }
+    });
+    private static final Comparator<Song> _BY_ALBUM_DATE_ADDED_DESC = ComparatorUtil.reverse(_BY_ALBUM_DATE_ADDED);
+
     private static final Comparator<Song> BY_DATE_MODIFIED = Comparator.comparingLong(s -> s.dateModified);
     private static final Comparator<Song> BY_DATE_MODIFIED_DESC = ComparatorUtil.reverse(BY_DATE_MODIFIED);
     private static final Comparator<Song> _BY_DISC_TRACK = (s1, s2) -> (s1.discNumber != s2.discNumber)
             ? (s1.discNumber - s2.discNumber)
             : (s1.trackNumber - s2.trackNumber);
     public static final Comparator<Song> BY_DISC_TRACK = ComparatorUtil.chain(_BY_DISC_TRACK, _BY_TITLE);
+    public static final Comparator<Song> BY_ALBUM_DATE_ADDED = ComparatorUtil.chain(_BY_ALBUM_DATE_ADDED, _BY_ALBUM_ID, _BY_DISC_TRACK, _BY_TITLE);
+    public static final Comparator<Song> BY_ALBUM_DATE_ADDED_DESC = ComparatorUtil.chain(_BY_ALBUM_DATE_ADDED_DESC, _BY_ALBUM_ID, _BY_DISC_TRACK, _BY_TITLE);
     public static final Comparator<Song> BY_ALBUM = ComparatorUtil.chain(_BY_ALBUM, _BY_ALBUM_ID, BY_DISC_TRACK);
     private static final Comparator<Song> BY_TITLE = ComparatorUtil.chain(_BY_TITLE, _BY_ARTIST, BY_ALBUM);
     private static final Comparator<Song> BY_TITLE_DESC = ComparatorUtil.chain(ComparatorUtil.reverse(_BY_TITLE), _BY_ARTIST, BY_ALBUM);

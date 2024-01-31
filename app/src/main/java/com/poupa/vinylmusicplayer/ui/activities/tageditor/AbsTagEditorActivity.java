@@ -534,9 +534,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
             @Nullable
             final Map<FieldKey, String> fieldKeyValueMap;
             @Nullable
-            private final ArtworkInfo artworkInfo;
+            final ArtworkInfo artworkInfo;
 
-            private LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
+            LoadingInfo(Collection<Song> songs, @Nullable Map<FieldKey, String> fieldKeyValueMap, @Nullable ArtworkInfo artworkInfo) {
                 this.songs = songs;
                 this.fieldKeyValueMap = fieldKeyValueMap;
                 this.artworkInfo = artworkInfo;

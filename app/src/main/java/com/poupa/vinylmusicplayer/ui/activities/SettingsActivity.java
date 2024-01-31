@@ -211,7 +211,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             PreferenceUtil.getInstance().unregisterOnSharedPreferenceChangedListener(this);
         }
 
-        private void invalidateSettings() {
+        void invalidateSettings() {
             final Preference generalTheme = findPreference(PreferenceUtil.GENERAL_THEME);
             if (generalTheme != null) {
                 final Context context = getContext();

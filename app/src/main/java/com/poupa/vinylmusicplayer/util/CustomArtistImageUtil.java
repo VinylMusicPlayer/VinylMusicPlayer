@@ -36,7 +36,7 @@ public class CustomArtistImageUtil {
 
     private static CustomArtistImageUtil sInstance;
 
-    private final SharedPreferences mPreferences;
+    final SharedPreferences mPreferences;
 
     private CustomArtistImageUtil(@NonNull final Context context) {
         mPreferences = context.getSharedPreferences(CUSTOM_ARTIST_IMAGE_PREFS, Context.MODE_PRIVATE);
@@ -131,7 +131,7 @@ public class CustomArtistImageUtil {
         return mPreferences.getBoolean(getFileName(artist), false);
     }
 
-    private static String getFileName(Artist artist) {
+    static String getFileName(Artist artist) {
         String artistName = artist.getName();
         if (artistName == null)
             artistName = "";

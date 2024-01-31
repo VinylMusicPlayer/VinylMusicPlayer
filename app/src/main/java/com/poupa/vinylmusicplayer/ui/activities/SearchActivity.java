@@ -24,17 +24,17 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SearchAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivitySearchBinding;
-import com.poupa.vinylmusicplayer.model.Album;
-import com.poupa.vinylmusicplayer.model.Artist;
-import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
-import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
+import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
 
     SearchView searchView;
 
-    private SearchAdapter adapter;
+    SearchAdapter adapter;
     private String query;
 
     @Override

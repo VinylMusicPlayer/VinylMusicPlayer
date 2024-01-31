@@ -142,10 +142,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public boolean pendingQuit = false;
 
-    private final AppWidgetBig appWidgetBig = AppWidgetBig.getInstance();
-    private final AppWidgetClassic appWidgetClassic = AppWidgetClassic.getInstance();
-    private final AppWidgetSmall appWidgetSmall = AppWidgetSmall.getInstance();
-    private final AppWidgetCard appWidgetCard = AppWidgetCard.getInstance();
+    final AppWidgetBig appWidgetBig = AppWidgetBig.getInstance();
+    final AppWidgetClassic appWidgetClassic = AppWidgetClassic.getInstance();
+    final AppWidgetSmall appWidgetSmall = AppWidgetSmall.getInstance();
+    final AppWidgetCard appWidgetCard = AppWidgetCard.getInstance();
 
     private StaticPlayingQueue playingQueue = new StaticPlayingQueue();
 
@@ -157,12 +157,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private CrashNotification crashNotification;
 
     private AudioManager audioManager;
-    private MediaSessionCompat mediaSession;
+    MediaSessionCompat mediaSession;
     private PowerManager.WakeLock wakeLock;
 
     @Nullable private Playback playback;
-    private PlaybackHandler playbackHandler;
-    private HandlerThread playbackHandlerThread;
+    PlaybackHandler playbackHandler;
+    HandlerThread playbackHandlerThread;
     private final AudioManager.OnAudioFocusChangeListener audioFocusListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(final int focusChange) {
@@ -454,7 +454,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     }
                 } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
                     // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                    OopsHandler.copyStackTraceToClipboard(queueCopiesOutOfSync);
+                    OopsHandler.collectStackTrace(queueCopiesOutOfSync);
                     SafeToast.show(this, R.string.failed_restore_playing_queue);
 
                     final int shuffleMode = playingQueue.getShuffleMode();
@@ -612,7 +612,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 R.string.report_a_crash_invitation);
     }
 
-    private void updateNotification() {
+    void updateNotification() {
         if (getCurrentSong().id != Song.EMPTY_SONG.id) {
             idleNotification.stop();
             playingNotification.update();
@@ -729,7 +729,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         });
     }
 
-    private static Bitmap copy(Bitmap bitmap) {
+    static Bitmap copy(Bitmap bitmap) {
         Bitmap.Config config = bitmap.getConfig();
         if (config == null) {
             config = Bitmap.Config.RGB_565;
@@ -1090,13 +1090,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public int getSongProgressMillis() {
         synchronized (this) {
-            return playback.position();
+            return (playback != null ? playback.position() : -1);
         }
     }
 
     public int getSongDurationMillis() {
         synchronized (this) {
-            return playback.duration();
+            return (playback != null ? playback.duration() : -1);
         }
     }
 
@@ -1212,7 +1212,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public int getAudioSessionId() {
         synchronized (this) {
-            return playback.getAudioSessionId();
+            return (playback != null ? playback.getAudioSessionId() : -1);
         }
     }
 
@@ -1238,7 +1238,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     if (sharedPreferences.getBoolean(key, false)) {
                         prepareNext();
                     } else {
-                        playback.setNextDataSource(null);
+                        if (playback != null) {playback.setNextDataSource(null);}
                     }
                 }
                 break;

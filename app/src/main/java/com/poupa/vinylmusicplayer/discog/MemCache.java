@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.discog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -14,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author SC (soncaokim)
@@ -54,12 +57,7 @@ class MemCache {
         }
 
         // Update genre cache
-        Genre genre = getOrCreateGenreByName(song);
-        ArrayList<Song> songs = songsByGenreId.get(genre.id);
-        if (songs != null) {
-            songs.add(song);
-            genre.songCount = songs.size();
-        }
+        addSongToGenres(song);
 
         // Update the overall max replay gain value, if it's been computed already
         if (!Float.isNaN(maxReplayGain)) {
@@ -125,19 +123,7 @@ class MemCache {
             }
 
             // ---- Remove song from Genre cache
-            final Genre genre = genresByName.get(song.genre);
-            if (genre != null) {
-                final ArrayList<Song> songs = songsByGenreId.get(genre.id);
-                if (songs != null) {
-                    songs.remove(song);
-                    if (songs.isEmpty()) {
-                        genresByName.remove(genre.name);
-                        songsByGenreId.remove(genre.id);
-                    } else {
-                        genre.songCount = songs.size();
-                    }
-                }
-            }
+            removeSongFromGenreCache(song);
 
             // Update the overall max replay gain value, if it's been computed already
             if (!Float.isNaN(maxReplayGain)) {
@@ -271,13 +257,59 @@ class MemCache {
         return result;
     }
 
-    @NonNull
-    private synchronized Genre getOrCreateGenreByName(@NonNull final Song song) {
-        Genre genre = genresByName.get(song.genre);
-        if (genre == null) {
-            genre = new Genre(genresByName.size(), song.genre, 0);
+    private synchronized void removeSongFromGenreCache(@NonNull final Song song) {
+        List<String> genres = MultiValuesTagUtil.split(song.genre);
+        genres.stream().forEach(genreName -> {
+            final Genre genre = genresByName.get(genreName);
+            if (genre != null) {
+                final ArrayList<Song> songs = songsByGenreId.get(genre.id);
+                if (songs != null) {
+                    songs.remove(song);
+                    if (songs.isEmpty()) {
+                        genresByName.remove(genre.name);
+                        songsByGenreId.remove(genre.id);
+                    } else {
+                        genre.songCount = songs.size();
+                    }
+                }
+            }
+        });
+    }
 
-            genresByName.put(song.genre, genre);
+    private synchronized void addSongToGenres(@NonNull final Song song) {
+        List<Genre> genres = getOrCreateGenresBySong(song);
+        genres.stream().forEach(genre->{
+            this.addSongToGenreAndUpdateCount(song, genre);
+        });
+    }
+
+    private synchronized void addSongToGenreAndUpdateCount(@NonNull final Song song, @NonNull final Genre genre) {
+        ArrayList<Song> songs = songsByGenreId.get(genre.id);
+        if (songs != null) {
+            songs.add(song);
+            genre.songCount = songs.size();
+        }
+    }
+
+    @NonNull
+    private synchronized List<Genre> getOrCreateGenresBySong(@NonNull final Song song) {
+        List<String> genres = MultiValuesTagUtil.split(song.genre);
+
+        // If a song has no genres, empty string is the "unknown" genre
+        if (genres.isEmpty()) {
+            genres = List.of("");
+        }
+
+        return genres.stream().map(this::getOrCreateGenreByName).collect(Collectors.toList());
+    }
+
+    @NonNull
+    private synchronized Genre getOrCreateGenreByName(@NonNull final String genreName) {
+        Genre genre = genresByName.get(genreName);
+        if (genre == null) {
+            genre = new Genre(genresByName.size(), genreName, 0);
+
+            genresByName.put(genreName, genre);
             songsByGenreId.put(genre.id, new ArrayList<>());
         }
         return genre;
