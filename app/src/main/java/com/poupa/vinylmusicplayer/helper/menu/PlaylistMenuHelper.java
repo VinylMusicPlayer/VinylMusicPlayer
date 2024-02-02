@@ -64,11 +64,13 @@ public class PlaylistMenuHelper {
             }
             try {
                 final String file = PlaylistsUtil.savePlaylist(context, playlist);
-                return context.getString(R.string.saved_playlist_to, file);
+                if (file != null) {
+                    return context.getString(R.string.saved_playlist_to, file);
+                }
             } catch (IOException e) {
                 OopsHandler.collectStackTrace(e);
-                return context.getString(R.string.failed_to_save_playlist, e);
             }
+            return context.getString(R.string.failed_to_save_playlist, "");
         }
 
         @Override
