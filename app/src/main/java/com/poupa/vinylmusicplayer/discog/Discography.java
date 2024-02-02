@@ -49,7 +49,7 @@ public class Discography implements MusicServiceEventListener {
 
     private MainActivity mainActivity = null;
     private Handler mainActivityTaskQueue = null;
-    private final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
+    private static final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
     public Discography() {
@@ -233,7 +233,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Album> getAllAlbums(@NonNull Comparator<Album> sortOrder) {
+    public ArrayList<Album> getAllAlbums(@NonNull Comparator<? super Album> sortOrder) {
         synchronized (cache) {
             ArrayList<Album> fullAlbums = new ArrayList<>();
             for (Map<Long, MemCache.AlbumSlice> albumsByArtist : cache.albumsByAlbumIdAndArtistId.values()) {
@@ -249,7 +249,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    private static Album mergeFullAlbum(@NonNull Collection<MemCache.AlbumSlice> albumParts) {
+    private static Album mergeFullAlbum(@NonNull Iterable<? extends MemCache.AlbumSlice> albumParts) {
         Album fullAlbum = new Album();
         for (Album fragment : albumParts) {
             for (Song song : fragment.songs) {
@@ -263,7 +263,7 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    public ArrayList<Genre> getAllGenres(@NonNull Comparator<Genre> sortOrder) {
+    public ArrayList<Genre> getAllGenres(@NonNull Comparator<? super Genre> sortOrder) {
         synchronized (cache) {
             // Make a copy here, to avoid error while the caller is iterating on the result
             ArrayList<Genre> copy = new ArrayList<>(cache.genresByName.values());
@@ -277,15 +277,18 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @Nullable
-    public ArrayList<Song> getSongsForGenre(long genreId, @NonNull Comparator<Song> sortOrder) {
+    public ArrayList<Song> getSongsForGenre(long genreId, @NonNull Comparator<? super Song> sortOrder) {
         synchronized (cache) {
-            ArrayList<Song> songs = new ArrayList<>(cache.songsByGenreId.get(genreId));
+            ArrayList<Song> songs = cache.songsByGenreId.get(genreId);
+            if (songs == null) {return null;}
+
+            ArrayList<Song> copy = new ArrayList<>(songs);
 
             // Perform sort inside the critical section, to avoid data race
             // (artist or album being modified while sorting)
-            Collections.sort(songs, sortOrder);
+            Collections.sort(copy, sortOrder);
 
-            return songs;
+            return copy;
         }
     }
 
