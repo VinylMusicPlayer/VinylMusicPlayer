@@ -47,7 +47,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, ?> prefsMap = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            stringBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
         }
 
         // Write all lines in the export file
