@@ -45,6 +45,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +54,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.GRAMMATICAL_INFLECTION_SERVICE;
+import static com.poupa.vinylmusicplayer.util.SharedPreferencesExporter.WRITE_REQUEST_CODE;
 
 /**
  * @author Andreas Lechner ()
@@ -65,11 +68,16 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
     }
 
     @NonNull private final String preferenceKey;
+    private Context context;
     //private final int WRITE_REQUEST_CODE = 1;
+
+
 
     public ExportSettingsPreferenceDialog(@NonNull String preference) {
         preferenceKey = preference;
     }
+
+    private SharedPreferences sharedPreferences;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
@@ -77,7 +85,9 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Gson gson = new Gson(); // com.google.gson.Gson
-        String jsonFromMap = gson.toJson(allPreferences);
+        //String jsonFromMap = gson.toJson(allPreferences);
+        this.context = this.getContext();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
         final Activity activity = requireActivity();
         String filename = this.getExportSettingsFilename();
         Log.i(ExportSettingsPreferenceDialog.class.getName(), filename);
@@ -91,7 +101,9 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
         alert.setPositiveButton(android.R.string.ok, (dialog, id) -> {
             // User taps OK button.
             //createFile(filename);
-            buttonCreateFile(activity, filename, jsonFromMap);
+            //this.context.startActivity(new Intent().setClass(this.context, SharedPreferencesExporter.class).putExtra("filename", editText.getText()));
+            SharedPreferencesExporter.start(this.context, editText.getText().toString());
+            //buttonCreateFile(activity, filename);//, jsonFromMap);
             //preferences;
             //SharedPreferencesExporter spe = new SharedPreferencesExporter();//App.getStaticContext());
             //spe.export();
@@ -124,9 +136,9 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
     }
 
     private Intent createFileIntent(String filename) {
-        Intent intent = null;
+        //Intent intent = null;
         //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-        intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
         //intent = new Intent(Intent.ACTION_);//, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
         //}
 
@@ -135,30 +147,54 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, filename);
 
-        this.startActivity(intent);
+        //this.startActivity(intent);
 
         return intent;
     }
 
-    public void buttonCreateFile(Activity activity, String filename, String content) {
+    private String exportSharedPreferences() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Map<String, ?> prefsMap = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
+            stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public void buttonCreateFile(Activity activity, String filename) { //, String content) {
 
         //intent.setAction(Intent.AC);
         //intent.putExtra(Intent.EXTRA_TEXT, content);
         //intent.setType("*/*");
-        Intent intent = createFileIntent(filename);
+        //String content = this.exportSharedPreferences();
+        //Intent intent = createFileIntent(filename);
+        //createFileIntent(filename);
         //activity.startActivityForResult(intent, WRITE_REQUEST_CODE);
+        //this.registerForActivityResult(intent);
+        /*ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.CreateDocument(),
+                uri -> {
+                    try {
+                        ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(uri, "w"); //intent.getData(), "w");
+                        FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
+                        fileOutputStream.write(content.getBytes());
+                        fileOutputStream.close();
+                        pfd.close();
+                    } catch (IOException e) {
+                        Log.e(ExportSettingsPreferenceDialog.class.getName(), e.getMessage());
+                    }
+                });*/
 
 
-        try {
-            //Uri uri = context.getContentResolver().insert(intent.getData(), null);
-            ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(intent.getData(), "w");
-            FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
-            fileOutputStream.write(content.getBytes());
-            fileOutputStream.close();
-            pfd.close();
-        } catch (IOException e) {
-            Log.e(ExportSettingsPreferenceDialog.class.getName(), e.getMessage());
-        }
+
+        //createDocumentLauncher.launch(filename);
+
+        Log.i(ExportSettingsPreferenceDialog.class.getName(), "------createDocumentLauncher Ende");
+
+
+        //Log.i(ExportSettingsPreferenceDialog.class.getName(), content);
+
+
         //Log.i(ExportSettingsPreferenceDialog.class.getName(), intent.getData().toString());
     }
 
