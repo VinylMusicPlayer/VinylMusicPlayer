@@ -185,9 +185,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof ExportSettingsPreference) {
                 return ExportSettingsPreferenceDialog.newInstance(preference.getKey());
-            } else if (preference instanceof ImportSettingsPreference) {
-                ImportSettingsPreferenceDialog.newInstance(preference.getKey()); return null;
-                //return ExportSettingsDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
                         SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),
@@ -291,6 +288,18 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 setSummary(autoDownloadImagesPolicy);
                 autoDownloadImagesPolicy.setOnPreferenceChangeListener((preference, o) -> {
                     setSummary(autoDownloadImagesPolicy, o);
+                    return true;
+                });
+            }
+
+            final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
+            if (importSettings != null) {
+                importSettings.setOnPreferenceClickListener((preference) -> {
+                    //ImportSettingsPreferenceDialog.newInstance(preference.getKey());
+                    ImportSettingsPreferenceDialog.start(getContext());
+                    //SettingsActivity.
+                    //openDocumentLauncher.launch(new String[]{"text/plain"});
+                    //Log.i(SettingsActivity.class.getName(), "Import clicked");
                     return true;
                 });
             }

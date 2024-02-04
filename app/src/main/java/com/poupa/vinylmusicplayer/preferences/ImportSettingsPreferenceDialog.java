@@ -42,8 +42,11 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SharedPreferencesExporter;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -59,37 +62,45 @@ import static android.app.Activity.RESULT_OK;
  */
 public class ImportSettingsPreferenceDialog extends AppCompatActivity {
 
+    /*
     @NonNull
     public static ImportSettingsPreferenceDialog newInstance(@NonNull String preference) {
         return new ImportSettingsPreferenceDialog(preference);
+    }*/
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, ImportSettingsPreferenceDialog.class);
+        context.startActivity(intent);
     }
 
-    @NonNull private final String preferenceKey;
-    //private final int WRITE_REQUEST_CODE = 1;
+    //@NonNull private final String preferenceKey;
 
-    public ImportSettingsPreferenceDialog(@NonNull String preference) {
+    private Context context;
+    private ActivityResultLauncher importFilePicker;
+
+    /*public ImportSettingsPreferenceDialog(@NonNull String preference) {
         preferenceKey = preference;
-        //this.readFileIntent();
-    }
-
-
-    private final ActivityResultLauncher<String[]> openDocumentLauncher =
-            registerForActivityResult(new ActivityResultContracts.OpenDocument(),
-                    result -> {
-                        if (result != null) {
-                            //readFileIntent();
-                            Log.i(ImportSettingsPreferenceDialog.class.getName(), "result not null " + result);
-                        }
-                    });
+        this.readFileIntent();
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        importSharedPreferencesWithPermission();
+        this.context = this.getApplicationContext();
+        importFilePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
+            // Unless the selection has been cancelled, create the export file
+            if(result != null) {
+                importSettings(result);
+            }
+            // Finishes the last activity to return to the settings activity.
+            this.finish();
+        });
+        importFilePicker.launch(new String[]{"text/plain"});
+        //importSharedPreferencesWithPermission();
     }
 
     private void importSharedPreferencesWithPermission() {
-        openDocumentLauncher.launch(new String[]{"text/plain"});
+        //openDocumentLauncher.launch(new String[]{"text/plain"});
     }
 
 
@@ -111,5 +122,60 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
         return intent;
     }
 
+    private void importSettings(Uri location) {
+        /*
+        StringBuilder stringBuilder = new StringBuilder();
+        Map<String, ?> prefsMap;
+
+        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
+            stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+
+        // Write all lines in the export file
+        try {
+            // Try to open the file
+            ParcelFileDescriptor file = this.context.getContentResolver().openFileDescriptor(location, "w");
+            if (file == null) return;
+
+            // Write all lines in the file
+            FileWriter writer = new FileWriter(file.getFileDescriptor());
+            writer.write(stringBuilder.toString());
+            writer.close();
+            file.close();
+        } catch (IOException exception) {
+            // An error happened while writing the line
+            OopsHandler.collectStackTrace(exception);
+        }
+        */
+
+
+        // Prepare the table used to store the lines
+        ArrayList<String> content = new ArrayList<>() ;
+        String buffer ;
+
+        try
+        {
+            // Try to open the file
+            ParcelFileDescriptor file = this.context.getContentResolver().openFileDescriptor(location, "r") ;
+            if(file == null) return ;
+
+            // Read the content from the file line by line
+            BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor())) ;
+            while((buffer = reader.readLine()) != null) {
+                Log.i(this.getLocalClassName(), buffer);
+                //content.add(buffer) ;
+            }
+            reader.close() ;
+            file.close() ;
+        }
+        catch(IOException exception)
+        {
+            // An error happened while reading the file
+            OopsHandler.collectStackTrace(exception);
+        }
+        //return content ;
+
+
+    }
 
 }
