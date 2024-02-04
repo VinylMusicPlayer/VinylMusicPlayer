@@ -195,7 +195,7 @@ class DB extends SQLiteOpenHelper {
                 final long dateAdded = cursor.getLong(++columnIndex);
                 final long dateModified = cursor.getLong(++columnIndex);
                 final int discNumber = cursor.getInt(++columnIndex);
-                final String genre = cursor.getString(++columnIndex);
+                final String genres = cursor.getString(++columnIndex);
                 final float replayGainAlbum = cursor.getFloat(++columnIndex);
                 final float replayGainTrack = cursor.getFloat(++columnIndex);
                 final float replayGainPeakAlbum = cursor.getFloat(++columnIndex);
@@ -220,7 +220,7 @@ class DB extends SQLiteOpenHelper {
                         MultiValuesTagUtil.split(artistNames));
                 song.discNumber = discNumber;
                 song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
-                song.genre = genre;
+                song.genres = MultiValuesTagUtil.split(genres);
                 song.replayGainTrack = replayGainTrack;
                 song.replayGainAlbum = replayGainAlbum;
                 song.replayGainPeakTrack = replayGainPeakTrack;
