@@ -31,11 +31,10 @@ public class OopsHandler implements UncaughtExceptionHandler {
 
     public void uncaughtException(@NonNull final Thread t, @NonNull final Throwable e) {
         try {
-            String result = getStackTraceWithTime(e);
+            String result = getStackTraceWithTime(e, null);
             Log.e(OopsHandler.class.getName(), "Submitting crash report");
             Log.e(OopsHandler.class.getName(), result);
             sendBugReport(result);
-            sendBugReport(getStackTraceWithTime(e, null));
         } catch (final Throwable ignore) {}
     }
 
