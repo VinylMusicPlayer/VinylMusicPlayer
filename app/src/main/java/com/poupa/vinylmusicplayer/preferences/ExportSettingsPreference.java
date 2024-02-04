@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEDialogPreference;
 
 /**
- * @author SC (soncaokim)
+ * @author Andreas Lechner
  */
 public class ExportSettingsPreference extends ATEDialogPreference {
     public ExportSettingsPreference(Context context) {
