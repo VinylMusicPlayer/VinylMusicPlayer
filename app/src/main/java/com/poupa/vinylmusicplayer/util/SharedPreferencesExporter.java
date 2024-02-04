@@ -16,10 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 public class SharedPreferencesExporter extends AppCompatActivity {
-
-    private static final String SHARED_PREFS_NAME = "MySharedPrefsFile";
-    public static final int WRITE_REQUEST_CODE = 1;
-
     private Context context;
     private ActivityResultLauncher<String> exportFilePicker;
     private SharedPreferences sharedPreferences;

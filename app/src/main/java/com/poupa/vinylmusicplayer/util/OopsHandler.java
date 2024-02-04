@@ -1,17 +1,15 @@
 package com.poupa.vinylmusicplayer.util;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 
@@ -24,10 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class OopsHandler implements UncaughtExceptionHandler {
-    final Context context;
+    @NonNull final Context context;
     private static final String NL = "\n";
 
-    public OopsHandler(final Context ctx) {
+    public OopsHandler(@NonNull final Context ctx) {
         context = ctx;
     }
 
@@ -37,6 +35,7 @@ public class OopsHandler implements UncaughtExceptionHandler {
             Log.e(OopsHandler.class.getName(), "Submitting crash report");
             Log.e(OopsHandler.class.getName(), result);
             sendBugReport(result);
+            sendBugReport(getStackTraceWithTime(e, null));
         } catch (final Throwable ignore) {}
     }
 
@@ -67,12 +66,14 @@ public class OopsHandler implements UncaughtExceptionHandler {
     }
 
     @NonNull
-    private static String getStackTraceWithTime(@NonNull final Throwable exception) {
+    private static String getStackTraceWithTime(@NonNull final Throwable exception, @Nullable CharSequence extraInfo) {
         final Writer result = new StringWriter();
         try {
             final String when = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US).format(System.currentTimeMillis());
             result.append("## Time: ").append(NL).append(when).append(NL);
-
+            if (!TextUtils.isEmpty(extraInfo)) {
+                result.append("## Extra info: ").append(NL).append(extraInfo).append(NL);
+            }
             result.append("## Stack: ").append(NL);
             final PrintWriter printWriter = new PrintWriter(result);
             exception.printStackTrace(printWriter);
@@ -83,21 +84,11 @@ public class OopsHandler implements UncaughtExceptionHandler {
         return result.toString();
     }
 
-    public static void copyStackTraceToClipboard(@NonNull final Throwable exception) {
-        if (!PreferenceUtil.getInstance().isOopsHandlerEnabled()) {return;}
-
-        final String stackTrace = getStackTraceWithTime(exception);
-        final Context context = App.getStaticContext();
-
-        // Post the clipboard manipulation task to the main thread, since this method may be called from a non-UI thread
-        new Handler(context.getMainLooper()).post(() -> {
-            final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            final ClipData clip = ClipData.newPlainText(context.getString(R.string.app_crashed), stackTrace);
-            clipboard.setPrimaryClip(clip);
-        });
+    public static void collectStackTrace(@NonNull final Throwable exception) {
+        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception, null));
     }
 
-    public static void collectStackTrace(@NonNull final Throwable exception) {
-        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception));
+    public static void collectStackTrace(@NonNull final Throwable exception, @NonNull final String extraInfo) {
+        PreferenceUtil.getInstance().pushOopsHandlerReport(getStackTraceWithTime(exception, extraInfo));
     }
 }

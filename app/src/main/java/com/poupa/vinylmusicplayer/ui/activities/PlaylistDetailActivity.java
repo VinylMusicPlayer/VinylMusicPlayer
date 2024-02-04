@@ -39,9 +39,12 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -156,6 +159,18 @@ public class PlaylistDetailActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(playlist instanceof AbsCustomPlaylist ? R.menu.menu_smart_playlist_detail : R.menu.menu_playlist_detail, menu);
+
+        // "Group by album" option
+        if (playlist instanceof NotRecentlyPlayedPlaylist) {
+            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
+            item.setCheckable(true).setEnabled(true)
+                    .setChecked(PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        } else if (playlist instanceof LastAddedPlaylist) {
+            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
+            item.setCheckable(true).setEnabled(true)
+                    .setChecked(PreferenceUtil.getInstance().getLastAddedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        }
+
         MenuHelper.decorateDestructiveItems(menu, this);
         return super.onCreateOptionsMenu(menu);
     }
@@ -169,6 +184,14 @@ public class PlaylistDetailActivity
         } else if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.action_song_sort_group_by_album) {
+            item.setChecked(!item.isChecked()); // toggle
+            if (playlist instanceof NotRecentlyPlayedPlaylist) {
+                PreferenceUtil.getInstance().setNotRecentlyPlayedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            } else if (playlist instanceof LastAddedPlaylist) {
+                PreferenceUtil.getInstance().setLastAddedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            }
+            reload();
         }
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
     }

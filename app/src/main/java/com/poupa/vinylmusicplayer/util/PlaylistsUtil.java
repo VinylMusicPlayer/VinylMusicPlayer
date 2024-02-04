@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.M3UWriter;
@@ -135,24 +136,30 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
+    @NonNull
     public static String getNameForPlaylist(final long id) {
         StaticPlaylist playlist = StaticPlaylist.getPlaylist(id);
         if (playlist == null) {return "";}
         return playlist.getName();
     }
 
+    @Nullable
     public static String savePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
         @NonNull ContentValues values = new ContentValues();
-        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/x-mpegurl");
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/x-mpegurl");
         //Note: Cannot obtain the permission to "Playlists" folder - Android 13 simply disallows non-standard ones
-        values.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
-        values.put(MediaStore.Audio.Media.DISPLAY_NAME, playlist.name);
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, playlist.name);
 
         // Delete existing, if any
         deletePlaylistFromMediaStore(context, playlist.name);
         // Now create a new one
         @NonNull final ContentResolver resolver = context.getContentResolver();
-        @NonNull final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+        final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+        if (uri == null) {
+            SafeToast.show(context, context.getResources().getString(R.string.failed_to_save_playlist, "Null URI"));
+            return null;
+        }
 
         try (final OutputStream stream = resolver.openOutputStream(uri, "wt")) {
             M3UWriter.write(context, stream, playlist);

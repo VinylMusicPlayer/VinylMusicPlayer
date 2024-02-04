@@ -62,6 +62,7 @@
     <string name="lyrics">Lyrics</string>
     <string name="album_artist_multiple">Album Artists (one per line)</string>
     <string name="artist_multiple">Artists (one per line)</string>
+    <string name="genre_multiple">Genres (one per line)</string>
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
     <string name="label_details">Details</string>
@@ -355,6 +356,7 @@
     <string name="sort_order_date_added_reverse">Added - Recent first</string>
     <string name="sort_order_date_modified">Modified</string>
     <string name="sort_order_date_modified_reverse">Modified - Recent first</string>
+    <string name="sort_order_group_by_album">Group by album</string>
     <string name="finish_current_music_sleep_timer">Finish last song</string>
     <string name="dialog_ringtone_title">Set ringtone</string>
     <string name="dialog_ringtone_message">Please allow Vinyl Music Player to modify system settings in the next screen before setting the ringtone.</string>

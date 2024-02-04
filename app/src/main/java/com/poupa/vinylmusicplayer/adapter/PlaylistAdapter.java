@@ -193,7 +193,11 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
             for (Playlist playlist : params[0]) {
                 try {
                     dir = PlaylistsUtil.savePlaylist(context, playlist);
-                    successes++;
+                    if (dir != null) {
+                        successes++;
+                    } else {
+                        failures++;
+                    }
                 } catch (IOException e) {
                     OopsHandler.collectStackTrace(e);
                     failures++;
