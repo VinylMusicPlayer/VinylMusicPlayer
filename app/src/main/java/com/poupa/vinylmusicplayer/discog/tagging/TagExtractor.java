@@ -79,7 +79,7 @@ public class TagExtractor {
                 song.title = file.getFile().getName();
             }
 
-            song.genre = safeGetTag.apply(tags, FieldKey.GENRE, song.genre);
+            song.genre = safeGetTagAsList.apply(tags, FieldKey.GENRE, song.genre);
             song.discNumber = safeGetTagAsInteger.apply(tags, FieldKey.DISC_NO, song.discNumber);
             song.trackNumber = safeGetTagAsInteger.apply(tags, FieldKey.TRACK, song.trackNumber);
             song.year = safeGetTagAsReleaseYear.apply(tags, FieldKey.YEAR, song.year);

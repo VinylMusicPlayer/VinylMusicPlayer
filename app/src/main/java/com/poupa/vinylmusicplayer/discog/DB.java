@@ -111,7 +111,7 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
             values.put(SongColumns.DATE_MODIFIED, song.dateModified);
             values.put(SongColumns.DISC_NUMBER, song.discNumber);
-            values.put(SongColumns.GENRE, song.genre);
+            values.put(SongColumns.GENRE, MultiValuesTagUtil.merge(song.genres));
             values.put(SongColumns.REPLAYGAIN_ALBUM, song.replayGainAlbum);
             values.put(SongColumns.REPLAYGAIN_TRACK, song.replayGainTrack);
             values.put(SongColumns.REPLAYGAINPEAK_ALBUM, song.replayGainPeakAlbum);
