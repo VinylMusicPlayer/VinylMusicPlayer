@@ -139,10 +139,10 @@ public class SongDetailDialog extends DialogFragment {
 
         htmlBuilder.appendLine(R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration));
 
-        final String rgTrack = song.replayGainTrack != 0
+        final String rgTrack = song.replayGainTrack != 0.0f
                 ? String.format(Locale.getDefault(), "%s: %.2f dB ", context.getString(R.string.song), song.replayGainTrack)
                 : "- ";
-        final String rgAlbum = song.replayGainAlbum != 0
+        final String rgAlbum = song.replayGainAlbum != 0.0f
                 ? String.format(Locale.getDefault(), "%s: %.2f dB ", context.getString(R.string.album), song.replayGainAlbum)
                 : "- ";
         htmlBuilder.appendLine(R.string.label_replay_gain, rgTrack, rgAlbum);

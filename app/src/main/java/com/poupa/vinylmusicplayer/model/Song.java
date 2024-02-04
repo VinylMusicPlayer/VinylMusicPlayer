@@ -22,10 +22,10 @@ public class Song implements Parcelable {
 
     public final long id;
 
-    public List<String> albumArtistNames = new ArrayList<>(Arrays.asList(""));
+    public List<String> albumArtistNames = new ArrayList<>(List.of(""));
     public String albumName;
     public long albumId;
-    public List<String> artistNames = new ArrayList<>(Arrays.asList(""));
+    public List<String> artistNames = new ArrayList<>(List.of(""));
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     @NonNls
     public final String data;
@@ -59,30 +59,30 @@ public class Song implements Parcelable {
         // discNumber, genre, albumArtistNames, replayGainTrack, replayGainAlbum
     }
 
-    public Song(final @NonNull Song song) {
-        this.id = song.id;
-        this.albumArtistNames = song.albumArtistNames;
-        this.albumName = song.albumName;
-        this.albumId = song.albumId;
-        this.artistNames = song.artistNames;
-        this.artistId = song.artistId;
-        this.data = song.data;
-        this.dateAdded = song.dateAdded;
-        this.dateModified = song.dateModified;
-        this.discNumber = song.discNumber;
-        this.duration = song.duration;
-        this.genre = song.genre;
-        this.replayGainAlbum = song.replayGainAlbum;
-        this.replayGainTrack = song.replayGainTrack;
-        this.replayGainPeakAlbum = song.replayGainPeakAlbum;
-        this.replayGainPeakTrack = song.replayGainPeakTrack;
-        this.title = song.title;
-        this.trackNumber = song.trackNumber;
-        this.year = song.year;
+    public Song(@NonNull final Song song) {
+        id = song.id;
+        albumArtistNames = song.albumArtistNames;
+        albumName = song.albumName;
+        albumId = song.albumId;
+        artistNames = song.artistNames;
+        artistId = song.artistId;
+        data = song.data;
+        dateAdded = song.dateAdded;
+        dateModified = song.dateModified;
+        discNumber = song.discNumber;
+        duration = song.duration;
+        genres = song.genres;
+        replayGainAlbum = song.replayGainAlbum;
+        replayGainTrack = song.replayGainTrack;
+        replayGainPeakAlbum = song.replayGainPeakAlbum;
+        replayGainPeakTrack = song.replayGainPeakTrack;
+        title = song.title;
+        trackNumber = song.trackNumber;
+        year = song.year;
     }
 
     public boolean isQuickEqual(Song song) {
-        return (this.id == song.id);
+        return (id == song.id);
     }
 
     @Override
@@ -140,17 +140,18 @@ public class Song implements Parcelable {
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         final String EOS = "'"; // end of string marker
         return "Song{" +
                 "id=" + id +
-                ", albumArtistName='" + MultiValuesTagUtil.infoString(albumArtistNames) + '\'' +
-                ", albumName='" + albumName + '\'' +
+                ", albumArtistName='" + MultiValuesTagUtil.infoString(albumArtistNames) + EOS +
+                ", albumName='" + albumName + EOS +
                 ", albumId=" + albumId +
-                ", artistNames='" + MultiValuesTagUtil.infoString(artistNames) + '\'' +
+                ", artistNames='" + MultiValuesTagUtil.infoString(artistNames) + EOS +
                 ", artistId=" + artistId +
-                ", data='" + data + '\'' +
+                ", data='" + data + EOS +
                 ", dateAdded=" + dateAdded +
                 ", dateModified=" + dateModified +
                 ", discNumber=" + discNumber +
