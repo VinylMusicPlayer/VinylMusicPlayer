@@ -323,8 +323,8 @@ public class Discography implements MusicServiceEventListener {
             // Replace genre numerical ID3v1 values by textual ones
             List<String> normalizedGenres = new ArrayList<>(song.genres.size());
             for (String genre : song.genres) {
-                int genreId = Integer.parseInt(genre);
                 try {
+                    int genreId = Integer.parseInt(genre);
                     String genreName = GenreTypes.getInstanceOf().getValueForId(genreId);
                     if (genreName != null) {
                         normalizedGenres.add(genreName);
