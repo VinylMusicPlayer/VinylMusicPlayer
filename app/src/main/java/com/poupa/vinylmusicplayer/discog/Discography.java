@@ -329,7 +329,9 @@ public class Discography implements MusicServiceEventListener {
                     if (genreName != null) {
                         normalizedGenres.add(genreName);
                     }
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                    normalizedGenres.add(genre);
+                }
             }
             song.genres = normalizedGenres;
 
