@@ -449,6 +449,10 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                                             tag.addField(entry.getKey(), value);
                                         }
                                     }
+                                    else if (entry.getKey() == FieldKey.GENRE) {
+                                        final List<String> values = MultiValuesTagUtil.tagEditorSplit(entry.getValue());
+                                        tag.setField(entry.getKey(), MultiValuesTagUtil.merge(values));
+                                    }
                                     else {
                                         tag.setField(entry.getKey(), entry.getValue().trim());
                                     }
@@ -607,7 +611,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
     @Nullable
     static String getGenreName(@NonNull final AudioFile audio) {
         try {
-            return audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
+            String tag = audio.getTagOrCreateAndSetDefault().getFirst(FieldKey.GENRE);
+            List<String> genres = MultiValuesTagUtil.split(tag);
+            return MultiValuesTagUtil.tagEditorMerge(genres);
         } catch (Exception ignored) {
             return null;
         }
