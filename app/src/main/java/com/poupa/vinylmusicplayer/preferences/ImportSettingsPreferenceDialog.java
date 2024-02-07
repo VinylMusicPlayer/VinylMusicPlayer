@@ -38,6 +38,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
+import com.poupa.vinylmusicplayer.util.DataTypeUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -111,18 +112,20 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
                 preference = buffer.split("=");
                 Log.i(this.getLocalClassName(), buffer);
                 String key = preference[0];
-                Object value = preference[1];
-                if (value instanceof String) {
-                    spEditor.putString(key, (String) value);
-                } else if (value instanceof Integer) {
-                    spEditor.putInt(key, (Integer) value);
-                } else if (value instanceof Boolean) {
-                    spEditor.putBoolean(key, (Boolean) value);
+                String value = preference[1];
+                if (DataTypeUtil.checkType(value) instanceof String) {
+                    spEditor.putString(key, value);
+                } else if (DataTypeUtil.checkType(value) instanceof Integer) {
+                    spEditor.putInt(key, Integer.parseInt(value));
+                } else if (DataTypeUtil.checkType(value) instanceof Boolean) {
+                    spEditor.putBoolean(key, Boolean.parseBoolean(value));
+                } else if (DataTypeUtil.checkType(value) instanceof Double) {
+                    spEditor.putFloat(key, Float.parseFloat(value));
                 }
                 //content.add(buffer) ;
             }
-            reader.close() ;
-            file.close() ;
+            reader.close();
+            file.close();
         }
         catch(IOException exception)
         {
@@ -130,8 +133,7 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
             OopsHandler.collectStackTrace(exception);
         }
         //return content ;
-
-
+        spEditor.apply();
     }
 
 }
