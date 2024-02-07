@@ -29,7 +29,6 @@ import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
-import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
@@ -39,6 +38,7 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
@@ -158,17 +158,11 @@ public class PlaylistDetailActivity
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(playlist instanceof AbsCustomPlaylist ? R.menu.menu_smart_playlist_detail : R.menu.menu_playlist_detail, menu);
-
-        // "Group by album" option
-        if (playlist instanceof NotRecentlyPlayedPlaylist) {
-            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
-            item.setCheckable(true).setEnabled(true)
-                    .setChecked(PreferenceUtil.getInstance().getNotRecentlyPlayedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
-        } else if (playlist instanceof LastAddedPlaylist) {
-            final MenuItem item = menu.add(Menu.NONE, R.id.action_song_sort_group_by_album, Menu.NONE, R.string.sort_order_group_by_album);
-            item.setCheckable(true).setEnabled(true)
-                    .setChecked(PreferenceUtil.getInstance().getLastAddedSortOrder().equals(PreferenceUtil.ALBUM_SORT_ORDER));
+        if (playlist instanceof AbsSmartPlaylist smartPlaylist) {
+            getMenuInflater().inflate(R.menu.menu_item_smart_playlist, menu);
+            PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(menu, smartPlaylist);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_item_playlist, menu);
         }
 
         MenuHelper.decorateDestructiveItems(menu, this);
@@ -178,10 +172,7 @@ public class PlaylistDetailActivity
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int id = item.getItemId();
-        if (id == R.id.action_shuffle_playlist) {
-            MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         } else if (id == R.id.action_song_sort_group_by_album) {

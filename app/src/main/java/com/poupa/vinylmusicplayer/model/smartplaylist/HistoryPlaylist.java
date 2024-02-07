@@ -8,12 +8,14 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.TopAndRecentlyPlayedTracksLoader;
+import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -51,6 +53,19 @@ public class HistoryPlaylist extends AbsSmartPlaylist {
     public void clear(@NonNull Context context) {
         HistoryStore.getInstance(context).clear();
         super.clear(context);
+    }
+
+    @Override
+    public boolean canImport() {return true;}
+
+    @Override
+    public void importPlaylist(@NonNull Context context, @NonNull Playlist playlist) {
+        List<Song> songs = playlist.getSongs(context);
+        List<Long> songIds = new ArrayList<>(songs.size());
+        for (Song song : songs) {songIds.add(song.id);}
+
+        HistoryStore.getInstance(context).addSongIds(songIds);
+        super.importPlaylist(context, playlist);
     }
 
     @Override

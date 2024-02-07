@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
+import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 /**
@@ -23,13 +24,20 @@ public abstract class AbsSmartPlaylist extends AbsCustomPlaylist {
         this.iconRes = iconRes;
     }
 
+    public boolean isClearable() {
+        return true;
+    }
+
     public void clear(@NonNull Context context) {
         // Notify app of clear event, so that the smart playlists are refreshed
         if (isClearable()) context.sendBroadcast(new Intent(MusicService.META_CHANGED));
     }
 
-    public boolean isClearable() {
-        return true;
+    public boolean canImport() {return false;}
+
+    public void importPlaylist(@NonNull Context context, @NonNull Playlist playlist) {
+        // Notify app of clear event, so that the smart playlists are refreshed
+        if (canImport()) context.sendBroadcast(new Intent(MusicService.META_CHANGED));
     }
 
     @Nullable

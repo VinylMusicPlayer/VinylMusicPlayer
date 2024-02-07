@@ -30,7 +30,6 @@ import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
-import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -248,44 +247,20 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
 
             if (menu != null) {
                 menu.setOnClickListener(view -> {
-                    final Playlist playlist = dataSet.get(getAdapterPosition());
+                    final Playlist playlist = dataSet.get(getBindingAdapterPosition());
                     final PopupMenu popupMenu = new PopupMenu(activity, view);
 
-                    if (playlist instanceof AbsSmartPlaylist) {
+                    if (itemViewType == SMART_PLAYLIST) {
                         popupMenu.inflate(R.menu.menu_item_smart_playlist);
-                        final AbsSmartPlaylist smartPlaylist = (AbsSmartPlaylist) playlist;
-                        if (!smartPlaylist.isClearable()) {
-                            popupMenu.getMenu().findItem(R.id.action_clear_playlist).setVisible(false);
-                        }
-                        final String prefKey = smartPlaylist.getPlaylistPreference();
-                        if (prefKey == null) {
-                            popupMenu.getMenu().findItem(R.id.action_playlist_settings).setVisible(false);
-                        }
-                        popupMenu.setOnMenuItemClickListener(item -> {
-                            if (item.getItemId() == R.id.action_clear_playlist) {
-                                ClearSmartPlaylistDialog.create(smartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_SMART_PLAYLIST_" + smartPlaylist.name);
-                                return true;
-                            }
-                            else if (item.getItemId() == R.id.action_playlist_settings) {
-                                if (prefKey != null) {
-                                    SmartPlaylistPreferenceDialog
-                                            .newInstance(prefKey)
-                                            .show(activity.getSupportFragmentManager(), "SETTINGS_SMART_PLAYLIST_" + smartPlaylist.name);
-                                }
-                                return true;
-                            }
-                            return PlaylistMenuHelper.handleMenuClick(
-                                activity, dataSet.get(getAdapterPosition()), item);
-                        });
+                        PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(popupMenu.getMenu(), (AbsSmartPlaylist)playlist);
                     }
                     else {
                         popupMenu.inflate(R.menu.menu_item_playlist);
-
-                        MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
-
-                        popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
-                            activity, dataSet.get(getAdapterPosition()), item));
                     }
+
+                    MenuHelper.decorateDestructiveItems(popupMenu.getMenu(), activity);
+                    popupMenu.setOnMenuItemClickListener(item -> PlaylistMenuHelper.handleMenuClick(
+                            activity, dataSet.get(getBindingAdapterPosition()), item));
                     popupMenu.show();
                 });
             }
