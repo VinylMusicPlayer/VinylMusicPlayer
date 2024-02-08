@@ -318,16 +318,22 @@ public class Discography implements MusicServiceEventListener {
             normNames.accept(song.artistNames);
             song.albumName = StringUtil.unicodeNormalize(song.albumName);
             song.title = StringUtil.unicodeNormalize(song.title);
-            song.genre = StringUtil.unicodeNormalize(song.genre);
+            normNames.accept(song.genres);
 
             // Replace genre numerical ID3v1 values by textual ones
-            try {
-                int genreId = Integer.parseInt(song.genre);
-                String genre = GenreTypes.getInstanceOf().getValueForId(genreId);
-                if (genre != null) {
-                    song.genre = genre;
+            List<String> normalizedGenres = new ArrayList<>(song.genres.size());
+            for (String genre : song.genres) {
+                try {
+                    int genreId = Integer.parseInt(genre);
+                    String genreName = GenreTypes.getInstanceOf().getValueForId(genreId);
+                    if (genreName != null) {
+                        normalizedGenres.add(genreName);
+                    }
+                } catch (NumberFormatException ignored) {
+                    normalizedGenres.add(genre);
                 }
-            } catch (NumberFormatException ignored) {}
+            }
+            song.genres = normalizedGenres;
 
             cache.addSong(song);
 

@@ -3,7 +3,6 @@ package com.poupa.vinylmusicplayer.discog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Genre;
@@ -258,8 +257,7 @@ class MemCache {
     }
 
     private synchronized void removeSongFromGenreCache(@NonNull final Song song) {
-        List<String> genres = MultiValuesTagUtil.split(song.genre);
-        genres.stream().forEach(genreName -> {
+        song.genres.stream().forEach(genreName -> {
             final Genre genre = genresByName.get(genreName);
             if (genre != null) {
                 final ArrayList<Song> songs = songsByGenreId.get(genre.id);
@@ -293,7 +291,7 @@ class MemCache {
 
     @NonNull
     private synchronized List<Genre> getOrCreateGenresBySong(@NonNull final Song song) {
-        List<String> genres = MultiValuesTagUtil.split(song.genre);
+        List<String> genres = song.genres;
 
         // If a song has no genres, empty string is the "unknown" genre
         if (genres.isEmpty()) {
