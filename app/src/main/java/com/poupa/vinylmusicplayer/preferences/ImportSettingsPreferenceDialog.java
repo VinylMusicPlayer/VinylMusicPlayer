@@ -80,7 +80,7 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this.getApplicationContext();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
+        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
         importFilePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
             // Unless the selection has been cancelled, create the export file
             if(result != null) {
@@ -98,7 +98,8 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
         //ArrayList<String> content = new ArrayList<>() ;
         String[] preference;
         String buffer ;
-        SharedPreferences.Editor spEditor = sharedPreferences.edit();
+        //SharedPreferences.Editor spEditor = sharedPreferences.edit();
+        SharedPreferences.Editor spEditor = PreferenceUtil.getInstance().mPreferences.edit();
 
         try
         {
@@ -113,14 +114,15 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
                 Log.i(this.getLocalClassName(), buffer);
                 String key = preference[0];
                 String value = preference[1];
-                if (DataTypeUtil.checkType(value) instanceof String) {
-                    spEditor.putString(key, value);
-                } else if (DataTypeUtil.checkType(value) instanceof Integer) {
-                    spEditor.putInt(key, Integer.parseInt(value));
-                } else if (DataTypeUtil.checkType(value) instanceof Boolean) {
-                    spEditor.putBoolean(key, Boolean.parseBoolean(value));
-                } else if (DataTypeUtil.checkType(value) instanceof Double) {
-                    spEditor.putFloat(key, Float.parseFloat(value));
+                Object object = DataTypeUtil.checkType(value);
+                if (object instanceof String) {
+                    spEditor.putString(key, (String) object);
+                } else if (object instanceof Integer) {
+                    spEditor.putInt(key, (Integer) object);
+                } else if (object instanceof Boolean) {
+                    spEditor.putBoolean(key, (Boolean) object);
+                } else if (object instanceof Float) {
+                    spEditor.putFloat(key, (Float) object);
                 }
                 //content.add(buffer) ;
             }
@@ -134,6 +136,7 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
         }
         //return content ;
         spEditor.apply();
+        this.finish();
     }
 
 }

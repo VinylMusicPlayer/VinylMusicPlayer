@@ -44,7 +44,7 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
-    private static final String REMEMBER_LAST_TAB = "remember_last_tab";
+    public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     private static final String LAST_PAGE = "last_start_page";
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
@@ -78,7 +78,7 @@ public final class PreferenceUtil {
     public static final String COLORED_NOTIFICATION = "colored_notification";
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
-    private static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
+    public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
 
     public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
 
@@ -94,7 +94,6 @@ public final class PreferenceUtil {
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
     private static final String EXPORT_SETTINGS = "export_settings";
-
     public static final String IMPORT_SETTINGS = "import_settings";
 
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
@@ -121,7 +120,7 @@ public final class PreferenceUtil {
     @NonNls
     public static final String LIBRARY_CATEGORIES = "library_categories";
 
-    private static final String REMEMBER_SHUFFLE = "remember_shuffle";
+    public static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
     @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
@@ -133,6 +132,7 @@ public final class PreferenceUtil {
     private static final String CLASSIC_THEME = "classic";
     @NonNls
     public static final String ROUNDED_THEME = "rounded";
+    public static final String SHOULD_COLOR_NAVIGATION_BAR = "should_color_navigation_bar";
 
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
@@ -151,7 +151,9 @@ public final class PreferenceUtil {
 
     private static PreferenceUtil sInstance;
 
-    private final SharedPreferences mPreferences;
+    //private final SharedPreferences mPreferences;
+    //Changed to public just for triage.
+    public final SharedPreferences mPreferences;
 
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
@@ -221,6 +223,12 @@ public final class PreferenceUtil {
             default:
                 return R.style.Theme_VinylMusicPlayer_Light;
         }
+    }
+
+    public void setRememberLastTab(final boolean rememberLastTab) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_LAST_TAB, rememberLastTab)
+                .apply();
     }
 
     public boolean rememberLastTab() {
@@ -643,6 +651,12 @@ public final class PreferenceUtil {
 
     public boolean introShown() {
         return mPreferences.getBoolean(INTRO_SHOWN, false);
+    }
+
+    public void setRememberShuffle(final boolean rememberShuffle) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_SHUFFLE, rememberShuffle)
+                .apply();
     }
 
     public boolean rememberShuffle() {

@@ -97,6 +97,13 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (frag != null) frag.invalidateSettings();
+    }
+
+    @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         final int title = dialog.getTitle();
         if (title == R.string.primary_color) {
@@ -304,7 +311,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final ATEColorPreference primaryColorPref = findPreference("primary_color");
+            final ATEColorPreference primaryColorPref = findPreference(ThemeStore.KEY_PRIMARY_COLOR);
             if (getActivity() != null && primaryColorPref != null) {
                 final int primaryColor = ThemeStore.primaryColor(getActivity());
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
@@ -319,7 +326,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final ATEColorPreference accentColorPref = findPreference("accent_color");
+            final ATEColorPreference accentColorPref = findPreference(ThemeStore.KEY_ACCENT_COLOR);
             if (getActivity() != null && accentColorPref != null) {
                 final int accentColor = ThemeStore.accentColor(getActivity());
                 accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
@@ -333,7 +340,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
-            TwoStatePreference colorNavBar = findPreference("should_color_navigation_bar");
+            TwoStatePreference colorNavBar = findPreference(PreferenceUtil.SHOULD_COLOR_NAVIGATION_BAR);
             if (colorNavBar != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     colorNavBar.setVisible(false);
@@ -377,7 +384,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     });
                 }
             }
-
             final TwoStatePreference colorAppShortcuts = findPreference("should_color_app_shortcuts");
             if (colorAppShortcuts != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
@@ -396,7 +402,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 }
             }
 
-            final TwoStatePreference transparentWidgets = findPreference("should_make_widget_background_transparent");
+            final TwoStatePreference transparentWidgets = findPreference(PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET);
             if (transparentWidgets != null) {
                 transparentWidgets.setChecked(PreferenceUtil.getInstance().transparentBackgroundWidget());
                 transparentWidgets.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -405,6 +411,28 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
                     // Update app shortcuts
                     new DynamicShortcutManager(getActivity()).updateDynamicShortcuts();
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference rememberShuffle = findPreference(PreferenceUtil.REMEMBER_SHUFFLE);
+            if (rememberShuffle != null) {
+                rememberShuffle.setChecked(PreferenceUtil.getInstance().rememberShuffle());
+                rememberShuffle.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setRememberShuffle((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference rememberLastTab = findPreference(PreferenceUtil.REMEMBER_LAST_TAB);
+            if (rememberLastTab != null) {
+                rememberLastTab.setChecked(PreferenceUtil.getInstance().rememberLastTab());
+                rememberLastTab.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setRememberLastTab((Boolean) newValue);
 
                     return true;
                 });
