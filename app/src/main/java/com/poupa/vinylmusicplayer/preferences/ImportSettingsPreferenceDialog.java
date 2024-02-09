@@ -80,7 +80,7 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this.getApplicationContext();
-        //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
         importFilePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
             // Unless the selection has been cancelled, create the export file
             if(result != null) {
@@ -98,8 +98,7 @@ public class ImportSettingsPreferenceDialog extends AppCompatActivity {
         //ArrayList<String> content = new ArrayList<>() ;
         String[] preference;
         String buffer ;
-        //SharedPreferences.Editor spEditor = sharedPreferences.edit();
-        SharedPreferences.Editor spEditor = PreferenceUtil.getInstance().mPreferences.edit();
+        SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
         try
         {

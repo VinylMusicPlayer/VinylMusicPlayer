@@ -44,6 +44,9 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
+    public static final String PRIMARY_COLOR = "primary_color";
+    public static final String ACCENT_COLOR = "accent_color";
+
     public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     private static final String LAST_PAGE = "last_start_page";
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
@@ -151,9 +154,7 @@ public final class PreferenceUtil {
 
     private static PreferenceUtil sInstance;
 
-    //private final SharedPreferences mPreferences;
-    //Changed to public just for triage.
-    public final SharedPreferences mPreferences;
+    private final SharedPreferences mPreferences;
 
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
@@ -719,6 +720,28 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType))
                 .apply();
+    }
+
+    public void setPrimaryColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(PRIMARY_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getPrimaryColor() {
+        //return mPreferences.getInt(PRIMARY_COLOR, 4149685);
+        return mPreferences.getInt(PRIMARY_COLOR, -12627531);
+    }
+
+    public void setAccentColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(ACCENT_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getAccentColor() {
+        //return mPreferences.getInt(ACCENT_COLOR, 16056407);
+        return mPreferences.getInt(ACCENT_COLOR, -720809);
     }
 
     public ArrayList<CategoryInfo> getLibraryCategoryInfos() {

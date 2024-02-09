@@ -107,10 +107,12 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         final int title = dialog.getTitle();
         if (title == R.string.primary_color) {
+            //PreferenceUtil.getInstance().setPrimaryColor(selectedColor);
             ThemeStore.editTheme(this)
                     .primaryColor(selectedColor)
                     .commit();
         } else if (title == R.string.accent_color) {
+            PreferenceUtil.getInstance().setAccentColor(selectedColor);
             ThemeStore.editTheme(this)
                     .accentColor(selectedColor)
                     .commit();
@@ -299,21 +301,21 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
-            if (importSettings != null) {
-                importSettings.setOnPreferenceClickListener((preference) -> {
-                    //ImportSettingsPreferenceDialog.newInstance(preference.getKey());
-                    ImportSettingsPreferenceDialog.start(getContext());
-                    //SettingsActivity.
-                    //openDocumentLauncher.launch(new String[]{"text/plain"});
-                    //Log.i(SettingsActivity.class.getName(), "Import clicked");
+            final TwoStatePreference whitelistEnabled = findPreference(PreferenceUtil.WHITELIST_ENABLED);
+            if (whitelistEnabled != null) {
+                whitelistEnabled.setChecked(PreferenceUtil.getInstance().getWhitelistEnabled());
+                whitelistEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    //PreferenceUtil.getInstance().setRememberShuffle((Boolean) newValue);
+
                     return true;
                 });
             }
 
             final ATEColorPreference primaryColorPref = findPreference(ThemeStore.KEY_PRIMARY_COLOR);
             if (getActivity() != null && primaryColorPref != null) {
-                final int primaryColor = ThemeStore.primaryColor(getActivity());
+                //final int primaryColor = ThemeStore.primaryColor(getActivity());
+                final int primaryColor = PreferenceUtil.getInstance().getPrimaryColor();
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
                 primaryColorPref.setOnPreferenceClickListener(preference -> {
                     new ColorChooserDialog.Builder(getActivity(), R.string.primary_color)
@@ -328,7 +330,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
             final ATEColorPreference accentColorPref = findPreference(ThemeStore.KEY_ACCENT_COLOR);
             if (getActivity() != null && accentColorPref != null) {
-                final int accentColor = ThemeStore.accentColor(getActivity());
+                //final int accentColor = ThemeStore.accentColor(getActivity());
+                final int accentColor = PreferenceUtil.getInstance().getAccentColor();
                 accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
                 accentColorPref.setOnPreferenceClickListener(preference -> {
                     new ColorChooserDialog.Builder(getActivity(), R.string.accent_color)
@@ -456,6 +459,14 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     pref.setEnabled(false);
                     pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                 }
+            }
+
+            final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
+            if (importSettings != null) {
+                importSettings.setOnPreferenceClickListener((preference) -> {
+                    ImportSettingsPreferenceDialog.start(getContext());
+                    return true;
+                });
             }
 
             updateNowPlayingScreenSummary();
