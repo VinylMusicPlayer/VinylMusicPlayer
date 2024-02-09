@@ -58,7 +58,7 @@ public class PlaylistsUtil {
         return id;
     }
 
-    public static void deletePlaylists(@NonNull final Context context, @NonNull final ArrayList<Playlist> playlists) {
+    public static void deletePlaylists(@NonNull final Context context, @NonNull final List<? extends Playlist> playlists) {
         for (int i = 0; i < playlists.size(); i++) {
             final String name = playlists.get(i).name;
             StaticPlaylist.removePlaylist(name);
@@ -105,7 +105,7 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<Song> songs, long playlistId) {
+    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<? extends Song> songs, long playlistId) {
         if (songs.size() == 0) {return;}
 
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
@@ -191,6 +191,6 @@ public class PlaylistsUtil {
             M3UWriter.write(context, stream, playlist);
         }
 
-        return Environment.DIRECTORY_MUSIC + "/" + playlist.name;
+        return Environment.DIRECTORY_MUSIC + File.pathSeparator + playlist.name;
     }
 }
