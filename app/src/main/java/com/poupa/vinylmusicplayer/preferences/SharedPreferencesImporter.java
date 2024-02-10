@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.util;
+package com.poupa.vinylmusicplayer.preferences;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
+import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreferenceDialog;
+import com.poupa.vinylmusicplayer.util.DataTypeUtil;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
@@ -17,55 +24,77 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 public class SharedPreferencesImporter extends AppCompatActivity {
-    private Context context;
-    private ActivityResultLauncher<String> exportFilePicker;
-    private SharedPreferences sharedPreferences;
 
-    public static void start(Context context, String filename) {
-        Intent intent = new Intent(context, SharedPreferencesImporter.class);
-        intent.putExtra("filename", filename);
+    public static void start(Context context) {
+        Intent intent = new Intent(context, ImportSettingsPreferenceDialog.class);
         context.startActivity(intent);
     }
+
+    private Context context;
+    private ActivityResultLauncher importFilePicker;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = this.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
-        Bundle b = this.getIntent().getExtras();
-        exportFilePicker = registerForActivityResult(new ActivityResultContracts.CreateDocument("text/plain"), result -> {
+        importFilePicker = registerForActivityResult(new ActivityResultContracts.OpenDocument(), result -> {
             // Unless the selection has been cancelled, create the export file
             if(result != null) {
-                writeToExportFile(result);
+                importSettings(result);
             }
             // Finishes the last activity to return to the settings activity.
             this.finish();
         });
-        exportFilePicker.launch(b.getString("filename"));
+        importFilePicker.launch(new String[]{"text/plain"});
+        //importSharedPreferencesWithPermission();
     }
 
-    private void writeToExportFile(Uri location) {
-        StringBuilder stringBuilder = new StringBuilder();
-        Map<String, ?> prefsMap = sharedPreferences.getAll();
-        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
+    private void importSettings(Uri location) {
+        // Prepare the table used to store the lines
+        //ArrayList<String> content = new ArrayList<>() ;
+        String[] preference;
+        String buffer ;
+        SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
-        // Write all lines in the export file
-        try {
+        try
+        {
             // Try to open the file
-            ParcelFileDescriptor file = this.context.getContentResolver().openFileDescriptor(location, "w");
-            if (file == null) return;
+            ParcelFileDescriptor file = this.context.getContentResolver().openFileDescriptor(location, "r") ;
+            if(file == null) return ;
 
-            // Write all lines in the file
-            FileWriter writer = new FileWriter(file.getFileDescriptor());
-            writer.write(stringBuilder.toString());
-            writer.close();
+            // Read the content from the file line by line
+            BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor())) ;
+            while((buffer = reader.readLine()) != null) {
+                preference = buffer.split("=");
+                Log.i(this.getLocalClassName(), buffer);
+                String key = preference[0];
+                String value = preference[1];
+                Object object = DataTypeUtil.checkType(value);
+                if (object instanceof String) {
+                    spEditor.putString(key, (String) object);
+                } else if (object instanceof Integer) {
+                    spEditor.putInt(key, (Integer) object);
+                } else if (object instanceof Boolean) {
+                    spEditor.putBoolean(key, (Boolean) object);
+                } else if (object instanceof Float) {
+                    spEditor.putFloat(key, (Float) object);
+                }
+                //content.add(buffer) ;
+            }
+            reader.close();
             file.close();
-        } catch (IOException exception) {
-            // An error happened while writing the line
+        }
+        catch(IOException exception)
+        {
+            // An error happened while reading the file
             OopsHandler.collectStackTrace(exception);
         }
+        //return content ;
+        spEditor.apply();
+        this.finish();
     }
-}
 
+}

@@ -35,13 +35,13 @@ import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWit
 import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons.ButtonInfo;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
-import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SharedPreferencesImporter;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreference;
@@ -464,7 +464,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
             if (importSettings != null) {
                 importSettings.setOnPreferenceClickListener((preference) -> {
-                    ImportSettingsPreferenceDialog.start(getContext());
+                    SharedPreferencesImporter.start(getContext());
                     return true;
                 });
             }
