@@ -25,7 +25,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.model.Song;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryStore extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "history.db";
@@ -65,7 +68,14 @@ public class HistoryStore extends SQLiteOpenHelper {
     }
 
     public void addSongId(final long songId) {
-        if (songId == -1) {
+        if (songId == Song.EMPTY_SONG.id) {
+            return;
+        }
+        addSongIds(List.of(songId));
+    }
+
+    public void addSongIds(@NonNull List<Long> songIds) {
+        if (songIds.isEmpty()) {
             return;
         }
 
@@ -73,21 +83,26 @@ public class HistoryStore extends SQLiteOpenHelper {
         database.beginTransaction();
 
         try {
-            // remove previous entries
-            removeSongId(database, songId);
-
-            // add the entry
+            long importTime = System.currentTimeMillis();
             final ContentValues values = new ContentValues(2);
-            values.put(RecentStoreColumns.ID, songId);
-            values.put(RecentStoreColumns.TIME_PLAYED, System.currentTimeMillis());
-            database.insert(RecentStoreColumns.NAME, null, values);
+
+            for (long songId : songIds) {
+                // remove previous entries
+                removeSongId(database, songId);
+
+                // add the entry
+                values.clear();
+                values.put(RecentStoreColumns.ID, songId);
+                values.put(RecentStoreColumns.TIME_PLAYED, importTime);
+                database.insert(RecentStoreColumns.NAME, null, values);
+            }
         } finally {
             database.setTransactionSuccessful();
             database.endTransaction();
         }
     }
 
-    public void removeSongIds(@NonNull ArrayList<Long> missingIds) {
+    public void removeSongIds(@NonNull List<Long> missingIds) {
         if (missingIds.isEmpty()) return;
 
         final SQLiteDatabase database = getWritableDatabase();
