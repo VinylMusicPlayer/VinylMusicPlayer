@@ -107,7 +107,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         final int title = dialog.getTitle();
         if (title == R.string.primary_color) {
-            //PreferenceUtil.getInstance().setPrimaryColor(selectedColor);
+            PreferenceUtil.getInstance().setPrimaryColor(selectedColor);
             ThemeStore.editTheme(this)
                     .primaryColor(selectedColor)
                     .commit();
@@ -349,10 +349,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     colorNavBar.setVisible(false);
                 } else {
                     final Activity activity = requireActivity();
-                    colorNavBar.setChecked(ThemeStore.coloredNavigationBar(activity));
+                    colorNavBar.setChecked(PreferenceUtil.getInstance().coloredNavigationBar());
                     colorNavBar.setOnPreferenceChangeListener((preference, newValue) -> {
+                        PreferenceUtil.getInstance().setColoredNavigationBar((Boolean) newValue);
                         ThemeStore.editTheme(activity)
-                                .coloredNavigationBar((Boolean) newValue)
+                                .coloredNavigationBar(PreferenceUtil.getInstance().coloredNavigationBar())
                                 .commit();
                         activity.recreate();
                         return true;

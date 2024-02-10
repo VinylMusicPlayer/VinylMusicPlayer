@@ -17,7 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.PreferenceManager;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SharedPreferencesExporter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,22 +54,23 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
         final Activity activity = requireActivity();
         String filename = this.getExportSettingsFilename();
         Log.i(ExportSettingsPreferenceDialog.class.getName(), filename);
-        AlertDialog.Builder alert = new AlertDialog.Builder(activity);
-        alert.setTitle(R.string.export_settings);
         LayoutInflater inflater = this.getLayoutInflater();
-        View parent = inflater.inflate(R.layout.preference_dialog_export_settings, null);
-        alert.setView(parent);
-        EditText editText = (EditText)parent.findViewById(R.id.ed_export_settings_filename);
+        View view = inflater.inflate(R.layout.preference_dialog_export_settings, null);
+        EditText editText = (EditText)view.findViewById(R.id.ed_export_settings_filename);
         editText.setText(filename, TextView.BufferType.EDITABLE);
-        alert.setPositiveButton(android.R.string.ok, (dialog, id) -> {
-            // User taps OK button.
-            SharedPreferencesExporter.start(this.context, editText.getText().toString());
-        });
-        alert.setNegativeButton(android.R.string.cancel, (dialog, id) -> {
-            // User cancels the dialog.
-        });
 
-        return alert.create();
+        return new MaterialDialog.Builder(getContext())
+                .title(R.string.export_settings)
+                .customView(view, false)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                //.autoDismiss(false)
+                .onNegative((dialog, action) -> dismiss())
+                .onPositive((dialog, action) -> {
+                    SharedPreferencesExporter.start(this.context, editText.getText().toString());
+                    dismiss();
+                })
+                .build();
     }
 
     private static String getCurrentFormattedDateTime() {
@@ -76,13 +80,5 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
 
     private static String getExportSettingsFilename() {
         return "vinylmusicplayer-settings_"+ getCurrentFormattedDateTime();
-    }
-
-    private void createFile(String filename) {
-        final Intent createDocument = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        createDocument.setType("text/plain");
-        createDocument.putExtra(Intent.EXTRA_TITLE, filename);
-        createDocument.addCategory(Intent.CATEGORY_OPENABLE);
-        //Log.i("LogFileinfo: ", createDocument.)
     }
 }

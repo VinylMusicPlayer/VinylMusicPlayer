@@ -300,6 +300,16 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(COLORED_APP_SHORTCUTS, true);
     }
 
+    public void setColoredNavigationBar(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(SHOULD_COLOR_NAVIGATION_BAR, value)
+                .apply();
+    }
+
+    public boolean coloredNavigationBar() {
+        return mPreferences.getBoolean(SHOULD_COLOR_NAVIGATION_BAR, true);
+    }
+
     public void setTransparentBackgroundWidget(final boolean value) {
         mPreferences.edit()
                 .putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value)

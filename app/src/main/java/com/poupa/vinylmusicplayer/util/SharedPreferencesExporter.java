@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -35,7 +36,11 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         exportFilePicker = registerForActivityResult(new ActivityResultContracts.CreateDocument("text/plain"), result -> {
             // Unless the selection has been cancelled, create the export file
             if(result != null) {
-                writeToExportFile(result);
+                try {
+                    writeToExportFile(result);
+                } catch (PackageManager.NameNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
             // Finishes the last activity to return to the settings activity.
             this.finish();
@@ -43,9 +48,10 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         exportFilePicker.launch(b.getString("filename"));
     }
 
-    private void writeToExportFile(Uri location) {
+    private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, ?> prefsMap = sharedPreferences.getAll();
+        stringBuilder.append("#" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName + "\n");
         for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
             stringBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
         }
