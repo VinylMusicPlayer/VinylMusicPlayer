@@ -1,4 +1,26 @@
 # Changelog
+
+## [1.8.0] - 2024-02-08
+
+### Features
+* Opus support by @drizzt in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/896
+* History import + Refactor playlist menu by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/922
+
+### Fixes
+* Refactor {card|flat} fragments, move common code to base class and fix NPE by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/926
+* Avoid NPE (related to https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/931 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/932
+* Allow tag editor to function on API 30+ by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/929
+* Fix multi genres by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/939
+* Fix NPE (on getSongsForGenre) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/933
+
+### Other Changes
+* Upgrade Github Actions plugins by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/934
+
+## New Contributors
+* @drizzt made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/896
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.7.0...1.8.0
+
 ## [1.7.0] - 2024-01-30
 
 ### Features

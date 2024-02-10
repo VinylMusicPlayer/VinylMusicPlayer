@@ -11,7 +11,6 @@ import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,14 +18,14 @@ import java.util.Objects;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
-    public static final Song EMPTY_SONG = new Song(-1, "", -1, -1, -1, "", -1, -1, -1, "", -1, new ArrayList<>(Arrays.asList("")));
+    public static final Song EMPTY_SONG = new Song(-1L, "", -1, -1, -1L, "", -1L, -1L, -1L, "", -1L, new ArrayList<>(List.of("")));
 
     public final long id;
 
-    public List<String> albumArtistNames = new ArrayList<>(Arrays.asList(""));
+    public List<String> albumArtistNames = new ArrayList<>(List.of(""));
     public String albumName;
     public long albumId;
-    public List<String> artistNames = new ArrayList<>(Arrays.asList(""));
+    public List<String> artistNames = new ArrayList<>(List.of(""));
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     @NonNls
     public final String data;
@@ -34,9 +33,9 @@ public class Song implements Parcelable {
     public final long dateModified;
     public int discNumber = 0;
     public final long duration;
-    public String genre = "";
-    public float replayGainAlbum = 0;
-    public float replayGainTrack = 0;
+    public List<String> genres = new ArrayList<>(List.of(""));
+    public float replayGainAlbum = 0.0f;
+    public float replayGainTrack = 0.0f;
     public float replayGainPeakAlbum = 1.0f;
     public float replayGainPeakTrack = 1.0f;
     public String title;
@@ -60,30 +59,30 @@ public class Song implements Parcelable {
         // discNumber, genre, albumArtistNames, replayGainTrack, replayGainAlbum
     }
 
-    public Song(final @NonNull Song song) {
-        this.id = song.id;
-        this.albumArtistNames = song.albumArtistNames;
-        this.albumName = song.albumName;
-        this.albumId = song.albumId;
-        this.artistNames = song.artistNames;
-        this.artistId = song.artistId;
-        this.data = song.data;
-        this.dateAdded = song.dateAdded;
-        this.dateModified = song.dateModified;
-        this.discNumber = song.discNumber;
-        this.duration = song.duration;
-        this.genre = song.genre;
-        this.replayGainAlbum = song.replayGainAlbum;
-        this.replayGainTrack = song.replayGainTrack;
-        this.replayGainPeakAlbum = song.replayGainPeakAlbum;
-        this.replayGainPeakTrack = song.replayGainPeakTrack;
-        this.title = song.title;
-        this.trackNumber = song.trackNumber;
-        this.year = song.year;
+    public Song(@NonNull final Song song) {
+        id = song.id;
+        albumArtistNames = song.albumArtistNames;
+        albumName = song.albumName;
+        albumId = song.albumId;
+        artistNames = song.artistNames;
+        artistId = song.artistId;
+        data = song.data;
+        dateAdded = song.dateAdded;
+        dateModified = song.dateModified;
+        discNumber = song.discNumber;
+        duration = song.duration;
+        genres = song.genres;
+        replayGainAlbum = song.replayGainAlbum;
+        replayGainTrack = song.replayGainTrack;
+        replayGainPeakAlbum = song.replayGainPeakAlbum;
+        replayGainPeakTrack = song.replayGainPeakTrack;
+        title = song.title;
+        trackNumber = song.trackNumber;
+        year = song.year;
     }
 
     public boolean isQuickEqual(Song song) {
-        return (this.id == song.id);
+        return (id == song.id);
     }
 
     @Override
@@ -110,10 +109,10 @@ public class Song implements Parcelable {
         // Compare simple object fields
         if (!TextUtils.equals(albumName, song.albumName)) return false;
         if (!TextUtils.equals(data, song.data)) return false;
-        if (!TextUtils.equals(genre, song.genre)) return false;
         if (!TextUtils.equals(title, song.title)) return false;
 
         // Compare structured object fields
+        if (!Objects.equals(genres, song.genres)) return false;
         if (!Objects.equals(albumArtistNames, song.albumArtistNames)) return false;
         if (!Objects.equals(artistNames, song.artistNames)) return false;
 
@@ -133,7 +132,7 @@ public class Song implements Parcelable {
         result = 31 * result + (int) (dateModified ^ (dateModified >>> 32));
         result = 31 * result + discNumber;
         result = 31 * result + (int) (duration ^ (duration >>> 32));
-        result = 31 * result + (genre != null ? genre.hashCode() : 0);
+        result = 31 * result + genres.hashCode();
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + trackNumber;
         result = 31 * result + year;
@@ -141,22 +140,24 @@ public class Song implements Parcelable {
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
+        final String EOS = "'"; // end of string marker
         return "Song{" +
                 "id=" + id +
-                ", albumArtistName='" + MultiValuesTagUtil.infoString(albumArtistNames) + '\'' +
-                ", albumName='" + albumName + '\'' +
+                ", albumArtistName='" + MultiValuesTagUtil.infoString(albumArtistNames) + EOS +
+                ", albumName='" + albumName + EOS +
                 ", albumId=" + albumId +
-                ", artistNames='" + MultiValuesTagUtil.infoString(artistNames) + '\'' +
+                ", artistNames='" + MultiValuesTagUtil.infoString(artistNames) + EOS +
                 ", artistId=" + artistId +
-                ", data='" + data + '\'' +
+                ", data='" + data + EOS +
                 ", dateAdded=" + dateAdded +
                 ", dateModified=" + dateModified +
                 ", discNumber=" + discNumber +
                 ", duration=" + duration +
-                ", genre='" + genre + '\'' +
-                ", title='" + title + '\'' +
+                ", genre='" + MultiValuesTagUtil.infoString(genres) + EOS +
+                ", title='" + title + EOS +
                 ", trackNumber=" + trackNumber +
                 ", year=" + year +
                 '}';
@@ -168,40 +169,40 @@ public class Song implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.id);
-        dest.writeStringList(this.albumArtistNames);
-        dest.writeString(this.albumName);
-        dest.writeLong(this.albumId);
-        dest.writeStringList(this.artistNames);
-        dest.writeLong(this.artistId);
-        dest.writeString(this.data);
-        dest.writeLong(this.dateAdded);
-        dest.writeLong(this.dateModified);
-        dest.writeInt(this.discNumber);
-        dest.writeLong(this.duration);
-        dest.writeString(this.genre);
-        dest.writeString(this.title);
-        dest.writeInt(this.trackNumber);
-        dest.writeInt(this.year);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeStringList(albumArtistNames);
+        parcel.writeString(albumName);
+        parcel.writeLong(albumId);
+        parcel.writeStringList(artistNames);
+        parcel.writeLong(artistId);
+        parcel.writeString(data);
+        parcel.writeLong(dateAdded);
+        parcel.writeLong(dateModified);
+        parcel.writeInt(discNumber);
+        parcel.writeLong(duration);
+        parcel.writeStringList(genres);
+        parcel.writeString(title);
+        parcel.writeInt(trackNumber);
+        parcel.writeInt(year);
     }
 
     protected Song(Parcel in) {
-        this.id = in.readLong();
-        in.readStringList(this.albumArtistNames);
-        this.albumName = in.readString();
-        this.albumId = in.readLong();
-        in.readStringList(this.artistNames);
-        this.artistId = in.readLong();
-        this.data = in.readString();
-        this.dateAdded = in.readLong();
-        this.dateModified = in.readLong();
-        this.discNumber = in.readInt();
-        this.duration = in.readLong();
-        this.genre = in.readString();
-        this.title = in.readString();
-        this.trackNumber = in.readInt();
-        this.year = in.readInt();
+        id = in.readLong();
+        in.readStringList(albumArtistNames);
+        albumName = in.readString();
+        albumId = in.readLong();
+        in.readStringList(artistNames);
+        artistId = in.readLong();
+        data = in.readString();
+        dateAdded = in.readLong();
+        dateModified = in.readLong();
+        discNumber = in.readInt();
+        duration = in.readLong();
+        in.readStringList(genres);
+        title = in.readString();
+        trackNumber = in.readInt();
+        year = in.readInt();
     }
 
     public static final Creator<Song> CREATOR = new Creator<Song>() {

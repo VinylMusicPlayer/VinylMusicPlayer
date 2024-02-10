@@ -293,7 +293,7 @@ A simple material design app intro with cool animations and a fluent API.
  - [MIT License](https://api.github.com/licenses/mit)
 
 ---
-## net.jthink.jaudiotagger - jaudiotagger
+## com.github.VinylMusicPlayer.jaudiotagger - jaudiotagger
 
 The aim of this project is to provide a world class Java library       for editing tag information in audio files.       Most existing solutions are not java based inhibiting the use of       java applications with digital files.
 
