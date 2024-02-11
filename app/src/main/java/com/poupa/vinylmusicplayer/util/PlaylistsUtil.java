@@ -70,7 +70,7 @@ public class PlaylistsUtil {
     private static void deletePlaylistFromMediaStore(@NonNull final Context context, @NonNull final String name) {
         @NonNull final ContentResolver resolver = context.getContentResolver();
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                MediaStore.MediaColumns.DISPLAY_NAME + "='" + name + "'",
+                MediaStore.Audio.PlaylistsColumns.NAME + "='" + name + "'",
                 null);
     }
 
