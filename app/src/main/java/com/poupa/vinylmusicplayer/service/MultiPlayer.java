@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.service;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -31,6 +30,7 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     private MediaPlayer mCurrentMediaPlayer = new MediaPlayer();
     private MediaPlayer mNextMediaPlayer;
 
+    @Nullable
     private DynamicsProcessing mDynamicsProcessing;
 
     private final Context context;
@@ -353,8 +353,8 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
 
         if (!Float.isNaN(replaygain)) {
             // setVolume uses a linear scale
-            float rgResult = ((float) Math.pow(10, (replaygain / 20)));
-            volume = Math.max(0, Math.min(1, rgResult));
+            float rgResult = ((float) Math.pow(10.0, (replaygain / 20.0)));
+            volume = Math.max(0.0F, Math.min(1.0F, rgResult));
         }
 
         if (App.DYNAMICS_PROCESSING_AVAILABLE) {
@@ -375,9 +375,6 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         setVolume(volume);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean onError(final MediaPlayer mp, final int what, final int extra) {
         if (mp == mCurrentMediaPlayer) {
@@ -409,9 +406,6 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onCompletion(final MediaPlayer mp) {
         if (mp == mCurrentMediaPlayer && mNextMediaPlayer != null) {
