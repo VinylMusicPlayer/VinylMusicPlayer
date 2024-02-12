@@ -27,6 +27,7 @@ import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceFragmentCompat;
+import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATESwitchPreference;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
@@ -500,6 +501,17 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 maintainSkippedSongsPlaylist.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
                     PreferenceUtil.getInstance().setMaintainSkippedSongsPlaylist((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference oopsHandlerEnabled = findPreference(PreferenceUtil.OOPS_HANDLER_ENABLED);
+            if (oopsHandlerEnabled != null) {
+                oopsHandlerEnabled.setChecked(PreferenceUtil.getInstance().isOopsHandlerEnabled());
+                oopsHandlerEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setOopsHandlerEnabled((Boolean) newValue);
 
                     return true;
                 });

@@ -861,6 +861,12 @@ public final class PreferenceUtil {
                 .apply();
     }
 
+    public void setOopsHandlerEnabled(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(OOPS_HANDLER_ENABLED, value)
+                .apply();
+    }
+
     public boolean isOopsHandlerEnabled() {
         return mPreferences.getBoolean(OOPS_HANDLER_ENABLED, false);
     }
