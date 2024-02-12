@@ -34,6 +34,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
@@ -111,7 +112,7 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     }
 
     private void setUpToolBar() {
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        toolbar.setBackgroundColor(PreferenceUtil.getInstance().getPrimaryColor()); //ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

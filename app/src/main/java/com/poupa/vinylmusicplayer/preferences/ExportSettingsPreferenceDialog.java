@@ -20,8 +20,7 @@ import androidx.preference.PreferenceManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.poupa.vinylmusicplayer.util.SharedPreferencesExporter;
+import com.poupa.vinylmusicplayer.preferences.SharedPreferencesExporter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

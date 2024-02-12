@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.poupa.vinylmusicplayer.preferences.ImportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.util.DataTypeUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 
@@ -26,7 +25,7 @@ import androidx.preference.PreferenceManager;
 public class SharedPreferencesImporter extends AppCompatActivity {
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, ImportSettingsPreferenceDialog.class);
+        Intent intent = new Intent(context, SharedPreferencesImporter.class);
         context.startActivity(intent);
     }
 
@@ -67,11 +66,20 @@ public class SharedPreferencesImporter extends AppCompatActivity {
 
             // Read the content from the file line by line
             BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor())) ;
+            String key = "";
+            String value = "";
             while((buffer = reader.readLine()) != null) {
-                preference = buffer.split("=");
-                Log.i(this.getLocalClassName(), buffer);
-                String key = preference[0];
-                String value = preference[1];
+                if(buffer.startsWith("#")) {
+                    continue;
+                }
+                try {
+                    preference = buffer.split("=");
+                    //Log.i(this.getLocalClassName(), buffer);
+                    key = preference[0];
+                    value = preference[1];
+                } catch (Exception e) {
+                    OopsHandler.collectStackTrace(e);
+                }
                 Object object = DataTypeUtil.checkType(value);
                 if (object instanceof String) {
                     spEditor.putString(key, (String) object);

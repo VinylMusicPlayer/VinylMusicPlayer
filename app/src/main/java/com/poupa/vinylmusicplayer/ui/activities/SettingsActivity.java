@@ -82,7 +82,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         setNavigationbarColorAuto();
         setTaskDescriptionColorAuto();
 
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        toolbar.setBackgroundColor(PreferenceUtil.getInstance().getPrimaryColor()); //ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -300,6 +300,17 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
+            final TwoStatePreference rememberLastTab = findPreference(PreferenceUtil.REMEMBER_LAST_TAB);
+            if (rememberLastTab != null) {
+                rememberLastTab.setChecked(PreferenceUtil.getInstance().rememberLastTab());
+                rememberLastTab.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setRememberLastTab((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
             final TwoStatePreference whitelistEnabled = findPreference(PreferenceUtil.WHITELIST_ENABLED);
             if (whitelistEnabled != null) {
                 whitelistEnabled.setChecked(PreferenceUtil.getInstance().getWhitelistEnabled());
@@ -419,23 +430,34 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
+            final TwoStatePreference audioDucking = findPreference(PreferenceUtil.AUDIO_DUCKING);
+            if (audioDucking != null) {
+                audioDucking.setChecked(PreferenceUtil.getInstance().audioDucking());
+                audioDucking.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setAudioDucking((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference gaplessPlayback = findPreference(PreferenceUtil.GAPLESS_PLAYBACK);
+            if (gaplessPlayback != null) {
+                gaplessPlayback.setChecked(PreferenceUtil.getInstance().gaplessPlayback());
+                gaplessPlayback.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setGaplessPlayback((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
             final TwoStatePreference rememberShuffle = findPreference(PreferenceUtil.REMEMBER_SHUFFLE);
             if (rememberShuffle != null) {
                 rememberShuffle.setChecked(PreferenceUtil.getInstance().rememberShuffle());
                 rememberShuffle.setOnPreferenceChangeListener((preference, newValue) -> {
                     // Save preference
                     PreferenceUtil.getInstance().setRememberShuffle((Boolean) newValue);
-
-                    return true;
-                });
-            }
-
-            final TwoStatePreference rememberLastTab = findPreference(PreferenceUtil.REMEMBER_LAST_TAB);
-            if (rememberLastTab != null) {
-                rememberLastTab.setChecked(PreferenceUtil.getInstance().rememberLastTab());
-                rememberLastTab.setOnPreferenceChangeListener((preference, newValue) -> {
-                    // Save preference
-                    PreferenceUtil.getInstance().setRememberLastTab((Boolean) newValue);
 
                     return true;
                 });
@@ -459,6 +481,28 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     pref.setEnabled(false);
                     pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                 }
+            }
+
+            final TwoStatePreference maintainTopTrackPlaylist = findPreference(PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST);
+            if (maintainTopTrackPlaylist != null) {
+                maintainTopTrackPlaylist.setChecked(PreferenceUtil.getInstance().maintainTopTrackPlaylist());
+                maintainTopTrackPlaylist.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setMaintainTopTrackPlaylist((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference maintainSkippedSongsPlaylist = findPreference(PreferenceUtil.MAINTAIN_SKIPPED_SONGS_PLAYLIST);
+            if (maintainSkippedSongsPlaylist != null) {
+                maintainSkippedSongsPlaylist.setChecked(PreferenceUtil.getInstance().maintainSkippedSongsPlaylist());
+                maintainSkippedSongsPlaylist.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setMaintainSkippedSongsPlaylist((Boolean) newValue);
+
+                    return true;
+                });
             }
 
             final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);

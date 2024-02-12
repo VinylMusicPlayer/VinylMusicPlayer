@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.util;
+package com.poupa.vinylmusicplayer.preferences;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+
+import com.poupa.vinylmusicplayer.util.OopsHandler;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
