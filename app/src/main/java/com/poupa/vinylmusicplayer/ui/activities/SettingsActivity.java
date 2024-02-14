@@ -52,6 +52,7 @@ import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -69,7 +70,6 @@ import java.util.List;
 public class SettingsActivity extends AbsBaseActivity implements ColorChooserDialog.ColorCallback {
 
     Toolbar toolbar;
-    private final int SELECT_EXPORT_SETTINGS_FILE_INTENT = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,12 +148,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             super.onCreate(savedInstanceState);
             sharedPreferencesImporter = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(), result -> {
-                        // Unless the selection has been cancelled, create the export file
+                        // Set the theming and recreate the settings activity after importing.
                         Activity activity = getActivity();
                         if(result != null) {
                             ThemeStore.editTheme(activity).primaryColor(PreferenceUtil.getInstance().getPrimaryColor()).commit();;
                             ThemeStore.editTheme(activity).accentColor(PreferenceUtil.getInstance().getAccentColor()).commit();
-                            //ThemeStore.editTheme(activity).textColorPrimary(PreferenceUtil.getInstance().getAccentColor()).commit();
                             activity.recreate();
                         }
                     });
@@ -303,6 +302,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
 
             final Preference themeStyle = findPreference(PreferenceUtil.THEME_STYLE);
+            ThemeStyleUtil.updateInstance(PreferenceUtil.getInstance().getThemeStyle());
+            //ThemeStore.markChanged(getActivity());
             themeStyle.setOnPreferenceChangeListener((preference, o) -> {
                 ThemeStyleUtil.updateInstance((String) o);
                 if (getActivity() != null) {
@@ -357,7 +358,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                             .show(getActivity());
                     return true;
                 });
-                //primaryColorPref.setOnPreferenceChangeListener((preference, newValue) -> );
             }
 
             final ATEColorPreference accentColorPref = findPreference(ThemeStore.KEY_ACCENT_COLOR);
@@ -541,16 +541,12 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
             if (importSettings != null) {
                 importSettings.setOnPreferenceClickListener((preference) -> {
-                    //startActivity(new Intent(getContext(), SharedPreferencesImporter.class));
                     sharedPreferencesImporter.launch(new Intent(getContext(), SharedPreferencesImporter.class));
-                    //SharedPreferencesImporter.start(getContext(), requireActivity());
-                    //ThemeStore.markChanged(getActivity());
-                    //getActivity().recreate();
                     return true;
                 });
             }
 
-            updateNowPlayingScreenSummary();
+            updateNowPlayingScreen();
             updatePlaylistsSummary();
             updateConfirmationSongSummary();
         }
@@ -569,7 +565,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             switch (key) {
                 case PreferenceUtil.NOW_PLAYING_SCREEN_ID:
-                    updateNowPlayingScreenSummary();
+                    updateNowPlayingScreen();
                     break;
                 case PreferenceUtil.CLASSIC_NOTIFICATION:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -602,8 +598,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
         }
 
-        private void updateNowPlayingScreenSummary() {
-            findPreference(PreferenceUtil.NOW_PLAYING_SCREEN_ID).setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
+        private void updateNowPlayingScreen() {
+            final Preference nowPlayingScreenPref = findPreference(PreferenceUtil.NOW_PLAYING_SCREEN_ID);
+            NowPlayingScreen nowPlayingScreen = PreferenceUtil.getInstance().getNowPlayingScreen();
+            nowPlayingScreenPref.setSummary(nowPlayingScreen.titleRes);
+            NowPlayingScreenPreferenceDialog.newInstance().onPageSelected(nowPlayingScreen.id);
         }
 
         private void updatePlaylistsSummary() {

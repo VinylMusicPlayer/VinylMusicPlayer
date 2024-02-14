@@ -26,14 +26,6 @@ import androidx.preference.PreferenceManager;
 
 public class SharedPreferencesImporter extends AppCompatActivity {
 
-    /*
-    public static void start(Context context, Activity activity) {
-        Intent intent = new Intent(context, SharedPreferencesImporter.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }
-    */
-
     private Context context;
     private ActivityResultLauncher importFilePicker;
 
@@ -53,12 +45,10 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             this.finish();
         });
         importFilePicker.launch(new String[]{"text/plain"});
-        //importSharedPreferencesWithPermission();
     }
 
     private void importSettings(Uri location) {
         // Prepare the table used to store the lines
-        //ArrayList<String> content = new ArrayList<>() ;
         String[] preference;
         String buffer ;
         SharedPreferences.Editor spEditor = sharedPreferences.edit();
@@ -95,7 +85,6 @@ public class SharedPreferencesImporter extends AppCompatActivity {
                 } else if (object instanceof Float) {
                     spEditor.putFloat(key, (Float) object);
                 }
-                //content.add(buffer) ;
             }
             reader.close();
             file.close();
@@ -105,9 +94,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             // An error happened while reading the file
             OopsHandler.collectStackTrace(exception);
         }
-        //return content ;
         spEditor.apply();
-        //this.finish();
     }
 
 }
