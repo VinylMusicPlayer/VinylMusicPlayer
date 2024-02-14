@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.preferences;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
 import com.poupa.vinylmusicplayer.util.DataTypeUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 
@@ -24,10 +26,13 @@ import androidx.preference.PreferenceManager;
 
 public class SharedPreferencesImporter extends AppCompatActivity {
 
-    public static void start(Context context) {
+    /*
+    public static void start(Context context, Activity activity) {
         Intent intent = new Intent(context, SharedPreferencesImporter.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
+    */
 
     private Context context;
     private ActivityResultLauncher importFilePicker;
@@ -102,7 +107,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
         }
         //return content ;
         spEditor.apply();
-        this.finish();
+        //this.finish();
     }
 
 }

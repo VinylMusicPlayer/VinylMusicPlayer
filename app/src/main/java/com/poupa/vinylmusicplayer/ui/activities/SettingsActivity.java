@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -138,6 +140,24 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        ActivityResultLauncher sharedPreferencesImporter;
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            sharedPreferencesImporter = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {
+                        // Unless the selection has been cancelled, create the export file
+                        Activity activity = getActivity();
+                        if(result != null) {
+                            ThemeStore.editTheme(activity).primaryColor(PreferenceUtil.getInstance().getPrimaryColor()).commit();;
+                            ThemeStore.editTheme(activity).accentColor(PreferenceUtil.getInstance().getAccentColor()).commit();
+                            //ThemeStore.editTheme(activity).textColorPrimary(PreferenceUtil.getInstance().getAccentColor()).commit();
+                            activity.recreate();
+                        }
+                    });
+        }
 
         private static void setSummary(@NonNull Preference preference) {
             setSummary(preference, PreferenceManager
@@ -337,6 +357,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                             .show(getActivity());
                     return true;
                 });
+                //primaryColorPref.setOnPreferenceChangeListener((preference, newValue) -> );
             }
 
             final ATEColorPreference accentColorPref = findPreference(ThemeStore.KEY_ACCENT_COLOR);
@@ -520,7 +541,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
             if (importSettings != null) {
                 importSettings.setOnPreferenceClickListener((preference) -> {
-                    SharedPreferencesImporter.start(getContext());
+                    //startActivity(new Intent(getContext(), SharedPreferencesImporter.class));
+                    sharedPreferencesImporter.launch(new Intent(getContext(), SharedPreferencesImporter.class));
+                    //SharedPreferencesImporter.start(getContext(), requireActivity());
+                    //ThemeStore.markChanged(getActivity());
+                    //getActivity().recreate();
                     return true;
                 });
             }
