@@ -1,11 +1,7 @@
 package com.poupa.vinylmusicplayer.preferences;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,17 +12,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
-import androidx.preference.PreferenceManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.preferences.SharedPreferencesExporter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 /**
- * @author Andreas Lechner ()
+ * @author Andreas Lechner
  */
 public class ExportSettingsPreferenceDialog extends DialogFragment {
 
@@ -42,15 +36,11 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
         preferenceKey = preference;
     }
 
-    private SharedPreferences sharedPreferences;
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         this.context = this.getContext();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
-        final Activity activity = requireActivity();
         String filename = this.getExportSettingsFilename();
         Log.i(ExportSettingsPreferenceDialog.class.getName(), filename);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -65,7 +55,7 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
                 .negativeText(android.R.string.cancel)
                 .onNegative((dialog, action) -> dismiss())
                 .onPositive((dialog, action) -> {
-                    SharedPreferencesExporter.start(this.context, editText.getText().toString());
+                    SharedPreferencesExporter.start(this.context, filename);
                     dismiss();
                 })
                 .build();
