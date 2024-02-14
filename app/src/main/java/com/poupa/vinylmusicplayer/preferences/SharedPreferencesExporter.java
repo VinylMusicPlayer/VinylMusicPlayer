@@ -8,7 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,12 +23,13 @@ import androidx.preference.PreferenceManager;
 
 public class SharedPreferencesExporter extends AppCompatActivity {
     private Context context;
+    private static final String FILENAME = "filename";
     private ActivityResultLauncher<String> exportFilePicker;
     private SharedPreferences sharedPreferences;
 
     public static void start(Context context, String filename) {
         Intent intent = new Intent(context, SharedPreferencesExporter.class);
-        intent.putExtra("filename", filename);
+        intent.putExtra(FILENAME, filename);
         context.startActivity(intent);
     }
 
@@ -48,7 +51,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
             // Finishes the last activity to return to the settings activity.
             this.finish();
         });
-        exportFilePicker.launch(b.getString("filename"));
+        exportFilePicker.launch(b.getString(FILENAME));
     }
 
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
@@ -72,6 +75,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
             file.close();
         } catch (IOException exception) {
             // An error happened while writing the line
+            SafeToast.show(this.context, R.string.cannot_export_settings);
             OopsHandler.collectStackTrace(exception);
         }
     }

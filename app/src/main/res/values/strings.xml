@@ -223,6 +223,8 @@
     <string name="action_new_playlist">New playlist…</string>
     <string name="new_playlist_title">New playlist</string>
     <string name="export_settings">Export settings</string>
+    <string name="cannot_export_settings">Cannot export settings</string>
+    <string name="cannot_import_settings">Cannot import settings</string>
     <string name="grid_size_1" translatable="false">1</string>
     <string name="grid_size_2" translatable="false">2</string>
     <string name="grid_size_3" translatable="false">3</string>

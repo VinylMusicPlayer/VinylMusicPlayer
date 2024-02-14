@@ -63,7 +63,6 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
                 .customView(view, false)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
-                //.autoDismiss(false)
                 .onNegative((dialog, action) -> dismiss())
                 .onPositive((dialog, action) -> {
                     SharedPreferencesExporter.start(this.context, editText.getText().toString());
@@ -73,7 +72,7 @@ public class ExportSettingsPreferenceDialog extends DialogFragment {
     }
 
     private static String getCurrentFormattedDateTime() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssZ", Locale.getDefault());
         return simpleDateFormat.format(new Date(System.currentTimeMillis()));
     }
 

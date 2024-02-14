@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
 import com.poupa.vinylmusicplayer.util.DataTypeUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -92,6 +94,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
         catch(IOException exception)
         {
             // An error happened while reading the file
+            SafeToast.show(this.context, R.string.cannot_import_settings);
             OopsHandler.collectStackTrace(exception);
         }
         spEditor.apply();
