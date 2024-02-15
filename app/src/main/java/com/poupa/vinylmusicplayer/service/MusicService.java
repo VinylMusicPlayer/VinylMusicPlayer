@@ -299,7 +299,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     case ACTION_PLAY_PLAYLIST:
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
                         if (playlist != null) {
-                            ArrayList<Song> playlistSongs = playlist.getSongs(this);
+                            List<? extends Song> playlistSongs = playlist.getSongs(this);
                             if (!playlistSongs.isEmpty()) {
                                 synchronized (this) {
                                     int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, playingQueue.getShuffleMode());
@@ -837,7 +837,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         propagateShuffleChange();
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
         int position;
         if (queue != null && shuffleMode != SHUFFLE_MODE_NONE && startPosition == RANDOM_START_POSITION_ON_SHUFFLE) {
             position = new Random().nextInt(queue.size());
@@ -857,7 +857,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         synchronized (this) {
             openQueue(queue, startPosition, startPlaying, playingQueue.getShuffleMode());
         }
@@ -877,7 +877,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongsAfter(int position, List<Song> songs) {
+    public void addSongsAfter(int position, List<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAllAfter(position, songs);
         }
@@ -891,7 +891,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongs(List<Song> songs) {
+    public void addSongs(List<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAll(songs);
             notifyChange(QUEUE_CHANGED);

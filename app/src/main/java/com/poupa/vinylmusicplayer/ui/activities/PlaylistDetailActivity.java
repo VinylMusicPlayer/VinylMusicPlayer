@@ -48,12 +48,13 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements
             CabHolder,
-            LoaderManager.LoaderCallbacks<ArrayList<Song>>
+            LoaderManager.LoaderCallbacks<List<? extends Song>>
 {
 
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
@@ -121,8 +122,9 @@ public class PlaylistDetailActivity
                     this,
                     (fromPosition, toPosition) -> {
                         if (PlaylistsUtil.moveItem(playlist.id, fromPosition, toPosition)) {
-                            Song song = adapter.getDataSet().remove(fromPosition);
-                            adapter.getDataSet().add(toPosition, song);
+                            final List<Song> dataSet = (List<Song>)adapter.getDataSet();
+                            final Song song = dataSet.remove(fromPosition);
+                            dataSet.add(toPosition, song);
                             adapter.notifyItemMoved(fromPosition, toPosition);
                         }
                     });
@@ -282,19 +284,19 @@ public class PlaylistDetailActivity
 
     @Override
     @NonNull
-    public Loader<ArrayList<Song>> onCreateLoader(int id, final Bundle args) {
+    public Loader<List<? extends Song>> onCreateLoader(int id, final Bundle args) {
         return new AsyncPlaylistSongLoader(this, playlist);
     }
 
     @Override
-    public void onLoadFinished(@NonNull final Loader<ArrayList<Song>> loader, final ArrayList<Song> data) {
+    public void onLoadFinished(@NonNull final Loader<List<? extends Song>> loader, final List<? extends Song> data) {
         if (adapter != null) {
             adapter.swapDataSet(data);
         }
     }
 
     @Override
-    public void onLoaderReset(@NonNull final Loader<ArrayList<Song>> loader) {
+    public void onLoaderReset(@NonNull final Loader<List<? extends Song>> loader) {
         if (adapter != null) {
             adapter.swapDataSet(new ArrayList<>());
         }
@@ -305,7 +307,7 @@ public class PlaylistDetailActivity
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
-    private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {
+    private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<List<? extends Song>> {
         private final Playlist playlist;
 
         AsyncPlaylistSongLoader(final Context context, final Playlist playlist) {
@@ -315,7 +317,7 @@ public class PlaylistDetailActivity
 
         @NonNull
         @Override
-        public ArrayList<Song> loadInBackground() {
+        public List<? extends Song> loadInBackground() {
             return playlist.getSongs(getContext());
         }
     }

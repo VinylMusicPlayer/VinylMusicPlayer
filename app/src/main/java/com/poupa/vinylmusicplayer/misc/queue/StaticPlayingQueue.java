@@ -113,8 +113,8 @@ public class StaticPlayingQueue {
     /**
      * Add list of song at the end of both list
      */
-    public void addAll(@NonNull List<Song> songs) {
-        int position = size();
+    public void addAll(@NonNull final List<? extends Song> songs) {
+        final int position = size();
         for (Song song : songs) {
             add(song);
         }
@@ -181,7 +181,7 @@ public class StaticPlayingQueue {
     /**
      * Add songs after and including position, numbering need to be redone for every song after this position (+number of song)
      */
-    public void addAllAfter(int position, @NonNull List<Song> songs) {
+    public void addAllAfter(int position, @NonNull List<? extends Song> songs) {
         final int queueSize = queue.size();
         if (queueSize == 0) {
             addAll(songs);
@@ -320,7 +320,7 @@ public class StaticPlayingQueue {
 
     /* -------------------- queue getter info -------------------- */
 
-    public boolean openQueue(@Nullable final ArrayList<Song> playingQueue, final int startPosition, int shuffleMode) {
+    public boolean openQueue(@Nullable final List<? extends Song> playingQueue, final int startPosition, int shuffleMode) {
         if (playingQueue == null || playingQueue.isEmpty() || startPosition < 0 || startPosition >= playingQueue.size()) {
             return false;
         }

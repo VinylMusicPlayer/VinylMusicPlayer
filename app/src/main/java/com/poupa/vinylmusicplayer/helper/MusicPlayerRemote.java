@@ -186,7 +186,7 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void openQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    public static void openQueue(final List<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
             if (!PreferenceUtil.getInstance().rememberShuffle()) {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
@@ -198,7 +198,7 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void openAndShuffleQueue(final ArrayList<Song> queue, boolean startPlaying) {
+    public static void openAndShuffleQueue(final List<? extends Song> queue, boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
             musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
@@ -208,7 +208,7 @@ public class MusicPlayerRemote {
         removeDuplicateBeforeQueuing(new ArrayList<>(Collections.singletonList(song)));
     }
 
-    private static void removeDuplicateBeforeQueuing (final ArrayList<Song> songsToAdd) {
+    private static void removeDuplicateBeforeQueuing (final List<? extends Song> songsToAdd) {
         // Deduplicate songs, favoring the occurrences in the new queue
         if (musicService == null) {return;}
         
@@ -237,7 +237,7 @@ public class MusicPlayerRemote {
         musicService.removeSongs(songsToRemove);
     }
 
-    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final ArrayList<Song> queue, int positionInQueue) {
+    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final List<? extends Song> queue, int positionInQueue) {
         if (musicService == null) {return;}
 
         if (tryToHandleOpenPlayingQueue(queue, positionInQueue, true)) {
@@ -289,7 +289,7 @@ public class MusicPlayerRemote {
 
     }
 
-    private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    private static boolean tryToHandleOpenPlayingQueue(final List<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
             if (startPlaying) {playSongAt(startPosition, isPlaying());}
             else {setPosition(startPosition);}
@@ -393,7 +393,7 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void playNext(@NonNull ArrayList<Song> songs) {
+    public static void playNext(@NonNull List<? extends Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 removeDuplicateBeforeQueuing(songs);
@@ -422,7 +422,7 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void enqueue(@NonNull ArrayList<Song> songs) {
+    public static void enqueue(@NonNull List<? extends Song> songs) {
         if (musicService != null) {
             if (getPlayingQueue().size() > 0) {
                 removeDuplicateBeforeQueuing(songs);

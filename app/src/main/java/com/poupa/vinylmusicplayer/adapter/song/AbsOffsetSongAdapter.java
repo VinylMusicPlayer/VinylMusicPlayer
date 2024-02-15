@@ -19,7 +19,7 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Eugene Cheung (arkon)
@@ -32,12 +32,15 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     // Need to be different from RecyclerView.NO_ID to not to upset the base class
     protected static final long OFFSET_ITEM_ID = RecyclerView.NO_ID - 1;
 
-    public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
+                                @LayoutRes final int itemLayoutRes,
+                                final boolean usePalette, @Nullable final CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
     }
 
-    public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, boolean usePalette,
-                                @Nullable CabHolder cabHolder, boolean showSectionName) {
+    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
+                                final boolean usePalette, @Nullable final CabHolder cabHolder,
+                                final boolean showSectionName) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder, showSectionName);
     }
 

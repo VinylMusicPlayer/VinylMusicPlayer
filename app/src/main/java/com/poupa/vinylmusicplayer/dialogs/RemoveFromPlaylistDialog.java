@@ -30,7 +30,7 @@ public class RemoveFromPlaylistDialog extends DialogFragment {
     }
 
     @NonNull
-    public static RemoveFromPlaylistDialog create(long playlistId, ArrayList<Song> songs) {
+    public static RemoveFromPlaylistDialog create(long playlistId, ArrayList<? extends Song> songs) {
         RemoveFromPlaylistDialog dialog = new RemoveFromPlaylistDialog();
         Bundle args = new Bundle();
         args.putLong(PLAYLIST_ID, playlistId);

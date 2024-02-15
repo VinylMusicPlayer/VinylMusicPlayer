@@ -16,7 +16,7 @@ import java.util.List;
 public class M3UWriter implements M3UConstants {
 
     public static void write(@NonNull final Context context, @NonNull final OutputStream stream, @NonNull final Playlist playlist) throws IOException {
-        List<Song> songs = playlist.getSongs(context);
+        List<? extends Song> songs = playlist.getSongs(context);
         if (!songs.isEmpty()) {
             stream.write(HEADER.getBytes(StandardCharsets.UTF_8));
 
