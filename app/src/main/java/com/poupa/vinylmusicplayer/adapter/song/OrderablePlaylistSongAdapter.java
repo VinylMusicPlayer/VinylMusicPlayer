@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
-import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
 import com.poupa.vinylmusicplayer.R;
@@ -35,10 +34,10 @@ public class OrderablePlaylistSongAdapter
     final OnMoveItemListener onMoveItemListener;
 
     public OrderablePlaylistSongAdapter(
-            @NonNull AppCompatActivity activity,
-            long playlistId, @NonNull ArrayList<Song> dataSet,
-            boolean usePalette, @Nullable CabHolder cabHolder,
-            @Nullable OnMoveItemListener onMoveItemListener)
+            @NonNull final AppCompatActivity activity,
+            final long playlistId, @NonNull final ArrayList<Song> dataSet,
+            final boolean usePalette, @Nullable final CabHolder cabHolder,
+            @Nullable final OnMoveItemListener onMoveItemListener)
     {
         super(activity, dataSet, usePalette, cabHolder);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
@@ -119,7 +118,7 @@ public class OrderablePlaylistSongAdapter
         void onMoveItem(int fromPosition, int toPosition);
     }
 
-    public class ViewHolder extends PlaylistSongAdapter.ViewHolder implements DraggableItemViewHolder {
+    public class ViewHolder extends PlaylistSongAdapter.ViewHolder {
         @DraggableItemStateFlags
         private int mDragStateFlags;
 

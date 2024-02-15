@@ -49,7 +49,7 @@ abstract class SongList {
         // Since the song list is decoupled from Discography, we need to check its content
         // against the valid songs in discog
         final Map<Long, Song> availableSongsById = Discography.getInstance().getAllSongsById();
-        for (Long id : songIds) {
+        for (final Long id : songIds) {
             final Song matchingSong = availableSongsById.get(id);
             if (matchingSong != null) {
                 result.add(matchingSong);
@@ -112,11 +112,11 @@ abstract class MutableSongList extends SongList {
 }
 
 class PreferencesBackedSongList extends MutableSongList {
-    private final static String SEPARATOR = ",";
-    private final static String PREF_NAME_PREFIX = "SONG_IDS_";
+    private static final String SEPARATOR = ",";
+    private static final String PREF_NAME_PREFIX = "SONG_IDS_";
 
     private static SharedPreferences preferences = null;
-    protected static SharedPreferences getPreferences() {
+    static SharedPreferences getPreferences() {
         if (preferences == null) {
             preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         }

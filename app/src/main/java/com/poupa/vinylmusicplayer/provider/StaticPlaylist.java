@@ -103,7 +103,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
     }
 
     @Nullable
-    public static StaticPlaylist getPlaylist(long id) {
+    public static StaticPlaylist getPlaylist(final long id) {
         List<StaticPlaylist> all = getAllPlaylists();
         for (StaticPlaylist item : all) {
             Playlist playlist = item.asPlaylist();
@@ -113,7 +113,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
     }
 
     @Nullable
-    public static StaticPlaylist getPlaylist(@NonNull String playlistName) {
+    public static StaticPlaylist getPlaylist(@NonNull final String playlistName) {
         List<StaticPlaylist> all = getAllPlaylists();
         for (StaticPlaylist item : all) {
             Playlist playlist = item.asPlaylist();
@@ -122,7 +122,8 @@ public class StaticPlaylist extends PreferencesBackedSongList {
         return null;
     }
 
-    public static StaticPlaylist getOrCreatePlaylist(@NonNull String name) {
+    @NonNull
+    public static StaticPlaylist getOrCreatePlaylist(@NonNull final String name) {
         StaticPlaylist result = getPlaylist(name);
         if (result == null) {
             result = new StaticPlaylist(name);
@@ -131,11 +132,11 @@ public class StaticPlaylist extends PreferencesBackedSongList {
         return result;
     }
 
-    public static void removePlaylist(@NonNull String name) {
+    public static void removePlaylist(@NonNull final String name) {
         remove(name);
     }
 
-    public StaticPlaylist(@NonNull String name) {
+    public StaticPlaylist(@NonNull final String name) {
         super(name);
     }
 
