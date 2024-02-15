@@ -448,7 +448,7 @@ public class MusicPlayerRemote {
     }
 
     public static IndexedSong getIndexedSongAt(int position) {
-        if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
+        if (musicService != null) {
             return musicService.getIndexedSongAt(position);
         }
         return IndexedSong.EMPTY_INDEXED_SONG;
