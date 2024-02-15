@@ -45,6 +45,17 @@ public class OrderablePlaylistSongAdapter
         this.onMoveItemListener = onMoveItemListener;
     }
 
+    @Override
+    public long getItemId(final int position) {
+        // Shifting by -1, since the very first item is the OFFSET_ITEM
+        final int adjustedPosition = position - 1;
+        if (adjustedPosition < 0) {return OFFSET_ITEM_ID;}
+
+        // Since the playlist may contain duplicates of same song,
+        // the song's ID cannot be used as the recycle view item ID
+        return ((IndexedSong)dataSet.get(adjustedPosition)).getUniqueId();
+    }
+
     @NonNull
     @Override
     protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {

@@ -12,7 +12,9 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
@@ -25,7 +27,10 @@ import java.util.UUID;
  * @author SC (soncaokim)
  */
 public class StaticPlaylist extends PreferencesBackedSongList {
-    static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
+    private static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
+
+    // A playlist can contain duplicate of same song -> assign an unique Id to each song
+    private long nextUniqueId = 0L;
 
     @NonNull
     private static List<StaticPlaylist> importDevicePlaylists(@NonNull final Context context, @NonNull final Set<String> internalNames) {
@@ -132,6 +137,21 @@ public class StaticPlaylist extends PreferencesBackedSongList {
 
     public StaticPlaylist(@NonNull String name) {
         super(name);
+    }
+
+    @Override
+    @NonNull
+    public List<? extends Song> asSongs() {
+        final List<? extends Song> songs = super.asSongs();
+        final int count = songs.size();
+
+        final ArrayList<IndexedSong> indexedSongs = new ArrayList<>(count);
+        for (int i=0; i<count; ++i) {
+            ++nextUniqueId;
+            indexedSongs.add(new IndexedSong(songs.get(i), i, nextUniqueId));
+        }
+
+        return indexedSongs;
     }
 
     public Playlist asPlaylist() {
