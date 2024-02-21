@@ -212,12 +212,12 @@ public class MusicPlayerRemote {
         // Deduplicate songs, favoring the occurrences in the new queue
         if (musicService == null) {return;}
         
-        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        final List<? extends Song> currentQueue = musicService.getPlayingQueue();
         if (currentQueue.isEmpty()) {
             return;
         }
 
-        final List<Song> remainingSongsInQueue = currentQueue.subList(
+        final List<? extends Song> remainingSongsInQueue = currentQueue.subList(
                 musicService.getPosition() + 1,
                 currentQueue.size()
         );
@@ -245,7 +245,7 @@ public class MusicPlayerRemote {
             return;
         }
 
-        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        final List<? extends Song> currentQueue = musicService.getPlayingQueue();
         if (currentQueue.isEmpty()) {
             openQueue(queue, positionInQueue, true);
             return;
@@ -320,7 +320,7 @@ public class MusicPlayerRemote {
         return -1;
     }
 
-    public static ArrayList<Song> getPlayingQueue() {
+    public static List<? extends Song> getPlayingQueue() {
         if (musicService != null) {
             return musicService.getPlayingQueue();
         }

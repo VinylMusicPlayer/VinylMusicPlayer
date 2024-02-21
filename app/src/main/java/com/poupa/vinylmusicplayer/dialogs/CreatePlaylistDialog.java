@@ -16,6 +16,7 @@ import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid), Aidan Follestad (afollestad)
@@ -37,10 +38,10 @@ public class CreatePlaylistDialog extends DialogFragment {
     }
 
     @NonNull
-    public static CreatePlaylistDialog create(ArrayList<Song> songs) {
+    public static CreatePlaylistDialog create(List<? extends Song> songs) {
         CreatePlaylistDialog dialog = new CreatePlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(SONGS, songs);
+        args.putParcelableArrayList(SONGS, new ArrayList<>(songs));
         dialog.setArguments(args);
         return dialog;
     }
