@@ -778,7 +778,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     public List<? extends Song> getPlayingQueue() {
         synchronized (this) {
-            return playingQueue.getPlayingQueueSongOnly();
+            return playingQueue.getPlayingQueue();
         }
     }
 

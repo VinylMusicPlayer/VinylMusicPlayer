@@ -26,10 +26,6 @@ public class StaticPlayingQueue {
 
     private int nextPosition;
 
-    /** Used to know when songs and queue.song are not equal so that getPlayingQueueSongOnly() will not always recreate songs every time */
-    private boolean songsIsStale;
-    /** Necessary as all implementation use MusicPlayerRemove.getPlayingQueue and want a pointer that doesn't change to a list of song */
-    private final ArrayList<Song> songs;
     /** List of element currently saved (way better than songs to ensure only the correct occurrence of a song is modified) */
     private ArrayList<IndexedSong> queue;
     /** Copy of the queue used to allow revert of history last operation */
@@ -38,12 +34,10 @@ public class StaticPlayingQueue {
     private long nextUniqueId;
 
     public StaticPlayingQueue() {
-        songs = new ArrayList<>();
         queue = new ArrayList<>();
         originalQueue = new ArrayList<>();
         shuffleMode = SHUFFLE_MODE_NONE;
         currentPosition = INVALID_POSITION;
-        songsIsStale = false;
 
         restoreUniqueId();
     }
@@ -63,10 +57,6 @@ public class StaticPlayingQueue {
                 remove(i);
             }
         }
-
-        songs = new ArrayList<>();
-        songsIsStale = true;
-        resetSongs();
 
         restoreUniqueId();
     }
@@ -106,8 +96,6 @@ public class StaticPlayingQueue {
         long uniqueId = getNextUniqueId();
         queue.add(new IndexedSong(song, queue.size(), uniqueId));
         originalQueue.add(new IndexedSong(song, originalQueue.size(), uniqueId));
-
-        songsIsStale = true;
     }
 
     /**
@@ -143,8 +131,6 @@ public class StaticPlayingQueue {
         queue.add(position, new IndexedSong(song, previousPosition, uniqueId));
 
         updateQueueIndexesAfterSongsModification(position, 0, previousPosition, +1);
-
-        songsIsStale = true;
     }
 
     /**
@@ -210,8 +196,6 @@ public class StaticPlayingQueue {
         if (getShuffleMode() == SHUFFLE_MODE_SHUFFLE) {
             ShuffleHelper.makeShuffleList(queue.subList(position, position + songs.size()), 0);
         }
-
-        songsIsStale = true;
     }
 
     /**
@@ -241,8 +225,6 @@ public class StaticPlayingQueue {
         } else if (from == currentPosition) {
             this.currentPosition = to;
         }
-
-        songsIsStale = true;
     }
 
     private int rePosition(int deletedPosition) {
@@ -270,8 +252,6 @@ public class StaticPlayingQueue {
 
         updateQueueIndexesAfterSongsModification(-1, 0, o.index, -1);
 
-        songsIsStale = true;
-
         return rePosition(position);
     }
 
@@ -286,8 +266,6 @@ public class StaticPlayingQueue {
                 }
             }
         }
-
-        songsIsStale = true;
 
         return hasPositionChanged;
     }
@@ -306,7 +284,6 @@ public class StaticPlayingQueue {
     }
 
     public void clear() {
-        songs.clear();
         queue.clear();
         originalQueue.clear();
 
@@ -315,7 +292,6 @@ public class StaticPlayingQueue {
 
     private void revert() {
         queue = new ArrayList<>(originalQueue);
-        songsIsStale = true;
     }
 
     /* -------------------- queue getter info -------------------- */
@@ -341,18 +317,6 @@ public class StaticPlayingQueue {
 
     public ArrayList<IndexedSong> getOriginalPlayingQueue() {
         return originalQueue;
-    }
-
-    private void resetSongs() {
-        this.songs.clear();
-        songs.addAll(queue);
-        songsIsStale = false;
-    }
-
-    public ArrayList<Song> getPlayingQueueSongOnly() {
-        if (songsIsStale)
-            resetSongs();
-        return songs;
     }
 
     public int size() {
@@ -463,7 +427,6 @@ public class StaticPlayingQueue {
                 break;
             case SHUFFLE_MODE_SHUFFLE:
                 ShuffleHelper.makeShuffleList(queue, currentPosition);
-                songsIsStale = true;
                 currentPosition = 0;
                 break;
         }
