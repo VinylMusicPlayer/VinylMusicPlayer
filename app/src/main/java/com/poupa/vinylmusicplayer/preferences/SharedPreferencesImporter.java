@@ -10,6 +10,9 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
+import com.google.gson.ToNumberStrategy;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
@@ -52,7 +55,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
     private void importSettings(Uri location) {
         // Prepare the table used to store the lines
         Map<String, ?> preferences;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE).create();
         SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
         try {
@@ -61,7 +64,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             if(file == null) return;
 
             // Read the content from the file line by line
-            BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor())) ;
+            BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor()));
             preferences = gson.fromJson(reader, Map.class);
 
             for(Map.Entry<String, ?> entry : preferences.entrySet()) {
@@ -69,8 +72,8 @@ public class SharedPreferencesImporter extends AppCompatActivity {
                 String key = entry.getKey();
                 if (object instanceof String) {
                     spEditor.putString(key, (String) object);
-                } else if (object instanceof Integer) {
-                    spEditor.putInt(key, (Integer) object);
+                } else if (object instanceof Long) {
+                    spEditor.putInt(key, object == null ? null : Math.toIntExact((Long) object));
                 } else if (object instanceof Boolean) {
                     spEditor.putBoolean(key, (Boolean) object);
                 } else if (object instanceof Float) {
