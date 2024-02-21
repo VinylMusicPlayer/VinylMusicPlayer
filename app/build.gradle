@@ -83,12 +83,8 @@ android {
         ci {
             dimension 'default'
 
-            final String gitBranch = providers.exec{
-              commandLine("git", "rev-parse", "--abbrev-ref", "HEAD")
-            }.standardOutput.asText.get().trim()
-            final String gitSha1 = providers.exec{
-              commandLine("git", "rev-parse", "--short", "HEAD")
-            }.standardOutput.asText.get().trim()
+            final String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
+            final String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
             final String buildTime = new Date().format('yyMMdd-HHmm')
             final String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
 
