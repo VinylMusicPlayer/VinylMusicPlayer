@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 
+import com.google.gson.Gson;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -55,12 +57,17 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     }
 
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
-        StringBuilder stringBuilder = new StringBuilder();
-        Map<String, ?> prefsMap = sharedPreferences.getAll();
-        stringBuilder.append("#" + context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName + "\n");
-        for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            stringBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
-        }
+        //StringBuilder stringBuilder = new StringBuilder();
+        Gson gson = new Gson();
+        HashMap<String, Object> prefsMap = (HashMap<String, Object>) ((HashMap<String, Object>) sharedPreferences.getAll()).clone();
+
+        prefsMap.put("version_name", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+        prefsMap.put("version_code", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+        prefsMap.put("file_format", "json");
+
+        //for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
+            //stringBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
+        //}
 
         // Write all lines in the export file
         try {
@@ -70,7 +77,8 @@ public class SharedPreferencesExporter extends AppCompatActivity {
 
             // Write all lines in the file
             FileWriter writer = new FileWriter(file.getFileDescriptor());
-            writer.write(stringBuilder.toString());
+            //writer.write(stringBuilder.toString());
+            writer.write(gson.toJson(prefsMap));
             writer.close();
             file.close();
         } catch (IOException exception) {
@@ -80,4 +88,3 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         }
     }
 }
-

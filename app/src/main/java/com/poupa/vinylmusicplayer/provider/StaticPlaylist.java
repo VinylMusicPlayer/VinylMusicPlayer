@@ -38,13 +38,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
         final SharedPreferences preferences = getPreferences();
         final boolean noMigrationMarker = !preferences.contains(PREF_MIGRATED_STATIC_PLAYLISTS);
 
-        Gson gson = new Gson();
-
-        //Set<String> previouslyMigratedNames = new HashSet<>(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
-        //Set<String> previouslyMigratedNames = new HashSet<>();
-        final Type collectionType = new TypeToken<HashSet<String>>() {
-        }.getType();
-        Set<String> previouslyMigratedNames = gson.fromJson(preferences.getString(PREF_MIGRATED_STATIC_PLAYLISTS, "[]"), collectionType);
+        Set<String> previouslyMigratedNames = new HashSet<>(preferences.getStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, new HashSet<>()));
         Set<String> skippedNames = new HashSet<>();
         Set<String> nowMigratedNames = new HashSet<>();
 
@@ -77,8 +71,7 @@ public class StaticPlaylist extends PreferencesBackedSongList {
         // Set a persistent marker in prefs, to avoid doing this again
         final boolean changed = !previouslyMigratedNames.containsAll(nowMigratedNames) || !nowMigratedNames.containsAll(previouslyMigratedNames);
         if (noMigrationMarker || changed) {
-            //preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, nowMigratedNames).apply();
-            preferences.edit().putString(PREF_MIGRATED_STATIC_PLAYLISTS, gson.toJson(nowMigratedNames, collectionType)).apply();
+            preferences.edit().putStringSet(PREF_MIGRATED_STATIC_PLAYLISTS, nowMigratedNames).apply();
         }
 
         if (noMigrationMarker) {

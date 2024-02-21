@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
-import com.poupa.vinylmusicplayer.util.DataTypeUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
@@ -51,33 +51,22 @@ public class SharedPreferencesImporter extends AppCompatActivity {
 
     private void importSettings(Uri location) {
         // Prepare the table used to store the lines
-        String[] preference;
-        String buffer ;
+        Map<String, ?> preferences;
+        Gson gson = new Gson();
         SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
-        try
-        {
+        try {
             // Try to open the file
             ParcelFileDescriptor file = this.context.getContentResolver().openFileDescriptor(location, "r") ;
-            if(file == null) return ;
+            if(file == null) return;
 
             // Read the content from the file line by line
             BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor())) ;
-            String key = "";
-            String value = "";
-            while((buffer = reader.readLine()) != null) {
-                if(buffer.startsWith("#")) {
-                    continue;
-                }
-                try {
-                    preference = buffer.split("=");
-                    //Log.i(this.getLocalClassName(), buffer);
-                    key = preference[0];
-                    value = preference[1];
-                } catch (Exception e) {
-                    OopsHandler.collectStackTrace(e);
-                }
-                Object object = DataTypeUtil.checkType(value);
+            preferences = gson.fromJson(reader, Map.class);
+
+            for(Map.Entry<String, ?> entry : preferences.entrySet()) {
+                Object object = entry.getValue();
+                String key = entry.getKey();
                 if (object instanceof String) {
                     spEditor.putString(key, (String) object);
                 } else if (object instanceof Integer) {
