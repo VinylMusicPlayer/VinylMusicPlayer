@@ -381,7 +381,7 @@ public class MusicPlayerRemote {
 
     public static void playNext(Song song) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(song);
                 musicService.addSongAfter(getPosition(), song);
             } else {
@@ -395,7 +395,7 @@ public class MusicPlayerRemote {
 
     public static void playNext(@NonNull List<? extends Song> songs) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(songs);
                 musicService.addSongsAfter(getPosition(), songs);
             } else {
@@ -410,7 +410,7 @@ public class MusicPlayerRemote {
 
     public static void enqueue(Song song) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(song);
                 musicService.addSong(song);
             } else {
@@ -424,7 +424,7 @@ public class MusicPlayerRemote {
 
     public static void enqueue(@NonNull List<? extends Song> songs) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(songs);
                 musicService.addSongs(songs);
             } else {
@@ -455,7 +455,8 @@ public class MusicPlayerRemote {
     }
 
     public static void moveSong(int from, int to) {
-        if (musicService != null && from >= 0 && to >= 0 && from < getPlayingQueue().size() && to < getPlayingQueue().size()) {
+        final int size = getPlayingQueue().size();
+        if (musicService != null && from >= 0 && to >= 0 && from < size && to < size) {
             musicService.moveSong(from, to);
         }
     }
