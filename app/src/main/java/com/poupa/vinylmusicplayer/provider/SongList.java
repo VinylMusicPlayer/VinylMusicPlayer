@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
@@ -174,5 +175,32 @@ class PreferencesBackedSongList extends MutableSongList {
             name = newName;
         }
         preferences.edit().putString(PREF_NAME_PREFIX + name, values.toString()).apply();
+    }
+}
+
+class PreferenceBackedReorderableSongList extends PreferencesBackedSongList {
+    public PreferenceBackedReorderableSongList(@NonNull final String name) {
+        super(name);
+    }
+
+    // Assign a stable and unique ID to each song in the list. That ID can then be used as UI RecycleView's ID
+    // - to be unique: the Song's id cannot be used since the list can contain duplicate of same some
+    // - to be stable: the postition of the song in the list cannot be used as an ID since the song can be moved (hence the position changes)
+
+    private long nextUniqueId = 0L;
+
+    @Override
+    @NonNull
+    public List<? extends Song> asSongs() {
+        final List<? extends Song> songs = super.asSongs();
+        final int count = songs.size();
+
+        final ArrayList<IndexedSong> indexedSongs = new ArrayList<>(count);
+        for (int i=0; i<count; ++i) {
+            ++nextUniqueId;
+            indexedSongs.add(new IndexedSong(songs.get(i), i, nextUniqueId));
+        }
+
+        return indexedSongs;
     }
 }
