@@ -174,7 +174,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
         impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
 

@@ -26,9 +26,9 @@ public class IndexedSong extends Song {
     public boolean isQuickEqual(@NonNull final Song song) {
         boolean ret = super.isQuickEqual(song);
 
-        if (getClass() == song.getClass()) {
-            IndexedSong indexedSong = (IndexedSong) song;
-            ret = ret && ((indexedSong.index == INVALID_INDEX) || (this.index == indexedSong.index));
+        if (ret && (getClass() == song.getClass())) {
+            final IndexedSong indexedSong = (IndexedSong) song;
+            ret = ((indexedSong.index == INVALID_INDEX) || (index == indexedSong.index));
         }
 
         return ret;

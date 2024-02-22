@@ -29,7 +29,7 @@
     <string name="action_save_playing_queue">Save playing queue</string>
     <string name="about_to_add_title_to_playing_queue">About to add 1 song into the playing queue.\nHow do you want to proceed with this song?</string>
     <string name="about_to_add_x_titles_to_playing_queue">About to add %1$d songs into the playing queue.\nHow do you want to proceed with these songs?</string>
-    <string name="added_title_to_playing_queue">"Added 1 songs to the playing queue."</string>
+    <string name="added_title_to_playing_queue">"Added 1 song to the playing queue."</string>
     <string name="added_x_titles_to_playing_queue">Added %1$d songs to the playing queue.</string>
     <string name="failed_restore_playing_queue">Cannot restore, previous queue is corrupted</string>
 
