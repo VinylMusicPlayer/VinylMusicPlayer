@@ -14,6 +14,8 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -21,20 +23,20 @@ import java.util.ArrayList;
 public class RemoveFromPlaylistDialog extends DialogFragment {
     private static final String PLAYLIST_ID = "playlist_id";
     private static final String SONGS = "songs";
+    public  static final String TAG = "REMOVE_FROM_PLAYLIST";
 
     @NonNull
-    public static RemoveFromPlaylistDialog create(long playlistId, Song song) {
-        ArrayList<Song> list = new ArrayList<>();
-        list.add(song);
-        return create(playlistId, list);
+    public static RemoveFromPlaylistDialog create(final long playlistId, final int position, @NonNull final Song song) {
+        return create(playlistId, Map.of(position, song));
     }
 
     @NonNull
-    public static RemoveFromPlaylistDialog create(long playlistId, ArrayList<? extends Song> songs) {
+    public static RemoveFromPlaylistDialog create(final long playlistId, @NonNull final Map<Integer, ? extends Song> songs) {
         RemoveFromPlaylistDialog dialog = new RemoveFromPlaylistDialog();
         Bundle args = new Bundle();
         args.putLong(PLAYLIST_ID, playlistId);
-        args.putParcelableArrayList(SONGS, songs);
+        args.putIntegerArrayList(SONGS, new ArrayList<>(songs.keySet()));
+
         dialog.setArguments(args);
         return dialog;
     }
@@ -46,25 +48,16 @@ public class RemoveFromPlaylistDialog extends DialogFragment {
         @NonNull final Bundle arguments = requireArguments();
 
         final long playlistId = arguments.getLong(PLAYLIST_ID);
-        final ArrayList<Song> songs = arguments.getParcelableArrayList(SONGS);
-        int title;
-        CharSequence content;
-        if (songs.size() > 1) {
-            title = R.string.remove_songs_from_playlist_title;
-            content = Html.fromHtml(getString(R.string.remove_x_songs_from_playlist, songs.size()));
-        } else {
-            title = R.string.remove_song_from_playlist_title;
-            content = Html.fromHtml(getString(R.string.remove_song_x_from_playlist, songs.get(0).title));
-        }
+        final List<Integer> songPositions = arguments.getIntegerArrayList(SONGS);
         return new MaterialDialog.Builder(activity)
-                .title(title)
-                .content(content)
+                .title(R.string.remove_songs_from_playlist_title)
+                .content(Html.fromHtml(getString(R.string.remove_x_songs_from_playlist, songPositions.size())))
                 .positiveText(R.string.remove_action)
                 .negativeText(android.R.string.cancel)
                 .onPositive((dialog, which) -> {
                     if (getActivity() == null)
                         return;
-                    PlaylistsUtil.removeFromPlaylist(activity, songs, playlistId);
+                    PlaylistsUtil.removeFromPlaylist(activity, songPositions, playlistId);
                 })
                 .build();
     }

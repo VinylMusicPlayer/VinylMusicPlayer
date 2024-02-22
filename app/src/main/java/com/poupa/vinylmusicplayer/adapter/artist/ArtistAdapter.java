@@ -36,7 +36,8 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -100,8 +101,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Artist artist = dataSet.get(position);
 
-        boolean isChecked = isChecked(artist);
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isChecked(position));
 
         if (holder.getAdapterPosition() == getItemCount() - 1) {
             if (holder.shortSeparator != null) {
@@ -119,7 +119,6 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
         if (holder.text != null) {
             holder.text.setText(MusicUtil.getArtistInfoString(activity, artist));
         }
-        holder.itemView.setActivated(isChecked(artist));
 
         loadArtistImage(artist, holder);
     }
@@ -171,12 +170,12 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Artist> selection) {
-        SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Artist> selection) {
+        SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values()), menuItem.getItemId());
     }
 
     @NonNull
-    private ArrayList<Song> getSongList(@NonNull List<Artist> artists) {
+    private ArrayList<Song> getSongList(@NonNull Collection<Artist> artists) {
         final ArrayList<Song> songs = new ArrayList<>();
         for (Artist artist : artists) {
             songs.addAll(artist.getSongs());

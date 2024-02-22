@@ -22,6 +22,8 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -69,9 +71,17 @@ public class OrderablePlaylistSongAdapter
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Song> selection) {
         if (menuItem.getItemId() == R.id.action_remove_from_playlist) {
-            RemoveFromPlaylistDialog.create(playlistId, selection).show(activity.getSupportFragmentManager(), "ADD_PLAYLIST");
+            // Shifting by -1, since the very first item is the OFFSET_ITEM
+            final Map<Integer, Song> selectionWithShiftedPosition = new HashMap<>(selection.size());
+            for (Integer position : selection.keySet()) {
+                selectionWithShiftedPosition.put(position - 1, selection.get(position));
+            }
+
+            RemoveFromPlaylistDialog
+                    .create(playlistId, selectionWithShiftedPosition)
+                    .show(activity.getSupportFragmentManager(), RemoveFromPlaylistDialog.TAG);
             return;
         }
         super.onMultipleItemAction(menuItem, selection);
@@ -145,7 +155,10 @@ public class OrderablePlaylistSongAdapter
         @Override
         protected boolean onSongMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.action_remove_from_playlist) {
-                RemoveFromPlaylistDialog.create(playlistId, getSong()).show(activity.getSupportFragmentManager(), "REMOVE_FROM_PLAYLIST");
+                RemoveFromPlaylistDialog
+                        // Shifting by -1, since the very first item is the OFFSET_ITEM
+                        .create(playlistId, getBindingAdapterPosition() - 1, getSong())
+                        .show(activity.getSupportFragmentManager(), RemoveFromPlaylistDialog.TAG);
                 return true;
             }
             return super.onSongMenuItemClick(item);
