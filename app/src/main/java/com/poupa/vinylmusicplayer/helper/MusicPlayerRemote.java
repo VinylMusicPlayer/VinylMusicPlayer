@@ -205,7 +205,7 @@ public class MusicPlayerRemote {
     }
 
     private static void removeDuplicateBeforeQueuing (final Song song) {
-        removeDuplicateBeforeQueuing(new ArrayList<>(Collections.singletonList(song)));
+        removeDuplicateBeforeQueuing(Collections.singletonList(song));
     }
 
     private static void removeDuplicateBeforeQueuing (final List<? extends Song> songsToAdd) {
@@ -304,13 +304,6 @@ public class MusicPlayerRemote {
             return musicService.getCurrentSong();
         }
         return Song.EMPTY_SONG;
-    }
-
-    public static IndexedSong getCurrentIndexedSong() {
-        if (musicService != null) {
-            return musicService.getCurrentIndexedSong();
-        }
-        return IndexedSong.EMPTY_INDEXED_SONG;
     }
 
     public static int getPosition() {

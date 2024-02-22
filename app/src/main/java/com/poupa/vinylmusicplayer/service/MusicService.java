@@ -508,7 +508,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 return false;
             }
 
-            return getCurrentIndexedSong().isQuickEqual(song);
+            return getCurrentSong().isQuickEqual(song);
         }
     }
 
@@ -749,11 +749,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public Song getCurrentSong() {
-        return getCurrentIndexedSong();
-    }
-
-    public IndexedSong getCurrentIndexedSong() {
-        return getIndexedSongAt(getPosition());
+        return getSongAt(getPosition());
     }
 
     private Song getSongAt(int position) {

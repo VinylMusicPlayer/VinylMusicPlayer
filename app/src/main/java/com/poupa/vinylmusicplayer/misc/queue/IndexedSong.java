@@ -1,5 +1,7 @@
 package com.poupa.vinylmusicplayer.misc.queue;
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.model.Song;
 
 public class IndexedSong extends Song {
@@ -21,7 +23,7 @@ public class IndexedSong extends Song {
         this.uniqueId = uniqueId;
     }
 
-    public boolean isQuickEqual(Song song) {
+    public boolean isQuickEqual(@NonNull final Song song) {
         boolean ret = super.isQuickEqual(song);
 
         if (getClass() == song.getClass()) {
