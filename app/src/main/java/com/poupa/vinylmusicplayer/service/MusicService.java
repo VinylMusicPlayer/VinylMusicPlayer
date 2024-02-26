@@ -10,8 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -37,17 +35,12 @@ import androidx.annotation.RequiresApi;
 import androidx.core.util.Predicate;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.GlideRequest;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
@@ -68,7 +61,6 @@ import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
-import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -632,15 +624,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 R.string.report_a_crash_invitation);
     }
 
-    void updateNotification() {
-        if (getCurrentSong().id != Song.EMPTY_SONG.id) {
+    private void updateNotification() {
+        if (!getPlayingQueue().isEmpty()) {
             idleNotification.stop();
             playingNotification.update();
         } else {
             playingNotification.stop();
             idleNotification.update();
         }
+    }
 
+    private void updateCrashNotification() {
         final List<String> crashReports = PreferenceUtil.getInstance().getOopsHandlerReports();
         if (crashReports != null && !crashReports.isEmpty()) {
             crashNotification.update();
@@ -719,34 +713,35 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
             }
         }
+        mediaSession.setMetadata(metaData.build());
 
-        // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
-        //       or similar to the MediaSession to have a hi-res cover image displayed,
-        //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
-        final Point screenSize = Util.getScreenSize(this);
-        GlideRequest<Bitmap> request = GlideApp.with(this)
-                .asBitmap()
-                .load(VinylGlideExtension.getSongModel(song))
-                .transition(VinylGlideExtension.getDefaultTransition())
-                .songOptions(song);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        mediaSession.setMetadata(metaData.build());
-                    }
-
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-                        mediaSession.setMetadata(metaData.build());
-                    }
-                });
-            }
-        });
+//        // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
+//        //       or similar to the MediaSession to have a hi-res cover image displayed,
+//        //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
+//        final Point screenSize = Util.getScreenSize(this);
+//        GlideRequest<Bitmap> request = GlideApp.with(this)
+//                .asBitmap()
+//                .load(VinylGlideExtension.getSongModel(song))
+//                .transition(VinylGlideExtension.getDefaultTransition())
+//                .songOptions(song);
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
+//                    @Override
+//                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+//                        super.onLoadFailed(errorDrawable);
+//                        mediaSession.setMetadata(metaData.build());
+//                    }
+//
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
+//                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
+//                        mediaSession.setMetadata(metaData.build());
+//                    }
+//                });
+//            }
+//        });
     }
 
     static Bitmap copy(Bitmap bitmap) {
@@ -1259,9 +1254,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 break;
             case PreferenceUtil.COLORED_NOTIFICATION:
+                updateNotification();
+                break;
             case PreferenceUtil.OOPS_HANDLER_ENABLED:
             case PreferenceUtil.OOPS_HANDLER_EXCEPTIONS:
-                updateNotification();
+                updateCrashNotification();
                 break;
             case PreferenceUtil.CLASSIC_NOTIFICATION:
                 initNotification();
