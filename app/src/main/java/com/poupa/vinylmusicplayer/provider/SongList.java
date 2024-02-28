@@ -14,6 +14,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -85,9 +86,10 @@ abstract class MutableSongList extends SongList {
     }
 
     public void removeSongsAtPosition(@NonNull final List<Integer> positions) {
-        final int size = songIds.size();
-        for (final int position : positions) {
-            if (position >= 0 && position < size) {
+        final List<Integer> reversedPositions = new ArrayList<>(positions);
+        reversedPositions.sort(Comparator.reverseOrder());
+        for (final int position : reversedPositions) {
+            if (position >= 0 && position < songIds.size()) {
                 songIds.remove(position);
             }
         }
