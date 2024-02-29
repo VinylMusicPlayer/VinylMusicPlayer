@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,10 +118,14 @@ public class StaticPlayingQueue {
             originalQueue.get(i).index = i;
 
             if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
-                queue.get(i).index = queue.get(i).index + direction*(occurrence + 1);
+                final int oldIndex = queue.get(i).index;
+                final int newIndex = queue.get(i).index + direction*(occurrence + 1);
 
-                int index = queue.get(i).index;
-                if (index < 0) {throw new IllegalArgumentException("Bad index=" + index);}
+                queue.get(i).index = newIndex;
+                if (newIndex < 0) {
+                    OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index, new=" + newIndex + " old=" + oldIndex));
+                    break;
+                }
             }
         }
     }

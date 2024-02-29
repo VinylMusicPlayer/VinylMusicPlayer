@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.misc.queue;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 public class IndexedSong extends Song {
 
@@ -16,7 +17,7 @@ public class IndexedSong extends Song {
         super(song);
 
         if (index < 0 && !song.equals(Song.EMPTY_SONG)) {
-            throw new IllegalArgumentException("Bad index=" + index);
+            OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index=" + index));
         }
         this.index = index;
 
