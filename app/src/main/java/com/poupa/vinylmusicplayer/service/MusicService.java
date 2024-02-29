@@ -12,6 +12,8 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Binder;
@@ -138,6 +140,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final int SAVE_QUEUES = 0;
     private static final int SKIP_THRESHOLD_MS = 5000;
 
+    static final AudioAttributes PLAYBACK_ATTRIBUTE = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build();
+
     private final IBinder musicBind = new MusicBinder();
 
     public boolean pendingQuit = false;
@@ -173,6 +180,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
     };
+    private final AudioFocusRequest focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(PLAYBACK_ATTRIBUTE)
+            .setOnAudioFocusChangeListener(audioFocusListener)
+            .build();
 
     private QueueSaveHandler queueSaveHandler;
     private HandlerThread queueSaveHandlerThread;
@@ -585,7 +596,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private boolean requestFocus() {
-        return (getAudioManager().requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+        return (getAudioManager().requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
     }
 
     private void initNotification() {
