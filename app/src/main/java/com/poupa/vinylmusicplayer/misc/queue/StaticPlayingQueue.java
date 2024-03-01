@@ -74,7 +74,7 @@ public class StaticPlayingQueue {
             queue.get(i).setUniqueId(uniqueId);
 
             int index = queue.get(i).index;
-            if(index < originalQueue.size()) {
+            if (index >= 0 && index < originalQueue.size()) {
                 originalQueue.get(index).setUniqueId(uniqueId);
             }
         }
@@ -119,9 +119,9 @@ public class StaticPlayingQueue {
 
             if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
                 final int oldIndex = queue.get(i).index;
-                final int newIndex = queue.get(i).index + direction*(occurrence + 1);
-
+                final int newIndex = oldIndex + direction*(occurrence + 1);
                 queue.get(i).index = newIndex;
+
                 if (newIndex < 0) {
                     OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index, new=" + newIndex + " old=" + oldIndex));
                     break;
