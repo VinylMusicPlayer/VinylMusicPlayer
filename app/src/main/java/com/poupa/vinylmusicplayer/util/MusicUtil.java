@@ -130,7 +130,7 @@ public class MusicUtil {
     }
 
     @NonNull
-    public static String getPlaylistInfoString(@NonNull final Context context, @NonNull List<Song> songs) {
+    public static String getPlaylistInfoString(@NonNull final Context context, @NonNull List<? extends Song> songs) {
         final long duration = getTotalDuration(songs);
 
         return MusicUtil.buildInfoString(
@@ -156,7 +156,7 @@ public class MusicUtil {
         return year > 0 ? String.valueOf(year) : "-";
     }
 
-    public static long getTotalDuration(@NonNull List<Song> songs) {
+    public static long getTotalDuration(@NonNull List<? extends Song> songs) {
         long duration = 0;
         for (int i = 0; i < songs.size(); i++) {
             duration += songs.get(i).duration;

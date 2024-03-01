@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.loader.GenreLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
-import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.loader.SongLoader;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class SearchQueryHelper {
     }
 
     @NonNull
-    public static ArrayList<Song> getSongs(
+    public static List<? extends Song> getSongs(
             @Nullable final String focus,
             @NonNull final Bundle extras) {
         // First try known search metrics Genre and Playlist

@@ -21,12 +21,12 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.sort.SongSortOrder;
-import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -35,6 +35,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -45,7 +46,7 @@ public class SongAdapter
 {
 
     protected final AppCompatActivity activity;
-    protected ArrayList<Song> dataSet;
+    protected List<? extends Song> dataSet;
 
     protected final int itemLayoutRes;
 
@@ -55,12 +56,12 @@ public class SongAdapter
 
     public RecyclerView recyclerView;
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
                        boolean usePalette, @Nullable CabHolder cabHolder) {
         this(activity, dataSet, itemLayoutRes, usePalette, cabHolder, true);
     }
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
                        boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
@@ -77,7 +78,7 @@ public class SongAdapter
         recyclerView = rV;
     }
 
-    public void swapDataSet(ArrayList<Song> dataSet) {
+    public void swapDataSet(List<? extends Song> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
@@ -95,7 +96,7 @@ public class SongAdapter
         return this.showAlbumImage;
     }
 
-    public ArrayList<Song> getDataSet() {
+    public List<? extends Song> getDataSet() {
         return dataSet;
     }
 

@@ -11,7 +11,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jetbrains.annotations.NonNls;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -67,7 +67,7 @@ public class Playlist implements Parcelable {
     }
 
     @NonNull
-    public ArrayList<Song> getSongs(Context context) {
+    public List<? extends Song> getSongs(Context context) {
         // this default implementation covers static playlists
         StaticPlaylist staticPlaylist = new StaticPlaylist(name);
         return staticPlaylist.asSongs();

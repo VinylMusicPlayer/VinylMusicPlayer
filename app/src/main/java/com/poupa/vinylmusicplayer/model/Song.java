@@ -81,7 +81,7 @@ public class Song implements Parcelable {
         year = song.year;
     }
 
-    public boolean isQuickEqual(Song song) {
+    public boolean isQuickEqual(@NonNull final Song song) {
         return (id == song.id);
     }
 

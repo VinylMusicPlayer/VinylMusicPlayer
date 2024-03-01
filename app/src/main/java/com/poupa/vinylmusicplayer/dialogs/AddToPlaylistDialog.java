@@ -31,10 +31,10 @@ public class AddToPlaylistDialog extends DialogFragment {
     }
 
     @NonNull
-    public static AddToPlaylistDialog create(ArrayList<Song> songs) {
+    public static AddToPlaylistDialog create(List<? extends Song> songs) {
         AddToPlaylistDialog dialog = new AddToPlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(SONGS, songs);
+        args.putParcelableArrayList(SONGS, new ArrayList<>(songs));
         dialog.setArguments(args);
         return dialog;
     }

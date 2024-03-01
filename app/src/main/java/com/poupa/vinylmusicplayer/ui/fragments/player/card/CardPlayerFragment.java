@@ -31,7 +31,6 @@ import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
-import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
@@ -182,7 +181,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     }
 
     private void updateCurrentSong() {
-        impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
+        impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
 
         // give the adapter a chance to update the decoration
         recyclerView.getAdapter().notifyItemChanged(MusicPlayerRemote.getPosition());
@@ -286,7 +285,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     interface Impl {
         void init();
 
-        void updateCurrentSong(IndexedSong song);
+        void updateCurrentSong(@NonNull final Song song);
 
         void animateColorChange(final int newColor);
 
@@ -406,7 +405,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         }
 
         @Override
-        public void updateCurrentSong(IndexedSong song) {
+        public void updateCurrentSong(@NonNull final Song song) {
             currentSong = song;
             currentSongViewHolder.title.setText(song.title);
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
@@ -449,7 +448,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         }
 
         @Override
-        public void updateCurrentSong(IndexedSong song) {
+        public void updateCurrentSong(@NonNull final Song song) {
             fragment.toolbar.setTitle(song.title);
             fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
         }

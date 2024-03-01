@@ -37,6 +37,7 @@ import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
 
@@ -116,7 +117,7 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
-        final ArrayList<Song> songs = adapter.getDataSet();
+        final List<? extends Song> songs = adapter.getDataSet();
         if (id == R.id.action_add_to_current_playing) {
             MusicPlayerRemote.enqueue(songs);
             return true;

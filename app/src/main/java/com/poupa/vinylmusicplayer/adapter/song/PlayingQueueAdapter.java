@@ -35,7 +35,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -53,7 +53,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     private int current;
 
-    public PlayingQueueAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public PlayingQueueAdapter(AppCompatActivity activity, List<? extends Song> dataSet, int current, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
@@ -101,7 +101,7 @@ public class PlayingQueueAdapter extends SongAdapter
         return CURRENT;
     }
 
-    public void swapDataSet(ArrayList<Song> dataSet, int position) {
+    public void swapDataSet(List<? extends Song> dataSet, int position) {
         this.dataSet = dataSet;
         current = position;
         notifyDataSetChanged();

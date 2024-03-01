@@ -57,7 +57,7 @@ public class ImportFromPlaylistDialog extends DialogFragment {
                     .itemsCallback((materialDialog, view, i, charSequence) -> {
                         materialDialog.dismiss();
                         final Playlist sourcePlaylist = playlists.get(i).asPlaylist();
-                        final List<Song> songs = sourcePlaylist.getSongs(context);
+                        final List<? extends Song> songs = sourcePlaylist.getSongs(context);
                         if (songs.isEmpty()) {
                             SafeToast.show(context, R.string.playlist_is_empty);
                         } else {
