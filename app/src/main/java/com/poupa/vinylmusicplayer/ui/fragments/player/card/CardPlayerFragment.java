@@ -159,8 +159,9 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
 
     @Override
     public void onMediaStoreChanged() {
-        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue until restart
+        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
         // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
+        MusicPlayerRemote.onMediaStoreChanged();
         updateQueue();
     }
 

@@ -443,44 +443,50 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     void restoreQueuesAndPositionIfNecessary() {
         synchronized (this) {
             if (!queuesRestored && playingQueue.size() == 0) {
-                try {
-                    final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
-                    ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
-                    ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
-                    int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
-                    int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
-
-                    if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
-                        playingQueue = new StaticPlayingQueue(
-                                restoredQueue,
-                                restoredOriginalQueue,
-                                restoredPosition,
-                                playingQueue.getShuffleMode(),
-                                playingQueue.getRepeatMode()
-                        );
-
-                        openCurrent();
-                        prepareNext();
-
-                        if (restoredPositionInTrack > 0) {
-                            seek(restoredPositionInTrack);
-                        }
-
-                        notHandledMetaChangedForCurrentTrack = true;
-                        sendChangeInternal(META_CHANGED);
-                        sendChangeInternal(QUEUE_CHANGED);
-                    }
-                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
-                    // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                    OopsHandler.collectStackTrace(queueCopiesOutOfSync);
-                    SafeToast.show(this, R.string.failed_restore_playing_queue);
-
-                    final int shuffleMode = playingQueue.getShuffleMode();
-                    playingQueue = new StaticPlayingQueue();
-                    playingQueue.setShuffle(shuffleMode);
-                }
+                restoreQueuesAndPosition();
             }
             queuesRestored = true;
+        }
+    }
+
+    private void restoreQueuesAndPosition() {
+        synchronized (this) {
+            try {
+                final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
+                ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
+                ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
+                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
+                int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+
+                if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
+                    playingQueue = new StaticPlayingQueue(
+                            restoredQueue,
+                            restoredOriginalQueue,
+                            restoredPosition,
+                            playingQueue.getShuffleMode(),
+                            playingQueue.getRepeatMode()
+                    );
+
+                    openCurrent();
+                    prepareNext();
+
+                    if (restoredPositionInTrack > 0) {
+                        seek(restoredPositionInTrack);
+                    }
+
+                    notHandledMetaChangedForCurrentTrack = true;
+                    sendChangeInternal(META_CHANGED);
+                    sendChangeInternal(QUEUE_CHANGED);
+                }
+            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
+                // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
+                OopsHandler.collectStackTrace(queueCopiesOutOfSync);
+                SafeToast.show(this, R.string.failed_restore_playing_queue);
+
+                final int shuffleMode = playingQueue.getShuffleMode();
+                playingQueue = new StaticPlayingQueue();
+                playingQueue.setShuffle(shuffleMode);
+            }
         }
     }
 
@@ -1372,5 +1378,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 MusicUtil.getReadableDurationString(duration),
                 position + "/" + size
         );
+    }
+
+    public void onMediaStoreChanged() {
+        // If a song is removed from the MediaStore, or updated (tags edited)
+        // force reload the queues so that they reflects the latest change
+
+        saveQueuesImpl(); // synchronous save
+        savePosition();
+        savePositionInTrack();
+
+        restoreQueuesAndPosition();
     }
 }

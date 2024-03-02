@@ -119,6 +119,11 @@ public class MusicPlayerRemote {
         }
     }
 
+    public static void onMediaStoreChanged() {
+        if (musicService != null) {
+            musicService.onMediaStoreChanged();
+        }
+    }
     /**
      * Async
      */
@@ -367,7 +372,7 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void setShuffleMode(final int shuffleMode) {
+    private static void setShuffleMode(final int shuffleMode) {
         if (musicService != null) {
             musicService.setShuffleMode(shuffleMode);
         }
