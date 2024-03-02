@@ -316,7 +316,8 @@ public class MusicPlayerRemote {
 
     public static List<? extends Song> getPlayingQueue() {
         if (musicService != null) {
-            return musicService.getPlayingQueue();
+            // TODO Sure we need to make a copy?
+            return new ArrayList<>(musicService.getPlayingQueue());
         }
         return new ArrayList<>();
     }
