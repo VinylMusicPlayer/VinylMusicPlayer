@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.DynamicsProcessing;
@@ -84,7 +85,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             } else {
                 player.setDataSource(path);
             }
-            player.setAudioAttributes(MusicService.PLAYBACK_ATTRIBUTE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                player.setAudioAttributes(MusicService.PLAYBACK_ATTRIBUTE);
+            } else {
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
             player.prepare();
         } catch (Exception e) {
             return false;
