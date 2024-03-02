@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -41,6 +42,8 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverFetcher;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
@@ -62,6 +65,7 @@ import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -694,7 +698,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private void updateMediaSessionMetaData() {
         final Song song = getCurrentSong();
 
-        if (song.id == -1) {
+        if (song.id == Song.EMPTY_SONG.id) {
             mediaSession.setMetadata(null);
             return;
         }
@@ -713,49 +717,19 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playingQueue.size());
             }
         }
+
+        // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
+        //       or similar to the MediaSession to have a hi-res cover image displayed,
+        //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
+        final SongCoverFetcher fetcher = new SongCoverFetcher(new SongCover(song));
+        final InputStream data = fetcher.loadData();
+        if (data != null) {
+            final Bitmap bitmap = BitmapFactory.decodeStream(data);
+            metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
+        }
+
         mediaSession.setMetadata(metaData.build());
-
-//        // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
-//        //       or similar to the MediaSession to have a hi-res cover image displayed,
-//        //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
-//        final Point screenSize = Util.getScreenSize(this);
-//        GlideRequest<Bitmap> request = GlideApp.with(this)
-//                .asBitmap()
-//                .load(VinylGlideExtension.getSongModel(song))
-//                .transition(VinylGlideExtension.getDefaultTransition())
-//                .songOptions(song);
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
-//                    @Override
-//                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-//                        super.onLoadFailed(errorDrawable);
-//                        mediaSession.setMetadata(metaData.build());
-//                    }
-//
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-//                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-//                        mediaSession.setMetadata(metaData.build());
-//                    }
-//                });
-//            }
-//        });
-    }
-
-    static Bitmap copy(Bitmap bitmap) {
-        Bitmap.Config config = bitmap.getConfig();
-        if (config == null) {
-            config = Bitmap.Config.RGB_565;
-        }
-        try {
-            return bitmap.copy(config, false);
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+   }
 
     public void runOnUiThread(Runnable runnable) {
         uiThreadHandler.post(runnable);
