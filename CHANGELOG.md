@@ -1,16 +1,15 @@
 # Changelog
+
 ## [1.8.1] - 2024-03-04
 
 ### Fixes
 * Fix save playlist android9 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/944
-* Dangling unknown artist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/956
+* Fix dangling unknown artist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/956
 * Fix crash on select dupe song in playlist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/950
-* Restore previous code to maintain compat with different version of Android by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/968
-* Attempt to fix stale notification by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/961
-### Other Changes
-* Upgrade to gradle 8.2 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/941
-* Revert gradle-8.2 upgrade by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/955
+* Fix stale notification by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/961
 * Silence logcat warning about deprecated use of stream type by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/963
+
+### Other Changes
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.0...1.8.1
 
