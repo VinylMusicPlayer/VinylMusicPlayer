@@ -59,7 +59,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
         //StringBuilder stringBuilder = new StringBuilder();
         Gson gson = new Gson();
-        HashMap<String, Object> prefsMap = (HashMap<String, Object>) ((HashMap<String, Object>) sharedPreferences.getAll()).clone();
+        HashMap<String, Object> prefsMap = new HashMap<>(sharedPreferences.getAll());
 
         prefsMap.put("version_name", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
         prefsMap.put("version_code", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);

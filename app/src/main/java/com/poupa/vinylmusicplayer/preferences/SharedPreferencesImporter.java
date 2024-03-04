@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -67,27 +68,43 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor()));
             preferences = gson.fromJson(reader, Map.class);
 
-            for(Map.Entry<String, ?> entry : preferences.entrySet()) {
-                Object object = entry.getValue();
-                String key = entry.getKey();
-                if (object instanceof String) {
-                    spEditor.putString(key, (String) object);
-                } else if (object instanceof Long) {
-                    spEditor.putInt(key, object == null ? null : Math.toIntExact((Long) object));
-                } else if (object instanceof Boolean) {
-                    spEditor.putBoolean(key, (Boolean) object);
-                } else if (object instanceof Float) {
-                    spEditor.putFloat(key, (Float) object);
+            String fileFormat = (String) preferences.get("file_format");
+            int versionCode = (int) preferences.get("version_code");
+
+            if(fileFormat == "json" && versionCode == context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
+
+                for (Map.Entry<String, ?> entry : preferences.entrySet()) {
+
+                    if(entry.getKey() == "file_format" || entry.getKey() == "version_code") continue;
+
+                    Object object = entry.getValue();
+                    String key = entry.getKey();
+                    if (object instanceof String) {
+                        spEditor.putString(key, (String) object);
+                    } else if (object instanceof Long) {
+                        spEditor.putInt(key, object == null ? null : Math.toIntExact((Long) object));
+                    } else if (object instanceof Boolean) {
+                        spEditor.putBoolean(key, (Boolean) object);
+                    } else if (object instanceof Float) {
+                        spEditor.putFloat(key, (Float) object);
+                    }
                 }
+                reader.close();
+                file.close();
+
+            } else if (fileFormat != "json" && versionCode == context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
+                // Import as another format
+            } else if (fileFormat == "json" && versionCode != context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
+                // Settings migration
             }
-            reader.close();
-            file.close();
         }
         catch(IOException exception)
         {
             // An error happened while reading the file
             SafeToast.show(this.context, R.string.cannot_import_settings);
             OopsHandler.collectStackTrace(exception);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
         }
         spEditor.apply();
     }
