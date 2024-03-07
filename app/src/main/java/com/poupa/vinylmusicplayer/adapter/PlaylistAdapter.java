@@ -39,7 +39,7 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -174,7 +174,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
                 new SavePlaylistsAsyncTask(activity).execute(playlists);
             }
         } else {
-            SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values()), menuItem.getItemId());
+            SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values().iterator()), menuItem.getItemId());
         }
     }
 
@@ -222,11 +222,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     @NonNull
-    private ArrayList<Song> getSongList(@NonNull Collection<Playlist> playlists) {
+    private ArrayList<Song> getSongList(@NonNull Iterator<Playlist> playlists) {
         final ArrayList<Song> songs = new ArrayList<>();
-        for (Playlist playlist : playlists) {
-            songs.addAll(playlist.getSongs(activity));
-        }
+        playlists.forEachRemaining(playlist -> songs.addAll(playlist.getSongs(activity)));
         return songs;
     }
 

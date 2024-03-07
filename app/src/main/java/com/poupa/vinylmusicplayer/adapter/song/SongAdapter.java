@@ -34,6 +34,8 @@ import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -189,7 +191,10 @@ public class SongAdapter
 
     @Override
     protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Song> selection) {
-        SongsMenuHelper.handleMenuClick(activity, selection.values(), menuItem.getItemId());
+        // Intermediate copy to preserve the selection order
+        Collection<Song> songs = new ArrayList<>();
+        selection.values().iterator().forEachRemaining(song -> songs.add(song));
+        SongsMenuHelper.handleMenuClick(activity, songs, menuItem.getItemId());
     }
 
     @NonNull

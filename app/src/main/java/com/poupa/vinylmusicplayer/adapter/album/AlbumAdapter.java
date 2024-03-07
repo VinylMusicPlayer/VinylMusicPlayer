@@ -37,7 +37,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -183,15 +183,13 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     @Override
     protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Album> selection) {
-        SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values()), menuItem.getItemId());
+        SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values().iterator()), menuItem.getItemId());
     }
 
     @NonNull
-    private ArrayList<Song> getSongList(@NonNull Collection<Album> albums) {
+    private ArrayList<Song> getSongList(@NonNull Iterator<Album> albums) {
         final ArrayList<Song> songs = new ArrayList<>();
-        for (Album album : albums) {
-            songs.addAll(album.songs);
-        }
+        albums.forEachRemaining(album -> songs.addAll(album.songs));
         return songs;
     }
 

@@ -22,7 +22,7 @@ import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -74,10 +74,11 @@ public class OrderablePlaylistSongAdapter
     protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Song> selection) {
         if (menuItem.getItemId() == R.id.action_remove_from_playlist) {
             // Shifting by -1, since the very first item is the OFFSET_ITEM
-            final Map<Integer, Song> selectionWithShiftedPosition = new HashMap<>(selection.size());
-            for (Integer position : selection.keySet()) {
-                selectionWithShiftedPosition.put(position - 1, selection.get(position));
-            }
+            // Use LinkedHashMap to preserve the insertion order in the original selection
+            final Map<Integer, Song> selectionWithShiftedPosition = new LinkedHashMap<>(selection.size());
+            selection.keySet().iterator().forEachRemaining(
+                    position -> selectionWithShiftedPosition.put(position - 1, selection.get(position))
+            );
 
             RemoveFromPlaylistDialog
                     .create(playlistId, selectionWithShiftedPosition)
