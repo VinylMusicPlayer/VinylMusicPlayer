@@ -18,7 +18,7 @@ import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +30,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     @Nullable
     private final CabHolder cabHolder;
     private AttachedCab cab;
-    private final HashMap<Integer, I> checked;
+    private final LinkedHashMap<Integer, I> checked;
     private int menuRes;
     private final Context context;
 
@@ -38,7 +38,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;
-        checked = new HashMap<>();
+        checked = new LinkedHashMap<>();
         this.menuRes = menuRes;
         this.context = context;
     }
