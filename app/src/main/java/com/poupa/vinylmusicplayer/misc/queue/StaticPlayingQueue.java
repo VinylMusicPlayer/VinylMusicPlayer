@@ -69,13 +69,20 @@ public class StaticPlayingQueue {
 
     private void restoreUniqueId() {
         nextUniqueId = 0;
-        for (int i = 0; i < queue.size(); i++) {
+        final int queueSize = queue.size();
+        final int origQueueSize = queue.size();
+        if (queueSize != origQueueSize) {
+            OopsHandler.collectStackTrace(new IllegalArgumentException("Queues out of sync queueSize=" + queueSize + " origQueueSize=" + origQueueSize));
+        }
+        for (int i = 0; i < queueSize; i++) {
             long uniqueId = getNextUniqueId();
             queue.get(i).setUniqueId(uniqueId);
 
             int index = queue.get(i).index;
-            if (index >= 0 && index < originalQueue.size()) {
+            if (index >= 0 && index < origQueueSize) {
                 originalQueue.get(index).setUniqueId(uniqueId);
+            } else {
+                OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index=" + index + " queueSize=" + origQueueSize));
             }
         }
     }
@@ -114,7 +121,8 @@ public class StaticPlayingQueue {
     }
 
     private void updateQueueIndexesAfterSongsModification(int position, int occurrence, int previousPosition, int direction) {
-        for (int i = 0; i < queue.size(); i++) {
+        final int queueSize = queue.size();
+        for (int i = 0; i < queueSize; i++) {
             originalQueue.get(i).index = i;
 
             if (!(i >= position && i <= position+occurrence) && queue.get(i).index >= previousPosition  ) {
@@ -122,8 +130,8 @@ public class StaticPlayingQueue {
                 final int newIndex = oldIndex + direction*(occurrence + 1);
                 queue.get(i).index = newIndex;
 
-                if (newIndex < 0) {
-                    OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index, new=" + newIndex + " old=" + oldIndex));
+                if (newIndex < 0 || newIndex >= queueSize) {
+                    OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index, new=" + newIndex + " old=" + oldIndex + " queueSize=" + queueSize));
                     break;
                 }
             }

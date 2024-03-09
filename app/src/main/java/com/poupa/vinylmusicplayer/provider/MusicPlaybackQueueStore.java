@@ -162,12 +162,17 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
 
         final int NUM_PROCESS = 20;
         int position = 0;
-        while (position < queue.size()) {
+        final int queueSize = queue.size();
+        while (position < queueSize) {
             database.beginTransaction();
             try {
-                for (int i = position; i < queue.size() && i < position + NUM_PROCESS; i++) {
+                for (int i = position; i < queueSize && i < position + NUM_PROCESS; i++) {
                     Song song = queue.get(i);
                     int indexInQueue = queue.get(i).index;
+                    //if (indexInQueue < 0 || indexInQueue >= queueSize) {
+                    //    OopsHandler.collectStackTrace(new IllegalArgumentException("Bad index=" + indexInQueue + " queueSize=" + queueSize));
+                    //    break;
+                    //}
                     ContentValues values = new ContentValues();
 
                     values.put(BaseColumns._ID, song.id);
