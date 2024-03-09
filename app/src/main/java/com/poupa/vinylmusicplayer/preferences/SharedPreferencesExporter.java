@@ -57,17 +57,12 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     }
 
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
-        //StringBuilder stringBuilder = new StringBuilder();
         Gson gson = new Gson();
         HashMap<String, Object> prefsMap = new HashMap<>(sharedPreferences.getAll());
 
         prefsMap.put("version_name", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-        prefsMap.put("version_code", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
-        prefsMap.put("file_format", "json");
-
-        //for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            //stringBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
-        //}
+        prefsMap.put(SharedPreferencesImporter.VERSION_CODE, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+        prefsMap.put(SharedPreferencesImporter.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
 
         // Write all lines in the export file
         try {
@@ -77,7 +72,6 @@ public class SharedPreferencesExporter extends AppCompatActivity {
 
             // Write all lines in the file
             FileWriter writer = new FileWriter(file.getFileDescriptor());
-            //writer.write(stringBuilder.toString());
             writer.write(gson.toJson(prefsMap));
             writer.close();
             file.close();

@@ -336,12 +336,6 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             final TwoStatePreference whitelistEnabled = findPreference(PreferenceUtil.WHITELIST_ENABLED);
             if (whitelistEnabled != null) {
                 whitelistEnabled.setChecked(PreferenceUtil.getInstance().getWhitelistEnabled());
-                whitelistEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
-                    // Save preference
-                    //PreferenceUtil.getInstance().setRememberShuffle((Boolean) newValue);
-
-                    return true;
-                });
             }
 
             final ATEColorPreference primaryColorPref = findPreference(ThemeStore.KEY_PRIMARY_COLOR);

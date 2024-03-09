@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -36,6 +37,13 @@ public class SharedPreferencesImporter extends AppCompatActivity {
     private ActivityResultLauncher importFilePicker;
 
     private SharedPreferences sharedPreferences;
+
+    static final String FILE_FORMAT = "file_format";
+    static final String VERSION_CODE = "version_code";
+    static final String CURRENT_FILE_FORMAT = "json";
+
+    static final int minCompatibleVersion = 192;
+    static final int maxCompatibleVersion = Integer.MAX_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,43 +76,44 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor()));
             preferences = gson.fromJson(reader, Map.class);
 
-            String fileFormat = (String) preferences.get("file_format");
-            int versionCode = (int) preferences.get("version_code");
+            String fileFormat = (String) preferences.get(FILE_FORMAT);
+            int savedPrefsVersionCode = (int) preferences.get(VERSION_CODE);
 
-            if(fileFormat == "json" && versionCode == context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
+            // Checks whether the file format saved in the preferences file is compatible with the current settings parser.
+            if(Objects.equals(fileFormat, CURRENT_FILE_FORMAT)) {
+                // Checks whether the version of the app and the saved settings are compatible.
+                if(minCompatibleVersion <= savedPrefsVersionCode && savedPrefsVersionCode <= maxCompatibleVersion) {
+                    for (Map.Entry<String, ?> entry : preferences.entrySet()) {
+                        if (Objects.equals(entry.getKey(), FILE_FORMAT) || Objects.equals(entry.getKey(), VERSION_CODE)) continue;
 
-                for (Map.Entry<String, ?> entry : preferences.entrySet()) {
-
-                    if(entry.getKey() == "file_format" || entry.getKey() == "version_code") continue;
-
-                    Object object = entry.getValue();
-                    String key = entry.getKey();
-                    if (object instanceof String) {
-                        spEditor.putString(key, (String) object);
-                    } else if (object instanceof Long) {
-                        spEditor.putInt(key, object == null ? null : Math.toIntExact((Long) object));
-                    } else if (object instanceof Boolean) {
-                        spEditor.putBoolean(key, (Boolean) object);
-                    } else if (object instanceof Float) {
-                        spEditor.putFloat(key, (Float) object);
+                        Object object = entry.getValue();
+                        String key = entry.getKey();
+                        if (object instanceof String) {
+                            spEditor.putString(key, (String) object);
+                        } else if (object instanceof Long) {
+                            spEditor.putInt(key, Math.toIntExact((Long) object));
+                        } else if (object instanceof Boolean) {
+                            spEditor.putBoolean(key, (Boolean) object);
+                        } else if (object instanceof Float) {
+                            spEditor.putFloat(key, (Float) object);
+                        }
                     }
+                    reader.close();
+                    file.close();
+                } else {
+                    // Future version of the app needs to come back here and provide importer/converter code
+                    SafeToast.show(this.context, R.string.unsupported_saved_pref_version);
                 }
-                reader.close();
-                file.close();
 
-            } else if (fileFormat != "json" && versionCode == context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
-                // Import as another format
-            } else if (fileFormat == "json" && versionCode != context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode) {
-                // Settings migration
+            } else {
+                // Future version of the app needs to come back here and provide importer/converter code
+                SafeToast.show(this.context, R.string.unsupported_saved_pref_format);
             }
         }
-        catch(IOException exception)
-        {
+        catch(IOException exception) {
             // An error happened while reading the file
             SafeToast.show(this.context, R.string.cannot_import_settings);
             OopsHandler.collectStackTrace(exception);
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
         }
         spEditor.apply();
     }
