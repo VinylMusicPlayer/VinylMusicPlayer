@@ -186,9 +186,10 @@ public class StaticPlayingQueue {
         for (int i = n; i >= 0; i--) {
             int newPosition = previousPosition + i;
             long uniqueId = getNextUniqueId();
-            final IndexedSong indexedSong = new IndexedSong(songsAsList.get(i), newPosition, uniqueId);
-            originalQueue.add(previousPosition, indexedSong);
-            queue.add(position, indexedSong);
+
+            // Note: Two separate copies in for two queues
+            originalQueue.add(previousPosition, new IndexedSong(songsAsList.get(i), newPosition, uniqueId));
+            queue.add(position, new IndexedSong(songsAsList.get(i), newPosition, uniqueId));
 
             if (position <= this.currentPosition) {
                 this.currentPosition++;
