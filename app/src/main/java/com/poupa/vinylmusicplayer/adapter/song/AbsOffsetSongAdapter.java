@@ -19,33 +19,36 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Eugene Cheung (arkon)
  */
 public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
-    protected static final int OFFSET_ITEM = 0;
-    protected static final int SONG = 1;
+    static final int OFFSET_ITEM = 0;
+    private static final int SONG = 1;
 
     // Need to be different from RecyclerView.NO_ID to not to upset the base class
     protected static final long OFFSET_ITEM_ID = RecyclerView.NO_ID - 1;
 
-    public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes, boolean usePalette, @Nullable CabHolder cabHolder) {
+    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
+                                @LayoutRes final int itemLayoutRes,
+                                final boolean usePalette, @Nullable final CabHolder cabHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
     }
 
-    public AbsOffsetSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, boolean usePalette,
-                                @Nullable CabHolder cabHolder, boolean showSectionName) {
+    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
+                                final boolean usePalette, @Nullable final CabHolder cabHolder,
+                                final boolean showSectionName) {
         super(activity, dataSet, R.layout.item_list, usePalette, cabHolder, showSectionName);
     }
 
     @NonNull
     @Override
-    public SongAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SongAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         if (viewType == OFFSET_ITEM) {
-            ItemListSingleRowBinding binding = ItemListSingleRowBinding.inflate(LayoutInflater.from(activity), parent, false);
+            final ItemListSingleRowBinding binding = ItemListSingleRowBinding.inflate(LayoutInflater.from(activity), parent, false);
             return createViewHolder(binding);
         }
         return super.onCreateViewHolder(parent, viewType);
@@ -53,28 +56,29 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListSingleRowBinding binding) {
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull final ItemListSingleRowBinding binding) {
         return new AbsOffsetSongAdapter.ViewHolder(binding);
     }
 
     @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemListBinding binding) {
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull final ItemListBinding binding) {
         return new AbsOffsetSongAdapter.ViewHolder(binding);
     }
 
     @NonNull
     @Override
-    protected SongAdapter.ViewHolder createViewHolder(@NonNull ItemGridBinding binding) {
+    protected SongAdapter.ViewHolder createViewHolder(@NonNull final ItemGridBinding binding) {
         return new AbsOffsetSongAdapter.ViewHolder(binding);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         // Shifting by -1, since the very first item is the OFFSET_ITEM
-        position--;
+        final int adjustedPosition = position - 1;
+        if (adjustedPosition < 0) {return OFFSET_ITEM_ID;}
 
-        return (position < 0 ? OFFSET_ITEM_ID : super.getItemId(position));
+        return super.getItemId(adjustedPosition);
     }
 
     @Nullable
@@ -92,7 +96,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType(final int position) {
         return position == 0 ? OFFSET_ITEM : SONG;
     }
 
@@ -105,27 +109,29 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     }
 
     public class ViewHolder extends SongAdapter.ViewHolder {
-        public ViewHolder(@NonNull ItemListSingleRowBinding binding) {
+        public ViewHolder(@NonNull final ItemListSingleRowBinding binding) {
             super(binding);
         }
 
-        public ViewHolder(@NonNull ItemListBinding binding) {
+        public ViewHolder(@NonNull final ItemListBinding binding) {
             super(binding);
         }
 
-        public ViewHolder(@NonNull ItemGridBinding binding) {
+        public ViewHolder(@NonNull final ItemGridBinding binding) {
             super(binding);
         }
 
+        @NonNull
         @Override
         protected Song getSong() {
-            if (getItemViewType() == OFFSET_ITEM)
-                return Song.EMPTY_SONG; // could also return null, just to be safe return empty song
+            if (getItemViewType() == OFFSET_ITEM) {
+                return Song.EMPTY_SONG;
+            }
             return dataSet.get(getBindingAdapterPosition() - 1);
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (isInQuickSelectMode() && getItemViewType() != OFFSET_ITEM) {
                 toggleChecked(getBindingAdapterPosition());
             } else {
@@ -134,7 +140,7 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
         }
 
         @Override
-        public boolean onLongClick(View view) {
+        public boolean onLongClick(final View view) {
             if (getItemViewType() == OFFSET_ITEM) return false;
             setColor(ThemeStore.primaryColor(activity));
             toggleChecked(getBindingAdapterPosition());

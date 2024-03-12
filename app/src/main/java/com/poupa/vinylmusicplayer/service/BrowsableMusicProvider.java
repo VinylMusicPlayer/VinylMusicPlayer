@@ -306,7 +306,7 @@ public class BrowsableMusicProvider {
 
     @NonNull
     private List<MediaBrowserCompat.MediaItem> getSpecificPlaylistChildren(@NonNull Resources resources, @NonNull String path) {
-        List<Song> songs = null;
+        List<? extends Song> songs = null;
         String[] pathParts = null;
         switch (path) {
             case BrowsableMediaIDHelper.MEDIA_ID_MUSICS_BY_LAST_ADDED:
@@ -357,7 +357,7 @@ public class BrowsableMusicProvider {
 
     private <T> void buildMediaItemsFromList(
             @NonNull List<MediaBrowserCompat.MediaItem> destination,
-            @Nullable List<T> source,
+            @Nullable List<? extends T> source,
             int startPosition,
             String[] pathParts,
             Function<T, Long> pathIdExtractor,
@@ -370,7 +370,7 @@ public class BrowsableMusicProvider {
     ) {
         if (source == null) {return;}
 
-        final List<T> truncatedSource = truncatedList(source, startPosition);
+        final List<? extends T> truncatedSource = truncatedList(source, startPosition);
         for (T item : truncatedSource) {
             BrowsableMediaItem.Builder builder = BrowsableMediaItem.with(mContext)
                     .path(pathParts, pathIdExtractor.apply(item))
@@ -395,7 +395,7 @@ public class BrowsableMusicProvider {
     }
 
     @NonNull
-    private static <T> List<T> truncatedList(@NonNull List<T> songs, int startPosition) {
+    private static <T> List<? extends T> truncatedList(@NonNull List<T> songs, int startPosition) {
         // As per https://developer.android.com/training/cars/media
         // Android Auto and Android Automotive OS have strict limits on how many media items they can display in each level of the menu
         final int LISTING_SIZE_LIMIT = 50;

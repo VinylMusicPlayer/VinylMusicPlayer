@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -188,22 +189,24 @@ class MemCache {
             return artist;
         };
 
-        Set<String> names = new HashSet<>();
+        final LinkedHashSet<String> names = new LinkedHashSet<>(); // ordered and unique list of names
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
         if (names.size() > 1) {
             // after merging one empty and one non-empty artists lists,
             // we end up with a list containing an empty element
             // remove it if that's the case
-            names.remove("");
+            names.remove(Artist.EMPTY.name);
         }
-        Set<Artist> artists = new HashSet<>();
+        final Set<Artist> artists = new HashSet<>(names.size());
+        Artist mainArtist = Artist.EMPTY;
         for (final String name : names) {
-            artists.add(getOrCreateArtist.apply(name));
+            final Artist artist = getOrCreateArtist.apply(name);
+            if (mainArtist.id == Artist.EMPTY.id) {mainArtist = artist;}
+            artists.add(artist);
         }
 
         // Since the MediaStore artistId is disregarded, correct the link on the Song object
-        Artist mainArtist = getOrCreateArtist.apply(song.artistNames.get(0));
         song.artistId = mainArtist.getId();
 
         return artists;

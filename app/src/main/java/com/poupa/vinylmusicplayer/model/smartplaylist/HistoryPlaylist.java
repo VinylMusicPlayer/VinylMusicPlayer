@@ -60,7 +60,7 @@ public class HistoryPlaylist extends AbsSmartPlaylist {
 
     @Override
     public void importPlaylist(@NonNull Context context, @NonNull Playlist playlist) {
-        List<Song> songs = playlist.getSongs(context);
+        List<? extends Song> songs = playlist.getSongs(context);
         List<Long> songIds = new ArrayList<>(songs.size());
         for (Song song : songs) {songIds.add(song.id);}
 

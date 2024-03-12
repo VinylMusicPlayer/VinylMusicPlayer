@@ -20,6 +20,7 @@ import com.poupa.vinylmusicplayer.misc.CustomFragmentStatePagerAdapter;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -31,7 +32,7 @@ public class AlbumCoverPagerAdapter extends CustomFragmentStatePagerAdapter {
     private AlbumCoverFragment.ColorReceiver currentColorReceiver;
     private int currentColorReceiverPosition = -1;
 
-    public AlbumCoverPagerAdapter(FragmentManager fm, ArrayList<Song> dataSet) {
+    public AlbumCoverPagerAdapter(FragmentManager fm, List<? extends Song> dataSet) {
         super(fm);
         // Make a copy to avoid race condition
         // i.e. the playing queue is modified, the UI code detects the change and crash

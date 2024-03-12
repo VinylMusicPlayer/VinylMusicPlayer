@@ -14,6 +14,7 @@ import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistSongLoader {
     @NonNull
@@ -43,7 +44,7 @@ public class PlaylistSongLoader {
      * @return Song list from the playlist found by search term
      */
     @NonNull
-    public static ArrayList<Song> getPlaylistSongList(
+    public static List<? extends Song> getPlaylistSongList(
             @NonNull final String playlistNameSearchTerm)
     {
         // Find closest match

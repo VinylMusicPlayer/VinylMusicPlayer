@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.glide.audiocover;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Priority;
 import com.poupa.vinylmusicplayer.App;
@@ -14,7 +15,6 @@ import org.jaudiotagger.tag.images.Artwork;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.MissingResourceException;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -30,27 +30,31 @@ public class SongCoverFetcher extends AbsCoverFetcher {
 
     @Override
     public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        try (AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(App.getStaticContext(), model.song)) {
-            if (audio == null) {
-                callback.onLoadFailed(new IOException("Cannot load audio file"));
-                return;
-            }
+        final InputStream data = loadData();
+        if (data == null) {
+            callback.onLoadFailed(new IOException("Cannot load artwork"));
+        } else {
+            callback.onDataReady(data);
+        }
+    }
 
-            Tag tags = audio.get().getTag();
+    @Nullable
+    public InputStream loadData() {
+        try (final AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(App.getStaticContext(), model.song)) {
+            if (audio == null) {return null;}
+
+            final Tag tags = audio.get().getTag();
             if (tags != null) {
-                Artwork art = tags.getFirstArtwork();
+                final Artwork art = tags.getFirstArtwork();
                 if (art != null) {
-                    byte[] imageData = art.getBinaryData();
-                    callback.onDataReady(new ByteArrayInputStream(imageData));
-                    return;
+                    final byte[] imageData = art.getBinaryData();
+                    return new ByteArrayInputStream(imageData);
                 }
             }
-            InputStream data = fallback(model.song.data);
-            if (data != null) {callback.onDataReady(data);}
-            else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
-        } catch (Exception e) {
+            return fallback(model.song.data);
+        } catch (final Exception e) {
             OopsHandler.collectStackTrace(e);
-            callback.onLoadFailed(e);
+            return null;
         }
     }
 }

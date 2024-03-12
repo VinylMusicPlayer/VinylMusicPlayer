@@ -10,8 +10,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
+import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.os.Binder;
@@ -31,20 +32,18 @@ import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.util.Predicate;
 import androidx.media.MediaBrowserServiceCompat;
 
-import com.bumptech.glide.request.transition.Transition;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.glide.GlideApp;
-import com.poupa.vinylmusicplayer.glide.GlideRequest;
-import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
-import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
+import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverFetcher;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
@@ -65,8 +64,8 @@ import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
-import com.poupa.vinylmusicplayer.util.Util;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -138,6 +137,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final int SAVE_QUEUES = 0;
     private static final int SKIP_THRESHOLD_MS = 5000;
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    static final AudioAttributes PLAYBACK_ATTRIBUTE = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build();
+
     private final IBinder musicBind = new MusicBinder();
 
     public boolean pendingQuit = false;
@@ -173,6 +178,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
     };
+    @RequiresApi(Build.VERSION_CODES.O)
+    private final AudioFocusRequest focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(PLAYBACK_ATTRIBUTE)
+            .setOnAudioFocusChangeListener(audioFocusListener)
+            .build();
 
     private QueueSaveHandler queueSaveHandler;
     private HandlerThread queueSaveHandlerThread;
@@ -299,7 +309,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     case ACTION_PLAY_PLAYLIST:
                         Playlist playlist = intent.getParcelableExtra(INTENT_EXTRA_PLAYLIST);
                         if (playlist != null) {
-                            ArrayList<Song> playlistSongs = playlist.getSongs(this);
+                            List<? extends Song> playlistSongs = playlist.getSongs(this);
                             if (!playlistSongs.isEmpty()) {
                                 synchronized (this) {
                                     int shuffleMode = intent.getIntExtra(INTENT_EXTRA_SHUFFLE_MODE, playingQueue.getShuffleMode());
@@ -343,6 +353,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
+
         unregisterReceiver(widgetIntentReceiver);
         unregisterReceiver(updateFavoriteReceiver);
 
@@ -506,7 +518,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 return false;
             }
 
-            return getCurrentIndexedSong().isQuickEqual(song);
+            return getCurrentSong().isQuickEqual(song);
         }
     }
 
@@ -585,7 +597,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private boolean requestFocus() {
-        return (getAudioManager().requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return (getAudioManager().requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+        } else {
+            return (getAudioManager().requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+        }
     }
 
     private void initNotification() {
@@ -612,15 +628,17 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 R.string.report_a_crash_invitation);
     }
 
-    void updateNotification() {
-        if (getCurrentSong().id != Song.EMPTY_SONG.id) {
+    private void updateNotification() {
+        if (!getPlayingQueue().isEmpty()) {
             idleNotification.stop();
             playingNotification.update();
         } else {
             playingNotification.stop();
             idleNotification.update();
         }
+    }
 
+    private void updateCrashNotification() {
         final List<String> crashReports = PreferenceUtil.getInstance().getOopsHandlerReports();
         if (crashReports != null && !crashReports.isEmpty()) {
             crashNotification.update();
@@ -680,7 +698,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private void updateMediaSessionMetaData() {
         final Song song = getCurrentSong();
 
-        if (song.id == -1) {
+        if (song.id == Song.EMPTY_SONG.id) {
             mediaSession.setMetadata(null);
             return;
         }
@@ -703,55 +721,22 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         // Note: For Android Auto and for Android 13, it is necessary to provide METADATA_KEY_ALBUM_ART
         //       or similar to the MediaSession to have a hi-res cover image displayed,
         //       respectively on the Auto's now playing screen and Android 13's now playing notification/lockscreen
-        final Point screenSize = Util.getScreenSize(this);
-        GlideRequest<Bitmap> request = GlideApp.with(this)
-                .asBitmap()
-                .load(VinylGlideExtension.getSongModel(song))
-                .transition(VinylGlideExtension.getDefaultTransition())
-                .songOptions(song);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                request.into(new VinylSimpleTarget<Bitmap>(screenSize.x, screenSize.y) {
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        mediaSession.setMetadata(metaData.build());
-                    }
-
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> glideAnimation) {
-                        metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, copy(resource));
-                        mediaSession.setMetadata(metaData.build());
-                    }
-                });
-            }
-        });
-    }
-
-    static Bitmap copy(Bitmap bitmap) {
-        Bitmap.Config config = bitmap.getConfig();
-        if (config == null) {
-            config = Bitmap.Config.RGB_565;
+        final SongCoverFetcher fetcher = new SongCoverFetcher(new SongCover(song));
+        final InputStream data = fetcher.loadData();
+        if (data != null) {
+            final Bitmap bitmap = BitmapFactory.decodeStream(data);
+            metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap);
         }
-        try {
-            return bitmap.copy(config, false);
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
+        mediaSession.setMetadata(metaData.build());
+   }
 
     public void runOnUiThread(Runnable runnable) {
         uiThreadHandler.post(runnable);
     }
 
     public Song getCurrentSong() {
-        return getCurrentIndexedSong();
-    }
-
-    public IndexedSong getCurrentIndexedSong() {
-        return getIndexedSongAt(getPosition());
+        return getSongAt(getPosition());
     }
 
     private Song getSongAt(int position) {
@@ -774,9 +759,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public ArrayList<Song> getPlayingQueue() {
+    public List<? extends Song> getPlayingQueue() {
         synchronized (this) {
-            return playingQueue.getPlayingQueueSongOnly();
+            return playingQueue.getPlayingQueue();
         }
     }
 
@@ -837,7 +822,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         propagateShuffleChange();
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
         int position;
         if (queue != null && shuffleMode != SHUFFLE_MODE_NONE && startPosition == RANDOM_START_POSITION_ON_SHUFFLE) {
             position = new Random().nextInt(queue.size());
@@ -857,7 +842,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         synchronized (this) {
             openQueue(queue, startPosition, startPlaying, playingQueue.getShuffleMode());
         }
@@ -877,7 +862,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongsAfter(int position, List<Song> songs) {
+    public void addSongsAfter(int position, List<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAllAfter(position, songs);
         }
@@ -891,7 +876,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongs(List<Song> songs) {
+    public void addSongs(List<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAll(songs);
             notifyChange(QUEUE_CHANGED);
@@ -1243,9 +1228,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 }
                 break;
             case PreferenceUtil.COLORED_NOTIFICATION:
+                updateNotification();
+                break;
             case PreferenceUtil.OOPS_HANDLER_ENABLED:
             case PreferenceUtil.OOPS_HANDLER_EXCEPTIONS:
-                updateNotification();
+                updateCrashNotification();
                 break;
             case PreferenceUtil.CLASSIC_NOTIFICATION:
                 initNotification();

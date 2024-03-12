@@ -54,10 +54,10 @@ public class DeleteSongsDialogApi30 extends Fragment {
     }
 
     @NonNull
-    public static DeleteSongsDialogApi30 create(ArrayList<Song> songs) {
+    public static DeleteSongsDialogApi30 create(List<? extends Song> songs) {
         DeleteSongsDialogApi30 dialog = new DeleteSongsDialogApi30();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(SONGS, songs);
+        args.putParcelableArrayList(SONGS, new ArrayList<>(songs));
         dialog.setArguments(args);
         return dialog;
     }

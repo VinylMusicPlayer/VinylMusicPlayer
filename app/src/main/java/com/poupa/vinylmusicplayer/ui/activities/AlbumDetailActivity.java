@@ -54,7 +54,7 @@ import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -274,7 +274,7 @@ public class AlbumDetailActivity
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int id = item.getItemId();
-        final ArrayList<Song> songs = adapter.getDataSet();
+        final List<? extends Song> songs = adapter.getDataSet();
         if (id == R.id.action_sleep_timer) {
             new SleepTimerDialog().show(getSupportFragmentManager(), "SET_SLEEP_TIMER");
             return true;

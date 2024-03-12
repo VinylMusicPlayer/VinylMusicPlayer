@@ -85,7 +85,11 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
             } else {
                 player.setDataSource(path);
             }
-            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                player.setAudioAttributes(MusicService.PLAYBACK_ATTRIBUTE);
+            } else {
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
             player.prepare();
         } catch (Exception e) {
             return false;
