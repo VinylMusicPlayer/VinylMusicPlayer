@@ -1,4 +1,21 @@
 # Changelog
+## [1.8.2] - 2024-03-13
+
+### Features
+* Monochrome icon by @ByteHamster in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/971
+### Fixes
+* Fix crash on init with API 19 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/982
+### Other Changes
+* Resolve "Android 8: Unnecessary "Vinyl is running" notification #952" by @AutomaticUpdates in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/978
+* feat(translations): add missing Dutch strings by @AnonymousWP in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/977
+* Revert "feat(translations): add missing Dutch strings" by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/981
+
+## New Contributors
+* @ByteHamster made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/971
+* @AutomaticUpdates made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/978
+* @AnonymousWP made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/977
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.1...1.8.2
 
 ## [1.8.1] - 2024-03-04
 
