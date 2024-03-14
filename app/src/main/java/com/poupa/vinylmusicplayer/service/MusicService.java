@@ -452,6 +452,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private void restoreQueuesAndPosition() {
         synchronized (this) {
             try {
+                // The current playing song
+                final var playingSong = getCurrentSong();
+
+                // The saved state
                 final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
                 ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
                 ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
@@ -467,13 +471,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                             playingQueue.getRepeatMode()
                     );
 
-                    openCurrent();
+                    // Before altering the player state, check that it is really necessary
+                    // ie. we are changing song in between
+                    // This prevents changing the player state, as it will stop the playback
+                    if (!getCurrentSong().isQuickEqual(playingSong)) {
+                        if (openCurrent() && (restoredPositionInTrack > 0)) {
+                            seek(restoredPositionInTrack);
+                        }
+                    } // else just continue the playback till end of the song
+
                     prepareNext();
-
-                    if (restoredPositionInTrack > 0) {
-                        seek(restoredPositionInTrack);
-                    }
-
                     notHandledMetaChangedForCurrentTrack = true;
                     sendChangeInternal(META_CHANGED);
                     sendChangeInternal(QUEUE_CHANGED);
@@ -1391,9 +1398,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             savePosition();
             savePositionInTrack();
 
-            final boolean wasPlaying = isPlaying();
-            restoreQueuesAndPosition(); // TODO This will update the player, hence stops playing
-            if (wasPlaying) {play();}
+            restoreQueuesAndPosition();
         }
     }
 }
