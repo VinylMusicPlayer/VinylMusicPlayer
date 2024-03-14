@@ -198,6 +198,7 @@
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
     <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
     <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
+    <string name="pref_title_queue_sync_with_media_store">Sync queue with media tag updates</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>

@@ -1388,7 +1388,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void onMediaStoreChanged() {
-        final boolean resync = false; // TODO Feature toggle, get from settings
+        final boolean resync = PreferenceUtil.getInstance().isQueueSyncWithMediaStoreEnabled();
         if (resync) {
             // If a song is removed from the MediaStore, or updated (tags edited)
             // reload the queues so that they reflects the latest change
