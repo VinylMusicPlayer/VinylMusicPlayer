@@ -1381,16 +1381,19 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     public void onMediaStoreChanged() {
-        // If a song is removed from the MediaStore, or updated (tags edited)
-        // reload the queues so that they reflects the latest change
-        // TODO We run into this code even when a playlist is added/modified -> Find a way to filter that event
+        final boolean resync = false; // TODO Feature toggle, get from settings
+        if (resync) {
+            // If a song is removed from the MediaStore, or updated (tags edited)
+            // reload the queues so that they reflects the latest change
+            // TODO We run into this code even when a playlist is added/modified -> Find a way to filter that event
 
-        saveQueuesImpl(); // synchronous save
-        savePosition();
-        savePositionInTrack();
+            saveQueuesImpl(); // synchronous save
+            savePosition();
+            savePositionInTrack();
 
-        final boolean wasPlaying = isPlaying();
-        restoreQueuesAndPosition(); // TODO This will update the player, hence stops playing
-        if (wasPlaying) {play();}
+            final boolean wasPlaying = isPlaying();
+            restoreQueuesAndPosition(); // TODO This will update the player, hence stops playing
+            if (wasPlaying) {play();}
+        }
     }
 }
