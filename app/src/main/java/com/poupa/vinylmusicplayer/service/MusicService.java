@@ -125,7 +125,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final int FOCUS_CHANGE = 6;
     static final int DUCK = 7;
     static final int UNDUCK = 8;
-    static final int RESTORE_QUEUES = 9;
 
     public static final int RANDOM_START_POSITION_ON_SHUFFLE = StaticPlayingQueue.INVALID_POSITION;
     public static final int SHUFFLE_MODE_NONE = StaticPlayingQueue.SHUFFLE_MODE_NONE;
@@ -135,7 +134,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int REPEAT_MODE_ALL = StaticPlayingQueue.REPEAT_MODE_ALL;
     public static final int REPEAT_MODE_THIS = StaticPlayingQueue.REPEAT_MODE_THIS;
 
-    static final int SAVE_QUEUES = 0;
     private static final int SKIP_THRESHOLD_MS = 5000;
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -419,8 +417,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void saveQueues() {
-        queueSaveHandler.removeMessages(SAVE_QUEUES);
-        queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
+        queueSaveHandler.removeMessages(QueueSaveHandler.SAVE_QUEUES);
+        queueSaveHandler.sendEmptyMessage(QueueSaveHandler.SAVE_QUEUES);
     }
 
     private void restoreState() {
@@ -430,9 +428,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             playingQueue.restoreMode(shuffleMode, repeateMode);
 
-            if (playbackHandlerThread.isAlive()) {
-                playbackHandler.removeMessages(RESTORE_QUEUES);
-                playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
+            if (queueSaveHandlerThread.isAlive()) {
+                queueSaveHandler.removeMessages(QueueSaveHandler.RESTORE_QUEUES);
+                queueSaveHandler.sendEmptyMessage(QueueSaveHandler.RESTORE_QUEUES);
             }
         }
 
@@ -449,7 +447,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    private void restoreQueuesAndPosition() {
+    void restoreQueuesAndPosition() {
         synchronized (this) {
             try {
                 // The current playing song
@@ -1394,11 +1392,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             // reload the queues so that they reflects the latest change
             // TODO We run into this code even when a playlist is added/modified -> Find a way to filter that event
 
-            saveQueuesImpl(); // synchronous save
-            savePosition();
-            savePositionInTrack();
-
-            restoreQueuesAndPosition();
+            saveState();
+            restoreState();
         }
     }
 }

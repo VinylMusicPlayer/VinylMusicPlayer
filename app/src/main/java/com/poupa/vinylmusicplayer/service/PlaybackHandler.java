@@ -91,10 +91,6 @@ final class PlaybackHandler extends Handler {
                 service.prepareNextImpl();
                 break;
 
-            case MusicService.RESTORE_QUEUES:
-                service.restoreQueuesAndPositionIfNecessary();
-                break;
-
             case MusicService.FOCUS_CHANGE:
                 switch (msg.arg1) {
                     case AudioManager.AUDIOFOCUS_GAIN:
