@@ -77,7 +77,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             preferences = gson.fromJson(reader, Map.class);
 
             String fileFormat = (String) preferences.get(FILE_FORMAT);
-            int savedPrefsVersionCode = (int) preferences.get(VERSION_CODE);
+            int savedPrefsVersionCode = Math.toIntExact((Long) preferences.get(VERSION_CODE));
 
             // Checks whether the file format saved in the preferences file is compatible with the current settings parser.
             if(Objects.equals(fileFormat, CURRENT_FILE_FORMAT)) {

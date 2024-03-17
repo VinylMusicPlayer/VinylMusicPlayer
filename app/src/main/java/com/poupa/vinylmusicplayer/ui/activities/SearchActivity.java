@@ -112,7 +112,7 @@ public class SearchActivity extends AbsMusicServiceActivity implements SearchVie
     }
 
     private void setUpToolBar() {
-        toolbar.setBackgroundColor(PreferenceUtil.getInstance().getPrimaryColor()); //ThemeStore.primaryColor(this));
+        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

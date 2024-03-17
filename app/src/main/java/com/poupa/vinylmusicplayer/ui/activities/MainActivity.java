@@ -174,7 +174,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
     private void setUpNavigationView() {
         int accentColor = ThemeStore.accentColor(this);
-        //int accentColor = PreferenceUtil.getInstance().getAccentColor();
         NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
         NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
         if(FoldersFragment.getSDCardDirectory(this) != null){
