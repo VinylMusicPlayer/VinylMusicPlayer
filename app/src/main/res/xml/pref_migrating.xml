@@ -7,13 +7,15 @@
             app:iconSpaceReserved="false"
             android:key="export_settings"
             android:defaultValue="1m"
-            android:title="@string/pref_title_export" />
+            android:title="@string/pref_title_export"
+            android:summary="@string/pref_summary_export" />
 
         <com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreference
             app:iconSpaceReserved="false"
             android:key="import_settings"
             android:defaultValue="1m"
-            android:title="@string/pref_title_import" />
+            android:title="@string/pref_title_import"
+            android:summary="@string/pref_summary_import" />
 
 
     </com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEPreferenceCategory>

@@ -158,7 +158,9 @@
     <string name="pref_title_not_recently_played_interval">Not recently played playlist interval</string>
     <string name="pref_title_last_added_interval">Last added playlist interval</string>
     <string name="pref_title_export">Export</string>
+    <string name="pref_summary_export">Export the settings as file</string>
     <string name="pref_title_import">Import</string>
+    <string name="pref_summary_import">Import the settings from previously exported file</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Maintain a playlist of top tracks</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of song skipped during playback</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
