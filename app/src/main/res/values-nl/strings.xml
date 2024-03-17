@@ -263,12 +263,8 @@
     <string name="pref_summary_library_categories">Configureer de zichtbaarheid en volgorde van categorieën</string>
     <string name="pref_title_enqueue_song_default_choice">Standaardactie bij het kiezen/tikken op een nummer tijdens het bladeren</string>
     <string name="action_always_ask_for_confirmation">Vraag altijd om acties</string>
-    <string name="action_clear_playing_queue">Wachtrij wissen</string>
-    <string name="action_save_playing_queue">Afspeelwachtrij opslaan</string>
     <string name="about_to_add_title_to_playing_queue">Er wordt 1 nummer toegevoegd aan de afspeelwachtrij.\nHoe wil je verder gaan met dit nummer?</string>
     <string name="about_to_add_x_titles_to_playing_queue">Er worden %1$d nummers toegevoegd aan de afspeelwachtrij.\nHoe wil je verder gaan met deze nummers?</string>
-    <string name="added_title_to_playing_queue">1 nummer toegevoegd aan de afspeelwachtrij.</string>
-    <string name="added_x_titles_to_playing_queue">%1$d nummers toegevoegd aan de afspeelwachtrij.</string>
     <string name="failed_restore_playing_queue">Kan niet herstellen, vorige wachtrij is beschadigd</string>
     <string name="unknown_genre">Onbekend genre</string>
     <string name="track_number">Tracknummer</string>
@@ -283,7 +279,6 @@
     <string name="import_playlist_title">Importeren uit afspeellijst</string>
     <string name="past_X_days">Afgelopen %d dagen</string>
     <string name="past_X_weeks">Afgelopen %d weken</string>
-    <string name="past_X_months">Afgelopen %d maanden</string>
     <string name="past_X_years">Afgelopen %d jaar</string>
     <string name="day">Dag</string>
     <string name="week">Week</string>
@@ -303,11 +298,9 @@
     <string name="time_unit_minutes">min</string>
     <string name="maintainers">Onderhouders</string>
     <string name="contributors">Bijdragers</string>
-    <string name="special_thanks_to">Speciale dank aan</string>
     <string name="label_other_contributors">+ vele andere bijdragers</string>
     <string name="missing_webview_component">Dit apparaat ondersteunt WebView niet, wat nodig is om de gevraagde actie uit te voeren.</string>
     <string name="karim_abou_zeid_summary">Oorspronkelijke auteur.</string>
-    <string name="open_playing_queue_instruction">Veeg de kaart in het nu spelen-scherm omhoog om de volledige speelrij te tonen.</string>
     <string name="sd_card">SD-kaart</string>
     <string name="saved_x_playlists_to_x">Afspeellijsten %1$d opgeslagen in %2$s.</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">%1$d afspeellijsten opgeslagen op %2$s, %3$d niet opgeslagen.</string>
