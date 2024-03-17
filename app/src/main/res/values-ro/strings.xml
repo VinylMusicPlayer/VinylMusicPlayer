@@ -184,6 +184,7 @@
     <string name="new_playlist_title">Listă de redare nouă</string>
     <string name="colored_footers">Subsoluri colorate</string>
     <string name="special_thanks_to">Mulțumiri speciale</string>
+    <string name="show_footer">arată subsolul</string>
     <string name="changelog">Jurnal modificări</string>
     <string name="licenses">Licenţe</string>
     <string name="permissions_denied">Permisiune refuzată.</string>

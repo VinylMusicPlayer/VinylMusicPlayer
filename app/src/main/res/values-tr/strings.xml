@@ -190,6 +190,7 @@
     <string name="new_playlist_title">Yeni çalma listesi</string>
     <string name="colored_footers">Renkli alt bilgiler</string>
     <string name="special_thanks_to">Özel teşekkür</string>
+    <string name="show_footer">altbilgiyi göster</string>
     <string name="changelog">Değişiklikler</string>
     <string name="licenses">Lisanslar</string>
     <string name="permissions_denied">İzinler reddedildi.</string>

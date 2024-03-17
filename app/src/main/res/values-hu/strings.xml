@@ -177,6 +177,7 @@
     <string name="new_playlist_title">Új lejátszási lista</string>
     <string name="colored_footers">Színes lábjegyzetek</string>
     <string name="special_thanks_to">Külön köszönet</string>
+    <string name="show_footer">mutasd meg a láblécet</string>
     <string name="changelog">Változások</string>
     <string name="licenses">Licencek</string>
     <string name="permissions_denied">Jogosultságok megtagadva.</string>

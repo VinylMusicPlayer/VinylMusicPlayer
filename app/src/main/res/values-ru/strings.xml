@@ -203,6 +203,7 @@
     <string name="maintainers">Мейнтейнеры</string>
     <string name="contributors">Внёсшие вклад</string>
     <string name="special_thanks_to">Особая благодарность</string>
+    <string name="show_footer">показать нижний колонтитул</string>
     <string name="changelog">Список изменений</string>
     <string name="licenses">Лицензии</string>
     <string name="permissions_denied">"В разрешениях отказано "</string>

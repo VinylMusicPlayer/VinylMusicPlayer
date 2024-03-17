@@ -155,6 +155,7 @@
     <string name="new_playlist_title">Новий список відтворення</string>
     <string name="colored_footers">Фарбовані колонтитули</string>
     <string name="special_thanks_to">Особлива подяка</string>
+    <string name="show_footer">показати нижній колонтитул</string>
     <string name="changelog">Список змін</string>
     <string name="licenses">Ліцензії</string>
     <string name="permissions_denied">У доступі відмовлено.</string>

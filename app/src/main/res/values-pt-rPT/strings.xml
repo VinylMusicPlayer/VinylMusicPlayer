@@ -154,6 +154,7 @@
     <string name="new_playlist_title">Nova lista de reprodução</string>
     <string name="colored_footers">Rodapés coloridos</string>
     <string name="special_thanks_to">Agradecimentos especiais a</string>
+    <string name="show_footer">mostrar rodapé</string>
     <string name="changelog">Changelog</string>
     <string name="licenses">"Licenças "</string>
     <string name="permissions_denied">Permissões negadas.</string>

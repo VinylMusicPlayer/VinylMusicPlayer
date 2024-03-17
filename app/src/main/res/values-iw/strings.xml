@@ -183,6 +183,7 @@
     <string name="new_playlist_title">רשימת השמעה חדשה</string>
     <string name="colored_footers">תחתית צבעונית</string>
     <string name="special_thanks_to">תודות מיוחדות ל</string>
+    <string name="show_footer">הצג כותרת תחתונה</string>
     <string name="changelog">רשימת שינויים</string>
     <string name="licenses">רישיונות</string>
     <string name="permissions_denied">הרשאות נדחו.</string>

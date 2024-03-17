@@ -67,6 +67,10 @@ public final class PreferenceUtil {
     private static final String ARTIST_GRID_SIZE = "artist_grid_size";
     private static final String ARTIST_GRID_SIZE_LAND = "artist_grid_size_land";
 
+    private static final String ALBUM_SHOW_FOOTER = "album_show_footer";
+    private static final String ARTIST_SHOW_FOOTER = "artist_show_footer";
+    private static final String ALBUM_ARTIST_SHOW_FOOTER = "album_artist_show_footer";
+
     private static final String ALBUM_COLORED_FOOTERS = "album_colored_footers";
     private static final String SONG_COLORED_FOOTERS = "song_colored_footers";
     private static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
@@ -568,6 +572,35 @@ public final class PreferenceUtil {
         return mPreferences.getInt(ARTIST_GRID_SIZE_LAND, context.getResources().getInteger(R.integer.default_list_columns_land));
     }
 
+    public void setAlbumShowFooter(final boolean value) {
+        mPreferences.edit()
+            .putBoolean(ALBUM_SHOW_FOOTER, value)
+            .apply();
+    }
+
+    public boolean albumShowFooter() {
+        return mPreferences.getBoolean(ALBUM_SHOW_FOOTER, true);
+    }
+
+    public void setAlbumArtistShowFooter(final boolean value) {
+        mPreferences.edit()
+            .putBoolean(ALBUM_ARTIST_SHOW_FOOTER, value)
+            .apply();
+    }
+
+    public boolean albumArtistShowFooter() {
+        return mPreferences.getBoolean(ALBUM_ARTIST_SHOW_FOOTER, true);
+    }
+    public void setArtistShowFooters(final boolean value) {
+        mPreferences.edit()
+            .putBoolean(ARTIST_SHOW_FOOTER, value)
+            .apply();
+    }
+
+    public boolean artistShowFooter() {
+        return mPreferences.getBoolean(ARTIST_SHOW_FOOTER, true);
+    }
+
     public void setAlbumColoredFooters(final boolean value) {
         mPreferences.edit()
                 .putBoolean(ALBUM_COLORED_FOOTERS, value)
@@ -660,10 +693,6 @@ public final class PreferenceUtil {
 
     public boolean maintainSkippedSongsPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, false);
-    }
-
-    public boolean showAlbumDetails() {
-        return mPreferences.getBoolean(SHOW_ALBUM_DETAILS, true);
     }
 
     public void setInitializedBlacklist() {

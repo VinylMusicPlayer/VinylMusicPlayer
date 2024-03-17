@@ -222,6 +222,7 @@
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Rodapés coloridos</string>
     <string name="special_thanks_to">Agradecimentos especiais para</string>
+    <string name="show_footer">mostrar rodapé</string>
     <string name="changelog">Novidades</string>
     <string name="licenses">Licenças</string>
     <string name="permissions_denied">Permissões negadas.</string>

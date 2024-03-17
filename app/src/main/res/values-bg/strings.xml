@@ -161,6 +161,7 @@
     <string name="new_playlist_title">Нов плейлист</string>
     <string name="colored_footers">Оцветени кутийки за имената</string>
     <string name="special_thanks_to">Специални благодарности към</string>
+    <string name="show_footer">покажи долен колонтитул</string>
     <string name="changelog">Последни промени</string>
     <string name="licenses">Лицензи</string>
     <string name="permissions_denied">Достъпът е отказан.</string>

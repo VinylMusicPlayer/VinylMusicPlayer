@@ -185,6 +185,7 @@
     <string name="new_playlist_title">新增播放清單</string>
     <string name="colored_footers">彩色的註腳</string>
     <string name="special_thanks_to">特別感謝</string>
+    <string name="show_footer">顯示頁腳</string>
     <string name="changelog">新功能</string>
     <string name="licenses">原始碼授權</string>
     <string name="permissions_denied">存取被拒</string>

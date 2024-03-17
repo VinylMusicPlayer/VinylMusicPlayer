@@ -178,6 +178,7 @@
     <string name="new_playlist_title">Nowa lista odtwarzania</string>
     <string name="colored_footers">Kolorowe stopki</string>
     <string name="special_thanks_to">Specjalne podziękowania dla</string>
+    <string name="show_footer">pokaż stopkę</string>
     <string name="changelog">Lista zmian</string>
     <string name="licenses">Licencje</string>
     <string name="permissions_denied">Odmówiono zezwolenia</string>

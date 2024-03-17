@@ -78,4 +78,5 @@
     <string name="song">Song</string>
     <string name="search_hint">Søk i biblioteket…</string>
     <string name="new_playlist_title">Ny speleliste</string>
+    <string name="show_footer">vis bunntekst</string>
 </resources>

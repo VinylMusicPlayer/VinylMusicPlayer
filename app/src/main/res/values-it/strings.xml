@@ -212,6 +212,7 @@
     <string name="new_playlist_title">Nuova playlist</string>
     <string name="colored_footers">Riquadri colorati</string>
     <string name="special_thanks_to">Ringraziamenti speciali a</string>
+    <string name="show_footer">mostra piè di pagina</string>
     <string name="changelog">Aggiornamenti</string>
     <string name="licenses">Licenze</string>
     <string name="permissions_denied">Permesso negato.</string>

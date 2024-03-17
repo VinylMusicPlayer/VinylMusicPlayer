@@ -184,6 +184,7 @@
     <string name="new_playlist_title">Novi popis naslova</string>
     <string name="colored_footers">Obojena podnožja</string>
     <string name="special_thanks_to">Posebne zahvale</string>
+    <string name="show_footer">pokazati podnožje</string>
     <string name="changelog">Popis promjena</string>
     <string name="licenses">Licence</string>
     <string name="permissions_denied">Pristup odbijen.</string>

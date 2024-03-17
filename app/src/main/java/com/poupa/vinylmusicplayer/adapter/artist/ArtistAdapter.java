@@ -48,14 +48,16 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
 
     protected final int itemLayoutRes;
 
+    protected boolean showFooter;
     protected boolean usePalette;
 
-    public ArtistAdapter(@NonNull AppCompatActivity activity, ArrayList<Artist> dataSet, @LayoutRes int itemLayoutRes
-            , boolean usePalette, @Nullable CabHolder cabHolder) {
+    public ArtistAdapter(@NonNull AppCompatActivity activity, ArrayList<Artist> dataSet, @LayoutRes int itemLayoutRes,
+            boolean showFooter, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         this.itemLayoutRes = itemLayoutRes;
+        this.showFooter = showFooter;
         this.usePalette = usePalette;
         setHasStableIds(true);
     }
@@ -71,6 +73,11 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
 
     public void usePalette(boolean usePalette) {
         this.usePalette = usePalette;
+        notifyDataSetChanged();
+    }
+
+    public void showFooter(boolean showFooter) {
+        this.showFooter = showFooter;
         notifyDataSetChanged();
     }
 

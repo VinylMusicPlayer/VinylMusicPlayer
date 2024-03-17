@@ -178,6 +178,7 @@
     <string name="new_playlist_title">Uusi soittolista</string>
     <string name="colored_footers">Värilliset alatunnisteet</string>
     <string name="special_thanks_to">Erikoiskiitokset</string>
+    <string name="show_footer">näytä alatunniste</string>
     <string name="changelog">Muutosloki</string>
     <string name="licenses">Lisenssit</string>
     <string name="permissions_denied">Sinulla ei ole oikeuksia tähän.</string>

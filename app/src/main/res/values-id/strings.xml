@@ -160,6 +160,7 @@
     <string name="new_playlist_title">Daftar putar baru</string>
     <string name="colored_footers">Bawahan berwarna</string>
     <string name="special_thanks_to">Terima kasih khusus kepada</string>
+    <string name="show_footer">tampilkan footer</string>
     <string name="changelog">Perubahan</string>
     <string name="licenses">Lisensi</string>
     <string name="permissions_denied">Izin ditolak</string>

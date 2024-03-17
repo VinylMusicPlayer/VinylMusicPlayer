@@ -190,6 +190,7 @@
     <string name="new_playlist_title">Nový playlist</string>
     <string name="colored_footers">"Barevné zápatí "</string>
     <string name="special_thanks_to">Zvláštní poděkování</string>
+    <string name="show_footer">zobrazit zápatí</string>
     <string name="changelog">"Co je nového "</string>
     <string name="licenses">Licence</string>
     <string name="permissions_denied">"Oprávnění zamítnuta. "</string>

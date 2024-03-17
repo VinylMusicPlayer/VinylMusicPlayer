@@ -162,6 +162,7 @@
     <string name="new_playlist_title">Νέα λίστα αναπαραγωγής</string>
     <string name="colored_footers">Χρωματιστά υποσέλιδα</string>
     <string name="special_thanks_to">Ιδιαίτερες ευχαριστίες προς</string>
+    <string name="show_footer">εμφάνιση υποσέλιδου</string>
     <string name="changelog">Κατάλογος αλλαγών</string>
     <string name="licenses">Άδειες</string>
     <string name="permissions_denied">Άρνηση χορήγησης δικαιωμάτων.</string>

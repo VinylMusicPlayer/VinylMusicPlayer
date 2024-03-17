@@ -217,6 +217,7 @@
     <string name="action_new_playlist">Neue Wiedergabeliste…</string>
     <string name="new_playlist_title">Neue Wiedergabeliste</string>
     <string name="colored_footers">Gefärbte Fußzeilen</string>
+    <string name="show_footer">Fußzeile anzeigen</string>
     <string name="changelog">Änderungen</string>
     <string name="licenses">Lizenzen</string>
     <string name="permissions_denied">Berechtigungen verweigert.</string>

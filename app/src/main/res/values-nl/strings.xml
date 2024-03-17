@@ -184,6 +184,7 @@
     <string name="new_playlist_title">Nieuwe afspeellijst</string>
     <string name="colored_footers">Gekleurde voetkaders</string>
     <string name="special_thanks_to">Speciale dank aan</string>
+    <string name="show_footer">voettekst weergeven</string>
     <string name="changelog">Wijzigingen</string>
     <string name="licenses">Licensies</string>
     <string name="permissions_denied">Machtiging geweigerd.</string>

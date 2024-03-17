@@ -18,6 +18,8 @@ public abstract class AbsLibraryPagerRecyclerViewCustomGridSizeFragment<A extend
     private String sortOrder;
 
     private boolean usePaletteInitialized;
+
+    private boolean showFooter;
     private boolean usePalette;
     private int currentLayoutRes;
 
@@ -38,6 +40,11 @@ public abstract class AbsLibraryPagerRecyclerViewCustomGridSizeFragment<A extend
         } else {
             return getResources().getInteger(R.integer.max_columns);
         }
+    }
+
+    public final boolean showFooter() {
+        showFooter = loadShowFooter();
+        return showFooter;
     }
 
     /**
@@ -73,6 +80,12 @@ public abstract class AbsLibraryPagerRecyclerViewCustomGridSizeFragment<A extend
         } else {
             setGridSize(gridSize);
         }
+    }
+
+    public void setAndSaveShowFooter(final boolean showFooter) {
+        this.showFooter = showFooter;
+        saveShowFooter(showFooter);
+        setShowFooter(showFooter);
     }
 
     public void setAndSaveUsePalette(final boolean usePalette) {
@@ -138,6 +151,12 @@ public abstract class AbsLibraryPagerRecyclerViewCustomGridSizeFragment<A extend
     protected abstract int loadGridSizeLand();
 
     protected abstract void saveGridSizeLand(int gridColumns);
+
+    protected abstract void saveShowFooter(boolean showFooter);
+
+    protected abstract boolean loadShowFooter();
+
+    protected abstract void setShowFooter(boolean showFooter);
 
     protected abstract void saveUsePalette(boolean usePalette);
 

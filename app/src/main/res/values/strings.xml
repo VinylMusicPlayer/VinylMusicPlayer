@@ -226,6 +226,7 @@
     <string name="grid_size_7" translatable="false">7</string>
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Colored footers</string>
+    <string name="show_footer">Show footers</string>
     <string name="changelog">Changelog</string>
     <string name="licenses">Licenses</string>
     <string name="permissions_denied">Permissions denied.</string>

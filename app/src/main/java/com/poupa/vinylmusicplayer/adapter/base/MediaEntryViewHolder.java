@@ -115,7 +115,7 @@ public class MediaEntryViewHolder extends AbstractDraggableSwipeableItemViewHold
         separator = null;
         shortSeparator  = null;
         dragView = null;
-        paletteColorContainer = null;
+        paletteColorContainer = binding.paletteColorContainer;
 
         final View itemView = binding.getRoot();
         itemView.setOnClickListener(this);

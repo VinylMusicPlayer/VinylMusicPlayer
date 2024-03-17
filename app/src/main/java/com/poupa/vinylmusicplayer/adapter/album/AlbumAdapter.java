@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -49,17 +50,29 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected final int itemLayoutRes;
 
+    protected boolean showFooter;
+
     protected boolean usePalette;
 
     public AlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, @LayoutRes int itemLayoutRes,
-                        boolean usePalette, @Nullable CabHolder cabHolder) {
+                        boolean showFooter, boolean usePalette, @Nullable CabHolder cabHolder) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         this.itemLayoutRes = itemLayoutRes;
+        this.showFooter = showFooter;
         this.usePalette = usePalette;
 
         setHasStableIds(true);
+    }
+
+    public void setShowFooter(boolean showFooter) {
+        this.showFooter = showFooter;
+        View actionColoredFooters = activity.findViewById(R.id.action_colored_footers);
+        if (actionColoredFooters != null) {
+            actionColoredFooters.setEnabled(showFooter);
+        }
+        notifyDataSetChanged();
     }
 
     public void usePalette(boolean usePalette) {
@@ -119,6 +132,8 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
             }
         }
 
+        // Title set here
+
         if (holder.title != null) {
             holder.title.setText(getAlbumTitle(album));
         }
@@ -131,10 +146,10 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected void updateDetails(int color, ViewHolder holder) {
         if (holder.paletteColorContainer != null) {
-            if (PreferenceUtil.getInstance().showAlbumDetails()) {
+            if (showFooter) {
                 holder.paletteColorContainer.setVisibility(View.VISIBLE);
                 holder.paletteColorContainer.setLayoutParams(
-                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, activity.getResources().getDimensionPixelSize(R.dimen.item_grid_color_container_height))
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, activity.getResources().getDimensionPixelSize(R.dimen.item_grid_color_container_height))
                 );
 
                 holder.paletteColorContainer.setBackgroundColor(color);
@@ -147,7 +162,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
             } else {
                 holder.paletteColorContainer.setVisibility(View.GONE);
                 holder.paletteColorContainer.setLayoutParams(
-                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0)
                 );
             }
         }

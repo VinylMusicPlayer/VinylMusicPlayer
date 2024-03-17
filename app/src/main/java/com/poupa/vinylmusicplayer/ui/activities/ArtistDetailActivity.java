@@ -110,6 +110,7 @@ public class ArtistDetailActivity
         setDrawUnderStatusbar();
 
         lastFMRestClient = new LastFMRestClient(this);
+        showFooter = PreferenceUtil.getInstance().albumArtistShowFooter();
         usePalette = PreferenceUtil.getInstance().albumArtistColoredFooters();
 
         initViews();
@@ -131,6 +132,7 @@ public class ArtistDetailActivity
         return slidingPanelBinding.getRoot();
     }
 
+    private boolean showFooter;
     private boolean usePalette;
 
     private void setUpObservableListViewParams() {
@@ -166,7 +168,7 @@ public class ArtistDetailActivity
 
     private void setUpAlbumRecyclerView() {
         albumRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        albumAdapter = new HorizontalAlbumAdapter(this, getArtist().albums, usePalette, this);
+        albumAdapter = new HorizontalAlbumAdapter(this, getArtist().albums, showFooter, usePalette, this);
         albumRecyclerView.setAdapter(albumAdapter);
         albumAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -175,6 +177,16 @@ public class ArtistDetailActivity
                 if (albumAdapter.getItemCount() == 0) {finish();}
             }
         });
+    }
+
+    private void setShowFooter(boolean showFooter) {
+        albumAdapter.setShowFooter(showFooter);
+        PreferenceUtil.getInstance().setAlbumArtistShowFooter(showFooter);
+        View actionColoredFooters = findViewById(R.id.action_colored_footers);
+        if (actionColoredFooters != null) {
+            actionColoredFooters.setEnabled(!showFooter);
+        }
+        this.showFooter = showFooter;
     }
 
     private void setUsePalette(boolean usePalette) {
@@ -299,7 +311,9 @@ public class ArtistDetailActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_artist_detail, menu);
+        menu.findItem(R.id.action_show_footer).setChecked(showFooter);
         menu.findItem(R.id.action_colored_footers).setChecked(usePalette);
+        menu.findItem(R.id.action_colored_footers).setEnabled(showFooter);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -356,6 +370,10 @@ public class ArtistDetailActivity
             CustomArtistImageUtil.getInstance(ArtistDetailActivity.this)
                     .resetCustomArtistImage(artist, this::loadArtistImage);
             forceDownload = true;
+            return true;
+        } else if (id == R.id.action_show_footer) {
+            item.setChecked(!item.isChecked());
+            setShowFooter(item.isChecked());
             return true;
         } else if (id == R.id.action_colored_footers) {
             item.setChecked(!item.isChecked());

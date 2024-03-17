@@ -176,6 +176,7 @@
     <string name="new_playlist_title">新建播放列表</string>
     <string name="colored_footers">着色页脚</string>
     <string name="special_thanks_to">特别鸣谢</string>
+    <string name="show_footer">显示页脚</string>
     <string name="changelog">更新日志</string>
     <string name="licenses">许可信息</string>
     <string name="permissions_denied">未能获取权限。</string>

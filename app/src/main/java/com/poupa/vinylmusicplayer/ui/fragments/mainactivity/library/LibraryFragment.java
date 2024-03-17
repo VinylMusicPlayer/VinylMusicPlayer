@@ -182,8 +182,7 @@ public class LibraryFragment
             menu.add(0, R.id.action_new_playlist, 0, R.string.new_playlist_title);
         }
         final Fragment currentFragment = getCurrentFragment();
-        if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment && currentFragment.isAdded()) {
-            final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
+        if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment && currentFragment.isAdded()) {
 
             final MenuItem gridSizeItem = menu.findItem(R.id.action_grid_size);
             if (Util.isLandscape(getResources())) {
@@ -191,12 +190,24 @@ public class LibraryFragment
             }
             setUpGridSizeMenu(fragment, gridSizeItem.getSubMenu());
 
-            menu.findItem(R.id.action_colored_footers).setChecked(fragment.usePalette());
-            menu.findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
+            final MenuItem actionShowFooter = menu.findItem(R.id.action_show_footer);
+            final MenuItem actionColoredFooters = menu.findItem(R.id.action_colored_footers);
+
+            actionShowFooter.setChecked(fragment.showFooter());
+            actionShowFooter.setEnabled(fragment.canUsePalette());
+            actionShowFooter.setOnMenuItemClickListener(item -> {
+                // item.isChecked() is inverted because this runs before the checked state updates
+                actionColoredFooters.setEnabled(fragment.canUsePalette() && !item.isChecked());
+                return false;
+            });
+
+            actionColoredFooters.setChecked(fragment.usePalette());
+            actionColoredFooters.setEnabled(fragment.canUsePalette() && fragment.showFooter());
 
             setUpSortOrderMenu(fragment, menu.findItem(R.id.action_sort_order).getSubMenu());
         } else {
             menu.removeItem(R.id.action_grid_size);
+            menu.removeItem(R.id.action_show_footer);
             menu.removeItem(R.id.action_colored_footers);
             menu.removeItem(R.id.action_sort_order);
         }
@@ -218,9 +229,12 @@ public class LibraryFragment
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final Fragment currentFragment = getCurrentFragment();
-        if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment) {
-            final AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment = (AbsLibraryPagerRecyclerViewCustomGridSizeFragment) currentFragment;
-            if (item.getItemId() == R.id.action_colored_footers) {
+        if (currentFragment instanceof AbsLibraryPagerRecyclerViewCustomGridSizeFragment fragment) {
+            if (item.getItemId() == R.id.action_show_footer) {
+                item.setChecked(!item.isChecked());
+                fragment.setAndSaveShowFooter(item.isChecked());
+                return true;
+            } else if (item.getItemId() == R.id.action_colored_footers) {
                 item.setChecked(!item.isChecked());
                 fragment.setAndSaveUsePalette(item.isChecked());
                 return true;
@@ -318,6 +332,7 @@ public class LibraryFragment
         if (gridSize > 0) {
             item.setChecked(true);
             fragment.setAndSaveGridSize(gridSize);
+            layoutBinding.toolbar.getMenu().findItem(R.id.action_show_footer).setEnabled(fragment.showFooter());
             layoutBinding.toolbar.getMenu().findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
             return true;
         }
