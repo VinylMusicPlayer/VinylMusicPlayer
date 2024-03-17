@@ -119,11 +119,6 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void onMediaStoreChanged() {
-        if (musicService != null) {
-            musicService.onMediaStoreChanged();
-        }
-    }
     /**
      * Async
      */

@@ -159,7 +159,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
 
     @Override
     public void onMediaStoreChanged() {
-        MusicPlayerRemote.onMediaStoreChanged();
         updateQueue();
     }
 

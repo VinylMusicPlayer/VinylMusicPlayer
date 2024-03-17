@@ -41,10 +41,12 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
 import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverFetcher;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -195,6 +197,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     private ContentObserver mediaStoreObserver;
     private boolean notHandledMetaChangedForCurrentTrack;
 
+    private final WeakMethodReference<MusicService> onDiscographyChanged = new WeakMethodReference<>(this, MusicService::onDiscographyChanged);
+
     private Handler uiThreadHandler;
 
     private PackageValidator mPackageValidator;
@@ -264,6 +268,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
 
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
         mediaStoreObserver.onChange(true);
     }
 
@@ -358,6 +363,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
 
         unregisterReceiver(widgetIntentReceiver);
         unregisterReceiver(updateFavoriteReceiver);
@@ -1385,13 +1392,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         );
     }
 
-    public void onMediaStoreChanged() {
+    private void onDiscographyChanged() {
         final boolean resync = PreferenceUtil.getInstance().isQueueSyncWithMediaStoreEnabled();
         if (resync) {
             // If a song is removed from the MediaStore, or updated (tags edited)
             // reload the queues so that they reflects the latest change
-            // TODO We run into this code even when a playlist is added/modified -> Find a way to filter that event
-
             saveState();
             restoreState();
         }
