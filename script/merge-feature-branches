@@ -11,7 +11,7 @@ blacklist_branches=""
 #  eliehess/VinylMusicPlayer/hide-album-details-setting
 alien_branches="
   TheFireCircle/VinylMusicPlayer/export-import-settings
-  AutomaticUpdates/VinylMusicPlayer/952-idle-notification
+  AnonymousWP/VinylMusicPlayer/add-missing-Dutch-strings
 "
 
 # Support for CircleCI
