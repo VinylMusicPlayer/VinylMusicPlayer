@@ -5,9 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
@@ -71,13 +69,8 @@ class SnackbarUtil {
         return messageWithIcon;
     }
 
-    private static void alignToTop(@NonNull final Snackbar snackbar) {
-        final View view = snackbar.getView();
-        if (view instanceof FrameLayout) {
-            final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            view.setLayoutParams(params);
-        }
+    private static void adjustPosition(@NonNull final Snackbar snackbar) {
+        snackbar.setAnchorView(R.id.sliding_panel);
     }
 
     void showProgress(@NonNull final CharSequence text) {
@@ -90,7 +83,7 @@ class SnackbarUtil {
 
         progressBar.setText(buildMessageWithIcon(text, progressBar));
         if (!progressBar.isShownOrQueued()) {
-            alignToTop(progressBar);
+            adjustPosition(progressBar);
             progressBar.show();
         }
     }
@@ -103,7 +96,7 @@ class SnackbarUtil {
                 "",
                 BaseTransientBottomBar.LENGTH_LONG);
         progressBar.setText(buildMessageWithIcon(message, progressBar));
-        alignToTop(progressBar);
+        adjustPosition(progressBar);
         progressBar.show();
     }
 
