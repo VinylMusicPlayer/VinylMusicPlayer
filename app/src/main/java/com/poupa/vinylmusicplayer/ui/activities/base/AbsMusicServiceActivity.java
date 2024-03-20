@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.MusicServiceEventListener;
 import com.poupa.vinylmusicplayer.service.MusicService;
@@ -50,11 +51,20 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         });
 
         setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied));
+
+        final Discography discog = Discography.getInstance();
+        discog.startService(this);
+        addMusicServiceEventListener(discog);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        final Discography discog = Discography.getInstance();
+        removeMusicServiceEventListener(discog);
+        discog.stopService();
+
         MusicPlayerRemote.unbindFromService(serviceToken);
         if (receiverRegistered) {
             unregisterReceiver(musicStateReceiver);

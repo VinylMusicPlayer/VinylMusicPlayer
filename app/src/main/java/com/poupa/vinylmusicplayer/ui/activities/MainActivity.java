@@ -91,19 +91,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         if (!checkShowIntro()) {
             showChangelog();
         }
-
-        final Discography discog = Discography.getInstance();
-        discog.startService(this);
-        addMusicServiceEventListener(discog);
-    }
-
-    @Override
-    protected void onDestroy() {
-        final Discography discog = Discography.getInstance();
-        removeMusicServiceEventListener(discog);
-        discog.stopService();
-
-        super.onDestroy();
     }
 
     private void setMusicChooser(int key) {

@@ -16,7 +16,7 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
-import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
@@ -47,8 +47,8 @@ public class Discography implements MusicServiceEventListener {
     private final DB database;
     private final MemCache cache;
 
-    private MainActivity mainActivity = null;
-    private Handler mainActivityTaskQueue = null;
+    private AbsMusicServiceActivity containerActivity = null;
+    private Handler containerActivityTaskQueue = null;
     private static final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
     private final Collection<Runnable> changedListeners = new LinkedList<>();
 
@@ -65,20 +65,20 @@ public class Discography implements MusicServiceEventListener {
         return App.getDiscography();
     }
 
-    public void startService(@NonNull final MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-        mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+    public void startService(@NonNull final AbsMusicServiceActivity activity) {
+        containerActivity = activity;
+        containerActivityTaskQueue = new Handler(containerActivity.getMainLooper());
 
         triggerSyncWithMediaStore(false);
     }
 
     public void stopService() {
         // Flush the delayed task queue - dont do anything is we are stopping
-        if (mainActivityTaskQueue != null && mainActivity != null) {
-            mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+        if (containerActivityTaskQueue != null && containerActivity != null) {
+            containerActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
 
-            mainActivity = null;
-            mainActivityTaskQueue = null;
+            containerActivity = null;
+            containerActivityTaskQueue = null;
         }
     }
 
@@ -351,11 +351,11 @@ public class Discography implements MusicServiceEventListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 final long DELAY = 500;
 
-                mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
-                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
+                containerActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+                containerActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
-        } else if (mainActivity != null) {
-            (new SyncWithMediaStoreAsyncTask(mainActivity, this, reset)).execute();
+        } else if (containerActivity != null) {
+            (new SyncWithMediaStoreAsyncTask(containerActivity, this, reset)).execute();
         }
     }
 
@@ -439,8 +439,8 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void removeChangedListener(Runnable listener) {
-        if (mainActivityTaskQueue != null) {
-            mainActivityTaskQueue.removeCallbacks(listener);
+        if (containerActivityTaskQueue != null) {
+            containerActivityTaskQueue.removeCallbacks(listener);
         }
         changedListeners.remove(listener);
     }
@@ -448,12 +448,12 @@ public class Discography implements MusicServiceEventListener {
     private void notifyDiscographyChanged() {
         // Notify the main activity to reload the tabs content
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
-        if (mainActivityTaskQueue != null) {
+        if (containerActivityTaskQueue != null) {
             // Post as much 1 event per a coalescence period
             final long COALESCENCE_DELAY = 200;
             for (Runnable listener : changedListeners) {
-                mainActivityTaskQueue.removeCallbacks(listener);
-                mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
+                containerActivityTaskQueue.removeCallbacks(listener);
+                containerActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
             }
         }
     }

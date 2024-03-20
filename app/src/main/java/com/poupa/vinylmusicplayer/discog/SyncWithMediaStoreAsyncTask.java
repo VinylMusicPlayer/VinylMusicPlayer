@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 
 /**
  * @author SC (soncaokim)
@@ -14,16 +14,16 @@ import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 
 class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
     @NonNull
-    final Discography discography;
+    private final Discography discography;
 
     @NonNull
-    final SnackbarUtil snackbar;
+    private final SnackbarUtil snackbar;
 
-    final boolean resetRequested;
+    private final boolean resetRequested;
 
-    SyncWithMediaStoreAsyncTask(@NonNull MainActivity mainActivity, @NonNull Discography discog, boolean reset) {
+    SyncWithMediaStoreAsyncTask(@NonNull final AbsMusicServiceActivity containerActivity, @NonNull final Discography discog, final boolean reset) {
         discography = discog;
-        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
+        snackbar = new SnackbarUtil(containerActivity.getSnackBarContainer());
         resetRequested = reset;
     }
 
@@ -75,9 +75,9 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
         }
     }
 
-    long startTimeMs = 0;
+    private long startTimeMs = 0L;
     private boolean isUIFeedbackNeeded() {
-        final long UI_VISIBLE_THRESHOLD_MS = 500;
+        final long UI_VISIBLE_THRESHOLD_MS = 500L;
         final long now = System.currentTimeMillis();
 
         return (now - startTimeMs > UI_VISIBLE_THRESHOLD_MS);
