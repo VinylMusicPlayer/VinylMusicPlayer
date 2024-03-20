@@ -96,8 +96,8 @@ public class HistoryStore extends SQLiteOpenHelper {
                 values.put(RecentStoreColumns.TIME_PLAYED, importTime);
                 database.insert(RecentStoreColumns.NAME, null, values);
             }
-        } finally {
             database.setTransactionSuccessful();
+        } finally {
             database.endTransaction();
         }
     }
@@ -111,8 +111,8 @@ public class HistoryStore extends SQLiteOpenHelper {
             for (long id : missingIds) {
                 removeSongId(database, id);
             }
-        } finally {
             database.setTransactionSuccessful();
+        } finally {
             database.endTransaction();
         }
     }
