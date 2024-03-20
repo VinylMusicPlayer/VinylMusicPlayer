@@ -151,11 +151,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         updateQueue();
     }
 
-    @Override
-    public void onMediaStoreChanged() {
-        updateQueue();
-    }
-
     private void updateQueue() {
         playingQueueAdapter.swapDataSet(MusicPlayerRemote.getPlayingQueue(), MusicPlayerRemote.getPosition());
         playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
