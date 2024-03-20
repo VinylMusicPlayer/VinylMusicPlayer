@@ -18,7 +18,8 @@ import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -29,7 +30,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     @Nullable
     private final CabHolder cabHolder;
     private AttachedCab cab;
-    private final ArrayList<I> checked;
+    private final LinkedHashMap<Integer, I> checked;
     private int menuRes;
     private final Context context;
 
@@ -37,7 +38,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
         this.cabHolder = cabHolder;
-        checked = new ArrayList<>();
+        checked = new LinkedHashMap<>();
         this.menuRes = menuRes;
         this.context = context;
     }
@@ -50,7 +51,8 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         final I identifier = getIdentifier(position);
         if (identifier == null) {return false;}
 
-        if (!checked.remove(identifier)) {checked.add(identifier);}
+        if (checked.containsKey(position)) {checked.remove(position);}
+        else {checked.put(position, identifier);}
 
         notifyItemChanged(position);
         updateCab();
@@ -64,7 +66,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         for (int i = 0; i < itemCount; i++) {
             final I identifier = getIdentifier(i);
             if (identifier != null) {
-                checked.add(identifier);
+                checked.put(i, identifier);
             }
         }
         notifyDataSetChanged();
@@ -82,8 +84,8 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         notifyDataSetChanged();
     }
 
-    protected boolean isChecked(final I identifier) {
-        return checked.contains(identifier);
+    protected boolean isChecked(final int position) {
+        return checked.containsKey(position);
     }
 
     protected boolean isInQuickSelectMode() {
@@ -104,7 +106,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         if (menuItem.getItemId() == R.id.action_multi_select_adapter_check_all) {
             checkAll();
         } else {
-            onMultipleItemAction(menuItem, new ArrayList<>(checked));
+            onMultipleItemAction(menuItem, checked);
             AttachedCabKt.destroy(cab);
             clearChecked();
         }
@@ -121,5 +123,5 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     @Nullable
     protected abstract I getIdentifier(int position);
 
-    protected abstract void onMultipleItemAction(MenuItem menuItem, ArrayList<I> selection);
+    protected abstract void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, I> selection);
 }

@@ -35,7 +35,9 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -141,8 +143,7 @@ public class SongAdapter
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Song song = dataSet.get(position);
 
-        boolean isChecked = isChecked(song);
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isChecked(position));
 
         if (holder.shortSeparator != null) {
             if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
@@ -189,8 +190,11 @@ public class SongAdapter
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
-        SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Song> selection) {
+        // Intermediate copy to preserve the selection order
+        Collection<Song> songs = new ArrayList<>();
+        selection.values().iterator().forEachRemaining(song -> songs.add(song));
+        SongsMenuHelper.handleMenuClick(activity, songs, menuItem.getItemId());
     }
 
     @NonNull
@@ -259,7 +263,7 @@ public class SongAdapter
             final int position = getBindingAdapterPosition();
             if (position < 0 || position >= dataSet.size()) {return Song.EMPTY_SONG;}
 
-            return dataSet.get(getBindingAdapterPosition());
+            return dataSet.get(position);
         }
 
         protected int getSongMenuRes() {

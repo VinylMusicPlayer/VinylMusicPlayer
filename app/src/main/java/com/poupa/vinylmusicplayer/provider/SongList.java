@@ -14,6 +14,7 @@ import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -84,8 +85,14 @@ abstract class MutableSongList extends SongList {
         save(null);
     }
 
-    public void removeSongs(List<Long> ids) {
-        songIds.removeAll(ids);
+    public void removeSongsAtPosition(@NonNull final List<Integer> positions) {
+        final List<Integer> reversedPositions = new ArrayList<>(positions);
+        reversedPositions.sort(Comparator.reverseOrder());
+        for (final int position : reversedPositions) {
+            if (position >= 0 && position < songIds.size()) {
+                songIds.remove(position);
+            }
+        }
         save(null);
     }
 
@@ -93,8 +100,8 @@ abstract class MutableSongList extends SongList {
         if (fromPosition == toPosition) {return true;}
 
         final int size = songIds.size();
-        if (fromPosition >= size) {return false;}
-        if (toPosition >= size) {return false;}
+        if (fromPosition < 0 || fromPosition >= size) {return false;}
+        if (toPosition < 0 || toPosition >= size) {return false;}
 
         final long movedSongId = songIds.get(fromPosition);
         songIds.remove(fromPosition);
@@ -184,7 +191,7 @@ class PreferenceBackedReorderableSongList extends PreferencesBackedSongList {
     }
 
     // Assign a stable and unique ID to each song in the list. That ID can then be used as UI RecycleView's ID
-    // - to be unique: the Song's id cannot be used since the list can contain duplicate of same some
+    // - to be unique: the Song's id cannot be used since the list can contain duplicate of same song
     // - to be stable: the postition of the song in the list cannot be used as an ID since the song can be moved (hence the position changes)
 
     private long nextUniqueId = 0L;
