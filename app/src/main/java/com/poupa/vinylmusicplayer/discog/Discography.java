@@ -82,13 +82,13 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    void setCacheState(MemCache.ConsistencyState value) {
+    void setCacheState(final MemCache.ConsistencyState value) {
         synchronized (cache) {
             cache.consistencyState = value;
         }
     }
 
-    MemCache.ConsistencyState getCacheState() {
+    private MemCache.ConsistencyState getCacheState() {
         synchronized (cache) {
             return cache.consistencyState;
         }
@@ -100,7 +100,7 @@ public class Discography implements MusicServiceEventListener {
             final Song discogSong = getSong(song.id);
             boolean existsAndObsolete = false;
             if (!discogSong.equals(Song.EMPTY_SONG)) {
-                BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
+                final BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                     if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
                     if (incomingSong.dateModified != cachedSong.dateModified) return true;
                     return (!incomingSong.data.equals(cachedSong.data));
@@ -367,12 +367,12 @@ public class Discography implements MusicServiceEventListener {
         final Context context = App.getInstance().getApplicationContext();
 
         // Zombies are tracks that are removed but still indexed by MediaStore
-        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
+        final Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
         // Whitelist
         final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
         final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
-        Predicate<Song> isNotWhiteListed = (s) -> {
+        final Predicate<Song> isNotWhiteListed = (s) -> {
             if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
                 return !s.data.startsWith(startPath);
             }
@@ -381,8 +381,8 @@ public class Discography implements MusicServiceEventListener {
 
         // Blacklist
         final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
-        Predicate<Song> isBlackListed = (s) -> {
-            for (String path : blackListedPaths) {
+        final Predicate<Song> isBlackListed = (s) -> {
+            for (final String path : blackListedPaths) {
                 if (s.data.startsWith(path)) return true;
             }
             return false;
@@ -403,7 +403,7 @@ public class Discography implements MusicServiceEventListener {
 
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
-            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
+            final Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
         }
