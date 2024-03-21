@@ -4,15 +4,13 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 
 /**
  * @author SC (soncaokim)
  */
 
-class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
+class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyncTask.Progress, SyncWithMediaStoreAsyncTask.Progress> {
     @NonNull
     private final Discography discography;
 
@@ -21,6 +19,34 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
 
     private final boolean resetRequested;
 
+    public static class Progress {
+        public int added = 0;
+        public int removed = 0;
+        public int updated = 0;
+
+        boolean isEmpty() {
+            return added == 0 && removed == 0 && updated == 0;
+        }
+
+        @NonNull
+        String buildInfoString() {
+            if (isEmpty()) return "";
+
+            final StringBuilder builder = new StringBuilder();
+            builder.append("Track update:");
+            if (added > 0) {
+                builder.append(String.format(" %1$d added", added));
+            }
+            if (updated > 0) {
+                builder.append(String.format(" %1$d updated", updated));
+            }
+            if (removed > 0) {
+                builder.append(String.format(" %1$d removed", removed));
+            }
+            return builder.toString();
+        }
+    }
+
     SyncWithMediaStoreAsyncTask(@NonNull final AbsMusicServiceActivity containerActivity, @NonNull final Discography discog, final boolean reset) {
         discography = discog;
         snackbar = new SnackbarUtil(containerActivity.getSnackBarContainer());
@@ -28,7 +54,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(Void...params) {
+    protected Progress doInBackground(final Void...params) {
         if (resetRequested) discography.clear();
         return discography.syncWithMediaStore(this::publishProgress);
     }
@@ -40,37 +66,29 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        if (isUIFeedbackNeeded()) {
-            int value = values[values.length - 1];
-            if (value == 0) return;
-
-            final String message = String.format(
-                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                    Math.abs(value));
-            snackbar.showProgress(message);
+    protected void onProgressUpdate(final Progress... values) {
+        final Progress last = values[values.length - 1];
+        if (!last.isEmpty() && isUIFeedbackNeeded()) {
+            snackbar.showProgress(last.buildInfoString());
         }
     }
 
     @Override
-    protected void onPostExecute(Integer value) {
+    protected void onPostExecute(@NonNull final Progress value) {
         onTermination(value);
     }
     @Override
-    protected void onCancelled(Integer value) {
+    protected void onCancelled(@NonNull final Progress value) {
         onTermination(value);
     }
 
-    private void onTermination(Integer value) {
+    private void onTermination(@NonNull final Progress value) {
         discography.setCacheState(MemCache.ConsistencyState.OK);
         if (isUIFeedbackNeeded()) {
-            if (value != 0) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        Math.abs(value));
-                snackbar.showResult(message);
-            } else {
+            if (value.isEmpty()) {
                 snackbar.dismiss();
+            } else {
+                snackbar.showResult(value.buildInfoString());
             }
         }
     }

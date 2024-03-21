@@ -95,9 +95,10 @@ public class Discography implements MusicServiceEventListener {
     }
 
     @NonNull
-    Song getOrAddSong(@NonNull final Song song) {
+    private Song getOrAddSong(@NonNull final Song song, @NonNull final SyncWithMediaStoreAsyncTask.Progress progress) {
         synchronized (cache) {
-            Song discogSong = getSong(song.id);
+            final Song discogSong = getSong(song.id);
+            boolean existsAndObsolete = false;
             if (!discogSong.equals(Song.EMPTY_SONG)) {
                 BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                     if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
@@ -105,14 +106,17 @@ public class Discography implements MusicServiceEventListener {
                     return (!incomingSong.data.equals(cachedSong.data));
                 };
 
-                if (!isMetadataObsolete.test(song, discogSong)) {
-                    return discogSong;
-                } else {
+                existsAndObsolete = isMetadataObsolete.test(song, discogSong);
+                if (existsAndObsolete) {
                     removeSongById(song.id);
+                } else {
+                    return discogSong;
                 }
             }
 
             addSong(song, false);
+            if (existsAndObsolete) {++ progress.updated;}
+            else {++ progress.added;}
 
             return song;
         }
@@ -359,7 +363,7 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    int syncWithMediaStore(Consumer<Integer> progressUpdater) {
+    SyncWithMediaStoreAsyncTask.Progress syncWithMediaStore(@NonNull final Consumer<SyncWithMediaStoreAsyncTask.Progress> progressUpdater) {
         final Context context = App.getInstance().getApplicationContext();
 
         // Zombies are tracks that are removed but still indexed by MediaStore
@@ -384,18 +388,17 @@ public class Discography implements MusicServiceEventListener {
             return false;
         };
 
-        final int initialSongCount = getSongCount();
-        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
-        final HashSet<Long> importedSongIds = new HashSet<>();
-        for (Song song : alienSongs) {
-            if (isNotWhiteListed.test(song)) continue;
-            if (isBlackListed.test(song)) continue;
-            if (isZombie.test(song)) continue;
-
-            Song matchedSong = getOrAddSong(song);
-            importedSongIds.add(matchedSong.id);
-
-            progressUpdater.accept(getSongCount() - initialSongCount);
+        final SyncWithMediaStoreAsyncTask.Progress counters = new SyncWithMediaStoreAsyncTask.Progress();
+        final ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
+        final Set<Long> importedSongIds = new HashSet<>();
+        for (final Song song : alienSongs) {
+            if (isNotWhiteListed.test(song) || isBlackListed.test(song) || isZombie.test(song)) {
+                ++ counters.removed;
+            } else {
+                final Song matchedSong = getOrAddSong(song, counters);
+                importedSongIds.add(matchedSong.id);
+            }
+            progressUpdater.accept(counters);
         }
 
         synchronized (cache) {
@@ -405,7 +408,7 @@ public class Discography implements MusicServiceEventListener {
             removeSongById(cacheSongsId.toArray(new Long[0]));
         }
 
-        return (getSongCount() - initialSongCount);
+        return counters;
     }
 
     @Override
