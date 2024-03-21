@@ -172,12 +172,6 @@ public class Discography implements MusicServiceEventListener {
         }
     }
 
-    private int getSongCount() {
-        synchronized (cache) {
-            return cache.songsById.size();
-        }
-    }
-
     @NonNull
     public ArrayList<Song> getAllSongs(@Nullable Comparator<Song> sortOrder) {
         synchronized (cache) {
