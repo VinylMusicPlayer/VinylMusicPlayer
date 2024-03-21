@@ -24,6 +24,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -181,12 +182,17 @@ SAFUtil {
 
             // Create a ephemeral/volatile audio file
             return AutoCloseAudioFile.createAutoDelete(AudioFileIO.read(tempFile.get()), tempFile);
+        } catch (final CannotReadException cannotRead) {
+            // The underlying library just cannot read the media file
+            // dont collect the stack trace since we cannot do much about it
+            return null;
         } catch (Exception e) {
             OopsHandler.collectStackTrace(e, "Original file: " + song.data);
+            return null;
+        } finally {
             if (tempFile != null) {
                 tempFile.close();
             }
-            return null;
         }
     }
 
