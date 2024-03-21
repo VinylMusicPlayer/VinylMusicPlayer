@@ -386,12 +386,13 @@ public class Discography implements MusicServiceEventListener {
         final ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
         final Set<Long> importedSongIds = new HashSet<>();
         for (final Song song : alienSongs) {
-            if (isNotWhiteListed.test(song) || isBlackListed.test(song) || isZombie.test(song)) {
-                ++ counters.removed;
-            } else {
-                final Song matchedSong = getOrAddSong(song, counters);
-                importedSongIds.add(matchedSong.id);
-            }
+            if (isNotWhiteListed.test(song)) continue;
+            if (isBlackListed.test(song)) continue;
+            if (isZombie.test(song)) continue;
+
+            final Song matchedSong = getOrAddSong(song, counters);
+            importedSongIds.add(matchedSong.id);
+
             progressUpdater.accept(counters);
         }
 
@@ -400,6 +401,8 @@ public class Discography implements MusicServiceEventListener {
             final Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
+
+            counters.removed = cacheSongsId.size();
         }
 
         return counters;
