@@ -33,7 +33,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (isEmpty()) return "";
 
             final StringBuilder builder = new StringBuilder();
-            builder.append("Track update:");
+            builder.append("Library refresh - ");
             if (added > 0) {
                 builder.append(String.format(" %1$d added", added));
             }
@@ -43,6 +43,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (removed > 0) {
                 builder.append(String.format(" %1$d removed", removed));
             }
+            builder.append(" tracks");
             return builder.toString();
         }
     }
