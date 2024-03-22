@@ -66,7 +66,7 @@ public class NavigationUtil {
     }
 
     @SafeVarargs
-    public static void goToAlbum(@NonNull final Activity activity, final long albumId, @Nullable Pair<View, String>... sharedElements) {
+    public static void goToAlbum(@NonNull final Activity activity, final long albumId, @Nullable final Pair<View, String>... sharedElements) {
         final Intent intent = new Intent(activity, AlbumDetailActivity.class);
         intent.putExtra(AlbumDetailActivity.EXTRA_ALBUM_ID, albumId);
 

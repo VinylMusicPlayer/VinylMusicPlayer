@@ -156,17 +156,17 @@ public class Song implements Parcelable {
         final String EOS = "'"; // end of string marker
         return "Song{" +
                 "id=" + id +
-                ", albumArtistName='" + MultiValuesTagUtil.infoString(albumArtistNames) + EOS +
+                ", albumArtistName='" + MultiValuesTagUtil.merge(albumArtistNames) + EOS +
                 ", albumName='" + albumName + EOS +
                 ", albumId=" + albumId +
-                ", artistNames='" + MultiValuesTagUtil.infoString(artistNames) + EOS +
+                ", artistNames='" + MultiValuesTagUtil.merge(artistNames) + EOS +
                 ", artistId=" + artistId +
                 ", data='" + data + EOS +
                 ", dateAdded=" + dateAdded +
                 ", dateModified=" + dateModified +
                 ", discNumber=" + discNumber +
                 ", duration=" + duration +
-                ", genre='" + MultiValuesTagUtil.infoString(genres) + EOS +
+                ", genre='" + MultiValuesTagUtil.merge(genres) + EOS +
                 ", title='" + title + EOS +
                 ", trackNumber=" + trackNumber +
                 ", year=" + year +
