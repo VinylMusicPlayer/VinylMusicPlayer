@@ -9,7 +9,6 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static List<String> splitIfNeeded(@NonNull final List<String> names) {
-        if (names.isEmpty()) {return new ArrayList<>(Arrays.asList(""));}
+        if (names.isEmpty()) {return new ArrayList<>();}
 
         // If the argument has multiple elements, or empty, dont split further
         if (names.size() > 1) {return names;}
@@ -59,9 +58,7 @@ public class MultiValuesTagUtil {
     @NonNull
     private static List<String> splitImpl(@Nullable final String names, @NonNull final String separator) {
         ArrayList<String> result = new ArrayList<>();
-        if (TextUtils.isEmpty(names)) {
-            result.add("");
-        } else {
+        if (!TextUtils.isEmpty(names)) {
             String[] namesSplit = names.split(separator);
             for (String name : namesSplit) {
                 result.add(name.trim());
@@ -72,7 +69,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue) {
-        if (names.size() == 0) {return defaultValue;}
+        if (names.isEmpty()) {return defaultValue;}
         return MusicUtil.buildInfoString(separator,
                 names.toArray(new String[0]));
     }

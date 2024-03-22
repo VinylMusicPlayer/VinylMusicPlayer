@@ -44,6 +44,7 @@
     <string name="action_set_as_start_directory">Set as start directory</string>
     <string name="albums">Albums</string>
     <string name="artists">Artists</string>
+    <string name="n_artists">%1$d artists</string>
     <string name="genres">Genres</string>
     <string name="songs">Songs</string>
     <string name="playlists">Playlists</string>

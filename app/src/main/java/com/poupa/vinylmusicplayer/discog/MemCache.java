@@ -192,12 +192,6 @@ class MemCache {
         final LinkedHashSet<String> names = new LinkedHashSet<>(); // ordered and unique list of names
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
-        if (names.size() > 1) {
-            // after merging one empty and one non-empty artists lists,
-            // we end up with a list containing an empty element
-            // remove it if that's the case
-            names.remove(Artist.EMPTY.name);
-        }
         final Set<Artist> artists = new HashSet<>(names.size());
         Artist mainArtist = Artist.EMPTY;
         for (final String name : names) {

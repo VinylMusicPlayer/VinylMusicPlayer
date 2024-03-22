@@ -22,10 +22,10 @@ public class Song implements Parcelable {
 
     public final long id;
 
-    public List<String> albumArtistNames = new ArrayList<>(List.of(""));
+    public List<String> albumArtistNames = new ArrayList<>();
     public String albumName;
     public long albumId;
-    public List<String> artistNames = new ArrayList<>(List.of(""));
+    public List<String> artistNames = new ArrayList<>();
     public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
     @NonNls
     public final String data;
@@ -79,6 +79,16 @@ public class Song implements Parcelable {
         title = song.title;
         trackNumber = song.trackNumber;
         year = song.year;
+    }
+
+    @NonNull
+    public List<String> getArtistNames() {
+        final List<String> result = new ArrayList<>(artistNames);
+        for (final String name : albumArtistNames) {
+            if (!result.contains(name)) {result.add(name);}
+        }
+
+        return result;
     }
 
     public boolean isQuickEqual(@NonNull final Song song) {

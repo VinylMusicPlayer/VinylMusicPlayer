@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -25,8 +26,8 @@ public class AlbumSortOrder {
             a1.safeGetFirstSong().albumName,
             a2.safeGetFirstSong().albumName);
     private static final Comparator<Album> _BY_ARTIST_NAME = (a1, a2) -> StringUtil.compareIgnoreAccent(
-            a1.getArtistName(),
-            a2.getArtistName());
+            MultiValuesTagUtil.merge(a1.getArtistNames()),
+            MultiValuesTagUtil.merge(a2.getArtistNames()));
     private static final Comparator<Album> _BY_DATE_ADDED = Comparator.comparingLong(Album::getDateAdded);
     private static final Comparator<Album> _BY_DATE_MODIFIED = Comparator.comparingLong(Album::getDateModified);
     private static final Comparator<Album> _BY_YEAR = Comparator.comparingInt(Album::getYear);
@@ -44,7 +45,7 @@ public class AlbumSortOrder {
     private static final List<SortOrder<Album>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(
                     MediaStore.Audio.Artists.DEFAULT_SORT_ORDER + ", " + MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
-                    album -> Utils.getSectionName(album.getArtistName()),
+                    album -> Utils.getSectionName(MultiValuesTagUtil.merge(album.getArtistNames())),
                     BY_ARTIST,
                     R.id.action_album_sort_order_artist,
                     R.string.sort_order_artist
