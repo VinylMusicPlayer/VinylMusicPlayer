@@ -15,7 +15,9 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -59,10 +61,21 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
         Gson gson = new Gson();
         HashMap<String, Object> prefsMap = new HashMap<>(sharedPreferences.getAll());
+        HashMap<String, Object> copyMap = new HashMap<>(prefsMap);
+        List<String> prefsFilter = Arrays.asList("SONG_IDS_");;
+
+        for (String filterKey : prefsFilter) {
+            for (String key : copyMap.keySet()) {
+                if (key.startsWith(filterKey)) {
+                    prefsMap.remove(key);
+                }
+            }
+        }
 
         prefsMap.put("version_name", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
         prefsMap.put(SharedPreferencesImporter.VERSION_CODE, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
         prefsMap.put(SharedPreferencesImporter.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
+
 
         // Write all lines in the export file
         try {
