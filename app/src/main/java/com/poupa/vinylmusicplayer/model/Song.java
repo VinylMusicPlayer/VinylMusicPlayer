@@ -21,21 +21,21 @@ import java.util.function.Function;
 public class Song implements Parcelable {
     public static final Song EMPTY_SONG = new Song(-1L, "", -1, -1, -1L, "", -1L, -1L, -1L, "", new ArrayList<>(0));
 
-    public long id = -1L;
+    public final long id;
     @NonNull
     public List<String> albumArtistNames = new ArrayList<>(1);
     @NonNull
-    public String albumName = "";
-    public long albumId = -1L;
+    public String albumName;
+    public long albumId;
     @NonNull
     public List<String> artistNames = new ArrayList<>(1);
     @NonNull
     @NonNls
-    public String data = "";
-    public long dateAdded = -1L;
-    public long dateModified = -1L;
+    public final String data;
+    public final long dateAdded;
+    public final long dateModified;
     public int discNumber = 0;
-    public long duration = -1L;
+    public final long duration;
     @NonNull
     public List<String> genres = new ArrayList<>(1);
     public float replayGainAlbum = 0.0f;
@@ -43,9 +43,9 @@ public class Song implements Parcelable {
     public float replayGainPeakAlbum = 1.0f;
     public float replayGainPeakTrack = 1.0f;
     @NonNull
-    public String title = "";
-    public int trackNumber = -1;
-    public int year = -1;
+    public String title;
+    public int trackNumber;
+    public int year;
 
     public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, @NonNull List<String> artistNames) {
         this.id = id;
@@ -83,8 +83,6 @@ public class Song implements Parcelable {
         trackNumber = song.trackNumber;
         year = song.year;
     }
-
-    public Song() {}
 
     @NonNull
     public List<String> getArtistNames() {
