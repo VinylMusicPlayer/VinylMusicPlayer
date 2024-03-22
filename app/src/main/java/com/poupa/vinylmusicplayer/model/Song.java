@@ -19,7 +19,7 @@ import java.util.function.Function;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
-    public static final Song EMPTY_SONG = new Song();
+    public static final Song EMPTY_SONG = new Song(-1L, "", -1, -1, -1L, "", -1L, -1L, -1L, "", new ArrayList<>(0));
 
     public long id = -1L;
     @NonNull
@@ -46,6 +46,22 @@ public class Song implements Parcelable {
     public String title = "";
     public int trackNumber = -1;
     public int year = -1;
+
+    public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, @NonNull List<String> artistNames) {
+        this.id = id;
+        this.albumName = albumName;
+        this.albumId = albumId;
+        this.artistNames = artistNames;
+        this.data = data;
+        this.dateAdded = dateAdded;
+        this.dateModified = dateModified;
+        this.duration = duration;
+        this.title = title;
+        this.trackNumber = trackNumber;
+        this.year = year;
+        // Note: Skip following fields since they are not supported by MediaStore:
+        // discNumber, genre, albumArtistNames, replayGainTrack, replayGainAlbum
+    }
 
     public Song(@NonNull final Song song) {
         id = song.id;

@@ -41,10 +41,10 @@ public class StaticPlayingQueueTest {
         StaticPlayingQueue test = new StaticPlayingQueue();
 
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_b, "b", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song3 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song4 = new Song(id_d, "d", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_b, "b", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song3 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song4 = new Song(id_d, "d", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -104,7 +104,7 @@ public class StaticPlayingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         System.out.println("Add song");
         test.add(song1);
@@ -124,7 +124,7 @@ public class StaticPlayingQueueTest {
         // test
         int pos = 2;
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         System.out.println("Add after position: "+pos);
         test.addAfter(pos, song1);
@@ -172,8 +172,8 @@ public class StaticPlayingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -200,8 +200,8 @@ public class StaticPlayingQueueTest {
         // test
         int pos = 2;
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -223,8 +223,8 @@ public class StaticPlayingQueueTest {
         // test
         int pos = 0;
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_e, "e", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_f, "f", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         ArrayList<Song> list = new ArrayList<>();
         list.add(song1);
@@ -294,8 +294,8 @@ public class StaticPlayingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         test.setCurrentPosition(2);
         print(test);
@@ -319,8 +319,8 @@ public class StaticPlayingQueueTest {
 
         // test
         List<String> artistName = new ArrayList<>();
-        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
-        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", 0, artistName);
+        Song song1 = new Song(id_a, "a", 0, 2012, 50, "", 0, 0, 0, "", artistName);
+        Song song2 = new Song(id_c, "c", 0, 2012, 50, "", 0, 0, 0, "", artistName);
 
         test.setCurrentPosition(1);
         print(test);

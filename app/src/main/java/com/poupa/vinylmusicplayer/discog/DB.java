@@ -203,18 +203,18 @@ class DB extends SQLiteOpenHelper {
                 final String trackTitle = cursor.getString(++columnIndex);
                 final int year = cursor.getInt(++columnIndex);
 
-                final Song song = new Song();
-                song.id = id;
-                song.title = trackTitle;
-                song.trackNumber = trackNumber;
-                song.year = year;
-                song.duration = trackDuration;
-                song.data = dataPath;
-                song.dateAdded = dateAdded;
-                song.dateModified = dateModified;
-                song.albumId = albumId;
-                song.albumName = albumName;
-                song.artistNames = MultiValuesTagUtil.split(artistNames);
+                final Song song = new Song(
+                        id,
+                        trackTitle,
+                        trackNumber,
+                        year,
+                        trackDuration,
+                        dataPath,
+                        dateAdded,
+                        dateModified,
+                        albumId,
+                        albumName,
+                        MultiValuesTagUtil.split(artistNames));
                 song.discNumber = discNumber;
                 song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
                 song.genres = MultiValuesTagUtil.split(genres);
