@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +65,7 @@ class DB extends SQLiteOpenHelper {
         migrateDB(db, oldVersion, newVersion);
     }
 
-    public void migrateDB(@NonNull SQLiteDatabase dbase, int oldVersion, int newVersion) {
+    private void migrateDB(@NonNull SQLiteDatabase dbase, int oldVersion, int newVersion) {
         final Consumer<SQLiteDatabase> migrateResetAll = (db) -> {
             db.execSQL(String.format("DROP TABLE IF EXISTS %s", SongColumns.NAME));
             onCreate(db);
@@ -123,7 +124,7 @@ class DB extends SQLiteOpenHelper {
 
             db.insert(SongColumns.NAME, null, values);
         } catch (Exception e) {
-            e.printStackTrace();
+            OopsHandler.collectStackTrace(e);
         }
     }
 
