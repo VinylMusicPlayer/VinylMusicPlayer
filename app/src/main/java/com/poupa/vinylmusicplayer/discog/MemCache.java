@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -208,19 +209,19 @@ class MemCache {
 
     @NonNull
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbum(@NonNull final Song song) {
-        Set<Artist> artists = getOrCreateArtistByName(song);
+        final Set<Artist> artists = getOrCreateArtistByName(song);
 
-        // Try reusing an existing album with same name
-        Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
-        if (albumIdsSameName != null) {
-            for (long id : albumIdsSameName) {
-                AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(song.artistId);
-                if (byMainArtist != null) {
-                    song.albumId = byMainArtist.getId();
-                    break;
-                }
-            }
-        }
+//        // Try reusing an existing album with same name
+//        final Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
+//        if (albumIdsSameName != null) {
+//            for (final long id : albumIdsSameName) {
+//                final AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(song.artistId);
+//                if (byMainArtist != null) {
+//                    song.albumId = byMainArtist.getId();
+//                    break;
+//                }
+//            }
+//        }
 
         // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
@@ -228,12 +229,13 @@ class MemCache {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
             albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         }
+        Objects.requireNonNull(albumsByArtist);
 
-        Map<Long, AlbumSlice> result = new HashMap<>();
-        for (Artist artist : artists) {
+        final Map<Long, AlbumSlice> result = new HashMap<>();
+        for (final Artist artist : artists) {
             // Attach to the artists if needed
             if (!albumsByArtist.containsKey(artist.id)) {
-                AlbumSlice album = new AlbumSlice();
+                final AlbumSlice album = new AlbumSlice();
                 albumsByArtist.put(artist.id, album);
 
                 Set<Long> albumsId = albumsByName.get(song.albumName);
@@ -241,6 +243,7 @@ class MemCache {
                     albumsByName.put(song.albumName, new HashSet<>());
                     albumsId = albumsByName.get(song.albumName);
                 }
+                Objects.requireNonNull(albumsId);
                 albumsId.add(song.albumId);
 
                 artist.albums.add(album);
