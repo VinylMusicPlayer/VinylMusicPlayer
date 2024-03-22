@@ -194,15 +194,10 @@ class MemCache {
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
         final Set<Artist> artists = new HashSet<>(names.size());
-//        Artist mainArtist = Artist.EMPTY;
         for (final String name : names) {
             final Artist artist = getOrCreateArtist.apply(name);
-//            if (mainArtist.id == Artist.EMPTY.id) {mainArtist = artist;}
             artists.add(artist);
         }
-//
-//        // Since the MediaStore artistId is disregarded, correct the link on the Song object
-//        song.artistId = mainArtist.getId();
 
         return artists;
     }
@@ -211,19 +206,6 @@ class MemCache {
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbum(@NonNull final Song song) {
         final Set<Artist> artists = getOrCreateArtistByName(song);
 
-//        // Try reusing an existing album with same name
-//        final Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
-//        if (albumIdsSameName != null) {
-//            for (final long id : albumIdsSameName) {
-//                final AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(song.artistId);
-//                if (byMainArtist != null) {
-//                    song.albumId = byMainArtist.getId();
-//                    break;
-//                }
-//            }
-//        }
-
-        // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
@@ -291,12 +273,8 @@ class MemCache {
 
     @NonNull
     private synchronized List<Genre> getOrCreateGenresBySong(@NonNull final Song song) {
-        List<String> genres = song.genres;
-
         // If a song has no genres, empty string is the "unknown" genre
-        if (genres.isEmpty()) {
-            genres = List.of("");
-        }
+        final List<String> genres = song.genres.isEmpty() ? List.of("") : song.genres;
 
         return genres.stream().map(this::getOrCreateGenreByName).collect(Collectors.toList());
     }

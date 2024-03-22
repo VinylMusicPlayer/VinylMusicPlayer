@@ -13,51 +13,39 @@ import org.jetbrains.annotations.NonNls;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
-    public static final Song EMPTY_SONG = new Song(-1L, "", -1, -1, -1L, "", -1L, -1L, -1L, "", -1L, new ArrayList<>(List.of("")));
+    public static final Song EMPTY_SONG = new Song();
 
-    public final long id;
-
-    public List<String> albumArtistNames = new ArrayList<>();
-    public String albumName;
-    public long albumId;
-    public List<String> artistNames = new ArrayList<>();
-    public long artistId; // TODO This field is ambiguous - song's first artist or album first artist?
+    public long id = -1L;
+    @NonNull
+    public List<String> albumArtistNames = new ArrayList<>(1);
+    @NonNull
+    public String albumName = "";
+    public long albumId = -1L;
+    @NonNull
+    public List<String> artistNames = new ArrayList<>(1);
+    @NonNull
     @NonNls
-    public final String data;
-    public final long dateAdded;
-    public final long dateModified;
+    public String data = "";
+    public long dateAdded = -1L;
+    public long dateModified = -1L;
     public int discNumber = 0;
-    public final long duration;
-    public List<String> genres = new ArrayList<>(List.of(""));
+    public long duration = -1L;
+    @NonNull
+    public List<String> genres = new ArrayList<>(1);
     public float replayGainAlbum = 0.0f;
     public float replayGainTrack = 0.0f;
     public float replayGainPeakAlbum = 1.0f;
     public float replayGainPeakTrack = 1.0f;
-    public String title;
-    public int trackNumber;
-    public int year;
-
-    public Song(long id, String title, int trackNumber, int year, long duration, String data, long dateAdded, long dateModified, long albumId, String albumName, long artistId, @NonNull List<String> artistNames) {
-        this.id = id;
-        this.albumName = albumName;
-        this.albumId = albumId;
-        this.artistNames = artistNames;
-        this.artistId = artistId;
-        this.data = data;
-        this.dateAdded = dateAdded;
-        this.dateModified = dateModified;
-        this.duration = duration;
-        this.title = title;
-        this.trackNumber = trackNumber;
-        this.year = year;
-        // Note: Skip following fields since they are not supported by MediaStore:
-        // discNumber, genre, albumArtistNames, replayGainTrack, replayGainAlbum
-    }
+    @NonNull
+    public String title = "";
+    public int trackNumber = -1;
+    public int year = -1;
 
     public Song(@NonNull final Song song) {
         id = song.id;
@@ -65,7 +53,6 @@ public class Song implements Parcelable {
         albumName = song.albumName;
         albumId = song.albumId;
         artistNames = song.artistNames;
-        artistId = song.artistId;
         data = song.data;
         dateAdded = song.dateAdded;
         dateModified = song.dateModified;
@@ -80,6 +67,8 @@ public class Song implements Parcelable {
         trackNumber = song.trackNumber;
         year = song.year;
     }
+
+    public Song() {}
 
     @NonNull
     public List<String> getArtistNames() {
@@ -105,7 +94,6 @@ public class Song implements Parcelable {
         // Compare numerical fields first
         if (id != song.id) return false;
         if (albumId != song.albumId) return false;
-        if (artistId != song.artistId) return false;
         if (dateAdded != song.dateAdded) return false;
         if (dateModified != song.dateModified) return false;
         if (discNumber != song.discNumber) return false;
@@ -136,7 +124,6 @@ public class Song implements Parcelable {
         result = 31 * result + (albumName != null ? albumName.hashCode() : 0);
         result = 31 * result + (int)albumId;
         result = 31 * result + artistNames.hashCode();
-        result = 31 * result + (int)artistId;
         result = 31 * result + (data != null ? data.hashCode() : 0);
         result = 31 * result + (int) (dateAdded ^ (dateAdded >>> 32));
         result = 31 * result + (int) (dateModified ^ (dateModified >>> 32));
@@ -160,7 +147,6 @@ public class Song implements Parcelable {
                 ", albumName='" + albumName + EOS +
                 ", albumId=" + albumId +
                 ", artistNames='" + MultiValuesTagUtil.merge(artistNames) + EOS +
-                ", artistId=" + artistId +
                 ", data='" + data + EOS +
                 ", dateAdded=" + dateAdded +
                 ", dateModified=" + dateModified +
@@ -179,13 +165,12 @@ public class Song implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public void writeToParcel(@NonNull Parcel parcel, final int flags) {
         parcel.writeLong(id);
         parcel.writeStringList(albumArtistNames);
         parcel.writeString(albumName);
         parcel.writeLong(albumId);
         parcel.writeStringList(artistNames);
-        parcel.writeLong(artistId);
         parcel.writeString(data);
         parcel.writeLong(dateAdded);
         parcel.writeLong(dateModified);
@@ -197,25 +182,26 @@ public class Song implements Parcelable {
         parcel.writeInt(year);
     }
 
-    protected Song(Parcel in) {
+    Song(@NonNull final Parcel in) {
+        final Function<String, String> nonNullify = (s) -> (s == null ? "" : s);
+
         id = in.readLong();
         in.readStringList(albumArtistNames);
-        albumName = in.readString();
+        albumName = nonNullify.apply(in.readString());
         albumId = in.readLong();
         in.readStringList(artistNames);
-        artistId = in.readLong();
-        data = in.readString();
+        data = nonNullify.apply(in.readString());
         dateAdded = in.readLong();
         dateModified = in.readLong();
         discNumber = in.readInt();
         duration = in.readLong();
         in.readStringList(genres);
-        title = in.readString();
+        title = nonNullify.apply(in.readString());
         trackNumber = in.readInt();
         year = in.readInt();
     }
 
-    public static final Creator<Song> CREATOR = new Creator<Song>() {
+    public static final Creator<Song> CREATOR = new Creator<>() {
         public Song createFromParcel(Parcel source) {
             return new Song(source);
         }
