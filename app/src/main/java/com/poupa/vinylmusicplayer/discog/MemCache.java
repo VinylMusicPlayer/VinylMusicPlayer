@@ -194,15 +194,15 @@ class MemCache {
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
         final Set<Artist> artists = new HashSet<>(names.size());
-        Artist mainArtist = Artist.EMPTY;
+//        Artist mainArtist = Artist.EMPTY;
         for (final String name : names) {
             final Artist artist = getOrCreateArtist.apply(name);
-            if (mainArtist.id == Artist.EMPTY.id) {mainArtist = artist;}
+//            if (mainArtist.id == Artist.EMPTY.id) {mainArtist = artist;}
             artists.add(artist);
         }
-
-        // Since the MediaStore artistId is disregarded, correct the link on the Song object
-        song.artistId = mainArtist.getId();
+//
+//        // Since the MediaStore artistId is disregarded, correct the link on the Song object
+//        song.artistId = mainArtist.getId();
 
         return artists;
     }
