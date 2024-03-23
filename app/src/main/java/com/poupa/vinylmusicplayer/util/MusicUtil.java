@@ -116,10 +116,10 @@ public class MusicUtil {
 
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
-        return MusicUtil.buildInfoString(
-                PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                song.albumName
+        return buildInfoString(
+                PreferenceUtil.getInstance().showSongNumber() ? getTrackNumberInfoString(song) : null,
                 MultiValuesTagUtil.infoStringAsArtists(song.artistNames),
+                Album.getTitle(song.albumName)
         );
     }
 

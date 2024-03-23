@@ -92,7 +92,7 @@ public class SongSortOrder {
             ),
             Utils.build(
                     MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
-                    song -> Utils.getSectionName(song.albumName),
+                    song -> Utils.getSectionName(Album.getTitle(song.albumName)),
                     BY_ALBUM,
                     R.id.action_song_sort_order_album,
                     R.string.sort_order_album

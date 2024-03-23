@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
@@ -67,7 +68,7 @@ public class PlayingNotificationImplApi19 extends PlayingNotification {
             notificationLayoutBig.setViewVisibility(R.id.media_titles, View.VISIBLE);
             notificationLayoutBig.setTextViewText(R.id.title, song.title);
             notificationLayoutBig.setTextViewText(R.id.text, artistNames);
-            notificationLayoutBig.setTextViewText(R.id.text2, song.albumName);
+            notificationLayoutBig.setTextViewText(R.id.text2, Album.getTitle(song.albumName));
         }
 
         linkButtons(notificationLayout, notificationLayoutBig);
