@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -22,22 +21,22 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static List<String> split(@Nullable final String names) {
-        return MultiValuesTagUtil.splitImpl(names, SINGLE_LINE_SEPARATOR);
+        return splitImpl(names, SINGLE_LINE_SEPARATOR);
     }
 
     @NonNull
     public static String merge(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(names, SINGLE_LINE_SEPARATOR, "");
+        return mergeImpl(names, SINGLE_LINE_SEPARATOR, "");
     }
 
     @NonNull
-    public static List<String> splitIfNeeded(@NonNull final List<String> names) {
-        if (names.isEmpty()) {return new ArrayList<>();}
+    static List<String> splitIfNeeded(@NonNull final List<String> names) {
+        if (names.isEmpty()) {return new ArrayList<>(0);}
 
         // If the argument has multiple elements, or empty, dont split further
         if (names.size() > 1) {return names;}
 
-        return MultiValuesTagUtil.split(names.get(0));
+        return split(names.get(0));
     }
 
     @NonNull
@@ -47,20 +46,20 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static List<String> tagEditorSplit(@Nullable final String names) {
-        return MultiValuesTagUtil.splitIfNeeded(MultiValuesTagUtil.splitImpl(names, MULTI_LINE_SEPARATOR));
+        return splitIfNeeded(splitImpl(names, MULTI_LINE_SEPARATOR));
     }
 
     @NonNull
     public static String tagEditorMerge(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(MultiValuesTagUtil.splitIfNeeded(names), MULTI_LINE_SEPARATOR, "");
+        return mergeImpl(splitIfNeeded(names), MULTI_LINE_SEPARATOR, "");
     }
 
     @NonNull
     private static List<String> splitImpl(@Nullable final String names, @NonNull final String separator) {
-        ArrayList<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
         if (!TextUtils.isEmpty(names)) {
-            String[] namesSplit = names.split(separator);
-            for (String name : namesSplit) {
+            final String[] namesSplit = names.split(separator);
+            for (final String name : namesSplit) {
                 result.add(name.trim());
             }
         }
