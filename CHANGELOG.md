@@ -1,4 +1,16 @@
 # Changelog
+## [1.8.3] - 2024-03-23
+
+### Fixes
+* Refactor multi select by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/958
+* Dont collect the stack trace if the underlying library  cannot read the media file by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/989
+* End the DB transaction properly (in case of failure) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/990
+### Other Changes
+* feat(translations): add Dutch translation by @AnonymousWP in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/986
+* Clean obsolete DB columns by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/993
+* Experiment to apply pipeline on PR as well by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/987
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.2...1.8.3
 
 ## [1.8.2] - 2024-03-13
 
