@@ -42,7 +42,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static String infoString(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(names, INFO_STRING_SEPARATOR, Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+        return mergeImpl(names, INFO_STRING_SEPARATOR, "");
     }
 
     @NonNull
