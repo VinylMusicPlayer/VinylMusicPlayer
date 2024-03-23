@@ -185,14 +185,12 @@ SAFUtil {
         } catch (final CannotReadException cannotRead) {
             // The underlying library just cannot read the media file
             // dont collect the stack trace since we cannot do much about it
+            if (tempFile != null) {tempFile.close();}
             return null;
         } catch (Exception e) {
             OopsHandler.collectStackTrace(e, "Original file: " + song.data);
+            if (tempFile != null) {tempFile.close();}
             return null;
-        } finally {
-            if (tempFile != null) {
-                tempFile.close();
-            }
         }
     }
 
