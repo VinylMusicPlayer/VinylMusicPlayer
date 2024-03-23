@@ -51,7 +51,7 @@ public class Song implements Parcelable {
         this.id = id;
         this.albumName = albumName;
         this.albumId = albumId;
-        this.artistNames = artistNames;
+        this.artistNames = artistNames; // TODO To avoid aliasing, may want to make a copy of this list instead
         this.data = data;
         this.dateAdded = dateAdded;
         this.dateModified = dateModified;

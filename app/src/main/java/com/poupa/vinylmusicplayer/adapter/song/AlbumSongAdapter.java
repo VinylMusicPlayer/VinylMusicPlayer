@@ -35,7 +35,8 @@ public class AlbumSongAdapter extends SongAdapter {
     }
 
     @Override
-    protected String getSongText(Song song) {
+    @NonNull
+    protected String getSongText(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
                 MusicUtil.getReadableDurationString(song.duration),
                 MultiValuesTagUtil.infoStringAsArtists(song.artistNames));

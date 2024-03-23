@@ -95,18 +95,18 @@ public class MusicUtil {
 
     @NonNull
     public static String getArtistInfoString(@NonNull final Context context, @NonNull final Artist artist) {
-        int albumCount = artist.getAlbumCount();
-        int songCount = artist.getSongCount();
+        final int albumCount = artist.getAlbumCount();
+        final int songCount = artist.getSongCount();
 
-        return MusicUtil.buildInfoString(
-            MusicUtil.getAlbumCountString(context, albumCount),
-            MusicUtil.getSongCountString(context, songCount)
+        return buildInfoString(
+            getAlbumCountString(context, albumCount),
+            getSongCountString(context, songCount)
         );
     }
 
     @NonNull
     public static String getAlbumInfoString(@NonNull final Context context, @NonNull final Album album) {
-        int songCount = album.getSongCount();
+        final int songCount = album.getSongCount();
 
         return buildInfoString(
             MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
@@ -133,9 +133,9 @@ public class MusicUtil {
     public static String getPlaylistInfoString(@NonNull final Context context, @NonNull List<? extends Song> songs) {
         final long duration = getTotalDuration(songs);
 
-        return MusicUtil.buildInfoString(
-            MusicUtil.getSongCountString(context, songs.size()),
-            MusicUtil.getReadableDurationString(duration)
+        return buildInfoString(
+            getSongCountString(context, songs.size()),
+            getReadableDurationString(duration)
         );
     }
 
@@ -183,7 +183,7 @@ public class MusicUtil {
      * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
      */
     @NonNull
-    public static String buildInfoString(final String... values)
+    public static String buildInfoString(@NonNull final String... values)
     {
         return buildInfoString("  •  ", values, null);
     }
@@ -327,7 +327,7 @@ public class MusicUtil {
     }
 
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
-        if ((name == null) || (name.length() == 0)) return true;
+        if (TextUtils.isEmpty(name)) return true;
         if (name.equals(defaultDisplayName)) return true;
         name = name.trim().toLowerCase();
         return (name.equals("unknown") || name.equals("<unknown>"));

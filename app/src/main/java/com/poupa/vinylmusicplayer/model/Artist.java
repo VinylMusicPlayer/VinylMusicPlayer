@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 public class Artist implements Parcelable {
     public static final String UNKNOWN_ARTIST_DISPLAY_NAME = "Unknown Artist";
-    public static final Artist EMPTY = new Artist(-1, "");
+    public static final Artist EMPTY = new Artist(-1L, "");
 
     public final long id;
     public final String name;

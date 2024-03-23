@@ -175,7 +175,8 @@ public class SongAdapter
         }
     }
 
-    protected String getSongText(Song song) {
+    @NonNull
+    protected String getSongText(@NonNull final Song song) {
         return MusicUtil.getSongInfoString(song);
     }
 
