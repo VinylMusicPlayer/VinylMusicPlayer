@@ -1,7 +1,8 @@
 # Changelog
+
 ## [1.8.4] - 2024-03-23
 
-### Other Changes
+### Fixes
 * Hotfix for regression introduced by PR #989 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/996
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.3...1.8.4
