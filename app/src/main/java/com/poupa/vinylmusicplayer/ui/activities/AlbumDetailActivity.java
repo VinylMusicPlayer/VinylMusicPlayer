@@ -394,7 +394,7 @@ public class AlbumDetailActivity
         final List<String> artistNames = album.getArtistNames();
         final String artistName = artistNames.isEmpty()
                 ? getResources().getString(R.string.no_artists)
-                : MultiValuesTagUtil.infoString(artistNames);
+                : MultiValuesTagUtil.infoStringAsArtists(artistNames);
 
         layoutBinding.title.setText(album.getTitle());
         layoutBinding.artistText.setText(artistName);

@@ -52,7 +52,7 @@ public class PlayingNotificationImplApi19 extends PlayingNotification {
         final RemoteViews notificationLayout = new RemoteViews(service.getPackageName(), R.layout.notification);
         final RemoteViews notificationLayoutBig = new RemoteViews(service.getPackageName(), R.layout.notification_big);
 
-        final String artistNames = MultiValuesTagUtil.infoString(song.artistNames);
+        final String artistNames = MultiValuesTagUtil.infoStringAsArtists(song.artistNames);
         if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistNames)) {
             notificationLayout.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         } else {

@@ -31,7 +31,7 @@ public class AppWidgetSmall extends BaseAppWidget {
         setTitlesArtwork(service);
 
         final Song song = service.getCurrentSong();
-        final String artistName = MultiValuesTagUtil.infoString(song.artistNames);
+        final String artistName = MultiValuesTagUtil.infoStringAsArtists(song.artistNames);
         if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistName)) &&
                 TextUtils.isEmpty(song.title) || TextUtils.isEmpty(artistName)) {
             appWidgetView.setTextViewText(R.id.text_separator, "");

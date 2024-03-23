@@ -102,7 +102,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     @NonNull
     protected String getAlbumText(Album album) {
         return MusicUtil.buildInfoString(
-                MultiValuesTagUtil.infoString(album.getArtistNames()),
+                MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
                 MusicUtil.getSongCountString(activity, album.songs.size())
         );
     }

@@ -283,7 +283,7 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
 
     protected void setTitlesArtwork(final MusicService service) {
         final Song song = service.getCurrentSong();
-        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(MultiValuesTagUtil.infoString(song.artistNames))) {
+        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(MultiValuesTagUtil.infoStringAsArtists(song.artistNames))) {
             appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
         } else {
             appWidgetView.setViewVisibility(R.id.media_titles, View.VISIBLE);

@@ -109,7 +109,7 @@ public class MusicUtil {
         int songCount = album.getSongCount();
 
         return buildInfoString(
-            MultiValuesTagUtil.infoString(album.getArtistNames()),
+            MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
             getSongCountString(context, songCount)
         );
     }
@@ -118,8 +118,8 @@ public class MusicUtil {
     public static String getSongInfoString(@NonNull final Song song) {
         return MusicUtil.buildInfoString(
                 PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                MultiValuesTagUtil.infoString(song.artistNames),
                 song.albumName
+                MultiValuesTagUtil.infoStringAsArtists(song.artistNames),
         );
     }
 
@@ -185,17 +185,22 @@ public class MusicUtil {
     @NonNull
     public static String buildInfoString(final String... values)
     {
-        return MusicUtil.buildInfoString("  •  ", values);
+        return buildInfoString("  •  ", values, null);
     }
 
     @NonNull
-    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values)
+    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values, @Nullable final String unknownReplacement)
     {
-        StringBuilder result = new StringBuilder();
-        for (String value : values) {
-            if (TextUtils.isEmpty(value)) continue;
-            if (result.length() > 0) result.append(separator);
-            result.append(value);
+        final StringBuilder result = new StringBuilder();
+        for (final String value : values) {
+            if (!TextUtils.isEmpty(value)) {
+                if (result.length() > 0) result.append(separator);
+
+                final String valueOrReplacement = (unknownReplacement != null) && isNameUnknown(value, unknownReplacement)
+                        ? unknownReplacement
+                        : value;
+                result.append(valueOrReplacement);
+            }
         }
         return result.toString();
     }

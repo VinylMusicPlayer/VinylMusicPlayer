@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static String merge(@NonNull final List<String> names) {
-        return mergeImpl(names, SINGLE_LINE_SEPARATOR, "");
+        return mergeImpl(names, SINGLE_LINE_SEPARATOR, "", null);
     }
 
     @NonNull
@@ -40,8 +42,13 @@ public class MultiValuesTagUtil {
     }
 
     @NonNull
-    public static String infoString(@NonNull final List<String> names) {
-        return mergeImpl(names, INFO_STRING_SEPARATOR, "");
+    public static String infoStringAsArtists(@NonNull final List<String> names) {
+        return mergeImpl(names, INFO_STRING_SEPARATOR, "", Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+    }
+
+    @NonNull
+    public static String infoStringAsGenres(@NonNull final List<String> names) {
+        return mergeImpl(names, INFO_STRING_SEPARATOR, "", Genre.UNKNOWN_GENRE_DISPLAY_NAME);
     }
 
     @NonNull
@@ -51,7 +58,7 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static String tagEditorMerge(@NonNull final List<String> names) {
-        return mergeImpl(splitIfNeeded(names), MULTI_LINE_SEPARATOR, "");
+        return mergeImpl(splitIfNeeded(names), MULTI_LINE_SEPARATOR, "", null);
     }
 
     @NonNull
@@ -67,10 +74,9 @@ public class MultiValuesTagUtil {
     }
 
     @NonNull
-    private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue) {
+    private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue, @Nullable final String unknownReplacement) {
         if (names.isEmpty()) {return defaultValue;}
-        return MusicUtil.buildInfoString(separator,
-                names.toArray(new String[0]));
+        return MusicUtil.buildInfoString(separator, names.toArray(new String[0]), unknownReplacement);
     }
 
 }
