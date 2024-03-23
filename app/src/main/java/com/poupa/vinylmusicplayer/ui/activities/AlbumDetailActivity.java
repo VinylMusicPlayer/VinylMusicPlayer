@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
 import com.poupa.vinylmusicplayer.dialogs.helper.DeleteSongsHelper;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -391,12 +392,9 @@ public class AlbumDetailActivity
         }
 
         final List<String> artistNames = album.getArtistNames();
-        final String artistName;
-        switch (artistNames.size()) {
-            case 0 -> artistName = getResources().getString(R.string.no_artists);
-            case 1 -> artistName = artistNames.get(0);
-            default -> artistName = getResources().getString(R.string.n_artists, artistNames.size());
-        }
+        final String artistName = artistNames.isEmpty()
+                ? getResources().getString(R.string.no_artists)
+                : MultiValuesTagUtil.infoString(artistNames);
 
         layoutBinding.title.setText(album.getTitle());
         layoutBinding.artistText.setText(artistName);
