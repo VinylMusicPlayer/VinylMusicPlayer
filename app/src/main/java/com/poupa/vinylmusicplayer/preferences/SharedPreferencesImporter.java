@@ -42,8 +42,8 @@ public class SharedPreferencesImporter extends AppCompatActivity {
     static final String VERSION_CODE = "version_code";
     static final String CURRENT_FILE_FORMAT = "json";
 
-    static final int minCompatibleVersion = 192;
-    static final int maxCompatibleVersion = Integer.MAX_VALUE;
+    static final int MIN_COMPATIBLE_VERSION = 192;
+    static final int MAX_COMPATIBLE_VERSION = Integer.MAX_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             // Checks whether the file format saved in the preferences file is compatible with the current settings parser.
             if(Objects.equals(fileFormat, CURRENT_FILE_FORMAT)) {
                 // Checks whether the version of the app and the saved settings are compatible.
-                if(minCompatibleVersion <= savedPrefsVersionCode && savedPrefsVersionCode <= maxCompatibleVersion) {
+                if(MIN_COMPATIBLE_VERSION <= savedPrefsVersionCode && savedPrefsVersionCode <= MAX_COMPATIBLE_VERSION) {
                     for (Map.Entry<String, ?> entry : preferences.entrySet()) {
                         if (Objects.equals(entry.getKey(), FILE_FORMAT) || Objects.equals(entry.getKey(), VERSION_CODE)) continue;
 

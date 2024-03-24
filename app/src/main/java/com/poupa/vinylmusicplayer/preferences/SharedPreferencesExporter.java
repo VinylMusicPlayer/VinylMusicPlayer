@@ -17,8 +17,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -28,6 +30,7 @@ import androidx.preference.PreferenceManager;
 public class SharedPreferencesExporter extends AppCompatActivity {
     private Context context;
     private static final String FILENAME = "filename";
+    static final String VERSION_NAME = "version_name";
     private ActivityResultLauncher<String> exportFilePicker;
     private SharedPreferences sharedPreferences;
 
@@ -61,18 +64,18 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     private void writeToExportFile(Uri location) throws PackageManager.NameNotFoundException {
         Gson gson = new Gson();
         HashMap<String, Object> prefsMap = new HashMap<>(sharedPreferences.getAll());
-        HashMap<String, Object> copyMap = new HashMap<>(prefsMap);
+        Set<String> prefsMapKeySet = new HashSet<>(prefsMap.keySet()); // Create a copy of key set to avoid ConcurrentModificationException
         List<String> prefsFilter = Arrays.asList("SONG_IDS_");;
 
         for (String filterKey : prefsFilter) {
-            for (String key : copyMap.keySet()) {
+            for (String key : prefsMapKeySet) {
                 if (key.startsWith(filterKey)) {
                     prefsMap.remove(key);
                 }
             }
         }
 
-        prefsMap.put("version_name", context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
+        prefsMap.put(VERSION_NAME, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
         prefsMap.put(SharedPreferencesImporter.VERSION_CODE, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
         prefsMap.put(SharedPreferencesImporter.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
 
