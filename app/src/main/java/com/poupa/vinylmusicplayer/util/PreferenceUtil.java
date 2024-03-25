@@ -19,24 +19,27 @@ import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
+import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
-import org.jetbrains.annotations.NonNls;
-
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Comparator;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
+
+    @PrefKey(ExportImportable = true)
     public static final String GENERAL_THEME = "general_theme";
     private static final String GENERAL_THEME_LIGHT = "light";
     private static final String GENERAL_THEME_DARK = "dark";
@@ -44,105 +47,147 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
+    @PrefKey(ExportImportable = true)
     private static final String REMEMBER_LAST_TAB = "remember_last_tab";
+    @PrefKey(ExportImportable = true)
     private static final String LAST_PAGE = "last_start_page";
+    @PrefKey(ExportImportable = true)
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
+    @PrefKey(ExportImportable = true)
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
 
+    @PrefKey(ExportImportable = true)
     private static final String ARTIST_SORT_ORDER = "artist_sort_order";
+    @PrefKey(ExportImportable = true)
     public static final String ALBUM_SORT_ORDER = "album_sort_order";
+    @PrefKey(ExportImportable = true)
     public static final String SONG_SORT_ORDER = "song_sort_order";
+    @PrefKey(ExportImportable = true)
     private static final String FILE_SORT_ORDER = "file_sort_order";
+    @PrefKey(ExportImportable = true)
+    private static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
+    @PrefKey(ExportImportable = true)
+    private static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
 
-    public static final String SORT_ORDER_NAME = "sort_order_name";
-    public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
-    public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
-    public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
-    public static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
-    public static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
-
+    @PrefKey(ExportImportable = true)
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
+    @PrefKey(ExportImportable = true)
     private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
 
+    @PrefKey(ExportImportable = true)
     private static final String SONG_GRID_SIZE = "song_grid_size";
+    @PrefKey(ExportImportable = true)
     private static final String SONG_GRID_SIZE_LAND = "song_grid_size_land";
 
+    @PrefKey(ExportImportable = true)
     private static final String ARTIST_GRID_SIZE = "artist_grid_size";
+    @PrefKey(ExportImportable = true)
     private static final String ARTIST_GRID_SIZE_LAND = "artist_grid_size_land";
 
+    @PrefKey(ExportImportable = true)
     private static final String ALBUM_COLORED_FOOTERS = "album_colored_footers";
+    @PrefKey(ExportImportable = true)
     private static final String SONG_COLORED_FOOTERS = "song_colored_footers";
+    @PrefKey(ExportImportable = true)
     private static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
+    @PrefKey(ExportImportable = true)
     private static final String ALBUM_ARTIST_COLORED_FOOTERS = "album_artist_colored_footers";
 
+    @PrefKey(ExportImportable = true)
     public static final String COLORED_NOTIFICATION = "colored_notification";
+    @PrefKey(ExportImportable = true)
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
+    @PrefKey(ExportImportable = true)
     private static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
 
+    @PrefKey(ExportImportable = true)
     public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
 
+    @PrefKey(ExportImportable = true)
     private static final String AUDIO_DUCKING = "audio_ducking";
+    @PrefKey(ExportImportable = true)
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
-    @Deprecated public static final String LAST_ADDED_CUTOFF = "last_added_interval";
+    @PrefKey(ExportImportable = true)
     public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
-    @Deprecated public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
+    @PrefKey(ExportImportable = true)
     public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
+    @PrefKey(ExportImportable = true)
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
+    @PrefKey(ExportImportable = true)
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
+    @PrefKey(ExportImportable = true)
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
+    @PrefKey(ExportImportable = true)
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
+    @PrefKey
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
+    @PrefKey(ExportImportable = true)
     private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
 
+    @PrefKey
     private static final String LAST_CHANGELOG_VERSION = "last_changelog_version";
+    @PrefKey
     private static final String INTRO_SHOWN = "intro_shown";
 
+    @PrefKey(ExportImportable = true)
     public static final String AUTO_DOWNLOAD_IMAGES_POLICY = "auto_download_images_policy";
     private static final String AUTO_DOWNLOAD_ALWAYS = "always";
     private static final String AUTO_DOWNLOAD_WIFI_ONLY = "only_wifi";
     private static final String AUTO_DOWNLOAD_NEVER = "never";
 
+    @PrefKey(ExportImportable = true)
     private static final String START_DIRECTORY = "start_directory";
 
+    @PrefKey(ExportImportable = true)
     private static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
+    @PrefKey(ExportImportable = true)
     private static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
+    @PrefKey(ExportImportable = true)
     private static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
 
+    @PrefKey
     private static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
+    @PrefKey(ExportImportable = true)
     public static final String WHITELIST_ENABLED = "whitelist_enabled";
 
-    @NonNls
+    @PrefKey(ExportImportable = true)
     public static final String LIBRARY_CATEGORIES = "library_categories";
 
+    @PrefKey(ExportImportable = true)
     private static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
-    @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
+    @PrefKey(ExportImportable = true)
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
-    public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
-    public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
-
-    public static final String THEME_STYLE = "theme_style";
-    @NonNls
-    private static final String CLASSIC_THEME = "classic";
-    @NonNls
-    public static final String ROUNDED_THEME = "rounded";
-
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
 
-    private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
-    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
+    @PrefKey(ExportImportable = true)
+    public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
+    @PrefKey(ExportImportable = true)
+    public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
+    @PrefKey(ExportImportable = true)
+    public static final String THEME_STYLE = "theme_style";
+    private static final String CLASSIC_THEME = "classic";
+    public static final String ROUNDED_THEME = "rounded";
+
+    @PrefKey
+    private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
+
+    @PrefKey(ExportImportable = true)
+    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
     public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
 
+    @PrefKey(ExportImportable = true)
     public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
+    @PrefKey
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
 
     private static PreferenceUtil sInstance;
@@ -152,6 +197,7 @@ public final class PreferenceUtil {
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         migratePreferencesIfNeeded();
+        checkAnnotations();
     }
 
     public static PreferenceUtil getInstance() {
@@ -171,6 +217,38 @@ public final class PreferenceUtil {
         migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
         migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
         migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
+    private void checkAnnotations() {
+        final Set<Field> annotatedFields = Arrays.stream(PreferenceUtil.class.getDeclaredFields())
+                        .filter(field -> {
+                            final PrefKey annotation = field.getAnnotation(PrefKey.class);
+                            return (annotation != null);
+                        })
+                .collect(Collectors.toSet());
+        final Set<String> annotatedPrefs = annotatedFields.stream()
+                .map(field -> {
+                    // get the value of a 'static final' field
+                    try {return (String) field.get(null);}
+                    catch (IllegalAccessException ignored) {return null;}
+                })
+                .collect(Collectors.toSet());
+        final Set<Field> exportableFields = annotatedFields.stream()
+                .filter(field -> {
+                    final PrefKey annotation = field.getAnnotation(PrefKey.class);
+                    return annotation.ExportImportable();
+                })
+                .collect(Collectors.toSet());
+
+        final Set<String> allPrefs = mPreferences.getAll().keySet();
+        final Set<String> notAnnotated = allPrefs.stream().filter(name -> !annotatedPrefs.contains(name)).collect(Collectors.toSet());
+        final Set<String> notUsed = annotatedPrefs.stream().filter(name -> !allPrefs.contains(name)).collect(Collectors.toSet());
+
+        // TODO Following tests are examples on how annotation can be used
+        if (!notAnnotated.isEmpty()) {
+            throw new RuntimeException("Pref used but not annotated: " + notAnnotated);
+        }
+        if (!notUsed.isEmpty()) {
+            SafeToast.show(App.getStaticContext(), "Pref annotated but not used: " + notAnnotated);
+        }
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {

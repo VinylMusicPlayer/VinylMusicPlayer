@@ -49,6 +49,7 @@ import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
@@ -111,9 +112,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
+    @PrefKey
     private static final String SAVED_POSITION = "POSITION";
+    @PrefKey
     private static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
+    @PrefKey(ExportImportable = true)
     private static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
+    @PrefKey(ExportImportable = true)
     private static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
 
     static final int RELEASE_WAKELOCK = 0;
