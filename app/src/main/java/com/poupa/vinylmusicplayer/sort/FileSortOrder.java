@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.ComparatorUtil;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.io.File;
 import java.util.Arrays;
@@ -30,30 +29,35 @@ public class FileSortOrder {
     };
     private static final Comparator<File> BY_DATE_MODIFIED = Comparator.comparingLong(File::lastModified);
 
+    private static final String SORT_ORDER_NAME = "sort_order_name";
+    private static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
+    private static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
+    private static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
+
     private static final List<SortOrder<File>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(
-                    PreferenceUtil.SORT_ORDER_NAME,
+                    SORT_ORDER_NAME,
                     file -> Utils.getSectionName(file.getName()),
                     BY_NAME,
                     R.id.action_file_sort_order_name,
                     R.string.sort_order_name
             ),
             Utils.build(
-                    PreferenceUtil.SORT_ORDER_NAME_REVERSE,
+                    SORT_ORDER_NAME_REVERSE,
                     file -> Utils.getSectionName(file.getName()),
                     ComparatorUtil.reverse(BY_NAME),
                     R.id.action_file_sort_order_name_reverse,
                     R.string.sort_order_name_reverse
             ),
             Utils.build(
-                    PreferenceUtil.SORT_ORDER_DATE_MODIFIED,
+                    SORT_ORDER_DATE_MODIFIED,
                     file -> Utils.getSectionName(file.lastModified() / 1000),
                     BY_DATE_MODIFIED,
                     R.id.action_file_sort_order_date_modified,
                     R.string.sort_order_date_modified
             ),
             Utils.build(
-                    PreferenceUtil.SORT_ORDER_DATE_MODIFIED_REVERSE,
+                    SORT_ORDER_DATE_MODIFIED_REVERSE,
                     file -> Utils.getSectionName(file.lastModified() / 1000),
                     ComparatorUtil.reverse(BY_DATE_MODIFIED),
                     R.id.action_file_sort_order_date_modified_reverse,

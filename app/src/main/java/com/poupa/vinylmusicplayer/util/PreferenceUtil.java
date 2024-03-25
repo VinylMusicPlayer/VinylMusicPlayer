@@ -208,15 +208,9 @@ public final class PreferenceUtil {
     }
 
     private void migratePreferencesIfNeeded() {
-        if (!mPreferences.contains(RG_SOURCE_MODE_V2)) {
-            mPreferences.edit()
-                    .putString(RG_SOURCE_MODE_V2, mPreferences.getString(RG_SOURCE_MODE, "none"))
-                    .apply();
-        }
+        // Nothing to do for now
+    }
 
-        migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
-        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
-        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
     private void checkAnnotations() {
         final Set<Field> annotatedFields = Arrays.stream(PreferenceUtil.class.getDeclaredFields())
                         .filter(field -> {
@@ -420,36 +414,6 @@ public final class PreferenceUtil {
     public void setFileSortOrder(final String sortOrder) {
         mPreferences.edit()
                 .putString(FILE_SORT_ORDER, sortOrder)
-                .apply();
-    }
-
-    private void migrateCutoffV1AsV2(@NonNull final String cutoffV1, @NonNull final String cutoffV2) {
-        if (mPreferences.contains(cutoffV2)) {return;}
-
-        final String migratedValue;
-        switch (mPreferences.getString(cutoffV1, "")) {
-            case "today":
-                migratedValue = "1d";
-                break;
-            case "this_week":
-                migratedValue = "1w";
-                break;
-            case "past_seven_days":
-                migratedValue = "7d";
-                break;
-            case "past_three_months":
-                migratedValue = "3m";
-                break;
-            case "this_year":
-                migratedValue = "1y";
-                break;
-            case "this_month":
-            default:
-                migratedValue = "1m";
-                break;
-        }
-        mPreferences.edit()
-                .putString(cutoffV2, migratedValue)
                 .apply();
     }
 
