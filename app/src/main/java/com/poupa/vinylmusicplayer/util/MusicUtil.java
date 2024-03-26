@@ -108,9 +108,9 @@ public class MusicUtil {
     public static String getAlbumInfoString(@NonNull final Context context, @NonNull final Album album) {
         int songCount = album.getSongCount();
 
-        return MusicUtil.buildInfoString(
-            album.getArtistName(),
-            MusicUtil.getSongCountString(context, songCount)
+        return buildInfoString(
+            MultiValuesTagUtil.infoString(album.getArtistNames()),
+            getSongCountString(context, songCount)
         );
     }
 

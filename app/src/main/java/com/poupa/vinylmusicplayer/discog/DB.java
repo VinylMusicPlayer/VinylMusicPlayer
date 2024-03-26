@@ -106,7 +106,6 @@ class DB extends SQLiteOpenHelper {
             values.put(SongColumns.ALBUM_ID, song.albumId);
             values.put(SongColumns.ALBUM_ARTIST_NAME, MultiValuesTagUtil.merge(song.albumArtistNames));
             values.put(SongColumns.ALBUM_NAME, song.albumName);
-            values.put(SongColumns.ARTIST_ID, song.artistId);
             values.put(SongColumns.ARTIST_NAME, MultiValuesTagUtil.merge(song.artistNames));
             values.put(SongColumns.DATA_PATH, song.data);
             values.put(SongColumns.DATE_ADDED, song.dateAdded);
@@ -158,7 +157,6 @@ class DB extends SQLiteOpenHelper {
                         SongColumns.ALBUM_ID,
                         SongColumns.ALBUM_ARTIST_NAME,
                         SongColumns.ALBUM_NAME,
-                        SongColumns.ARTIST_ID,
                         SongColumns.ARTIST_NAME,
                         SongColumns.DATA_PATH,
                         SongColumns.DATE_ADDED,
@@ -190,7 +188,6 @@ class DB extends SQLiteOpenHelper {
                 final long albumId = cursor.getLong(++columnIndex);
                 final String albumArtistNames = cursor.getString(++columnIndex);
                 final String albumName = cursor.getString(++columnIndex);
-                final long artistId = cursor.getLong(++columnIndex);
                 final String artistNames = cursor.getString(++columnIndex);
                 final String dataPath = cursor.getString(++columnIndex);
                 final long dateAdded = cursor.getLong(++columnIndex);
@@ -206,7 +203,7 @@ class DB extends SQLiteOpenHelper {
                 final String trackTitle = cursor.getString(++columnIndex);
                 final int year = cursor.getInt(++columnIndex);
 
-                Song song = new Song(
+                final Song song = new Song(
                         id,
                         trackTitle,
                         trackNumber,
@@ -217,7 +214,6 @@ class DB extends SQLiteOpenHelper {
                         dateModified,
                         albumId,
                         albumName,
-                        artistId,
                         MultiValuesTagUtil.split(artistNames));
                 song.discNumber = discNumber;
                 song.albumArtistNames = MultiValuesTagUtil.split(albumArtistNames);
@@ -240,7 +236,7 @@ class DB extends SQLiteOpenHelper {
         String ALBUM_ID = "album_id";
         String ALBUM_ARTIST_NAME = "album_artist_name";
         String ALBUM_NAME = "album_name";
-        String ARTIST_ID = "artist_id";
+        String ARTIST_ID = "artist_id"; // TODO Drop this column, unused
         String ARTIST_NAME = "artist_name";
         String DATA_PATH = "data_path";
         String DATE_ADDED = "date_added";

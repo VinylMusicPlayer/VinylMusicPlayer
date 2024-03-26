@@ -1124,7 +1124,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("id", song.id);
 
-        intent.putExtra("artist", MultiValuesTagUtil.infoString(song.artistNames));
+        intent.putExtra("artist", MultiValuesTagUtil.merge(song.artistNames));
         intent.putExtra("album", song.albumName);
         intent.putExtra("track", song.title);
 

@@ -131,10 +131,10 @@ public class SongDetailDialog extends DialogFragment {
         htmlBuilder.appendLine(R.string.track_number, String.valueOf(song.trackNumber));
         htmlBuilder.appendLine(R.string.disc_number, String.valueOf(song.discNumber));
         htmlBuilder.appendLine(R.string.title, song.title);
-        htmlBuilder.appendLine(R.string.artist, MultiValuesTagUtil.merge(song.artistNames));
+        htmlBuilder.appendLine(R.string.artist, MultiValuesTagUtil.infoString(song.artistNames));
         htmlBuilder.appendLine(R.string.album, song.albumName);
-        htmlBuilder.appendLine(R.string.album_artist, MultiValuesTagUtil.merge(song.albumArtistNames));
-        htmlBuilder.appendLine(R.string.genre, MultiValuesTagUtil.merge(song.genres));
+        htmlBuilder.appendLine(R.string.album_artist, MultiValuesTagUtil.infoString(song.albumArtistNames));
+        htmlBuilder.appendLine(R.string.genre, MultiValuesTagUtil.infoString(song.genres));
         htmlBuilder.appendLine(R.string.year, MusicUtil.getYearString(song.year));
 
         htmlBuilder.appendLine(R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration));

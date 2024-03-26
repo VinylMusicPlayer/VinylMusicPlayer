@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -192,54 +193,31 @@ class MemCache {
         final LinkedHashSet<String> names = new LinkedHashSet<>(); // ordered and unique list of names
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
-        if (names.size() > 1) {
-            // after merging one empty and one non-empty artists lists,
-            // we end up with a list containing an empty element
-            // remove it if that's the case
-            names.remove(Artist.EMPTY.name);
-        }
         final Set<Artist> artists = new HashSet<>(names.size());
-        Artist mainArtist = Artist.EMPTY;
         for (final String name : names) {
             final Artist artist = getOrCreateArtist.apply(name);
-            if (mainArtist.id == Artist.EMPTY.id) {mainArtist = artist;}
             artists.add(artist);
         }
-
-        // Since the MediaStore artistId is disregarded, correct the link on the Song object
-        song.artistId = mainArtist.getId();
 
         return artists;
     }
 
     @NonNull
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbum(@NonNull final Song song) {
-        Set<Artist> artists = getOrCreateArtistByName(song);
+        final Set<Artist> artists = getOrCreateArtistByName(song);
 
-        // Try reusing an existing album with same name
-        Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
-        if (albumIdsSameName != null) {
-            for (long id : albumIdsSameName) {
-                AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(song.artistId);
-                if (byMainArtist != null) {
-                    song.albumId = byMainArtist.getId();
-                    break;
-                }
-            }
-        }
-
-        // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
             albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         }
+        Objects.requireNonNull(albumsByArtist);
 
-        Map<Long, AlbumSlice> result = new HashMap<>();
-        for (Artist artist : artists) {
+        final Map<Long, AlbumSlice> result = new HashMap<>();
+        for (final Artist artist : artists) {
             // Attach to the artists if needed
             if (!albumsByArtist.containsKey(artist.id)) {
-                AlbumSlice album = new AlbumSlice();
+                final AlbumSlice album = new AlbumSlice();
                 albumsByArtist.put(artist.id, album);
 
                 Set<Long> albumsId = albumsByName.get(song.albumName);
@@ -247,6 +225,7 @@ class MemCache {
                     albumsByName.put(song.albumName, new HashSet<>());
                     albumsId = albumsByName.get(song.albumName);
                 }
+                Objects.requireNonNull(albumsId);
                 albumsId.add(song.albumId);
 
                 artist.albums.add(album);
@@ -294,12 +273,8 @@ class MemCache {
 
     @NonNull
     private synchronized List<Genre> getOrCreateGenresBySong(@NonNull final Song song) {
-        List<String> genres = song.genres;
-
         // If a song has no genres, empty string is the "unknown" genre
-        if (genres.isEmpty()) {
-            genres = List.of("");
-        }
+        final List<String> genres = song.genres.isEmpty() ? List.of("") : song.genres;
 
         return genres.stream().map(this::getOrCreateGenreByName).collect(Collectors.toList());
     }
