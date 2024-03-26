@@ -95,6 +95,7 @@
     <string name="pref_header_colors">Cores</string>
     <string name="pref_header_now_playing_screen">A reproduzir</string>
     <string name="pref_title_general_theme">Tema geral</string>
+    <string name="pref_header_album">Álbum</string>
     <string name="pref_header_audio">Áudio</string>
     <string name="pref_header_images">Imagens</string>
     <string name="pref_header_lockscreen">Ecrã de Bloqueio</string>
@@ -104,6 +105,7 @@
     <string name="pref_title_colored_notification">Notificação colorida</string>
 <!--    <string name="pref_title_ignore_media_store_artwork">Ignorar capas Media Store</string>-->
     <string name="pref_title_gapless_playback">Reprodução contínua</string>
+    <string name="pref_summary_show_album_details">Mostrar nome, artista e contagem de músicas abaixo de cada álbum na visualização do álbum</string>
     <string name="no_equalizer">Nenhum equalizador encontrado.</string>
     <string name="no_audio_ID">"Reproduza uma faixa primeiro, e tente outra vez."</string>
     <string name="delete_action">Eliminar</string>
@@ -133,6 +135,7 @@
     <string name="pref_summary_colored_navigation_bar">Colorir a barra de navegação na cor primária</string>
     <string name="pref_summary_audio_ducking">Notificações, navegação etc.</string>
     <string name="could_not_download_album_cover">"N\u00e3o foi encontrada uma capa para este \u00e1lbum."</string>
+    <string name="album_details">Detalhes do álbum</string>
     <string name="search_hint">Procurar na biblioteca…</string>
     <string name="favorites">Favoritos</string>
     <string name="last_added">Últimas adições</string>
@@ -171,7 +174,7 @@
     <string name="up_next">A seguir</string>
     <string name="pref_title_now_playing_screen_appearance">Aparência</string>
     <string name="intro_label">Introdução</string>
-    <string name="welcome_to_vinyl_music_player">"Bem vindo ao Vinyl Music Player, um belo e leve leitor de música para Android. "</string>
+    <string name="welcome_to_vinyl_music_player">"Bem-vindo ao Vinyl Music Player, um belo e leve leitor de música para Android. "</string>
     <string name="open_playing_queue_instruction">Deslize o cartão no ecrã de \"a reproduzir\" para cima para mostrar a fila de reprodução completa.</string>
     <string name="rearrange_playing_queue_instruction">Reorganizar a fila de reprodução arrastando a música desde o seu número</string>
     <string name="library">Biblioteca</string>

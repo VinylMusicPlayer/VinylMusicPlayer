@@ -45,14 +45,14 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
     }
 
     @Override
-    protected void setColors(int color, ViewHolder holder) {
+    protected void updateDetails(int color, ViewHolder holder) {
         CardView card = (CardView) holder.itemView;
         card.setCardBackgroundColor(color);
         if (holder.title != null) {
-                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+            holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
         }
         if (holder.text != null) {
-                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+            holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
         }
     }
 
@@ -71,15 +71,15 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
-                        setColors(getAlbumArtistFooterColor(), holder);
+                        updateDetails(getAlbumArtistFooterColor(), holder);
                     }
 
                     @Override
                     public void onColorReady(int color) {
                         if (usePalette)
-                            setColors(color, holder);
+                            updateDetails(color, holder);
                         else
-                            setColors(getAlbumArtistFooterColor(), holder);
+                            updateDetails(getAlbumArtistFooterColor(), holder);
                     }
                 });
     }

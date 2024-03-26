@@ -98,6 +98,7 @@
     <string name="pref_header_colors">Warna</string>
     <string name="pref_header_now_playing_screen">Sedang diputar</string>
     <string name="pref_title_general_theme">Tema umum</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Suara</string>
     <string name="pref_header_images">Gambar</string>
     <string name="pref_header_lockscreen">Layar kunci</string>
@@ -109,6 +110,7 @@
 <!--    <string name="pref_title_ignore_media_store_artwork">Abaikan sampul-sampul dari \'Media Store\' android.</string>-->
     <string name="pref_title_gapless_playback">Pemutaran tanpa jeda</string>
     <string name="pref_title_audio_ducking">Kurangi suara saat ada pemberitahuan</string>
+    <string name="pref_summary_show_album_details">Tampilkan nama, artis, dan jumlah lagu di bawah setiap album dalam tampilan album</string>
     <string name="no_equalizer">Tidak ada ekualiser yang ditemukan.</string>
     <string name="no_audio_ID">"Silahkan mainkan sebuah lagu dan coba lagi. "</string>
     <string name="delete_action">Hapus</string>
@@ -139,6 +141,7 @@
     <string name="pref_summary_colored_app_shortcuts">Mewarnai pintasan-pintasan dengan warna utama</string>
     <string name="pref_summary_audio_ducking">Pemberitahuan, navigasi dll.</string>
     <string name="could_not_download_album_cover">"Tidak dapat mengunduh sampul album yang cocok."</string>
+    <string name="album_details">Detail album</string>
     <string name="search_hint">Mencari pustaka Anda…</string>
     <string name="favorites">Favorit</string>
     <string name="last_added">Terakhir ditambahkan</string>

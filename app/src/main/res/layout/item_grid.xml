@@ -43,7 +43,7 @@
             <LinearLayout
                 android:id="@+id/palette_color_container"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="@dimen/item_grid_color_container_height"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"

@@ -100,6 +100,7 @@
     <string name="pref_header_colors">Χρώματα</string>
     <string name="pref_header_now_playing_screen">Γίνεται αναπαραγωγή</string>
     <string name="pref_title_general_theme">Γενικό θέμα</string>
+    <string name="pref_header_album">Άλμπουμ</string>
     <string name="pref_header_audio">Ήχος</string>
     <string name="pref_header_images">Εικόνες</string>
     <string name="pref_header_lockscreen">Οθόνη κλειδώματος</string>
@@ -111,6 +112,7 @@
     <!--string name="pref_title_ignore_media_store_artwork">Παράληψη των album art στην SD</string-->
     <string name="pref_title_gapless_playback">Εναλλαγή χωρίς παύση</string>
     <string name="pref_title_audio_ducking">Μειώστε την ένταση στην απώλεια εστίασης</string>
+    <string name="pref_summary_show_album_details">Εμφάνιση ονόματος, καλλιτέχνη και αριθμού τραγουδιών κάτω από κάθε άλμπουμ στην προβολή άλμπουμ</string>
     <string name="no_equalizer">Δε βρέθηκε ισοσταθμιστής</string>
     <string name="no_audio_ID">"Αναπαράγετε ένα τραγούδι πρώτα και δοκιμάστε ξανά."</string>
     <string name="delete_action">Διαγραφή</string>
@@ -141,6 +143,7 @@
     <string name="pref_summary_colored_app_shortcuts">Χρωματίζει τις συντομεύσεις της εφαρμογής στο κυρίως χρώμα</string>
     <string name="pref_summary_audio_ducking">Ειδοποιήσεις, πλοήγηση κ.λπ.</string>
     <string name="could_not_download_album_cover">"\u0394\u03b5\u03bd \u03ae\u03c4\u03b1\u03bd \u03b4\u03c5\u03bd\u03b1\u03c4\u03ae \u03b7 \u03b5\u03cd\u03c1\u03b5\u03c3\u03b7 \u03ba\u03b1\u03b9 \u03b7 \u03bb\u03ae\u03c8\u03b7 \u03b5\u03bd\u03cc\u03c2 \u03b5\u03be\u03ce\u03c6\u03c5\u03bb\u03bb\u03bf\u03c5 \u03c0\u03bf\u03c5 \u03bd\u03b1 \u03c4\u03b1\u03b9\u03c1\u03b9\u03ac\u03b6\u03b5\u03b9."</string>
+    <string name="album_details">Λεπτομέρειες άλμπουμ</string>
     <string name="search_hint">Αναζήτηση στη βιβλιοθήκη…</string>
     <string name="favorites">Αγαπημένα</string>
     <string name="last_added">Προστέθηκαν τελευταία</string>

@@ -61,6 +61,7 @@
     <string name="dark_theme_name">Mørk</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_title_general_theme">Generelt tema</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_title_navigation_bar">Farga navigasjonslinje</string>
     <string name="no_equalizer">Ingen equalizer funne</string>
