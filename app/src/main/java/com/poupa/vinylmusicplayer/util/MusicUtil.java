@@ -185,19 +185,18 @@ public class MusicUtil {
     @NonNull
     public static String buildInfoString(final String... values)
     {
-        return buildInfoString("  •  ", List.of(values));
+        return MusicUtil.buildInfoString("  •  ", values);
     }
 
     @NonNull
-    public static String buildInfoString(@NonNull final String separator, @NonNull final Iterable<String> values)
+    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values)
     {
-        final StringBuilder result = new StringBuilder();
-        values.forEach(value -> {
-            if (!TextUtils.isEmpty(value)) {
-                if (result.length() > 0) {result.append(separator);}
-                result.append(value);
-            }
-        });
+        StringBuilder result = new StringBuilder();
+        for (String value : values) {
+            if (TextUtils.isEmpty(value)) continue;
+            if (result.length() > 0) result.append(separator);
+            result.append(value);
+        }
         return result.toString();
     }
 
