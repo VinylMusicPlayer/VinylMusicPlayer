@@ -69,8 +69,7 @@ public class MultiValuesTagUtil {
     @NonNull
     private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue) {
         if (names.isEmpty()) {return defaultValue;}
-        return MusicUtil.buildInfoString(separator,
-                names.toArray(new String[0]));
+        return MusicUtil.buildInfoString(separator, names);
     }
 
 }

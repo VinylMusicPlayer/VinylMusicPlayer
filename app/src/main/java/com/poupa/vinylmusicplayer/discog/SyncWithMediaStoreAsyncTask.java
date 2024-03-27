@@ -49,7 +49,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
                             (added > 0) ? resources.getString(R.string.scanning_x_songs_added, added) : "",
                             (updated > 0) ? resources.getString(R.string.scanning_x_songs_updated, updated) : "",
                             (removed > 0) ? resources.getString(R.string.scanning_x_songs_removed, removed) : ""
-                    ).toArray(new String[3]));
+                    ));
         }
     }
 
