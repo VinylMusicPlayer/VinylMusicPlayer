@@ -44,7 +44,10 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
-    private static final String REMEMBER_LAST_TAB = "remember_last_tab";
+    public static final String PRIMARY_COLOR = "primary_color";
+    public static final String ACCENT_COLOR = "accent_color";
+
+    public static final String REMEMBER_LAST_TAB = "remember_last_tab";
     private static final String LAST_PAGE = "last_start_page";
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
@@ -78,11 +81,11 @@ public final class PreferenceUtil {
     public static final String COLORED_NOTIFICATION = "colored_notification";
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
-    private static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
+    public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
 
     public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
 
-    private static final String AUDIO_DUCKING = "audio_ducking";
+    public static final String AUDIO_DUCKING = "audio_ducking";
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
     @Deprecated public static final String LAST_ADDED_CUTOFF = "last_added_interval";
@@ -91,7 +94,10 @@ public final class PreferenceUtil {
     public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
-    private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
+    public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
+
+    private static final String EXPORT_SETTINGS = "export_settings";
+    public static final String IMPORT_SETTINGS = "import_settings";
 
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
@@ -117,7 +123,7 @@ public final class PreferenceUtil {
     @NonNls
     public static final String LIBRARY_CATEGORIES = "library_categories";
 
-    private static final String REMEMBER_SHUFFLE = "remember_shuffle";
+    public static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
     @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
@@ -129,6 +135,7 @@ public final class PreferenceUtil {
     private static final String CLASSIC_THEME = "classic";
     @NonNls
     public static final String ROUNDED_THEME = "rounded";
+    public static final String SHOULD_COLOR_NAVIGATION_BAR = "should_color_navigation_bar";
 
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
@@ -219,6 +226,12 @@ public final class PreferenceUtil {
         }
     }
 
+    public void setRememberLastTab(final boolean rememberLastTab) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_LAST_TAB, rememberLastTab)
+                .apply();
+    }
+
     public boolean rememberLastTab() {
         return mPreferences.getBoolean(REMEMBER_LAST_TAB, true);
     }
@@ -287,6 +300,16 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(COLORED_APP_SHORTCUTS, true);
     }
 
+    public void setColoredNavigationBar(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(SHOULD_COLOR_NAVIGATION_BAR, value)
+                .apply();
+    }
+
+    public boolean coloredNavigationBar() {
+        return mPreferences.getBoolean(SHOULD_COLOR_NAVIGATION_BAR, true);
+    }
+
     public void setTransparentBackgroundWidget(final boolean value) {
         mPreferences.edit()
                 .putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value)
@@ -297,8 +320,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(TRANSPARENT_BACKGROUND_WIDGET, false);
     }
 
+    public void setGaplessPlayback(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(GAPLESS_PLAYBACK, value)
+                .apply();
+    }
+
     public boolean gaplessPlayback() {
         return mPreferences.getBoolean(GAPLESS_PLAYBACK, false);
+    }
+
+    public void setAudioDucking(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(AUDIO_DUCKING, value)
+                .apply();
     }
 
     public boolean audioDucking() {
@@ -641,6 +676,12 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(INTRO_SHOWN, false);
     }
 
+    public void setRememberShuffle(final boolean rememberShuffle) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_SHUFFLE, rememberShuffle)
+                .apply();
+    }
+
     public boolean rememberShuffle() {
         return mPreferences.getBoolean(REMEMBER_SHUFFLE, true);
     }
@@ -671,8 +712,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SHOW_SONG_NUMBER, false);
     }
 
+    public void setMaintainTopTrackPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, value)
+                .apply();
+    }
+
     public boolean maintainTopTrackPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, true);
+    }
+
+    public void setMaintainSkippedSongsPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, value)
+                .apply();
     }
 
     public boolean maintainSkippedSongsPlaylist() {
@@ -701,6 +754,28 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType))
                 .apply();
+    }
+
+    public void setPrimaryColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(PRIMARY_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getPrimaryColor() {
+        //return mPreferences.getInt(PRIMARY_COLOR, 4149685);
+        return mPreferences.getInt(PRIMARY_COLOR, -12627531);
+    }
+
+    public void setAccentColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(ACCENT_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getAccentColor() {
+        //return mPreferences.getInt(ACCENT_COLOR, 16056407);
+        return mPreferences.getInt(ACCENT_COLOR, -720809);
     }
 
     public ArrayList<CategoryInfo> getLibraryCategoryInfos() {
@@ -783,6 +858,12 @@ public final class PreferenceUtil {
     public void setSAFSDCardUri(@NonNull final Uri uri) {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
+                .apply();
+    }
+
+    public void setOopsHandlerEnabled(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(OOPS_HANDLER_ENABLED, value)
                 .apply();
     }
 

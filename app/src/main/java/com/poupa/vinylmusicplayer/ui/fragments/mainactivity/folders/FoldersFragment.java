@@ -83,6 +83,7 @@ public class FoldersFragment
 
     private static final String PATH = "path";
     private static final String CRUMBS = "crumbs";
+    private static int accentColor;
 
     private FragmentFolderBinding layoutBinding;
 
@@ -90,6 +91,10 @@ public class FoldersFragment
     private SongFileAdapter adapter;
 
     private String sortOrder;
+
+    private FoldersFragment() {
+        accentColor = PreferenceUtil.getInstance().getAccentColor();
+    }
 
     public static FoldersFragment newInstance() {
         return newInstance(PreferenceUtil.getInstance().getStartDirectory());
@@ -187,7 +192,7 @@ public class FoldersFragment
         ViewUtil.setUpFastScrollRecyclerViewColor(
                 getActivity(),
                 layoutBinding.recyclerView,
-                ThemeStore.accentColor(requireActivity()));
+                accentColor);
 
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -348,7 +353,7 @@ public class FoldersFragment
                                     Html.fromHtml(String.format(getString(R.string.not_listed_in_media_store), canonicalFile.getName())),
                                     Snackbar.LENGTH_LONG)
                             .setAction(R.string.action_scan, v -> scanPaths(new String[]{canonicalFile.getPath()}))
-                            .setActionTextColor(ThemeStore.accentColor(requireActivity()))
+                            .setActionTextColor(accentColor)
                             .show();
                 }
             }).execute(new ListSongsAsyncTask.LoadingInfo(position, canonicalFile.getParentFile(), fileFilter, getFileComparator()));
@@ -372,7 +377,7 @@ public class FoldersFragment
                             }
                             scanPaths(paths);
                         })
-                        .setActionTextColor(ThemeStore.accentColor(requireActivity()))
+                        .setActionTextColor(accentColor)
                         .show();
             }
         }).execute(new ListSongsAsyncTask.LoadingInfo(files, AUDIO_FILE_FILTER, getFileComparator()));
@@ -441,7 +446,7 @@ public class FoldersFragment
                                             Html.fromHtml(String.format(getString(R.string.not_listed_in_media_store), file.getName())),
                                             Snackbar.LENGTH_LONG)
                                     .setAction(R.string.action_scan, v -> scanPaths(new String[]{FileUtil.safeGetCanonicalPath(file)}))
-                                    .setActionTextColor(ThemeStore.accentColor(requireActivity()))
+                                    .setActionTextColor(accentColor)
                                     .show();
                         }
                     }).execute(new ListSongsAsyncTask.LoadingInfo(position, file, AUDIO_FILE_FILTER, getFileComparator()));

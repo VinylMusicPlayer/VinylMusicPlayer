@@ -3,6 +3,7 @@ package com.poupa.vinylmusicplayer.util;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
+import android.util.Log;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,10 @@ public class OopsHandler implements UncaughtExceptionHandler {
 
     public void uncaughtException(@NonNull final Thread t, @NonNull final Throwable e) {
         try {
-            sendBugReport(getStackTraceWithTime(e, null));
+            String result = getStackTraceWithTime(e, null);
+            Log.e(OopsHandler.class.getName(), "Submitting crash report");
+            Log.e(OopsHandler.class.getName(), result);
+            sendBugReport(result);
         } catch (final Throwable ignore) {}
     }
 

@@ -34,6 +34,7 @@ import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 import com.poupa.vinylmusicplayer.util.Util;
 
