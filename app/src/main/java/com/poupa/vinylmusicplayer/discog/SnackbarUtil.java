@@ -69,8 +69,12 @@ class SnackbarUtil {
         return messageWithIcon;
     }
 
-    private static void adjustPosition(@NonNull final Snackbar snackbar) {
-        snackbar.setAnchorView(R.id.sliding_panel);
+    private void adjustPosition(@NonNull final Snackbar snackbar) {
+        final View bottomBar = viewContainer.findViewById(R.id.sliding_panel);
+        if (bottomBar != null) {
+            // avoid the bottom bar if the view has it, by sticking to the top of it
+            snackbar.setAnchorView(bottomBar);
+        }
     }
 
     void showProgress(@NonNull final CharSequence text) {
