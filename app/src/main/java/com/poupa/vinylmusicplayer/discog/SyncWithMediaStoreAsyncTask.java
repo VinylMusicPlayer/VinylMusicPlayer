@@ -46,9 +46,9 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             final Resources resources = context.getResources();
             return MusicUtil.buildInfoString(", ",
                     List.of(
-                            (added > 0) ? resources.getString(R.string.snack_bar_x_tracks_added, added) : "",
-                            (updated > 0) ? resources.getString(R.string.snack_bar_x_tracks_updated, updated) : "",
-                            (removed > 0) ? resources.getString(R.string.snack_bar_x_tracks_removed, removed) : ""
+                            (added > 0) ? resources.getString(R.string.scanning_x_songs_added, added) : "",
+                            (updated > 0) ? resources.getString(R.string.scanning_x_songs_updated, updated) : "",
+                            (removed > 0) ? resources.getString(R.string.scanning_x_songs_removed, removed) : ""
                     ).toArray(new String[3]));
         }
     }
