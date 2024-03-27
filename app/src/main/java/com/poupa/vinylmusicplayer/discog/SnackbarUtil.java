@@ -10,51 +10,55 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.content.res.AppCompatResources;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
+
+import java.util.Objects;
 
 /**
  * @author SC (soncaokim)
  */
 
-public class SnackbarUtil {
+class SnackbarUtil {
     @DrawableRes
-    public static final int ICON = R.drawable.ic_bookmark_music_white_24dp;
+    private static final int ICON = R.drawable.ic_bookmark_music_white_24dp;
 
+    @Nullable
     private Snackbar progressBar = null;
     private final View viewContainer;
 
-    public SnackbarUtil(View view) {
+    SnackbarUtil(@NonNull final View view) {
         viewContainer = view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
-    private static Drawable tintedIcon(@NonNull Snackbar snackbar) {
+    private static Drawable tintedIcon(@NonNull final Snackbar snackbar) {
         final Context context = App.getInstance().getApplicationContext();
 
         // Pick the color from the text view...
-        TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+        final TextView tv = snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
         final int color = tv.getCurrentTextColor();
 
         // ... and apply the color on the icon
         final Drawable icon = AppCompatResources.getDrawable(context, ICON);
-        if (icon != null) {
-            icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-            icon.setTint(color);
-        }
+        Objects.requireNonNull(icon);
+        icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
+        icon.setTint(color);
         return icon;
     }
 
     @NonNull
-    private static CharSequence buildMessageWithIcon(@NonNull final CharSequence message, @NonNull Snackbar snackbar) {
+    private static CharSequence buildMessageWithIcon(@NonNull final CharSequence message, @NonNull final Snackbar snackbar) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {return message;}
 
-        SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
+        final SpannableStringBuilder messageWithIcon = new SpannableStringBuilder();
         messageWithIcon.append(
                 " ",
                 new ImageSpan(tintedIcon(snackbar)),
@@ -65,29 +69,27 @@ public class SnackbarUtil {
         return messageWithIcon;
     }
 
-    public void showProgress(@NonNull final CharSequence text) {
+    private void adjustPosition(@NonNull final Snackbar snackbar) {
+        final View bottomBar = viewContainer.findViewById(R.id.sliding_panel);
+        if (bottomBar != null) {
+            // avoid the bottom bar if the view has it, by sticking to the top of it
+            snackbar.setAnchorView(bottomBar);
+        }
+    }
+
+    void showProgress(@NonNull final CharSequence text) {
         if (progressBar == null) {
             progressBar = Snackbar.make(
                     viewContainer,
                     "",
-                    Snackbar.LENGTH_INDEFINITE);
+                    BaseTransientBottomBar.LENGTH_LONG);
         }
 
         progressBar.setText(buildMessageWithIcon(text, progressBar));
         if (!progressBar.isShownOrQueued()) {
+            adjustPosition(progressBar);
             progressBar.show();
         }
-    }
-
-    void showResult(@NonNull final CharSequence message) {
-        dismiss();
-
-        progressBar = Snackbar.make(
-                viewContainer,
-                "",
-                Snackbar.LENGTH_LONG);
-        progressBar.setText(buildMessageWithIcon(message, progressBar));
-        progressBar.show();
     }
 
     void dismiss() {
