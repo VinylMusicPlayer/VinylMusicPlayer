@@ -457,8 +457,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     void restoreQueuesAndPosition() {
         synchronized (this) {
             try {
-                // The current playing song
-                final var playingSong = getCurrentSong();
+                // The current playback state
+                final var savedCurrentSong = getCurrentSong();
+                final boolean savedPlayingState = isPlaying();
 
                 // The saved state
                 final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
@@ -479,15 +480,19 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     // Before altering the player state, check that it is really necessary
                     // ie. we are changing song in between
                     // This prevents changing the player state, as it will stop the playback
-                    if (!getCurrentSong().isQuickEqual(playingSong)) {
+                    if (!getCurrentSong().isQuickEqual(savedCurrentSong)) {
                         if (openCurrent() && (restoredPositionInTrack > 0)) {
                             seek(restoredPositionInTrack);
                         }
+                        notHandledMetaChangedForCurrentTrack = true;
+                        sendChangeInternal(META_CHANGED);
                     } // else just continue the playback till end of the song
 
+                    // Restore playback
+                    // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
+                    if (savedPlayingState && !isPlaying()) {play();}
+
                     prepareNext();
-                    notHandledMetaChangedForCurrentTrack = true;
-                    sendChangeInternal(META_CHANGED);
                     sendChangeInternal(QUEUE_CHANGED);
                 }
             } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
