@@ -323,6 +323,9 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="snack_bar_action_undo">undo</string>
     <string name="snack_bar_title_removed_song">Removed</string>
+    <string name="snack_bar_x_tracks_added">"%1$d tracks added"</string>
+    <string name="snack_bar_x_tracks_updated">"%1$d tracks updated"</string>
+    <string name="snack_bar_x_tracks_removed">"%1$d tracks removed"</string>
 
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>

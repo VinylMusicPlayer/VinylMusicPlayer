@@ -1,10 +1,17 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
+
+import java.util.List;
 
 /**
  * @author SC (soncaokim)
@@ -13,6 +20,10 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyncTask.Progress, SyncWithMediaStoreAsyncTask.Progress> {
     @NonNull
     private final Discography discography;
+
+    @SuppressLint("StaticFieldLeak") // short lived reference, only while the sync operation is running
+    @NonNull
+    private final Context context;
 
     @NonNull
     private final SnackbarUtil snackbar;
@@ -29,28 +40,22 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
         }
 
         @NonNull
-        String buildInfoString() {
+        String buildInfoString(@NonNull final Context context) {
             if (isEmpty()) return "";
 
-            final StringBuilder builder = new StringBuilder();
-            // TODO Localisable strings
-            builder.append("Library refresh - ");
-            if (added > 0) {
-                builder.append(String.format(" %1$d added", added));
-            }
-            if (updated > 0) {
-                builder.append(String.format(" %1$d updated", updated));
-            }
-            if (removed > 0) {
-                builder.append(String.format(" %1$d removed", removed));
-            }
-            builder.append(" tracks");
-            return builder.toString();
+            final Resources resources = context.getResources();
+            return MusicUtil.buildInfoString(", ",
+                    List.of(
+                            (added > 0) ? resources.getString(R.string.snack_bar_x_tracks_added, added) : "",
+                            (updated > 0) ? resources.getString(R.string.snack_bar_x_tracks_updated, updated) : "",
+                            (removed > 0) ? resources.getString(R.string.snack_bar_x_tracks_removed, removed) : ""
+                    ).toArray(new String[3]));
         }
     }
 
     SyncWithMediaStoreAsyncTask(@NonNull final AbsMusicServiceActivity containerActivity, @NonNull final Discography discog, final boolean reset) {
         discography = discog;
+        context = containerActivity;
         snackbar = new SnackbarUtil(containerActivity.getSnackBarContainer());
         resetRequested = reset;
     }
@@ -71,7 +76,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
     protected void onProgressUpdate(final Progress... values) {
         final Progress last = values[values.length - 1];
         if (!last.isEmpty() && isUIFeedbackNeeded()) {
-            snackbar.showProgress(last.buildInfoString());
+            snackbar.showProgress(last.buildInfoString(context));
         }
     }
 
@@ -90,7 +95,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (value.isEmpty()) {
                 snackbar.dismiss();
             } else {
-                snackbar.showResult(value.buildInfoString());
+                snackbar.showResult(value.buildInfoString(context));
             }
         }
     }
