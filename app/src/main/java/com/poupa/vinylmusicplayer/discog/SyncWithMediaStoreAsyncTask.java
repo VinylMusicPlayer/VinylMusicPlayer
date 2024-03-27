@@ -92,7 +92,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (value.isEmpty()) {
                 snackbar.dismiss();
             } else {
-                snackbar.showResult(value.buildInfoString(context));
+                snackbar.showProgress(value.buildInfoString(context));
             }
         }
     }

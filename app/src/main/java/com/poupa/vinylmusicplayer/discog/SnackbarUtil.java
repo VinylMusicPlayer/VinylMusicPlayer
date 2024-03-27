@@ -82,7 +82,7 @@ class SnackbarUtil {
             progressBar = Snackbar.make(
                     viewContainer,
                     "",
-                    BaseTransientBottomBar.LENGTH_INDEFINITE);
+                    BaseTransientBottomBar.LENGTH_LONG);
         }
 
         progressBar.setText(buildMessageWithIcon(text, progressBar));
@@ -90,18 +90,6 @@ class SnackbarUtil {
             adjustPosition(progressBar);
             progressBar.show();
         }
-    }
-
-    void showResult(@NonNull final CharSequence message) {
-        dismiss();
-
-        progressBar = Snackbar.make(
-                viewContainer,
-                "",
-                BaseTransientBottomBar.LENGTH_LONG);
-        progressBar.setText(buildMessageWithIcon(message, progressBar));
-        adjustPosition(progressBar);
-        progressBar.show();
     }
 
     void dismiss() {
