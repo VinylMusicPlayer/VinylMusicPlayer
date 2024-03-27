@@ -33,6 +33,7 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (isEmpty()) return "";
 
             final StringBuilder builder = new StringBuilder();
+            // TODO Localisable strings
             builder.append("Library refresh - ");
             if (added > 0) {
                 builder.append(String.format(" %1$d added", added));

@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -44,20 +45,12 @@ import java.util.function.Predicate;
 
 public class Discography implements MusicServiceEventListener {
     // TODO wrap this inside the MemCache class
-    private final DB database;
-    private final MemCache cache;
+    private final DB database = new DB();
+    private final MemCache cache = new MemCache();
 
-    private AbsMusicServiceActivity containerActivity = null;
-    private Handler containerActivityTaskQueue = null;
+    private final Map<AbsMusicServiceActivity, Handler> attachedActivitiesAndQueue = new HashMap<>();
     private static final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
     private final Collection<Runnable> changedListeners = new LinkedList<>();
-
-    public Discography() {
-        database = new DB();
-        cache = new MemCache();
-
-        fetchAllSongs();
-    }
 
     // TODO This is not a singleton and should not be declared as such
     @NonNull
@@ -65,20 +58,31 @@ public class Discography implements MusicServiceEventListener {
         return App.getDiscography();
     }
 
-    public void startService(@NonNull final AbsMusicServiceActivity activity) {
-        containerActivity = activity;
-        containerActivityTaskQueue = new Handler(containerActivity.getMainLooper());
+    public void addActivity(@NonNull final AbsMusicServiceActivity activity) {
+        if (!attachedActivitiesAndQueue.containsKey(activity)) {
+            attachedActivitiesAndQueue.put(activity, new Handler(activity.getMainLooper()));
 
-        triggerSyncWithMediaStore(false);
+            activity.addMusicServiceEventListener(this);
+
+            if (cache.consistencyState == MemCache.ConsistencyState.UNINITIALIZED) {
+                // These operations are IO intensive and may take time, depending on the library size
+                // delay it till UI is availble
+                fetchAllSongs();
+                triggerSyncWithMediaStore(false);
+            }
+        }
     }
 
-    public void stopService() {
-        // Flush the delayed task queue - dont do anything is we are stopping
-        if (containerActivityTaskQueue != null && containerActivity != null) {
-            containerActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+    public void removeActivity(@NonNull final AbsMusicServiceActivity activity) {
+        if (attachedActivitiesAndQueue.containsKey(activity)) {
+            activity.removeMusicServiceEventListener(this);
 
-            containerActivity = null;
-            containerActivityTaskQueue = null;
+            // Flush the delayed task queue - dont do anything is we are stopping
+            final Handler handler = attachedActivitiesAndQueue.get(activity);
+            Objects.requireNonNull(handler);
+            handler.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+
+            attachedActivitiesAndQueue.remove(activity);
         }
     }
 
@@ -344,16 +348,23 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void triggerSyncWithMediaStore(boolean reset) {
+        // Pick an attached activity
+        if (attachedActivitiesAndQueue.isEmpty()) {throw new IllegalStateException("No attached activity");}
+        final AbsMusicServiceActivity activity = (AbsMusicServiceActivity)attachedActivitiesAndQueue.keySet().toArray()[0];
+        Objects.requireNonNull(activity);
+
         if (getCacheState() != MemCache.ConsistencyState.OK) {
             // Prevent reentrance - delay to later
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                final long DELAY = 500;
+                final long DELAY = 500L;
 
-                containerActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
-                containerActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
+                final Handler handler = attachedActivitiesAndQueue.get(activity);
+                Objects.requireNonNull(handler);
+                handler.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+                handler.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
-        } else if (containerActivity != null) {
-            (new SyncWithMediaStoreAsyncTask(containerActivity, this, reset)).execute();
+        } else {
+            (new SyncWithMediaStoreAsyncTask(activity, this, reset)).execute();
         }
     }
 
@@ -439,23 +450,21 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void removeChangedListener(Runnable listener) {
-        if (containerActivityTaskQueue != null) {
-            containerActivityTaskQueue.removeCallbacks(listener);
-        }
+        attachedActivitiesAndQueue.forEach((activity, handler) -> handler.removeCallbacks(listener));
         changedListeners.remove(listener);
     }
 
     private void notifyDiscographyChanged() {
-        // Notify the main activity to reload the tabs content
+        // Notify the attached activiies to reload the UI content
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
-        if (containerActivityTaskQueue != null) {
+        attachedActivitiesAndQueue.forEach((activity, handler) -> {
             // Post as much 1 event per a coalescence period
-            final long COALESCENCE_DELAY = 200;
-            for (Runnable listener : changedListeners) {
-                containerActivityTaskQueue.removeCallbacks(listener);
-                containerActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
+            final long COALESCENCE_DELAY = 200L;
+            for (final Runnable listener : changedListeners) {
+                handler.removeCallbacks(listener);
+                handler.postDelayed(listener, COALESCENCE_DELAY);
             }
-        }
+        });
     }
 
     public void removeSongByPath(@NonNull String... paths) {

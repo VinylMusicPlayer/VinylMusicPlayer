@@ -53,8 +53,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied));
 
         final Discography discog = Discography.getInstance();
-        discog.startService(this);
-        addMusicServiceEventListener(discog);
+        discog.addActivity(this);
     }
 
     @Override
@@ -62,8 +61,7 @@ public abstract class AbsMusicServiceActivity extends AbsBaseActivity implements
         super.onDestroy();
 
         final Discography discog = Discography.getInstance();
-        removeMusicServiceEventListener(discog);
-        discog.stopService();
+        discog.removeActivity(this);
 
         MusicPlayerRemote.unbindFromService(serviceToken);
         if (receiverRegistered) {
