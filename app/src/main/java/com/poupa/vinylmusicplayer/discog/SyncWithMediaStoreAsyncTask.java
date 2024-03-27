@@ -11,8 +11,6 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
-import java.util.List;
-
 /**
  * @author SC (soncaokim)
  */
@@ -44,12 +42,11 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
             if (isEmpty()) return "";
 
             final Resources resources = context.getResources();
-            return MusicUtil.buildInfoString(", ",
-                    (String[]) List.of(
-                            (added > 0) ? resources.getString(R.string.scanning_x_songs_added, added) : "",
-                            (updated > 0) ? resources.getString(R.string.scanning_x_songs_updated, updated) : "",
-                            (removed > 0) ? resources.getString(R.string.scanning_x_songs_removed, removed) : ""
-                    ).toArray(new String[3]));
+            return MusicUtil.buildInfoString(
+                    (added > 0) ? resources.getString(R.string.scanning_x_songs_added, added) : "",
+                    (updated > 0) ? resources.getString(R.string.scanning_x_songs_updated, updated) : "",
+                    (removed > 0) ? resources.getString(R.string.scanning_x_songs_removed, removed) : ""
+            );
         }
     }
 
