@@ -13,7 +13,7 @@ import androidx.annotation.StringRes;
  * Toast wrapper that can be used from non-UI thread
  */
 public class SafeToast {
-    private static final int DURATION = Toast.LENGTH_SHORT;
+    private static final int DURATION = Toast.LENGTH_LONG;
 
     public static void show(@NonNull final Context context, @StringRes final int resId)
             throws Resources.NotFoundException {

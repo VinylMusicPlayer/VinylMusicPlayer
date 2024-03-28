@@ -299,7 +299,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getAction() != null) {
-                restoreQueuesAndPositionIfNecessary(); // TODO Not necessary? Since already called async via onCreate.restoreStates
+                // Just in case the async queue restore has not been excuted yet
+                synchronized (this) {
+                    if (!queuesRestored) {
+                        restoreQueuesAndPosition();
+                        queuesRestored = true;
+                    }
+                }
+
                 String action = intent.getAction();
                 switch (action) {
                     case ACTION_TOGGLE_PAUSE:
@@ -445,15 +452,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
     }
 
-    void restoreQueuesAndPositionIfNecessary() {
-        synchronized (this) {
-            if (!queuesRestored && playingQueue.size() == 0) {
-                restoreQueuesAndPosition();
-            }
-            queuesRestored = true;
-        }
-    }
-
     void restoreQueuesAndPosition() {
         synchronized (this) {
             try {
@@ -465,36 +463,41 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
                 ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
                 ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
-                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
+                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, StaticPlayingQueue.INVALID_POSITION);
                 int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
 
-                if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
-                    playingQueue = new StaticPlayingQueue(
-                            restoredQueue,
-                            restoredOriginalQueue,
-                            restoredPosition,
-                            playingQueue.getShuffleMode(),
-                            playingQueue.getRepeatMode()
-                    );
+                playingQueue = new StaticPlayingQueue(
+                        restoredQueue,
+                        restoredOriginalQueue,
+                        restoredPosition,
+                        playingQueue.getShuffleMode(),
+                        playingQueue.getRepeatMode()
+                );
+                queuesRestored = true;
 
-                    // Before altering the player state, check that it is really necessary
-                    // ie. we are changing song in between
-                    // This prevents changing the player state, as it will stop the playback
-                    if (!getCurrentSong().isQuickEqual(savedCurrentSong)) {
-                        if (openCurrent() && (restoredPositionInTrack > 0)) {
-                            seek(restoredPositionInTrack);
-                        }
-                        notHandledMetaChangedForCurrentTrack = true;
-                        sendChangeInternal(META_CHANGED);
-                    } // else just continue the playback till end of the song
+                // Before altering the player state, check that it is really necessary
+                // ie. we are changing song in between
+                // This prevents changing the player state, as it will stop the playback
+                final var currentSong = getCurrentSong();
+                if (!currentSong.isQuickEqual(savedCurrentSong)) {
+                    // TODO For debug only
+                    SafeToast.show(this, "Song changed: " +
+                            "previous=" + savedCurrentSong.id + "/'" + savedCurrentSong.title  + "'" +
+                            " vs now=" + currentSong.id + "/'" + currentSong.title + "'");
 
-                    // Restore playback
-                    // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
-                    if (savedPlayingState && !isPlaying()) {play();}
+                    if (openCurrent() && (restoredPositionInTrack > 0)) {
+                        seek(restoredPositionInTrack);
+                    }
+                    notHandledMetaChangedForCurrentTrack = true;
+                    sendChangeInternal(META_CHANGED);
+                } // else just continue the playback till end of the song
 
-                    prepareNext();
-                    sendChangeInternal(QUEUE_CHANGED);
-                }
+                // Restore playback
+                // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
+                if (savedPlayingState && !isPlaying()) {play();}
+
+                prepareNext();
+                sendChangeInternal(QUEUE_CHANGED);
             } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
                 // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
                 OopsHandler.collectStackTrace(queueCopiesOutOfSync);
