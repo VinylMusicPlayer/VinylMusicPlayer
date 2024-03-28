@@ -95,14 +95,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         }
     }
 
-    protected String getAlbumTitle(Album album) {
+    @NonNull
+    private static String getAlbumTitle(@NonNull final Album album) {
         return album.getTitle();
     }
 
     @NonNull
-    protected String getAlbumText(Album album) {
+    protected String getAlbumText(@NonNull final Album album) {
         return MusicUtil.buildInfoString(
-                MultiValuesTagUtil.infoString(album.getArtistNames()),
+                MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
                 MusicUtil.getSongCountString(activity, album.songs.size())
         );
     }

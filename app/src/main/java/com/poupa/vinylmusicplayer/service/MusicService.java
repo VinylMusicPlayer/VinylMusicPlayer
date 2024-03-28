@@ -47,6 +47,7 @@ import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverFetcher;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
@@ -710,10 +711,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoString(song.artistNames))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoString(song.albumArtistNames))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.artistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.albumArtistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, Album.getTitle(song.albumName))
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getTitle())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, getPosition() + 1)
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year);
@@ -1124,9 +1125,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("id", song.id);
 
-        intent.putExtra("artist", MultiValuesTagUtil.merge(song.artistNames));
-        intent.putExtra("album", song.albumName);
-        intent.putExtra("track", song.title);
+        intent.putExtra("artist", MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
+        intent.putExtra("album", Album.getTitle(song.albumName));
+        intent.putExtra("track", song.getTitle());
 
         intent.putExtra("duration", song.duration);
         intent.putExtra("position", (long) getSongProgressMillis());

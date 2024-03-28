@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import org.jetbrains.annotations.NonNls;
 
@@ -19,6 +20,8 @@ import java.util.function.Function;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Song implements Parcelable {
+    public static String UNTITLED_DISPLAY_NAME = "Untitled";
+
     public static final Song EMPTY_SONG = new Song(-1L, "", -1, -1, -1L, "", -1L, -1L, -1L, "", new ArrayList<>(0));
 
     public final long id;
@@ -51,7 +54,7 @@ public class Song implements Parcelable {
         this.id = id;
         this.albumName = albumName;
         this.albumId = albumId;
-        this.artistNames = artistNames;
+        this.artistNames = artistNames; // TODO To avoid aliasing, may want to make a copy of this list instead
         this.data = data;
         this.dateAdded = dateAdded;
         this.dateModified = dateModified;
@@ -82,6 +85,11 @@ public class Song implements Parcelable {
         title = song.title;
         trackNumber = song.trackNumber;
         year = song.year;
+    }
+
+    @NonNull
+    public String getTitle() {
+        return MusicUtil.isSongTitleUnknown(title) ? UNTITLED_DISPLAY_NAME : title;
     }
 
     @NonNull

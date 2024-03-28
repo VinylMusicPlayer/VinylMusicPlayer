@@ -56,7 +56,10 @@
     <string name="album">Album</string>
     <string name="artist">Artist</string>
     <string name="genre">Genre</string>
-    <string name="unknown_genre">Unknown genre</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="unknown_album">Unknown Album</string>
+    <string name="unknown_genre">Unknown Genre</string>
+    <string name="untitled_song">Untitled</string>
     <string name="album_artist">Album artist</string>
     <string name="year">Year</string>
     <string name="track_number">"Track Number"</string>

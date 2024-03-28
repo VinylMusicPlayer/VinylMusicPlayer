@@ -16,7 +16,7 @@ public class LyricsDialog extends DialogFragment {
     public static LyricsDialog create(@NonNull Lyrics lyrics) {
         LyricsDialog dialog = new LyricsDialog();
         Bundle args = new Bundle();
-        args.putString("title", lyrics.song.title);
+        args.putString("title", lyrics.song.getTitle());
         args.putString("lyrics", lyrics.getText());
         dialog.setArguments(args);
         return dialog;

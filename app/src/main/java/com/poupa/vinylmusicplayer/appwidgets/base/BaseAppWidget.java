@@ -16,7 +16,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -29,7 +28,6 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
@@ -283,13 +281,9 @@ public abstract class BaseAppWidget extends AppWidgetProvider {
 
     protected void setTitlesArtwork(final MusicService service) {
         final Song song = service.getCurrentSong();
-        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(MultiValuesTagUtil.infoString(song.artistNames))) {
-            appWidgetView.setViewVisibility(R.id.media_titles, View.INVISIBLE);
-        } else {
-            appWidgetView.setViewVisibility(R.id.media_titles, View.VISIBLE);
-            appWidgetView.setTextViewText(R.id.title, song.title);
-            appWidgetView.setTextViewText(R.id.text, getSongArtistAndAlbum(song));
-        }
+        appWidgetView.setViewVisibility(R.id.media_titles, View.VISIBLE);
+        appWidgetView.setTextViewText(R.id.title, song.getTitle());
+        appWidgetView.setTextViewText(R.id.text, getSongArtistAndAlbum(song));
     }
 
     protected void setButtons(final MusicService service) {

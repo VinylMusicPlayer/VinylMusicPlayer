@@ -1,12 +1,9 @@
 package com.poupa.vinylmusicplayer.appwidgets;
 
-import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.appwidgets.base.BaseAppWidget;
-import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
 public class AppWidgetSmall extends BaseAppWidget {
@@ -29,15 +26,6 @@ public class AppWidgetSmall extends BaseAppWidget {
 
         // Set the titles and artwork
         setTitlesArtwork(service);
-
-        final Song song = service.getCurrentSong();
-        final String artistName = MultiValuesTagUtil.infoString(song.artistNames);
-        if (!(TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistName)) &&
-                TextUtils.isEmpty(song.title) || TextUtils.isEmpty(artistName)) {
-            appWidgetView.setTextViewText(R.id.text_separator, "");
-        } else {
-            appWidgetView.setTextViewText(R.id.text_separator, "•");
-        }
 
         // Link actions buttons to intents
         linkButtons(service);

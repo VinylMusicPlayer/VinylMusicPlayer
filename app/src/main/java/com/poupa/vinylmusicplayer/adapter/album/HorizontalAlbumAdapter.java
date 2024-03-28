@@ -84,8 +84,9 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
                 });
     }
 
+    @NonNull
     @Override
-    protected String getAlbumText(Album album) {
+    protected String getAlbumText(@NonNull final Album album) {
         return MusicUtil.getYearString(album.getYear());
     }
 

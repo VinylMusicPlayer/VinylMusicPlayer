@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Album implements Parcelable {
-    public static final String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
+    public static String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
 
     public final ArrayList<Song> songs;
 
@@ -33,12 +33,17 @@ public class Album implements Parcelable {
         return safeGetFirstSong().albumId;
     }
 
+    @NonNull
     public String getTitle() {
-        String name = safeGetFirstSong().albumName;
-        if (MusicUtil.isAlbumNameUnknown(name)) {
+        return getTitle(safeGetFirstSong().albumName);
+    }
+
+    @NonNull
+    public static String getTitle(@NonNull final String albumName) {
+        if (MusicUtil.isAlbumNameUnknown(albumName)) {
             return UNKNOWN_ALBUM_DISPLAY_NAME;
         }
-        return name;
+        return albumName;
     }
 
     @NonNull
@@ -61,7 +66,7 @@ public class Album implements Parcelable {
 
         return Collections.min(
                 songs,
-                Comparator.comparingLong(s -> s.dateAdded)
+                Comparator.comparingLong(song -> song.dateAdded)
         ).dateAdded;
     }
 
@@ -70,7 +75,7 @@ public class Album implements Parcelable {
 
         return Collections.max(
                 songs,
-                Comparator.comparingLong(s -> s.dateModified)
+                Comparator.comparingLong(song -> song.dateModified)
         ).dateModified;
     }
 

@@ -407,7 +407,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         @Override
         public void updateCurrentSong(@NonNull final Song song) {
             currentSong = song;
-            currentSongViewHolder.title.setText(song.title);
+            currentSongViewHolder.title.setText(song.getTitle());
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
 
             if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
@@ -449,7 +449,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
 
         @Override
         public void updateCurrentSong(@NonNull final Song song) {
-            fragment.toolbar.setTitle(song.title);
+            fragment.toolbar.setTitle(song.getTitle());
             fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
         }
 

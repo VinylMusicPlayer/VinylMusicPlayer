@@ -28,8 +28,8 @@ public class HistoryPlaylist extends AbsSmartPlaylist {
 
     @NonNull
     @Override
-    public String getInfoString(@NonNull Context context) {
-        String cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffText(context);
+    public String getInfoString(@NonNull final Context context) {
+        final String cutoff = PreferenceUtil.getInstance().getRecentlyPlayedCutoffText(context);
 
         return MusicUtil.buildInfoString(
             cutoff,
