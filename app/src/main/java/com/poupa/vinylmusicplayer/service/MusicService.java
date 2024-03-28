@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid), Andrew Neal
@@ -481,20 +482,26 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 final var currentSong = getCurrentSong();
                 if (!currentSong.isQuickEqual(savedCurrentSong)) {
                     // TODO For debug only
+                    Function<Song, String> songInfo = song -> String.format(
+                            "%d/'%s'",
+                            (song.id % 10000),
+                            song.title.substring(0, Math.min(song.title.length(), 10))
+                    );
                     SafeToast.show(this, "Song changed: " +
-                            "previous=" + savedCurrentSong.id + "/'" + savedCurrentSong.title  + "'" +
-                            " vs now=" + currentSong.id + "/'" + currentSong.title + "'");
+                            "previous=" + songInfo.apply(savedCurrentSong) +
+                            " vs now=" + songInfo.apply(currentSong)
+                    );
 
                     if (openCurrent() && (restoredPositionInTrack > 0)) {
                         seek(restoredPositionInTrack);
                     }
                     notHandledMetaChangedForCurrentTrack = true;
                     sendChangeInternal(META_CHANGED);
-                } // else just continue the playback till end of the song
 
-                // Restore playback
-                // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
-                if (savedPlayingState && !isPlaying()) {play();}
+                    // Restore playback
+                    // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
+                    if (savedPlayingState && !isPlaying()) {play();}
+                } // else just leave the playback with the current song
 
                 prepareNext();
                 sendChangeInternal(QUEUE_CHANGED);
