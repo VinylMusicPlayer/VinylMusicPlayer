@@ -315,7 +315,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
         songTitle.setSingleLine();
         songTitle.setEllipsize(TextUtils.TruncateAt.END);
-        songTitle.setText(adapter.dataSet.get(position).title + " " + snackBarTitle);
+        songTitle.setText(adapter.dataSet.get(position).getTitle() + " " + snackBarTitle);
 
         Integer color = getBackgroundColor(activity);
         if (color == null) {

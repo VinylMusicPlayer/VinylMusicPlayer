@@ -326,11 +326,17 @@ public class MusicUtil {
         return isNameUnknown(genreName, Genre.UNKNOWN_GENRE_DISPLAY_NAME);
     }
 
+    public static boolean isSongTitleUnknown(@Nullable String title) {
+        return isNameUnknown(title, Song.UNTITLED_DISPLAY_NAME);
+    }
+
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
         if (TextUtils.isEmpty(name)) return true;
         if (name.equals(defaultDisplayName)) return true;
-        name = name.trim().toLowerCase();
-        return (name.equals("unknown") || name.equals("<unknown>"));
+        final String normName = name.trim().toLowerCase();
+        return (normName.equals("unknown") || normName.equals("<unknown>") ||
+                normName.equals("untitled") || normName.equals("(untitled)")
+        );
     }
 
     @NonNull

@@ -714,7 +714,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.artistNames))
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.albumArtistNames))
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, Album.getTitle(song.albumName))
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getTitle())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, getPosition() + 1)
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year);
@@ -1127,7 +1127,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("artist", MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
         intent.putExtra("album", Album.getTitle(song.albumName));
-        intent.putExtra("track", song.title);
+        intent.putExtra("track", song.getTitle());
 
         intent.putExtra("duration", song.duration);
         intent.putExtra("position", (long) getSongProgressMillis());

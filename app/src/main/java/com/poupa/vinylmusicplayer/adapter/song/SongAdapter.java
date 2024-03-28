@@ -154,7 +154,7 @@ public class SongAdapter
         }
 
         if (holder.title != null) {
-            holder.title.setText(song.title);
+            holder.title.setText(song.getTitle());
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));
