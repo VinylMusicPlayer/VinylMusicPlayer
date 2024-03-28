@@ -72,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 
 /**
  * @author Karim Abou Zeid (kabouzeid), Andrew Neal
@@ -457,15 +456,16 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             try {
                 // The current playback state
-                final var savedCurrentSong = getCurrentSong();
-                final boolean savedPlayingState = isPlaying();
+                final long savedSongId = getCurrentSong().id;
 
                 // The saved state
                 final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
-                ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
-                ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
-                int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, StaticPlayingQueue.INVALID_POSITION);
-                int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+                final ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
+                final ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
+                final int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this)
+                        .getInt(SAVED_POSITION, StaticPlayingQueue.INVALID_POSITION);
+                final int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this)
+                        .getInt(SAVED_POSITION_IN_TRACK, -1);
 
                 playingQueue = new StaticPlayingQueue(
                         restoredQueue,
@@ -479,17 +479,11 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 // Before altering the player state, check that it is really necessary
                 // ie. we are changing song in between
                 // This prevents changing the player state, as it will stop the playback
-                final var currentSong = getCurrentSong();
-                if (!currentSong.isQuickEqual(savedCurrentSong)) {
-                    // TODO For debug only
-                    Function<Song, String> songInfo = song -> String.format(
-                            "%d/'%s'",
-                            (song.id % 10000),
-                            song.title.substring(0, Math.min(song.title.length(), 10))
-                    );
-                    SafeToast.show(this, "Song changed: " +
-                            "previous=" + songInfo.apply(savedCurrentSong) +
-                            " vs now=" + songInfo.apply(currentSong)
+                final long currentSongId = getCurrentSong().id;
+                if (currentSongId != savedSongId) {
+                    SafeToast.show(this, "Song changed" +
+                            " previous=" + savedSongId +
+                            " vs now=" + currentSongId
                     );
 
                     if (openCurrent() && (restoredPositionInTrack > 0)) {
@@ -497,10 +491,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     }
                     notHandledMetaChangedForCurrentTrack = true;
                     sendChangeInternal(META_CHANGED);
-
-                    // Restore playback
-                    // TODO Unclear why the playback sometime is interrupted - not reproducible consistently
-                    if (savedPlayingState && !isPlaying()) {play();}
                 } // else just leave the playback with the current song
 
                 prepareNext();
