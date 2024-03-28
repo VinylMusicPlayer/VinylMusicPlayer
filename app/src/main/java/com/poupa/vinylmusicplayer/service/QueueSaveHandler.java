@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import java.lang.ref.WeakReference;
 
 class QueueSaveHandler extends Handler {
+    static final int SAVE_QUEUES = 0;
+    static final int RESTORE_QUEUES = 1;
+
     @NonNull
     private final WeakReference<MusicService> mService;
 
@@ -20,8 +23,9 @@ class QueueSaveHandler extends Handler {
     @Override
     public void handleMessage(@NonNull Message msg) {
         final MusicService service = mService.get();
-        if (msg.what == MusicService.SAVE_QUEUES) {
-            service.saveQueuesImpl();
+        switch (msg.what) {
+            case SAVE_QUEUES -> service.saveQueuesImpl();
+            case RESTORE_QUEUES -> service.restoreQueuesAndPosition();
         }
     }
 }

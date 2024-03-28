@@ -44,6 +44,13 @@ public class StaticPlayingQueue {
     }
 
     public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode, int repeatMode) {
+        if (restoreQueue.size() != restoreOriginalQueue.size()) {
+            throw new IllegalArgumentException("Mismatching queue size: queue=" + restoreQueue.size() + " vs originalQueue=" + restoreOriginalQueue.size());
+        }
+        if (restoredPosition < 0 || restoredPosition > restoreQueue.size() - 1) {
+            throw new IllegalArgumentException("Queue size=" + restoreQueue.size() + " vs position=" + restoredPosition);
+        }
+
         this.queue = new ArrayList<>(restoreQueue);
         this.originalQueue = new ArrayList<>(restoreOriginalQueue);
         this.shuffleMode = shuffleMode;
