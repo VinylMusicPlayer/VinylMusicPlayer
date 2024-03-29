@@ -6,20 +6,25 @@
 
     <!--The unused FrameLayout layout is necessary to prevent a crash on rotate-->
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/player_sliding_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="true"
-        android:gravity="bottom"
-        sothree:umanoFadeColor="#00000000"
-        sothree:umanoOverlay="true"
-        sothree:umanoPanelHeight="0dp"
-        sothree:umanoScrollableView="@+id/player_recycler_view"
-        sothree:umanoShadowHeight="0dp">
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/player_sliding_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="true"
+            android:gravity="bottom"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="@dimen/mini_player_height"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layoutDescription="@xml/sliding_music_panel_layout_scene"
+            >
 
         <FrameLayout
+            android:id="@+id/content_container_xxx"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -153,6 +158,7 @@
 
         </com.poupa.vinylmusicplayer.views.StatusBarMarginFrameLayout>
 
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </FrameLayout>

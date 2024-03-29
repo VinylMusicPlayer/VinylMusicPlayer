@@ -16,8 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
@@ -29,7 +32,6 @@ import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
@@ -38,11 +40,13 @@ import com.poupa.vinylmusicplayer.util.Util;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPanelLayout.PanelSlideListener {
+public class FlatPlayerFragment extends AbsPlayerFragment {
+    private MotionLayout slidingUpPanel;
+    private BottomSheetBehavior<MotionLayout> slidingUpPanelLayout;
+    private BottomSheetBehavior.BottomSheetCallback slidingUpPanelCallback;
+
     private View playerStatusBar;
-    private SlidingUpPanelLayout slidingUpPanelLayout;
     private RecyclerView recyclerView;
     private TextView playerQueueSubHeader;
 
@@ -64,7 +68,25 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         toolbar = binding.playerToolbar;
         playerStatusBar = binding.playerStatusBar;
         toolbarContainer = binding.toolbarContainer;
-        slidingUpPanelLayout = binding.playerSlidingLayout;
+        slidingUpPanel = binding.playerSlidingLayout;
+        slidingUpPanelLayout = (BottomSheetBehavior<MotionLayout>) ((CoordinatorLayout.LayoutParams) slidingUpPanel.getLayoutParams()).getBehavior();
+        slidingUpPanelCallback = new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull final View view, final int i) {
+                switch (i) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        onPanelCollapsed(view);
+                        break;
+//            case BottomSheetBehavior.STATE_ANCHORED:
+//                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED); // this fixes a bug where the panel would get stuck for some reason
+//                break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull final View view, final float v) {
+            }
+        };
         recyclerView = binding.playerRecyclerView;
         playerQueueSubHeader = binding.playerQueueSubHeader;
 
@@ -80,11 +102,11 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         setUpPlayerToolbar();
         setUpSubFragments();
 
-        setUpRecyclerView(recyclerView,slidingUpPanelLayout);
+        setUpRecyclerView(recyclerView,slidingUpPanel);
 
         if (slidingUpPanelLayout != null) {
-            slidingUpPanelLayout.addPanelSlideListener(this);
-            slidingUpPanelLayout.setAntiDragView(view.findViewById(R.id.draggable_area));
+            slidingUpPanelLayout.addBottomSheetCallback(slidingUpPanelCallback);
+//            slidingUpPanel.setAntiDragView(view.findViewById(R.id.draggable_area));
         }
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -99,7 +121,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     @Override
     public void onDestroyView() {
         if (slidingUpPanelLayout != null) {
-            slidingUpPanelLayout.removePanelSlideListener(this);
+            slidingUpPanelLayout.removeBottomSheetCallback(slidingUpPanelCallback);
         }
 
         if (recyclerView != null) {
@@ -154,7 +176,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     private void updateQueue() {
         playingQueueAdapter.swapDataSet(MusicPlayerRemote.getPlayingQueue(), MusicPlayerRemote.getPosition());
         playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
-        if (slidingUpPanelLayout == null || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        if (slidingUpPanelLayout == null || slidingUpPanelLayout.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             resetToCurrentPosition();
         }
     }
@@ -162,7 +184,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     private void updateQueuePosition() {
         playingQueueAdapter.setCurrent(MusicPlayerRemote.getPosition());
         playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
-        if (slidingUpPanelLayout == null || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        if (slidingUpPanelLayout == null || slidingUpPanelLayout.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
             resetToCurrentPosition();
         }
     }
@@ -215,8 +237,8 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     public boolean onBackPressed() {
         boolean wasExpanded = false;
         if (slidingUpPanelLayout != null) {
-            wasExpanded = slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED;
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            wasExpanded = slidingUpPanelLayout.getState() == BottomSheetBehavior.STATE_EXPANDED;
+            slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
 
         return wasExpanded;
@@ -228,22 +250,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         playbackControlsFragment.setDark(ColorUtil.isColorLight(color));
 
         super.onColorChanged(color);
-    }
-
-    @Override
-    public void onPanelSlide(View view, float slide) {
-    }
-
-    @Override
-    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-        switch (newState) {
-            case COLLAPSED:
-                onPanelCollapsed(panel);
-                break;
-            case ANCHORED:
-                slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED); // this fixes a bug where the panel would get stuck for some reason
-                break;
-        }
     }
 
     public void onPanelCollapsed(View panel) {
@@ -318,10 +324,10 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
             currentSongViewHolder.image.setImageResource(PlayingSongDecorationUtil.sIconPlaying);
             currentSongViewHolder.itemView.setOnClickListener(v -> {
                 // toggle the panel
-                if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    fragment.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                } else if (fragment.slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    fragment.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                if (fragment.slidingUpPanelLayout.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    fragment.slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else if (fragment.slidingUpPanelLayout.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    fragment.slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             });
             currentSongViewHolder.menu.setOnClickListener(new SongMenuHelper.OnClickSongMenu((AppCompatActivity) fragment.getActivity()) {
@@ -354,15 +360,16 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         public void setUpPanelAndAlbumCoverHeight() {
             WidthFitSquareLayout albumCoverContainer = fragment.getView().findViewById(R.id.album_cover_container);
 
-            final int availablePanelHeight = fragment.slidingUpPanelLayout.getHeight() - fragment.getView().findViewById(R.id.player_content).getHeight();
+            final int availablePanelHeight = fragment.slidingUpPanel.getHeight() - fragment.getView().findViewById(R.id.player_content).getHeight();
             final int minPanelHeight = (int) ViewUtil.convertDpToPixel(8 + 72 + 24, fragment.getResources()) + fragment.getResources().getDimensionPixelSize(R.dimen.progress_container_height) + fragment.getResources().getDimensionPixelSize(R.dimen.media_controller_container_height);
             if (availablePanelHeight < minPanelHeight) {
                 albumCoverContainer.getLayoutParams().height = albumCoverContainer.getHeight() - (minPanelHeight - availablePanelHeight);
                 albumCoverContainer.forceSquare(false);
             }
-            fragment.slidingUpPanelLayout.setPanelHeight(Math.max(minPanelHeight, availablePanelHeight));
+            fragment.slidingUpPanel.setMinHeight(Math.max(minPanelHeight, availablePanelHeight));
+            fragment.slidingUpPanel.setMaxHeight(Math.max(minPanelHeight, availablePanelHeight));
 
-            ((AbsSlidingMusicPanelActivity) fragment.getActivity()).setAntiDragView(fragment.slidingUpPanelLayout.findViewById(R.id.player_panel));
+//            ((AbsSlidingMusicPanelActivity) fragment.getActivity()).setAntiDragView(fragment.slidingUpPanel.findViewById(R.id.player_panel));
         }
 
         @Override
@@ -399,7 +406,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
 
         @Override
         public void setUpPanelAndAlbumCoverHeight() {
-            ((AbsSlidingMusicPanelActivity) fragment.getActivity()).setAntiDragView(fragment.getView().findViewById(R.id.player_panel));
+//            ((AbsSlidingMusicPanelActivity) fragment.getActivity()).setAntiDragView(fragment.getView().findViewById(R.id.player_panel));
         }
 
         @Override

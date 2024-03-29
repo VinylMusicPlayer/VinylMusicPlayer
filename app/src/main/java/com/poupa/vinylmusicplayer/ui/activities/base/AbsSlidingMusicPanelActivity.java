@@ -11,8 +11,10 @@ import android.view.animation.PathInterpolator;
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -25,13 +27,14 @@ import com.poupa.vinylmusicplayer.ui.fragments.player.card.CardPlayerFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.flat.FlatPlayerFragment;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivity implements SlidingUpPanelLayout.PanelSlideListener, CardPlayerFragment.Callbacks {
-    SlidingUpPanelLayout slidingUpPanelLayout;
+public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivity implements CardPlayerFragment.Callbacks {
+    MotionLayout slidingUpPanel;
+    BottomSheetBehavior slidingUpPanelLayout;
+    private BottomSheetBehavior.BottomSheetCallback slidingUpPanelCallback;
 
     private int navigationbarColor;
     private int taskColor;
@@ -52,16 +55,10 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         setContentView(createContentView());
 
         currentNowPlayingScreen = PreferenceUtil.getInstance().getNowPlayingScreen();
-        Fragment fragment; // must implement AbsPlayerFragment
-        switch (currentNowPlayingScreen) {
-            case FLAT:
-                fragment = new FlatPlayerFragment();
-                break;
-            case CARD:
-            default:
-                fragment = new CardPlayerFragment();
-                break;
-        }
+        final AbsPlayerFragment fragment = switch (currentNowPlayingScreen) {
+            case FLAT -> new FlatPlayerFragment();
+            case CARD -> new CardPlayerFragment();
+        };
         getSupportFragmentManager().beginTransaction().replace(R.id.player_fragment_container, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
 
@@ -71,18 +68,43 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         //noinspection ConstantConditions
         miniPlayerFragment.getView().setOnClickListener(v -> expandPanel());
 
-        slidingUpPanelLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        slidingUpPanelCallback = new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onSlide(View panel, @FloatRange(from = 0, to = 1) float slideOffset) {
+                setMiniPlayerAlphaProgress(slideOffset);
+                if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel();
+                setNavigationbarColor((int) argbEvaluator.evaluate(slideOffset, navigationbarColor, playerFragment.getPaletteColor()));
+            }
+
+            @Override
+            public void onStateChanged(View panel, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        onPanelCollapsed(panel);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        onPanelExpanded(panel);
+                        break;
+//            case BottomSheetBehavior.STATE_ANCHORED:
+//                collapsePanel(); // this fixes a bug where the panel would get stuck for some reason
+//                break;
+                }
+            }
+        };
+        slidingUpPanelLayout.addBottomSheetCallback(slidingUpPanelCallback);
+
+        slidingUpPanel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                slidingUpPanelLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                slidingUpPanel.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 switch (getPanelState()) {
-                    case EXPANDED:
-                        onPanelSlide(slidingUpPanelLayout, 1);
-                        onPanelExpanded(slidingUpPanelLayout);
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        slidingUpPanelCallback.onSlide(slidingUpPanel, 1);
+                        onPanelExpanded(slidingUpPanel);
                         break;
-                    case COLLAPSED:
-                        onPanelCollapsed(slidingUpPanelLayout);
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        onPanelCollapsed(slidingUpPanel);
                         break;
                     default:
                         playerFragment.onHide();
@@ -90,7 +112,6 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
                 }
             }
         });
-        slidingUpPanelLayout.addPanelSlideListener(this);
     }
 
     @Override
@@ -114,9 +135,9 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         reload();
     }
 
-    public void setAntiDragView(View antiDragView) {
-        slidingUpPanelLayout.setAntiDragView(antiDragView);
-    }
+//    public void setAntiDragView(View antiDragView) {
+//        slidingUpPanelLayout.setAntiDragView(antiDragView);
+//    }
 
     protected abstract View createContentView();
 
@@ -126,42 +147,22 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     public void onServiceConnected() {
         super.onServiceConnected();
         if (!MusicPlayerRemote.getPlayingQueue().isEmpty()) {
-            slidingUpPanelLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            slidingUpPanel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    slidingUpPanelLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    slidingUpPanel.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     hideBottomBar(false);
                 }
             });
-        } // don't call hideBottomBar(true) here as it causes a bug with the SlidingUpPanelLayout
+        } else {
+            hideBottomBar(true);
+        }
     }
 
     @Override
     public void onQueueChanged() {
         super.onQueueChanged();
         hideBottomBar(MusicPlayerRemote.getPlayingQueue().isEmpty());
-    }
-
-    @Override
-    public void onPanelSlide(View panel, @FloatRange(from = 0, to = 1) float slideOffset) {
-        setMiniPlayerAlphaProgress(slideOffset);
-        if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel();
-        super.setNavigationbarColor((int) argbEvaluator.evaluate(slideOffset, navigationbarColor, playerFragment.getPaletteColor()));
-    }
-
-    @Override
-    public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-        switch (newState) {
-            case COLLAPSED:
-                onPanelCollapsed(panel);
-                break;
-            case EXPANDED:
-                onPanelExpanded(panel);
-                break;
-            case ANCHORED:
-                collapsePanel(); // this fixes a bug where the panel would get stuck for some reason
-                break;
-        }
     }
 
     public void onPanelCollapsed(View panel) {
@@ -195,32 +196,33 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         miniPlayerFragment.getView().setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
     }
 
-
-    public SlidingUpPanelLayout.PanelState getPanelState() {
-        return slidingUpPanelLayout == null ? null : slidingUpPanelLayout.getPanelState();
+    protected int getPanelState() {
+        return slidingUpPanelLayout == null ? -1 : slidingUpPanelLayout.getState();
     }
 
     public void collapsePanel() {
-        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     public void expandPanel() {
-        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void hideBottomBar(final boolean hide) {
         if (hide) {
-            slidingUpPanelLayout.setPanelHeight(0);
+            slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_HIDDEN);
             collapsePanel();
         } else {
-            slidingUpPanelLayout.setPanelHeight(getResources().getDimensionPixelSize(R.dimen.mini_player_height));
+            slidingUpPanelLayout.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
     }
 
     @NonNull
     protected SlidingMusicPanelLayoutBinding createSlidingMusicPanel() {
         SlidingMusicPanelLayoutBinding binding = SlidingMusicPanelLayoutBinding.inflate(getLayoutInflater());
-        slidingUpPanelLayout = binding.slidingLayout;
+        slidingUpPanel = binding.slidingLayout;
+        slidingUpPanelLayout = (BottomSheetBehavior) ((CoordinatorLayout.LayoutParams) slidingUpPanel.getLayoutParams()).getBehavior();
+
         return binding;
     }
 
@@ -231,9 +233,9 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     }
 
     public boolean handleBackPress() {
-        if (slidingUpPanelLayout.getPanelHeight() != 0 && playerFragment.onBackPressed())
+        if (slidingUpPanel.getHeight() != 0 && playerFragment.onBackPressed())
             return true;
-        if (getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (getPanelState() == BottomSheetBehavior.STATE_EXPANDED) {
             collapsePanel();
             return true;
         }
@@ -242,7 +244,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
     @Override
     public void onPaletteColorChanged() {
-        if (getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (getPanelState() == BottomSheetBehavior.STATE_EXPANDED) {
             int playerFragmentColor = playerFragment.getPaletteColor();
             super.setTaskDescriptionColor(playerFragmentColor);
             animateNavigationBarColor(playerFragmentColor);
@@ -252,7 +254,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     @Override
     public void setLightStatusbar(boolean enabled) {
         lightStatusbar = enabled;
-        if (getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        if (getPanelState() == BottomSheetBehavior.STATE_COLLAPSED) {
             super.setLightStatusbar(enabled);
         }
     }
@@ -260,7 +262,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     @Override
     public void setNavigationbarColor(int color) {
         this.navigationbarColor = color;
-        if (getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        if (getPanelState() == BottomSheetBehavior.STATE_COLLAPSED) {
             if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel();
             super.setNavigationbarColor(color);
         }
@@ -281,13 +283,14 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        slidingUpPanelLayout.removeBottomSheetCallback(slidingUpPanelCallback);
         if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel(); // just in case
     }
 
     @Override
     public void setTaskDescriptionColor(@ColorInt int color) {
         this.taskColor = color;
-        if (getPanelState() == null || getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+        if (getPanelState() == BottomSheetBehavior.STATE_COLLAPSED) {
             super.setTaskDescriptionColor(color);
         }
     }

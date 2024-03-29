@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +48,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public abstract class AbsPlayerFragment
         extends AbsMusicServiceFragment
@@ -78,7 +78,7 @@ public abstract class AbsPlayerFragment
         callbacks = null;
     }
 
-    protected void setUpRecyclerView(RecyclerView recyclerView, final SlidingUpPanelLayout slidingUpPanelLayout) {
+    protected void setUpRecyclerView(final @NonNull RecyclerView recyclerView, final @NonNull MotionLayout slidingUpPanel) {
         RecyclerViewTouchActionGuardManager recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
         recyclerViewSwipeManager = new RecyclerViewSwipeManager();
         recyclerViewDragDropManager = new RecyclerViewDragDropManager();
@@ -111,12 +111,12 @@ public abstract class AbsPlayerFragment
         recyclerViewSwipeManager.setOnItemSwipeEventListener(new RecyclerViewSwipeManager.OnItemSwipeEventListener() {
             @Override
             public void onItemSwipeStarted(int i) {
-                slidingUpPanelLayout.setTouchEnabled(false);
+                slidingUpPanel.setInteractionEnabled(false);
             }
 
             @Override
             public void onItemSwipeFinished(int i, int i1, int i2) {
-                slidingUpPanelLayout.setTouchEnabled(true);
+                slidingUpPanel.setInteractionEnabled(true);
             }
         });
 

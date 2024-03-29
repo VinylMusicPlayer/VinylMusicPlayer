@@ -21,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
@@ -46,7 +47,6 @@ import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragm
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
 import java.util.List;
@@ -64,7 +64,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     DrawerLayout drawerLayout;
 
     @Nullable
-    MainActivityFragmentCallbacks currentFragment;
+    private MainActivityFragmentCallbacks currentFragment;
 
     @Nullable
     private View navigationDrawerHeader;
@@ -205,7 +205,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                 navigationDrawerHeader = navigationView.inflateHeaderView(R.layout.navigation_drawer_header);
                 navigationDrawerHeader.setOnClickListener(v -> {
                     drawerLayout.closeDrawers();
-                    if (getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    if (getPanelState() == BottomSheetBehavior.STATE_HIDDEN) {
                         expandPanel();
                     }
                 });
