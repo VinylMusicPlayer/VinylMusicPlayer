@@ -142,10 +142,10 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
                 // if we have no existing results, create a new one
                 createNewPlayedEntry(database, songId);
             }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-
-        database.setTransactionSuccessful();
-        database.endTransaction();
     }
 
     /**
@@ -297,10 +297,10 @@ public class SongPlayCountStore extends SQLiteOpenHelper {
                     updateExistingRow(database, cursor, false);
                 } while (cursor.moveToNext());
             }
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
         }
-
-        database.setTransactionSuccessful();
-        database.endTransaction();
     }
 
     /**

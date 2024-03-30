@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,18 +104,13 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<? extends Song> songs, long playlistId) {
-        if (songs.size() == 0) {return;}
+    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<Integer> songPositions, long playlistId) {
+        if (songPositions.isEmpty()) {return;}
 
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return;}
 
-        List<Long> songIds = new ArrayList<>();
-        for (Song song : songs) {
-            songIds.add(song.id);
-        }
-
-        list.removeSongs(songIds);
+        list.removeSongsAtPosition(songPositions);
         notifyChange(context);
     }
 

@@ -7,6 +7,7 @@ import com.poupa.vinylmusicplayer.helper.ShuffleHelper;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class StaticPlayingQueue {
@@ -101,7 +102,7 @@ public class StaticPlayingQueue {
     /**
      * Add list of song at the end of both list
      */
-    public void addAll(@NonNull final List<? extends Song> songs) {
+    public void addAll(@NonNull final Collection<? extends Song> songs) {
         final int position = size();
         for (Song song : songs) {
             add(song);
@@ -167,7 +168,7 @@ public class StaticPlayingQueue {
     /**
      * Add songs after and including position, numbering need to be redone for every song after this position (+number of song)
      */
-    public void addAllAfter(int position, @NonNull List<? extends Song> songs) {
+    public void addAllAfter(int position, @NonNull Collection<? extends Song> songs) {
         final int queueSize = queue.size();
         if (queueSize == 0) {
             addAll(songs);
@@ -181,11 +182,14 @@ public class StaticPlayingQueue {
         position = position + 1;
 
         int n = songs.size() - 1;
+        final List<Song> songsAsList = new ArrayList<>(songs);
         for (int i = n; i >= 0; i--) {
             int newPosition = previousPosition + i;
             long uniqueId = getNextUniqueId();
-            originalQueue.add(previousPosition, new IndexedSong(songs.get(i), newPosition, uniqueId));
-            queue.add(position, new IndexedSong(songs.get(i), newPosition, uniqueId));
+
+            // Note: Two separate copies in for two queues
+            originalQueue.add(previousPosition, new IndexedSong(songsAsList.get(i), newPosition, uniqueId));
+            queue.add(position, new IndexedSong(songsAsList.get(i), newPosition, uniqueId));
 
             if (position <= this.currentPosition) {
                 this.currentPosition++;
@@ -296,7 +300,7 @@ public class StaticPlayingQueue {
 
     /* -------------------- queue getter info -------------------- */
 
-    public boolean openQueue(@Nullable final List<? extends Song> playingQueue, final int startPosition, int shuffleMode) {
+    public boolean openQueue(@Nullable final Collection<? extends Song> playingQueue, final int startPosition, int shuffleMode) {
         if (playingQueue == null || playingQueue.isEmpty() || startPosition < 0 || startPosition >= playingQueue.size()) {
             return false;
         }

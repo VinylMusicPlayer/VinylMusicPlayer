@@ -28,6 +28,7 @@ import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
 import com.poupa.vinylmusicplayer.provider.StoreLoader;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -81,12 +82,12 @@ public class TopAndRecentlyPlayedTracksLoader {
         if (!enabled) {return new ArrayList<>();}
 
         final int NUMBER_OF_TOP_TRACKS = 100;
-        try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)){
+        try (Cursor cursor = SongPlayCountStore.getInstance(context).getTopPlayedResults(NUMBER_OF_TOP_TRACKS)) {
             ArrayList<Long> songIds = StoreLoader.getIdsFromCursor(cursor, SongPlayCountStore.SongPlayCountColumns.ID);
             Discography discography = Discography.getInstance();
             return discography.getSongsFromIdsAndCleanupOrphans(songIds, null);
-        } catch (SQLiteException exception) {
-            exception.printStackTrace();
+        } catch (SQLiteException|IllegalStateException exception) {
+            OopsHandler.collectStackTrace(exception);
             return new ArrayList<>();
         }
     }

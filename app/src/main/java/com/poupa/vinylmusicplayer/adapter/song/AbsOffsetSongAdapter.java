@@ -84,9 +84,11 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     @Nullable
     @Override
     protected Song getIdentifier(int position) {
-        position--;
-        if (position < 0) return null;
-        return super.getIdentifier(position);
+        // Shifting by -1, since the very first item is the OFFSET_ITEM
+        final int adjustedPosition = position - 1;
+        if (adjustedPosition < 0) {return null;}
+
+        return super.getIdentifier(adjustedPosition);
     }
 
     @Override
@@ -106,6 +108,12 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
         position--;
         if (position < 0) return "";
         return super.getSectionName(position);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final SongAdapter.ViewHolder holder, int position) {
+        super.onBindViewHolder(holder,position);
+        holder.itemView.setActivated(isChecked(position + 1));
     }
 
     public class ViewHolder extends SongAdapter.ViewHolder {

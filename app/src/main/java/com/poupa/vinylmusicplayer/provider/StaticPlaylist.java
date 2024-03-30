@@ -13,6 +13,7 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.loader.PlaylistLoader;
 import com.poupa.vinylmusicplayer.loader.PlaylistSongLoader;
 import com.poupa.vinylmusicplayer.model.Playlist;
+import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.UUID;
  * @author SC (soncaokim)
  */
 public class StaticPlaylist extends PreferenceBackedReorderableSongList {
+    @PrefKey
     private static final String PREF_MIGRATED_STATIC_PLAYLISTS = "migrated_static_playlists";
 
     @NonNull

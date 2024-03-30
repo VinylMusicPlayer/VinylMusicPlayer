@@ -39,7 +39,9 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -89,7 +91,7 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Playlist playlist = dataSet.get(position);
 
-        holder.itemView.setActivated(isChecked(playlist));
+        holder.itemView.setActivated(isChecked(position));
 
         if (holder.title != null) {
             holder.title.setText(getPlaylistTitle(playlist));
@@ -148,30 +150,31 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Playlist> selection) {
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Playlist> selection) {
         if (R.id.action_delete_playlist == menuItem.getItemId()) {
-            for (int i = 0; i < selection.size(); i++) {
-                Playlist playlist = selection.get(i);
-                if (playlist instanceof AbsSmartPlaylist) {
-                    AbsSmartPlaylist absSmartPlaylist = (AbsSmartPlaylist) playlist;
+            final List<Playlist> staticPlaylists = new ArrayList<>();
+            for (final Playlist playlist : selection.values()) {
+                if (playlist instanceof AbsSmartPlaylist absSmartPlaylist) {
                     if (absSmartPlaylist.isClearable()) {
                         ClearSmartPlaylistDialog.create(absSmartPlaylist).show(activity.getSupportFragmentManager(), "CLEAR_PLAYLIST_" + absSmartPlaylist.name);
                     }
-                    selection.remove(playlist);
-                    i--;
+                }
+                else {
+                    staticPlaylists.add(playlist);
                 }
             }
-            if (!selection.isEmpty()) {
-                DeletePlaylistDialog.create(selection).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
+            if (!staticPlaylists.isEmpty()) {
+                DeletePlaylistDialog.create(new ArrayList<>(staticPlaylists)).show(activity.getSupportFragmentManager(), "DELETE_PLAYLIST");
             }
         } else if (R.id.action_save_playlist == menuItem.getItemId()) {
-            if (selection.size() == 1) {
-                PlaylistMenuHelper.handleMenuClick(activity, selection.get(0), menuItem);
+            ArrayList<Playlist> playlists = new ArrayList<>(selection.values());
+            if (playlists.size() == 1) {
+                PlaylistMenuHelper.handleMenuClick(activity, playlists.get(0), menuItem);
             } else {
-                new SavePlaylistsAsyncTask(activity).execute(selection);
+                new SavePlaylistsAsyncTask(activity).execute(playlists);
             }
         } else {
-            SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
+            SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values().iterator()), menuItem.getItemId());
         }
     }
 
@@ -219,11 +222,9 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     }
 
     @NonNull
-    private ArrayList<Song> getSongList(@NonNull List<Playlist> playlists) {
+    private ArrayList<Song> getSongList(@NonNull Iterator<Playlist> playlists) {
         final ArrayList<Song> songs = new ArrayList<>();
-        for (Playlist playlist : playlists) {
-            songs.addAll(playlist.getSongs(activity));
-        }
+        playlists.forEachRemaining(playlist -> songs.addAll(playlist.getSongs(activity)));
         return songs;
     }
 

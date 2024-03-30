@@ -32,8 +32,8 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewHolder, File> implements FastScrollRecyclerView.SectionedAdapter {
 
@@ -80,7 +80,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     public void onBindViewHolder(@NonNull final ViewHolder holder, int index) {
         final File file = dataSet.get(index);
 
-        holder.itemView.setActivated(isChecked(file));
+        holder.itemView.setActivated(isChecked(index));
 
         if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
             if (holder.shortSeparator != null) {
@@ -155,7 +155,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     @Override
-    protected void onMultipleItemAction(final MenuItem menuItem, final ArrayList<File> selection) {
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, File> selection) {
         if (callbacks == null) return;
         callbacks.onMultipleItemAction(menuItem, selection);
     }
@@ -177,9 +177,9 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
 
             if (menu != null && callbacks != null) {
                 menu.setOnClickListener(v -> {
-                    final int position = getAdapterPosition();
+                    final int position = getBindingAdapterPosition();
                     if (isPositionInRange(position)) {
-                        callbacks.onFileMenuClicked(dataSet.get(position), v);
+                        callbacks.onFileMenuClicked(position, dataSet.get(position), v);
                     }
                 });
             }
@@ -193,7 +193,7 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
                     toggleChecked(position);
                 } else {
                     if (callbacks != null) {
-                        callbacks.onFileSelected(dataSet.get(position));
+                        callbacks.onFileSelected(position, dataSet.get(position));
                     }
                 }
             }
@@ -211,10 +211,10 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     }
 
     public interface Callbacks {
-        void onFileSelected(File file);
+        void onFileSelected(final int position, @NonNull final File file);
 
-        void onFileMenuClicked(File file, View view);
+        void onFileMenuClicked(final int position, @NonNull final File file, @NonNull final View view);
 
-        void onMultipleItemAction(MenuItem item, ArrayList<File> files);
+        void onMultipleItemAction(@NonNull final MenuItem item, @NonNull final Map<Integer, File> files);
     }
 }

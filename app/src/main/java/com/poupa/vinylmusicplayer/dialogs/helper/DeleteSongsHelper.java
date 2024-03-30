@@ -11,7 +11,7 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class DeleteSongsHelper {
 
@@ -23,7 +23,7 @@ public class DeleteSongsHelper {
         }
     }
 
-    public static void delete(List<? extends Song> songs, @NonNull FragmentManager manager, @Nullable String tag) {
+    public static void delete(Collection<? extends Song> songs, @NonNull FragmentManager manager, @Nullable String tag) {
         if (Build.VERSION.SDK_INT < VERSION_CODES.R) {
             DeleteSongsDialogApi19.create(songs).show(manager, tag);
         } else {

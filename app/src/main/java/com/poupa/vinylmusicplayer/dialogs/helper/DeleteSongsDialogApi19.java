@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
     }
 
     @NonNull
-    public static DeleteSongsDialogApi19 create(List<? extends Song> songs) {
+    public static DeleteSongsDialogApi19 create(Collection<? extends Song> songs) {
         DeleteSongsDialogApi19 dialog = new DeleteSongsDialogApi19();
         Bundle args = new Bundle();
         args.putParcelableArrayList(SONGS, new ArrayList<>(songs));

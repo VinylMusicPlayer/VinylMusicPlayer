@@ -49,6 +49,7 @@ import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
@@ -67,6 +68,7 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -110,9 +112,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
+    @PrefKey
     private static final String SAVED_POSITION = "POSITION";
+    @PrefKey
     private static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
+    @PrefKey(ExportImportable = true)
     private static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
+    @PrefKey(ExportImportable = true)
     private static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
 
     static final int RELEASE_WAKELOCK = 0;
@@ -827,7 +833,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         propagateShuffleChange();
     }
 
-    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
+    public void openQueue(@Nullable final Collection<? extends Song> queue, final int startPosition, final boolean startPlaying, final int shuffleMode) {
         int position;
         if (queue != null && shuffleMode != SHUFFLE_MODE_NONE && startPosition == RANDOM_START_POSITION_ON_SHUFFLE) {
             position = new Random().nextInt(queue.size());
@@ -847,7 +853,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
     }
 
-    public void openQueue(@Nullable final List<? extends Song> queue, final int startPosition, final boolean startPlaying) {
+    public void openQueue(@Nullable final Collection<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         synchronized (this) {
             openQueue(queue, startPosition, startPlaying, playingQueue.getShuffleMode());
         }
@@ -867,7 +873,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongsAfter(int position, List<? extends Song> songs) {
+    public void addSongsAfter(int position, Collection<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAllAfter(position, songs);
         }
@@ -881,7 +887,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         notifyChange(QUEUE_CHANGED);
     }
 
-    public void addSongs(List<? extends Song> songs) {
+    public void addSongs(Collection<? extends Song> songs) {
         synchronized (this) {
             playingQueue.addAll(songs);
             notifyChange(QUEUE_CHANGED);

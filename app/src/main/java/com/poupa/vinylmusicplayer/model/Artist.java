@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class Artist implements Parcelable {
 
     public final long id;
     public final String name;
-    public final ArrayList<Album> albums;
+    @NonNull public final ArrayList<Album> albums;
 
     public Artist(long id, String name) {
         this.id = id;
