@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0] - 2024-03-30
+
+### Features
+* Multi artists navigation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/992
+* Improve unknown artist/album/genre/song title display by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/994
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.4...1.9.0
+
 ## [1.8.4] - 2024-03-23
 
 ### Fixes
