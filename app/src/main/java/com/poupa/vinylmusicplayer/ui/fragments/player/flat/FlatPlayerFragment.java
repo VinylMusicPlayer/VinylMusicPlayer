@@ -367,7 +367,7 @@ public class FlatPlayerFragment extends AbsPlayerFragment {
                 albumCoverContainer.forceSquare(false);
             }
             fragment.slidingUpPanel.setMinHeight(Math.max(minPanelHeight, availablePanelHeight));
-            fragment.slidingUpPanel.setMaxHeight(Math.max(minPanelHeight, availablePanelHeight));
+            //fragment.slidingUpPanel.setMaxHeight(Math.max(minPanelHeight, availablePanelHeight));
 
 //            ((AbsSlidingMusicPanelActivity) fragment.getActivity()).setAntiDragView(fragment.slidingUpPanel.findViewById(R.id.player_panel));
         }
