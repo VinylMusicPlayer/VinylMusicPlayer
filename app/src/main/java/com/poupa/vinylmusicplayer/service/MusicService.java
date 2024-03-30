@@ -481,11 +481,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 // This prevents changing the player state, as it will stop the playback
                 final long currentSongId = getCurrentSong().id;
                 if (currentSongId != savedSongId) {
-                    SafeToast.show(this, "Song changed" +
-                            " previous=" + savedSongId +
-                            " vs now=" + currentSongId
-                    );
-
                     if (openCurrent() && (restoredPositionInTrack > 0)) {
                         seek(restoredPositionInTrack);
                     }
