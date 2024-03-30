@@ -223,7 +223,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }
                 });
             }
-            ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.title);
+            ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.getTitle());
             ((TextView) navigationDrawerHeader.findViewById(R.id.text)).setText(MusicUtil.getSongInfoString(song));
             GlideApp.with(this)
                     .asDrawable()

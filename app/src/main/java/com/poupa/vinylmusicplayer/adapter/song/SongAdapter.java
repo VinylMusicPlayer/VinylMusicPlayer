@@ -154,7 +154,7 @@ public class SongAdapter
         }
 
         if (holder.title != null) {
-            holder.title.setText(song.title);
+            holder.title.setText(song.getTitle());
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));
@@ -175,7 +175,8 @@ public class SongAdapter
         }
     }
 
-    protected String getSongText(Song song) {
+    @NonNull
+    protected String getSongText(@NonNull final Song song) {
         return MusicUtil.getSongInfoString(song);
     }
 

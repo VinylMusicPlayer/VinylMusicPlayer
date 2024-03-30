@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -27,6 +26,7 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.glide.VinylSimpleTarget;
 import com.poupa.vinylmusicplayer.glide.palette.BitmapPaletteWrapper;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
@@ -52,23 +52,15 @@ public class PlayingNotificationImplApi19 extends PlayingNotification {
         final RemoteViews notificationLayout = new RemoteViews(service.getPackageName(), R.layout.notification);
         final RemoteViews notificationLayoutBig = new RemoteViews(service.getPackageName(), R.layout.notification_big);
 
-        final String artistNames = MultiValuesTagUtil.infoString(song.artistNames);
-        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistNames)) {
-            notificationLayout.setViewVisibility(R.id.media_titles, View.INVISIBLE);
-        } else {
-            notificationLayout.setViewVisibility(R.id.media_titles, View.VISIBLE);
-            notificationLayout.setTextViewText(R.id.title, song.title);
-            notificationLayout.setTextViewText(R.id.text, artistNames);
-        }
+        final String artistNames = MultiValuesTagUtil.infoStringAsArtists(song.artistNames);
+        notificationLayout.setViewVisibility(R.id.media_titles, View.VISIBLE);
+        notificationLayout.setTextViewText(R.id.title, song.getTitle());
+        notificationLayout.setTextViewText(R.id.text, artistNames);
 
-        if (TextUtils.isEmpty(song.title) && TextUtils.isEmpty(artistNames) && TextUtils.isEmpty(song.albumName)) {
-            notificationLayoutBig.setViewVisibility(R.id.media_titles, View.INVISIBLE);
-        } else {
-            notificationLayoutBig.setViewVisibility(R.id.media_titles, View.VISIBLE);
-            notificationLayoutBig.setTextViewText(R.id.title, song.title);
-            notificationLayoutBig.setTextViewText(R.id.text, artistNames);
-            notificationLayoutBig.setTextViewText(R.id.text2, song.albumName);
-        }
+        notificationLayoutBig.setViewVisibility(R.id.media_titles, View.VISIBLE);
+        notificationLayoutBig.setTextViewText(R.id.title, song.getTitle());
+        notificationLayoutBig.setTextViewText(R.id.text, artistNames);
+        notificationLayoutBig.setTextViewText(R.id.text2, Album.getTitle(song.albumName));
 
         linkButtons(notificationLayout, notificationLayoutBig);
 

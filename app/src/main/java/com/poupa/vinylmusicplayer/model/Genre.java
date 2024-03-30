@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 public class Genre implements Parcelable {
-    public static final String UNKNOWN_GENRE_DISPLAY_NAME = "Unknown Genre";
+    public static String UNKNOWN_GENRE_DISPLAY_NAME = "Unknown Genre";
 
     public final long id;
     public final String name;

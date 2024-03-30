@@ -71,14 +71,14 @@ public class SongSortOrder {
     private static final List<SortOrder<Song>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(
                     MediaStore.Audio.Media.DEFAULT_SORT_ORDER,
-                    song -> Utils.getSectionName(song.title),
+                    song -> Utils.getSectionName(song.getTitle()),
                     BY_TITLE,
                     R.id.action_song_sort_order_name,
                     R.string.sort_order_name
             ),
             Utils.build(
                     MediaStore.Audio.Media.DEFAULT_SORT_ORDER + " DESC",
-                    song -> Utils.getSectionName(song.title),
+                    song -> Utils.getSectionName(song.getTitle()),
                     BY_TITLE_DESC,
                     R.id.action_song_sort_order_name_reverse,
                     R.string.sort_order_name_reverse
@@ -92,7 +92,7 @@ public class SongSortOrder {
             ),
             Utils.build(
                     MediaStore.Audio.Albums.DEFAULT_SORT_ORDER,
-                    song -> Utils.getSectionName(song.albumName),
+                    song -> Utils.getSectionName(Album.getTitle(song.albumName)),
                     BY_ALBUM,
                     R.id.action_song_sort_order_album,
                     R.string.sort_order_album
