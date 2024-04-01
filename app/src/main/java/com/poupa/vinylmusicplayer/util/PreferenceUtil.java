@@ -30,7 +30,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,6 +143,8 @@ public final class PreferenceUtil {
 
     public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
+
+    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
 
     private static PreferenceUtil sInstance;
 
@@ -845,5 +846,9 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putInt(ENQUEUE_SONGS_DEFAULT_CHOICE, choice)
                 .apply();
+    }
+
+    public boolean isQueueSyncWithMediaStoreEnabled() {
+        return mPreferences.getBoolean(QUEUE_SYNC_MEDIA_STORE_ENABLED, false);
     }
 }
