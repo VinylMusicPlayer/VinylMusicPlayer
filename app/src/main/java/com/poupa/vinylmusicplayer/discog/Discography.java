@@ -16,7 +16,7 @@ import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
-import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.StringUtil;
@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -44,20 +45,12 @@ import java.util.function.Predicate;
 
 public class Discography implements MusicServiceEventListener {
     // TODO wrap this inside the MemCache class
-    private final DB database;
-    private final MemCache cache;
+    private final DB database = new DB();
+    private final MemCache cache = new MemCache();
 
-    private MainActivity mainActivity = null;
-    private Handler mainActivityTaskQueue = null;
+    private final Map<AbsMusicServiceActivity, Handler> attachedActivitiesAndQueue = new HashMap<>();
     private static final String TASK_QUEUE_COALESCENCE_TOKEN = "Discography.triggerSyncWithMediaStore";
     private final Collection<Runnable> changedListeners = new LinkedList<>();
-
-    public Discography() {
-        database = new DB();
-        cache = new MemCache();
-
-        fetchAllSongs();
-    }
 
     // TODO This is not a singleton and should not be declared as such
     @NonNull
@@ -65,54 +58,69 @@ public class Discography implements MusicServiceEventListener {
         return App.getDiscography();
     }
 
-    public void startService(@NonNull final MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-        mainActivityTaskQueue = new Handler(mainActivity.getMainLooper());
+    public void addActivity(@NonNull final AbsMusicServiceActivity activity) {
+        if (!attachedActivitiesAndQueue.containsKey(activity)) {
+            attachedActivitiesAndQueue.put(activity, new Handler(activity.getMainLooper()));
 
-        triggerSyncWithMediaStore(false);
-    }
+            activity.addMusicServiceEventListener(this);
 
-    public void stopService() {
-        // Flush the delayed task queue - dont do anything is we are stopping
-        if (mainActivityTaskQueue != null && mainActivity != null) {
-            mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
-
-            mainActivity = null;
-            mainActivityTaskQueue = null;
+            if (cache.consistencyState == MemCache.ConsistencyState.UNINITIALIZED) {
+                // These operations are IO intensive and may take time, depending on the library size
+                // delay it till UI is availble
+                fetchAllSongs();
+                triggerSyncWithMediaStore(false);
+            }
         }
     }
 
-    void setCacheState(MemCache.ConsistencyState value) {
+    public void removeActivity(@NonNull final AbsMusicServiceActivity activity) {
+        if (attachedActivitiesAndQueue.containsKey(activity)) {
+            activity.removeMusicServiceEventListener(this);
+
+            // Flush the delayed task queue - dont do anything is we are stopping
+            final Handler handler = attachedActivitiesAndQueue.get(activity);
+            Objects.requireNonNull(handler);
+            handler.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+
+            attachedActivitiesAndQueue.remove(activity);
+        }
+    }
+
+    void setCacheState(final MemCache.ConsistencyState value) {
         synchronized (cache) {
             cache.consistencyState = value;
         }
     }
 
-    MemCache.ConsistencyState getCacheState() {
+    private MemCache.ConsistencyState getCacheState() {
         synchronized (cache) {
             return cache.consistencyState;
         }
     }
 
     @NonNull
-    Song getOrAddSong(@NonNull final Song song) {
+    private Song getOrAddSong(@NonNull final Song song, @NonNull final SyncWithMediaStoreAsyncTask.Progress progress) {
         synchronized (cache) {
-            Song discogSong = getSong(song.id);
+            final Song discogSong = getSong(song.id);
+            boolean existsAndObsolete = false;
             if (!discogSong.equals(Song.EMPTY_SONG)) {
-                BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
+                final BiPredicate<Song, Song> isMetadataObsolete = (final @NonNull Song incomingSong, final @NonNull Song cachedSong) -> {
                     if (incomingSong.dateAdded != cachedSong.dateAdded) return true;
                     if (incomingSong.dateModified != cachedSong.dateModified) return true;
                     return (!incomingSong.data.equals(cachedSong.data));
                 };
 
-                if (!isMetadataObsolete.test(song, discogSong)) {
-                    return discogSong;
-                } else {
+                existsAndObsolete = isMetadataObsolete.test(song, discogSong);
+                if (existsAndObsolete) {
                     removeSongById(song.id);
+                } else {
+                    return discogSong;
                 }
             }
 
             addSong(song, false);
+            if (existsAndObsolete) {++ progress.updated;}
+            else {++ progress.added;}
 
             return song;
         }
@@ -165,12 +173,6 @@ public class Discography implements MusicServiceEventListener {
                 }
             }
             return matchingSong;
-        }
-    }
-
-    private int getSongCount() {
-        synchronized (cache) {
-            return cache.songsById.size();
         }
     }
 
@@ -346,29 +348,36 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void triggerSyncWithMediaStore(boolean reset) {
+        // Pick an attached activity
+        if (attachedActivitiesAndQueue.isEmpty()) {throw new IllegalStateException("No attached activity");}
+        final AbsMusicServiceActivity activity = (AbsMusicServiceActivity)attachedActivitiesAndQueue.keySet().toArray()[0];
+        Objects.requireNonNull(activity);
+
         if (getCacheState() != MemCache.ConsistencyState.OK) {
             // Prevent reentrance - delay to later
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                final long DELAY = 500;
+                final long DELAY = 500L;
 
-                mainActivityTaskQueue.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
-                mainActivityTaskQueue.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
+                final Handler handler = attachedActivitiesAndQueue.get(activity);
+                Objects.requireNonNull(handler);
+                handler.removeCallbacksAndMessages(TASK_QUEUE_COALESCENCE_TOKEN);
+                handler.postDelayed(() -> triggerSyncWithMediaStore(reset), TASK_QUEUE_COALESCENCE_TOKEN, DELAY);
             } // else: too bad, just drop the operation. It is unlikely we get there anyway
-        } else if (mainActivity != null) {
-            (new SyncWithMediaStoreAsyncTask(mainActivity, this, reset)).execute();
+        } else {
+            (new SyncWithMediaStoreAsyncTask(activity, this, reset)).execute();
         }
     }
 
-    int syncWithMediaStore(Consumer<Integer> progressUpdater) {
+    SyncWithMediaStoreAsyncTask.Progress syncWithMediaStore(@NonNull final Consumer<SyncWithMediaStoreAsyncTask.Progress> progressUpdater) {
         final Context context = App.getInstance().getApplicationContext();
 
         // Zombies are tracks that are removed but still indexed by MediaStore
-        Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
+        final Predicate<Song> isZombie = (s) -> !(new File(s.data)).exists();
 
         // Whitelist
         final File startDirectory = PreferenceUtil.getInstance().getStartDirectory();
         final String startPath = FileUtil.safeGetCanonicalPath(startDirectory);
-        Predicate<Song> isNotWhiteListed = (s) -> {
+        final Predicate<Song> isNotWhiteListed = (s) -> {
             if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
                 return !s.data.startsWith(startPath);
             }
@@ -377,35 +386,37 @@ public class Discography implements MusicServiceEventListener {
 
         // Blacklist
         final ArrayList<String> blackListedPaths = BlacklistStore.getInstance(context).getPaths();
-        Predicate<Song> isBlackListed = (s) -> {
-            for (String path : blackListedPaths) {
+        final Predicate<Song> isBlackListed = (s) -> {
+            for (final String path : blackListedPaths) {
                 if (s.data.startsWith(path)) return true;
             }
             return false;
         };
 
-        final int initialSongCount = getSongCount();
-        ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
-        final HashSet<Long> importedSongIds = new HashSet<>();
-        for (Song song : alienSongs) {
+        final SyncWithMediaStoreAsyncTask.Progress counters = new SyncWithMediaStoreAsyncTask.Progress();
+        final ArrayList<Song> alienSongs = MediaStoreBridge.getAllSongs(context);
+        final Set<Long> importedSongIds = new HashSet<>();
+        for (final Song song : alienSongs) {
             if (isNotWhiteListed.test(song)) continue;
             if (isBlackListed.test(song)) continue;
             if (isZombie.test(song)) continue;
 
-            Song matchedSong = getOrAddSong(song);
+            final Song matchedSong = getOrAddSong(song, counters);
             importedSongIds.add(matchedSong.id);
 
-            progressUpdater.accept(getSongCount() - initialSongCount);
+            progressUpdater.accept(counters);
         }
 
         synchronized (cache) {
             // Clean orphan songs (removed from MediaStore)
-            Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
+            final Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
             removeSongById(cacheSongsId.toArray(new Long[0]));
+
+            counters.removed = cacheSongsId.size();
         }
 
-        return (getSongCount() - initialSongCount);
+        return counters;
     }
 
     @Override
@@ -439,23 +450,21 @@ public class Discography implements MusicServiceEventListener {
     }
 
     public void removeChangedListener(Runnable listener) {
-        if (mainActivityTaskQueue != null) {
-            mainActivityTaskQueue.removeCallbacks(listener);
-        }
+        attachedActivitiesAndQueue.forEach((activity, handler) -> handler.removeCallbacks(listener));
         changedListeners.remove(listener);
     }
 
     private void notifyDiscographyChanged() {
-        // Notify the main activity to reload the tabs content
+        // Notify the attached activiies to reload the UI content
         // Since this can be called from a background thread, make it safe by wrapping as an event to main thread
-        if (mainActivityTaskQueue != null) {
+        attachedActivitiesAndQueue.forEach((activity, handler) -> {
             // Post as much 1 event per a coalescence period
-            final long COALESCENCE_DELAY = 200;
-            for (Runnable listener : changedListeners) {
-                mainActivityTaskQueue.removeCallbacks(listener);
-                mainActivityTaskQueue.postDelayed(listener, COALESCENCE_DELAY);
+            final long COALESCENCE_DELAY = 200L;
+            for (final Runnable listener : changedListeners) {
+                handler.removeCallbacks(listener);
+                handler.postDelayed(listener, COALESCENCE_DELAY);
             }
-        }
+        });
     }
 
     public void removeSongByPath(@NonNull String... paths) {

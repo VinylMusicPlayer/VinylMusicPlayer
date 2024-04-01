@@ -302,8 +302,6 @@
     <string name="saved_x_playlists_to_x">将%1$d播放列表保存到%2$s。</string>
     <string name="saved_x_playlists_to_x_failed_to_save_x">将%1$d播放列表保存到%2$s，保存到%3$d时失败。</string>
     <string name="some_files_are_not_listed_in_the_media_store">有些文件未在媒体库中列出。</string>
-    <string name="scanning_x_songs_in_progress">正在更新%1$d首歌曲……</string>
-    <string name="scanning_x_songs_finished">已更新%1$d首歌曲</string>
     <string name="deleting_songs">正在删除歌曲</string>
     <string name="snack_bar_action_undo">撤销操作</string>
     <string name="snack_bar_title_removed_song">已删除</string>

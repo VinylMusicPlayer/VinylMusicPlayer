@@ -29,11 +29,12 @@ import java.util.stream.Collectors;
 
 class MemCache {
     enum ConsistencyState {
+        UNINITIALIZED,
         RESETTING,
         REFRESHING,
         OK
     };
-    ConsistencyState consistencyState = ConsistencyState.REFRESHING;
+    ConsistencyState consistencyState = ConsistencyState.UNINITIALIZED;
 
     final Map<Long, Song> songsById = new HashMap<>();
 

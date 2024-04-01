@@ -357,8 +357,6 @@
     <string name="yes">Sí</string>
     <string name="whitelist">Llista blanca</string>
     <string name="time_unit_minutes">min</string>
-    <string name="scanning_x_songs_in_progress">Actualizant %1$d cançons…</string>
-    <string name="scanning_x_songs_finished">%1$d cançons actualitzades</string>
     <string name="rounded_theme_style_name">Arrodonit</string>
     <string name="pref_title_theme_style">Estil del tema</string>
     <string name="pref_title_show_song_number">Mostra el número de pista</string>

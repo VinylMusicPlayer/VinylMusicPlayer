@@ -68,7 +68,7 @@ public abstract class AbsBaseActivity extends AbsThemeActivity {
         return null;
     }
 
-    protected View getSnackBarContainer() {
+    public View getSnackBarContainer() {
         return getWindow().getDecorView();
     }
 
