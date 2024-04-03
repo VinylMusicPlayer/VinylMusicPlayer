@@ -433,7 +433,7 @@ public class StaticPlayingQueue {
 
         switch (shuffleMode) {
             case SHUFFLE_MODE_NONE:
-                currentPosition = queue.get(currentPosition).index;
+                currentPosition = queue.isEmpty() ? -1 : queue.get(currentPosition).index;
                 revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:
