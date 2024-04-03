@@ -178,7 +178,7 @@ class MemCache {
     }
 
     @NonNull
-    private synchronized Set<Artist> getOrCreateArtistByName(@NonNull final Song song) {
+    private synchronized List<Artist> getOrCreateArtistByName(@NonNull final Song song) {
         Function<String, Artist> getOrCreateArtist = (@NonNull final String artistName) -> {
             Artist artist = artistsByName.get(artistName);
             if (artist == null) {
@@ -194,7 +194,7 @@ class MemCache {
         final LinkedHashSet<String> names = new LinkedHashSet<>(); // ordered and unique list of names
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
-        final Set<Artist> artists = new HashSet<>(names.size());
+        final List<Artist> artists = new ArrayList<>(names.size());
         for (final String name : names) {
             final Artist artist = getOrCreateArtist.apply(name);
             artists.add(artist);
@@ -205,8 +205,23 @@ class MemCache {
 
     @NonNull
     private synchronized Map<Long, AlbumSlice> getOrCreateAlbum(@NonNull final Song song) {
-        final Set<Artist> artists = getOrCreateArtistByName(song);
+        final List<Artist> artists = getOrCreateArtistByName(song);
 
+        // Try reusing an existing album with same name
+        final Set<Long> albumIdsSameName = albumsByName.get(song.albumName);
+        if ((albumIdsSameName != null) && !artists.isEmpty()) {
+            final Artist mainArtist = artists.get(0);
+
+            for (final long id : albumIdsSameName) {
+                final AlbumSlice byMainArtist = albumsByAlbumIdAndArtistId.get(id).get(mainArtist.id);
+                if (byMainArtist != null) {
+                    song.albumId = byMainArtist.getId();
+                    break;
+                }
+            }
+        }
+
+        // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
             albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
