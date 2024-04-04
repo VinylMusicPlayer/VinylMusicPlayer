@@ -1,12 +1,12 @@
 # Changelog
+
 ## [1.10.0] - 2024-04-04
 
 ### Fixes
 * Keep the queue in sync with changes from MediaStore (removal, update) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/969
-* Regression from #992 (mutli-artist-navigation) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1007
+* Fix regression on discography (album) introduced by #992 (multi-artist-navigation) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1007
 * Fix crash described by #1008 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1009
-* Fix issue 974 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1010
-### Other Changes
+* Fix issue #974 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1010
 * Snackbar tweaks by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/991
 
 **Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.9.0...1.10.0
