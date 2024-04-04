@@ -121,7 +121,9 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         currentPosition = position;
         ((AlbumCoverPagerAdapter) viewPager.getAdapter()).receiveColor(colorReceiver, position);
         if (position != MusicPlayerRemote.getPosition()) {
-            MusicPlayerRemote.playSongAt(position, true);
+            if (!MusicPlayerRemote.getPlayingQueue().isEmpty()) {
+                MusicPlayerRemote.playSongAt(position, true);
+            } // else: User emptied the queue, we receive this callbak since the recycle view pager is updated
         }
     }
 
