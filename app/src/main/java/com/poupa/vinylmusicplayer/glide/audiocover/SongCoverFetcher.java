@@ -41,10 +41,10 @@ public class SongCoverFetcher extends AbsCoverFetcher {
     public InputStream loadData() {
         InputStream input = loadCoverFromAudioTags(model.song);
         if (input == null) {
-            input = loadCoverFromMediaStore(model.song);
+            input = loadCoverFromFolderImage(new File(model.song.data));
         }
         if (input == null) {
-            input = loadCoverFromFolderImage(new File(model.song.data));
+            input = loadCoverFromMediaStore(model.song);
         }
         return input;
     }

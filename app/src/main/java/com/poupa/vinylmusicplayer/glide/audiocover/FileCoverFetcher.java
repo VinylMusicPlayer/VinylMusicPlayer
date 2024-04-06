@@ -26,6 +26,9 @@ public class FileCoverFetcher extends AbsCoverFetcher {
             if (input == null) {
                 input = loadCoverFromFolderImage(model.file);
             }
+            if (input == null) {
+                input = loadCoverFromMediaStore(model.file);
+            }
 
             if (input == null) {
                 callback.onLoadFailed(new IOException("Cannot load cover for file"));
