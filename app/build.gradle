@@ -43,8 +43,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 189
-        versionName '1.6.3'
+        versionCode 197
+        versionName '1.10.0'
 
         multiDexEnabled true
     }
@@ -180,7 +180,7 @@ dependencies {
 
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 
-    implementation 'net.jthink:jaudiotagger:3.0.1'
+    implementation 'com.github.VinylMusicPlayer:jaudiotagger:v3.0.1o'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 

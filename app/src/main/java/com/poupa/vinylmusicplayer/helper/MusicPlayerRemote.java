@@ -33,6 +33,7 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -186,7 +187,7 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void openQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    public static void openQueue(@NonNull final Collection<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, startPosition, startPlaying) && musicService != null) {
             if (!PreferenceUtil.getInstance().rememberShuffle()) {
                 setShuffleMode(MusicService.SHUFFLE_MODE_NONE);
@@ -198,26 +199,26 @@ public class MusicPlayerRemote {
     /**
      * Async
      */
-    public static void openAndShuffleQueue(final ArrayList<Song> queue, boolean startPlaying) {
+    public static void openAndShuffleQueue(final List<? extends Song> queue, boolean startPlaying) {
         if (!tryToHandleOpenPlayingQueue(queue, 0, startPlaying) && musicService != null) {
             musicService.openQueue(queue, MusicService.RANDOM_START_POSITION_ON_SHUFFLE, startPlaying, MusicService.SHUFFLE_MODE_SHUFFLE);
         }
     }
 
     private static void removeDuplicateBeforeQueuing (final Song song) {
-        removeDuplicateBeforeQueuing(new ArrayList<>(Collections.singletonList(song)));
+        removeDuplicateBeforeQueuing(Collections.singletonList(song));
     }
 
-    private static void removeDuplicateBeforeQueuing (final ArrayList<Song> songsToAdd) {
+    private static void removeDuplicateBeforeQueuing (final Collection<? extends Song> songsToAdd) {
         // Deduplicate songs, favoring the occurrences in the new queue
         if (musicService == null) {return;}
         
-        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        final List<? extends Song> currentQueue = musicService.getPlayingQueue();
         if (currentQueue.isEmpty()) {
             return;
         }
 
-        final List<Song> remainingSongsInQueue = currentQueue.subList(
+        final List<? extends Song> remainingSongsInQueue = currentQueue.subList(
                 musicService.getPosition() + 1,
                 currentQueue.size()
         );
@@ -237,7 +238,7 @@ public class MusicPlayerRemote {
         musicService.removeSongs(songsToRemove);
     }
 
-    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final ArrayList<Song> queue, int positionInQueue) {
+    public static void enqueueSongsWithConfirmation(final @NonNull Context context, final List<? extends Song> queue, int positionInQueue) {
         if (musicService == null) {return;}
 
         if (tryToHandleOpenPlayingQueue(queue, positionInQueue, true)) {
@@ -245,7 +246,7 @@ public class MusicPlayerRemote {
             return;
         }
 
-        final ArrayList<Song> currentQueue = musicService.getPlayingQueue();
+        final List<? extends Song> currentQueue = musicService.getPlayingQueue();
         if (currentQueue.isEmpty()) {
             openQueue(queue, positionInQueue, true);
             return;
@@ -289,7 +290,7 @@ public class MusicPlayerRemote {
 
     }
 
-    private static boolean tryToHandleOpenPlayingQueue(final ArrayList<Song> queue, final int startPosition, final boolean startPlaying) {
+    private static boolean tryToHandleOpenPlayingQueue(final Collection<? extends Song> queue, final int startPosition, final boolean startPlaying) {
         if (getPlayingQueue() == queue) {
             if (startPlaying) {playSongAt(startPosition, isPlaying());}
             else {setPosition(startPosition);}
@@ -306,13 +307,6 @@ public class MusicPlayerRemote {
         return Song.EMPTY_SONG;
     }
 
-    public static IndexedSong getCurrentIndexedSong() {
-        if (musicService != null) {
-            return musicService.getCurrentIndexedSong();
-        }
-        return IndexedSong.EMPTY_INDEXED_SONG;
-    }
-
     public static int getPosition() {
         if (musicService != null) {
             return musicService.getPosition();
@@ -320,7 +314,7 @@ public class MusicPlayerRemote {
         return -1;
     }
 
-    public static ArrayList<Song> getPlayingQueue() {
+    public static List<? extends Song> getPlayingQueue() {
         if (musicService != null) {
             return musicService.getPlayingQueue();
         }
@@ -373,7 +367,7 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void setShuffleMode(final int shuffleMode) {
+    private static void setShuffleMode(final int shuffleMode) {
         if (musicService != null) {
             musicService.setShuffleMode(shuffleMode);
         }
@@ -381,7 +375,7 @@ public class MusicPlayerRemote {
 
     public static void playNext(Song song) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(song);
                 musicService.addSongAfter(getPosition(), song);
             } else {
@@ -393,9 +387,9 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void playNext(@NonNull ArrayList<Song> songs) {
+    public static void playNext(@NonNull Collection<? extends Song> songs) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(songs);
                 musicService.addSongsAfter(getPosition(), songs);
             } else {
@@ -410,7 +404,7 @@ public class MusicPlayerRemote {
 
     public static void enqueue(Song song) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(song);
                 musicService.addSong(song);
             } else {
@@ -422,9 +416,9 @@ public class MusicPlayerRemote {
         }
     }
 
-    public static void enqueue(@NonNull ArrayList<Song> songs) {
+    public static void enqueue(@NonNull final Collection<? extends Song> songs) {
         if (musicService != null) {
-            if (getPlayingQueue().size() > 0) {
+            if (!getPlayingQueue().isEmpty()) {
                 removeDuplicateBeforeQueuing(songs);
                 musicService.addSongs(songs);
             } else {
@@ -448,14 +442,15 @@ public class MusicPlayerRemote {
     }
 
     public static IndexedSong getIndexedSongAt(int position) {
-        if (musicService != null && position >= 0 && position < getPlayingQueue().size()) {
+        if (musicService != null) {
             return musicService.getIndexedSongAt(position);
         }
         return IndexedSong.EMPTY_INDEXED_SONG;
     }
 
     public static void moveSong(int from, int to) {
-        if (musicService != null && from >= 0 && to >= 0 && from < getPlayingQueue().size() && to < getPlayingQueue().size()) {
+        final int size = getPlayingQueue().size();
+        if (musicService != null && from >= 0 && to >= 0 && from < size && to < size) {
             musicService.moveSong(from, to);
         }
     }

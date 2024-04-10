@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,10 @@ import androidx.multidex.MultiDexApplication;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.appshortcuts.DynamicShortcutManager;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Genre;
+import com.poupa.vinylmusicplayer.model.Song;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -45,6 +50,12 @@ public class App extends MultiDexApplication {
 
         // setup discography
         discography = new Discography();
+
+        final Resources resources = context.getResources();
+        Artist.UNKNOWN_ARTIST_DISPLAY_NAME = resources.getString(R.string.unknown_artist);
+        Album.UNKNOWN_ALBUM_DISPLAY_NAME = resources.getString(R.string.unknown_album);
+        Genre.UNKNOWN_GENRE_DISPLAY_NAME = resources.getString(R.string.unknown_genre);
+        Song.UNTITLED_DISPLAY_NAME =  resources.getString(R.string.untitled_song);
     }
 
     public static App getInstance() {

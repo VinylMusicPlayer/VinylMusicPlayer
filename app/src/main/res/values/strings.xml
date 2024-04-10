@@ -13,6 +13,7 @@
     <string name="action_add_to_favorites">Add to favorites</string>
     <string name="action_remove_from_favorites">Remove from favorites</string>
     <string name="save_playlists_title">Save as files</string>
+    <string name="action_import_from_playlist">Import from playlist</string>
     <string name="action_search">Search</string>
     <string name="action_play_next">Play next</string>
     <string name="action_play">Play</string>
@@ -27,12 +28,13 @@
     <string name="action_clear_playing_queue">Clear playing queue</string>
     <string name="action_save_playing_queue">Save playing queue</string>
     <string name="about_to_add_title_to_playing_queue">About to add 1 song into the playing queue.\nHow do you want to proceed with this song?</string>
-    <string name="about_to_add_x_titles_to_playing_queue">About to add %1$d titles into the playing queue.\nHow do you want to proceed with these songs?</string>
-    <string name="added_title_to_playing_queue">"Added 1 title to the playing queue."</string>
-    <string name="added_x_titles_to_playing_queue">Added %1$d titles to the playing queue.</string>
+    <string name="about_to_add_x_titles_to_playing_queue">About to add %1$d songs into the playing queue.\nHow do you want to proceed with these songs?</string>
+    <string name="added_title_to_playing_queue">"Added 1 song to the playing queue."</string>
+    <string name="added_x_titles_to_playing_queue">Added %1$d songs to the playing queue.</string>
     <string name="failed_restore_playing_queue">Cannot restore, previous queue is corrupted</string>
 
     <string name="action_add_to_playlist">Add to playlist…</string>
+    <string name="added_x_titles_to_playlist">Added %1$d songs to the playlist.</string>
     <string name="action_tag_editor">Tag editor</string>
     <string name="action_delete_from_device">Delete from device</string>
     <string name="action_details">Details</string>
@@ -54,7 +56,10 @@
     <string name="album">Album</string>
     <string name="artist">Artist</string>
     <string name="genre">Genre</string>
-    <string name="unknown_genre">Unknown genre</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="unknown_album">Unknown Album</string>
+    <string name="unknown_genre">Unknown Genre</string>
+    <string name="untitled_song">Untitled</string>
     <string name="album_artist">Album artist</string>
     <string name="year">Year</string>
     <string name="track_number">"Track Number"</string>
@@ -62,6 +67,7 @@
     <string name="lyrics">Lyrics</string>
     <string name="album_artist_multiple">Album Artists (one per line)</string>
     <string name="artist_multiple">Artists (one per line)</string>
+    <string name="genre_multiple">Genres (one per line)</string>
     <string name="album_or_artist_empty">The title or artist is empty.</string>
     <string name="saving_changes">Saving changes</string>
     <string name="label_details">Details</string>
@@ -105,6 +111,7 @@
     <string name="clear_playlist_title">Clear playlist</string>
     <string name="save_playlist_title">Save as file</string>
     <string name="add_playlist_title">"Add to playlist"</string>
+    <string name="import_playlist_title">"Import from playlist"</string>
     <string name="select_all_title">Select all</string>
     <string name="action_shuffle_all">Shuffle all</string>
     <string name="action_shuffle_album">Shuffle album</string>
@@ -196,6 +203,7 @@
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
     <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
     <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
+    <string name="pref_title_queue_sync_with_media_store">Sync queue with media tag updates</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="album_details">Album details</string>
     <string name="search_hint">Search your library…</string>
@@ -276,8 +284,9 @@
     <string name="nothing_to_scan">Nothing to scan.</string>
     <string name="scanned_files">Scanned %1$d of %2$d files.</string>
     <string name="could_not_scan_files">Could not scan %d files.</string>
-    <string name="scanning_x_songs_in_progress">Updating %1$d songs…</string>
-    <string name="scanning_x_songs_finished">Updated %1$d songs</string>
+    <string name="scanning_x_songs_added">"%1$d tracks added"</string>
+    <string name="scanning_x_songs_updated">"%1$d tracks updated"</string>
+    <string name="scanning_x_songs_removed">"%1$d tracks removed"</string>
     <string name="listing_files">Listing files</string>
     <string name="new_start_directory">%s is the new start directory.</string>
     <string name="app_widget_big_name">Vinyl Music Player - Big</string>
@@ -323,7 +332,6 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="snack_bar_action_undo">undo</string>
     <string name="snack_bar_title_removed_song">Removed</string>
-
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
 
@@ -354,6 +362,7 @@
     <string name="sort_order_date_added_reverse">Added - Recent first</string>
     <string name="sort_order_date_modified">Modified</string>
     <string name="sort_order_date_modified_reverse">Modified - Recent first</string>
+    <string name="sort_order_group_by_album">Group by album</string>
     <string name="finish_current_music_sleep_timer">Finish last song</string>
     <string name="dialog_ringtone_title">Set ringtone</string>
     <string name="dialog_ringtone_message">Please allow Vinyl Music Player to modify system settings in the next screen before setting the ringtone.</string>

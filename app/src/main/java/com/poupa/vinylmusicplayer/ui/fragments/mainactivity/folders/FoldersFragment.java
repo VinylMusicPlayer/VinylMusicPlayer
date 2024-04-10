@@ -66,6 +66,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FoldersFragment
         extends AbsMainActivityFragment
@@ -325,7 +326,7 @@ public class FoldersFragment
     }
 
     @Override
-    public void onFileSelected(final File file) {
+    public void onFileSelected(final int position, @NonNull final File file) {
         final File canonicalFile = FileUtil.safeGetCanonicalFile(file); // important as we compare the path value later
         if (canonicalFile.isDirectory()) {
             setCrumb(new BreadCrumbLayout.Crumb(canonicalFile), true);
@@ -350,12 +351,12 @@ public class FoldersFragment
                             .setActionTextColor(ThemeStore.accentColor(requireActivity()))
                             .show();
                 }
-            }).execute(new ListSongsAsyncTask.LoadingInfo(canonicalFile.getParentFile(), fileFilter, getFileComparator()));
+            }).execute(new ListSongsAsyncTask.LoadingInfo(position, canonicalFile.getParentFile(), fileFilter, getFileComparator()));
         }
     }
 
     @Override
-    public void onMultipleItemAction(final MenuItem item, final ArrayList<File> files) {
+    public void onMultipleItemAction(@NonNull final MenuItem item, @NonNull final Map<Integer, File> files) {
         final int itemId = item.getItemId();
         new ListSongsAsyncTask(getActivity(), null, (songs, extra) -> {
             if (!songs.isEmpty()) {
@@ -383,7 +384,7 @@ public class FoldersFragment
     }
 
     @Override
-    public void onFileMenuClicked(final File file, final View view) {
+    public void onFileMenuClicked(final int position, @NonNull final File file, @NonNull final View view) {
         final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         if (file.isDirectory()) {
             popupMenu.inflate(R.menu.menu_item_directory);
@@ -398,11 +399,11 @@ public class FoldersFragment
                         if (!songs.isEmpty()) {
                             SongsMenuHelper.handleMenuClick(requireActivity(), songs, itemId);
                         }
-                    }).execute(new ListSongsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER, getFileComparator()));
+                    }).execute(new ListSongsAsyncTask.LoadingInfo(position, file, AUDIO_FILE_FILTER, getFileComparator()));
                     return true;
                 } else if (itemId == R.id.action_set_as_start_directory) {
                     PreferenceUtil.getInstance().setStartDirectory(file);
-                    SafeToast.show(getActivity(), String.format(getString(R.string.new_start_directory), file.getPath()));
+                    SafeToast.show(requireActivity(), String.format(getString(R.string.new_start_directory), file.getPath()));
                     
                     // Rescan if whitelist enabled
                     if (PreferenceUtil.getInstance().getWhitelistEnabled()) {
@@ -443,7 +444,7 @@ public class FoldersFragment
                                     .setActionTextColor(ThemeStore.accentColor(requireActivity()))
                                     .show();
                         }
-                    }).execute(new ListSongsAsyncTask.LoadingInfo(file, AUDIO_FILE_FILTER, getFileComparator()));
+                    }).execute(new ListSongsAsyncTask.LoadingInfo(position, file, AUDIO_FILE_FILTER, getFileComparator()));
                     return true;
                 } else if (itemId == R.id.action_scan) {
                     scanPaths(new String[]{FileUtil.safeGetCanonicalPath(file)});
@@ -610,7 +611,7 @@ public class FoldersFragment
         protected ArrayList<Song> doInBackground(final LoadingInfo... params) {
             try {
                 final LoadingInfo info = params[0];
-                final List<File> files = FileUtil.listFilesDeep(info.files, info.fileFilter);
+                final List<File> files = FileUtil.listFilesDeep(info.files.values(), info.fileFilter);
 
                 if (isCancelled() || checkContextReference() == null || checkCallbackReference() == null)
                     return null;
@@ -658,13 +659,13 @@ public class FoldersFragment
         public static class LoadingInfo {
             final Comparator<File> fileComparator;
             final FileFilter fileFilter;
-            public final List<File> files;
+            public final Map<Integer, File> files;
 
-            LoadingInfo(@NonNull final File file, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
-                this(Collections.singletonList(file), fileFilter, fileComparator);
+            LoadingInfo(int position, @NonNull final File file, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
+                this(Map.of(position, file), fileFilter, fileComparator);
             }
 
-            LoadingInfo(@NonNull final List<File> files, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
+            LoadingInfo(@NonNull final Map<Integer, File> files, @NonNull final FileFilter fileFilter, @NonNull final Comparator<File> fileComparator) {
                 this.fileComparator = fileComparator;
                 this.fileFilter = fileFilter;
                 this.files = files;

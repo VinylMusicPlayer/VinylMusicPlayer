@@ -6,10 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.model.Artist;
+import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,47 +23,50 @@ public class MultiValuesTagUtil {
 
     @NonNull
     public static List<String> split(@Nullable final String names) {
-        return MultiValuesTagUtil.splitImpl(names, SINGLE_LINE_SEPARATOR);
+        return splitImpl(names, SINGLE_LINE_SEPARATOR);
     }
 
     @NonNull
     public static String merge(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(names, SINGLE_LINE_SEPARATOR, "");
+        return mergeImpl(names, SINGLE_LINE_SEPARATOR, "", null);
     }
 
     @NonNull
-    public static List<String> splitIfNeeded(@NonNull final List<String> names) {
-        if (names.isEmpty()) {return new ArrayList<>(Arrays.asList(""));}
+    static List<String> splitIfNeeded(@NonNull final List<String> names) {
+        if (names.isEmpty()) {return new ArrayList<>(0);}
 
         // If the argument has multiple elements, or empty, dont split further
         if (names.size() > 1) {return names;}
 
-        return MultiValuesTagUtil.split(names.get(0));
+        return split(names.get(0));
     }
 
     @NonNull
-    public static String infoString(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(names, INFO_STRING_SEPARATOR, Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+    public static String infoStringAsArtists(@NonNull final List<String> names) {
+        return mergeImpl(names, INFO_STRING_SEPARATOR, "", Artist.UNKNOWN_ARTIST_DISPLAY_NAME);
+    }
+
+    @NonNull
+    public static String infoStringAsGenres(@NonNull final List<String> names) {
+        return mergeImpl(names, INFO_STRING_SEPARATOR, "", Genre.UNKNOWN_GENRE_DISPLAY_NAME);
     }
 
     @NonNull
     public static List<String> tagEditorSplit(@Nullable final String names) {
-        return MultiValuesTagUtil.splitIfNeeded(MultiValuesTagUtil.splitImpl(names, MULTI_LINE_SEPARATOR));
+        return splitIfNeeded(splitImpl(names, MULTI_LINE_SEPARATOR));
     }
 
     @NonNull
     public static String tagEditorMerge(@NonNull final List<String> names) {
-        return MultiValuesTagUtil.mergeImpl(MultiValuesTagUtil.splitIfNeeded(names), MULTI_LINE_SEPARATOR, "");
+        return mergeImpl(splitIfNeeded(names), MULTI_LINE_SEPARATOR, "", null);
     }
 
     @NonNull
     private static List<String> splitImpl(@Nullable final String names, @NonNull final String separator) {
-        ArrayList<String> result = new ArrayList<>();
-        if (TextUtils.isEmpty(names)) {
-            result.add("");
-        } else {
-            String[] namesSplit = names.split(separator);
-            for (String name : namesSplit) {
+        final List<String> result = new ArrayList<>();
+        if (!TextUtils.isEmpty(names)) {
+            final String[] namesSplit = names.split(separator);
+            for (final String name : namesSplit) {
                 result.add(name.trim());
             }
         }
@@ -71,10 +74,9 @@ public class MultiValuesTagUtil {
     }
 
     @NonNull
-    private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue) {
-        if (names.size() == 0) {return defaultValue;}
-        return MusicUtil.buildInfoString(separator,
-                names.toArray(new String[0]));
+    private static String mergeImpl(@NonNull final List<String> names, @NonNull final String separator, @NonNull final String defaultValue, @Nullable final String unknownReplacement) {
+        if (names.isEmpty()) {return defaultValue;}
+        return MusicUtil.buildInfoString(separator, names.toArray(new String[0]), unknownReplacement);
     }
 
 }

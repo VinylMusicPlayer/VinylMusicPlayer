@@ -49,7 +49,7 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AbsSlidingMusicPanelActivity {
 
@@ -91,19 +91,6 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
         if (!checkShowIntro()) {
             showChangelog();
         }
-
-        final Discography discog = Discography.getInstance();
-        discog.startService(this);
-        addMusicServiceEventListener(discog);
-    }
-
-    @Override
-    protected void onDestroy() {
-        final Discography discog = Discography.getInstance();
-        removeMusicServiceEventListener(discog);
-        discog.stopService();
-
-        super.onDestroy();
     }
 
     private void setMusicChooser(int key) {
@@ -223,7 +210,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                     }
                 });
             }
-            ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.title);
+            ((TextView) navigationDrawerHeader.findViewById(R.id.title)).setText(song.getTitle());
             ((TextView) navigationDrawerHeader.findViewById(R.id.text)).setText(MusicUtil.getSongInfoString(song));
             GlideApp.with(this)
                     .asDrawable()
@@ -285,7 +272,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
 
         if (intent.getAction() != null && intent.getAction().equals(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH)) {
             final String focus = intent.getStringExtra(MediaStore.EXTRA_MEDIA_FOCUS);
-            final ArrayList<Song> songs =
+            final List<? extends Song> songs =
                     SearchQueryHelper.getSongs(focus, intent.getExtras());
             // Guards against no songs found. Will cause a crash otherwise
             if (songs.size() > 0) {

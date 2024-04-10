@@ -22,6 +22,7 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemGridCardHorizontalBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -38,7 +39,8 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -106,13 +108,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         }
     }
 
-    protected String getAlbumTitle(Album album) {
+    @NonNull
+    private static String getAlbumTitle(@NonNull final Album album) {
         return album.getTitle();
     }
 
-    protected String getAlbumText(Album album) {
+    @NonNull
+    protected String getAlbumText(@NonNull final Album album) {
         return MusicUtil.buildInfoString(
-                album.getArtistName(),
+                MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
                 MusicUtil.getSongCountString(activity, album.songs.size())
         );
     }
@@ -121,8 +125,7 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Album album = dataSet.get(position);
 
-        final boolean isChecked = isChecked(album);
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isChecked(position));
 
         if (holder.shortSeparator != null) {
             if (holder.getAdapterPosition() == getItemCount() - 1) {
@@ -209,16 +212,14 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Album> selection) {
-        SongsMenuHelper.handleMenuClick(activity, getSongList(selection), menuItem.getItemId());
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Album> selection) {
+        SongsMenuHelper.handleMenuClick(activity, getSongList(selection.values().iterator()), menuItem.getItemId());
     }
 
     @NonNull
-    private ArrayList<Song> getSongList(@NonNull List<Album> albums) {
+    private ArrayList<Song> getSongList(@NonNull Iterator<Album> albums) {
         final ArrayList<Song> songs = new ArrayList<>();
-        for (Album album : albums) {
-            songs.addAll(album.songs);
-        }
+        albums.forEachRemaining(album -> songs.addAll(album.songs));
         return songs;
     }
 

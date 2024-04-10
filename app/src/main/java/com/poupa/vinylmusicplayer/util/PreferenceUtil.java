@@ -49,14 +49,16 @@ public final class PreferenceUtil {
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
 
     private static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    private static final String ALBUM_SORT_ORDER = "album_sort_order";
-    private static final String SONG_SORT_ORDER = "song_sort_order";
+    public static final String ALBUM_SORT_ORDER = "album_sort_order";
+    public static final String SONG_SORT_ORDER = "song_sort_order";
     private static final String FILE_SORT_ORDER = "file_sort_order";
 
     public static final String SORT_ORDER_NAME = "sort_order_name";
     public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
     public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
     public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
+    public static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
+    public static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
 
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
     private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
@@ -147,6 +149,8 @@ public final class PreferenceUtil {
 
     public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
+
+    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
 
     private static PreferenceUtil sInstance;
 
@@ -480,6 +484,22 @@ public final class PreferenceUtil {
     @NonNull
     public String getNotRecentlyPlayedCutoffText(final Context context) {
         return getCutoffTextV2(NOT_RECENTLY_PLAYED_CUTOFF_V2, context);
+    }
+
+    public @NonNull String getLastAddedSortOrder() {
+        return mPreferences.getString(LAST_ADDED_SORT_ORDER, SONG_SORT_ORDER);
+    }
+
+    public void setLastAddedSortOrder(@NonNull final String value) {
+        mPreferences.edit().putString(LAST_ADDED_SORT_ORDER, value).apply();
+    }
+
+    public @NonNull String getNotRecentlyPlayedSortOrder() {
+        return mPreferences.getString(NOT_RECENTLY_PLAYED_SORT_ORDER, SONG_SORT_ORDER);
+    }
+
+    public void setNotRecentlyPlayedSortOrder(@NonNull final String value) {
+        mPreferences.edit().putString(NOT_RECENTLY_PLAYED_SORT_ORDER, value).apply();
     }
 
     public int getLastSleepTimerValue() {
@@ -861,5 +881,9 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putInt(ENQUEUE_SONGS_DEFAULT_CHOICE, choice)
                 .apply();
+    }
+
+    public boolean isQueueSyncWithMediaStoreEnabled() {
+        return mPreferences.getBoolean(QUEUE_SYNC_MEDIA_STORE_ENABLED, false);
     }
 }

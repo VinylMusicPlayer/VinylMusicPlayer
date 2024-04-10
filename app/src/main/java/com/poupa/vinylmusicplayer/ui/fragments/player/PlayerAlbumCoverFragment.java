@@ -32,7 +32,7 @@ import com.poupa.vinylmusicplayer.util.ViewUtil;
  */
 public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements ViewPager.OnPageChangeListener, MusicProgressViewUpdateHelper.Callback {
 
-    public static final int VISIBILITY_ANIM_DURATION = 300;
+    public static final long VISIBILITY_ANIM_DURATION = 300L;
 
     ViewPager viewPager;
     ImageView favoriteIcon;
@@ -121,7 +121,9 @@ public class PlayerAlbumCoverFragment extends AbsMusicServiceFragment implements
         currentPosition = position;
         ((AlbumCoverPagerAdapter) viewPager.getAdapter()).receiveColor(colorReceiver, position);
         if (position != MusicPlayerRemote.getPosition()) {
-            MusicPlayerRemote.playSongAt(position, true);
+            if (!MusicPlayerRemote.getPlayingQueue().isEmpty()) {
+                MusicPlayerRemote.playSongAt(position, true);
+            } // else: User emptied the queue, we receive this callbak since the recycle view pager is updated
         }
     }
 

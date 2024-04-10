@@ -96,7 +96,7 @@ public class PlayingNotificationImplApi24 extends PlayingNotification {
                                 .setLargeIcon(bitmap)
                                 .setContentIntent(clickIntent)
                                 .setDeleteIntent(deleteIntent)
-                                .setContentTitle(song.title)
+                                .setContentTitle(song.getTitle())
                                 .setContentText(text)
                                 .setOngoing(isPlaying)
                                 .setShowWhen(false)

@@ -1,34 +1,64 @@
 package com.poupa.vinylmusicplayer.discog;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
+import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 /**
  * @author SC (soncaokim)
  */
 
-class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
+class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyncTask.Progress, SyncWithMediaStoreAsyncTask.Progress> {
     @NonNull
-    final Discography discography;
+    private final Discography discography;
+
+    @SuppressLint("StaticFieldLeak") // short lived reference, only while the sync operation is running
+    @NonNull
+    private final Context context;
 
     @NonNull
-    final SnackbarUtil snackbar;
+    private final SnackbarUtil snackbar;
 
-    final boolean resetRequested;
+    private final boolean resetRequested;
 
-    SyncWithMediaStoreAsyncTask(@NonNull MainActivity mainActivity, @NonNull Discography discog, boolean reset) {
+    public static class Progress {
+        public int added = 0;
+        public int removed = 0;
+        public int updated = 0;
+
+        boolean isEmpty() {
+            return added == 0 && removed == 0 && updated == 0;
+        }
+
+        @NonNull
+        String buildInfoString(@NonNull final Context context) {
+            if (isEmpty()) return "";
+
+            final Resources resources = context.getResources();
+            return MusicUtil.buildInfoString(
+                    (added > 0) ? resources.getString(R.string.scanning_x_songs_added, added) : "",
+                    (updated > 0) ? resources.getString(R.string.scanning_x_songs_updated, updated) : "",
+                    (removed > 0) ? resources.getString(R.string.scanning_x_songs_removed, removed) : ""
+            );
+        }
+    }
+
+    SyncWithMediaStoreAsyncTask(@NonNull final AbsMusicServiceActivity containerActivity, @NonNull final Discography discog, final boolean reset) {
         discography = discog;
-        snackbar = new SnackbarUtil(mainActivity.getSnackBarContainer());
+        context = containerActivity;
+        snackbar = new SnackbarUtil(containerActivity.getSnackBarContainer());
         resetRequested = reset;
     }
 
     @Override
-    protected Integer doInBackground(Void...params) {
+    protected Progress doInBackground(final Void...params) {
         if (resetRequested) discography.clear();
         return discography.syncWithMediaStore(this::publishProgress);
     }
@@ -40,44 +70,36 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, Integer, Integer> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        if (isUIFeedbackNeeded()) {
-            int value = values[values.length - 1];
-            if (value == 0) return;
-
-            final String message = String.format(
-                    App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_in_progress),
-                    Math.abs(value));
-            snackbar.showProgress(message);
+    protected void onProgressUpdate(final Progress... values) {
+        final Progress last = values[values.length - 1];
+        if (!last.isEmpty() && isUIFeedbackNeeded()) {
+            snackbar.showProgress(last.buildInfoString(context));
         }
     }
 
     @Override
-    protected void onPostExecute(Integer value) {
+    protected void onPostExecute(@NonNull final Progress value) {
         onTermination(value);
     }
     @Override
-    protected void onCancelled(Integer value) {
+    protected void onCancelled(@NonNull final Progress value) {
         onTermination(value);
     }
 
-    private void onTermination(Integer value) {
+    private void onTermination(@NonNull final Progress value) {
         discography.setCacheState(MemCache.ConsistencyState.OK);
         if (isUIFeedbackNeeded()) {
-            if (value != 0) {
-                final String message = String.format(
-                        App.getInstance().getApplicationContext().getString(R.string.scanning_x_songs_finished),
-                        Math.abs(value));
-                snackbar.showResult(message);
-            } else {
+            if (value.isEmpty()) {
                 snackbar.dismiss();
+            } else {
+                snackbar.showProgress(value.buildInfoString(context));
             }
         }
     }
 
-    long startTimeMs = 0;
+    private long startTimeMs = 0L;
     private boolean isUIFeedbackNeeded() {
-        final long UI_VISIBLE_THRESHOLD_MS = 500;
+        final long UI_VISIBLE_THRESHOLD_MS = 500L;
         final long now = System.currentTimeMillis();
 
         return (now - startTimeMs > UI_VISIBLE_THRESHOLD_MS);

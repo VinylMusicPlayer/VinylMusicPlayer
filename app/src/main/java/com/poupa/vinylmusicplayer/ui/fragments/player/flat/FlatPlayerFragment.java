@@ -2,21 +2,14 @@ package com.poupa.vinylmusicplayer.ui.fragments.player.flat;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,22 +21,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
-import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentFlatPlayerBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
-import com.poupa.vinylmusicplayer.dialogs.LyricsDialog;
 import com.poupa.vinylmusicplayer.dialogs.SongShareDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
-import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.model.lyrics.Lyrics;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.player.AbsPlayerFragment;
-import com.poupa.vinylmusicplayer.ui.fragments.player.PlayerAlbumCoverFragment;
-import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -53,24 +40,17 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import com.poupa.vinylmusicplayer.views.WidthFitSquareLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbumCoverFragment.Callbacks, SlidingUpPanelLayout.PanelSlideListener {
-    View playerStatusBar;
-    FrameLayout toolbarContainer;
-    SlidingUpPanelLayout slidingUpPanelLayout;
-    RecyclerView recyclerView;
-    TextView playerQueueSubHeader;
+public class FlatPlayerFragment extends AbsPlayerFragment implements SlidingUpPanelLayout.PanelSlideListener {
+    private View playerStatusBar;
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+    private RecyclerView recyclerView;
+    private TextView playerQueueSubHeader;
 
-    int lastColor;
+    private int lastColor;
 
-    FlatPlayerPlaybackControlsFragment playbackControlsFragment;
-    PlayerAlbumCoverFragment playerAlbumCoverFragment;
+    private FlatPlayerPlaybackControlsFragment playbackControlsFragment;
 
-    private AsyncTask<Song, Void, Boolean> updateIsFavoriteTask;
-    private AsyncTask<Void, Void, Lyrics> updateLyricsAsyncTask;
-
-    Lyrics lyrics;
-
-    Impl impl;
+    private Impl impl;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -171,13 +151,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         updateQueue();
     }
 
-    @Override
-    public void onMediaStoreChanged() {
-        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue untill restart
-        // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
-        updateQueue();
-    }
-
     private void updateQueue() {
         playingQueueAdapter.swapDataSet(MusicPlayerRemote.getPlayingQueue(), MusicPlayerRemote.getPosition());
         playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
@@ -194,19 +167,17 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void updateCurrentSong() {
-        impl.updateCurrentSong(MusicPlayerRemote.getCurrentIndexedSong());
+        impl.updateCurrentSong(MusicPlayerRemote.getCurrentSong());
 
         // give the adapter a chance to update the decoration
         recyclerView.getAdapter().notifyItemChanged(MusicPlayerRemote.getPosition());
     }
 
-    private void setUpSubFragments() {
+    @Override
+    protected void setUpSubFragments() {
         playbackControlsFragment = (FlatPlayerPlaybackControlsFragment) getChildFragmentManager().findFragmentById(R.id.playback_controls_fragment);
-        playerAlbumCoverFragment = (PlayerAlbumCoverFragment) getChildFragmentManager().findFragmentById(R.id.player_album_cover_fragment);
-
-        playerAlbumCoverFragment.setCallbacks(this);
+        super.setUpSubFragments();
     }
 
     protected void setUpPlayerToolbar() {
@@ -219,97 +190,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.action_show_lyrics) {
-            if (lyrics != null)
-                LyricsDialog.create(lyrics).show(getParentFragmentManager(), "LYRICS");
-            return true;
-        }
-        return super.onMenuItemClick(item);
-    }
-
-    private void updateIsFavorite() {
-        if (updateIsFavoriteTask != null) updateIsFavoriteTask.cancel(false);
-        updateIsFavoriteTask = new AsyncTask<Song, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Song... params) {
-                Activity activity = getActivity();
-                if (activity != null) {
-                    return MusicUtil.isFavorite(getActivity(), params[0]);
-                } else {
-                    cancel(false);
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(Boolean isFavorite) {
-                Activity activity = getActivity();
-                if (activity != null) {
-                    int res = isFavorite ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp;
-                    int color = ToolbarContentTintHelper.toolbarContentColor(activity, Color.TRANSPARENT);
-                    Drawable drawable = ImageUtil.getTintedVectorDrawable(activity, res, color);
-                    toolbar.getMenu().findItem(R.id.action_toggle_favorite)
-                            .setIcon(drawable)
-                            .setTitle(isFavorite ? getString(R.string.action_remove_from_favorites) : getString(R.string.action_add_to_favorites));
-                }
-            }
-        }.execute(MusicPlayerRemote.getCurrentSong());
-    }
-
-    private void updateLyrics() {
-        if (updateLyricsAsyncTask != null) updateLyricsAsyncTask.cancel(false);
-        final Song song = MusicPlayerRemote.getCurrentSong();
-        if (song.equals(Song.EMPTY_SONG)) return;
-
-        updateLyricsAsyncTask = new AsyncTask<Void, Void, Lyrics>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                lyrics = null;
-                playerAlbumCoverFragment.setLyrics(null);
-                toolbar.getMenu().removeItem(R.id.action_show_lyrics);
-            }
-
-            @Override
-            protected Lyrics doInBackground(Void... params) {
-                String data = MusicUtil.getLyrics(requireContext(), song);
-                if (TextUtils.isEmpty(data)) {
-                    return null;
-                }
-                return Lyrics.parse(song, data);
-            }
-
-            @Override
-            protected void onPostExecute(Lyrics l) {
-                lyrics = l;
-                playerAlbumCoverFragment.setLyrics(lyrics);
-                if (lyrics == null) {
-                    if (toolbar != null) {
-                        toolbar.getMenu().removeItem(R.id.action_show_lyrics);
-                    }
-                } else {
-                    Activity activity = getActivity();
-                    if (toolbar != null && activity != null)
-                        if (toolbar.getMenu().findItem(R.id.action_show_lyrics) == null) {
-                            int color = ToolbarContentTintHelper.toolbarContentColor(activity, Color.TRANSPARENT);
-                            Drawable drawable = ImageUtil.getTintedVectorDrawable(activity, R.drawable.ic_comment_text_outline_white_24dp, color);
-                            toolbar.getMenu()
-                                    .add(Menu.NONE, R.id.action_show_lyrics, Menu.NONE, R.string.action_show_lyrics)
-                                    .setIcon(drawable)
-                                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                        }
-                }
-            }
-
-            @Override
-            protected void onCancelled(Lyrics s) {
-                onPostExecute(null);
-            }
-        }.execute();
-    }
-
-    @Override
     @ColorInt
     public int getPaletteColor() {
         return lastColor;
@@ -318,17 +198,6 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     private void animateColorChange(final int newColor) {
         impl.animateColorChange(newColor);
         lastColor = newColor;
-    }
-
-    @Override
-    protected void toggleFavorite(Song song) {
-        super.toggleFavorite(song);
-        if (song.id == MusicPlayerRemote.getCurrentSong().id) {
-            if (MusicUtil.isFavorite(requireActivity(), song)) {
-                playerAlbumCoverFragment.showHeartAnimation();
-            }
-            updateIsFavorite();
-        }
     }
 
     @Override
@@ -357,12 +226,8 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     public void onColorChanged(int color) {
         animateColorChange(color);
         playbackControlsFragment.setDark(ColorUtil.isColorLight(color));
-        getCallbacks().onPaletteColorChanged();
-    }
 
-    @Override
-    public void onToolbarToggled() {
-        toggleToolbar(toolbarContainer);
+        super.onColorChanged(color);
     }
 
     @Override
@@ -393,14 +258,14 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
     interface Impl {
         void init();
 
-        void updateCurrentSong(IndexedSong song);
+        void updateCurrentSong(@NonNull final Song song);
 
         void animateColorChange(final int newColor);
 
         void setUpPanelAndAlbumCoverHeight();
     }
 
-    private static abstract class BaseImpl implements Impl {
+    private abstract static class BaseImpl implements Impl {
         protected FlatPlayerFragment fragment;
 
         public BaseImpl(FlatPlayerFragment fragment) {
@@ -501,9 +366,9 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
 
         @Override
-        public void updateCurrentSong(IndexedSong song) {
+        public void updateCurrentSong(@NonNull final Song song) {
             currentSong = song;
-            currentSongViewHolder.title.setText(song.title);
+            currentSongViewHolder.title.setText(song.getTitle());
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
 
             if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
@@ -538,8 +403,8 @@ public class FlatPlayerFragment extends AbsPlayerFragment implements PlayerAlbum
         }
 
         @Override
-        public void updateCurrentSong(IndexedSong song) {
-            fragment.toolbar.setTitle(song.title);
+        public void updateCurrentSong(@NonNull final Song song) {
+            fragment.toolbar.setTitle(song.getTitle());
             fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
         }
 

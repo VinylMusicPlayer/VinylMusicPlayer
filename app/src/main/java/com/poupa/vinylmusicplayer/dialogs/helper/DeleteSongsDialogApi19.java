@@ -27,6 +27,7 @@ import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,10 +53,10 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
     }
 
     @NonNull
-    public static DeleteSongsDialogApi19 create(ArrayList<Song> songs) {
+    public static DeleteSongsDialogApi19 create(Collection<? extends Song> songs) {
         DeleteSongsDialogApi19 dialog = new DeleteSongsDialogApi19();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(SONGS, songs);
+        args.putParcelableArrayList(SONGS, new ArrayList<>(songs));
         dialog.setArguments(args);
         return dialog;
     }
@@ -119,7 +120,7 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
             content = Html.fromHtml(getString(R.string.delete_x_songs, songs.size()));
         } else {
             title = R.string.delete_song_title;
-            content = Html.fromHtml(getString(R.string.delete_song_x, songs.get(0).title));
+            content = Html.fromHtml(getString(R.string.delete_song_x, songs.get(0).getTitle()));
         }
         return new MaterialDialog.Builder(requireActivity())
                 .title(title)

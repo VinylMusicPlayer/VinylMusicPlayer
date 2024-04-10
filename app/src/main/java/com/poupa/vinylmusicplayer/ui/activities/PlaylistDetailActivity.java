@@ -29,7 +29,6 @@ import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
-import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
@@ -39,18 +38,23 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
+import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements
             CabHolder,
-            LoaderManager.LoaderCallbacks<ArrayList<Song>>
+            LoaderManager.LoaderCallbacks<List<? extends Song>>
 {
 
     private static final int LOADER_ID = LoaderIds.PLAYLIST_DETAIL_ACTIVITY;
@@ -118,8 +122,9 @@ public class PlaylistDetailActivity
                     this,
                     (fromPosition, toPosition) -> {
                         if (PlaylistsUtil.moveItem(playlist.id, fromPosition, toPosition)) {
-                            Song song = adapter.getDataSet().remove(fromPosition);
-                            adapter.getDataSet().add(toPosition, song);
+                            final List<Song> dataSet = (List<Song>)adapter.getDataSet();
+                            final Song song = dataSet.remove(fromPosition);
+                            dataSet.add(toPosition, song);
                             adapter.notifyItemMoved(fromPosition, toPosition);
                         }
                     });
@@ -155,7 +160,13 @@ public class PlaylistDetailActivity
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(playlist instanceof AbsCustomPlaylist ? R.menu.menu_smart_playlist_detail : R.menu.menu_playlist_detail, menu);
+        if (playlist instanceof AbsSmartPlaylist smartPlaylist) {
+            getMenuInflater().inflate(R.menu.menu_item_smart_playlist, menu);
+            PlaylistMenuHelper.hideShowSmartPlaylistMenuItems(menu, smartPlaylist);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_item_playlist, menu);
+        }
+
         MenuHelper.decorateDestructiveItems(menu, this);
         return super.onCreateOptionsMenu(menu);
     }
@@ -163,12 +174,17 @@ public class PlaylistDetailActivity
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int id = item.getItemId();
-        if (id == R.id.action_shuffle_playlist) {
-            MusicPlayerRemote.openAndShuffleQueue(adapter.getDataSet(), true);
-            return true;
-        } else if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.action_song_sort_group_by_album) {
+            item.setChecked(!item.isChecked()); // toggle
+            if (playlist instanceof NotRecentlyPlayedPlaylist) {
+                PreferenceUtil.getInstance().setNotRecentlyPlayedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            } else if (playlist instanceof LastAddedPlaylist) {
+                PreferenceUtil.getInstance().setLastAddedSortOrder(item.isChecked() ? PreferenceUtil.ALBUM_SORT_ORDER : PreferenceUtil.SONG_SORT_ORDER);
+            }
+            reload();
         }
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
     }
@@ -268,19 +284,19 @@ public class PlaylistDetailActivity
 
     @Override
     @NonNull
-    public Loader<ArrayList<Song>> onCreateLoader(int id, final Bundle args) {
+    public Loader<List<? extends Song>> onCreateLoader(int id, final Bundle args) {
         return new AsyncPlaylistSongLoader(this, playlist);
     }
 
     @Override
-    public void onLoadFinished(@NonNull final Loader<ArrayList<Song>> loader, final ArrayList<Song> data) {
+    public void onLoadFinished(@NonNull final Loader<List<? extends Song>> loader, final List<? extends Song> data) {
         if (adapter != null) {
             adapter.swapDataSet(data);
         }
     }
 
     @Override
-    public void onLoaderReset(@NonNull final Loader<ArrayList<Song>> loader) {
+    public void onLoaderReset(@NonNull final Loader<List<? extends Song>> loader) {
         if (adapter != null) {
             adapter.swapDataSet(new ArrayList<>());
         }
@@ -291,7 +307,7 @@ public class PlaylistDetailActivity
         LoaderManager.getInstance(this).restartLoader(LOADER_ID, null, this);
     }
 
-    private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<ArrayList<Song>> {
+    private static class AsyncPlaylistSongLoader extends WrappedAsyncTaskLoader<List<? extends Song>> {
         private final Playlist playlist;
 
         AsyncPlaylistSongLoader(final Context context, final Playlist playlist) {
@@ -301,7 +317,7 @@ public class PlaylistDetailActivity
 
         @NonNull
         @Override
-        public ArrayList<Song> loadInBackground() {
+        public List<? extends Song> loadInBackground() {
             return playlist.getSongs(getContext());
         }
     }

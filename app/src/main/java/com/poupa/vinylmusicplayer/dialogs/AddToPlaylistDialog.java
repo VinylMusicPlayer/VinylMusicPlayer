@@ -15,6 +15,7 @@ import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,10 +32,10 @@ public class AddToPlaylistDialog extends DialogFragment {
     }
 
     @NonNull
-    public static AddToPlaylistDialog create(ArrayList<Song> songs) {
+    public static AddToPlaylistDialog create(Collection<? extends Song> songs) {
         AddToPlaylistDialog dialog = new AddToPlaylistDialog();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(SONGS, songs);
+        args.putParcelableArrayList(SONGS, new ArrayList<>(songs));
         dialog.setArguments(args);
         return dialog;
     }

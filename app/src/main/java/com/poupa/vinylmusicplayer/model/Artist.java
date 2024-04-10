@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
@@ -15,12 +17,13 @@ import java.util.Objects;
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Artist implements Parcelable {
-    public static final String UNKNOWN_ARTIST_DISPLAY_NAME = "Unknown Artist";
-    public static final Artist EMPTY = new Artist(-1, "");
+    public static String UNKNOWN_ARTIST_DISPLAY_NAME = "Unknown Artist";
+
+    public static final Artist EMPTY = new Artist(-1L, "");
 
     public final long id;
     public final String name;
-    public final ArrayList<Album> albums;
+    @NonNull public final ArrayList<Album> albums;
 
     public Artist(long id, String name) {
         this.id = id;

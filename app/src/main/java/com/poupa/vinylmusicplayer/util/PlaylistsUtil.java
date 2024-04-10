@@ -5,21 +5,26 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.helper.M3UConstants;
 import com.poupa.vinylmusicplayer.helper.M3UWriter;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,7 +57,7 @@ public class PlaylistsUtil {
         return id;
     }
 
-    public static void deletePlaylists(@NonNull final Context context, @NonNull final ArrayList<Playlist> playlists) {
+    public static void deletePlaylists(@NonNull final Context context, @NonNull final List<? extends Playlist> playlists) {
         for (int i = 0; i < playlists.size(); i++) {
             final String name = playlists.get(i).name;
             StaticPlaylist.removePlaylist(name);
@@ -64,7 +69,7 @@ public class PlaylistsUtil {
     private static void deletePlaylistFromMediaStore(@NonNull final Context context, @NonNull final String name) {
         @NonNull final ContentResolver resolver = context.getContentResolver();
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                MediaStore.Audio.Playlists.NAME + "='" + name + "'",
+                MediaStore.Audio.PlaylistsColumns.NAME + "='" + name + "'",
                 null);
     }
 
@@ -99,18 +104,13 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
-    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<Song> songs, long playlistId) {
-        if (songs.size() == 0) {return;}
+    public static void removeFromPlaylist(@NonNull final Context context, @NonNull final List<Integer> songPositions, long playlistId) {
+        if (songPositions.isEmpty()) {return;}
 
         StaticPlaylist list = StaticPlaylist.getPlaylist(playlistId);
         if (list == null) {return;}
 
-        List<Long> songIds = new ArrayList<>();
-        for (Song song : songs) {
-            songIds.add(song.id);
-        }
-
-        list.removeSongs(songIds);
+        list.removeSongsAtPosition(songPositions);
         notifyChange(context);
     }
 
@@ -135,29 +135,56 @@ public class PlaylistsUtil {
         notifyChange(context);
     }
 
+    @NonNull
     public static String getNameForPlaylist(final long id) {
         StaticPlaylist playlist = StaticPlaylist.getPlaylist(id);
         if (playlist == null) {return "";}
         return playlist.getName();
     }
 
+    @Nullable
     public static String savePlaylist(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            return savePlaylist_Api28(context, playlist);
+        } else {
+            return savePlaylist_Api29(context, playlist);
+        }
+    }
+
+    @NonNull
+    private static String savePlaylist_Api28(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
+        final File path = new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_MUSIC);
+        if (!path.exists()) {path.mkdirs();}
+
+        final File m3uFile = new File(path, playlist.name + "." + M3UConstants.EXTENSION);
+        M3UWriter.write(context, new FileOutputStream(m3uFile), playlist);
+
+        return Environment.DIRECTORY_MUSIC + File.pathSeparator + playlist.name;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @Nullable
+    private static String savePlaylist_Api29(@NonNull final Context context, @NonNull final Playlist playlist) throws IOException {
         @NonNull ContentValues values = new ContentValues();
-        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/x-mpegurl");
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/x-mpegurl");
         //Note: Cannot obtain the permission to "Playlists" folder - Android 13 simply disallows non-standard ones
-        values.put(MediaStore.Audio.Media.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
-        values.put(MediaStore.Audio.Media.DISPLAY_NAME, playlist.name);
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MUSIC);
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, playlist.name);
 
         // Delete existing, if any
         deletePlaylistFromMediaStore(context, playlist.name);
         // Now create a new one
         @NonNull final ContentResolver resolver = context.getContentResolver();
-        @NonNull final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+        final Uri uri = resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+        if (uri == null) {
+            SafeToast.show(context, context.getResources().getString(R.string.failed_to_save_playlist, "Null URI"));
+            return null;
+        }
 
         try (final OutputStream stream = resolver.openOutputStream(uri, "wt")) {
             M3UWriter.write(context, stream, playlist);
         }
 
-        return Environment.DIRECTORY_MUSIC + "/" + playlist.name;
+        return Environment.DIRECTORY_MUSIC + File.pathSeparator + playlist.name;
     }
 }

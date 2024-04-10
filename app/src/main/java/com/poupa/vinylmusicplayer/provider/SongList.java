@@ -8,11 +8,13 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.Discography;
+import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,14 +44,14 @@ abstract class SongList {
     }
 
     @NonNull
-    public ArrayList<Song> asSongs() {
+    public List<? extends Song> asSongs() {
         ArrayList<Song> result = new ArrayList<>();
         ArrayList<Long> orphanIds = new ArrayList<>();
 
         // Since the song list is decoupled from Discography, we need to check its content
         // against the valid songs in discog
         final Map<Long, Song> availableSongsById = Discography.getInstance().getAllSongsById();
-        for (Long id : songIds) {
+        for (final Long id : songIds) {
             final Song matchingSong = availableSongsById.get(id);
             if (matchingSong != null) {
                 result.add(matchingSong);
@@ -83,8 +85,14 @@ abstract class MutableSongList extends SongList {
         save(null);
     }
 
-    public void removeSongs(List<Long> ids) {
-        songIds.removeAll(ids);
+    public void removeSongsAtPosition(@NonNull final List<Integer> positions) {
+        final List<Integer> reversedPositions = new ArrayList<>(positions);
+        reversedPositions.sort(Comparator.reverseOrder());
+        for (final int position : reversedPositions) {
+            if (position >= 0 && position < songIds.size()) {
+                songIds.remove(position);
+            }
+        }
         save(null);
     }
 
@@ -92,8 +100,8 @@ abstract class MutableSongList extends SongList {
         if (fromPosition == toPosition) {return true;}
 
         final int size = songIds.size();
-        if (fromPosition >= size) {return false;}
-        if (toPosition >= size) {return false;}
+        if (fromPosition < 0 || fromPosition >= size) {return false;}
+        if (toPosition < 0 || toPosition >= size) {return false;}
 
         final long movedSongId = songIds.get(fromPosition);
         songIds.remove(fromPosition);
@@ -112,11 +120,11 @@ abstract class MutableSongList extends SongList {
 }
 
 class PreferencesBackedSongList extends MutableSongList {
-    private final static String SEPARATOR = ",";
-    private final static String PREF_NAME_PREFIX = "SONG_IDS_";
+    private static final String SEPARATOR = ",";
+    private static final String PREF_NAME_PREFIX = "SONG_IDS_";
 
     private static SharedPreferences preferences = null;
-    protected static SharedPreferences getPreferences() {
+    static SharedPreferences getPreferences() {
         if (preferences == null) {
             preferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         }
@@ -174,5 +182,32 @@ class PreferencesBackedSongList extends MutableSongList {
             name = newName;
         }
         preferences.edit().putString(PREF_NAME_PREFIX + name, values.toString()).apply();
+    }
+}
+
+class PreferenceBackedReorderableSongList extends PreferencesBackedSongList {
+    public PreferenceBackedReorderableSongList(@NonNull final String name) {
+        super(name);
+    }
+
+    // Assign a stable and unique ID to each song in the list. That ID can then be used as UI RecycleView's ID
+    // - to be unique: the Song's id cannot be used since the list can contain duplicate of same song
+    // - to be stable: the postition of the song in the list cannot be used as an ID since the song can be moved (hence the position changes)
+
+    private long nextUniqueId = 0L;
+
+    @Override
+    @NonNull
+    public List<? extends Song> asSongs() {
+        final List<? extends Song> songs = super.asSongs();
+        final int count = songs.size();
+
+        final ArrayList<IndexedSong> indexedSongs = new ArrayList<>(count);
+        for (int i=0; i<count; ++i) {
+            ++nextUniqueId;
+            indexedSongs.add(new IndexedSong(songs.get(i), i, nextUniqueId));
+        }
+
+        return indexedSongs;
     }
 }

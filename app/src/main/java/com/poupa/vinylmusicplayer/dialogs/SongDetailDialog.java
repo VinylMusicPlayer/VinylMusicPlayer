@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -130,19 +131,19 @@ public class SongDetailDialog extends DialogFragment {
         htmlBuilder.appendLine(R.string.label_date_modified, formatDate.apply(song.dateModified));
         htmlBuilder.appendLine(R.string.track_number, String.valueOf(song.trackNumber));
         htmlBuilder.appendLine(R.string.disc_number, String.valueOf(song.discNumber));
-        htmlBuilder.appendLine(R.string.title, song.title);
-        htmlBuilder.appendLine(R.string.artist, MultiValuesTagUtil.merge(song.artistNames));
-        htmlBuilder.appendLine(R.string.album, song.albumName);
-        htmlBuilder.appendLine(R.string.album_artist, MultiValuesTagUtil.merge(song.albumArtistNames));
-        htmlBuilder.appendLine(R.string.genre, song.genre);
+        htmlBuilder.appendLine(R.string.title, song.getTitle());
+        htmlBuilder.appendLine(R.string.artist, MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
+        htmlBuilder.appendLine(R.string.album, Album.getTitle(song.albumName));
+        htmlBuilder.appendLine(R.string.album_artist, MultiValuesTagUtil.infoStringAsArtists(song.albumArtistNames));
+        htmlBuilder.appendLine(R.string.genre, MultiValuesTagUtil.infoStringAsGenres(song.genres));
         htmlBuilder.appendLine(R.string.year, MusicUtil.getYearString(song.year));
 
         htmlBuilder.appendLine(R.string.label_track_length, MusicUtil.getReadableDurationString(song.duration));
 
-        final String rgTrack = song.replayGainTrack != 0
+        final String rgTrack = song.replayGainTrack != 0.0f
                 ? String.format(Locale.getDefault(), "%s: %.2f dB ", context.getString(R.string.song), song.replayGainTrack)
                 : "- ";
-        final String rgAlbum = song.replayGainAlbum != 0
+        final String rgAlbum = song.replayGainAlbum != 0.0f
                 ? String.format(Locale.getDefault(), "%s: %.2f dB ", context.getString(R.string.album), song.replayGainAlbum)
                 : "- ";
         htmlBuilder.appendLine(R.string.label_replay_gain, rgTrack, rgAlbum);

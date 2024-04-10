@@ -1,21 +1,21 @@
 name: GithubActions CI
 
-on: [push, workflow_dispatch]
+on: [push, workflow_dispatch, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
     - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: wrapper
 
@@ -48,7 +48,7 @@ jobs:
         GRADLEW_COMMAND: assemblePlayStoreRelease
 
     - name: Archive APKs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: outputs-apk
         path: app/build/outputs/apk/**/*.apk
@@ -58,7 +58,7 @@ jobs:
       if: (!contains(github.ref, 'refs/tags/'))
     - name: Archive test results
       if: (!contains(github.ref, 'refs/tags/'))
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: outputs-tests
         path: app/build/test-results
@@ -68,7 +68,7 @@ jobs:
       if: (!contains(github.ref, 'refs/tags/'))
     - name: Archive lint results
       if: (!contains(github.ref, 'refs/tags/'))
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: outputs-lint
         path: app/build/reports/lint-*
@@ -81,7 +81,7 @@ jobs:
       contents: write # Needed to manipulate tags
     steps:
     - name: Retrieve built assets
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: outputs-apk
         path: app/build/outputs/apk
@@ -101,7 +101,7 @@ jobs:
     - name: Release to Play Store
       # TODO Dont publish to PlayStore any tag, must follow M.m.u convention
       if: (contains(github.ref, 'refs/tags/') && !contains(github.ref, 'refs/tags/pre-release'))
-      uses: r0adkll/upload-google-play@v1
+      uses: r0adkll/upload-google-play@v1.1.2
       with:
         serviceAccountJsonPlainText: ${{secrets.SERVICE_ACCOUNT}}
         packageName: com.poupa.vinylmusicplayer

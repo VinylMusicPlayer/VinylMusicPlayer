@@ -21,12 +21,12 @@ import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.sort.SongSortOrder;
-import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.sort.SongSortOrder;
+import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -35,6 +35,9 @@ import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -45,7 +48,7 @@ public class SongAdapter
 {
 
     protected final AppCompatActivity activity;
-    protected ArrayList<Song> dataSet;
+    protected List<? extends Song> dataSet;
 
     protected final int itemLayoutRes;
 
@@ -55,12 +58,12 @@ public class SongAdapter
 
     public RecyclerView recyclerView;
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
                        boolean usePalette, @Nullable CabHolder cabHolder) {
         this(activity, dataSet, itemLayoutRes, usePalette, cabHolder, true);
     }
 
-    public SongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, @LayoutRes int itemLayoutRes,
+    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
                        boolean usePalette, @Nullable CabHolder cabHolder, boolean showSectionName) {
         super(activity, cabHolder, R.menu.menu_media_selection);
         this.activity = activity;
@@ -77,7 +80,7 @@ public class SongAdapter
         recyclerView = rV;
     }
 
-    public void swapDataSet(ArrayList<Song> dataSet) {
+    public void swapDataSet(List<? extends Song> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
@@ -95,7 +98,7 @@ public class SongAdapter
         return this.showAlbumImage;
     }
 
-    public ArrayList<Song> getDataSet() {
+    public List<? extends Song> getDataSet() {
         return dataSet;
     }
 
@@ -140,8 +143,7 @@ public class SongAdapter
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final Song song = dataSet.get(position);
 
-        boolean isChecked = isChecked(song);
-        holder.itemView.setActivated(isChecked);
+        holder.itemView.setActivated(isChecked(position));
 
         if (holder.shortSeparator != null) {
             if (holder.getBindingAdapterPosition() == getItemCount() - 1) {
@@ -152,7 +154,7 @@ public class SongAdapter
         }
 
         if (holder.title != null) {
-            holder.title.setText(song.title);
+            holder.title.setText(song.getTitle());
         }
         if (holder.text != null) {
             holder.text.setText(getSongText(song));
@@ -173,7 +175,8 @@ public class SongAdapter
         }
     }
 
-    protected String getSongText(Song song) {
+    @NonNull
+    protected String getSongText(@NonNull final Song song) {
         return MusicUtil.getSongInfoString(song);
     }
 
@@ -188,8 +191,11 @@ public class SongAdapter
     }
 
     @Override
-    protected void onMultipleItemAction(@NonNull MenuItem menuItem, @NonNull ArrayList<Song> selection) {
-        SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
+    protected void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, Song> selection) {
+        // Intermediate copy to preserve the selection order
+        Collection<Song> songs = new ArrayList<>();
+        selection.values().iterator().forEachRemaining(song -> songs.add(song));
+        SongsMenuHelper.handleMenuClick(activity, songs, menuItem.getItemId());
     }
 
     @NonNull
@@ -258,7 +264,7 @@ public class SongAdapter
             final int position = getBindingAdapterPosition();
             if (position < 0 || position >= dataSet.size()) {return Song.EMPTY_SONG;}
 
-            return dataSet.get(getBindingAdapterPosition());
+            return dataSet.get(position);
         }
 
         protected int getSongMenuRes() {

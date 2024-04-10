@@ -1,4 +1,111 @@
 # Changelog
+
+## [1.10.0] - 2024-04-04
+
+### Fixes
+* Keep the queue in sync with changes from MediaStore (removal, update) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/969
+* Fix regression on discography (album) introduced by #992 (multi-artist-navigation) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1007
+* Fix crash described by #1008 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1009
+* Fix issue #974 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1010
+* Snackbar tweaks by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/991
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.9.0...1.10.0
+
+## [1.9.0] - 2024-03-30
+
+### Features
+* Multi artists navigation by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/992
+* Improve unknown artist/album/genre/song title display by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/994
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.4...1.9.0
+
+## [1.8.4] - 2024-03-23
+
+### Fixes
+* Hotfix for regression introduced by PR #989 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/996
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.3...1.8.4
+
+## [1.8.3] - 2024-03-23
+
+### Fixes
+* Refactor multi select by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/958
+* Dont collect the stack trace if the underlying library  cannot read the media file by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/989
+* End the DB transaction properly (in case of failure) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/990
+* Clean obsolete DB columns by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/993
+
+### Other Changes
+* feat(translations): add Dutch translation by @AnonymousWP in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/986
+* Apply build pipeline on PR as well by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/987
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.2...1.8.3
+
+## [1.8.2] - 2024-03-13
+
+### Fixes
+* Monochrome icon by @ByteHamster in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/971
+* Fix crash on init with API 19 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/982
+* Resolve "Android 8: Unnecessary "Vinyl is running" notification #952" by @AutomaticUpdates in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/978
+
+## New Contributors
+* @ByteHamster made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/971
+* @AutomaticUpdates made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/978
+* @AnonymousWP made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/977
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.1...1.8.2
+
+## [1.8.1] - 2024-03-04
+
+### Fixes
+* Fix save playlist android9 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/944
+* Fix dangling unknown artist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/956
+* Fix crash on select dupe song in playlist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/950
+* Fix stale notification by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/961
+* Silence logcat warning about deprecated use of stream type by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/963
+
+### Other Changes
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.8.0...1.8.1
+
+## [1.8.0] - 2024-02-08
+
+### Features
+* Opus support by @drizzt in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/896
+* History import + Refactor playlist menu by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/922
+
+### Fixes
+* Refactor {card|flat} fragments, move common code to base class and fix NPE by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/926
+* Avoid NPE (related to https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/931 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/932
+* Allow tag editor to function on API 30+ by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/929
+* Fix multi genres by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/939
+* Fix NPE (on getSongsForGenre) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/933
+
+### Other Changes
+* Upgrade Github Actions plugins by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/934
+
+## New Contributors
+* @drizzt made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/896
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.7.0...1.8.0
+
+## [1.7.0] - 2024-01-30
+
+### Features
+* Add context menu to genre activity by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/907
+* Not recently played/Last added - group by album by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/752
+* add multi-line genre editing by @gaycodegal in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/928 and in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/904
+
+### Fixes
+* fixes #853, the system UI notification crash by @ellisonch in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+* Fixes #855 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/925
+* Blacklist error on android 12 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/924
+* Report original filename with error by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/923
+
+## New Contributors
+* @ellisonch made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/902
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.6.3...1.7.0
+
 ## [1.6.3] - 2023-12-24
 
 ### Fixes
