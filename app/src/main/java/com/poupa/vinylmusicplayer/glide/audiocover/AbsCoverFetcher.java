@@ -4,7 +4,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -136,7 +135,7 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
     }
 
     @Nullable
-    private static InputStream loadCoverFromMediaStoreApi19(final long albumId) {
+    private static InputStream loadCoverFromMediaStoreApi19(final long albumId) throws FileNotFoundException {
         final Context context = App.getStaticContext();
         try (final Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
@@ -150,11 +149,9 @@ public abstract class AbsCoverFetcher implements DataFetcher<InputStream> {
             final int columnIndex = cursor.getColumnIndex(MediaStore.Audio.AlbumColumns.ALBUM_ART);
             if (cursor.moveToNext()) {
                 final String path = cursor.getString(columnIndex);
+                if (path == null) {return null;}
 
-                final Bitmap cover = BitmapFactory.decodeFile(path);
-                if (cover == null) {return null;}
-
-                return bitmap2InputStream(cover);
+                return new FileInputStream(path);
             }
         }
 
