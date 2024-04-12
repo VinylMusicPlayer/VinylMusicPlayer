@@ -1049,8 +1049,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             if (playback == null) {return;}
 
-            byte mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
-            if (mode != PreferenceUtil.RG_SOURCE_MODE_NONE) {
+            final String mode = PreferenceUtil.getInstance().getReplayGainSourceMode();
+            if (!mode.equals(PreferenceUtil.RG_SOURCE_MODE_NONE)) {
                 Song song = getCurrentSong();
 
                 float adjustDB = 0.0f;

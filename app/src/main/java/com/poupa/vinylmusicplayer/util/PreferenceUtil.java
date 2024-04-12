@@ -23,6 +23,8 @@ import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -32,12 +34,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
+
+    @PrefKey(ExportImportable = true)
+    public static final String PRIMARY_COLOR = "primary_color";
+    @PrefKey(ExportImportable = true)
+    public static final String ACCENT_COLOR = "accent_color";
+    @PrefKey(ExportImportable = true)
+    public static final String COLORED_NAVBAR = "should_color_navigation_bar";
 
     @PrefKey(ExportImportable = true)
     public static final String GENERAL_THEME = "general_theme";
@@ -99,7 +109,7 @@ public final class PreferenceUtil {
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
     @PrefKey(ExportImportable = true)
-    private static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
+    public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
 
     @PrefKey(ExportImportable = true)
     public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
@@ -108,6 +118,8 @@ public final class PreferenceUtil {
     private static final String AUDIO_DUCKING = "audio_ducking";
     @PrefKey(ExportImportable = true)
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
+    @PrefKey(ExportImportable = true)
+    public static final String EQUALIZER = "equalizer";
 
     @PrefKey(ExportImportable = true)
     public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
@@ -161,10 +173,13 @@ public final class PreferenceUtil {
 
     @PrefKey(ExportImportable = true)
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
-    public static final byte RG_SOURCE_MODE_NONE = 0;
-    public static final byte RG_SOURCE_MODE_TRACK = 1;
-    public static final byte RG_SOURCE_MODE_ALBUM = 2;
+    @NonNls
+    public static final String RG_SOURCE_MODE_NONE = "none";
+    public static final String RG_SOURCE_MODE_TRACK = "track";
+    public static final String RG_SOURCE_MODE_ALBUM = "album";
 
+    @PrefKey(ExportImportable = true)
+    public static final String RG_PREAMP = "replaygain_preamp";
     @PrefKey(ExportImportable = true)
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     @PrefKey(ExportImportable = true)
@@ -189,8 +204,8 @@ public final class PreferenceUtil {
     public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
     @PrefKey
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
-
-    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
+    @PrefKey(ExportImportable = true)
+    private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
 
     private static PreferenceUtil sInstance;
 
@@ -779,19 +794,9 @@ public final class PreferenceUtil {
         return mPreferences.getString(THEME_STYLE, CLASSIC_THEME);
     }
 
-    public byte getReplayGainSourceMode() {
-        byte sourceMode = RG_SOURCE_MODE_NONE;
-
-        switch (mPreferences.getString(RG_SOURCE_MODE_V2, "none")) {
-            case "track":
-                sourceMode = RG_SOURCE_MODE_TRACK;
-                break;
-            case "album":
-                sourceMode = RG_SOURCE_MODE_ALBUM;
-                break;
-        }
-
-        return sourceMode;
+    @NonNull
+    public String getReplayGainSourceMode() {
+        return mPreferences.getString(RG_SOURCE_MODE_V2, RG_SOURCE_MODE_NONE);
     }
 
     private float getDefaultPreamp() {
