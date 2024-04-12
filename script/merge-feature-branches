@@ -5,7 +5,6 @@
 # Branches (in same repo) that we dont want to include in CI builds
 # Space separated list of branch names
 blacklist_branches="
-  pref-annotation
   sliding-panel
 "
 
