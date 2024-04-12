@@ -20,6 +20,8 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
@@ -31,10 +33,10 @@ import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -214,7 +216,7 @@ public final class PreferenceUtil {
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         migratePreferencesIfNeeded();
-        checkAnnotations();
+        annotationSanityCheck();
     }
 
     public static PreferenceUtil getInstance() {
@@ -228,38 +230,85 @@ public final class PreferenceUtil {
         // Nothing to do for now
     }
 
-    private void checkAnnotations() {
-        final Set<Field> annotatedFields = Arrays.stream(PreferenceUtil.class.getDeclaredFields())
-                        .filter(field -> {
-                            final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                            return (annotation != null);
-                        })
-                .collect(Collectors.toSet());
-        final Set<String> annotatedPrefs = annotatedFields.stream()
-                .map(field -> {
-                    // get the value of a 'static final' field
-                    try {return (String) field.get(null);}
-                    catch (IllegalAccessException ignored) {return null;}
-                })
-                .collect(Collectors.toSet());
-        final Set<Field> exportableFields = annotatedFields.stream()
+    private static Collection<Field> getAnnotatedPreferenceFields() {
+        final Collection<Field> annotatedFields = new ArrayList<>();
+        for (final var fields : List.of(
+                // TODO Discover this list of classes using annotation via reflection
+                MusicService.class.getDeclaredFields(),
+                PreferenceUtil.class.getDeclaredFields(),
+                StaticPlaylist.class.getDeclaredFields()
+        )) {
+            annotatedFields.addAll(Arrays.stream(fields)
+                    .filter(field -> {
+                        final PrefKey annotation = field.getAnnotation(PrefKey.class);
+                        return (annotation != null);
+                    })
+                    .collect(Collectors.toList()));
+        }
+        return annotatedFields;
+    }
+
+    @Nullable
+    private static String getAnnotatedPreferenceFieldValue(@NonNull final Field field) {
+        try {
+            field.setAccessible(true); // in the case it is not public
+            return (String) field.get(null); // get the value of a 'static final' field
+        }
+        catch (final IllegalAccessException access) {
+            OopsHandler.collectStackTrace(access);
+            return null;
+        }
+    }
+
+    private static Collection<String> getAnnotatedPreferenceKeys() {
+        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields();
+        return annotatedFields.stream()
+                .map(PreferenceUtil::getAnnotatedPreferenceFieldValue)
+                .collect(Collectors.toList());
+    }
+
+    private static Collection<String> getAnnotatedExportablePreferenceKeys() {
+        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields();
+        final Collection<Field> exportableFields = annotatedFields.stream()
                 .filter(field -> {
                     final PrefKey annotation = field.getAnnotation(PrefKey.class);
                     return annotation.ExportImportable();
                 })
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
+        return exportableFields.stream()
+                .map(PreferenceUtil::getAnnotatedPreferenceFieldValue)
+                .collect(Collectors.toList());
+    }
+
+    private void annotationSanityCheck() {
+        final Collection<String> annotatedPrefs = getAnnotatedPreferenceKeys();
 
         final Set<String> allPrefs = mPreferences.getAll().keySet();
-        final Set<String> notAnnotated = allPrefs.stream().filter(name -> !annotatedPrefs.contains(name)).collect(Collectors.toSet());
-        final Set<String> notUsed = annotatedPrefs.stream().filter(name -> !allPrefs.contains(name)).collect(Collectors.toSet());
+        final Set<String> obsoletePrefs = Set.of();
+        allPrefs.removeAll(obsoletePrefs);
 
-        // TODO Following tests are examples on how annotation can be used
-        if (!notAnnotated.isEmpty()) {
-            throw new RuntimeException("Pref used but not annotated: " + notAnnotated);
+        // Check that the app prefs are all annotated
+        final Collection<String> missingAnnotation = allPrefs.stream()
+                .filter(name -> !annotatedPrefs.contains(name))
+                .collect(Collectors.toList());
+        if (!missingAnnotation.isEmpty()) {
+            SafeToast.show(App.getStaticContext(), "Pref used but not annotated: " + missingAnnotation);
         }
-        if (!notUsed.isEmpty()) {
-            SafeToast.show(App.getStaticContext(), "Pref annotated but not used: " + notAnnotated);
-        }
+
+    }
+
+    public void exportPreferencesToFile() {
+        final Collection<String> exportablePrefs = getAnnotatedExportablePreferenceKeys();
+        final Set<String> allPrefs = mPreferences.getAll().keySet();
+        final Collection<String> toExport = allPrefs.stream()
+                .filter(exportablePrefs::contains)
+                .collect(Collectors.toList());
+
+        // TODO save to a persistent file...
+    }
+
+    public void importPreferencesFromFile() {
+        // TODO ...
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
