@@ -109,10 +109,10 @@ public final class PreferenceUtil {
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
 
     @PrefKey(ExportImportable = true)
-    public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
+    public static final String COLORED_APP_SHORTCUTS = "should_color_app_shortcuts";
 
     @PrefKey(ExportImportable = true)
-    public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
+    public static final String TRANSPARENT_BACKGROUND_WIDGET = "should_make_widget_background_transparent";
 
     @PrefKey(ExportImportable = true)
     private static final String AUDIO_DUCKING = "audio_ducking";
