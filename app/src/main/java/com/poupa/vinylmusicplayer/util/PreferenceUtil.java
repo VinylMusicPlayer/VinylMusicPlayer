@@ -20,6 +20,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
+import com.poupa.vinylmusicplayer.provider.SongList;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
@@ -34,9 +35,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -230,20 +233,25 @@ public final class PreferenceUtil {
         // Nothing to do for now
     }
 
-    private static Collection<Field> getAnnotatedPreferenceFields() {
+    @NonNull
+    private static Collection<Field> getAnnotatedPreferenceFields(@Nullable Predicate<Field> extraFilter) {
         final Collection<Field> annotatedFields = new ArrayList<>();
         for (final var fields : List.of(
                 // TODO Discover this list of classes using annotation via reflection
                 MusicService.class.getDeclaredFields(),
                 PreferenceUtil.class.getDeclaredFields(),
+                SongList.class.getDeclaredFields(),
                 StaticPlaylist.class.getDeclaredFields()
         )) {
-            annotatedFields.addAll(Arrays.stream(fields)
-                    .filter(field -> {
-                        final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                        return (annotation != null);
-                    })
-                    .collect(Collectors.toList()));
+            annotatedFields.addAll(
+                    Arrays.stream(fields)
+                            .filter(field -> {
+                                final PrefKey annotation = field.getAnnotation(PrefKey.class);
+                                return (annotation != null);
+                            })
+                            .filter(field -> (extraFilter == null) || (extraFilter.test(field)))
+                            .collect(Collectors.toList())
+            );
         }
         return annotatedFields;
     }
@@ -260,49 +268,55 @@ public final class PreferenceUtil {
         }
     }
 
-    private static Collection<String> getAnnotatedPreferenceKeys() {
-        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields();
-        return annotatedFields.stream()
-                .map(PreferenceUtil::getAnnotatedPreferenceFieldValue)
-                .collect(Collectors.toList());
-    }
+    @NonNull
+    private static Map<String, ?> filterPreferencesByAnnotation(
+            @NonNull final Map<String, ?> preferences,
+            @Nullable final Predicate<Field> fieldFilter
+    ) {
+        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields(fieldFilter);
 
-    private static Collection<String> getAnnotatedExportablePreferenceKeys() {
-        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields();
-        final Collection<Field> exportableFields = annotatedFields.stream()
-                .filter(field -> {
-                    final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                    return annotation.ExportImportable();
-                })
-                .collect(Collectors.toList());
-        return exportableFields.stream()
-                .map(PreferenceUtil::getAnnotatedPreferenceFieldValue)
-                .collect(Collectors.toList());
+        // Split into two list of keys: literal ones and prefix-based ones
+        final Collection<String> literalKeys = new ArrayList<>(annotatedFields.size());
+        final Collection<String> prefixKeys = new ArrayList<>(annotatedFields.size());
+        for (final Field field : annotatedFields) {
+            final PrefKey annotation = field.getAnnotation(PrefKey.class);
+            if (annotation.IsPrefix()) {prefixKeys.add(getAnnotatedPreferenceFieldValue(field));}
+            else {literalKeys.add(getAnnotatedPreferenceFieldValue(field));}
+        }
+
+        final Predicate<String> matching = name -> {
+            if (literalKeys.contains(name)) {return true;}
+            for (final String prefix : prefixKeys) {
+                if (name.startsWith(prefix)) {return true;}
+            }
+            return false;
+        };
+        final Map<String, Object> result = new HashMap<>(preferences.size());
+        for (final Map.Entry<String, ?> entry : preferences.entrySet()) {
+            if (matching.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
+        }
+        return result;
     }
 
     private void annotationSanityCheck() {
-        final Collection<String> annotatedPrefs = getAnnotatedPreferenceKeys();
-
-        final Set<String> allPrefs = mPreferences.getAll().keySet();
-        final Set<String> obsoletePrefs = Set.of();
-        allPrefs.removeAll(obsoletePrefs);
+        final Map<String, ?> allPrefs = mPreferences.getAll();
+        final Map<String, ?> annotatedPrefs = filterPreferencesByAnnotation(allPrefs, null);
 
         // Check that the app prefs are all annotated
-        final Collection<String> missingAnnotation = allPrefs.stream()
-                .filter(name -> !annotatedPrefs.contains(name))
+        final Collection<String> missingAnnotation = allPrefs.keySet().stream()
+                .filter(name -> !annotatedPrefs.containsKey(name))
                 .collect(Collectors.toList());
         if (!missingAnnotation.isEmpty()) {
             SafeToast.show(App.getStaticContext(), "Pref used but not annotated: " + missingAnnotation);
         }
-
     }
 
     public void exportPreferencesToFile() {
-        final Collection<String> exportablePrefs = getAnnotatedExportablePreferenceKeys();
-        final Set<String> allPrefs = mPreferences.getAll().keySet();
-        final Collection<String> toExport = allPrefs.stream()
-                .filter(exportablePrefs::contains)
-                .collect(Collectors.toList());
+        final Map<String, ?> allPrefs = mPreferences.getAll();
+        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, field -> {
+            final PrefKey annotation = field.getAnnotation(PrefKey.class);
+            return !annotation.ExportImportable();
+        });
 
         // TODO save to a persistent file...
     }
