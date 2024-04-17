@@ -39,161 +39,171 @@ import java.util.stream.Collectors;
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String GENERAL_THEME = "general_theme";
     private static final String GENERAL_THEME_LIGHT = "light";
     private static final String GENERAL_THEME_DARK = "dark";
     private static final String GENERAL_THEME_BLACK = "black";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
-  
+
+    @PrefKey
     public static final String PRIMARY_COLOR = "primary_color";
+    @PrefKey
     public static final String ACCENT_COLOR = "accent_color";
-  
-    @PrefKey(ExportImportable = true)
-    private static final String REMEMBER_LAST_TAB = "remember_last_tab";
-    @PrefKey(ExportImportable = true)
+
+    @PrefKey
+    public static final String REMEMBER_LAST_TAB = "remember_last_tab";
+    @PrefKey
     private static final String LAST_PAGE = "last_start_page";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String ALBUM_SORT_ORDER = "album_sort_order";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String SONG_SORT_ORDER = "song_sort_order";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String FILE_SORT_ORDER = "file_sort_order";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ALBUM_GRID_SIZE = "album_grid_size";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SONG_GRID_SIZE = "song_grid_size";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SONG_GRID_SIZE_LAND = "song_grid_size_land";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ARTIST_GRID_SIZE = "artist_grid_size";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ARTIST_GRID_SIZE_LAND = "artist_grid_size_land";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ALBUM_COLORED_FOOTERS = "album_colored_footers";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SONG_COLORED_FOOTERS = "song_colored_footers";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ALBUM_ARTIST_COLORED_FOOTERS = "album_artist_colored_footers";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String COLORED_NOTIFICATION = "colored_notification";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String CLASSIC_NOTIFICATION = "classic_notification";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
+    public static final String SHOULD_COLOR_APP_SHORTCUTS = "should_color_app_shortcuts";
+    @PrefKey
     public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String AUDIO_DUCKING = "audio_ducking";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
 
     private static final String EXPORT_SETTINGS = "export_settings";
     public static final String IMPORT_SETTINGS = "import_settings";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
+    public static final String FILE_FORMAT = "file_format";
+    @PrefKey
+    public static final String VERSION_CODE = "version_code";
+
+    @PrefKey
     public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
 
-    @PrefKey(ExportImportable = true)
-    private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     @PrefKey
+    private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
+    @PrefKey(ExportImportable = false)
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
 
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String LAST_CHANGELOG_VERSION = "last_changelog_version";
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String INTRO_SHOWN = "intro_shown";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String AUTO_DOWNLOAD_IMAGES_POLICY = "auto_download_images_policy";
     private static final String AUTO_DOWNLOAD_ALWAYS = "always";
     private static final String AUTO_DOWNLOAD_WIFI_ONLY = "only_wifi";
     private static final String AUTO_DOWNLOAD_NEVER = "never";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String START_DIRECTORY = "start_directory";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
 
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String WHITELIST_ENABLED = "whitelist_enabled";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String LIBRARY_CATEGORIES = "library_categories";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String REMEMBER_SHUFFLE = "remember_shuffle";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
     public static final byte RG_SOURCE_MODE_NONE = 0;
     public static final byte RG_SOURCE_MODE_TRACK = 1;
     public static final byte RG_SOURCE_MODE_ALBUM = 2;
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String THEME_STYLE = "theme_style";
     private static final String CLASSIC_THEME = "classic";
     public static final String ROUNDED_THEME = "rounded";
     public static final String SHOULD_COLOR_NAVIGATION_BAR = "should_color_navigation_bar";
 
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
 
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
     public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
 
-    @PrefKey(ExportImportable = true)
-    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
     @PrefKey
+    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
+    @PrefKey(ExportImportable = false)
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
 
+    private Set<Field> exportableFields = null;
     private static PreferenceUtil sInstance;
 
     private final SharedPreferences mPreferences;
@@ -229,7 +239,7 @@ public final class PreferenceUtil {
                     catch (IllegalAccessException ignored) {return null;}
                 })
                 .collect(Collectors.toSet());
-        final Set<Field> exportableFields = annotatedFields.stream()
+        exportableFields = annotatedFields.stream()
                 .filter(field -> {
                     final PrefKey annotation = field.getAnnotation(PrefKey.class);
                     return annotation.ExportImportable();
@@ -247,6 +257,13 @@ public final class PreferenceUtil {
         if (!notUsed.isEmpty()) {
             SafeToast.show(App.getStaticContext(), "Pref annotated but not used: " + notAnnotated);
         }
+    }
+
+    public Set<Field> getExportableFields() {
+        if(exportableFields == null) {
+            throw new RuntimeException("exportableFields not initialized");
+        }
+        return exportableFields;
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {

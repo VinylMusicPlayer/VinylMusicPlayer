@@ -17,6 +17,7 @@ import com.google.gson.ToNumberStrategy;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.SettingsActivity;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.BufferedReader;
@@ -38,8 +39,6 @@ public class SharedPreferencesImporter extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-    static final String FILE_FORMAT = "file_format";
-    static final String VERSION_CODE = "version_code";
     static final String CURRENT_FILE_FORMAT = "json";
 
     static final int MIN_COMPATIBLE_VERSION = 192;
@@ -76,15 +75,15 @@ public class SharedPreferencesImporter extends AppCompatActivity {
             BufferedReader reader = new BufferedReader(new FileReader(file.getFileDescriptor()));
             preferences = gson.fromJson(reader, Map.class);
 
-            String fileFormat = (String) preferences.get(FILE_FORMAT);
-            int savedPrefsVersionCode = Math.toIntExact((Long) preferences.get(VERSION_CODE));
+            String fileFormat = (String) preferences.get(PreferenceUtil.FILE_FORMAT);
+            int savedPrefsVersionCode = Math.toIntExact((Long) preferences.get(PreferenceUtil.VERSION_CODE));
 
             // Checks whether the file format saved in the preferences file is compatible with the current settings parser.
             if(Objects.equals(fileFormat, CURRENT_FILE_FORMAT)) {
                 // Checks whether the version of the app and the saved settings are compatible.
                 if(MIN_COMPATIBLE_VERSION <= savedPrefsVersionCode && savedPrefsVersionCode <= MAX_COMPATIBLE_VERSION) {
                     for (Map.Entry<String, ?> entry : preferences.entrySet()) {
-                        if (Objects.equals(entry.getKey(), FILE_FORMAT) || Objects.equals(entry.getKey(), VERSION_CODE)) continue;
+                        if (Objects.equals(entry.getKey(), PreferenceUtil.FILE_FORMAT) || Objects.equals(entry.getKey(), PreferenceUtil.VERSION_CODE)) continue;
 
                         Object object = entry.getValue();
                         String key = entry.getKey();

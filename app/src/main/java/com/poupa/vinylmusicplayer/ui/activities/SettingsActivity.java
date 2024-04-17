@@ -414,7 +414,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     });
                 }
             }
-            final TwoStatePreference colorAppShortcuts = findPreference("should_color_app_shortcuts");
+            final TwoStatePreference colorAppShortcuts = findPreference(PreferenceUtil.SHOULD_COLOR_APP_SHORTCUTS);
             if (colorAppShortcuts != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
                     colorAppShortcuts.setVisible(false);

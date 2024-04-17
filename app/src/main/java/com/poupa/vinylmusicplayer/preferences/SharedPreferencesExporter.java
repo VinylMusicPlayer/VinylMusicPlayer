@@ -11,10 +11,12 @@ import android.os.ParcelFileDescriptor;
 import com.google.gson.Gson;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
+import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,19 +67,20 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         Gson gson = new Gson();
         HashMap<String, Object> prefsMap = new HashMap<>(sharedPreferences.getAll());
         Set<String> prefsMapKeySet = new HashSet<>(prefsMap.keySet()); // Create a copy of key set to avoid ConcurrentModificationException
-        List<String> prefsFilter = Arrays.asList("SONG_IDS_");;
+        //List<String> prefsFilter = Arrays.asList("SONG_IDS_");
+        Set<Field> exportableFields = PreferenceUtil.getInstance().getExportableFields();
 
-        for (String filterKey : prefsFilter) {
+        for (Field filterKey : exportableFields) {
             for (String key : prefsMapKeySet) {
-                if (key.startsWith(filterKey)) {
+                if (!key.startsWith(filterKey.getName())) {
                     prefsMap.remove(key);
                 }
             }
         }
 
         prefsMap.put(VERSION_NAME, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName);
-        prefsMap.put(SharedPreferencesImporter.VERSION_CODE, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
-        prefsMap.put(SharedPreferencesImporter.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
+        prefsMap.put(PreferenceUtil.VERSION_CODE, context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+        prefsMap.put(PreferenceUtil.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
 
 
         // Write all lines in the export file
