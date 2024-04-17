@@ -41,12 +41,15 @@ import com.poupa.vinylmusicplayer.appwidgets.AppWidgetBig;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetCard;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetClassic;
 import com.poupa.vinylmusicplayer.appwidgets.AppWidgetSmall;
+import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.audiocover.SongCover;
 import com.poupa.vinylmusicplayer.glide.audiocover.SongCoverFetcher;
 import com.poupa.vinylmusicplayer.helper.PendingIntentCompat;
+import com.poupa.vinylmusicplayer.helper.WeakMethodReference;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
+import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
@@ -130,7 +133,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final int FOCUS_CHANGE = 6;
     static final int DUCK = 7;
     static final int UNDUCK = 8;
-    static final int RESTORE_QUEUES = 9;
 
     public static final int RANDOM_START_POSITION_ON_SHUFFLE = StaticPlayingQueue.INVALID_POSITION;
     public static final int SHUFFLE_MODE_NONE = StaticPlayingQueue.SHUFFLE_MODE_NONE;
@@ -140,7 +142,6 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public static final int REPEAT_MODE_ALL = StaticPlayingQueue.REPEAT_MODE_ALL;
     public static final int REPEAT_MODE_THIS = StaticPlayingQueue.REPEAT_MODE_THIS;
 
-    static final int SAVE_QUEUES = 0;
     private static final int SKIP_THRESHOLD_MS = 5000;
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -201,6 +202,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     };
     private ContentObserver mediaStoreObserver;
     private boolean notHandledMetaChangedForCurrentTrack;
+
+    private final WeakMethodReference<MusicService> onDiscographyChanged = new WeakMethodReference<>(this, MusicService::onDiscographyChanged);
 
     private Handler uiThreadHandler;
 
@@ -271,6 +274,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         sendBroadcast(new Intent(VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".VINYL_MUSIC_PLAYER_MUSIC_SERVICE_CREATED"));
 
+        Discography.getInstance().addChangedListener(onDiscographyChanged);
         mediaStoreObserver.onChange(true);
     }
 
@@ -301,7 +305,14 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getAction() != null) {
-                restoreQueuesAndPositionIfNecessary(); // TODO Not necessary? Since already called async via onCreate.restoreStates
+                // Just in case the async queue restore has not been excuted yet
+                synchronized (this) {
+                    if (!queuesRestored) {
+                        restoreQueuesAndPosition();
+                        queuesRestored = true;
+                    }
+                }
+
                 String action = intent.getAction();
                 switch (action) {
                     case ACTION_TOGGLE_PAUSE:
@@ -366,6 +377,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     public void onDestroy() {
         super.onDestroy();
 
+        Discography.getInstance().removeChangedListener(onDiscographyChanged);
+
         unregisterReceiver(widgetIntentReceiver);
         unregisterReceiver(updateFavoriteReceiver);
 
@@ -424,8 +437,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     private void saveQueues() {
-        queueSaveHandler.removeMessages(SAVE_QUEUES);
-        queueSaveHandler.sendEmptyMessage(SAVE_QUEUES);
+        queueSaveHandler.removeMessages(QueueSaveHandler.SAVE_QUEUES);
+        queueSaveHandler.sendEmptyMessage(QueueSaveHandler.SAVE_QUEUES);
     }
 
     private void restoreState() {
@@ -435,9 +448,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         synchronized (this) {
             playingQueue.restoreMode(shuffleMode, repeateMode);
 
-            if (playbackHandlerThread.isAlive()) {
-                playbackHandler.removeMessages(RESTORE_QUEUES);
-                playbackHandler.sendEmptyMessage(RESTORE_QUEUES);
+            if (queueSaveHandlerThread.isAlive()) {
+                queueSaveHandler.removeMessages(QueueSaveHandler.RESTORE_QUEUES);
+                queueSaveHandler.sendEmptyMessage(QueueSaveHandler.RESTORE_QUEUES);
             }
         }
 
@@ -445,47 +458,53 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         handleAndSendChangeInternal(REPEAT_MODE_CHANGED);
     }
 
-    void restoreQueuesAndPositionIfNecessary() {
+    void restoreQueuesAndPosition() {
         synchronized (this) {
-            if (!queuesRestored && playingQueue.size() == 0) {
-                try {
-                    final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
-                    ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
-                    ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
-                    int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION, -1);
-                    int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this).getInt(SAVED_POSITION_IN_TRACK, -1);
+            try {
+                // The current playback state
+                final long savedSongId = getCurrentSong().id;
 
-                    if (!restoredQueue.isEmpty() && (restoredQueue.size() == restoredOriginalQueue.size()) && (restoredPosition != -1)) {
-                        playingQueue = new StaticPlayingQueue(
-                                restoredQueue,
-                                restoredOriginalQueue,
-                                restoredPosition,
-                                playingQueue.getShuffleMode(),
-                                playingQueue.getRepeatMode()
-                        );
+                // The saved state
+                final MusicPlaybackQueueStore queueStore = MusicPlaybackQueueStore.getInstance(this);
+                final ArrayList<IndexedSong> restoredQueue = queueStore.getSavedPlayingQueue();
+                final ArrayList<IndexedSong> restoredOriginalQueue = queueStore.getSavedOriginalPlayingQueue();
+                final int restoredPosition = PreferenceManager.getDefaultSharedPreferences(this)
+                        .getInt(SAVED_POSITION, StaticPlayingQueue.INVALID_POSITION);
+                final int restoredPositionInTrack = PreferenceManager.getDefaultSharedPreferences(this)
+                        .getInt(SAVED_POSITION_IN_TRACK, -1);
 
-                        openCurrent();
-                        prepareNext();
+                playingQueue = new StaticPlayingQueue(
+                        restoredQueue,
+                        restoredOriginalQueue,
+                        restoredPosition,
+                        playingQueue.getShuffleMode(),
+                        playingQueue.getRepeatMode()
+                );
+                queuesRestored = true;
 
-                        if (restoredPositionInTrack > 0) {
-                            seek(restoredPositionInTrack);
-                        }
-
-                        notHandledMetaChangedForCurrentTrack = true;
-                        sendChangeInternal(META_CHANGED);
-                        sendChangeInternal(QUEUE_CHANGED);
+                // Before altering the player state, check that it is really necessary
+                // ie. we are changing song in between
+                // This prevents changing the player state, as it will stop the playback
+                final long currentSongId = getCurrentSong().id;
+                if (currentSongId != savedSongId) {
+                    if (openCurrent() && (restoredPositionInTrack > 0)) {
+                        seek(restoredPositionInTrack);
                     }
-                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
-                    // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
-                    OopsHandler.collectStackTrace(queueCopiesOutOfSync);
-                    SafeToast.show(this, R.string.failed_restore_playing_queue);
+                    notHandledMetaChangedForCurrentTrack = true;
+                    sendChangeInternal(META_CHANGED);
+                } // else just leave the playback with the current song
 
-                    final int shuffleMode = playingQueue.getShuffleMode();
-                    playingQueue = new StaticPlayingQueue();
-                    playingQueue.setShuffle(shuffleMode);
-                }
+                prepareNext();
+                sendChangeInternal(QUEUE_CHANGED);
+            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException queueCopiesOutOfSync) {
+                // fallback, when the copies of the restored queues are out of sync or the queues are corrupted
+                OopsHandler.collectStackTrace(queueCopiesOutOfSync);
+                SafeToast.show(this, R.string.failed_restore_playing_queue);
+
+                final int shuffleMode = playingQueue.getShuffleMode();
+                playingQueue = new StaticPlayingQueue();
+                playingQueue.setShuffle(shuffleMode);
             }
-            queuesRestored = true;
         }
     }
 
@@ -715,10 +734,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
         }
 
         final MediaMetadataCompat.Builder metaData = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoString(song.artistNames))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoString(song.albumArtistNames))
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.artistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MultiValuesTagUtil.infoStringAsArtists(song.albumArtistNames))
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, Album.getTitle(song.albumName))
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.getTitle())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, getPosition() + 1)
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year);
@@ -1129,9 +1148,9 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
         intent.putExtra("id", song.id);
 
-        intent.putExtra("artist", MultiValuesTagUtil.infoString(song.artistNames));
-        intent.putExtra("album", song.albumName);
-        intent.putExtra("track", song.title);
+        intent.putExtra("artist", MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
+        intent.putExtra("album", Album.getTitle(song.albumName));
+        intent.putExtra("track", song.getTitle());
 
         intent.putExtra("duration", song.duration);
         intent.putExtra("position", (long) getSongProgressMillis());
@@ -1377,5 +1396,15 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 MusicUtil.getReadableDurationString(duration),
                 position + "/" + size
         );
+    }
+
+    private void onDiscographyChanged() {
+        final boolean resync = PreferenceUtil.getInstance().isQueueSyncWithMediaStoreEnabled();
+        if (resync) {
+            // If a song is removed from the MediaStore, or updated (tags edited)
+            // reload the queues so that they reflects the latest change
+            saveState();
+            restoreState();
+        }
     }
 }

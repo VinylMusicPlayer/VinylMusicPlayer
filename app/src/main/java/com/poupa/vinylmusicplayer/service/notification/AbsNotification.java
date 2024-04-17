@@ -25,7 +25,7 @@ public abstract class AbsNotification {
         }
     }
 
-    @RequiresApi(26)
+    @RequiresApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(@NonNull final String channelId, @StringRes final int channelName,
                                            @StringRes final int channelDescription) {
         NotificationChannel notificationChannel = notificationManager.getNotificationChannel(channelId);

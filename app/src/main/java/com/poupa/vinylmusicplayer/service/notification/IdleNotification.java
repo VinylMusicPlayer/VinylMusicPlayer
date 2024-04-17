@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat;
 import com.poupa.vinylmusicplayer.R;
 
 /**
- * This notification is added as part of Android 13 upgrade (required by Google). It shows up in
+ * This notification shows up in
  * place of the usual now-playing notification if nothing is playing, to indicate that the app is
  * running in the background.
  * See <a href="https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/952">#952</a> for
@@ -19,7 +19,7 @@ public class IdleNotification extends AbsNotification {
     public static final String NOTIFICATION_CHANNEL_ID = "idle_notification";
 
     public void update() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final Notification notification = new NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(service.getString(R.string.idle_notification_title))
@@ -33,7 +33,7 @@ public class IdleNotification extends AbsNotification {
     }
 
     public void stop() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.cancel(NOTIFICATION_ID);
         }
     }

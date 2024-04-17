@@ -292,8 +292,4 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         }
     }
 
-    @Override
-    public View getSnackBarContainer() {
-        return findViewById(R.id.fragment_container);
-    }
 }

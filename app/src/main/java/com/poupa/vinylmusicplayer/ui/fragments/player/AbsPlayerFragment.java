@@ -160,7 +160,7 @@ public abstract class AbsPlayerFragment
             NavigationUtil.goToAlbum(requireActivity(), song.albumId);
             return true;
         } else if (itemId == R.id.action_go_to_artist) {
-            NavigationUtil.goToArtist(requireActivity(), song.artistId);
+            NavigationUtil.goToArtist(requireActivity(), song.artistNames);
             return true;
         } else if (itemId == R.id.action_show_lyrics) {
             if (lyrics != null) {

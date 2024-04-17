@@ -120,7 +120,7 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
             content = Html.fromHtml(getString(R.string.delete_x_songs, songs.size()));
         } else {
             title = R.string.delete_song_title;
-            content = Html.fromHtml(getString(R.string.delete_song_x, songs.get(0).title));
+            content = Html.fromHtml(getString(R.string.delete_song_x, songs.get(0).getTitle()));
         }
         return new MaterialDialog.Builder(requireActivity())
                 .title(title)

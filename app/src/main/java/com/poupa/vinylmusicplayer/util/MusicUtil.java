@@ -95,31 +95,31 @@ public class MusicUtil {
 
     @NonNull
     public static String getArtistInfoString(@NonNull final Context context, @NonNull final Artist artist) {
-        int albumCount = artist.getAlbumCount();
-        int songCount = artist.getSongCount();
+        final int albumCount = artist.getAlbumCount();
+        final int songCount = artist.getSongCount();
 
-        return MusicUtil.buildInfoString(
-            MusicUtil.getAlbumCountString(context, albumCount),
-            MusicUtil.getSongCountString(context, songCount)
+        return buildInfoString(
+            getAlbumCountString(context, albumCount),
+            getSongCountString(context, songCount)
         );
     }
 
     @NonNull
     public static String getAlbumInfoString(@NonNull final Context context, @NonNull final Album album) {
-        int songCount = album.getSongCount();
+        final int songCount = album.getSongCount();
 
-        return MusicUtil.buildInfoString(
-            album.getArtistName(),
-            MusicUtil.getSongCountString(context, songCount)
+        return buildInfoString(
+            MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
+            getSongCountString(context, songCount)
         );
     }
 
     @NonNull
     public static String getSongInfoString(@NonNull final Song song) {
-        return MusicUtil.buildInfoString(
-                PreferenceUtil.getInstance().showSongNumber() ? MusicUtil.getTrackNumberInfoString(song) : null,
-                MultiValuesTagUtil.infoString(song.artistNames),
-                song.albumName
+        return buildInfoString(
+                PreferenceUtil.getInstance().showSongNumber() ? getTrackNumberInfoString(song) : null,
+                MultiValuesTagUtil.infoStringAsArtists(song.artistNames),
+                Album.getTitle(song.albumName)
         );
     }
 
@@ -133,9 +133,9 @@ public class MusicUtil {
     public static String getPlaylistInfoString(@NonNull final Context context, @NonNull List<? extends Song> songs) {
         final long duration = getTotalDuration(songs);
 
-        return MusicUtil.buildInfoString(
-            MusicUtil.getSongCountString(context, songs.size()),
-            MusicUtil.getReadableDurationString(duration)
+        return buildInfoString(
+            getSongCountString(context, songs.size()),
+            getReadableDurationString(duration)
         );
     }
 
@@ -183,19 +183,24 @@ public class MusicUtil {
      * Ex: for a given album --> buildInfoString(album.artist, album.songCount)
      */
     @NonNull
-    public static String buildInfoString(final String... values)
+    public static String buildInfoString(@NonNull final String... values)
     {
-        return MusicUtil.buildInfoString("  •  ", values);
+        return buildInfoString("  •  ", values, null);
     }
 
     @NonNull
-    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values)
+    public static String buildInfoString(@NonNull final String separator, @NonNull final String[] values, @Nullable final String unknownReplacement)
     {
-        StringBuilder result = new StringBuilder();
-        for (String value : values) {
-            if (TextUtils.isEmpty(value)) continue;
-            if (result.length() > 0) result.append(separator);
-            result.append(value);
+        final StringBuilder result = new StringBuilder();
+        for (final String value : values) {
+            if (!TextUtils.isEmpty(value)) {
+                if (result.length() > 0) result.append(separator);
+
+                final String valueOrReplacement = (unknownReplacement != null) && isNameUnknown(value, unknownReplacement)
+                        ? unknownReplacement
+                        : value;
+                result.append(valueOrReplacement);
+            }
         }
         return result.toString();
     }
@@ -321,11 +326,17 @@ public class MusicUtil {
         return isNameUnknown(genreName, Genre.UNKNOWN_GENRE_DISPLAY_NAME);
     }
 
+    public static boolean isSongTitleUnknown(@Nullable String title) {
+        return isNameUnknown(title, Song.UNTITLED_DISPLAY_NAME);
+    }
+
     private static boolean isNameUnknown(@Nullable String name, @NonNull final String defaultDisplayName) {
-        if ((name == null) || (name.length() == 0)) return true;
+        if (TextUtils.isEmpty(name)) return true;
         if (name.equals(defaultDisplayName)) return true;
-        name = name.trim().toLowerCase();
-        return (name.equals("unknown") || name.equals("<unknown>"));
+        final String normName = name.trim().toLowerCase();
+        return (normName.equals("unknown") || normName.equals("<unknown>") ||
+                normName.equals("untitled") || normName.equals("(untitled)")
+        );
     }
 
     @NonNull

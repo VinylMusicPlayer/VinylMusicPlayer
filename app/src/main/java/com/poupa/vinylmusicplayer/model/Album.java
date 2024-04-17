@@ -5,19 +5,19 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class Album implements Parcelable {
-    public static final String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
+    public static String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
 
     public final ArrayList<Song> songs;
 
@@ -33,39 +33,28 @@ public class Album implements Parcelable {
         return safeGetFirstSong().albumId;
     }
 
+    @NonNull
     public String getTitle() {
-        String name = safeGetFirstSong().albumName;
-        if (MusicUtil.isAlbumNameUnknown(name)) {
-            return UNKNOWN_ALBUM_DISPLAY_NAME;
-        }
-        return name;
-    }
-
-    public long getArtistId() {
-        return getArtist().id;
-    }
-
-    public String getArtistName() {
-        return getArtist().name;
+        return getTitle(safeGetFirstSong().albumName);
     }
 
     @NonNull
-    private Artist getArtist() {
+    public static String getTitle(@NonNull final String albumName) {
+        if (MusicUtil.isAlbumNameUnknown(albumName)) {
+            return UNKNOWN_ALBUM_DISPLAY_NAME;
+        }
+        return albumName;
+    }
+
+    @NonNull
+    public List<String> getArtistNames() {
         final Song song = safeGetFirstSong();
 
-        // Try getting the album artist
-        final String name = song.albumArtistNames.get(0);
-        if (!MusicUtil.isArtistNameUnknown(name)) {
-            final Artist artist = Discography.getInstance().getArtistByName(name);
-            if (artist != null) return artist;
+        if (song.albumArtistNames.isEmpty()) {
+            return Collections.unmodifiableList(song.artistNames);
+        } else {
+            return Collections.unmodifiableList(song.albumArtistNames);
         }
-
-        // Fallback: use the first song's first artist
-        final Artist artist = Discography.getInstance().getArtist(song.artistId);
-        if (artist != null) return artist;
-
-        // Give up
-        return Artist.EMPTY;
     }
 
     public int getYear() {
@@ -77,7 +66,7 @@ public class Album implements Parcelable {
 
         return Collections.min(
                 songs,
-                Comparator.comparingLong(s -> s.dateAdded)
+                Comparator.comparingLong(song -> song.dateAdded)
         ).dateAdded;
     }
 
@@ -86,7 +75,7 @@ public class Album implements Parcelable {
 
         return Collections.max(
                 songs,
-                Comparator.comparingLong(s -> s.dateModified)
+                Comparator.comparingLong(song -> song.dateModified)
         ).dateModified;
     }
 

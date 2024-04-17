@@ -194,6 +194,8 @@ public final class PreferenceUtil {
     @PrefKey
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
 
+    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
+
     private static PreferenceUtil sInstance;
 
     private final SharedPreferences mPreferences;
@@ -965,5 +967,9 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putInt(ENQUEUE_SONGS_DEFAULT_CHOICE, choice)
                 .apply();
+    }
+
+    public boolean isQueueSyncWithMediaStoreEnabled() {
+        return mPreferences.getBoolean(QUEUE_SYNC_MEDIA_STORE_ENABLED, false);
     }
 }

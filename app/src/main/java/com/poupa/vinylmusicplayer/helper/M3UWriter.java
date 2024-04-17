@@ -25,7 +25,7 @@ public class M3UWriter implements M3UConstants {
                         ENTRY +
                         song.duration +
                         DURATION_SEPARATOR +
-                        MultiValuesTagUtil.infoString(song.artistNames) +
+                        MultiValuesTagUtil.merge(song.artistNames) +
                         " - " +
                         song.title +
                         System.lineSeparator() +
