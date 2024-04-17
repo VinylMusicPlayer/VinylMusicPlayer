@@ -26,6 +26,8 @@ import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
+import org.jetbrains.annotations.NonNls;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -197,7 +199,7 @@ public final class PreferenceUtil {
     public static final String THEME_STYLE = "theme_style";
     private static final String CLASSIC_THEME = "classic";
     public static final String ROUNDED_THEME = "rounded";
-    public static final String SHOULD_COLOR_NAVIGATION_BAR = "should_color_navigation_bar";
+    public static final String COLORED_NAVBAR = "should_color_navigation_bar";
 
     @PrefKey(ExportImportable = false)
     private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
@@ -224,7 +226,7 @@ public final class PreferenceUtil {
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         migratePreferencesIfNeeded();
-        checkAnnotations();
+        //checkAnnotations();
         annotationSanityCheck();
     }
 
@@ -239,6 +241,12 @@ public final class PreferenceUtil {
         // Nothing to do for now
     }
 
+    public Set<Field> getExportableFields() {
+        if (exportableFields == null) {
+            throw new RuntimeException("exportableFields not initialized");
+        }
+        return exportableFields;
+    }
 
     @NonNull
     private static Collection<Field> getAnnotatedPreferenceFields(@Nullable Predicate<Field> extraFilter) {
@@ -454,12 +462,12 @@ public final class PreferenceUtil {
 
     public void setColoredNavigationBar(final boolean value) {
         mPreferences.edit()
-                .putBoolean(SHOULD_COLOR_NAVIGATION_BAR, value)
+                .putBoolean(COLORED_NAVBAR, value)
                 .apply();
     }
 
     public boolean coloredNavigationBar() {
-        return mPreferences.getBoolean(SHOULD_COLOR_NAVIGATION_BAR, true);
+        return mPreferences.getBoolean(COLORED_NAVBAR, true);
     }
 
     public void setTransparentBackgroundWidget(final boolean value) {
