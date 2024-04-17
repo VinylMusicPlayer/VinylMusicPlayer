@@ -8,5 +8,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface PrefKey {
+    // Wherether the annotated value should be exportable
     boolean ExportImportable() default true;
+
+    // Wherether the annotated field value is just a preference key prefix, i.e. not the whole key
+    boolean IsPrefix() default false;
 }

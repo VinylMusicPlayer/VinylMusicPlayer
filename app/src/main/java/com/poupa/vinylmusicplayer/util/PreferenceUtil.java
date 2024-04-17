@@ -20,6 +20,9 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
+import com.poupa.vinylmusicplayer.provider.SongList;
+import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
+import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
@@ -29,16 +32,19 @@ import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
-
     @PrefKey
     public static final String GENERAL_THEME = "general_theme";
     private static final String GENERAL_THEME_LIGHT = "light";
@@ -112,6 +118,8 @@ public final class PreferenceUtil {
     public static final String AUDIO_DUCKING = "audio_ducking";
     @PrefKey
     public static final String GAPLESS_PLAYBACK = "gapless_playback";
+    @PrefKey(ExportImportable = true)
+    public static final String EQUALIZER = "equalizer";
 
     @PrefKey
     public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
@@ -173,10 +181,13 @@ public final class PreferenceUtil {
 
     @PrefKey
     public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
-    public static final byte RG_SOURCE_MODE_NONE = 0;
-    public static final byte RG_SOURCE_MODE_TRACK = 1;
-    public static final byte RG_SOURCE_MODE_ALBUM = 2;
+    @NonNls
+    public static final String RG_SOURCE_MODE_NONE = "none";
+    public static final String RG_SOURCE_MODE_TRACK = "track";
+    public static final String RG_SOURCE_MODE_ALBUM = "album";
 
+    @PrefKey
+    public static final String RG_PREAMP = "replaygain_preamp";
     @PrefKey
     public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
     @PrefKey
@@ -204,7 +215,7 @@ public final class PreferenceUtil {
     public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
 
     private Set<Field> exportableFields = null;
-    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
+    private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
 
     private static PreferenceUtil sInstance;
 
@@ -214,6 +225,7 @@ public final class PreferenceUtil {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         migratePreferencesIfNeeded();
         checkAnnotations();
+        annotationSanityCheck();
     }
 
     public static PreferenceUtil getInstance() {
@@ -227,45 +239,97 @@ public final class PreferenceUtil {
         // Nothing to do for now
     }
 
-    private void checkAnnotations() {
-        final Set<Field> annotatedFields = Arrays.stream(PreferenceUtil.class.getDeclaredFields())
-                        .filter(field -> {
-                            final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                            return (annotation != null);
-                        })
-                .collect(Collectors.toSet());
-        final Set<String> annotatedPrefs = annotatedFields.stream()
-                .map(field -> {
-                    // get the value of a 'static final' field
-                    try {return (String) field.get(null);}
-                    catch (IllegalAccessException ignored) {return null;}
-                })
-                .collect(Collectors.toSet());
-        exportableFields = annotatedFields.stream()
-                .filter(field -> {
-                    final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                    return annotation.ExportImportable();
-                })
-                .collect(Collectors.toSet());
 
-        final Set<String> allPrefs = mPreferences.getAll().keySet();
-        final Set<String> notAnnotated = allPrefs.stream().filter(name -> !annotatedPrefs.contains(name)).collect(Collectors.toSet());
-        final Set<String> notUsed = annotatedPrefs.stream().filter(name -> !allPrefs.contains(name)).collect(Collectors.toSet());
-
-        // TODO Following tests are examples on how annotation can be used
-        if (!notAnnotated.isEmpty()) {
-            throw new RuntimeException("Pref used but not annotated: " + notAnnotated);
+    @NonNull
+    private static Collection<Field> getAnnotatedPreferenceFields(@Nullable Predicate<Field> extraFilter) {
+        final Collection<Field> annotatedFields = new ArrayList<>();
+        for (final var fields : List.of(
+                // TODO Discover this list of classes using annotation via reflection
+                MusicService.class.getDeclaredFields(),
+                PreferenceUtil.class.getDeclaredFields(),
+                SongList.class.getDeclaredFields(),
+                StaticPlaylist.class.getDeclaredFields()
+        )) {
+            annotatedFields.addAll(
+                    Arrays.stream(fields)
+                            .filter(field -> {
+                                final PrefKey annotation = field.getAnnotation(PrefKey.class);
+                                return (annotation != null);
+                            })
+                            .filter(field -> (extraFilter == null) || (extraFilter.test(field)))
+                            .collect(Collectors.toList())
+            );
         }
-        if (!notUsed.isEmpty()) {
-            SafeToast.show(App.getStaticContext(), "Pref annotated but not used: " + notAnnotated);
+        return annotatedFields;
+    }
+
+    @Nullable
+    private static String getAnnotatedPreferenceFieldValue(@NonNull final Field field) {
+        try {
+            field.setAccessible(true); // in the case it is not public
+            return (String) field.get(null); // get the value of a 'static final' field
+        }
+        catch (final IllegalAccessException access) {
+            OopsHandler.collectStackTrace(access);
+            return null;
         }
     }
 
-    public Set<Field> getExportableFields() {
-        if(exportableFields == null) {
-            throw new RuntimeException("exportableFields not initialized");
+    @NonNull
+    private static Map<String, ?> filterPreferencesByAnnotation(
+            @NonNull final Map<String, ?> preferences,
+            @Nullable final Predicate<Field> fieldFilter
+    ) {
+        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields(fieldFilter);
+
+        // Split into two list of keys: literal ones and prefix-based ones
+        final Collection<String> literalKeys = new ArrayList<>(annotatedFields.size());
+        final Collection<String> prefixKeys = new ArrayList<>(annotatedFields.size());
+        for (final Field field : annotatedFields) {
+            final PrefKey annotation = field.getAnnotation(PrefKey.class);
+            if (annotation.IsPrefix()) {prefixKeys.add(getAnnotatedPreferenceFieldValue(field));}
+            else {literalKeys.add(getAnnotatedPreferenceFieldValue(field));}
         }
-        return exportableFields;
+
+        final Predicate<String> matching = name -> {
+            if (literalKeys.contains(name)) {return true;}
+            for (final String prefix : prefixKeys) {
+                if (name.startsWith(prefix)) {return true;}
+            }
+            return false;
+        };
+        final Map<String, Object> result = new HashMap<>(preferences.size());
+        for (final Map.Entry<String, ?> entry : preferences.entrySet()) {
+            if (matching.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
+        }
+        return result;
+    }
+
+    private void annotationSanityCheck() {
+        final Map<String, ?> allPrefs = mPreferences.getAll();
+        final Map<String, ?> annotatedPrefs = filterPreferencesByAnnotation(allPrefs, null);
+
+        // Check that the app prefs are all annotated
+        final Collection<String> missingAnnotation = allPrefs.keySet().stream()
+                .filter(name -> !annotatedPrefs.containsKey(name))
+                .collect(Collectors.toList());
+        if (!missingAnnotation.isEmpty()) {
+            SafeToast.show(App.getStaticContext(), "Pref used but not annotated: " + missingAnnotation);
+        }
+    }
+
+    public void exportPreferencesToFile() {
+        final Map<String, ?> allPrefs = mPreferences.getAll();
+        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, field -> {
+            final PrefKey annotation = field.getAnnotation(PrefKey.class);
+            return !annotation.ExportImportable();
+        });
+
+        // TODO save to a persistent file...
+    }
+
+    public void importPreferencesFromFile() {
+        // TODO ...
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
@@ -868,19 +932,9 @@ public final class PreferenceUtil {
         return mPreferences.getString(THEME_STYLE, CLASSIC_THEME);
     }
 
-    public byte getReplayGainSourceMode() {
-        byte sourceMode = RG_SOURCE_MODE_NONE;
-
-        switch (mPreferences.getString(RG_SOURCE_MODE_V2, "none")) {
-            case "track":
-                sourceMode = RG_SOURCE_MODE_TRACK;
-                break;
-            case "album":
-                sourceMode = RG_SOURCE_MODE_ALBUM;
-                break;
-        }
-
-        return sourceMode;
+    @NonNull
+    public String getReplayGainSourceMode() {
+        return mPreferences.getString(RG_SOURCE_MODE_V2, RG_SOURCE_MODE_NONE);
     }
 
     private float getDefaultPreamp() {

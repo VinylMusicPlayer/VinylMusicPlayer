@@ -337,8 +337,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             if (whitelistEnabled != null) {
                 whitelistEnabled.setChecked(PreferenceUtil.getInstance().getWhitelistEnabled());
             }
+          
+            final ATEColorPreference primaryColorPref = findPreference(PreferenceUtil.PRIMARY_COLOR);
 
-            final ATEColorPreference primaryColorPref = findPreference(ThemeStore.KEY_PRIMARY_COLOR);
             if (getActivity() != null && primaryColorPref != null) {
                 //final int primaryColor = ThemeStore.primaryColor(getActivity());
                 final int primaryColor = PreferenceUtil.getInstance().getPrimaryColor();
@@ -354,7 +355,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            final ATEColorPreference accentColorPref = findPreference(ThemeStore.KEY_ACCENT_COLOR);
+            final ATEColorPreference accentColorPref = findPreference(PreferenceUtil.ACCENT_COLOR);
+
             if (getActivity() != null && accentColorPref != null) {
                 //final int accentColor = ThemeStore.accentColor(getActivity());
                 final int accentColor = PreferenceUtil.getInstance().getAccentColor();
@@ -369,7 +371,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
-            TwoStatePreference colorNavBar = findPreference(PreferenceUtil.SHOULD_COLOR_NAVIGATION_BAR);
+
+            TwoStatePreference colorNavBar = findPreference(PreferenceUtil.COLORED_NAVBAR);
+
             if (colorNavBar != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     colorNavBar.setVisible(false);
@@ -414,7 +418,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     });
                 }
             }
-            final TwoStatePreference colorAppShortcuts = findPreference(PreferenceUtil.SHOULD_COLOR_APP_SHORTCUTS);
+
+            final TwoStatePreference colorAppShortcuts = findPreference(PreferenceUtil.COLORED_APP_SHORTCUTS);
+
             if (colorAppShortcuts != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
                     colorAppShortcuts.setVisible(false);
@@ -478,8 +484,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+          
+            final Preference equalizer = findPreference(PreferenceUtil.EQUALIZER);
 
-            final Preference equalizer = findPreference("equalizer");
             if (equalizer != null) {
                 if (!hasEqualizer()) {
                     equalizer.setEnabled(false);
@@ -491,8 +498,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
-            if (PreferenceUtil.getInstance().getReplayGainSourceMode() == PreferenceUtil.RG_SOURCE_MODE_NONE) {
-                Preference pref = findPreference("replaygain_preamp");
+            if (PreferenceUtil.getInstance().getReplayGainSourceMode().equals(PreferenceUtil.RG_SOURCE_MODE_NONE)) {
+                Preference pref = findPreference(PreferenceUtil.RG_PREAMP);
                 if (pref != null) {
                     pref.setEnabled(false);
                     pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
@@ -567,9 +574,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     }
                     break;
                 case PreferenceUtil.RG_SOURCE_MODE_V2:
-                    Preference pref = findPreference("replaygain_preamp");
+                    Preference pref = findPreference(PreferenceUtil.RG_PREAMP);
                     if (pref != null) {
-                        if (!sharedPreferences.getString(key, "none").equals("none")) {
+                        if (!sharedPreferences.getString(key, PreferenceUtil.RG_SOURCE_MODE_NONE).equals(PreferenceUtil.RG_SOURCE_MODE_NONE)) {
                             pref.setEnabled(true);
                             pref.setSummary(R.string.pref_summary_rg_preamp);
                         } else {
