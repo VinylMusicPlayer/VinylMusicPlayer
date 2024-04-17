@@ -4,15 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Priority;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
-import com.poupa.vinylmusicplayer.util.SAFUtil;
 
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.tag.images.Artwork;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.MissingResourceException;
 
 /**
  * @author SC (soncaokim)
@@ -20,30 +14,28 @@ import java.util.MissingResourceException;
 public class FileCoverFetcher extends AbsCoverFetcher {
     private final FileCover model;
 
-    public FileCoverFetcher(FileCover model) {
+    FileCoverFetcher(@NonNull final FileCover value) {
         super();
-        this.model = model;
+        model = value;
     }
 
     @Override
-    public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
+    public void loadData(@NonNull final Priority priority, @NonNull final DataCallback<? super InputStream> callback) {
         try {
-            final AudioFile audio = SAFUtil.loadAudioFile(model.file);
-            if (audio == null) {
-                callback.onLoadFailed(new IOException("Cannot load audio file"));
-                return;
+            InputStream input = loadCoverFromAudioTags(model.file);
+            if (input == null) {
+                input = loadCoverFromFolderImage(model.file);
+            }
+            if (input == null) {
+                input = loadCoverFromMediaStore(model.file);
             }
 
-            final Artwork art = audio.getTag().getFirstArtwork();
-            if (art != null) {
-                byte[] imageData = art.getBinaryData();
-                callback.onDataReady(new ByteArrayInputStream(imageData));
+            if (input == null) {
+                callback.onLoadFailed(new IOException("Cannot load cover for file"));
             } else {
-                InputStream data = fallback(model.file);
-                if (data != null) {callback.onDataReady(data);}
-                else {callback.onLoadFailed(new MissingResourceException("No artwork", "", ""));}
+                callback.onDataReady(input);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             OopsHandler.collectStackTrace(e);
             callback.onLoadFailed(e);
         }

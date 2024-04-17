@@ -21,6 +21,7 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemGridCardHorizontalBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -94,13 +95,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         }
     }
 
-    protected String getAlbumTitle(Album album) {
+    @NonNull
+    private static String getAlbumTitle(@NonNull final Album album) {
         return album.getTitle();
     }
 
-    protected String getAlbumText(Album album) {
+    @NonNull
+    protected String getAlbumText(@NonNull final Album album) {
         return MusicUtil.buildInfoString(
-                album.getArtistName(),
+                MultiValuesTagUtil.infoStringAsArtists(album.getArtistNames()),
                 MusicUtil.getSongCountString(activity, album.songs.size())
         );
     }

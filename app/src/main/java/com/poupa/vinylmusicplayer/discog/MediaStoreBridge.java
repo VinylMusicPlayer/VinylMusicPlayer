@@ -23,18 +23,17 @@ import java.util.List;
 public class MediaStoreBridge {
     private static final String BASE_SELECTION = MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''";
     private static final String[] BASE_PROJECTION = new String[]{
-            BaseColumns._ID,// 0
-            MediaStore.Audio.AudioColumns.TITLE,// 1
-            MediaStore.Audio.AudioColumns.TRACK,// 2
-            MediaStore.Audio.AudioColumns.YEAR,// 3
-            MediaStore.Audio.AudioColumns.DURATION,// 4
-            MediaStore.Audio.AudioColumns.DATA,// 5
-            MediaStore.Audio.AudioColumns.DATE_ADDED,// 6
-            MediaStore.Audio.AudioColumns.DATE_MODIFIED,// 7
-            MediaStore.Audio.AudioColumns.ALBUM_ID,// 8
-            MediaStore.Audio.AudioColumns.ALBUM,// 9
-            MediaStore.Audio.AudioColumns.ARTIST_ID,// 10
-            MediaStore.Audio.AudioColumns.ARTIST,// 11
+            BaseColumns._ID,
+            MediaStore.Audio.AudioColumns.TITLE,
+            MediaStore.Audio.AudioColumns.TRACK,
+            MediaStore.Audio.AudioColumns.YEAR,
+            MediaStore.Audio.AudioColumns.DURATION,
+            MediaStore.Audio.AudioColumns.DATA,
+            MediaStore.Audio.AudioColumns.DATE_ADDED,
+            MediaStore.Audio.AudioColumns.DATE_MODIFIED,
+            MediaStore.Audio.AudioColumns.ALBUM_ID,
+            MediaStore.Audio.AudioColumns.ALBUM,
+            MediaStore.Audio.AudioColumns.ARTIST,
     };
 
     @NonNull
@@ -59,20 +58,20 @@ public class MediaStoreBridge {
     private static Song getSongFromCursorImpl(@NonNull Cursor cursor) {
         // Most of the time data imported from these columns are overriden by those extracted ourselves from ID3 tags
         // However, in the case extraction fails (unsupported track format), they serve as fallback values
-        final long id = cursor.getLong(0);
-        final String title = cursor.getString(1);
-        final int trackNumber = cursor.getInt(2);
-        final int year = cursor.getInt(3);
-        final long duration = cursor.getLong(4);
-        final String data = cursor.getString(5);
-        final long dateAdded = cursor.getLong(6);
-        final long dateModified = cursor.getLong(7);
-        final long albumId = cursor.getLong(8);
-        final String albumName = cursor.getString(9);
-        final long artistId = cursor.getLong(10);
-        final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(11));
+        int columnIndex = -1;
+        final long id = cursor.getLong(++columnIndex);
+        final String title = cursor.getString(++columnIndex);
+        final int trackNumber = cursor.getInt(++columnIndex);
+        final int year = cursor.getInt(++columnIndex);
+        final long duration = cursor.getLong(++columnIndex);
+        final String data = cursor.getString(++columnIndex);
+        final long dateAdded = cursor.getLong(++columnIndex);
+        final long dateModified = cursor.getLong(++columnIndex);
+        final long albumId = cursor.getLong(++columnIndex);
+        final String albumName = cursor.getString(++columnIndex);
+        final List<String> artistNames = MultiValuesTagUtil.split(cursor.getString(++columnIndex));
 
-        final Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistId, artistNames);
+        final Song song = new Song(id, title, trackNumber, year, duration, data, dateAdded, dateModified, albumId, albumName, artistNames);
 
         // MediaStore compat: Split track number into disc + track number
         // See documentation for MediaStore.Audio.AudioColumns.TRACK

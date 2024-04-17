@@ -4,15 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Priority;
-import com.poupa.vinylmusicplayer.App;
-import com.poupa.vinylmusicplayer.util.AutoCloseAudioFile;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
-import com.poupa.vinylmusicplayer.util.SAFUtil;
 
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.images.Artwork;
-
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,38 +17,35 @@ import java.io.InputStream;
 public class SongCoverFetcher extends AbsCoverFetcher {
     private final SongCover model;
 
-    public SongCoverFetcher(SongCover model) {
+    public SongCoverFetcher(@NonNull final SongCover value) {
         super();
-        this.model = model;
+        model = value;
     }
 
     @Override
-    public void loadData(@NonNull Priority priority, @NonNull DataCallback<? super InputStream> callback) {
-        final InputStream data = loadData();
-        if (data == null) {
-            callback.onLoadFailed(new IOException("Cannot load artwork"));
-        } else {
-            callback.onDataReady(data);
+    public void loadData(@NonNull final Priority priority, @NonNull final DataCallback<? super InputStream> callback) {
+        try {
+            final InputStream input = loadData();
+            if (input == null) {
+                callback.onLoadFailed(new IOException("Cannot load cover for song"));
+            } else {
+                callback.onDataReady(input);
+            }
+        } catch (final Exception e) {
+            OopsHandler.collectStackTrace(e);
+            callback.onLoadFailed(e);
         }
     }
 
     @Nullable
     public InputStream loadData() {
-        try (final AutoCloseAudioFile audio = SAFUtil.loadReadOnlyAudioFile(App.getStaticContext(), model.song)) {
-            if (audio == null) {return null;}
-
-            final Tag tags = audio.get().getTag();
-            if (tags != null) {
-                final Artwork art = tags.getFirstArtwork();
-                if (art != null) {
-                    final byte[] imageData = art.getBinaryData();
-                    return new ByteArrayInputStream(imageData);
-                }
-            }
-            return fallback(model.song.data);
-        } catch (final Exception e) {
-            OopsHandler.collectStackTrace(e);
-            return null;
+        InputStream input = loadCoverFromAudioTags(model.song);
+        if (input == null) {
+            input = loadCoverFromMediaStore(model.song);
         }
+        if (input == null) {
+            input = loadCoverFromFolderImage(new File(model.song.data));
+        }
+        return input;
     }
 }

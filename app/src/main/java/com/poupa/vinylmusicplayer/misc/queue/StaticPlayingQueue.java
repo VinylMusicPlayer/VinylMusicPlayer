@@ -44,6 +44,14 @@ public class StaticPlayingQueue {
     }
 
     public StaticPlayingQueue(ArrayList<IndexedSong> restoreQueue, ArrayList<IndexedSong> restoreOriginalQueue, int restoredPosition, int shuffleMode, int repeatMode) {
+        final int queueSize = restoreQueue.size();
+        if (queueSize != restoreOriginalQueue.size()) {
+            throw new IllegalArgumentException("Mismatching queue size: queue=" + queueSize + " vs originalQueue=" + restoreOriginalQueue.size());
+        }
+        if ((queueSize > 0) && (restoredPosition < 0 || restoredPosition > restoreQueue.size() - 1)) {
+            throw new IllegalArgumentException("Queue size=" + queueSize + " vs position=" + restoredPosition);
+        }
+
         this.queue = new ArrayList<>(restoreQueue);
         this.originalQueue = new ArrayList<>(restoreOriginalQueue);
         this.shuffleMode = shuffleMode;
@@ -53,7 +61,7 @@ public class StaticPlayingQueue {
 
         // Adjust for removed songs, marked with Song.EMPTY in the restored queues
         // See MusicPlaybackQueueStore.getSongPosition
-        for (int i = restoreQueue.size() - 1; i >= 0; --i) {
+        for (int i = queueSize - 1; i >= 0; --i) {
             if (restoreQueue.get(i).id == Song.EMPTY_SONG.id) {
                 remove(i);
             }
@@ -426,7 +434,7 @@ public class StaticPlayingQueue {
 
         switch (shuffleMode) {
             case SHUFFLE_MODE_NONE:
-                currentPosition = queue.get(currentPosition).index;
+                currentPosition = queue.isEmpty() ? -1 : queue.get(currentPosition).index;
                 revert();
                 break;
             case SHUFFLE_MODE_SHUFFLE:

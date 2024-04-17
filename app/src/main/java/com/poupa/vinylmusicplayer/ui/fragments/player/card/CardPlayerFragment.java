@@ -156,14 +156,6 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
     public void onQueueChanged() {
         updateQueue();
     }
-
-    @Override
-    public void onMediaStoreChanged() {
-        // TODO If a song is removed from the MediaStore, this is not reflected in the playing queue until restart
-        // TODO If a song is updated (tags edited), this is not reflected in the playing queue until restart
-        updateQueue();
-    }
-
     private void updateQueue() {
         playingQueueAdapter.swapDataSet(MusicPlayerRemote.getPlayingQueue(), MusicPlayerRemote.getPosition());
         playerQueueSubHeader.setText(MusicPlayerRemote.getQueueInfoString());
@@ -407,7 +399,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
         @Override
         public void updateCurrentSong(@NonNull final Song song) {
             currentSong = song;
-            currentSongViewHolder.title.setText(song.title);
+            currentSongViewHolder.title.setText(song.getTitle());
             currentSongViewHolder.text.setText(MusicUtil.getSongInfoString(song));
 
             if (PreferenceUtil.getInstance().animatePlayingSongIcon()) {
@@ -449,7 +441,7 @@ public class CardPlayerFragment extends AbsPlayerFragment implements SlidingUpPa
 
         @Override
         public void updateCurrentSong(@NonNull final Song song) {
-            fragment.toolbar.setTitle(song.title);
+            fragment.toolbar.setTitle(song.getTitle());
             fragment.toolbar.setSubtitle(MusicUtil.getSongInfoString(song));
         }
 

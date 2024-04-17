@@ -56,7 +56,10 @@
     <string name="album">Album</string>
     <string name="artist">Artist</string>
     <string name="genre">Genre</string>
-    <string name="unknown_genre">Unknown genre</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="unknown_album">Unknown Album</string>
+    <string name="unknown_genre">Unknown Genre</string>
+    <string name="untitled_song">Untitled</string>
     <string name="album_artist">Album artist</string>
     <string name="year">Year</string>
     <string name="track_number">"Track Number"</string>
@@ -204,6 +207,7 @@
     <string name="pref_summary_remember_shuffle">Shuffle mode will stay on when selecting a new list of songs</string>
     <string name="pref_title_oops_handler_enabled">Collect crash reports</string>
     <string name="pref_summary_oops_handler_enabled">Help development by collecting and reporting crashes</string>
+    <string name="pref_title_queue_sync_with_media_store">Sync queue with media tag updates</string>
     <string name="could_not_download_album_cover">"Couldn\u2019t download a matching album cover."</string>
     <string name="search_hint">Search your library…</string>
     <string name="favorites">Favorites</string>
@@ -287,8 +291,9 @@
     <string name="nothing_to_scan">Nothing to scan.</string>
     <string name="scanned_files">Scanned %1$d of %2$d files.</string>
     <string name="could_not_scan_files">Could not scan %d files.</string>
-    <string name="scanning_x_songs_in_progress">Updating %1$d songs…</string>
-    <string name="scanning_x_songs_finished">Updated %1$d songs</string>
+    <string name="scanning_x_songs_added">"%1$d tracks added"</string>
+    <string name="scanning_x_songs_updated">"%1$d tracks updated"</string>
+    <string name="scanning_x_songs_removed">"%1$d tracks removed"</string>
     <string name="listing_files">Listing files</string>
     <string name="new_start_directory">%s is the new start directory.</string>
     <string name="app_widget_big_name">Vinyl Music Player - Big</string>
@@ -334,7 +339,6 @@
     <string name="playlist_is_empty">Playlist is empty</string>
     <string name="snack_bar_action_undo">undo</string>
     <string name="snack_bar_title_removed_song">Removed</string>
-
     <string name="playing_notification_description">The playing notification provides actions for play/pause etc.</string>
     <string name="playing_notification_name">Playing notification</string>
 

@@ -32,8 +32,8 @@ public class SongShareDialog extends DialogFragment {
         final Song song = getArguments().getParcelable("song");
         final String currentlyListening = getString(
                 R.string.currently_listening_to_x_by_x,
-                song.title,
-                MultiValuesTagUtil.infoString(song.artistNames));
+                song.getTitle(),
+                MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
         return new MaterialDialog.Builder(getActivity())
                 .title(R.string.what_do_you_want_to_share)
                 .items(getString(R.string.the_audio_file), "\u201C" + currentlyListening + "\u201D")

@@ -77,7 +77,7 @@ public class MiniPlayerFragment extends AbsMusicServiceFragment implements Music
     }
 
     private void updateSongTitle() {
-        miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().title);
+        miniPlayerTitle.setText(MusicPlayerRemote.getCurrentSong().getTitle());
     }
 
     @Override

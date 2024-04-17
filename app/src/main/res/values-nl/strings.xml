@@ -301,8 +301,6 @@
     <string name="imported_x_playlists">Geïmporteerde %d afspeellijsten</string>
     <string name="imported_x_skipped_x_playlists">%1$d afspeellijsten geïmporteerd, %2$d overgeslagen</string>
     <string name="some_files_are_not_listed_in_the_media_store">Sommige bestanden worden niet weergegeven in de mediaopslag.</string>
-    <string name="scanning_x_songs_in_progress">Bijwerken van %1$d nummers...</string>
-    <string name="scanning_x_songs_finished">%1$d nummers bijgewerkt</string>
     <string name="app_crashed">Vinyl Muziek Speler is gecrasht</string>
     <string name="report_a_crash_invitation">Sorry voor het ongemak.\n\n
     Gegevens over de crash zijn verzameld en kunnen de ontwikkelaars helpen om deze situatie te verbeteren.\n

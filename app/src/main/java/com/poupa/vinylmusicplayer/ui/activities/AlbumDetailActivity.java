@@ -29,6 +29,7 @@ import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.dialogs.MarkdownViewDialog;
 import com.poupa.vinylmusicplayer.dialogs.SleepTimerDialog;
 import com.poupa.vinylmusicplayer.dialogs.helper.DeleteSongsHelper;
+import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -133,7 +134,7 @@ public class AlbumDetailActivity
         setUpSongsAdapter();
         layoutBinding.artistText.setOnClickListener(v -> {
             if (album != null) {
-                NavigationUtil.goToArtist(AlbumDetailActivity.this, album.getArtistId());
+                NavigationUtil.goToArtist(this, album.getArtistNames());
             }
         });
         setColors(DialogUtils.resolveColor(this, R.attr.defaultFooterColor));
@@ -235,8 +236,10 @@ public class AlbumDetailActivity
     void loadWiki(@Nullable final String lang) {
         wiki = null;
 
+        final List<String> artistNames = getAlbum().getArtistNames();
+        final String artistName = artistNames.isEmpty() ? "" : artistNames.get(0);
         lastFMRestClient.getApiService()
-                .getAlbumInfo(getAlbum().getTitle(), getAlbum().getArtistName(), lang)
+                .getAlbumInfo(getAlbum().getTitle(), artistName, lang)
                 .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<LastFmAlbum> call, @NonNull Response<LastFmAlbum> response) {
@@ -305,7 +308,7 @@ public class AlbumDetailActivity
             startActivityForResult(intent, TAG_EDITOR_REQUEST);
             return true;
         } else if (id == R.id.action_go_to_artist) {
-            NavigationUtil.goToArtist(this, getAlbum().getArtistId());
+            NavigationUtil.goToArtist(this, getAlbum().getArtistNames());
             return true;
         } else if (id == R.id.action_wiki) {
             if (wikiDialog == null) {
@@ -388,8 +391,13 @@ public class AlbumDetailActivity
             loadWiki();
         }
 
+        final List<String> artistNames = album.getArtistNames();
+        final String artistName = artistNames.isEmpty()
+                ? getResources().getString(R.string.no_artists)
+                : MultiValuesTagUtil.infoStringAsArtists(artistNames);
+
         layoutBinding.title.setText(album.getTitle());
-        layoutBinding.artistText.setText(album.getArtistName());
+        layoutBinding.artistText.setText(artistName);
         layoutBinding.songCountText.setText(MusicUtil.getSongCountString(this, album.getSongCount()));
         layoutBinding.durationText.setText(MusicUtil.getReadableDurationString(MusicUtil.getTotalDuration(album.songs)));
         layoutBinding.albumYearText.setText(MusicUtil.getYearString(album.getYear()));

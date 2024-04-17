@@ -66,7 +66,7 @@ public class SongMenuHelper {
             NavigationUtil.goToAlbum(activity, song.albumId);
             return true;
         } else if (menuItemId == R.id.action_go_to_artist) {
-            NavigationUtil.goToArtist(activity, song.artistId);
+            NavigationUtil.goToArtist(activity, song.getArtistNames());
             return true;
         }
         return false;

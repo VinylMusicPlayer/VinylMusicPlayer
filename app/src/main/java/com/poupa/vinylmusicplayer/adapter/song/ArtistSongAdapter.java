@@ -91,7 +91,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
             }
         }
 
-        songTitle.setText(song.title);
+        songTitle.setText(song.getTitle());
         songInfo.setText(MusicUtil.getSongInfoString(song));
 
         // TODO This album art loading can be factorized with the decorate() helper function

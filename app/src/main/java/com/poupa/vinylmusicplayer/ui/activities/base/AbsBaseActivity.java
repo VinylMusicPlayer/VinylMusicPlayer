@@ -14,9 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.util.SafeToast;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
@@ -68,7 +70,7 @@ public abstract class AbsBaseActivity extends AbsThemeActivity {
         return null;
     }
 
-    protected View getSnackBarContainer() {
+    public View getSnackBarContainer() {
         return getWindow().getDecorView();
     }
 
@@ -98,33 +100,43 @@ public abstract class AbsBaseActivity extends AbsThemeActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST) {
-            for (int grantResult : grantResults) {
+            for (final int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(AbsBaseActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        //User has deny from permission dialog
-                        Snackbar.make(getSnackBarContainer(), getPermissionDeniedMessage(),
-                                Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.action_grant, view -> requestPermissions())
-                                .setActionTextColor(ThemeStore.accentColor(this))
-                                .show();
-                    } else {
-                        // User has deny permission and checked never show permission dialog so you can redirect to Application settings page
-                        Snackbar.make(getSnackBarContainer(), getPermissionDeniedMessage(),
-                                Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.action_settings, view -> {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    Uri uri = Uri.fromParts("package", AbsBaseActivity.this.getPackageName(), null);
-                                    intent.setData(uri);
-                                    startActivity(intent);
-                                })
-                                .setActionTextColor(ThemeStore.accentColor(this))
-                                .show();
+                    final String message = getPermissionDeniedMessage();
+                    try {
+                        final View container = getSnackBarContainer();
+                        final Snackbar snackbar = Snackbar.make(container, message, BaseTransientBottomBar.LENGTH_INDEFINITE);
+
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            //User has denied from permission dialog
+                            snackbar.setAction(R.string.action_grant, view -> requestPermissions())
+                                    .setActionTextColor(ThemeStore.accentColor(this))
+                                    .show();
+                        } else {
+                            // User has denied permission and checked never show permission dialog so you can redirect to Application settings page
+                            snackbar.setAction(R.string.action_settings, view -> {
+                                        final Intent intent = new Intent();
+                                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        final Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                        intent.setData(uri);
+                                        startActivity(intent);
+                                    })
+                                    .setActionTextColor(ThemeStore.accentColor(this))
+                                    .show();
+                        }
+
+                        return;
+                    } catch (final IllegalArgumentException ignored) {
+                        // Issue #908: No suitable parent found from the given view. Please provide a valid view.
+                        // The error is thrown from here: Snackbar.findSuitableParent
+
+                        // Possible cause: The UI state has changed (i.e. user navigated to another view) and not
+                        // usable anymore for Snackbar implementation
+                        SafeToast.show(this, message);
                     }
-                    return;
                 }
             }
             hadPermissions = true;
