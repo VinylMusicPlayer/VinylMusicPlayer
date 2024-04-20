@@ -332,7 +332,7 @@ public class LibraryFragment
         if (gridSize > 0) {
             item.setChecked(true);
             fragment.setAndSaveGridSize(gridSize);
-            layoutBinding.toolbar.getMenu().findItem(R.id.action_show_footer).setEnabled(fragment.showFooter());
+            layoutBinding.toolbar.getMenu().findItem(R.id.action_show_footer).setEnabled(true);
             layoutBinding.toolbar.getMenu().findItem(R.id.action_colored_footers).setEnabled(fragment.canUsePalette());
             return true;
         }
