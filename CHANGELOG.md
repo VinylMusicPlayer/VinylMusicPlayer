@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.10.1] - 2024-04-23
+
+### Fixes
+* Possible fix for issue #908 (No suitable parent found from the given view) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1014
+* Fix ANR on app startup if the queue is empty by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1029
+* Fallback to cover image scanned and stored in MediaStore by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1022
+* Fix NPE (Attempt to invoke interface method 'java.util.Set java.util.Map.entrySet()' on a null object reference) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1045
+* Fix NPE (the result object can indeed be null) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1046
+
+### Other Changes
+* Rollback unwanted crowdin integration by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1015
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.0...1.10.1
+
 ## [1.10.0] - 2024-04-04
 
 ### Fixes

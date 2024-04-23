@@ -43,8 +43,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         applicationId 'com.poupa.vinylmusicplayer'
-        versionCode 197
-        versionName '1.10.0'
+        versionCode 198
+        versionName '1.10.1'
 
         multiDexEnabled true
     }
