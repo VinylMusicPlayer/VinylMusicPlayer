@@ -26,7 +26,7 @@ import java.util.UUID;
  * @author SC (soncaokim)
  */
 public class StaticPlaylist extends PreferenceBackedReorderableSongList {
-    private static final String PREF_MIGRATED_STATIC_PLAYLISTS = PrefKey.key("migrated_static_playlists");
+    private static final String PREF_MIGRATED_STATIC_PLAYLISTS = PrefKey.nonExportableKey("migrated_static_playlists");
 
     @NonNull
     private static List<StaticPlaylist> importDevicePlaylists(@NonNull final Context context, @NonNull final Set<String> internalNames) {

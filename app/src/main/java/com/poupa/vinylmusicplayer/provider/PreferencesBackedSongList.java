@@ -122,7 +122,7 @@ abstract class MutableSongList extends SongList {
 
 public class PreferencesBackedSongList extends MutableSongList {
     private static final String SEPARATOR = ",";
-    private static final String PREF_NAME_PREFIX = PrefKey.prefixedKey("SONG_IDS_");
+    private static final String PREF_NAME_PREFIX = PrefKey.nonExportablePrefixedKey("SONG_IDS_");
 
     private static SharedPreferences preferences = null;
     static SharedPreferences getPreferences() {

@@ -116,8 +116,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
-    private static final String SAVED_POSITION = PrefKey.key("POSITION");
-    private static final String SAVED_POSITION_IN_TRACK = PrefKey.key("POSITION_IN_TRACK");
+    private static final String SAVED_POSITION = PrefKey.nonExportableKey("POSITION");
+    private static final String SAVED_POSITION_IN_TRACK = PrefKey.nonExportableKey("POSITION_IN_TRACK");
     private static final String SAVED_SHUFFLE_MODE = PrefKey.exportableKey("SHUFFLE_MODE");
     private static final String SAVED_REPEAT_MODE = PrefKey.exportableKey("REPEAT_MODE");
 

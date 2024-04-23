@@ -44,13 +44,13 @@ public class PrefKey {
 
     // Declare a pref key
     @NonNull
-    public static String key(@NonNull final String value) {
+    public static String nonExportableKey(@NonNull final String value) {
         return new PrefKey(value, false, false).value;
     }
 
     // Declare a prefixed pref key
     @NonNull
-    public static String prefixedKey(@NonNull final String value) {
+    public static String nonExportablePrefixedKey(@NonNull final String value) {
         return new PrefKey(value, false, true).value;
     }
 

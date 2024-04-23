@@ -99,11 +99,11 @@ public final class PreferenceUtil {
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = PrefKey.exportableKey("maintain_skipped_songs_playlist");
 
     private static final String LAST_SLEEP_TIMER_VALUE = PrefKey.exportableKey("last_sleep_timer_value");
-    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = PrefKey.key("next_sleep_timer_elapsed_real_time");
+    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = PrefKey.nonExportableKey("next_sleep_timer_elapsed_real_time");
     private static final String SLEEP_TIMER_FINISH_SONG = PrefKey.exportableKey("sleep_timer_finish_music");
 
-    private static final String LAST_CHANGELOG_VERSION = PrefKey.key("last_changelog_version");
-    private static final String INTRO_SHOWN = PrefKey.key("intro_shown");
+    private static final String LAST_CHANGELOG_VERSION = PrefKey.nonExportableKey("last_changelog_version");
+    private static final String INTRO_SHOWN = PrefKey.nonExportableKey("intro_shown");
 
     public static final String AUTO_DOWNLOAD_IMAGES_POLICY = PrefKey.exportableKey("auto_download_images_policy");
     private static final String AUTO_DOWNLOAD_ALWAYS = "always";
@@ -116,7 +116,7 @@ public final class PreferenceUtil {
     private static final String ANIMATE_PLAYING_SONG_ICON = PrefKey.exportableKey("animate_playing_song_icon");
     private static final String SHOW_SONG_NUMBER = PrefKey.exportableKey("show_song_number_on_playing_queue");
 
-    private static final String INITIALIZED_BLACKLIST = PrefKey.key("initialized_blacklist");
+    private static final String INITIALIZED_BLACKLIST = PrefKey.nonExportableKey("initialized_blacklist");
     public static final String WHITELIST_ENABLED = PrefKey.exportableKey("whitelist_enabled");
 
     public static final String LIBRARY_CATEGORIES = PrefKey.exportableKey("library_categories");
@@ -137,7 +137,7 @@ public final class PreferenceUtil {
     private static final String CLASSIC_THEME = "classic";
     public static final String ROUNDED_THEME = "rounded";
 
-    private static final String SAF_SDCARD_URI = PrefKey.key("saf_sdcard_uri");
+    private static final String SAF_SDCARD_URI = PrefKey.nonExportableKey("saf_sdcard_uri");
 
     public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = PrefKey.exportableKey("enqueue_songs_default_choice");
     public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
@@ -148,7 +148,7 @@ public final class PreferenceUtil {
     @NonNls
     public static final String OOPS_HANDLER_ENABLED = PrefKey.exportableKey("oops_handler_enabled");
     @NonNls
-    public static final String OOPS_HANDLER_EXCEPTIONS = PrefKey.key("oops_handler_exceptions");
+    public static final String OOPS_HANDLER_EXCEPTIONS = PrefKey.nonExportableKey("oops_handler_exceptions");
     private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = PrefKey.exportableKey("queue_sync_with_media_store");
 
     private static PreferenceUtil sInstance;
@@ -173,11 +173,11 @@ public final class PreferenceUtil {
     }
 
     @NonNull
-    private static Map<String, ?> filterPreferencesByAnnotation(
+    private static Map<String, ?> filterPreferences(
             @NonNull final Map<String, ?> preferences,
-            @Nullable final Predicate<PrefKey> fieldFilter
+            @Nullable final Predicate<? super PrefKey> filter
     ) {
-        final Collection<PrefKey> allKeys = PrefKey.getKeys(fieldFilter);
+        final Collection<PrefKey> allKeys = PrefKey.getKeys(filter);
         final Predicate<String> matching = name -> allKeys.stream().anyMatch(key -> key.isMatchingKey(name));
 
         final Map<String, Object> result = new HashMap<>(preferences.size());
@@ -202,7 +202,7 @@ public final class PreferenceUtil {
 
     public void exportPreferencesToFile() {
         final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, key -> !key.isExportImportable);
+        final Map<String, ?> exportablePrefs = filterPreferences(allPrefs, key -> !key.isExportImportable);
 
         // TODO save to a persistent file...
     }
