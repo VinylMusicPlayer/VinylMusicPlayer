@@ -86,13 +86,15 @@ class MemCache {
         final Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
+            final Collection<Long> orphanArtists = new HashSet<>();
             final Map<Long, AlbumSlice> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
-            final Set<Long> orphanArtists = new HashSet<>();
-            for (final Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
-                final Album album = pair.getValue();
-                if (album.songs.remove(song)) {
-                    if (album.songs.isEmpty()) {
-                        orphanArtists.add(pair.getKey());
+            if (impactedAlbumsByArtist != null) {
+                for (final Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
+                    final Album album = pair.getValue();
+                    if (album.songs.remove(song)) {
+                        if (album.songs.isEmpty()) {
+                            orphanArtists.add(pair.getKey());
+                        }
                     }
                 }
             }
