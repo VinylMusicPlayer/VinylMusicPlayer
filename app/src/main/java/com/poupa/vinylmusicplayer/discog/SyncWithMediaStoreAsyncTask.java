@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsMusicServiceActivity;
@@ -78,18 +79,18 @@ class SyncWithMediaStoreAsyncTask extends AsyncTask<Void, SyncWithMediaStoreAsyn
     }
 
     @Override
-    protected void onPostExecute(@NonNull final Progress value) {
+    protected void onPostExecute(final Progress value) {
         onTermination(value);
     }
     @Override
-    protected void onCancelled(@NonNull final Progress value) {
+    protected void onCancelled(final Progress value) {
         onTermination(value);
     }
 
-    private void onTermination(@NonNull final Progress value) {
+    private void onTermination(@Nullable final Progress value) {
         discography.setCacheState(MemCache.ConsistencyState.OK);
         if (isUIFeedbackNeeded()) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 snackbar.dismiss();
             } else {
                 snackbar.showProgress(value.buildInfoString(context));
