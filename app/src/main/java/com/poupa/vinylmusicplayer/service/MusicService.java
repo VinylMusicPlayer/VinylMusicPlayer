@@ -29,6 +29,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1242,36 +1243,31 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case PreferenceUtil.GAPLESS_PLAYBACK:
-                synchronized (this) {
-                    if (sharedPreferences.getBoolean(key, false)) {
-                        prepareNext();
-                    } else {
-                        if (playback != null) {playback.setNextDataSource(null);}
-                    }
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, @Nullable final String key) {
+        if (TextUtils.equals(key, PreferenceUtil.GAPLESS_PLAYBACK)) {
+            synchronized (this) {
+                if (sharedPreferences.getBoolean(key, false)) {
+                    prepareNext();
+                } else {
+                    if (playback != null) {playback.setNextDataSource(null);}
                 }
-                break;
-            case PreferenceUtil.COLORED_NOTIFICATION:
-                updateNotification();
-                break;
-            case PreferenceUtil.OOPS_HANDLER_ENABLED:
-            case PreferenceUtil.OOPS_HANDLER_EXCEPTIONS:
-                updateCrashNotification();
-                break;
-            case PreferenceUtil.CLASSIC_NOTIFICATION:
-                initNotification();
-                updateNotification();
-                break;
-            case PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET:
-                sendChangeInternal(MusicService.META_CHANGED);
-                break;
-            case PreferenceUtil.RG_SOURCE_MODE_V2:
-            case PreferenceUtil.RG_PREAMP_WITH_TAG:
-            case PreferenceUtil.RG_PREAMP_WITHOUT_TAG:
-                applyReplayGain();
-                break;
+            }
+        } else if (TextUtils.equals(key, PreferenceUtil.COLORED_NOTIFICATION)) {
+            updateNotification();
+        } else if (TextUtils.equals(key, PreferenceUtil.OOPS_HANDLER_ENABLED)
+                || TextUtils.equals(key, PreferenceUtil.OOPS_HANDLER_EXCEPTIONS)
+        ) {
+            updateCrashNotification();
+        } else if (TextUtils.equals(key, PreferenceUtil.CLASSIC_NOTIFICATION)) {
+            initNotification();
+            updateNotification();
+        } else if (TextUtils.equals(key, PreferenceUtil.TRANSPARENT_BACKGROUND_WIDGET)) {
+            sendChangeInternal(META_CHANGED);
+        } else if (TextUtils.equals(key, PreferenceUtil.RG_SOURCE_MODE_V2)
+                || TextUtils.equals(key, PreferenceUtil.RG_PREAMP_WITH_TAG)
+                || TextUtils.equals(key, PreferenceUtil.RG_PREAMP_WITHOUT_TAG)
+        ) {
+            applyReplayGain();
         }
     }
 

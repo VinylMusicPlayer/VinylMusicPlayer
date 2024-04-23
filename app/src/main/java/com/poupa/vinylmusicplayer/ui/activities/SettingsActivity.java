@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -425,38 +426,32 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            switch (key) {
-                case PreferenceUtil.NOW_PLAYING_SCREEN_ID:
-                    updateNowPlayingScreenSummary();
-                    break;
-                case PreferenceUtil.CLASSIC_NOTIFICATION:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        findPreference(PreferenceUtil.COLORED_NOTIFICATION).setEnabled(sharedPreferences.getBoolean(key, false));
+            if (TextUtils.equals(key, PreferenceUtil.NOW_PLAYING_SCREEN_ID)) {
+                updateNowPlayingScreenSummary();
+            } else if (TextUtils.equals(key, PreferenceUtil.CLASSIC_NOTIFICATION)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    findPreference(PreferenceUtil.COLORED_NOTIFICATION).setEnabled(sharedPreferences.getBoolean(key, false));
+                }
+            } else if (TextUtils.equals(key, PreferenceUtil.RG_SOURCE_MODE_V2)) {
+                Preference pref = findPreference(PreferenceUtil.RG_PREAMP);
+                if (pref != null) {
+                    if (!sharedPreferences.getString(key, PreferenceUtil.RG_SOURCE_MODE_NONE).equals(PreferenceUtil.RG_SOURCE_MODE_NONE)) {
+                        pref.setEnabled(true);
+                        pref.setSummary(R.string.pref_summary_rg_preamp);
+                    } else {
+                        pref.setEnabled(false);
+                        pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
                     }
-                    break;
-                case PreferenceUtil.RG_SOURCE_MODE_V2:
-                    Preference pref = findPreference(PreferenceUtil.RG_PREAMP);
-                    if (pref != null) {
-                        if (!sharedPreferences.getString(key, PreferenceUtil.RG_SOURCE_MODE_NONE).equals(PreferenceUtil.RG_SOURCE_MODE_NONE)) {
-                            pref.setEnabled(true);
-                            pref.setSummary(R.string.pref_summary_rg_preamp);
-                        } else {
-                            pref.setEnabled(false);
-                            pref.setSummary(getResources().getString(R.string.pref_rg_disabled));
-                        }
-                    }
-                    break;
-                case PreferenceUtil.WHITELIST_ENABLED:
-                    getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
-                    break;
-                case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
-                case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
-                case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
-                    updatePlaylistsSummary();
-                    break;
-                case PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE:
-                    updateConfirmationSongSummary();
-                    break;
+                }
+            } else if (TextUtils.equals(key, PreferenceUtil.WHITELIST_ENABLED)) {
+                getContext().sendBroadcast(new Intent(MusicService.MEDIA_STORE_CHANGED));
+            } else if (TextUtils.equals(key, PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2)
+                    || TextUtils.equals(key, PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2)
+                    || TextUtils.equals(key, PreferenceUtil.LAST_ADDED_CUTOFF_V2)
+            ) {
+                updatePlaylistsSummary();
+            } else if (TextUtils.equals(key, PreferenceUtil.ENQUEUE_SONGS_DEFAULT_CHOICE)) {
+                updateConfirmationSongSummary();
             }
         }
 

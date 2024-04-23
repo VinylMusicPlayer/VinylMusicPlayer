@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -65,16 +66,12 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         // ---- Retrieve the stored value
         String prefName = "";
         Pair<Integer, ChronoUnit> prefValue = PreferenceUtil.getInstance().getCutoffTimeV2(preferenceKey);
-        switch (preferenceKey) {
-            case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
-                prefName = resources.getString(R.string.pref_title_last_added_interval);
-                break;
-            case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
-                prefName = resources.getString(R.string.pref_title_recently_played_interval);
-                break;
-            case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
-                prefName = resources.getString(R.string.pref_title_not_recently_played_interval);
-                break;
+        if (TextUtils.equals(preferenceKey, PreferenceUtil.LAST_ADDED_CUTOFF_V2)) {
+            prefName = resources.getString(R.string.pref_title_last_added_interval);
+        } else if (TextUtils.equals(preferenceKey, PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2)) {
+            prefName = resources.getString(R.string.pref_title_recently_played_interval);
+        } else if (TextUtils.equals(preferenceKey, PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2)) {
+            prefName = resources.getString(R.string.pref_title_not_recently_played_interval);
         }
 
         // ---- Build the dialog

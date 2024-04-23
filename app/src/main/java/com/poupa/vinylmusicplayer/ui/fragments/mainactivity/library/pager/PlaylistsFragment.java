@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
@@ -131,19 +132,18 @@ public class PlaylistsFragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
-            case PreferenceUtil.LAST_ADDED_CUTOFF_V2:
-            case PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2:
-            case PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2:
-            case PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST:
-                // This event can be called when the fragment is is detached mode
-                // In such situation, cannot call the reload (i.e. crash)
-                //     E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
-                //     E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
-                //     E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
-                // -> circumvent by delaying the reload
-                new Handler().postDelayed(this::reload, 100);
-                break;
+        if (TextUtils.equals(key, PreferenceUtil.LAST_ADDED_CUTOFF_V2)
+                || TextUtils.equals(key, PreferenceUtil.RECENTLY_PLAYED_CUTOFF_V2)
+                || TextUtils.equals(key, PreferenceUtil.NOT_RECENTLY_PLAYED_CUTOFF_V2)
+                || TextUtils.equals(key, PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST)
+        ) {
+            // This event can be called when the fragment is is detached mode
+            // In such situation, cannot call the reload (i.e. crash)
+            //     E AndroidRuntime: java.lang.IllegalStateException: Can't access ViewModels from detached fragment
+            //     E AndroidRuntime:        at androidx.fragment.app.Fragment.getViewModelStore(Unknown Source:32)
+            //     E AndroidRuntime:        at androidx.loader.app.LoaderManager.getInstance(Unknown Source:5)
+            // -> circumvent by delaying the reload
+            new Handler().postDelayed(this::reload, 100);
         }
     }
 }
