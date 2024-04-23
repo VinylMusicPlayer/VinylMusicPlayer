@@ -11,6 +11,7 @@ import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -226,10 +227,9 @@ class MemCache {
         // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
-            albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
-            albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+            albumsByArtist = new HashMap<>();
+            albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
         }
-        Objects.requireNonNull(albumsByArtist);
 
         final Map<Long, AlbumSlice> result = new HashMap<>();
         for (final Artist artist : artists) {
