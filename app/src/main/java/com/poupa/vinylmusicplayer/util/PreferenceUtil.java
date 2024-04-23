@@ -178,22 +178,8 @@ public final class PreferenceUtil {
             @Nullable final Predicate<PrefKey> fieldFilter
     ) {
         final Collection<PrefKey> allKeys = PrefKey.getKeys(fieldFilter);
+        final Predicate<String> matching = name -> allKeys.stream().anyMatch(key -> key.isMatchingKey(name));
 
-        // Split into two list of keys: literal ones and prefix-based ones
-        final Collection<String> literalKeys = new ArrayList<>(allKeys.size());
-        final Collection<String> prefixKeys = new ArrayList<>(allKeys.size());
-        for (final PrefKey key : allKeys) {
-            if (key.IsPrefix()) {prefixKeys.add(key.value());}
-            else {literalKeys.add(key.value());}
-        }
-
-        final Predicate<String> matching = name -> {
-            if (literalKeys.contains(name)) {return true;}
-            for (final String prefix : prefixKeys) {
-                if (name.startsWith(prefix)) {return true;}
-            }
-            return false;
-        };
         final Map<String, Object> result = new HashMap<>(preferences.size());
         for (final Map.Entry<String, ?> entry : preferences.entrySet()) {
             if (matching.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
@@ -216,7 +202,7 @@ public final class PreferenceUtil {
 
     public void exportPreferencesToFile() {
         final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, key -> !key.ExportImportable());
+        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, key -> !key.isExportImportable);
 
         // TODO save to a persistent file...
     }
