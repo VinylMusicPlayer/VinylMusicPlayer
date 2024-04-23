@@ -52,7 +52,6 @@ import com.poupa.vinylmusicplayer.misc.queue.StaticPlayingQueue;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
 import com.poupa.vinylmusicplayer.provider.HistoryStore;
 import com.poupa.vinylmusicplayer.provider.MusicPlaybackQueueStore;
 import com.poupa.vinylmusicplayer.provider.SongPlayCountStore;
@@ -66,6 +65,7 @@ import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PackageValidator;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
+import com.poupa.vinylmusicplayer.util.PrefKey;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
@@ -115,14 +115,10 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
-    @PrefKey
-    private static final String SAVED_POSITION = "POSITION";
-    @PrefKey
-    private static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
-    @PrefKey(ExportImportable = true)
-    private static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
-    @PrefKey(ExportImportable = true)
-    private static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
+    private static final String SAVED_POSITION = PrefKey.key("POSITION");
+    private static final String SAVED_POSITION_IN_TRACK = PrefKey.key("POSITION_IN_TRACK");
+    private static final String SAVED_SHUFFLE_MODE = PrefKey.exportableKey("SHUFFLE_MODE");
+    private static final String SAVED_REPEAT_MODE = PrefKey.exportableKey("REPEAT_MODE");
 
     static final int RELEASE_WAKELOCK = 0;
     static final int TRACK_ENDED = 1;

@@ -19,17 +19,12 @@ import com.google.gson.reflect.TypeToken;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
-import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
-import com.poupa.vinylmusicplayer.provider.PreferencesBackedSongList;
-import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
-import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -47,170 +42,114 @@ import java.util.stream.Collectors;
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
 
-    @PrefKey(ExportImportable = true)
-    public static final String PRIMARY_COLOR = "primary_color";
-    @PrefKey(ExportImportable = true)
-    public static final String ACCENT_COLOR = "accent_color";
-    @PrefKey(ExportImportable = true)
-    public static final String COLORED_NAVBAR = "should_color_navigation_bar";
+    public static final String PRIMARY_COLOR = PrefKey.exportableKey("primary_color");
+    public static final String ACCENT_COLOR = PrefKey.exportableKey("accent_color");
+    public static final String COLORED_NAVBAR = PrefKey.exportableKey("should_color_navigation_bar");
 
-    @PrefKey(ExportImportable = true)
-    public static final String GENERAL_THEME = "general_theme";
+    public static final String GENERAL_THEME = PrefKey.exportableKey("general_theme");
     private static final String GENERAL_THEME_LIGHT = "light";
     private static final String GENERAL_THEME_DARK = "dark";
     private static final String GENERAL_THEME_BLACK = "black";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
-    @PrefKey(ExportImportable = true)
-    private static final String REMEMBER_LAST_TAB = "remember_last_tab";
-    @PrefKey(ExportImportable = true)
-    private static final String LAST_PAGE = "last_start_page";
-    @PrefKey(ExportImportable = true)
-    private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
-    @PrefKey(ExportImportable = true)
-    public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
+    private static final String REMEMBER_LAST_TAB = PrefKey.exportableKey("remember_last_tab");
+    private static final String LAST_PAGE = PrefKey.exportableKey("last_start_page");
+    private static final String LAST_MUSIC_CHOOSER = PrefKey.exportableKey("last_music_chooser");
+    public static final String NOW_PLAYING_SCREEN_ID = PrefKey.exportableKey("now_playing_screen_id");
 
-    @PrefKey(ExportImportable = true)
-    private static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    @PrefKey(ExportImportable = true)
-    public static final String ALBUM_SORT_ORDER = "album_sort_order";
-    @PrefKey(ExportImportable = true)
-    public static final String SONG_SORT_ORDER = "song_sort_order";
-    @PrefKey(ExportImportable = true)
-    private static final String FILE_SORT_ORDER = "file_sort_order";
-    @PrefKey(ExportImportable = true)
-    private static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
-    @PrefKey(ExportImportable = true)
-    private static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
+    private static final String ARTIST_SORT_ORDER = PrefKey.exportableKey("artist_sort_order");
+    public static final String ALBUM_SORT_ORDER = PrefKey.exportableKey("album_sort_order");
+    public static final String SONG_SORT_ORDER = PrefKey.exportableKey("song_sort_order");
+    private static final String FILE_SORT_ORDER = PrefKey.exportableKey("file_sort_order");
+    private static final String LAST_ADDED_SORT_ORDER = PrefKey.exportableKey("last_added_sort_order");
+    private static final String NOT_RECENTLY_PLAYED_SORT_ORDER = PrefKey.exportableKey("not_recently_played_sort_order");
 
-    @PrefKey(ExportImportable = true)
-    private static final String ALBUM_GRID_SIZE = "album_grid_size";
-    @PrefKey(ExportImportable = true)
-    private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
+    private static final String ALBUM_GRID_SIZE = PrefKey.exportableKey("album_grid_size");
+    private static final String ALBUM_GRID_SIZE_LAND = PrefKey.exportableKey("album_grid_size_land");
 
-    @PrefKey(ExportImportable = true)
-    private static final String SONG_GRID_SIZE = "song_grid_size";
-    @PrefKey(ExportImportable = true)
-    private static final String SONG_GRID_SIZE_LAND = "song_grid_size_land";
+    private static final String SONG_GRID_SIZE = PrefKey.exportableKey("song_grid_size");
+    private static final String SONG_GRID_SIZE_LAND = PrefKey.exportableKey("song_grid_size_land");
 
-    @PrefKey(ExportImportable = true)
-    private static final String ARTIST_GRID_SIZE = "artist_grid_size";
-    @PrefKey(ExportImportable = true)
-    private static final String ARTIST_GRID_SIZE_LAND = "artist_grid_size_land";
+    private static final String ARTIST_GRID_SIZE = PrefKey.exportableKey("artist_grid_size");
+    private static final String ARTIST_GRID_SIZE_LAND = PrefKey.exportableKey("artist_grid_size_land");
 
-    @PrefKey(ExportImportable = true)
-    private static final String ALBUM_COLORED_FOOTERS = "album_colored_footers";
-    @PrefKey(ExportImportable = true)
-    private static final String SONG_COLORED_FOOTERS = "song_colored_footers";
-    @PrefKey(ExportImportable = true)
-    private static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
-    @PrefKey(ExportImportable = true)
-    private static final String ALBUM_ARTIST_COLORED_FOOTERS = "album_artist_colored_footers";
+    private static final String ALBUM_COLORED_FOOTERS = PrefKey.exportableKey("album_colored_footers");
+    private static final String SONG_COLORED_FOOTERS = PrefKey.exportableKey("song_colored_footers");
+    private static final String ARTIST_COLORED_FOOTERS = PrefKey.exportableKey("artist_colored_footers");
+    private static final String ALBUM_ARTIST_COLORED_FOOTERS = PrefKey.exportableKey("album_artist_colored_footers");
 
-    @PrefKey(ExportImportable = true)
-    public static final String COLORED_NOTIFICATION = "colored_notification";
-    @PrefKey(ExportImportable = true)
-    public static final String CLASSIC_NOTIFICATION = "classic_notification";
+    @NonNls
+    public static final String COLORED_NOTIFICATION = PrefKey.exportableKey("colored_notification");
+    public static final String CLASSIC_NOTIFICATION = PrefKey.exportableKey("classic_notification");
 
-    @PrefKey(ExportImportable = true)
-    public static final String COLORED_APP_SHORTCUTS = "should_color_app_shortcuts";
+    public static final String COLORED_APP_SHORTCUTS = PrefKey.exportableKey("should_color_app_shortcuts");
 
-    @PrefKey(ExportImportable = true)
-    public static final String TRANSPARENT_BACKGROUND_WIDGET = "should_make_widget_background_transparent";
+    public static final String TRANSPARENT_BACKGROUND_WIDGET = PrefKey.exportableKey("should_make_widget_background_transparent");
 
-    @PrefKey(ExportImportable = true)
-    private static final String AUDIO_DUCKING = "audio_ducking";
-    @PrefKey(ExportImportable = true)
-    public static final String GAPLESS_PLAYBACK = "gapless_playback";
-    @PrefKey(ExportImportable = true)
-    public static final String EQUALIZER = "equalizer";
+    private static final String AUDIO_DUCKING = PrefKey.exportableKey("audio_ducking");
+    @NonNls
+    public static final String GAPLESS_PLAYBACK = PrefKey.exportableKey("gapless_playback");
+    public static final String EQUALIZER = PrefKey.exportableKey("equalizer");
 
-    @PrefKey(ExportImportable = true)
-    public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
-    @PrefKey(ExportImportable = true)
-    public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
-    @PrefKey(ExportImportable = true)
-    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
-    @PrefKey(ExportImportable = true)
-    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
-    @PrefKey(ExportImportable = true)
-    private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
+    public static final String LAST_ADDED_CUTOFF_V2 = PrefKey.exportableKey("last_added_interval_v2");
+    public static final String RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("recently_played_interval_v2");
+    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("not_recently_played_interval_v2");
+    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = PrefKey.exportableKey("maintain_top_tracks_playlist");
+    private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = PrefKey.exportableKey("maintain_skipped_songs_playlist");
 
-    @PrefKey(ExportImportable = true)
-    private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
-    @PrefKey
-    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
-    @PrefKey(ExportImportable = true)
-    private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
+    private static final String LAST_SLEEP_TIMER_VALUE = PrefKey.exportableKey("last_sleep_timer_value");
+    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = PrefKey.key("next_sleep_timer_elapsed_real_time");
+    private static final String SLEEP_TIMER_FINISH_SONG = PrefKey.exportableKey("sleep_timer_finish_music");
 
-    @PrefKey
-    private static final String LAST_CHANGELOG_VERSION = "last_changelog_version";
-    @PrefKey
-    private static final String INTRO_SHOWN = "intro_shown";
+    private static final String LAST_CHANGELOG_VERSION = PrefKey.key("last_changelog_version");
+    private static final String INTRO_SHOWN = PrefKey.key("intro_shown");
 
-    @PrefKey(ExportImportable = true)
-    public static final String AUTO_DOWNLOAD_IMAGES_POLICY = "auto_download_images_policy";
+    public static final String AUTO_DOWNLOAD_IMAGES_POLICY = PrefKey.exportableKey("auto_download_images_policy");
     private static final String AUTO_DOWNLOAD_ALWAYS = "always";
     private static final String AUTO_DOWNLOAD_WIFI_ONLY = "only_wifi";
     private static final String AUTO_DOWNLOAD_NEVER = "never";
 
-    @PrefKey(ExportImportable = true)
-    private static final String START_DIRECTORY = "start_directory";
+    private static final String START_DIRECTORY = PrefKey.exportableKey("start_directory");
 
-    @PrefKey(ExportImportable = true)
-    private static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
-    @PrefKey(ExportImportable = true)
-    private static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
-    @PrefKey(ExportImportable = true)
-    private static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
+    private static final String SYNCHRONIZED_LYRICS_SHOW = PrefKey.exportableKey("synchronized_lyrics_show");
+    private static final String ANIMATE_PLAYING_SONG_ICON = PrefKey.exportableKey("animate_playing_song_icon");
+    private static final String SHOW_SONG_NUMBER = PrefKey.exportableKey("show_song_number_on_playing_queue");
 
-    @PrefKey
-    private static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
-    @PrefKey(ExportImportable = true)
-    public static final String WHITELIST_ENABLED = "whitelist_enabled";
+    private static final String INITIALIZED_BLACKLIST = PrefKey.key("initialized_blacklist");
+    public static final String WHITELIST_ENABLED = PrefKey.exportableKey("whitelist_enabled");
 
-    @PrefKey(ExportImportable = true)
-    public static final String LIBRARY_CATEGORIES = "library_categories";
+    public static final String LIBRARY_CATEGORIES = PrefKey.exportableKey("library_categories");
 
-    @PrefKey(ExportImportable = true)
-    private static final String REMEMBER_SHUFFLE = "remember_shuffle";
+    private static final String REMEMBER_SHUFFLE = PrefKey.exportableKey("remember_shuffle");
 
-    @PrefKey(ExportImportable = true)
-    public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
+    public static final String RG_SOURCE_MODE_V2 = PrefKey.exportableKey("replaygain_source_mode");
     @NonNls
     public static final String RG_SOURCE_MODE_NONE = "none";
     public static final String RG_SOURCE_MODE_TRACK = "track";
     public static final String RG_SOURCE_MODE_ALBUM = "album";
 
-    @PrefKey(ExportImportable = true)
-    public static final String RG_PREAMP = "replaygain_preamp";
-    @PrefKey(ExportImportable = true)
-    public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
-    @PrefKey(ExportImportable = true)
-    public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
+    public static final String RG_PREAMP = PrefKey.exportableKey("replaygain_preamp");
+    public static final String RG_PREAMP_WITH_TAG = PrefKey.exportableKey("replaygain_preamp_with_tag");
+    public static final String RG_PREAMP_WITHOUT_TAG = PrefKey.exportableKey("replaygain_preamp_without_tag");
 
-    @PrefKey(ExportImportable = true)
-    public static final String THEME_STYLE = "theme_style";
+    public static final String THEME_STYLE = PrefKey.exportableKey("theme_style");
     private static final String CLASSIC_THEME = "classic";
     public static final String ROUNDED_THEME = "rounded";
 
-    @PrefKey
-    private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
+    private static final String SAF_SDCARD_URI = PrefKey.key("saf_sdcard_uri");
 
-    @PrefKey(ExportImportable = true)
-    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
+    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = PrefKey.exportableKey("enqueue_songs_default_choice");
     public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
 
-    @PrefKey(ExportImportable = true)
-    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
-    @PrefKey
-    public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
-    @PrefKey(ExportImportable = true)
-    private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
+    @NonNls
+    public static final String OOPS_HANDLER_ENABLED = PrefKey.exportableKey("oops_handler_enabled");
+    @NonNls
+    public static final String OOPS_HANDLER_EXCEPTIONS = PrefKey.key("oops_handler_exceptions");
+    private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = PrefKey.exportableKey("queue_sync_with_media_store");
 
     private static PreferenceUtil sInstance;
 
@@ -234,54 +173,18 @@ public final class PreferenceUtil {
     }
 
     @NonNull
-    private static Collection<Field> getAnnotatedPreferenceFields(@Nullable Predicate<Field> extraFilter) {
-        final Collection<Field> annotatedFields = new ArrayList<>();
-        for (final var fields : List.of(
-                // TODO Discover this list of classes using annotation via reflection
-                MusicService.class.getDeclaredFields(),
-                PreferenceUtil.class.getDeclaredFields(),
-                PreferencesBackedSongList.class.getDeclaredFields(),
-                StaticPlaylist.class.getDeclaredFields()
-        )) {
-            annotatedFields.addAll(
-                    Arrays.stream(fields)
-                            .filter(field -> {
-                                final PrefKey annotation = field.getAnnotation(PrefKey.class);
-                                return (annotation != null);
-                            })
-                            .filter(field -> (extraFilter == null) || (extraFilter.test(field)))
-                            .collect(Collectors.toList())
-            );
-        }
-        return annotatedFields;
-    }
-
-    @Nullable
-    private static String getAnnotatedPreferenceFieldValue(@NonNull final Field field) {
-        try {
-            field.setAccessible(true); // in the case it is not public
-            return (String) field.get(null); // get the value of a 'static final' field
-        }
-        catch (final IllegalAccessException access) {
-            OopsHandler.collectStackTrace(access);
-            return null;
-        }
-    }
-
-    @NonNull
     private static Map<String, ?> filterPreferencesByAnnotation(
             @NonNull final Map<String, ?> preferences,
-            @Nullable final Predicate<Field> fieldFilter
+            @Nullable final Predicate<PrefKey> fieldFilter
     ) {
-        final Collection<Field> annotatedFields = getAnnotatedPreferenceFields(fieldFilter);
+        final Collection<PrefKey> allKeys = PrefKey.getKeys(fieldFilter);
 
         // Split into two list of keys: literal ones and prefix-based ones
-        final Collection<String> literalKeys = new ArrayList<>(annotatedFields.size());
-        final Collection<String> prefixKeys = new ArrayList<>(annotatedFields.size());
-        for (final Field field : annotatedFields) {
-            final PrefKey annotation = field.getAnnotation(PrefKey.class);
-            if (annotation.IsPrefix()) {prefixKeys.add(getAnnotatedPreferenceFieldValue(field));}
-            else {literalKeys.add(getAnnotatedPreferenceFieldValue(field));}
+        final Collection<String> literalKeys = new ArrayList<>(allKeys.size());
+        final Collection<String> prefixKeys = new ArrayList<>(allKeys.size());
+        for (final PrefKey key : allKeys) {
+            if (key.IsPrefix()) {prefixKeys.add(key.value());}
+            else {literalKeys.add(key.value());}
         }
 
         final Predicate<String> matching = name -> {
@@ -313,10 +216,7 @@ public final class PreferenceUtil {
 
     public void exportPreferencesToFile() {
         final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, field -> {
-            final PrefKey annotation = field.getAnnotation(PrefKey.class);
-            return !annotation.ExportImportable();
-        });
+        final Map<String, ?> exportablePrefs = filterPreferencesByAnnotation(allPrefs, key -> !key.ExportImportable());
 
         // TODO save to a persistent file...
     }
