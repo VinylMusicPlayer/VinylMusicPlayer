@@ -69,22 +69,24 @@ public class TagExtractor {
             if (tags.isEmpty() && (file instanceof MP3File)) {
                 tags = ((MP3File) file).getID3v1Tag();
             }
+            if (tags != null) {
+                song.albumName = safeGetTag.apply(tags, FieldKey.ALBUM, song.albumName);
+                song.artistNames = safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames);
+                song.albumArtistNames = safeGetTagAsList.apply(tags, FieldKey.ALBUM_ARTIST, song.albumArtistNames);
+                song.title = safeGetTag.apply(tags, FieldKey.TITLE, song.title);
 
-            song.albumName = safeGetTag.apply(tags, FieldKey.ALBUM, song.albumName);
-            song.artistNames = safeGetTagAsList.apply(tags, FieldKey.ARTIST, song.artistNames);
-            song.albumArtistNames = safeGetTagAsList.apply(tags, FieldKey.ALBUM_ARTIST, song.albumArtistNames);
-            song.title = safeGetTag.apply(tags, FieldKey.TITLE, song.title);
+                String genres = safeGetTag.apply(tags, FieldKey.GENRE, "");
+                song.genres = MultiValuesTagUtil.split(genres);
+
+                song.discNumber = safeGetTagAsInteger.apply(tags, FieldKey.DISC_NO, song.discNumber);
+                song.trackNumber = safeGetTagAsInteger.apply(tags, FieldKey.TRACK, song.trackNumber);
+                song.year = safeGetTagAsReleaseYear.apply(tags, FieldKey.YEAR, song.year);
+            }
+
             if (song.title.isEmpty()) {
                 // fallback to use the file name
                 song.title = file.getFile().getName();
             }
-
-            String genres = safeGetTag.apply(tags, FieldKey.GENRE, "");
-            song.genres = MultiValuesTagUtil.split(genres);
-
-            song.discNumber = safeGetTagAsInteger.apply(tags, FieldKey.DISC_NO, song.discNumber);
-            song.trackNumber = safeGetTagAsInteger.apply(tags, FieldKey.TRACK, song.trackNumber);
-            song.year = safeGetTagAsReleaseYear.apply(tags, FieldKey.YEAR, song.year);
 
             ReplayGainTagExtractor.ReplayGainValues rgValues = ReplayGainTagExtractor.setReplayGainValues(file);
             song.replayGainAlbum = rgValues.album;
