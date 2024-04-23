@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author SC (soncaokim)
  */
-public abstract class SongList {
+abstract class SongList {
     @NonNull public String name;
     final List<Long> songIds = new ArrayList<>();
 
@@ -120,7 +120,7 @@ abstract class MutableSongList extends SongList {
     }
 }
 
-class PreferencesBackedSongList extends MutableSongList {
+public class PreferencesBackedSongList extends MutableSongList {
     private static final String SEPARATOR = ",";
     @PrefKey(IsPrefix = true)
     private static final String PREF_NAME_PREFIX = "SONG_IDS_";
@@ -188,7 +188,7 @@ class PreferencesBackedSongList extends MutableSongList {
 }
 
 class PreferenceBackedReorderableSongList extends PreferencesBackedSongList {
-    public PreferenceBackedReorderableSongList(@NonNull final String name) {
+    PreferenceBackedReorderableSongList(@NonNull final String name) {
         super(name);
     }
 

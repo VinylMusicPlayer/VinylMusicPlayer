@@ -20,7 +20,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
 import com.poupa.vinylmusicplayer.preferences.annotation.PrefKey;
-import com.poupa.vinylmusicplayer.provider.SongList;
+import com.poupa.vinylmusicplayer.provider.PreferencesBackedSongList;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
@@ -240,7 +240,7 @@ public final class PreferenceUtil {
                 // TODO Discover this list of classes using annotation via reflection
                 MusicService.class.getDeclaredFields(),
                 PreferenceUtil.class.getDeclaredFields(),
-                SongList.class.getDeclaredFields(),
+                PreferencesBackedSongList.class.getDeclaredFields(),
                 StaticPlaylist.class.getDeclaredFields()
         )) {
             annotatedFields.addAll(
