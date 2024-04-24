@@ -24,6 +24,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.TwoStatePreference;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
@@ -57,6 +58,7 @@ import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -88,6 +90,18 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         } else {
             SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
             if (frag != null) frag.invalidateSettings();
+        }
+
+        // TODO Debug only
+        final Collection<String> usedUndeclaredPrefKeys = PreferenceUtil.getInstance().getUndeclaredPrefKeys();
+        if (!usedUndeclaredPrefKeys.isEmpty()) {
+            new MaterialDialog.Builder(this)
+                    .title("Used but not declared pref keys")
+                    .items(usedUndeclaredPrefKeys)
+                    .autoDismiss(true)
+                    .positiveText(android.R.string.ok)
+                    .build()
+                    .show();
         }
     }
 

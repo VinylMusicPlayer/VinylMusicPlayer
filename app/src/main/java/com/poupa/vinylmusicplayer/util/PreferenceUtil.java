@@ -158,7 +158,6 @@ public final class PreferenceUtil {
     private PreferenceUtil() {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(App.getStaticContext());
         migratePreferencesIfNeeded();
-        annotationSanityCheck();
     }
 
     public static PreferenceUtil getInstance() {
