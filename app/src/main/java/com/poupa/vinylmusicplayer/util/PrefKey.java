@@ -35,11 +35,12 @@ public class PrefKey {
     }
 
     boolean isMatchingKey(@NonNull final String key) {
-        if (isPrefixed) {
-            return key.startsWith(value);
-        } else {
-            return TextUtils.equals(value, key);
-        }
+        return (isPrefixed && key.startsWith(value) || TextUtils.equals(value, key));
+    }
+
+    @NonNull
+    public String toString() {
+        return value + " exportable=" + isExportImportable + " prefix=" + isPrefixed;
     }
 
     // Declare a pref key
@@ -54,13 +55,13 @@ public class PrefKey {
         return new PrefKey(value, false, true).value;
     }
 
-    // Declare am exportable/importable pref key
+    // Declare an exportable/importable pref key
     @NonNull
     public static String exportableKey(@NonNull final String value) {
         return new PrefKey(value, true, false).value;
     }
 
-    // Declare am exportable/importable prefixed pref key
+    // Declare an exportable/importable prefixed pref key
     @NonNull
     public static String exportablePrefixedKey(@NonNull final String value) {
         return new PrefKey(value, true, true).value;
@@ -68,8 +69,10 @@ public class PrefKey {
 
     // Get the list of all declared keys, with an optional filter
     @NonNull
-    static Set<PrefKey> getKeys(@Nullable final Predicate<? super PrefKey> filter) {
+    static Set<PrefKey> getDeclaredKeys(@Nullable final Predicate<? super PrefKey> filter) {
         synchronized (declaredKeys) {
+            // Attn: The declarations are collected in runtime, i.e. depedning on the class loading order,
+            // it may not contain all the declaration used in the code
             if (filter == null) {
                 return Collections.unmodifiableSet(declaredKeys);
             } else {

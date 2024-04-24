@@ -173,36 +173,34 @@ public final class PreferenceUtil {
     }
 
     @NonNull
-    private static Map<String, ?> filterPreferences(
+    private static Map<String, ?> reducePreferencesToDeclared(
             @NonNull final Map<String, ?> preferences,
             @Nullable final Predicate<? super PrefKey> filter
     ) {
-        final Collection<PrefKey> allKeys = PrefKey.getKeys(filter);
-        final Predicate<String> matching = name -> allKeys.stream().anyMatch(key -> key.isMatchingKey(name));
+        final Collection<PrefKey> declaredKeys = PrefKey.getDeclaredKeys(filter);
+        final Predicate<String> isDeclared = name -> declaredKeys.stream()
+                .anyMatch(key -> key.isMatchingKey(name));
 
         final Map<String, Object> result = new HashMap<>(preferences.size());
         for (final Map.Entry<String, ?> entry : preferences.entrySet()) {
-            if (matching.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
+            if (isDeclared.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
         }
         return result;
     }
 
-    private void annotationSanityCheck() {
+    @NonNull
+    public Collection<String> getUndeclaredPrefKeys() {
         final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> annotatedPrefs = filterPreferencesByAnnotation(allPrefs, null);
+        final Map<String, ?> declared = reducePreferencesToDeclared(allPrefs, null);
 
-        // Check that the app prefs are all annotated
-        final Collection<String> missingAnnotation = allPrefs.keySet().stream()
-                .filter(name -> !annotatedPrefs.containsKey(name))
-                .collect(Collectors.toList());
-        if (!missingAnnotation.isEmpty()) {
-            SafeToast.show(App.getStaticContext(), "Pref used but not annotated: " + missingAnnotation);
-        }
+        return allPrefs.keySet().stream()
+                .filter(name -> !declared.containsKey(name))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public void exportPreferencesToFile() {
         final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> exportablePrefs = filterPreferences(allPrefs, key -> !key.isExportImportable);
+        final Map<String, ?> exportablePrefs = reducePreferencesToDeclared(allPrefs, key -> key.isExportImportable);
 
         // TODO save to a persistent file...
     }
