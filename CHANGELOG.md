@@ -1,4 +1,11 @@
 # Changelog
+## [1.10.2] - 2024-04-25
+
+### Fixes
+* Fix NPE (if there is no embedded tag) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1049
+* Reduce crash report spam for exceptions that we cannot resolve by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1048
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.1...1.10.2
 
 ## [1.10.1] - 2024-04-23
 
