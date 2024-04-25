@@ -5,7 +5,7 @@
 # Otherwise, rely on the default (unsecured) signing configs
 if [ -n "${KEYSTORE_PROPERTIES}" ]; then
     echo "${KEYSTORE_PROPERTIES}" > keystore.properties
-    echo -n "{$STORE_FILE}" | base64 --decode > ./app/vinyl.jks
+    echo -n "${STORE_FILE}" | base64 --decode > ./app/vinyl.jks
 fi
 
 ./gradlew $GRADLEW_COMMAND
