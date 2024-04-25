@@ -1,6 +1,11 @@
 #!/bin/bash
 
-echo "$KEYSTORE_PROPERTIES" > keystore.properties
-echo -n "$STORE_FILE" | base64 --decode > ./app/vinyl.jks
+# If the env variables are defined, use them as override to the signing config
+# This is to support CI/CD builds via Github Actions
+# Otherwise, rely on the default (unsecured) signing configs
+if [ -n "${KEYSTORE_PROPERTIES}" ]; then
+    echo "${KEYSTORE_PROPERTIES}" > keystore.properties
+    echo -n "${STORE_FILE}" | base64 --decode > ./app/vinyl.jks
+fi
 
 ./gradlew $GRADLEW_COMMAND
