@@ -17,6 +17,8 @@
         <!-- Necessary for CAB popup menu -->
         <item name="android:textColor">@color/ate_primary_text_dark</item>
         <item name="android:itemBackground">@color/md_grey_800</item>
+        <!-- Override the CAB close button-->
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
         <!-- So that the CAB is overlaid over the window content, not shifting the content down-->
         <item name="windowActionModeOverlay">true</item>
 
@@ -58,6 +60,8 @@
         <!-- Necessary for CAB popup menu -->
         <item name="android:textColor">@color/ate_primary_text_light</item>
         <item name="android:itemBackground">@color/md_white_1000</item>
+        <!-- Override the CAB close button-->
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
         <!-- So that the CAB is overlaid over the window content, not shifting the content down-->
         <item name="windowActionModeOverlay">true</item>
 
