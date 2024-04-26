@@ -151,7 +151,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
         SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
     }
 
-    protected void toggleChecked(Song song) {
+    private void toggleChecked(Song song) {
         if (cabHolder != null) {
             if (!checked.remove(song)) {checked.add(song);}
             notifyDataSetChanged();

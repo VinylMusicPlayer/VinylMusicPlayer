@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.R;
@@ -74,7 +75,7 @@ public interface CabHolder {
     }
 
     @NonNull
-    static ActionMode updateCab(@NonNull final Context context, @NonNull ActionMode cab,
+    static ActionMode updateCab(@NonNull final Context context, @Nullable ActionMode cab,
                                 @NonNull final Supplier<ActionMode> openCabFunction,
                                 final int checkedCount) {
         if (checkedCount <= 0) {
