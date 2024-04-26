@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.os.Build;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
@@ -41,7 +40,8 @@ import java.util.ArrayList;
 public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallbacks {
     @Nullable
     private final CabHolder cabHolder;
-    private AttachedCab cab;
+    @Nullable
+    private ActionMode cab;
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
@@ -173,8 +173,8 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
         return checked.contains(song);
     }
 
-    protected boolean isInQuickSelectMode() {
-        return cab != null && AttachedCabKt.isActive(cab);
+    private boolean isInQuickSelectMode() {
+        return cab != null;
     }
 
     public void setColor(int color) {
@@ -182,20 +182,21 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     }
 
     @Override
-    public void onCabCreate(AttachedCab materialCab, Menu menu) {
+    public void onCabCreate(@NonNull final ActionMode cab, @NonNull final Menu menu) {
         AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
     }
 
     @Override
-    public boolean onCabSelection(@NonNull MenuItem menuItem) {
+    public boolean onCabSelection(@NonNull final MenuItem menuItem) {
         onMultipleItemAction(menuItem, new ArrayList<>(checked));
-        AttachedCabKt.destroy(cab);
+        cab.finish();
+        cab = null;
         unCheckAll();
         return true;
     }
 
     @Override
-    public boolean onCabDestroy(AttachedCab materialCab) {
+    public boolean onCabDestroy(@NonNull final ActionMode cab) {
         AbsThemeActivity.static_setStatusbarColor(activity, color);
         unCheckAll();
         return true;

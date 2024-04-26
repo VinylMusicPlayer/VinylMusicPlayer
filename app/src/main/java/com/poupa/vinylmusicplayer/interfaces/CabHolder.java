@@ -1,82 +1,91 @@
 package com.poupa.vinylmusicplayer.interfaces;
 
 import android.content.Context;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
-import com.afollestad.materialcab.MaterialCabKt;
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
-import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.function.Supplier;
 
-import kotlin.Unit;
-
 @FunctionalInterface
 public interface CabHolder {
-    long ANIMATION_DELAY_MS = 500L;
+    @NonNull
+    ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks);
 
     @NonNull
-    AttachedCab openCab(final int menuRes, final CabCallbacks callbacks);
-
-    @NonNull
-    static AttachedCab openCabImpl(
+    static ActionMode openCabImpl(
             @NonNull final AppCompatActivity context,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,
             @NonNull final CabCallbacks callbacks)
     {
-        final AttachedCab attachedCab = MaterialCabKt.createCab(
-                context,
-                R.id.cab_holder,
-                cab -> {
-                    cab.menu(menuRes);
-                    cab.closeDrawable(R.drawable.ic_close_white_24dp);
-                    cab.backgroundColor(
-                            ResourcesCompat.ID_NULL,
-                            VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor));
-                    cab.popupTheme(PreferenceUtil.getInstance().getGeneralTheme());
+        final ActionMode attachedCab = context.startActionMode(
+                new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                        final MenuInflater inflater = mode.getMenuInflater();
+                        inflater.inflate(menuRes, menu);
+                        MenuHelper.decorateDestructiveItems(menu, context);
 
-                    cab.onCreate((attachedCab1, menu) -> {
-                        callbacks.onCabCreate(attachedCab1, menu);
-                        return Unit.INSTANCE;
-                    });
-                    cab.onDestroy(callbacks::onCabDestroy);
-                    cab.onSelection(callbacks::onCabSelection);
-                    cab.slideDown(ANIMATION_DELAY_MS);
+                        return true;
+                    }
 
-                    return Unit.INSTANCE;
-                });
+                    @Override
+                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                        final ViewGroup decorView = (ViewGroup) context.getWindow().getDecorView();
+                        decorView.postDelayed(() -> {
+                            final View cabView = context.getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+                            final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
+                            if (cabView != null) {
+                                cabView.setBackgroundColor(cabColor);
+                            }
+                        }, 10L);
 
-        MenuHelper.decorateDestructiveItems(attachedCab.getMenu(), context);
+                        callbacks.onCabCreate(mode, menu);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                        callbacks.onCabSelection(item);
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(final ActionMode mode) {
+                        callbacks.onCabDestroy(mode);
+                    }
+                }
+        );
 
         return attachedCab;
     }
 
     @NonNull
-    static AttachedCab updateCab(@NonNull Context context, @NonNull AttachedCab cab,
-                                 @NonNull final Supplier<AttachedCab> openCabFunction,
-                                 int checkedCount) {
+    static ActionMode updateCab(@NonNull final Context context, @NonNull ActionMode cab,
+                                @NonNull final Supplier<ActionMode> openCabFunction,
+                                final int checkedCount) {
+        // TODO Review this method, should not expect to change the cab if the selection changes
         if (checkedCount <= 0) {
-            AttachedCabKt.destroy(cab);
-        }
-        else {
-            if (!AttachedCabKt.isActive(cab)) {
+            cab.finish();
+            cab = null;
+        } else {
+            if (cab == null) {
                 cab = openCabFunction.get();
             }
-            cab.title(ResourcesCompat.ID_NULL,
-                    (checkedCount == 1)
-                            ? context.getString(R.string.x_selected, 1)
-                            : context.getString(R.string.x_selected, checkedCount)
-            );
+            cab.setTitle(context.getString(R.string.x_selected, checkedCount));
         }
         return cab;
     }

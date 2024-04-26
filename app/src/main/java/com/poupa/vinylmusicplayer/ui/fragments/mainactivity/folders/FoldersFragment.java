@@ -8,6 +8,7 @@ import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +27,6 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -86,7 +85,8 @@ public class FoldersFragment
 
     private FragmentFolderBinding layoutBinding;
 
-    private AttachedCab cab;
+    @Nullable
+    private ActionMode cab;
     private SongFileAdapter adapter;
 
     private String sortOrder;
@@ -221,8 +221,9 @@ public class FoldersFragment
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {
-            AttachedCabKt.destroy(cab);
+        if (cab != null) {
+            cab.finish();
+            cab = null;
             return true;
         }
         if (layoutBinding.breadCrumbs.popHistory()) {
@@ -234,8 +235,8 @@ public class FoldersFragment
 
     @NonNull
     @Override
-    public AttachedCab openCab(int menuRes, final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
+    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+        if (cab != null) {cab.finish();}
 
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
         adapter.setColor(color);

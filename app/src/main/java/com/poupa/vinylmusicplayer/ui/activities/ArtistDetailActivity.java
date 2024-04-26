@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +18,6 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -74,7 +73,8 @@ public class ArtistDetailActivity
     private View songListHeader;
     private RecyclerView albumRecyclerView;
 
-    private AttachedCab cab;
+    @Nullable
+    private ActionMode cab;
     int headerViewHeight;
     int toolbarColor;
 
@@ -367,8 +367,8 @@ public class ArtistDetailActivity
 
     @NonNull
     @Override
-    public AttachedCab openCab(int menuRes, @NonNull final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
+    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+        if (cab != null) {cab.finish();}
 
         @ColorInt final int color = getPaletteColor();
         songAdapter.setColor(color);
@@ -378,8 +378,10 @@ public class ArtistDetailActivity
 
     @Override
     public void onBackPressed() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
-        else {
+        if (cab != null) {
+            cab.finish();
+            cab = null;
+        } else {
             albumRecyclerView.stopScroll();
             super.onBackPressed();
         }

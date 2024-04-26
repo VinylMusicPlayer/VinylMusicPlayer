@@ -3,19 +3,19 @@ package com.poupa.vinylmusicplayer.ui.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
@@ -66,7 +66,8 @@ public class PlaylistDetailActivity
 
     private Playlist playlist;
 
-    private AttachedCab cab;
+    @Nullable
+    private ActionMode cab;
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
@@ -191,19 +192,21 @@ public class PlaylistDetailActivity
 
     @NonNull
     @Override
-    public AttachedCab openCab(final int menu, final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
+    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+        if (cab != null) {cab.finish();}
 
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menu, color, callbacks);
+        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
         return cab;
     }
 
     @Override
     public void onBackPressed() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
-        else {
+        if (cab != null) {
+            cab.finish();
+            cab = null;
+        } else {
             layoutBinding.recyclerView.stopScroll();
             super.onBackPressed();
         }

@@ -1,14 +1,15 @@
 package com.poupa.vinylmusicplayer.interfaces;
 
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.afollestad.materialcab.attached.AttachedCab;
+import androidx.annotation.NonNull;
 
 public interface CabCallbacks {
-    void onCabCreate(AttachedCab cab, Menu menu);
+    void onCabCreate(@NonNull final ActionMode cab, @NonNull final Menu menu);
 
-    boolean onCabDestroy(AttachedCab cab);
+    boolean onCabDestroy(@NonNull final ActionMode cab);
 
-    boolean onCabSelection(MenuItem menuItem);
+    boolean onCabSelection(@NonNull final MenuItem menuItem);
 }
