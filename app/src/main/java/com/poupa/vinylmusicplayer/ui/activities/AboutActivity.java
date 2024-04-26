@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,7 +18,6 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.resources.TextAppearance;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
@@ -42,8 +42,6 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
 
     private static final String GITHUB = "https://github.com/VinylMusicPlayer/VinylMusicPlayer";
 
-    private static final String WEBSITE = "https://adrien.poupa.fr/";
-
     private static final String RATE_ON_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=com.poupa.vinylmusicplayer";
 
     private ActivityAboutBinding layoutBinding;
@@ -55,11 +53,11 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         try {
             layoutBinding = ActivityAboutBinding.inflate(LayoutInflater.from(this));
         } catch (InflateException e) {
-            new MaterialDialog.Builder(this)
-                    .title(android.R.string.dialog_alert_title)
-                    .content(R.string.missing_webview_component)
-                    .positiveText(android.R.string.ok)
-                    .build()
+            new AlertDialog.Builder(this)
+                    .setTitle(android.R.string.dialog_alert_title)
+                    .setMessage(R.string.missing_webview_component)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                    .create()
                     .show();
         }
 
@@ -220,7 +218,7 @@ public class AboutActivity extends AbsBaseActivity implements View.OnClickListen
         if (v == layoutBinding.content.cardAboutApp.changelog) {
             new ChangelogDialog.Builder(this).show();
         } else if (v == layoutBinding.content.cardAboutApp.licenses) {
-            new MarkdownViewDialog.Builder(this).build()
+            new MarkdownViewDialog.Builder(this)
                     .setMarkdownContentFromAsset(this,"LICENSES.md")
                     .show();
         } else if (v == layoutBinding.content.cardAboutApp.intro) {

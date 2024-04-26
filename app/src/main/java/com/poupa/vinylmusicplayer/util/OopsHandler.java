@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Looper;
@@ -8,7 +9,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.ui.activities.bugreport.BugReportActivity;
 
@@ -40,19 +40,18 @@ public class OopsHandler implements UncaughtExceptionHandler {
             public void run() {
                 Looper.prepare();
 
-                new MaterialDialog.Builder(context)
-                        .title(R.string.app_crashed)
-                        .content(R.string.report_a_crash_invitation)
-                        .autoDismiss(true)
-                        .onPositive((dialog, which) -> {
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.app_crashed)
+                        .setMessage(R.string.report_a_crash_invitation)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.report_a_crash, (dialog, which) -> {
                             final Intent sendIntent = new Intent(context, BugReportActivity.class);
                             sendIntent.putExtra(Intent.EXTRA_TEXT, errorContent);
                             context.startActivity(sendIntent);
                             System.exit(0);
                         })
-                        .onNegative(((dialog, which) -> System.exit(0)))
-                        .positiveText(R.string.report_a_crash)
-                        .negativeText(android.R.string.cancel)
+                        .setNegativeButton(android.R.string.cancel, ((dialog, which) -> System.exit(0)))
+                        .create()
                         .show();
 
                 Looper.loop();

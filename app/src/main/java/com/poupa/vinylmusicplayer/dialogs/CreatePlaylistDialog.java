@@ -1,15 +1,16 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
@@ -50,15 +51,18 @@ public class CreatePlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = requireActivity();
-        return new MaterialDialog.Builder(activity)
-                .title(R.string.new_playlist_title)
-                .positiveText(R.string.create_action)
-                .negativeText(android.R.string.cancel)
-                .inputType(InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                .input(R.string.playlist_name_empty, 0, false, (materialDialog, charSequence) -> {
-                    final String name = charSequence.toString().trim();
+
+        final EditText input = new EditText(activity);
+        input.setInputType(InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
+                InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+
+        return new AlertDialog.Builder(activity)
+                //.setTitle(R.string.new_playlist_title)
+                .setTitle(R.string.playlist_name_empty)
+                .setView(input)
+                .setPositiveButton(R.string.create_action, (dialog, which) -> {
+                    final String name = input.getText().toString().trim();
                     if (!name.isEmpty()) {
                         if (!PlaylistsUtil.doesPlaylistExist(name)) {
                             final long playlistId = PlaylistsUtil.createPlaylist(activity, name);
@@ -73,7 +77,9 @@ public class CreatePlaylistDialog extends DialogFragment {
                             );
                         }
                     }
+                    dialog.dismiss();
                 })
-                .build();
+                .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
+                .create();
     }
 }

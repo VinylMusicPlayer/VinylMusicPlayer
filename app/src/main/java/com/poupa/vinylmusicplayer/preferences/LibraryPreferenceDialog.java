@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.preferences;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.CategoryInfoAdapter;
 import com.poupa.vinylmusicplayer.model.CategoryInfo;
@@ -44,20 +44,17 @@ public class LibraryPreferenceDialog extends DialogFragment {
 
         adapter.attachToRecyclerView(recyclerView);
 
-        return new MaterialDialog.Builder(getContext())
-                .title(R.string.library_categories)
-                .customView(view, false)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .neutralText(R.string.reset_action)
-                .autoDismiss(false)
-                .onNeutral((dialog, action) -> adapter.setCategoryInfos(PreferenceUtil.getInstance().getDefaultLibraryCategoryInfos()))
-                .onNegative((dialog, action) -> dismiss())
-                .onPositive((dialog, action) -> {
+        return new AlertDialog.Builder(getContext())
+                .setTitle(R.string.library_categories)
+                .setView(view)
+                .setPositiveButton(android.R.string.ok, (dialog, action) -> {
                     updateCategories(adapter.getCategoryInfos());
                     dismiss();
                 })
-                .build();
+                .setNegativeButton(android.R.string.cancel, (dialog, action) -> dismiss())
+                .setNeutralButton(R.string.reset_action, (dialog, action) -> adapter.setCategoryInfos(PreferenceUtil.getInstance().getDefaultLibraryCategoryInfos()))
+                .setCancelable(false)
+                .create();
     }
 
     @Override

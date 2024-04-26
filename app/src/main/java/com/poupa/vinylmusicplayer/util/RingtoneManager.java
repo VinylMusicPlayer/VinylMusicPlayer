@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,7 +14,6 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 
 public class RingtoneManager {
@@ -27,18 +27,18 @@ public class RingtoneManager {
     }
 
     public static void showDialog(Context context) {
-        new MaterialDialog.Builder(context)
-                .title(R.string.dialog_ringtone_title)
-                .content(R.string.dialog_ringtone_message)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .onPositive((dialog, which) -> {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.dialog_ringtone_title)
+                .setMessage(R.string.dialog_ringtone_message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
                     }
                 })
+                .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
                 .show();
     }
 

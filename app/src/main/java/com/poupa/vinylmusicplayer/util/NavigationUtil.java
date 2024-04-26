@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.media.audiofx.AudioEffect;
@@ -37,10 +38,10 @@ public class NavigationUtil {
             goToArtist(activity, artistNames.get(0), sharedElements);
         } else {
             // Popup to select one name to navigate to
-            new MaterialDialog.Builder(activity)
-                    .title(R.string.action_go_to_artist)
-                    .items(artistNames)
-                    .itemsCallback((dialog, view, which, text) -> goToArtist(activity, text.toString(), sharedElements))
+            new AlertDialog.Builder(activity)
+                    .setTitle(R.string.action_go_to_artist)
+                    .setItems(artistNames.toArray(new String[0]), (dialog, which) -> goToArtist(activity, artistNames.get(which), sharedElements))
+                    .create()
                     .show();
         }
     }

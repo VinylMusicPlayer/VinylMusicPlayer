@@ -1,8 +1,10 @@
 package com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
@@ -28,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -67,6 +68,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class FoldersFragment
         extends AbsMainActivityFragment
@@ -795,14 +797,16 @@ public class FoldersFragment
 
         @Override
         protected Dialog createDialog(@NonNull final Context context) {
-            return new MaterialDialog.Builder(context)
-                    .title(R.string.listing_files)
-                    .progress(true, 0)
-                    .progressIndeterminateStyle(true)
-                    .cancelListener(dialog -> cancel(false))
-                    .dismissListener(dialog -> cancel(false))
-                    .negativeText(android.R.string.cancel)
-                    .onNegative((dialog, which) -> cancel(false))
+            Consumer<DialogInterface> dimissHandler = (dialog) -> {
+                cancel(false);
+                dialog.dismiss();
+            };
+            return new AlertDialog.Builder(context)
+                    .setTitle(R.string.listing_files)
+                    // TODO Replace the removed indeterminate progessbar by some text here
+                    .setOnCancelListener(dimissHandler::accept)
+                    .setOnDismissListener(dimissHandler::accept)
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dimissHandler.accept(dialog))
                     .show();
         }
     }

@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.ui.activities.tageditor;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -29,7 +30,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewbinding.ViewBinding;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kabouzeid.appthemehelper.ThemeStore;
@@ -223,10 +223,9 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                 getString(R.string.web_search),
                 getString(R.string.remove_cover)
         };
-        image.setOnClickListener(v -> new MaterialDialog.Builder(AbsTagEditorActivity.this)
-                .title(R.string.update_image)
-                .items(items)
-                .itemsCallback((dialog, view, which, text) -> {
+        image.setOnClickListener(v -> new AlertDialog.Builder(AbsTagEditorActivity.this)
+                .setTitle(R.string.update_image)
+                .setItems(items, (dialog, which) -> {
                     switch (which) {
                         case 0:
                             getImageFromLastFM();
@@ -241,7 +240,8 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
                             deleteImage();
                             break;
                     }
-                }).show());
+                })
+                .show());
     }
 
     protected abstract void loadCurrentImage();
@@ -515,18 +515,18 @@ public abstract class AbsTagEditorActivity extends AbsBaseActivity {
 
         @Override
         protected Dialog createDialog(@NonNull Context context) {
-            return new MaterialDialog.Builder(context)
-                    .title(R.string.saving_changes)
-                    .cancelable(false)
-                    .progress(false, 0)
-                    .build();
+            return new AlertDialog.Builder(context)
+                    .setTitle(R.string.saving_changes)
+                    .setCancelable(false)
+                    .create();
         }
 
         @Override
         protected void onProgressUpdate(@NonNull Dialog dialog, Integer... values) {
             super.onProgressUpdate(dialog, values);
-            ((MaterialDialog) dialog).setMaxProgress(values[1]);
-            ((MaterialDialog) dialog).setProgress(values[0]);
+
+            final String message = dialog.getContext().getResources().getString(R.string.processed_x_over_y_tracks, values[0], values[1]);
+            ((AlertDialog) dialog).setMessage(message);
         }
 
         static class LoadingInfo {

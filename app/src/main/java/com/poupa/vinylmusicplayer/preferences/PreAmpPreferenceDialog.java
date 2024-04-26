@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.preferences;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -55,15 +55,13 @@ public class PreAmpPreferenceDialog extends DialogFragment implements SeekBar.On
         seekbarWithoutRg.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         seekbarWithoutRg.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
-        return new MaterialDialog.Builder(getContext())
-                .title(R.string.pref_title_rg_preamp)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .autoDismiss(false)
-                .onNegative((dialog, which) -> dismiss())
-                .onPositive((dialog, which) -> updateAndClose())
-                .customView(view, false)
-                .build();
+        return new AlertDialog.Builder(getContext())
+                .setTitle(R.string.pref_title_rg_preamp)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> updateAndClose())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dismiss())
+                .setCancelable(false)
+                .setView(view)
+                .create();
     }
 
     private void updateAndClose() {

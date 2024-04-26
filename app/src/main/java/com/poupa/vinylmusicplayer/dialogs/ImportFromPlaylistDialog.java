@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -42,19 +42,18 @@ public class ImportFromPlaylistDialog extends DialogFragment {
         final List<StaticPlaylist> playlists = StaticPlaylist.getAllPlaylists();
 
         if (playlists.isEmpty()) {
-            return new MaterialDialog.Builder(context)
-                    .title(R.string.import_playlist_title)
-                    .content(R.string.no_playlists)
-                    .build();
+            return new AlertDialog.Builder(context)
+                    .setTitle(R.string.import_playlist_title)
+                    .setMessage(R.string.no_playlists)
+                    .create();
         } else {
             CharSequence[] playlistNames = new CharSequence[playlists.size()];
             for (int i = 0; i < playlistNames.length; i++) {
                 playlistNames[i] = playlists.get(i).asPlaylist().name;
             }
-            return new MaterialDialog.Builder(context)
-                    .title(R.string.import_playlist_title)
-                    .items(playlistNames)
-                    .itemsCallback((materialDialog, view, i, charSequence) -> {
+            return new AlertDialog.Builder(context)
+                    .setTitle(R.string.import_playlist_title)
+                    .setItems(playlistNames, (materialDialog, i) -> {
                         materialDialog.dismiss();
                         final Playlist sourcePlaylist = playlists.get(i).asPlaylist();
                         final List<? extends Song> songs = sourcePlaylist.getSongs(context);
@@ -68,7 +67,7 @@ public class ImportFromPlaylistDialog extends DialogFragment {
                             }
                         }
                     })
-                    .build();
+                    .create();
         }
     }
 }

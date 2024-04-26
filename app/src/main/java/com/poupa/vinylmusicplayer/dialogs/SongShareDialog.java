@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -34,11 +34,14 @@ public class SongShareDialog extends DialogFragment {
                 R.string.currently_listening_to_x_by_x,
                 song.getTitle(),
                 MultiValuesTagUtil.infoStringAsArtists(song.artistNames));
-        return new MaterialDialog.Builder(getActivity())
-                .title(R.string.what_do_you_want_to_share)
-                .items(getString(R.string.the_audio_file), "\u201C" + currentlyListening + "\u201D")
-                .itemsCallback((materialDialog, view, i, charSequence) -> {
-                    switch (i) {
+        final String[] items = new String[]{
+                getString(R.string.the_audio_file),
+                "\u201C" + currentlyListening + "\u201D"
+        };
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.what_do_you_want_to_share)
+                .setItems(items, (materialDialog, which) -> {
+                    switch (which) {
                         case 0:
                             startActivity(Intent.createChooser(MusicUtil.createShareSongFileIntent(song, getContext()), null));
                             break;
@@ -55,6 +58,6 @@ public class SongShareDialog extends DialogFragment {
                             break;
                     }
                 })
-                .build();
+                .create();
     }
 }

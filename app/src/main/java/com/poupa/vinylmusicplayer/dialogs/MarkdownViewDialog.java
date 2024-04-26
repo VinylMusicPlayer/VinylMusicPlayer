@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 
 import java.io.BufferedReader;
@@ -28,77 +28,66 @@ import io.noties.markwon.image.glide.GlideImagesPlugin;
 /**
  * @author SC (soncaokim)
  */
-public class MarkdownViewDialog extends MaterialDialog {
-    private String markdownContent;
-
+public class MarkdownViewDialog extends AlertDialog {
     protected MarkdownViewDialog(Builder builder) {
-        super(builder);
+        super(builder.getContext());
     }
 
-    public MarkdownViewDialog setMarkdownContent(@NonNull final Context context, @NonNull final String content) {
-        markdownContent = content;
+    public static class Builder extends AlertDialog.Builder {
+        private final View customView;
 
-        if (isShowing()) {
+        public Builder(@NonNull Context context) {
+            super(context);
+            customView = LayoutInflater.from(context).inflate(R.layout.dialog_markdown_view, null);
+        }
+
+        @NonNull
+        public Builder setMarkdownContent(@NonNull final String content) {
+            final Context context = getContext();
             final Markwon markwon = Markwon.builder(context)
                     .usePlugin(GlideImagesPlugin.create(context)) // image loader
                     .usePlugin(HtmlPlugin.create()) // basic Html tags
                     .usePlugin(new GithubLinkify())
                     .usePlugin(new CustomStyles(context))
                     .build();
-            final TextView markdownView = getCustomView().findViewById(R.id.markdown_view);
-            markwon.setMarkdown(markdownView, markdownContent);
-        } else {
-            setOnShowListener(dialog -> ((MarkdownViewDialog)dialog).setMarkdownContent(context, markdownContent));
-        }
-
-        return this;
-    }
-
-    public MarkdownViewDialog setMarkdownContentFromAsset(@NonNull final Context context, @NonNull final String assetName) {
-        final String content = loadFileFromAssets(context, assetName);
-        return setMarkdownContent(context, content);
-    }
-
-    @NonNull
-    private String loadFileFromAssets(@NonNull final Context context, @NonNull final String name) {
-        StringBuilder buf = new StringBuilder();
-        try {
-            InputStream json = context.getAssets().open(name);
-            BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
-            String str;
-            while ((str = in.readLine()) != null) {
-                buf.append(str);
-                buf.append('\n');
-            }
-            in.close();
-        }
-        catch (IOException ioe) {
-            buf.append("Unable to load ").append(name)
-                .append("\n\n")
-                .append(ioe.getLocalizedMessage());
-        }
-        return buf.toString();
-    }
-
-    public static class Builder extends MaterialDialog.Builder {
-        public Builder(@NonNull Context context) {
-            super(context);
-        }
-
-        @Override
-        public Builder title(@NonNull final CharSequence title) {
-            super.title(title);
+            final TextView markdownView = customView.findViewById(R.id.markdown_view);
+            markwon.setMarkdown(markdownView, content);
             return this;
+        }
+
+        public Builder setMarkdownContentFromAsset(@NonNull final Context context, @NonNull final String assetName) {
+            final String content = loadFileFromAssets(context, assetName);
+            return setMarkdownContent(content);
+        }
+
+        @NonNull
+        private static String loadFileFromAssets(@NonNull final Context context, @NonNull final String name) {
+            StringBuilder buf = new StringBuilder();
+            try {
+                InputStream json = context.getAssets().open(name);
+                BufferedReader in = new BufferedReader(new InputStreamReader(json, StandardCharsets.UTF_8));
+                String str;
+                while ((str = in.readLine()) != null) {
+                    buf.append(str);
+                    buf.append('\n');
+                }
+                in.close();
+            }
+            catch (IOException ioe) {
+                buf.append("Unable to load ").append(name)
+                        .append("\n\n")
+                        .append(ioe.getLocalizedMessage());
+            }
+            return buf.toString();
         }
 
         @Override
         @UiThread
-        public MarkdownViewDialog build() {
-            final View customView = LayoutInflater.from(context).inflate(R.layout.dialog_markdown_view, null);
-            customView(customView, true);
-            positiveText(android.R.string.ok);
+        public AlertDialog create() {
+            setView(customView);
+            setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()));
 
-            return new MarkdownViewDialog(this);
+            return super.create();
         }
     }
 

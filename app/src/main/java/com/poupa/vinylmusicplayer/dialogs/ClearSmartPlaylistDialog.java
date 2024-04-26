@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Html;
@@ -7,7 +8,6 @@ import android.text.Html;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
 
@@ -32,17 +32,16 @@ public class ClearSmartPlaylistDialog extends DialogFragment {
         int title = R.string.clear_playlist_title;
         CharSequence content = Html.fromHtml(getString(R.string.clear_playlist_x, playlist.name));
 
-        return new MaterialDialog.Builder(getActivity())
-                .title(title)
-                .content(content)
-                .positiveText(R.string.clear_action)
-                .negativeText(android.R.string.cancel)
-                .onPositive((dialog, which) -> {
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setMessage(content)
+                .setPositiveButton(R.string.clear_action, (dialog, which) -> {
                     if (getActivity() == null) {
                         return;
                     }
                     playlist.clear(getActivity());
                 })
-                .build();
+                .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
+                .create();
     }
 }
