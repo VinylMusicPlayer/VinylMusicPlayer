@@ -77,16 +77,15 @@ public interface CabHolder {
     static ActionMode updateCab(@NonNull final Context context, @NonNull ActionMode cab,
                                 @NonNull final Supplier<ActionMode> openCabFunction,
                                 final int checkedCount) {
-        // TODO Review this method, should not expect to change the cab if the selection changes
         if (checkedCount <= 0) {
             cab.finish();
-            cab = null;
+            return null;
         } else {
             if (cab == null) {
                 cab = openCabFunction.get();
             }
             cab.setTitle(context.getString(R.string.x_selected, checkedCount));
+            return cab;
         }
-        return cab;
     }
 }
