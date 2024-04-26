@@ -74,7 +74,7 @@ public interface CabHolder {
         return attachedCab;
     }
 
-    @NonNull
+    @Nullable
     static ActionMode updateCab(@NonNull final Context context, @Nullable ActionMode cab,
                                 @NonNull final Supplier<ActionMode> openCabFunction,
                                 final int checkedCount) {
