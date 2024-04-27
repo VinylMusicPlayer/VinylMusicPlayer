@@ -181,8 +181,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
                         .setTitle(R.string.reset_discography)
                         .setMessage(R.string.reset_discography_warning)
                         .setPositiveButton(R.string.reset_discography, (dialog, which) -> {
-                            Discography.getInstance().triggerSyncWithMediaStore(true);
                             dialog.dismiss();
+                            Discography.getInstance().triggerSyncWithMediaStore(true);
                         })
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
                         .show();
