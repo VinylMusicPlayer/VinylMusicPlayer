@@ -55,13 +55,12 @@ public interface CabHolder {
                         }, 10L);
 
                         callbacks.onCabCreate(mode, menu);
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
-                        callbacks.onCabSelection(item);
-                        return true;
+                        return callbacks.onCabSelection(item);
                     }
 
                     @Override
