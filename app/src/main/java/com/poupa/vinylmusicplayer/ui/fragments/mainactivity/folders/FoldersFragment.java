@@ -231,12 +231,9 @@ public class FoldersFragment
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
         adapter.setColor(color);
-        cab = CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
     }
 
     @Override

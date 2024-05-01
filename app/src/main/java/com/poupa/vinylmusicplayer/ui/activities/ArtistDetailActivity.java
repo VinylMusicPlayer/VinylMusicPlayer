@@ -73,8 +73,6 @@ public class ArtistDetailActivity
     private View songListHeader;
     private RecyclerView albumRecyclerView;
 
-    @Nullable
-    private ActionMode cab;
     int headerViewHeight;
     int toolbarColor;
 
@@ -368,12 +366,9 @@ public class ArtistDetailActivity
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = getPaletteColor();
         songAdapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
     }
 
     @Override

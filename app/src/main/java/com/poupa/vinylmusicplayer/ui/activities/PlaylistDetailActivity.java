@@ -10,7 +10,6 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -66,8 +65,6 @@ public class PlaylistDetailActivity
 
     private Playlist playlist;
 
-    @Nullable
-    private ActionMode cab;
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
@@ -193,12 +190,9 @@ public class PlaylistDetailActivity
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
     }
 
     @Override

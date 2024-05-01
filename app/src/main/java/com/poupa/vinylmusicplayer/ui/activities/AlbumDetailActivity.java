@@ -74,8 +74,6 @@ public class AlbumDetailActivity
 
     ActivityAlbumDetailBinding layoutBinding;
     AlbumSongAdapter adapter;
-    @Nullable
-    private ActionMode cab;
     int headerViewHeight;
     int toolbarColor;
 
@@ -344,12 +342,9 @@ public class AlbumDetailActivity
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = getPaletteColor();
         adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
     }
 
     @Override

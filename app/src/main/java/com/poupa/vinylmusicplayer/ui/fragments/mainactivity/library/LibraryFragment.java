@@ -61,8 +61,6 @@ public class LibraryFragment
     private FragmentLibraryBinding layoutBinding;
 
     private MusicLibraryPagerAdapter pagerAdapter;
-    @Nullable
-    private ActionMode cab;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -155,11 +153,8 @@ public class LibraryFragment
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
     }
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {

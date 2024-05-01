@@ -48,7 +48,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
 
     private Genre genre;
 
-    private ActionMode cab;
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
@@ -139,12 +138,9 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
     @NonNull
     @Override
     public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
-        if (cab != null) {cab.finish();}
-
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
-        return cab;
+        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
     }
 
     @Override
