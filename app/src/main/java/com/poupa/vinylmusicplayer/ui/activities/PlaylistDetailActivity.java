@@ -203,13 +203,8 @@ public class PlaylistDetailActivity
 
     @Override
     public void onBackPressed() {
-        if (cab != null) {
-            cab.finish();
-            cab = null;
-        } else {
-            layoutBinding.recyclerView.stopScroll();
-            super.onBackPressed();
-        }
+        layoutBinding.recyclerView.stopScroll();
+        super.onBackPressed();
     }
 
     @Override

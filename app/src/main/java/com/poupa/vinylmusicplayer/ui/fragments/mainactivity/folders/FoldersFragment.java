@@ -221,11 +221,6 @@ public class FoldersFragment
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null) {
-            cab.finish();
-            cab = null;
-            return true;
-        }
         if (layoutBinding.breadCrumbs.popHistory()) {
             setCrumb(layoutBinding.breadCrumbs.lastHistory(), false);
             return true;

@@ -378,13 +378,8 @@ public class ArtistDetailActivity
 
     @Override
     public void onBackPressed() {
-        if (cab != null) {
-            cab.finish();
-            cab = null;
-        } else {
-            albumRecyclerView.stopScroll();
-            super.onBackPressed();
-        }
+        albumRecyclerView.stopScroll();
+        super.onBackPressed();
     }
 
     @Override

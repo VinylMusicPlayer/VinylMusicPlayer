@@ -354,14 +354,8 @@ public class AlbumDetailActivity
 
     @Override
     public void onBackPressed() {
-        if (cab != null) {
-            cab.finish();
-            cab = null;
-        }
-        else {
-            layoutBinding.list.stopScroll();
-            super.onBackPressed();
-        }
+        layoutBinding.list.stopScroll();
+        super.onBackPressed();
     }
 
     @Override
