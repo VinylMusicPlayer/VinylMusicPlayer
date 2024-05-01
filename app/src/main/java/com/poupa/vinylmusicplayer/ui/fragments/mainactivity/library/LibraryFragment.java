@@ -39,6 +39,7 @@ import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.ArtistSortOrder;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AbsLibraryPagerRecyclerViewCustomGridSizeFragment;
@@ -53,6 +54,7 @@ public class LibraryFragment
         extends AbsMainActivityFragment
         implements
             CabHolder,
+            MainActivity.MainActivityFragmentCallbacks,
             ViewPager.OnPageChangeListener,
             SharedPreferences.OnSharedPreferenceChangeListener
 {
@@ -357,6 +359,11 @@ public class LibraryFragment
             return true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean handleBackPress() {
         return false;
     }
 
