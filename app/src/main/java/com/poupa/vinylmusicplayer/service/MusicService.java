@@ -12,6 +12,7 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+//import android.media.AudioFocusRequest;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
@@ -115,13 +116,13 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
     static final String TOGGLE_SHUFFLE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".toggleshuffle";
     public static final String TOGGLE_FAVORITE = VINYL_MUSIC_PLAYER_PACKAGE_NAME + ".togglefavorite";
 
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String SAVED_POSITION = "POSITION";
-    @PrefKey
+    @PrefKey(ExportImportable = false)
     private static final String SAVED_POSITION_IN_TRACK = "POSITION_IN_TRACK";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SAVED_SHUFFLE_MODE = "SHUFFLE_MODE";
-    @PrefKey(ExportImportable = true)
+    @PrefKey
     private static final String SAVED_REPEAT_MODE = "REPEAT_MODE";
 
     static final int RELEASE_WAKELOCK = 0;
@@ -182,8 +183,8 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
             }
         }
     };
-    @RequiresApi(Build.VERSION_CODES.O)
-    private AudioFocusRequest focusRequest;
+    //@RequiresApi(Build.VERSION_CODES.O)
+    private Object focusRequest;
 
     private QueueSaveHandler queueSaveHandler;
     private HandlerThread queueSaveHandlerThread;
@@ -227,7 +228,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
-            focusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            focusRequest = new android.media.AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                     .setAudioAttributes(PLAYBACK_ATTRIBUTE)
                     .setOnAudioFocusChangeListener(audioFocusListener)
                     .build();
@@ -628,7 +629,7 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
 
     private boolean requestFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return (getAudioManager().requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+            return (getAudioManager().requestAudioFocus((android.media.AudioFocusRequest) focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
         } else {
             return (getAudioManager().requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
         }
