@@ -32,7 +32,7 @@ public interface CabHolder {
             @ColorInt final int backgroundColor,
             @NonNull final CabCallbacks callbacks)
     {
-        final ActionMode attachedCab = context.startActionMode(
+        final ActionMode cab = context.startActionMode(
                 new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
@@ -46,15 +46,13 @@ public interface CabHolder {
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
                         final ViewGroup decorView = (ViewGroup) context.getWindow().getDecorView();
-                        decorView.postDelayed(() -> {
-                            final View cabView = context.getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+                        final View cabView = decorView.findViewById(R.id.action_mode_bar);
+                        if (cabView != null) {
                             final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
-                            if (cabView != null) {
-                                cabView.setBackgroundColor(cabColor);
-                            }
-                        }, 10L);
-
+                            cabView.setBackgroundColor(cabColor);
+                        }
                         callbacks.onCabCreate(mode, menu);
+
                         return true;
                     }
 
@@ -70,7 +68,7 @@ public interface CabHolder {
                 }
         );
 
-        return attachedCab;
+        return cab;
     }
 
     @Nullable
