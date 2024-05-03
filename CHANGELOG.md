@@ -1,4 +1,12 @@
 # Changelog
+## [1.10.3] - 2024-05-03
+
+### Fixes
+* Fix crash on Android 19 with go to artist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1060
+### Other Changes
+* CI updates by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1057
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.2...1.10.3
 ## [1.10.2] - 2024-04-25
 
 ### Fixes
