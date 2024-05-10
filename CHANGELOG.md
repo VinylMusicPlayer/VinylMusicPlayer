@@ -1,4 +1,11 @@
 # Changelog
+## [1.10.4] - 2024-05-10
+
+### Fixes
+* Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/1017  by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1050
+* Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/1071 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1079
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.3...1.10.4
 
 ## [1.10.3] - 2024-05-03
 
