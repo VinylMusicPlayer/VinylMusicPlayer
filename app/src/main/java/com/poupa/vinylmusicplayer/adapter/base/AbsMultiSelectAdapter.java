@@ -107,8 +107,10 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
             checkAll();
         } else {
             onMultipleItemAction(menuItem, checked);
-            cab.finish();
-            cab = null;
+            if (cab != null) {
+                cab.finish();
+                cab = null;
+            }
             clearChecked();
         }
         return true;

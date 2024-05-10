@@ -189,8 +189,10 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     @Override
     public boolean onCabSelection(@NonNull final MenuItem menuItem) {
         onMultipleItemAction(menuItem, new ArrayList<>(checked));
-        cab.finish();
-        cab = null;
+        if (cab != null) {
+            cab.finish();
+            cab = null;
+        }
         unCheckAll();
         return true;
     }

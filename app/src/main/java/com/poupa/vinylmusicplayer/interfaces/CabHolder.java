@@ -76,7 +76,9 @@ public interface CabHolder {
                                 @NonNull final Supplier<ActionMode> openCabFunction,
                                 final int checkedCount) {
         if (checkedCount <= 0) {
-            cab.finish();
+            if (cab != null) {
+                cab.finish();
+            }
             return null;
         } else {
             if (cab == null) {
