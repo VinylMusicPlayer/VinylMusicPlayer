@@ -115,7 +115,7 @@ class MemCache {
                     artistsByName.remove(artist.name);
                 }
             }
-            if (impactedAlbumsByArtist.isEmpty()) {
+            if (impactedAlbumsByArtist != null && impactedAlbumsByArtist.isEmpty()) {
                 albumsByAlbumIdAndArtistId.remove(song.albumId);
 
                 @Nullable final Set<Long> albumsId = albumsByName.get(song.albumName);
