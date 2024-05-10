@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.service.playback.Playback;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.SafeToast;
 
@@ -281,8 +282,8 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
     private void setVolume(final float vol) {
         try {
             mCurrentMediaPlayer.setVolume(vol, vol);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
+        } catch (final IllegalStateException e) {
+            OopsHandler.collectStackTrace(e);
         }
     }
 
@@ -367,10 +368,13 @@ public class MultiPlayer implements Playback, MediaPlayer.OnErrorListener, Media
 
                 // DynamicsProcessing is in charge of replay gain, revert volume to 100%
                 volume = 1.0f;
-            } catch (UnsupportedOperationException e) {
-                // This can happen when an external equalizer is in use
+            } catch (final RuntimeException error) {
+                // This can happen with:
+                // - UnsupportedOperationException: an external equalizer is in use
+                // - RuntimeException: AudioEffect: set/get parameter error
                 // Fallback to volume modification in this case
-                Log.d(TAG, "Could not apply replay gain using DynamicsProcessing", e);
+                OopsHandler.collectStackTrace(error);
+                //SafeToast.show(App.getStaticContext(), "Could not apply replay gain using DynamicsProcessing");
             }
         }
 
