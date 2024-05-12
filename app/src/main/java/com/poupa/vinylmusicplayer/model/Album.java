@@ -19,14 +19,15 @@ import java.util.Objects;
 public class Album implements Parcelable {
     public static String UNKNOWN_ALBUM_DISPLAY_NAME = "Unknown Album";
 
+    @NonNull
     public final ArrayList<Song> songs;
 
-    public Album(ArrayList<Song> songs) {
-        this.songs = songs;
+    public Album(@NonNull final ArrayList<Song> theSongs) {
+        songs = theSongs;
     }
 
     public Album() {
-        this.songs = new ArrayList<>();
+        songs = new ArrayList<>();
     }
 
     public long getId() {
@@ -101,7 +102,7 @@ public class Album implements Parcelable {
 
     @Override
     public int hashCode() {
-        return songs != null ? songs.hashCode() : 0;
+        return songs.hashCode();
     }
 
     @NonNull
@@ -122,8 +123,9 @@ public class Album implements Parcelable {
         dest.writeTypedList(songs);
     }
 
-    protected Album(Parcel in) {
-        this.songs = in.createTypedArrayList(Song.CREATOR);
+    protected Album(@NonNull final Parcel in) {
+        final ArrayList<Song> loadedSongs = in.createTypedArrayList(Song.CREATOR);
+        songs = (loadedSongs == null) ? new ArrayList<>() : loadedSongs;
     }
 
     public static final Creator<Album> CREATOR = new Creator<>() {

@@ -198,7 +198,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_artist_image"
+                    app:srcCompat="@drawable/default_artist_image"
                     tools:ignore="ContentDescription" />
 
         </com.poupa.vinylmusicplayer.views.WidthFitSquareLayout>

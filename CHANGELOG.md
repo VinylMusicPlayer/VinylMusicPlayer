@@ -1,4 +1,43 @@
 # Changelog
+## [1.10.4] - 2024-05-10
+
+### Fixes
+* Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/1017  by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1050
+* Fix https://github.com/VinylMusicPlayer/VinylMusicPlayer/issues/1071 by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1079
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.3...1.10.4
+
+## [1.10.3] - 2024-05-03
+
+### Fixes
+* Fix crash on Android 19 with go to artist by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1060
+
+### Other Changes
+* CI updates by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1057
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.2...1.10.3
+
+## [1.10.2] - 2024-04-25
+
+### Fixes
+* Fix NPE (if there is no embedded tag) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1049
+* Reduce crash report spam for exceptions that we cannot resolve by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1048
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.1...1.10.2
+
+## [1.10.1] - 2024-04-23
+
+### Fixes
+* Possible fix for issue #908 (No suitable parent found from the given view) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1014
+* Fix ANR on app startup if the queue is empty by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1029
+* Fallback to cover image scanned and stored in MediaStore by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1022
+* Fix NPE (Attempt to invoke interface method 'java.util.Set java.util.Map.entrySet()' on a null object reference) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1045
+* Fix NPE (the result object can indeed be null) by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1046
+
+### Other Changes
+* Rollback unwanted crowdin integration by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1015
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.0...1.10.1
 
 ## [1.10.0] - 2024-04-04
 

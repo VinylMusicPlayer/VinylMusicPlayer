@@ -411,7 +411,7 @@ public class Discography implements MusicServiceEventListener {
             // Clean orphan songs (removed from MediaStore)
             final Set<Long> cacheSongsId = new HashSet<>(cache.songsById.keySet()); // make a copy
             cacheSongsId.removeAll(importedSongIds);
-            removeSongById(cacheSongsId.toArray(new Long[0]));
+            removeSongsById(cacheSongsId);
 
             counters.removed = cacheSongsId.size();
         }
@@ -478,14 +478,18 @@ public class Discography implements MusicServiceEventListener {
                     }
                 }
             }
-            removeSongById(matchingSongIds.toArray(new Long[0]));
+            removeSongsById(matchingSongIds);
         }
     }
 
-    private void removeSongById(@NonNull Long... songIds) {
-        if (songIds.length == 0) return;
+    private void removeSongById(final long songId) {
+        removeSongsById(List.of(songId));
+    }
 
-        for (long songId : songIds) {
+    private void removeSongsById(@NonNull final Collection<Long> songIds) {
+        if (songIds.isEmpty()) return;
+
+        for (final long songId : songIds) {
             cache.removeSongById(songId);
             database.removeSongById(songId);
         }

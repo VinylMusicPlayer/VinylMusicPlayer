@@ -11,6 +11,7 @@ import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -86,13 +87,15 @@ class MemCache {
         final Song song = songsById.get(songId);
         if (song != null) {
             // ---- Remove the song from linked Album cache
+            final Collection<Long> orphanArtists = new HashSet<>();
             final Map<Long, AlbumSlice> impactedAlbumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
-            final Set<Long> orphanArtists = new HashSet<>();
-            for (final Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
-                final Album album = pair.getValue();
-                if (album.songs.remove(song)) {
-                    if (album.songs.isEmpty()) {
-                        orphanArtists.add(pair.getKey());
+            if (impactedAlbumsByArtist != null) {
+                for (final Map.Entry<Long, AlbumSlice> pair : impactedAlbumsByArtist.entrySet()) {
+                    final Album album = pair.getValue();
+                    if (album.songs.remove(song)) {
+                        if (album.songs.isEmpty()) {
+                            orphanArtists.add(pair.getKey());
+                        }
                     }
                 }
             }
@@ -112,7 +115,7 @@ class MemCache {
                     artistsByName.remove(artist.name);
                 }
             }
-            if (impactedAlbumsByArtist.isEmpty()) {
+            if (impactedAlbumsByArtist != null && impactedAlbumsByArtist.isEmpty()) {
                 albumsByAlbumIdAndArtistId.remove(song.albumId);
 
                 @Nullable final Set<Long> albumsId = albumsByName.get(song.albumName);
@@ -224,10 +227,9 @@ class MemCache {
         // Now search by ID
         Map<Long, AlbumSlice> albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
         if (albumsByArtist == null) {
-            albumsByAlbumIdAndArtistId.put(song.albumId, new HashMap<>());
-            albumsByArtist = albumsByAlbumIdAndArtistId.get(song.albumId);
+            albumsByArtist = new HashMap<>();
+            albumsByAlbumIdAndArtistId.put(song.albumId, albumsByArtist);
         }
-        Objects.requireNonNull(albumsByArtist);
 
         final Map<Long, AlbumSlice> result = new HashMap<>();
         for (final Artist artist : artists) {
