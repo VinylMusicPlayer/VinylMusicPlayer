@@ -111,7 +111,6 @@
     <!--string name="pref_title_ignore_media_store_artwork">Игнорирай вградените обложки</string-->
     <string name="pref_title_gapless_playback">Непрекъснато звучене</string>
     <string name="pref_title_audio_ducking">Намалявай звукът при известия</string>
-    <string name="pref_summary_show_album_details">Показване на име, изпълнител и брой песни под всеки албум в изгледа на албума</string>
     <string name="no_equalizer">Еквилайзерът не бе намерен.</string>
     <string name="no_audio_ID">"Първо пусни песен, тогава пробвай отново"</string>
     <string name="delete_action">Изтрий</string>
@@ -142,7 +141,6 @@
     <string name="pref_summary_colored_app_shortcuts">Оцветява бутоните в главният цвят на апликацията</string>
     <string name="pref_summary_audio_ducking">Известия, навигация etc.</string>
     <string name="could_not_download_album_cover">"\u041d\u0435 \u043c\u043e\u0436\u0435\u0448\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u0438\u0437\u0442\u0435\u0433\u043b\u0435\u043d\u0430 \u043e\u0431\u043b\u043e\u0436\u043a\u0430."</string>
-    <string name="album_details">Подробности за албума</string>
     <string name="search_hint">Търсене във вашата аудио библиотека…</string>
     <string name="favorites">Любими</string>
     <string name="last_added">Последно добавени</string>

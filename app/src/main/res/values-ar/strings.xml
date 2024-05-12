@@ -104,7 +104,6 @@
     <!--string name="pref_title_ignore_media_store_artwork">تجاهل صور متجر الوسائط</string-->
     <string name="pref_title_gapless_playback">تشغيل بدون فواصل</string>
     <string name="pref_title_audio_ducking">خفض الصوت عند فقدان التركيز</string>
-    <string name="pref_summary_show_album_details">إظهار الاسم والفنان وعدد الأغاني أسفل كل ألبوم في عرض الألبوم</string>
     <string name="no_equalizer">لا يوجد معدل صوت</string>
     <string name="no_audio_ID">"شغل مقطعاً، ثم حاول مجدداً"</string>
     <string name="delete_action">حذف</string>
@@ -134,7 +133,6 @@
     <string name="pref_summary_colored_navigation_bar">تلوين شريط التنقل باللون الأساسي</string>
     <string name="pref_summary_audio_ducking">الإشعارات، التنقل، إلى آخره.</string>
     <string name="could_not_download_album_cover">"\u0644\u0627 \u064a\u0645\u0643\u0646 \u062a\u062d\u0645\u064a\u0644 \u063a\u0644\u0627\u0641 \u0623\u0644\u0628\u0648\u0645 \u0645\u0637\u0627\u0628\u0642 ."</string>
-    <string name="album_details">تفاصيل الألبوم</string>
     <string name="search_hint">إبحث في مكتبتك…</string>
     <string name="favorites">المفضلة</string>
     <string name="last_added">آخر ما تمت إضافته</string>

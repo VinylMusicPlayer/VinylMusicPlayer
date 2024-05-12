@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -94,8 +93,6 @@ public final class PreferenceUtil {
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
     private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
-
-    private static final String SHOW_ALBUM_DETAILS = "show_album_details";
 
     private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
@@ -592,14 +589,12 @@ public final class PreferenceUtil {
     }
 
     public void setAlbumShowFooter(final boolean value) {
-        Log.d("ACK", "Set to " + value);
         mPreferences.edit()
             .putBoolean(ALBUM_SHOW_FOOTER, value)
             .apply();
     }
 
     public boolean albumShowFooter() {
-        Log.d("ACK", "Get " + mPreferences.getBoolean(ALBUM_SHOW_FOOTER, true));
         return mPreferences.getBoolean(ALBUM_SHOW_FOOTER, true);
     }
 

@@ -124,7 +124,6 @@
     <string name="pref_title_gapless_playback">Phát lại quãng lặng</string>
     <string name="pref_title_audio_ducking">Giảm âm lượng khi mất tập trung</string>
     <string name="pref_title_last_added_interval">Thời gian danh sách nhạc được thêm vào sau cùng</string>
-    <string name="pref_summary_show_album_details">Hiển thị tên, nghệ sĩ và số lượng bài hát bên dưới mỗi album trong chế độ xem album</string>
     <string name="pref_title_synchronized_lyrics_show">Hiển thị lời bài hát được đồng bộ</string>
     <string name="no_equalizer">Không có bộ lọc âm thanh nào.</string>
     <string name="no_audio_ID">"Phát một bài hát đầu tiên, sau đó thử lại."</string>
@@ -158,7 +157,6 @@
     <string name="pref_summary_audio_ducking">Thông báo, điều hướng, vv.</string>
     <string name="pref_summary_synchronized_lyrics_show">Hiện tại chỉ được đồng bộ lời bài hát ở định dạng LRC. Nhúng hoặc là một tập tin riêng biệt.</string>
     <string name="could_not_download_album_cover">"Kh\u00f4ng th\u1ec3 t\u1ea3i v\u1ec1 b\u00eca album ph\u00f9 h\u1ee3p."</string>
-    <string name="album_details">Chi tiết anbom</string>
     <string name="search_hint">Tìm kiếm thư viện của bạn…</string>
     <string name="favorites">Yêu thích</string>
     <string name="last_added">Được thêm sau cùng</string>

@@ -127,7 +127,6 @@
     <string name="pref_title_gapless_playback">Redare fără întreruperi</string>
     <string name="pref_title_audio_ducking">Se reduce volumul la pierderea focalizării</string>
     <string name="pref_title_last_added_interval">Ultimul interval al listei de redare adăugate</string>
-    <string name="pref_summary_show_album_details">Afișați numele, artistul și numărul de melodii sub fiecare album din afișarea albumului</string>
     <string name="pref_title_synchronized_lyrics_show">Afişare versuri sincronizate</string>
     <string name="pref_title_remember_last_tab">Rețineți ultima filă</string>
     <string name="no_equalizer">Niciun egalizator găsit</string>
@@ -165,7 +164,6 @@
     <string name="pref_summary_synchronized_lyrics_show">În prezent sunt acceptate numai versurile sincronizate în format LRC. Fie încorporate, fie ca fişier separat.</string>
     <string name="pref_summary_remember_last_tab">Accesați ultima filă deschisă la lansare</string>
     <string name="could_not_download_album_cover">"Nu s-a putut desc\u0103rca o copert\u0103 de album corespunz\u0103toare."</string>
-    <string name="album_details">Detalii album</string>
     <string name="search_hint">Căutați în bibliotecă.</string>
     <string name="favorites">Favorite</string>
     <string name="last_added">Ultimele adăugate</string>

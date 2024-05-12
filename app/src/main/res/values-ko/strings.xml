@@ -144,7 +144,6 @@
     <string name="pref_title_recently_played_interval">\'최근에 들은 곡\' 재생 목록 기준</string>
     <string name="pref_title_not_recently_played_interval">\'최근에 듣지 않은 곡\' 재생 목록 기준</string>
     <string name="pref_title_last_added_interval">\'최근에 추가한 곡\' 재생 목록 기준</string>
-    <string name="pref_summary_show_album_details">앨범 보기의 각 앨범 아래에 이름, 아티스트, 노래 수 표시</string>
     <string name="pref_summary_maintain_top_tracks_playlist">\'자주 들은 곡\' 재생 목록 사용</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">\'건너뛴 곡\' 재생 목록 사용</string>
     <string name="pref_title_synchronized_lyrics_show">동기화 가사 보이기</string>
@@ -189,7 +188,6 @@
     <string name="pref_summary_remember_last_tab">앱을 실행하면 마지막으로 열었던 탭으로 이동합니다.</string>
     <string name="pref_summary_remember_shuffle">다른 재생 목록을 선택해도 무작위 모드를 그대로 유지합니다.</string>
     <string name="could_not_download_album_cover">"일치하는 앨범 커버를 다운로드하지 못했습니다."</string>
-    <string name="album_details">앨범 세부정보</string>
     <string name="search_hint">라이브러리에서 검색…</string>
     <string name="favorites">즐겨찾기</string>
     <string name="last_added">최근에 추가한 곡</string>

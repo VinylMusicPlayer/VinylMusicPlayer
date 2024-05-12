@@ -181,7 +181,6 @@
     <string name="pref_summary_remember_last_tab">Ves a l\'última pestanya oberta en iniciar l\'aplicació</string>
     <string name="pref_summary_remember_shuffle">El mode aleatori es mantindrà activat en seleccionar una nova llista de cançons</string>
     <string name="could_not_download_album_cover">No s\'ha pogut baixar una portada d\'àlbum coincident</string>
-    <string name="album_details">Detalls de l\'àlbum</string>
     <string name="search_hint">Cerca a la col·lecció…</string>
     <string name="favorites">Preferides</string>
     <string name="last_added">Afegides recentment</string>
@@ -365,7 +364,6 @@
     <string name="pref_title_show_song_number">Mostra el número de pista</string>
     <string name="pref_title_not_recently_played_interval">No reproduîdes recentment</string>
     <string name="pref_summary_show_song_number">Mostra el número de pista a la cua de reproducció i a les notificacions</string>
-    <string name="pref_summary_show_album_details">Mostra el nom, l\'artista i el recompte de cançons a sota de cada àlbum a la vista de l\'àlbum</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Mostra una llista amb les cançons més reproduïdes</string>
     <string name="pref_playlist_disabled">Desactivada</string>
     <string name="pref_summary_whitelist">"Mostra només el contingut de la carpeta: "</string>

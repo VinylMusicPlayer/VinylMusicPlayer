@@ -124,7 +124,6 @@
     <string name="pref_title_gapless_playback">Áttűnéses lejátszás</string>
     <string name="pref_title_audio_ducking">Hangerő csökkentése</string>
     <string name="pref_title_last_added_interval">Utoljára hozzáadott lejátszási lista intervallum</string>
-    <string name="pref_summary_show_album_details">Az albumnézetben az egyes albumok alatt jelenítse meg a nevét, az előadót és a dalszámot</string>
     <string name="pref_title_synchronized_lyrics_show">Szinkronizált dalszöveg</string>
     <string name="no_equalizer">Nem található hangszínszabályzó.</string>
     <string name="no_audio_ID">"Először játsszon le egy dalt, majd próbálja újra."</string>
@@ -158,7 +157,6 @@
     <string name="pref_summary_audio_ducking">Beérkező értesítéskor a lejátszás hangereje lecsökken, majd az értesítés végén visszaáll az eredeti hangerőre</string>
     <string name="pref_summary_synchronized_lyrics_show">Jelenleg csak az LRC formátumban szinkronizált szövegeket támogatják. Beágyazott vagy külön fájlként.</string>
     <string name="could_not_download_album_cover">"Nem siker\u00fclt let\u00f6lteni a megfelel\u0151 albumbor\u00edt\u00f3t."</string>
-    <string name="album_details">Az album részletei</string>
     <string name="search_hint">Keresés a könyvtárban…</string>
     <string name="favorites">Kedvencek</string>
     <string name="last_added">Legfrissebb dalok</string>

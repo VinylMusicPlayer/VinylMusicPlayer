@@ -152,7 +152,6 @@
     <string name="pref_title_recently_played_interval">Intervall der \"Kürzlich abgespielt\"-Wiedergabeliste</string>
     <string name="pref_title_not_recently_played_interval">Intervall der \"Nicht kürzlich abgespielt\"-Wiedergabeliste</string>
     <string name="pref_title_last_added_interval">Intervall der \"Zuletzt hinzugefügt\"-Wiedergabeliste</string>
-    <string name="pref_summary_show_album_details">Zeigen Sie in der Albumansicht unter jedem Album den Namen, den Interpreten und die Songanzahl an</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Eine Wiedergabeliste mit Lieblingstiteln beibehalten</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Eine Wiedergabeliste mit angespielten Titeln beibehalten</string>
     <string name="pref_title_synchronized_lyrics_show">Synchronisierten Songtext anzeigen</string>
@@ -196,7 +195,6 @@
     <string name="pref_title_oops_handler_enabled">Absturzberichte sammeln</string>
     <string name="pref_summary_oops_handler_enabled">Hilf bei der Entwicklung durch das Erfassen und Berichten von Abstürzen</string>
     <string name="could_not_download_album_cover">"Es konnte kein passendes Album-Cover heruntergeladen werden."</string>
-    <string name="album_details">Albumdetails</string>
     <string name="search_hint">Durchsuche deine Mediathek</string>
     <string name="favorites">Favoriten</string>
     <string name="last_added">Zuletzt hinzugefügt</string>

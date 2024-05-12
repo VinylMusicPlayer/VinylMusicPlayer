@@ -128,7 +128,6 @@
     <string name="pref_title_gapless_playback">無縫播放</string>
     <string name="pref_title_audio_ducking">在焦點音訊響起時降低音量</string>
     <string name="pref_title_last_added_interval">最後新增列表的時間範圍</string>
-    <string name="pref_summary_show_album_details">在專輯視圖中每個專輯下方顯示名稱、藝人和歌曲數</string>
     <string name="pref_title_synchronized_lyrics_show">同步顯示歌詞</string>
     <string name="pref_title_remember_last_tab">記住最後開啟的頁面</string>
     <string name="no_equalizer">找不到等化器</string>
@@ -166,7 +165,6 @@
     <string name="pref_summary_synchronized_lyrics_show">目前僅支援 LRC 格式歌詞。內嵌或外掛皆可。</string>
     <string name="pref_summary_remember_last_tab">開啟時顯示最後使用的頁面</string>
     <string name="could_not_download_album_cover">"\u7121\u6cd5\u4e0b\u8f09\u5408\u9069\u7684\u5c08\u8f2f\u5c01\u9762\u3002"</string>
-    <string name="album_details">專輯詳情</string>
     <string name="search_hint">搜尋音樂庫…</string>
     <string name="favorites">最愛</string>
     <string name="last_added">最後新增</string>

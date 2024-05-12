@@ -130,7 +130,6 @@
     <string name="pref_title_gapless_playback">Aralıksız çalma</string>
     <string name="pref_title_audio_ducking">Odak kaybına neden olacak sesi azalt</string>
     <string name="pref_title_last_added_interval">Son eklenen çalma listesi süresi</string>
-    <string name="pref_summary_show_album_details">Albüm görünümünde her albümün altında adı, sanatçıyı ve şarkı sayısını göster</string>
     <string name="pref_title_synchronized_lyrics_show">Senkronize şarkı sözlerini göster</string>
     <string name="pref_title_remember_last_tab">Son sekmeyi hatırla</string>
     <string name="pref_title_remember_shuffle">Remember shuffle</string>
@@ -171,7 +170,6 @@
     <string name="pref_summary_remember_last_tab">Başlatıldığında son açılan sekmeye git</string>
     <string name="pref_summary_remember_shuffle">Yeni bir şarkı listesi seçerken karıştır modu açık kalacak</string>
     <string name="could_not_download_album_cover">"E\\015fle\\015fen bir alb\\00fcm kapa\\011f\\0131 indirilemedi."</string>
-    <string name="album_details">Albüm ayrıntıları</string>
     <string name="search_hint">Kitaplığınız taranıyor…</string>
     <string name="favorites">Favoriler</string>
     <string name="last_added">Son eklenen</string>

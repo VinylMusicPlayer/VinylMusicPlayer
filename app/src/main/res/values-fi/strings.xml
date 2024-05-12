@@ -124,7 +124,6 @@
     <string name="pref_title_gapless_playback">Tauoton toisto</string>
     <string name="pref_title_audio_ducking">Hiljennä ääntä, kun kohdistus menetetään</string>
     <string name="pref_title_last_added_interval">Viimeksi lisätyt -soittolistan aikaväli</string>
-    <string name="pref_summary_show_album_details">Näytä nimi, esittäjä ja kappalemäärä jokaisen albumin alla albuminäkymässä</string>
     <string name="pref_title_synchronized_lyrics_show">Näytä synkronoidut sanoitukset</string>
     <string name="pref_title_remember_last_tab">Muista viimeisin välilehti</string>
     <string name="no_equalizer">Taajuuskorjainta ei löytynyt.</string>
@@ -159,7 +158,6 @@
     <string name="pref_summary_synchronized_lyrics_show">Nykyiseltään sovellus tukee vain LRC-muodossa olevia sanoituksia, joko sulautettuna tai erillisinä tiedostoina</string>
     <string name="pref_summary_remember_last_tab">Palauttaa käynnistyessään viimeksi avoinna olleen välilehden</string>
     <string name="could_not_download_album_cover">"Ei voitu ladata albumia vastaavaa albumin kantta."</string>
-    <string name="album_details">Albumin tiedot</string>
     <string name="search_hint">Etsi kirjastostasi…</string>
     <string name="favorites">Suosikit</string>
     <string name="last_added">Viimeksi lisätyt</string>
