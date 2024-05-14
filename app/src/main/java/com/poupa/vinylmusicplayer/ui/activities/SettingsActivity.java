@@ -225,7 +225,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             } else if (preference instanceof SmartPlaylistPreference) {
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof ExportSettingsPreference) {
-                return ExportSettingsPreferenceDialog.newInstance(preference.getKey());
+                return ExportSettingsPreferenceDialog.newInstance();
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
                         SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),

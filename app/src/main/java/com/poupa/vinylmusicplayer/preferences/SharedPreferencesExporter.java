@@ -10,6 +10,7 @@ import android.os.ParcelFileDescriptor;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -26,12 +27,10 @@ import java.util.Map;
 public class SharedPreferencesExporter extends AppCompatActivity {
     private Context context;
     private static final String FILENAME = "filename";
-    static final String VERSION_NAME = "version_name";
-    private ActivityResultLauncher<String> exportFilePicker;
     private SharedPreferences sharedPreferences;
 
-    public static void start(Context context, String filename) {
-        Intent intent = new Intent(context, SharedPreferencesExporter.class);
+    public static void start(@NonNull final Context context, @NonNull final String filename) {
+        final Intent intent = new Intent(context, SharedPreferencesExporter.class);
         intent.putExtra(FILENAME, filename);
         context.startActivity(intent);
     }
@@ -39,12 +38,14 @@ public class SharedPreferencesExporter extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.context = this.getApplicationContext();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
-        Bundle b = this.getIntent().getExtras();
-        exportFilePicker = registerForActivityResult(new ActivityResultContracts.CreateDocument("text/plain"), result -> {
+        context = getApplicationContext();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final Bundle bundle = getIntent().getExtras();
+        // Unless the selection has been cancelled, create the export file
+        // Finishes the last activity to return to the settings activity.
+        final ActivityResultLauncher<String> exportFilePicker = registerForActivityResult(new ActivityResultContracts.CreateDocument("text/plain"), result -> {
             // Unless the selection has been cancelled, create the export file
-            if(result != null) {
+            if (result != null) {
                 try {
                     writeToExportFile(result);
                 } catch (PackageManager.NameNotFoundException e) {
@@ -54,7 +55,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
             // Finishes the last activity to return to the settings activity.
             this.finish();
         });
-        exportFilePicker.launch(b.getString(FILENAME));
+        exportFilePicker.launch(bundle.getString(FILENAME));
     }
 
     private void writeToExportFile(final Uri location) throws PackageManager.NameNotFoundException {
@@ -63,7 +64,7 @@ public class SharedPreferencesExporter extends AppCompatActivity {
         final Map<String, Object> exportablePrefs = PreferenceUtil.reducePreferencesToDeclared(allPrefs, key -> key.isExportImportable);
 
         final var packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        exportablePrefs.put(VERSION_NAME, packageInfo.versionName);
+        exportablePrefs.put(PreferenceUtil.VERSION_NAME, packageInfo.versionName);
         exportablePrefs.put(PreferenceUtil.VERSION_CODE, packageInfo.versionCode);
         exportablePrefs.put(PreferenceUtil.FILE_FORMAT, SharedPreferencesImporter.CURRENT_FILE_FORMAT);
 

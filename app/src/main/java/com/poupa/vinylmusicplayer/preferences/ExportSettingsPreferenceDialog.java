@@ -27,47 +27,41 @@ import java.util.Locale;
 public class ExportSettingsPreferenceDialog extends DialogFragment {
 
     @NonNull
-    public static ExportSettingsPreferenceDialog newInstance(@NonNull String preference) {
-        return new ExportSettingsPreferenceDialog(preference);
-    }
-
-    @NonNull private final String preferenceKey;
-    private Context context;
-
-    public ExportSettingsPreferenceDialog(@NonNull String preference) {
-        preferenceKey = preference;
+    public static ExportSettingsPreferenceDialog newInstance() {
+        return new ExportSettingsPreferenceDialog();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        this.context = this.getContext();
-        String filename = this.getExportSettingsFilename();
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+        final Context context = requireContext();
+        final String filename = getExportSettingsFilename();
         Log.i(ExportSettingsPreferenceDialog.class.getName(), filename);
-        LayoutInflater inflater = this.getLayoutInflater();
-        View view = inflater.inflate(R.layout.preference_dialog_export_settings, null);
-        EditText editText = (EditText)view.findViewById(R.id.ed_export_settings_filename);
+        final LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.preference_dialog_export_settings, null);
+        final EditText editText = (EditText)view.findViewById(R.id.ed_export_settings_filename);
         editText.setText(filename, TextView.BufferType.EDITABLE);
 
-        return new MaterialDialog.Builder(getContext())
+        return new MaterialDialog.Builder(context)
                 .title(R.string.export_settings)
                 .customView(view, false)
                 .positiveText(android.R.string.ok)
                 .negativeText(android.R.string.cancel)
                 .onNegative((dialog, action) -> dismiss())
                 .onPositive((dialog, action) -> {
-                    SharedPreferencesExporter.start(this.context, filename);
+                    SharedPreferencesExporter.start(context, filename);
                     dismiss();
                 })
                 .build();
     }
 
     private static String getCurrentFormattedDateTime() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssZ", Locale.getDefault());
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssZ", Locale.getDefault());
         return simpleDateFormat.format(new Date(System.currentTimeMillis()));
     }
 
+    @NonNull
     private static String getExportSettingsFilename() {
         return "vinylmusicplayer-settings_"+ getCurrentFormattedDateTime();
     }

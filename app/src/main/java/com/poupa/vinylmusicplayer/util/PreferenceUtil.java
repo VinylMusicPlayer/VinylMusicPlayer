@@ -115,6 +115,7 @@ public final class PreferenceUtil {
 
     public static final String FILE_FORMAT = PrefKey.exportableKey("file_format");
     public static final String VERSION_CODE = PrefKey.exportableKey("version_code");
+    public static final String VERSION_NAME = PrefKey.exportableKey("version_name");
 
     private static final String START_DIRECTORY = PrefKey.exportableKey("start_directory");
 
