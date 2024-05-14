@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,17 +39,21 @@ import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWit
 import com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog.BottomSheetDialogWithButtons.ButtonInfo;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreference;
 import com.poupa.vinylmusicplayer.preferences.BlacklistPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreference;
+import com.poupa.vinylmusicplayer.preferences.ExportSettingsPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreference;
 import com.poupa.vinylmusicplayer.preferences.LibraryPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreference;
 import com.poupa.vinylmusicplayer.preferences.NowPlayingScreenPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreference;
 import com.poupa.vinylmusicplayer.preferences.PreAmpPreferenceDialog;
+import com.poupa.vinylmusicplayer.preferences.SharedPreferencesImporter;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreference;
 import com.poupa.vinylmusicplayer.preferences.SmartPlaylistPreferenceDialog;
 import com.poupa.vinylmusicplayer.preferences.SongConfirmationPreference;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsBaseActivity;
+import com.poupa.vinylmusicplayer.ui.fragments.player.NowPlayingScreen;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -80,7 +86,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         setNavigationbarColorAuto();
         setTaskDescriptionColorAuto();
 
-        toolbar.setBackgroundColor(ThemeStore.primaryColor(this));
+        toolbar.setBackgroundColor(PreferenceUtil.getInstance().getPrimaryColor());
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -106,13 +112,22 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        SettingsFragment frag = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (frag != null) frag.invalidateSettings();
+    }
+
+    @Override
     public void onColorSelection(@NonNull ColorChooserDialog dialog, @ColorInt int selectedColor) {
         final int title = dialog.getTitle();
         if (title == R.string.primary_color) {
+            PreferenceUtil.getInstance().setPrimaryColor(selectedColor);
             ThemeStore.editTheme(this)
                     .primaryColor(selectedColor)
                     .commit();
         } else if (title == R.string.accent_color) {
+            PreferenceUtil.getInstance().setAccentColor(selectedColor);
             ThemeStore.editTheme(this)
                     .accentColor(selectedColor)
                     .commit();
@@ -138,6 +153,23 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
     }
 
     public static class SettingsFragment extends ATEPreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        ActivityResultLauncher sharedPreferencesImporter;
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            sharedPreferencesImporter = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {
+                        // Set the theming and recreate the settings activity after importing.
+                        Activity activity = getActivity();
+                        if(result != null) {
+                            ThemeStore.editTheme(activity).primaryColor(PreferenceUtil.getInstance().getPrimaryColor()).commit();;
+                            ThemeStore.editTheme(activity).accentColor(PreferenceUtil.getInstance().getAccentColor()).commit();
+                            activity.recreate();
+                        }
+                    });
+        }
 
         private static void setSummary(@NonNull Preference preference) {
             setSummary(preference, PreferenceManager
@@ -169,6 +201,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             addPreferencesFromResource(R.xml.pref_images);
             addPreferencesFromResource(R.xml.pref_audio);
             addPreferencesFromResource(R.xml.pref_playlists);
+            addPreferencesFromResource(R.xml.pref_migrating);
             addPreferencesFromResource(R.xml.pref_development);
 
             // set summary for whitelist, in order to indicate start directory
@@ -191,6 +224,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 return PreAmpPreferenceDialog.newInstance();
             } else if (preference instanceof SmartPlaylistPreference) {
                 return SmartPlaylistPreferenceDialog.newInstance(preference.getKey());
+            } else if (preference instanceof ExportSettingsPreference) {
+                return ExportSettingsPreferenceDialog.newInstance(preference.getKey());
             } else if (preference instanceof SongConfirmationPreference) {
                 final List<ButtonInfo> possibleActions = Arrays.asList(
                         SongConfirmationPreference.ASK.setAction(() -> PreferenceUtil.getInstance().setEnqueueSongsDefaultChoice(PreferenceUtil.ENQUEUE_SONGS_CHOICE_ASK)),
@@ -280,6 +315,8 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
 
             final Preference themeStyle = findPreference(PreferenceUtil.THEME_STYLE);
+            ThemeStyleUtil.updateInstance(PreferenceUtil.getInstance().getThemeStyle());
+            //ThemeStore.markChanged(getActivity());
             themeStyle.setOnPreferenceChangeListener((preference, o) -> {
                 ThemeStyleUtil.updateInstance((String) o);
                 if (getActivity() != null) {
@@ -298,9 +335,25 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 });
             }
 
+            final TwoStatePreference rememberLastTab = findPreference(PreferenceUtil.REMEMBER_LAST_TAB);
+            if (rememberLastTab != null) {
+                rememberLastTab.setChecked(PreferenceUtil.getInstance().rememberLastTab());
+                rememberLastTab.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setRememberLastTab((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference whitelistEnabled = findPreference(PreferenceUtil.WHITELIST_ENABLED);
+            if (whitelistEnabled != null) {
+                whitelistEnabled.setChecked(PreferenceUtil.getInstance().getWhitelistEnabled());
+            }
+          
             final ATEColorPreference primaryColorPref = findPreference(PreferenceUtil.PRIMARY_COLOR);
             if (getActivity() != null && primaryColorPref != null) {
-                final int primaryColor = ThemeStore.primaryColor(getActivity());
+                final int primaryColor = PreferenceUtil.getInstance().getPrimaryColor();
                 primaryColorPref.setColor(primaryColor, ColorUtil.darkenColor(primaryColor));
                 primaryColorPref.setOnPreferenceClickListener(preference -> {
                     new ColorChooserDialog.Builder(getActivity(), R.string.primary_color)
@@ -315,7 +368,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
 
             final ATEColorPreference accentColorPref = findPreference(PreferenceUtil.ACCENT_COLOR);
             if (getActivity() != null && accentColorPref != null) {
-                final int accentColor = ThemeStore.accentColor(getActivity());
+                final int accentColor = PreferenceUtil.getInstance().getAccentColor();
                 accentColorPref.setColor(accentColor, ColorUtil.darkenColor(accentColor));
                 accentColorPref.setOnPreferenceClickListener(preference -> {
                     new ColorChooserDialog.Builder(getActivity(), R.string.accent_color)
@@ -327,16 +380,18 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+
             TwoStatePreference colorNavBar = findPreference(PreferenceUtil.COLORED_NAVBAR);
             if (colorNavBar != null) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     colorNavBar.setVisible(false);
                 } else {
                     final Activity activity = requireActivity();
-                    colorNavBar.setChecked(ThemeStore.coloredNavigationBar(activity));
+                    colorNavBar.setChecked(PreferenceUtil.getInstance().coloredNavigationBar());
                     colorNavBar.setOnPreferenceChangeListener((preference, newValue) -> {
+                        PreferenceUtil.getInstance().setColoredNavigationBar((Boolean) newValue);
                         ThemeStore.editTheme(activity)
-                                .coloredNavigationBar((Boolean) newValue)
+                                .coloredNavigationBar(PreferenceUtil.getInstance().coloredNavigationBar())
                                 .commit();
                         activity.recreate();
                         return true;
@@ -403,6 +458,40 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                     return true;
                 });
             }
+
+            final TwoStatePreference audioDucking = findPreference(PreferenceUtil.AUDIO_DUCKING);
+            if (audioDucking != null) {
+                audioDucking.setChecked(PreferenceUtil.getInstance().audioDucking());
+                audioDucking.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setAudioDucking((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference gaplessPlayback = findPreference(PreferenceUtil.GAPLESS_PLAYBACK);
+            if (gaplessPlayback != null) {
+                gaplessPlayback.setChecked(PreferenceUtil.getInstance().gaplessPlayback());
+                gaplessPlayback.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setGaplessPlayback((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference rememberShuffle = findPreference(PreferenceUtil.REMEMBER_SHUFFLE);
+            if (rememberShuffle != null) {
+                rememberShuffle.setChecked(PreferenceUtil.getInstance().rememberShuffle());
+                rememberShuffle.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setRememberShuffle((Boolean) newValue);
+
+                    return true;
+                });
+            }
+          
             final Preference equalizer = findPreference(PreferenceUtil.EQUALIZER);
             if (equalizer != null) {
                 if (!hasEqualizer()) {
@@ -423,7 +512,48 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
                 }
             }
 
-            updateNowPlayingScreenSummary();
+            final TwoStatePreference maintainTopTrackPlaylist = findPreference(PreferenceUtil.MAINTAIN_TOP_TRACKS_PLAYLIST);
+            if (maintainTopTrackPlaylist != null) {
+                maintainTopTrackPlaylist.setChecked(PreferenceUtil.getInstance().maintainTopTrackPlaylist());
+                maintainTopTrackPlaylist.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setMaintainTopTrackPlaylist((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference maintainSkippedSongsPlaylist = findPreference(PreferenceUtil.MAINTAIN_SKIPPED_SONGS_PLAYLIST);
+            if (maintainSkippedSongsPlaylist != null) {
+                maintainSkippedSongsPlaylist.setChecked(PreferenceUtil.getInstance().maintainSkippedSongsPlaylist());
+                maintainSkippedSongsPlaylist.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setMaintainSkippedSongsPlaylist((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final TwoStatePreference oopsHandlerEnabled = findPreference(PreferenceUtil.OOPS_HANDLER_ENABLED);
+            if (oopsHandlerEnabled != null) {
+                oopsHandlerEnabled.setChecked(PreferenceUtil.getInstance().isOopsHandlerEnabled());
+                oopsHandlerEnabled.setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Save preference
+                    PreferenceUtil.getInstance().setOopsHandlerEnabled((Boolean) newValue);
+
+                    return true;
+                });
+            }
+
+            final Preference importSettings = findPreference(PreferenceUtil.IMPORT_SETTINGS);
+            if (importSettings != null) {
+                importSettings.setOnPreferenceClickListener((preference) -> {
+                    sharedPreferencesImporter.launch(new Intent(getContext(), SharedPreferencesImporter.class));
+                    return true;
+                });
+            }
+
+            updateNowPlayingScreen();
             updatePlaylistsSummary();
             updateConfirmationSongSummary();
         }
@@ -441,7 +571,7 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (TextUtils.equals(key, PreferenceUtil.NOW_PLAYING_SCREEN_ID)) {
-                updateNowPlayingScreenSummary();
+                updateNowPlayingScreen();
             } else if (TextUtils.equals(key, PreferenceUtil.CLASSIC_NOTIFICATION)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     findPreference(PreferenceUtil.COLORED_NOTIFICATION).setEnabled(sharedPreferences.getBoolean(key, false));
@@ -469,8 +599,11 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             }
         }
 
-        private void updateNowPlayingScreenSummary() {
-            findPreference(PreferenceUtil.NOW_PLAYING_SCREEN_ID).setSummary(PreferenceUtil.getInstance().getNowPlayingScreen().titleRes);
+        private void updateNowPlayingScreen() {
+            final Preference nowPlayingScreenPref = findPreference(PreferenceUtil.NOW_PLAYING_SCREEN_ID);
+            NowPlayingScreen nowPlayingScreen = PreferenceUtil.getInstance().getNowPlayingScreen();
+            nowPlayingScreenPref.setSummary(nowPlayingScreen.titleRes);
+            NowPlayingScreenPreferenceDialog.newInstance().onPageSelected(nowPlayingScreen.id);
         }
 
         private void updatePlaylistsSummary() {

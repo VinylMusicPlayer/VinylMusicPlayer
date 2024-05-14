@@ -113,6 +113,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.AlbumDetailActivity" />
+        <activity android:name="com.poupa.vinylmusicplayer.preferences.SharedPreferencesExporter" />
+        <activity android:name="com.poupa.vinylmusicplayer.preferences.SharedPreferencesImporter" />
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.ArtistDetailActivity" />
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.GenreDetailActivity" />
         <activity android:name="com.poupa.vinylmusicplayer.ui.activities.PlaylistDetailActivity" />

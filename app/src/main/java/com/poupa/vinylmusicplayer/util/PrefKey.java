@@ -16,7 +16,7 @@ public class PrefKey {
     final String value;
 
     // Wherether the annotated value should be exportable
-    final boolean isExportImportable;
+    public final boolean isExportImportable;
 
     // Wherether the annotated field value is just a preference key prefix, i.e. not the whole key
     final boolean isPrefixed;

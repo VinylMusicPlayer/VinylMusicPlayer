@@ -53,7 +53,7 @@ public final class PreferenceUtil {
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
-    private static final String REMEMBER_LAST_TAB = PrefKey.exportableKey("remember_last_tab");
+    public static final String REMEMBER_LAST_TAB = PrefKey.exportableKey("remember_last_tab");
     private static final String LAST_PAGE = PrefKey.exportableKey("last_start_page");
     private static final String LAST_MUSIC_CHOOSER = PrefKey.exportableKey("last_music_chooser");
     public static final String NOW_PLAYING_SCREEN_ID = PrefKey.exportableKey("now_playing_screen_id");
@@ -87,7 +87,7 @@ public final class PreferenceUtil {
 
     public static final String TRANSPARENT_BACKGROUND_WIDGET = PrefKey.exportableKey("should_make_widget_background_transparent");
 
-    private static final String AUDIO_DUCKING = PrefKey.exportableKey("audio_ducking");
+    public static final String AUDIO_DUCKING = PrefKey.exportableKey("audio_ducking");
     @NonNls
     public static final String GAPLESS_PLAYBACK = PrefKey.exportableKey("gapless_playback");
     public static final String EQUALIZER = PrefKey.exportableKey("equalizer");
@@ -96,7 +96,7 @@ public final class PreferenceUtil {
     public static final String RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("recently_played_interval_v2");
     public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("not_recently_played_interval_v2");
     public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = PrefKey.exportableKey("maintain_top_tracks_playlist");
-    private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = PrefKey.exportableKey("maintain_skipped_songs_playlist");
+    public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = PrefKey.exportableKey("maintain_skipped_songs_playlist");
 
     private static final String LAST_SLEEP_TIMER_VALUE = PrefKey.exportableKey("last_sleep_timer_value");
     private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = PrefKey.nonExportableKey("next_sleep_timer_elapsed_real_time");
@@ -110,6 +110,12 @@ public final class PreferenceUtil {
     private static final String AUTO_DOWNLOAD_WIFI_ONLY = "only_wifi";
     private static final String AUTO_DOWNLOAD_NEVER = "never";
 
+    //private static final String EXPORT_SETTINGS = "export_settings";
+    public static final String IMPORT_SETTINGS = "import_settings";
+
+    public static final String FILE_FORMAT = PrefKey.exportableKey("file_format");
+    public static final String VERSION_CODE = PrefKey.exportableKey("version_code");
+
     private static final String START_DIRECTORY = PrefKey.exportableKey("start_directory");
 
     private static final String SYNCHRONIZED_LYRICS_SHOW = PrefKey.exportableKey("synchronized_lyrics_show");
@@ -121,7 +127,7 @@ public final class PreferenceUtil {
 
     public static final String LIBRARY_CATEGORIES = PrefKey.exportableKey("library_categories");
 
-    private static final String REMEMBER_SHUFFLE = PrefKey.exportableKey("remember_shuffle");
+    public static final String REMEMBER_SHUFFLE = PrefKey.exportableKey("remember_shuffle");
 
     public static final String RG_SOURCE_MODE_V2 = PrefKey.exportableKey("replaygain_source_mode");
     @NonNls
@@ -172,7 +178,7 @@ public final class PreferenceUtil {
     }
 
     @NonNull
-    private static Map<String, ?> reducePreferencesToDeclared(
+    public static Map<String, Object> reducePreferencesToDeclared(
             @NonNull final Map<String, ?> preferences,
             @Nullable final Predicate<? super PrefKey> filter
     ) {
@@ -195,17 +201,6 @@ public final class PreferenceUtil {
         return allPrefs.keySet().stream()
                 .filter(name -> !declared.containsKey(name))
                 .collect(Collectors.toUnmodifiableSet());
-    }
-
-    public void exportPreferencesToFile() {
-        final Map<String, ?> allPrefs = mPreferences.getAll();
-        final Map<String, ?> exportablePrefs = reducePreferencesToDeclared(allPrefs, key -> key.isExportImportable);
-
-        // TODO save to a persistent file...
-    }
-
-    public void importPreferencesFromFile() {
-        // TODO ...
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
@@ -252,6 +247,12 @@ public final class PreferenceUtil {
             default:
                 return R.style.Theme_VinylMusicPlayer_Light;
         }
+    }
+
+    public void setRememberLastTab(final boolean rememberLastTab) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_LAST_TAB, rememberLastTab)
+                .apply();
     }
 
     public boolean rememberLastTab() {
@@ -322,6 +323,16 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(COLORED_APP_SHORTCUTS, true);
     }
 
+    public void setColoredNavigationBar(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(COLORED_NAVBAR, value)
+                .apply();
+    }
+
+    public boolean coloredNavigationBar() {
+        return mPreferences.getBoolean(COLORED_NAVBAR, true);
+    }
+
     public void setTransparentBackgroundWidget(final boolean value) {
         mPreferences.edit()
                 .putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value)
@@ -332,8 +343,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(TRANSPARENT_BACKGROUND_WIDGET, false);
     }
 
+    public void setGaplessPlayback(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(GAPLESS_PLAYBACK, value)
+                .apply();
+    }
+
     public boolean gaplessPlayback() {
         return mPreferences.getBoolean(GAPLESS_PLAYBACK, false);
+    }
+
+    public void setAudioDucking(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(AUDIO_DUCKING, value)
+                .apply();
     }
 
     public boolean audioDucking() {
@@ -646,6 +669,12 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(INTRO_SHOWN, false);
     }
 
+    public void setRememberShuffle(final boolean rememberShuffle) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_SHUFFLE, rememberShuffle)
+                .apply();
+    }
+
     public boolean rememberShuffle() {
         return mPreferences.getBoolean(REMEMBER_SHUFFLE, true);
     }
@@ -676,8 +705,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SHOW_SONG_NUMBER, false);
     }
 
+    public void setMaintainTopTrackPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, value)
+                .apply();
+    }
+
     public boolean maintainTopTrackPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, true);
+    }
+
+    public void setMaintainSkippedSongsPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, value)
+                .apply();
     }
 
     public boolean maintainSkippedSongsPlaylist() {
@@ -706,6 +747,28 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType))
                 .apply();
+    }
+
+    public void setPrimaryColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(PRIMARY_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getPrimaryColor() {
+        //return mPreferences.getInt(PRIMARY_COLOR, 4149685);
+        return mPreferences.getInt(PRIMARY_COLOR, -12627531);
+    }
+
+    public void setAccentColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(ACCENT_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getAccentColor() {
+        //return mPreferences.getInt(ACCENT_COLOR, 16056407);
+        return mPreferences.getInt(ACCENT_COLOR, -720809);
     }
 
     public ArrayList<CategoryInfo> getLibraryCategoryInfos() {
@@ -778,6 +841,12 @@ public final class PreferenceUtil {
     public void setSAFSDCardUri(@NonNull final Uri uri) {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
+                .apply();
+    }
+
+    public void setOopsHandlerEnabled(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(OOPS_HANDLER_ENABLED, value)
                 .apply();
     }
 

@@ -147,6 +147,7 @@
     <string name="pref_header_images">Images</string>
     <string name="pref_header_lockscreen">Lockscreen</string>
     <string name="pref_header_playlists">Playlists</string>
+    <string name="pref_header_migrating">Migrating</string>
     <string name="pref_header_notification">Notification</string>
     <string name="pref_title_navigation_bar">Colored navigation bar</string>
     <string name="pref_title_app_shortcuts">Colored app shortcuts</string>
@@ -159,6 +160,10 @@
     <string name="pref_title_recently_played_interval">Recently played playlist interval</string>
     <string name="pref_title_not_recently_played_interval">Not recently played playlist interval</string>
     <string name="pref_title_last_added_interval">Last added playlist interval</string>
+    <string name="pref_title_export">Export</string>
+    <string name="pref_summary_export">Export the settings as file</string>
+    <string name="pref_title_import">Import</string>
+    <string name="pref_summary_import">Import the settings from previously exported file</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Maintain a playlist of top tracks</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of song skipped during playback</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
@@ -187,6 +192,7 @@
     <string name="no_genres">No genres</string>
     <string name="empty">Empty</string>
     <string name="playlist_name_empty">Playlist name</string>
+    <string name="settings_filename">Filename (without .json)</string>
     <string name="song">Song</string>
     <string name="pref_summary_classic_notification">Use the classic notification design</string>
     <string name="pref_summary_colored_notification">"Colors the notification in the album cover\u2019s vibrant color"</string>
@@ -222,6 +228,11 @@
     <string name="time_unit_minutes">min</string>
     <string name="action_new_playlist">New playlist…</string>
     <string name="new_playlist_title">New playlist</string>
+    <string name="export_settings">Export settings</string>
+    <string name="cannot_export_settings">Cannot export settings</string>
+    <string name="cannot_import_settings">Cannot import settings</string>
+    <string name="unsupported_saved_pref_version">Unsupported saved pref version</string>
+    <string name="unsupported_saved_pref_format">Unsupported saved pref format</string>
     <string name="grid_size_1" translatable="false">1</string>
     <string name="grid_size_2" translatable="false">2</string>
     <string name="grid_size_3" translatable="false">3</string>
