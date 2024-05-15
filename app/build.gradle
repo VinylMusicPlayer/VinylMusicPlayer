@@ -117,6 +117,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig true
     }
     testOptions {
         unitTests.returnDefaultValues = true
