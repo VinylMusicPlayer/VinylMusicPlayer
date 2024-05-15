@@ -11,8 +11,8 @@ blacklist_branches="
 
 # Alien branches (from other repos) that we want to pull in (pull requests etc)
 # Space separated list, each following the 'login/repo/branch' format
+#  eliehess/VinylMusicPlayer/hide-album-details-setting
 alien_branches="
-  eliehess/VinylMusicPlayer/hide-album-details-setting
 "
 
 # Support for CircleCI
