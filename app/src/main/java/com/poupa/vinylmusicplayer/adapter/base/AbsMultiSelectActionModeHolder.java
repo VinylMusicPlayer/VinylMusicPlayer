@@ -6,13 +6,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
@@ -26,33 +24,32 @@ public interface AbsMultiSelectActionModeHolder {
 
     @Nullable
     static ActionMode startActionModeImpl(
-            @NonNull final AppCompatActivity context,
+            @NonNull final AbsThemeActivity activity,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,
             @NonNull final ActionMode.Callback callbacks)
     {
-        return context.startActionMode(
+        return activity.startActionMode(
                 new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
                         final MenuInflater inflater = mode.getMenuInflater();
                         inflater.inflate(menuRes, menu);
-                        MenuHelper.decorateDestructiveItems(menu, context);
+                        MenuHelper.decorateDestructiveItems(menu, activity);
 
                         return callbacks.onCreateActionMode(mode, menu);
                     }
 
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-                        final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
+                        final int adjustedColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
 
-                        final ViewGroup decorView = (ViewGroup) context.getWindow().getDecorView();
-                        final View view = decorView.findViewById(R.id.action_mode_bar);
+                        final View view = activity.getWindow().getDecorView().findViewById(R.id.action_mode_bar);
                         if (view != null) {
-                            view.setBackgroundColor(cabColor);
+                            view.setBackgroundColor(adjustedColor);
                         }
 
-                        AbsThemeActivity.static_setStatusbarColor(context, cabColor);
+                        activity.setStatusbarColor(adjustedColor); // TODO This is not having any effect!
 
                         callbacks.onPrepareActionMode(mode, menu);
                         return true;
@@ -65,7 +62,7 @@ public interface AbsMultiSelectActionModeHolder {
 
                     @Override
                     public void onDestroyActionMode(final ActionMode mode) {
-                        AbsThemeActivity.static_setStatusbarColor(context, backgroundColor);
+                        activity.setStatusbarColor(backgroundColor);
 
                         callbacks.onDestroyActionMode(mode);
                     }
