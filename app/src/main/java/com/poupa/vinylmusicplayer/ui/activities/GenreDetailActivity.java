@@ -18,7 +18,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenreDetailActivity extends AbsSlidingMusicPanelActivity
-        implements AbsMultiSelectActionModeHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>>
+        implements AbsMultiSelectAdapter.ActionModeHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>>
 {
 
     private static final int LOADER_ID = LoaderIds.GENRE_DETAIL_ACTIVITY;

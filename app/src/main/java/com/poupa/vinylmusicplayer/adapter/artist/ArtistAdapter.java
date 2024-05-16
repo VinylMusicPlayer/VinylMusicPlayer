@@ -15,7 +15,6 @@ import androidx.core.util.Pair;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
@@ -51,7 +50,7 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
     protected boolean usePalette;
 
     public ArtistAdapter(@NonNull AppCompatActivity activity, ArrayList<Artist> dataSet, @LayoutRes int itemLayoutRes,
-            boolean usePalette, @Nullable AbsMultiSelectActionModeHolder actionModeHolder)
+            boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder)
     {
         super(activity, actionModeHolder, R.menu.menu_media_selection);
         this.activity = activity;

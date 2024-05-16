@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class ArtistSongAdapter extends ArrayAdapter<Song> {
     @Nullable
-    private final AbsMultiSelectActionModeHolder actionModeHolder;
+    private final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder;
     @Nullable
     private ActionMode mutltiSelectActionMode;
     private ArrayList<Song> dataSet;
@@ -45,7 +45,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
     @NonNull
     final AppCompatActivity activity;
 
-    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
+    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
         super(activity, R.layout.item_list, dataSet);
         this.activity = activity;
         this.actionModeHolder = actionModeHolder;
@@ -152,7 +152,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
             notifyDataSetChanged();
 
             if (mutltiSelectActionMode == null) {
-                mutltiSelectActionMode = AbsMultiSelectActionModeHolder.startActionMode(
+                mutltiSelectActionMode = AbsMultiSelectAdapter.ActionModeHelper.startActionMode(
                         actionModeHolder.getActionModeActivity(),
                         R.menu.menu_media_selection,
                         actionModeHolder.getActionModeBackgroundColor(),
@@ -182,7 +182,7 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
                             }
                         });
             }
-            AbsMultiSelectActionModeHolder.update(activity, mutltiSelectActionMode, checked.size());
+            AbsMultiSelectAdapter.ActionModeHelper.updateActionMode(activity, mutltiSelectActionMode, checked.size());
         }
     }
 

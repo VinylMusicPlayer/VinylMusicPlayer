@@ -47,7 +47,7 @@ public class AlbumsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFra
                 dataSet,
                 itemLayoutRes,
                 loadUsePalette(),
-                getLibraryFragment());
+                getLibraryFragment().getMainActivity());
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
@@ -38,7 +38,7 @@ public class OrderablePlaylistSongAdapter
     public OrderablePlaylistSongAdapter(
             @NonNull final AppCompatActivity activity,
             final long playlistId, @NonNull final ArrayList<Song> dataSet,
-            final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder,
+            final boolean usePalette, @Nullable final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder,
             @Nullable final OnMoveItemListener onMoveItemListener)
     {
         super(activity, dataSet, usePalette, actionModeHolder);

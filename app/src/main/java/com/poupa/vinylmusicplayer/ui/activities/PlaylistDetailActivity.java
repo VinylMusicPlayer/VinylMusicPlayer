@@ -22,7 +22,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.OrderablePlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
@@ -51,7 +51,7 @@ import java.util.List;
 public class PlaylistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements
-            AbsMultiSelectActionModeHolder,
+            AbsMultiSelectAdapter.ActionModeHolder,
             LoaderManager.LoaderCallbacks<List<? extends Song>>
 {
 

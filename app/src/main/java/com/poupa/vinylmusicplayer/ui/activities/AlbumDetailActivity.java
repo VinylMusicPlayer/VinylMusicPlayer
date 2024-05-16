@@ -20,7 +20,7 @@ import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityAlbumDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -62,7 +62,7 @@ import retrofit2.Response;
 
 public class AlbumDetailActivity
         extends AbsSlidingMusicPanelActivity
-        implements PaletteColorHolder, AbsMultiSelectActionModeHolder, LoaderManager.LoaderCallbacks<Album> {
+        implements PaletteColorHolder, AbsMultiSelectAdapter.ActionModeHolder, LoaderManager.LoaderCallbacks<Album> {
 
     private static final int TAG_EDITOR_REQUEST = 2001;
     private static final int LOADER_ID = LoaderIds.ALBUM_DETAIL_ACTIVITY;

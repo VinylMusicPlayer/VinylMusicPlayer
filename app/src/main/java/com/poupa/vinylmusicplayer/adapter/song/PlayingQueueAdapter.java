@@ -26,7 +26,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.annotation.SwipeableItemResults;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
@@ -53,7 +53,7 @@ public class PlayingQueueAdapter extends SongAdapter
 
     private int current;
 
-    public PlayingQueueAdapter(AppCompatActivity activity, List<? extends Song> dataSet, int current, boolean usePalette, @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
+    public PlayingQueueAdapter(AppCompatActivity activity, List<? extends Song> dataSet, int current, boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
         super(activity, dataSet, R.layout.item_list, usePalette, actionModeHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -26,6 +27,7 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.kabouzeid.appthemehelper.util.NavigationViewUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityMainContentBinding;
 import com.poupa.vinylmusicplayer.databinding.ActivityMainDrawerLayoutBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -41,6 +43,7 @@ import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
@@ -51,7 +54,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.io.File;
 import java.util.List;
 
-public class MainActivity extends AbsSlidingMusicPanelActivity {
+public class MainActivity extends AbsSlidingMusicPanelActivity implements AbsMultiSelectAdapter.ActionModeHolder {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final int APP_INTRO_REQUEST = 100;
@@ -378,4 +381,12 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();
     }
+
+    @Override
+    @NonNull
+    public AbsThemeActivity getActionModeActivity() {return this;}
+
+    @Override
+    @ColorInt
+    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(this);}
 }

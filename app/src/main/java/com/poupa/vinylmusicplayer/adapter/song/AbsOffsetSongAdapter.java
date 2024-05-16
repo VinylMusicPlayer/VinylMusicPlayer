@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
@@ -33,12 +33,12 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
                                 @LayoutRes final int itemLayoutRes,
-                                final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder) {
+                                final boolean usePalette, @Nullable final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
         super(activity, dataSet, itemLayoutRes, usePalette, actionModeHolder);
     }
 
     public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
-                                final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder,
+                                final boolean usePalette, @Nullable final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder,
                                 final boolean showSectionName) {
         super(activity, dataSet, R.layout.item_list, usePalette, actionModeHolder, showSectionName);
     }

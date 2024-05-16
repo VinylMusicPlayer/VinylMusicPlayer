@@ -3,14 +3,20 @@ package com.poupa.vinylmusicplayer.adapter.base;
 import android.content.Context;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
+import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,7 +28,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         extends RecyclerView.Adapter<VH>
 {
     @Nullable
-    private final AbsMultiSelectActionModeHolder actionModeHolder;
+    private final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder;
     @Nullable
     private ActionMode actionMode;
     private final LinkedHashMap<Integer, I> checked;
@@ -30,7 +36,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     private int menuRes;
     private final Context context;
 
-    protected AbsMultiSelectAdapter(final Context context, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder, @MenuRes int menuRes) {
+    protected AbsMultiSelectAdapter(final Context context, @Nullable final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder, @MenuRes int menuRes) {
         this.actionModeHolder = actionModeHolder;
         checked = new LinkedHashMap<>();
         this.menuRes = menuRes;
@@ -49,7 +55,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         else {checked.put(position, identifier);}
 
         notifyItemChanged(position);
-        updateMultiSelectActionMode();
+        startOrUpdateActionMode();
 
         return true;
     }
@@ -64,15 +70,15 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
             }
         }
         notifyDataSetChanged();
-        updateMultiSelectActionMode();
+        startOrUpdateActionMode();
     }
 
-    private void updateMultiSelectActionMode() {
+    private void startOrUpdateActionMode() {
         if (actionMode == null) {
             if (actionModeHolder != null) {
                 final var activity = actionModeHolder.getActionModeActivity();
                 final var color = actionModeHolder.getActionModeBackgroundColor();
-                actionMode = AbsMultiSelectActionModeHolder.startActionMode(activity, menuRes, color, new ActionMode.Callback() {
+                actionMode = ActionModeHelper.startActionMode(activity, menuRes, color, new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
                         return true;
@@ -103,7 +109,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
                 });
             }
         }
-        AbsMultiSelectActionModeHolder.update(context, actionMode, checked.size());
+        ActionModeHelper.updateActionMode(context, actionMode, checked.size());
     }
 
     private void clearChecked() {
@@ -123,4 +129,72 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     protected abstract I getIdentifier(int position);
 
     protected abstract void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, I> selection);
+
+    public interface ActionModeHolder {
+        @NonNull
+        AbsThemeActivity getActionModeActivity();
+
+        @ColorInt
+        int getActionModeBackgroundColor();
+    }
+
+    public final class ActionModeHelper {
+        @Nullable
+        public static ActionMode startActionMode(
+                @NonNull final AbsThemeActivity activity,
+                @MenuRes final int menuRes,
+                @ColorInt final int backgroundColor,
+                @NonNull final ActionMode.Callback callbacks)
+        {
+            return activity.startActionMode(
+                    new ActionMode.Callback() {
+                        @Override
+                        public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                            final MenuInflater inflater = mode.getMenuInflater();
+                            inflater.inflate(menuRes, menu);
+                            MenuHelper.decorateDestructiveItems(menu, activity);
+
+                            return callbacks.onCreateActionMode(mode, menu);
+                        }
+
+                        @Override
+                        public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                            final int adjustedColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
+
+                            final View view = activity.getWindow().getDecorView().findViewById(R.id.action_mode_bar);
+                            if (view != null) {
+                                view.setBackgroundColor(adjustedColor);
+                            }
+
+                            activity.setStatusbarColor(adjustedColor); // TODO This is not having any effect!
+
+                            callbacks.onPrepareActionMode(mode, menu);
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                            return callbacks.onActionItemClicked(mode, item);
+                        }
+
+                        @Override
+                        public void onDestroyActionMode(final ActionMode mode) {
+                            activity.setStatusbarColor(backgroundColor);
+
+                            callbacks.onDestroyActionMode(mode);
+                        }
+                    }
+            );
+        }
+
+        public static void updateActionMode(@NonNull final Context context, @Nullable final ActionMode mode, final int checkedCount) {
+            if (mode == null) {return;}
+
+            if (checkedCount <= 0) {
+                mode.finish();
+            } else {
+                mode.setTitle(context.getString(R.string.x_selected, checkedCount));
+            }
+        }
+    }
 }

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -34,7 +33,6 @@ import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SongFileAdapter;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
@@ -48,7 +46,6 @@ import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.sort.FileSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -70,7 +67,6 @@ public class FoldersFragment
         extends AbsMainActivityFragment
         implements
             MainActivity.MainActivityFragmentCallbacks,
-            AbsMultiSelectActionModeHolder,
             BreadCrumbLayout.SelectionCallback,
             SongFileAdapter.Callbacks,
             AppBarLayout.OnOffsetChangedListener,
@@ -192,7 +188,11 @@ public class FoldersFragment
     }
 
     private void setUpAdapter() {
-        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), this, this);
+        adapter = new SongFileAdapter(
+                getMainActivity(),
+                new LinkedList<>(),
+                this,
+                getMainActivity());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -224,14 +224,6 @@ public class FoldersFragment
         }
         return false;
     }
-
-    @Override
-    @NonNull
-    public AbsThemeActivity getActionModeActivity() {return getMainActivity();}
-
-    @Override
-    @ColorInt
-    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(getMainActivity());}
 
     @Override
     public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {

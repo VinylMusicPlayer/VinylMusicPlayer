@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView;
 
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridCardHorizontalBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class HorizontalAlbumAdapter extends AlbumAdapter {
 
     public HorizontalAlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, boolean usePalette,
-                                  @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
+                                  @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
         super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, actionModeHolder);
     }
 

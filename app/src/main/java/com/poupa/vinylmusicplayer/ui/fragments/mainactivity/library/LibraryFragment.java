@@ -12,7 +12,6 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,7 +24,6 @@ import com.kabouzeid.appthemehelper.util.TabLayoutUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.MusicLibraryPagerAdapter;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -39,7 +37,6 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AbsLibraryPagerRecyclerViewCustomGridSizeFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AlbumsFragment;
@@ -52,7 +49,6 @@ import com.poupa.vinylmusicplayer.util.Util;
 public class LibraryFragment
         extends AbsMainActivityFragment
         implements
-            AbsMultiSelectActionModeHolder,
             MainActivity.MainActivityFragmentCallbacks,
             ViewPager.OnPageChangeListener,
             SharedPreferences.OnSharedPreferenceChangeListener
@@ -148,14 +144,6 @@ public class LibraryFragment
     private boolean isPlaylistPage() {
         return getCurrentFragment() instanceof PlaylistsFragment;
     }
-
-    @Override
-    @NonNull
-    public AbsThemeActivity getActionModeActivity() {return getMainActivity();}
-
-    @Override
-    @ColorInt
-    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(getMainActivity());}
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
         layoutBinding.appbar.addOnOffsetChangedListener(listener);
