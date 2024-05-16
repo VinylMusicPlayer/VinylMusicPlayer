@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.adapter.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -12,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -82,11 +79,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-                        AbsThemeActivity.static_setStatusbarColor(
-                                (Activity) context,
-                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
-                        );
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -103,7 +96,6 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
                     @Override
                     public void onDestroyActionMode(final ActionMode mode) {
-                        AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
                         clearChecked();
                         actionMode = null;
                     }

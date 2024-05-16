@@ -24,12 +24,10 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
 import com.poupa.vinylmusicplayer.model.Song;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 
@@ -159,20 +157,12 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
                 mutltiSelectActionMode = actionModeHolder.startActionMode(R.menu.menu_media_selection, new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-                        AbsThemeActivity.static_setStatusbarColor(
-                                activity,
-                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
-                        );
                         return true;
                     }
 
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-                        AbsThemeActivity.static_setStatusbarColor(
-                                activity,
-                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
-                        );
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -185,7 +175,6 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
 
                     @Override
                     public void onDestroyActionMode(final ActionMode mode) {
-                        AbsThemeActivity.static_setStatusbarColor(activity, color);
                         unCheckAll();
                         mutltiSelectActionMode = null;
                     }

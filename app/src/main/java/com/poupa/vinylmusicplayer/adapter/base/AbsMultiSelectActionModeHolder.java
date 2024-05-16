@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 @FunctionalInterface
@@ -43,12 +44,15 @@ public interface AbsMultiSelectActionModeHolder {
 
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                        final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
+
                         final ViewGroup decorView = (ViewGroup) context.getWindow().getDecorView();
                         final View view = decorView.findViewById(R.id.action_mode_bar);
                         if (view != null) {
-                            final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
                             view.setBackgroundColor(cabColor);
                         }
+
+                        AbsThemeActivity.static_setStatusbarColor(context, cabColor);
 
                         callbacks.onPrepareActionMode(mode, menu);
                         return true;
@@ -61,6 +65,8 @@ public interface AbsMultiSelectActionModeHolder {
 
                     @Override
                     public void onDestroyActionMode(final ActionMode mode) {
+                        AbsThemeActivity.static_setStatusbarColor(context, backgroundColor);
+
                         callbacks.onDestroyActionMode(mode);
                     }
                 }
