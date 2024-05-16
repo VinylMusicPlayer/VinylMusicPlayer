@@ -42,8 +42,6 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
-    private int color;
-
     @NonNull
     final AppCompatActivity activity;
 
@@ -197,7 +195,4 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
         return mutltiSelectActionMode != null;
     }
 
-    public void setColor(int color) {
-        this.color = color;
-    }
 }

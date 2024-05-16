@@ -29,8 +29,6 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     private int menuRes;
     private final Context context;
 
-    private int color;
-
     protected AbsMultiSelectAdapter(final Context context, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder, @MenuRes int menuRes) {
         this.actionModeHolder = actionModeHolder;
         checked = new LinkedHashMap<>();
@@ -116,10 +114,6 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     protected boolean isInQuickSelectMode() {
         return actionMode != null;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
     }
 
     @Nullable

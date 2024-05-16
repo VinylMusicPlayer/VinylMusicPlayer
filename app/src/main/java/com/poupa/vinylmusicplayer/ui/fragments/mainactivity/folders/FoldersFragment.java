@@ -229,7 +229,6 @@ public class FoldersFragment
     @Override
     public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
-        adapter.setColor(color);
         return AbsMultiSelectActionModeHolder.startActionModeImpl(getMainActivity(), menuRes, color, callbacks);
     }
 

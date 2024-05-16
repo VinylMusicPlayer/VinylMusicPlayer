@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -365,9 +364,7 @@ public class ArtistDetailActivity
     @Nullable
     @Override
     public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
-        @ColorInt final int color = getPaletteColor();
-        songAdapter.setColor(color);
-        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, toolbarColor, callbacks);
     }
 
     @Override
