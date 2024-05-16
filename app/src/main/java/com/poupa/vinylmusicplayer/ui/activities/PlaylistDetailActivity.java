@@ -22,7 +22,6 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.OrderablePlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.PlaylistSongAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
@@ -31,6 +30,7 @@ import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -40,7 +40,6 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
@@ -51,7 +50,6 @@ import java.util.List;
 public class PlaylistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements
-            AbsMultiSelectAdapter.ActionModeHolder,
             LoaderManager.LoaderCallbacks<List<? extends Song>>
 {
 
@@ -105,8 +103,13 @@ public class PlaylistDetailActivity
                 layoutBinding.recyclerView,
                 ThemeStore.accentColor(this));
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final PaletteColorHolder holder = new PaletteColorHolder() {
+            @Override
+            @ColorInt
+            public int getPaletteColor() {return ThemeStore.primaryColor(PlaylistDetailActivity.this);}
+        };
         if (playlist instanceof AbsCustomPlaylist) {
-            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, this);
+            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, holder);
             layoutBinding.recyclerView.setAdapter(adapter);
         } else {
             recyclerViewDragDropManager = new RecyclerViewDragDropManager();
@@ -116,7 +119,7 @@ public class PlaylistDetailActivity
                     playlist.id,
                     new ArrayList<>(),
                     false,
-                    this,
+                    holder,
                     (fromPosition, toPosition) -> {
                         if (PlaylistsUtil.moveItem(playlist.id, fromPosition, toPosition)) {
                             final List<Song> dataSet = (List<Song>)adapter.getDataSet();
@@ -185,14 +188,6 @@ public class PlaylistDetailActivity
         }
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
     }
-
-    @Override
-    @NonNull
-    public AbsThemeActivity getActionModeActivity() {return this;}
-
-    @Override
-    @ColorInt
-    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(this);}
 
     @Override
     public void onBackPressed() {

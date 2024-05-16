@@ -18,29 +18,26 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.loader.GenreLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Genre;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
-import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenreDetailActivity extends AbsSlidingMusicPanelActivity
-        implements AbsMultiSelectAdapter.ActionModeHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>>
+        implements LoaderManager.LoaderCallbacks<ArrayList<Song>>
 {
-
     private static final int LOADER_ID = LoaderIds.GENRE_DETAIL_ACTIVITY;
 
     public static final String EXTRA_GENRE = "extra_genre";
@@ -83,10 +80,14 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity
     }
 
     private void setUpRecyclerView() {
-        ViewUtil.setUpFastScrollRecyclerViewColor(this, ((FastScrollRecyclerView) layoutBinding.recyclerView), ThemeStore.accentColor(this));
+        ViewUtil.setUpFastScrollRecyclerViewColor(this, layoutBinding.recyclerView, ThemeStore.accentColor(this));
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new SongAdapter(this, new ArrayList<>(), R.layout.item_list, false, this);
+        adapter = new SongAdapter(this, new ArrayList<>(), R.layout.item_list, false, new PaletteColorHolder() {
+            @Override
+            @ColorInt
+            public int getPaletteColor() {return ThemeStore.primaryColor(GenreDetailActivity.this);}
+        });
         layoutBinding.recyclerView.setAdapter(adapter);
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -135,14 +136,6 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    @NonNull
-    public AbsThemeActivity getActionModeActivity() {return this;}
-
-    @Override
-    @ColorInt
-    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(this);}
 
     @Override
     public void onBackPressed() {

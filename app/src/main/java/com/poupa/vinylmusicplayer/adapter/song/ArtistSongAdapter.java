@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.poupa.vinylmusicplayer.R;
@@ -23,7 +22,9 @@ import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -36,19 +37,19 @@ import java.util.ArrayList;
  */
 public class ArtistSongAdapter extends ArrayAdapter<Song> {
     @Nullable
-    private final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder;
+    private final PaletteColorHolder paletteColorHolder;
     @Nullable
     private ActionMode mutltiSelectActionMode;
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
     @NonNull
-    final AppCompatActivity activity;
+    final AbsThemeActivity activity;
 
-    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
+    public ArtistSongAdapter(@NonNull final AbsThemeActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable PaletteColorHolder palette) {
         super(activity, R.layout.item_list, dataSet);
         this.activity = activity;
-        this.actionModeHolder = actionModeHolder;
+        this.paletteColorHolder = palette;
         this.dataSet = dataSet;
         checked = new ArrayList<>();
     }
@@ -147,15 +148,15 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
     }
 
     private void toggleChecked(Song song) {
-        if (actionModeHolder != null) {
+        if (paletteColorHolder != null) {
             if (!checked.remove(song)) {checked.add(song);}
             notifyDataSetChanged();
 
             if (mutltiSelectActionMode == null) {
                 mutltiSelectActionMode = AbsMultiSelectAdapter.ActionModeHelper.startActionMode(
-                        actionModeHolder.getActionModeActivity(),
+                        activity,
                         R.menu.menu_media_selection,
-                        actionModeHolder.getActionModeBackgroundColor(),
+                        paletteColorHolder.getPaletteColor(),
                         new ActionMode.Callback() {
                             @Override
                             public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {

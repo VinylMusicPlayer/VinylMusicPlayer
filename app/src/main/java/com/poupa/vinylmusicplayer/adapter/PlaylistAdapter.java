@@ -24,10 +24,12 @@ import com.poupa.vinylmusicplayer.dialogs.DeletePlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.misc.WeakContextAsyncTask;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.smartplaylist.AbsSmartPlaylist;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -52,8 +54,8 @@ public class PlaylistAdapter extends AbsMultiSelectAdapter<PlaylistAdapter.ViewH
     protected final AppCompatActivity activity;
     protected ArrayList<Playlist> dataSet;
 
-    public PlaylistAdapter(AppCompatActivity activity, ArrayList<Playlist> dataSet, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
-        super(activity, actionModeHolder, R.menu.menu_playlists_selection);
+    public PlaylistAdapter(@NonNull final AbsThemeActivity activity, ArrayList<Playlist> dataSet, @Nullable final PaletteColorHolder palette) {
+        super(activity, palette, R.menu.menu_playlists_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         setHasStableIds(true);

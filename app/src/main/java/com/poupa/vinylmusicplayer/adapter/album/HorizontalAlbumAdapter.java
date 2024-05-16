@@ -6,18 +6,18 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridCardHorizontalBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.HorizontalAdapterHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Album;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
@@ -28,9 +28,9 @@ import java.util.ArrayList;
  */
 public class HorizontalAlbumAdapter extends AlbumAdapter {
 
-    public HorizontalAlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, boolean usePalette,
-                                  @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
-        super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, actionModeHolder);
+    public HorizontalAlbumAdapter(@NonNull final AbsThemeActivity activity, ArrayList<Album> dataSet, boolean usePalette,
+                                  @Nullable PaletteColorHolder palette) {
+        super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, palette);
     }
 
     @Override

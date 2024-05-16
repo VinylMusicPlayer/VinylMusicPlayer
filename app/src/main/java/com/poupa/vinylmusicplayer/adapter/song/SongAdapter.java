@@ -23,9 +23,11 @@ import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -57,14 +59,14 @@ public class SongAdapter
 
     public RecyclerView recyclerView;
 
-    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
-                       boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
-        this(activity, dataSet, itemLayoutRes, usePalette, actionModeHolder, true);
+    public SongAdapter(@NonNull final AbsThemeActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
+                       boolean usePalette, @Nullable PaletteColorHolder palette) {
+        this(activity, dataSet, itemLayoutRes, usePalette, palette, true);
     }
 
-    public SongAdapter(AppCompatActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
-                       boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder, boolean showSectionName) {
-        super(activity, actionModeHolder, R.menu.menu_media_selection);
+    public SongAdapter(@NonNull final AbsThemeActivity activity, List<? extends Song> dataSet, @LayoutRes int itemLayoutRes,
+                       boolean usePalette, @Nullable PaletteColorHolder palette, boolean showSectionName) {
+        super(activity, palette, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         this.itemLayoutRes = itemLayoutRes;

@@ -26,12 +26,13 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.annotation.SwipeableItemResults;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
@@ -53,8 +54,8 @@ public class PlayingQueueAdapter extends SongAdapter
 
     private int current;
 
-    public PlayingQueueAdapter(AppCompatActivity activity, List<? extends Song> dataSet, int current, boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
-        super(activity, dataSet, R.layout.item_list, usePalette, actionModeHolder);
+    public PlayingQueueAdapter(@NonNull final AbsThemeActivity activity, List<? extends Song> dataSet, int current, boolean usePalette, @Nullable PaletteColorHolder palette) {
+        super(activity, dataSet, R.layout.item_list, usePalette, palette);
         this.showAlbumImage = false; // We don't want to load it in this adapter
         this.current = current;
     }

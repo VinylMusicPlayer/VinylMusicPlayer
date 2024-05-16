@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
@@ -28,19 +29,20 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         extends RecyclerView.Adapter<VH>
 {
     @Nullable
-    private final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder;
+    private final PaletteColorHolder palette;
     @Nullable
     private ActionMode actionMode;
     private final LinkedHashMap<Integer, I> checked;
     @MenuRes
     private int menuRes;
-    private final Context context;
+    @NonNull
+    private final AbsThemeActivity activity;
 
-    protected AbsMultiSelectAdapter(final Context context, @Nullable final AbsMultiSelectAdapter.ActionModeHolder actionModeHolder, @MenuRes int menuRes) {
-        this.actionModeHolder = actionModeHolder;
+    protected AbsMultiSelectAdapter(@NonNull final AbsThemeActivity activity, @Nullable final PaletteColorHolder holder, @MenuRes int menuRes) {
+        palette = holder;
         checked = new LinkedHashMap<>();
         this.menuRes = menuRes;
-        this.context = context;
+        this.activity = activity;
     }
 
     protected void setMultiSelectMenuRes(@MenuRes final int menuRes) {
@@ -75,9 +77,8 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
 
     private void startOrUpdateActionMode() {
         if (actionMode == null) {
-            if (actionModeHolder != null) {
-                final var activity = actionModeHolder.getActionModeActivity();
-                final var color = actionModeHolder.getActionModeBackgroundColor();
+            if (palette != null) {
+                @ColorInt final int color = palette.getPaletteColor();
                 actionMode = ActionModeHelper.startActionMode(activity, menuRes, color, new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
@@ -109,7 +110,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
                 });
             }
         }
-        ActionModeHelper.updateActionMode(context, actionMode, checked.size());
+        ActionModeHelper.updateActionMode(activity, actionMode, checked.size());
     }
 
     private void clearChecked() {
@@ -129,14 +130,6 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     protected abstract I getIdentifier(int position);
 
     protected abstract void onMultipleItemAction(@NonNull final MenuItem menuItem, @NonNull final Map<Integer, I> selection);
-
-    public interface ActionModeHolder {
-        @NonNull
-        AbsThemeActivity getActionModeActivity();
-
-        @ColorInt
-        int getActionModeBackgroundColor();
-    }
 
     public final class ActionModeHelper {
         @Nullable

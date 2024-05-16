@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -22,7 +21,6 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.album.HorizontalAlbumAdapter;
-import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityArtistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -43,7 +41,6 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
-import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.CustomArtistImageUtil;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
@@ -60,7 +57,7 @@ import retrofit2.Response;
 
 public class ArtistDetailActivity
         extends AbsSlidingMusicPanelActivity
-        implements PaletteColorHolder, AbsMultiSelectAdapter.ActionModeHolder, LoaderManager.LoaderCallbacks<Artist> {
+        implements PaletteColorHolder, LoaderManager.LoaderCallbacks<Artist> {
 
     private static final int LOADER_ID = LoaderIds.ARTIST_DETAIL_ACTIVITY;
     private static final int REQUEST_CODE_SELECT_IMAGE = 1000;
@@ -361,14 +358,6 @@ public class ArtistDetailActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    @NonNull
-    public AbsThemeActivity getActionModeActivity() {return this;}
-
-    @Override
-    @ColorInt
-    public int getActionModeBackgroundColor() {return getPaletteColor();}
 
     @Override
     public void onBackPressed() {

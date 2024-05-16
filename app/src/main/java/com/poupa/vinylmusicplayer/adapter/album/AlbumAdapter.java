@@ -25,10 +25,12 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.sort.AlbumSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -51,9 +53,9 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected boolean usePalette;
 
-    public AlbumAdapter(@NonNull AppCompatActivity activity, ArrayList<Album> dataSet, @LayoutRes int itemLayoutRes,
-                        boolean usePalette, @Nullable AbsMultiSelectAdapter.ActionModeHolder actionModeHolder) {
-        super(activity, actionModeHolder, R.menu.menu_media_selection);
+    public AlbumAdapter(@NonNull final AbsThemeActivity activity, ArrayList<Album> dataSet, @LayoutRes int itemLayoutRes,
+                        boolean usePalette, @Nullable PaletteColorHolder paletete) {
+        super(activity, paletete, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         this.itemLayoutRes = itemLayoutRes;
