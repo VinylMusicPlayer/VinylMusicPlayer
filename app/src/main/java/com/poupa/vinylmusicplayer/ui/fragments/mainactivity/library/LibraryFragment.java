@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +39,7 @@ import com.poupa.vinylmusicplayer.sort.SongSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
 import com.poupa.vinylmusicplayer.ui.activities.SearchActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AbsLibraryPagerRecyclerViewCustomGridSizeFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.pager.AlbumsFragment;
@@ -149,12 +149,13 @@ public class LibraryFragment
         return getCurrentFragment() instanceof PlaylistsFragment;
     }
 
-    @Nullable
     @Override
-    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
-        @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        return AbsMultiSelectActionModeHolder.startActionModeImpl(getMainActivity(), menuRes, color, callbacks);
-    }
+    @NonNull
+    public AbsThemeActivity getActionModeActivity() {return getMainActivity();}
+
+    @Override
+    @ColorInt
+    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(getMainActivity());}
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
         layoutBinding.appbar.addOnOffsetChangedListener(listener);

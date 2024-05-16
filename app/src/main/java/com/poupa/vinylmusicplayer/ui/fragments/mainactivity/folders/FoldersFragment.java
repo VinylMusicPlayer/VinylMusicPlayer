@@ -8,7 +8,6 @@ import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +48,7 @@ import com.poupa.vinylmusicplayer.service.MusicService;
 import com.poupa.vinylmusicplayer.sort.FileSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.ui.activities.MainActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.AbsMainActivityFragment;
 import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -225,12 +225,13 @@ public class FoldersFragment
         return false;
     }
 
-    @Nullable
     @Override
-    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
-        @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
-        return AbsMultiSelectActionModeHolder.startActionModeImpl(getMainActivity(), menuRes, color, callbacks);
-    }
+    @NonNull
+    public AbsThemeActivity getActionModeActivity() {return getMainActivity();}
+
+    @Override
+    @ColorInt
+    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(getMainActivity());}
 
     @Override
     public void onCreateOptionsMenu(@NonNull final Menu menu, @NonNull final MenuInflater inflater) {

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -44,6 +44,7 @@ import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AlbumTagEditorActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
@@ -337,11 +338,13 @@ public class AlbumDetailActivity
         }
     }
 
-    @Nullable
     @Override
-    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
-        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, toolbarColor, callbacks);
-    }
+    @NonNull
+    public AbsThemeActivity getActionModeActivity() {return this;}
+
+    @Override
+    @ColorInt
+    public int getActionModeBackgroundColor() {return getPaletteColor();}
 
     @Override
     public void onBackPressed() {

@@ -3,14 +3,12 @@ package com.poupa.vinylmusicplayer.ui.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +40,7 @@ import com.poupa.vinylmusicplayer.model.smartplaylist.LastAddedPlaylist;
 import com.poupa.vinylmusicplayer.model.smartplaylist.NotRecentlyPlayedPlaylist;
 import com.poupa.vinylmusicplayer.provider.StaticPlaylist;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivity;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
@@ -187,12 +186,13 @@ public class PlaylistDetailActivity
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
     }
 
-    @Nullable
     @Override
-    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
-        @ColorInt final int color = ThemeStore.primaryColor(this);
-        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, color, callbacks);
-    }
+    @NonNull
+    public AbsThemeActivity getActionModeActivity() {return this;}
+
+    @Override
+    @ColorInt
+    public int getActionModeBackgroundColor() {return ThemeStore.primaryColor(this);}
 
     @Override
     public void onBackPressed() {

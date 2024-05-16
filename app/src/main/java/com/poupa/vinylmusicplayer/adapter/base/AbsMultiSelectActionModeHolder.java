@@ -17,13 +17,15 @@ import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-@FunctionalInterface
 public interface AbsMultiSelectActionModeHolder {
-    @Nullable
-    ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks);
+    @NonNull
+    AbsThemeActivity getActionModeActivity();
+
+    @ColorInt
+    int getActionModeBackgroundColor();
 
     @Nullable
-    static ActionMode startActionModeImpl(
+    static ActionMode startActionMode(
             @NonNull final AbsThemeActivity activity,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,

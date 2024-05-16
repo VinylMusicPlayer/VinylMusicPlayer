@@ -26,6 +26,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     @Nullable
     private ActionMode actionMode;
     private final LinkedHashMap<Integer, I> checked;
+    @MenuRes
     private int menuRes;
     private final Context context;
 
@@ -67,9 +68,11 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     }
 
     private void updateMultiSelectActionMode() {
-        if (actionModeHolder != null) {
-            if (actionMode == null) {
-                actionMode = actionModeHolder.startActionMode(menuRes, new ActionMode.Callback() {
+        if (actionMode == null) {
+            if (actionModeHolder != null) {
+                final var activity = actionModeHolder.getActionModeActivity();
+                final var color = actionModeHolder.getActionModeBackgroundColor();
+                actionMode = AbsMultiSelectActionModeHolder.startActionMode(activity, menuRes, color, new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
                         return true;
@@ -99,8 +102,8 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
                     }
                 });
             }
-            AbsMultiSelectActionModeHolder.update(context, actionMode, checked.size());
         }
+        AbsMultiSelectActionModeHolder.update(context, actionMode, checked.size());
     }
 
     private void clearChecked() {

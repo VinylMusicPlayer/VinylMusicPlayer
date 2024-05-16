@@ -152,31 +152,35 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> {
             notifyDataSetChanged();
 
             if (mutltiSelectActionMode == null) {
-                mutltiSelectActionMode = actionModeHolder.startActionMode(R.menu.menu_media_selection, new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
-                        return true;
-                    }
+                mutltiSelectActionMode = AbsMultiSelectActionModeHolder.startActionMode(
+                        actionModeHolder.getActionModeActivity(),
+                        R.menu.menu_media_selection,
+                        actionModeHolder.getActionModeBackgroundColor(),
+                        new ActionMode.Callback() {
+                            @Override
+                            public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                                return true;
+                            }
 
-                    @Override
-                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
-                        return false;
-                    }
+                            @Override
+                            public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                                return false;
+                            }
 
-                    @Override
-                    public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
-                        onMultipleItemAction(item, new ArrayList<>(checked));
-                        mode.finish();
-                        unCheckAll();
-                        return true;
-                    }
+                            @Override
+                            public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                                onMultipleItemAction(item, new ArrayList<>(checked));
+                                mode.finish();
+                                unCheckAll();
+                                return true;
+                            }
 
-                    @Override
-                    public void onDestroyActionMode(final ActionMode mode) {
-                        unCheckAll();
-                        mutltiSelectActionMode = null;
-                    }
-                });
+                            @Override
+                            public void onDestroyActionMode(final ActionMode mode) {
+                                unCheckAll();
+                                mutltiSelectActionMode = null;
+                            }
+                        });
             }
             AbsMultiSelectActionModeHolder.update(activity, mutltiSelectActionMode, checked.size());
         }
