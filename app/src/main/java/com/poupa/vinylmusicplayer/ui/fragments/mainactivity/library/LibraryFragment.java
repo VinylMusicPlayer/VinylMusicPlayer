@@ -26,12 +26,11 @@ import com.kabouzeid.appthemehelper.util.TabLayoutUtil;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.MusicLibraryPagerAdapter;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -53,7 +52,7 @@ import com.poupa.vinylmusicplayer.util.Util;
 public class LibraryFragment
         extends AbsMainActivityFragment
         implements
-            CabHolder,
+            AbsMultiSelectActionModeHolder,
             MainActivity.MainActivityFragmentCallbacks,
             ViewPager.OnPageChangeListener,
             SharedPreferences.OnSharedPreferenceChangeListener
@@ -150,11 +149,11 @@ public class LibraryFragment
         return getCurrentFragment() instanceof PlaylistsFragment;
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        return CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(getMainActivity(), menuRes, color, callbacks);
     }
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {

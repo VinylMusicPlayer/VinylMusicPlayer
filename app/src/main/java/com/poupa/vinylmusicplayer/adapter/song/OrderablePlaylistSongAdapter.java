@@ -12,10 +12,10 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
@@ -38,10 +38,10 @@ public class OrderablePlaylistSongAdapter
     public OrderablePlaylistSongAdapter(
             @NonNull final AppCompatActivity activity,
             final long playlistId, @NonNull final ArrayList<Song> dataSet,
-            final boolean usePalette, @Nullable final CabHolder cabHolder,
+            final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder,
             @Nullable final OnMoveItemListener onMoveItemListener)
     {
-        super(activity, dataSet, usePalette, cabHolder);
+        super(activity, dataSet, usePalette, actionModeHolder);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
         this.playlistId = playlistId;
         this.onMoveItemListener = onMoveItemListener;

@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,13 +20,12 @@ import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.adapter.song.SongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityGenreDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.dialogs.AddToPlaylistDialog;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.loader.GenreLoader;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
@@ -38,7 +38,9 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements CabHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>> {
+public class GenreDetailActivity extends AbsSlidingMusicPanelActivity
+        implements AbsMultiSelectActionModeHolder, LoaderManager.LoaderCallbacks<ArrayList<Song>>
+{
 
     private static final int LOADER_ID = LoaderIds.GENRE_DETAIL_ACTIVITY;
 
@@ -135,12 +137,12 @@ public class GenreDetailActivity extends AbsSlidingMusicPanelActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = ThemeStore.primaryColor(this);
         adapter.setColor(color);
-        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, color, callbacks);
     }
 
     @Override

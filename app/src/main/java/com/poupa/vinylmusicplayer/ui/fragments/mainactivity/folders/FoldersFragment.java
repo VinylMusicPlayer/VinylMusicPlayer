@@ -35,12 +35,11 @@ import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
 import com.kabouzeid.appthemehelper.util.ToolbarContentTintHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.SongFileAdapter;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
@@ -71,7 +70,7 @@ public class FoldersFragment
         extends AbsMainActivityFragment
         implements
             MainActivity.MainActivityFragmentCallbacks,
-            CabHolder,
+            AbsMultiSelectActionModeHolder,
             BreadCrumbLayout.SelectionCallback,
             SongFileAdapter.Callbacks,
             AppBarLayout.OnOffsetChangedListener,
@@ -85,8 +84,6 @@ public class FoldersFragment
 
     private FragmentFolderBinding layoutBinding;
 
-    @Nullable
-    private ActionMode cab;
     private SongFileAdapter adapter;
 
     private String sortOrder;
@@ -228,12 +225,12 @@ public class FoldersFragment
         return false;
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
         adapter.setColor(color);
-        return CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(getMainActivity(), menuRes, color, callbacks);
     }
 
     @Override

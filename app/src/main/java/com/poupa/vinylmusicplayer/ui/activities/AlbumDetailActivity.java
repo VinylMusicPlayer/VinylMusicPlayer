@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.adapter.song.AlbumSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityAlbumDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -34,8 +35,6 @@ import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
@@ -63,7 +62,7 @@ import retrofit2.Response;
 
 public class AlbumDetailActivity
         extends AbsSlidingMusicPanelActivity
-        implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Album> {
+        implements PaletteColorHolder, AbsMultiSelectActionModeHolder, LoaderManager.LoaderCallbacks<Album> {
 
     private static final int TAG_EDITOR_REQUEST = 2001;
     private static final int LOADER_ID = LoaderIds.ALBUM_DETAIL_ACTIVITY;
@@ -339,12 +338,12 @@ public class AlbumDetailActivity
         }
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = getPaletteColor();
         adapter.setColor(color);
-        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, color, callbacks);
     }
 
     @Override

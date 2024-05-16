@@ -23,6 +23,7 @@ import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.adapter.album.HorizontalAlbumAdapter;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.adapter.song.ArtistSongAdapter;
 import com.poupa.vinylmusicplayer.databinding.ActivityArtistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
@@ -33,8 +34,6 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
@@ -61,7 +60,7 @@ import retrofit2.Response;
 
 public class ArtistDetailActivity
         extends AbsSlidingMusicPanelActivity
-        implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Artist> {
+        implements PaletteColorHolder, AbsMultiSelectActionModeHolder, LoaderManager.LoaderCallbacks<Artist> {
 
     private static final int LOADER_ID = LoaderIds.ARTIST_DETAIL_ACTIVITY;
     private static final int REQUEST_CODE_SELECT_IMAGE = 1000;
@@ -363,12 +362,12 @@ public class ArtistDetailActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @NonNull
+    @Nullable
     @Override
-    public ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks) {
+    public ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks) {
         @ColorInt final int color = getPaletteColor();
         songAdapter.setColor(color);
-        return CabHolder.openCabImpl(this, menuRes, color, callbacks);
+        return AbsMultiSelectActionModeHolder.startActionModeImpl(this, menuRes, color, callbacks);
     }
 
     @Override

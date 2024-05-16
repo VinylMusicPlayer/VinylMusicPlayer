@@ -17,12 +17,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.MediaStoreSignature;
 import com.kabouzeid.appthemehelper.util.ATHUtil;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.audiocover.FileCover;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.sort.FileSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
@@ -46,8 +46,8 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     final Callbacks callbacks;
 
     public SongFileAdapter(@NonNull final AppCompatActivity activity, @NonNull final List<File> songFiles,
-                           @Nullable final Callbacks callback, @Nullable final CabHolder cabHolder) {
-        super(activity, cabHolder, R.menu.menu_media_selection);
+                           @Nullable final Callbacks callback, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder) {
+        super(activity, actionModeHolder, R.menu.menu_media_selection);
         this.activity = activity;
         dataSet = songFiles;
         callbacks = callback;

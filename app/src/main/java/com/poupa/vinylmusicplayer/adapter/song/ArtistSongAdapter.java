@@ -17,13 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
@@ -37,11 +36,11 @@ import java.util.ArrayList;
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallbacks {
+public class ArtistSongAdapter extends ArrayAdapter<Song> {
     @Nullable
-    private final CabHolder cabHolder;
+    private final AbsMultiSelectActionModeHolder actionModeHolder;
     @Nullable
-    private ActionMode cab;
+    private ActionMode mutltiSelectActionMode;
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
@@ -50,10 +49,10 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     @NonNull
     final AppCompatActivity activity;
 
-    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable CabHolder cabHolder) {
+    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
         super(activity, R.layout.item_list, dataSet);
         this.activity = activity;
-        this.cabHolder = cabHolder;
+        this.actionModeHolder = actionModeHolder;
         this.dataSet = dataSet;
         checked = new ArrayList<>();
     }
@@ -152,15 +151,47 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     }
 
     private void toggleChecked(Song song) {
-        if (cabHolder != null) {
+        if (actionModeHolder != null) {
             if (!checked.remove(song)) {checked.add(song);}
             notifyDataSetChanged();
 
-            cab = CabHolder.updateCab(
-                    activity,
-                    cab,
-                    () -> cabHolder.openCab(R.menu.menu_media_selection, this),
-                    checked.size());
+            if (mutltiSelectActionMode == null) {
+                mutltiSelectActionMode = actionModeHolder.startActionMode(R.menu.menu_media_selection, new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                        AbsThemeActivity.static_setStatusbarColor(
+                                activity,
+                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
+                        );
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                        AbsThemeActivity.static_setStatusbarColor(
+                                activity,
+                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
+                        );
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                        onMultipleItemAction(item, new ArrayList<>(checked));
+                        mode.finish();
+                        unCheckAll();
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(final ActionMode mode) {
+                        AbsThemeActivity.static_setStatusbarColor(activity, color);
+                        unCheckAll();
+                        mutltiSelectActionMode = null;
+                    }
+                });
+            }
+            AbsMultiSelectActionModeHolder.update(activity, mutltiSelectActionMode, checked.size());
         }
     }
 
@@ -174,33 +205,10 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
     }
 
     private boolean isInQuickSelectMode() {
-        return cab != null;
+        return mutltiSelectActionMode != null;
     }
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    @Override
-    public void onCabCreate(@NonNull final ActionMode cab, @NonNull final Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
-    }
-
-    @Override
-    public boolean onCabSelection(@NonNull final MenuItem menuItem) {
-        onMultipleItemAction(menuItem, new ArrayList<>(checked));
-        if (cab != null) {
-            cab.finish();
-            cab = null;
-        }
-        unCheckAll();
-        return true;
-    }
-
-    @Override
-    public boolean onCabDestroy(@NonNull final ActionMode cab) {
-        AbsThemeActivity.static_setStatusbarColor(activity, color);
-        unCheckAll();
-        return true;
     }
 }

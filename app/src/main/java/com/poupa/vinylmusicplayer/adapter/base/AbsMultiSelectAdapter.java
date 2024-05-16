@@ -12,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poupa.vinylmusicplayer.R;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
@@ -25,19 +23,19 @@ import java.util.Map;
  */
 public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, I>
         extends RecyclerView.Adapter<VH>
-        implements CabCallbacks {
+{
     @Nullable
-    private final CabHolder cabHolder;
+    private final AbsMultiSelectActionModeHolder actionModeHolder;
     @Nullable
-    private ActionMode cab;
+    private ActionMode actionMode;
     private final LinkedHashMap<Integer, I> checked;
     private int menuRes;
     private final Context context;
 
     private int color;
 
-    protected AbsMultiSelectAdapter(final Context context, @Nullable final CabHolder cabHolder, @MenuRes int menuRes) {
-        this.cabHolder = cabHolder;
+    protected AbsMultiSelectAdapter(final Context context, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder, @MenuRes int menuRes) {
+        this.actionModeHolder = actionModeHolder;
         checked = new LinkedHashMap<>();
         this.menuRes = menuRes;
         this.context = context;
@@ -55,7 +53,7 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
         else {checked.put(position, identifier);}
 
         notifyItemChanged(position);
-        updateCab();
+        updateMultiSelectActionMode();
 
         return true;
     }
@@ -70,12 +68,48 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
             }
         }
         notifyDataSetChanged();
-        updateCab();
+        updateMultiSelectActionMode();
     }
 
-    private void updateCab() {
-        if (cabHolder != null) {
-            cab = CabHolder.updateCab(context, cab, () -> cabHolder.openCab(menuRes, this), checked.size());
+    private void updateMultiSelectActionMode() {
+        if (actionModeHolder != null) {
+            if (actionMode == null) {
+                actionMode = actionModeHolder.startActionMode(menuRes, new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                        AbsThemeActivity.static_setStatusbarColor(
+                                (Activity) context,
+                                VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color)
+                        );
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                        if (item.getItemId() == R.id.action_multi_select_adapter_check_all) {
+                            checkAll();
+                        } else {
+                            onMultipleItemAction(item, checked);
+                            mode.finish();
+                            clearChecked();
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(final ActionMode mode) {
+                        AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
+                        clearChecked();
+                        actionMode = null;
+                    }
+                });
+            }
+            AbsMultiSelectActionModeHolder.update(context, actionMode, checked.size());
         }
     }
 
@@ -89,38 +123,11 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
     }
 
     protected boolean isInQuickSelectMode() {
-        return cab != null;
+        return actionMode != null;
     }
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    @Override
-    public void onCabCreate(@NonNull final ActionMode cab, @NonNull final Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor((Activity) context, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
-    }
-
-    @Override
-    public boolean onCabSelection(@NonNull final MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_multi_select_adapter_check_all) {
-            checkAll();
-        } else {
-            onMultipleItemAction(menuItem, checked);
-            if (cab != null) {
-                cab.finish();
-                cab = null;
-            }
-            clearChecked();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onCabDestroy(@NonNull final ActionMode cab) {
-        AbsThemeActivity.static_setStatusbarColor((Activity) context, color);
-        clearChecked();
-        return true;
     }
 
     @Nullable

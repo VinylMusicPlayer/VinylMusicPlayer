@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 
 import java.util.List;
@@ -34,14 +34,14 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
 
     public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
                                 @LayoutRes final int itemLayoutRes,
-                                final boolean usePalette, @Nullable final CabHolder cabHolder) {
-        super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
+                                final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder) {
+        super(activity, dataSet, itemLayoutRes, usePalette, actionModeHolder);
     }
 
     public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
-                                final boolean usePalette, @Nullable final CabHolder cabHolder,
+                                final boolean usePalette, @Nullable final AbsMultiSelectActionModeHolder actionModeHolder,
                                 final boolean showSectionName) {
-        super(activity, dataSet, R.layout.item_list, usePalette, cabHolder, showSectionName);
+        super(activity, dataSet, R.layout.item_list, usePalette, actionModeHolder, showSectionName);
     }
 
     @NonNull

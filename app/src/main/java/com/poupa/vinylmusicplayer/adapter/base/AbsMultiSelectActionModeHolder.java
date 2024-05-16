@@ -1,4 +1,4 @@
-package com.poupa.vinylmusicplayer.interfaces;
+package com.poupa.vinylmusicplayer.adapter.base;
 
 import android.content.Context;
 import android.view.ActionMode;
@@ -18,21 +18,19 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
-import java.util.function.Supplier;
-
 @FunctionalInterface
-public interface CabHolder {
-    @NonNull
-    ActionMode openCab(final int menuRes, @NonNull final CabCallbacks callbacks);
+public interface AbsMultiSelectActionModeHolder {
+    @Nullable
+    ActionMode startActionMode(final int menuRes, @NonNull final ActionMode.Callback callbacks);
 
-    @NonNull
-    static ActionMode openCabImpl(
+    @Nullable
+    static ActionMode startActionModeImpl(
             @NonNull final AppCompatActivity context,
             @MenuRes final int menuRes,
             @ColorInt final int backgroundColor,
-            @NonNull final CabCallbacks callbacks)
+            @NonNull final ActionMode.Callback callbacks)
     {
-        final ActionMode cab = context.startActionMode(
+        return context.startActionMode(
                 new ActionMode.Callback() {
                     @Override
                     public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
@@ -40,52 +38,42 @@ public interface CabHolder {
                         inflater.inflate(menuRes, menu);
                         MenuHelper.decorateDestructiveItems(menu, context);
 
-                        return true;
+                        return callbacks.onCreateActionMode(mode, menu);
                     }
 
                     @Override
                     public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
                         final ViewGroup decorView = (ViewGroup) context.getWindow().getDecorView();
-                        final View cabView = decorView.findViewById(R.id.action_mode_bar);
-                        if (cabView != null) {
+                        final View view = decorView.findViewById(R.id.action_mode_bar);
+                        if (view != null) {
                             final int cabColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
-                            cabView.setBackgroundColor(cabColor);
+                            view.setBackgroundColor(cabColor);
                         }
-                        callbacks.onCabCreate(mode, menu);
 
+                        callbacks.onPrepareActionMode(mode, menu);
                         return true;
                     }
 
                     @Override
                     public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
-                        return callbacks.onCabSelection(item);
+                        return callbacks.onActionItemClicked(mode, item);
                     }
 
                     @Override
                     public void onDestroyActionMode(final ActionMode mode) {
-                        callbacks.onCabDestroy(mode);
+                        callbacks.onDestroyActionMode(mode);
                     }
                 }
         );
-
-        return cab;
     }
 
-    @Nullable
-    static ActionMode updateCab(@NonNull final Context context, @Nullable ActionMode cab,
-                                @NonNull final Supplier<ActionMode> openCabFunction,
-                                final int checkedCount) {
+    static void update(@NonNull final Context context, @Nullable final ActionMode mode, final int checkedCount) {
+        if (mode == null) {return;}
+
         if (checkedCount <= 0) {
-            if (cab != null) {
-                cab.finish();
-            }
-            return null;
+            mode.finish();
         } else {
-            if (cab == null) {
-                cab = openCabFunction.get();
-            }
-            cab.setTitle(context.getString(R.string.x_selected, checkedCount));
-            return cab;
+            mode.setTitle(context.getString(R.string.x_selected, checkedCount));
         }
     }
 }

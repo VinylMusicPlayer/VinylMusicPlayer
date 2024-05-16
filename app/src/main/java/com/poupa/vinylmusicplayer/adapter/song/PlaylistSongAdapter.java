@@ -10,9 +10,9 @@ import androidx.core.util.Pair;
 
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
@@ -25,8 +25,8 @@ import java.util.ArrayList;
 public class PlaylistSongAdapter extends AbsOffsetSongAdapter {
 
     public PlaylistSongAdapter(AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, boolean usePalette,
-                               @Nullable CabHolder cabHolder) {
-        super(activity, dataSet, usePalette, cabHolder, false);
+                               @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
+        super(activity, dataSet, usePalette, actionModeHolder, false);
         setMultiSelectMenuRes(R.menu.menu_cannot_delete_single_songs_playlist_songs_selection);
     }
 

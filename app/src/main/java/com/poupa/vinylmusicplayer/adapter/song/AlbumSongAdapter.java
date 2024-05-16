@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectActionModeHolder;
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 
@@ -17,8 +17,8 @@ import java.util.ArrayList;
  */
 public class AlbumSongAdapter extends SongAdapter {
 
-    public AlbumSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, boolean usePalette, @Nullable CabHolder cabHolder) {
-        super(activity, dataSet, R.layout.item_list, usePalette, cabHolder);
+    public AlbumSongAdapter(AppCompatActivity activity, ArrayList<Song> dataSet, boolean usePalette, @Nullable AbsMultiSelectActionModeHolder actionModeHolder) {
+        super(activity, dataSet, R.layout.item_list, usePalette, actionModeHolder);
         this.showAlbumImage = false; // We don't want to load it in this adapter
     }
 
