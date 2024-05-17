@@ -169,6 +169,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         super.setLightStatusbar(lightStatusbar);
         super.setTaskDescriptionColor(taskColor);
         super.setNavigationbarColor(navigationbarColor);
+        setStatusbarColorAuto();
 
         playerFragment.setMenuVisibility(false);
         playerFragment.setUserVisibleHint(false);
@@ -181,6 +182,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         super.setLightStatusbar(false);
         super.setTaskDescriptionColor(playerFragmentColor);
         super.setNavigationbarColor(playerFragmentColor);
+        super.setStatusbarColor(Color.TRANSPARENT);
 
         playerFragment.setMenuVisibility(true);
         playerFragment.setUserVisibleHint(true);
