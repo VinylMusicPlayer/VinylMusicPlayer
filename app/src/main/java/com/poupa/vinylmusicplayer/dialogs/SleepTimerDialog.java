@@ -40,7 +40,7 @@ public class SleepTimerDialog extends DialogFragment {
     private CheckBox shouldFinishLastSong;
 
     int seekArcProgress;
-    AlertDialog materialDialog;
+    AlertDialog alertDialog;
     private TimerUpdater timerUpdater;
     final AtomicBoolean changingText = new AtomicBoolean(false);
 
@@ -60,7 +60,7 @@ public class SleepTimerDialog extends DialogFragment {
         shouldFinishLastSong = binding.shouldFinishLastSong;
 
         timerUpdater = new TimerUpdater();
-        materialDialog = new AlertDialog.Builder(activity)
+        alertDialog = new AlertDialog.Builder(activity)
                 .setTitle(activity.getResources().getString(R.string.action_sleep_timer))
                 .setPositiveButton(R.string.action_set, (dialog, which) -> {
                     PreferenceUtil.getInstance().setSleepTimerFinishMusic(shouldFinishLastSong.isChecked());
@@ -172,7 +172,7 @@ public class SleepTimerDialog extends DialogFragment {
             }
         });
 
-        return materialDialog;
+        return alertDialog;
     }
 
     void updateTimeDisplayTime() {
