@@ -155,11 +155,9 @@ public abstract class AbsMultiSelectAdapter<VH extends RecyclerView.ViewHolder, 
                             final int adjustedColor = VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(backgroundColor);
 
                             final View view = activity.getWindow().getDecorView().findViewById(R.id.action_mode_bar);
-                            if (view != null) {
-                                view.setBackgroundColor(adjustedColor);
-                            }
+                            if (view != null) {view.setBackgroundColor(adjustedColor);}
 
-                            activity.setStatusbarColor(adjustedColor); // TODO This is not having any effect!
+                            activity.setStatusbarColor(adjustedColor);
 
                             callbacks.onPrepareActionMode(mode, menu);
                             return true;
