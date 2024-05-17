@@ -2,6 +2,7 @@ package com.poupa.vinylmusicplayer.ui.activities.base;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
