@@ -64,15 +64,14 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
     }
 
     public void setStatusbarColor(int color) {
-        final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
-        if (statusBar != null) {
-            statusBar.setBackgroundColor(color);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                setLightStatusbarAuto(color);
-            }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(color);
             setLightStatusbarAuto(color);
+        } else {
+            final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
+            if (statusBar != null) {
+                statusBar.setBackgroundColor(color);
+            }
         }
     }
 
