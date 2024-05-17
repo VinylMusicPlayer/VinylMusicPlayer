@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.discog.tagging.MultiValuesTagUtil;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.OopsHandler;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 import java.util.ArrayList;
@@ -91,8 +92,8 @@ public class MediaStoreBridge {
                     null,
                     PreferenceUtil.getInstance().getSongSortOrder()
             );
-        } catch (SecurityException e) {
-            e.printStackTrace();
+        } catch (final RuntimeException e) {
+            OopsHandler.collectStackTrace(e);
             return null;
         }
     }
