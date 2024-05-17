@@ -27,7 +27,6 @@ import org.jaudiotagger.audio.AudioHeader;
 import java.io.File;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -86,15 +85,15 @@ public class SongDetailDialog extends DialogFragment {
         final @NonNull Activity context = requireActivity();
         final @NonNull Song song = requireArguments().getParcelable("song");
 
+        final View customView = getLayoutInflater().inflate(R.layout.dialog_file_details, null);
         AlertDialog dialog = new AlertDialog.Builder(context)
-                .setView(R.layout.dialog_file_details)
+                .setView(customView)
                 .setTitle(context.getResources().getString(R.string.label_details))
                 .setPositiveButton(android.R.string.ok, ((dialog1, which) -> dialog1.dismiss()))
                 .create();
 
-        @NonNull final View dialogView = Objects.requireNonNull(dialog.getWindow().getDecorView());
-        final TextView filesystemInfo = dialogView.findViewById(R.id.filesystem_info);
-        final TextView discographyInfo = dialogView.findViewById(R.id.discography_info);
+        final TextView filesystemInfo = customView.findViewById(R.id.filesystem_info);
+        final TextView discographyInfo = customView.findViewById(R.id.discography_info);
 
         HtmlBuilder htmlBuilder = new HtmlBuilder(context);
 
