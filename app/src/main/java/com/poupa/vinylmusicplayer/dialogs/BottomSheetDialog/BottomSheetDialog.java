@@ -3,8 +3,6 @@ package com.poupa.vinylmusicplayer.dialogs.BottomSheetDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -12,7 +10,6 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
-import com.poupa.vinylmusicplayer.util.Util;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
