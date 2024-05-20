@@ -14,6 +14,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.discog.Discography;
@@ -37,6 +38,8 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     private int navigationbarColor;
     private int taskColor;
     private boolean lightStatusbar;
+    @ColorInt protected int statusBarCollapsedColor;
+    @ColorInt protected int statusBarExpandedColor;
 
     private NowPlayingScreen currentNowPlayingScreen;
     AbsPlayerFragment playerFragment;
@@ -92,6 +95,9 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
             }
         });
         slidingUpPanelLayout.addPanelSlideListener(this);
+
+        statusBarCollapsedColor = ThemeStore.primaryColor(this);
+        statusBarExpandedColor = Color.TRANSPARENT;
     }
 
     @Override
@@ -146,8 +152,11 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     @Override
     public void onPanelSlide(View panel, @FloatRange(from = 0, to = 1) float slideOffset) {
         setMiniPlayerAlphaProgress(slideOffset);
+
         if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel();
         super.setNavigationbarColor((int) argbEvaluator.evaluate(slideOffset, navigationbarColor, playerFragment.getPaletteColor()));
+
+        super.setStatusbarColor((int) argbEvaluator.evaluate(slideOffset, statusBarCollapsedColor, statusBarExpandedColor));
     }
 
     @Override
@@ -167,10 +176,10 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
     public void onPanelCollapsed(View panel) {
         // restore values
-        super.setLightStatusbar(lightStatusbar);
-        super.setTaskDescriptionColor(taskColor);
-        super.setNavigationbarColor(navigationbarColor);
-        setStatusbarColorAuto();
+        setLightStatusbar(lightStatusbar);
+        setTaskDescriptionColor(taskColor);
+        setNavigationbarColor(navigationbarColor);
+        setStatusbarColor(statusBarCollapsedColor);
 
         playerFragment.setMenuVisibility(false);
         playerFragment.setUserVisibleHint(false);
@@ -180,10 +189,10 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
     public void onPanelExpanded(View panel) {
         // setting fragments values
         int playerFragmentColor = playerFragment.getPaletteColor();
-        super.setLightStatusbar(false);
-        super.setTaskDescriptionColor(playerFragmentColor);
-        super.setNavigationbarColor(playerFragmentColor);
-        super.setStatusbarColor(Color.TRANSPARENT);
+        setLightStatusbar(false);
+        setTaskDescriptionColor(playerFragmentColor);
+        setNavigationbarColor(playerFragmentColor);
+        setStatusbarColor(statusBarExpandedColor);
 
         playerFragment.setMenuVisibility(true);
         playerFragment.setUserVisibleHint(true);
@@ -197,7 +206,6 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         // necessary to make the views below clickable
         miniPlayerFragment.getView().setVisibility(alpha == 0 ? View.GONE : View.VISIBLE);
     }
-
 
     public SlidingUpPanelLayout.PanelState getPanelState() {
         return slidingUpPanelLayout == null ? null : slidingUpPanelLayout.getPanelState();
@@ -276,7 +284,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
                     .ofArgb(getWindow().getNavigationBarColor(), color)
                     .setDuration(ViewUtil.VINYL_MUSIC_PLAYER_ANIM_TIME);
             navigationBarColorAnimator.setInterpolator(new PathInterpolator(0.4f, 0f, 1f, 1f));
-            navigationBarColorAnimator.addUpdateListener(animation -> AbsSlidingMusicPanelActivity.super.setNavigationbarColor((Integer) animation.getAnimatedValue()));
+            navigationBarColorAnimator.addUpdateListener(animation -> super.setNavigationbarColor((Integer) animation.getAnimatedValue()));
             navigationBarColorAnimator.start();
         }
     }
@@ -289,7 +297,7 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
 
     @Override
     public void setTaskDescriptionColor(@ColorInt int color) {
-        this.taskColor = color;
+        taskColor = color;
         if (getPanelState() == null || getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
             super.setTaskDescriptionColor(color);
         }

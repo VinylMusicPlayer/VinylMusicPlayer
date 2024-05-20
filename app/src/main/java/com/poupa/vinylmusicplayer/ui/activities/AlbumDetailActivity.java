@@ -160,6 +160,7 @@ public class AlbumDetailActivity
 
         layoutBinding.toolbar.setBackgroundColor(color);
         setSupportActionBar(layoutBinding.toolbar); // needed to auto readjust the toolbar content color
+        statusBarCollapsedColor = color; // needed to match the palette when the playing screen is collapsed
         setStatusbarColor(color);
 
         final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
