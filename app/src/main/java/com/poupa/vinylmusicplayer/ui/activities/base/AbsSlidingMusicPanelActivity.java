@@ -154,9 +154,18 @@ public abstract class AbsSlidingMusicPanelActivity extends AbsMusicServiceActivi
         setMiniPlayerAlphaProgress(slideOffset);
 
         if (navigationBarColorAnimator != null) navigationBarColorAnimator.cancel();
-        super.setNavigationbarColor((int) argbEvaluator.evaluate(slideOffset, navigationbarColor, playerFragment.getPaletteColor()));
+        super.setNavigationbarColor((int) argbEvaluator.evaluate(
+                slideOffset,
+                navigationbarColor,
+                playerFragment.getPaletteColor()
+        ));
 
-        super.setStatusbarColor((int) argbEvaluator.evaluate(slideOffset, statusBarCollapsedColor, statusBarExpandedColor));
+        // synchronize the color of status bar to that of the sliding panel's dimmed part animation
+        super.setStatusbarColor((int) argbEvaluator.evaluate(
+                slideOffset,
+                statusBarCollapsedColor,
+                slidingUpPanelLayout.getCoveredFadeColor()
+        ));
     }
 
     @Override
