@@ -160,7 +160,6 @@ public class SleepTimerDialog extends DialogFragment {
             public void onProgressChanged(@NonNull SeekArc seekArc, int i, boolean b) {
                 if (i < 1) {
                     seekArc.setProgress(0);
-                    shouldFinishLastSong.setChecked(true);
                     return;
                 }
                 seekArcProgress = i;
