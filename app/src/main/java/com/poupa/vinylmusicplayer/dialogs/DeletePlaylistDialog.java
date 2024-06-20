@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Html;
@@ -7,7 +8,6 @@ import android.text.Html;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.model.Playlist;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
@@ -48,16 +48,16 @@ public class DeletePlaylistDialog extends DialogFragment {
             title = R.string.delete_playlist_title;
             content = Html.fromHtml(getString(R.string.delete_playlist_x, playlists.get(0).name));
         }
-        return new MaterialDialog.Builder(getActivity())
-                .title(title)
-                .content(content)
-                .positiveText(R.string.delete_action)
-                .negativeText(android.R.string.cancel)
-                .onPositive((dialog, which) -> {
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(title)
+                .setMessage(content)
+                .setPositiveButton(R.string.delete_action, (dialog, which) -> {
+                    dialog.dismiss();
                     if (getActivity() == null)
                         return;
                     PlaylistsUtil.deletePlaylists(getActivity(), playlists);
                 })
-                .build();
+                .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
+                .create();
     }
 }

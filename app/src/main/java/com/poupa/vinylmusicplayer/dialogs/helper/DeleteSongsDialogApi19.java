@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.dialogs.helper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -122,13 +122,10 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
             title = R.string.delete_song_title;
             content = Html.fromHtml(getString(R.string.delete_song_x, songs.get(0).getTitle()));
         }
-        return new MaterialDialog.Builder(requireActivity())
-                .title(title)
-                .content(content)
-                .positiveText(R.string.delete_action)
-                .negativeText(android.R.string.cancel)
-                .autoDismiss(false)
-                .onPositive((dialog, which) -> {
+        return new AlertDialog.Builder(requireActivity())
+                .setTitle(title)
+                .setMessage(content)
+                .setPositiveButton(R.string.delete_action, (dialog, which) -> {
                     dismiss();
 
                     DeleteSongsHelper.managePlayingSong(songs);
@@ -138,8 +135,9 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
                     deleteSongsTask = new DeleteSongsAsyncTask(DeleteSongsDialogApi19.this);
                     ((DeleteSongsAsyncTask)deleteSongsTask).execute(songs);
                 })
-                .onNegative((materialDialog, dialogAction) -> dismiss())
-                .build();
+                .setNegativeButton(android.R.string.cancel, (materialDialog, dialogAction) -> dismiss())
+                .setCancelable(false)
+                .create();
     }
 
     void deleteSongs(List<Song> songs, List<Uri> safUris) {
@@ -178,11 +176,11 @@ public class DeleteSongsDialogApi19 extends DialogFragment {
 
         @Override
         protected Dialog createDialog(@NonNull Context context) {
-            return new MaterialDialog.Builder(context)
-                    .title(R.string.deleting_songs)
-                    .cancelable(false)
-                    .progress(true, 0)
-                    .build();
+            return new AlertDialog.Builder(context)
+                    .setTitle(R.string.deleting_songs)
+                    .setMessage(context.getResources().getString(R.string.processed_x_over_y_tracks, 0, 0))
+                    .setCancelable(false)
+                    .create();
         }
     }
 

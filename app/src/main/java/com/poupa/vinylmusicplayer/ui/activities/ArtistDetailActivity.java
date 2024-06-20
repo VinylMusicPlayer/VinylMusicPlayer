@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialcab.attached.AttachedCab;
 import com.afollestad.materialcab.attached.AttachedCabKt;
-import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
 import com.poupa.vinylmusicplayer.R;
@@ -81,7 +80,6 @@ public class ArtistDetailActivity
     private Artist artist;
     @Nullable
     String biography;
-    MarkdownViewDialog biographyDialog;
     HorizontalAlbumAdapter albumAdapter;
     private ArtistSongAdapter songAdapter;
 
@@ -145,7 +143,7 @@ public class ArtistDetailActivity
     private void setUpViews() {
         setUpSongListView();
         setUpAlbumRecyclerView();
-        setColors(DialogUtils.resolveColor(this, R.attr.defaultFooterColor));
+        setColors(R.attr.defaultFooterColor);
     }
 
     private void setUpSongListView() {
@@ -214,20 +212,20 @@ public class ArtistDetailActivity
                             return;
                         }
 
-                        if (!PreferenceUtil.isAllowedToDownloadMetadata(ArtistDetailActivity.this)) {
-                            if (biography != null) {
-                                biographyDialog.setMarkdownContent(ArtistDetailActivity.this, biography);
-                            } else {
-                                biographyDialog.dismiss();
-                                SafeToast.show(ArtistDetailActivity.this, getResources().getString(R.string.biography_unavailable));
-                            }
+                        if (biography != null) {
+                            new MarkdownViewDialog.Builder(ArtistDetailActivity.this)
+                                    .setMarkdownContent(biography)
+                                    .setTitle(artist.getName())
+                                    .show();
+                        } else {
+                            SafeToast.show(ArtistDetailActivity.this, R.string.biography_unavailable);
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull final Call<LastFmArtist> call, @NonNull final Throwable t) {
+                        SafeToast.show(ArtistDetailActivity.this, R.string.biography_unavailable);
                         t.printStackTrace();
-                        biography = null;
                     }
                 });
     }
@@ -329,21 +327,10 @@ public class ArtistDetailActivity
             super.onBackPressed();
             return true;
         } else if (id == R.id.action_biography) {
-            if (biographyDialog == null) {
-                biographyDialog = new MarkdownViewDialog.Builder(this)
-                        .title(artist.getName())
-                        .build();
-            }
-            if (PreferenceUtil.isAllowedToDownloadMetadata(this)) { // wiki should've been already downloaded
-                if (biography != null) {
-                    biographyDialog.setMarkdownContent(this, biography);
-                    biographyDialog.show();
-                } else {
-                    SafeToast.show(this, getResources().getString(R.string.biography_unavailable));
-                }
-            } else { // force download
-                biographyDialog.show();
+            if (PreferenceUtil.isAllowedToDownloadMetadata(this)) {
                 loadBiography();
+            } else {
+                SafeToast.show(this, R.string.biography_disallowed);
             }
             return true;
         } else if (id == R.id.action_set_artist_image) {
@@ -394,10 +381,6 @@ public class ArtistDetailActivity
     private void setArtist(final Artist artist) {
         this.artist = artist;
         loadArtistImage();
-
-        if (PreferenceUtil.isAllowedToDownloadMetadata(this)) {
-            loadBiography();
-        }
 
         layoutBinding.title.setText(artist.getName());
         layoutBinding.songCountText.setText(MusicUtil.getSongCountString(this, artist.getSongCount()));

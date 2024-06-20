@@ -1,12 +1,12 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.model.lyrics.Lyrics;
 
 /**
@@ -25,10 +25,9 @@ public class LyricsDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //noinspection ConstantConditions
-        return new MaterialDialog.Builder(getActivity())
-                .title(getArguments().getString("title"))
-                .content(getArguments().getString("lyrics"))
-                .build();
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(getArguments().getString("title"))
+                .setMessage(getArguments().getString("lyrics"))
+                .create();
     }
 }

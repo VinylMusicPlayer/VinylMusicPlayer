@@ -1,26 +1,28 @@
 package com.poupa.vinylmusicplayer.preferences;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.dialogs.BlacklistFolderChooserDialog;
 import com.poupa.vinylmusicplayer.provider.BlacklistStore;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
 public class BlacklistPreferenceDialog extends DialogFragment implements BlacklistFolderChooserDialog.FolderCallback {
 
-    private ArrayList<String> paths;
+    private String[] paths;
+    private DialogInterface.OnClickListener onPathSelected;
 
     public static BlacklistPreferenceDialog newInstance() {
         return new BlacklistPreferenceDialog();
@@ -34,57 +36,56 @@ public class BlacklistPreferenceDialog extends DialogFragment implements Blackli
             blacklistFolderChooserDialog.setCallback(this);
         }
 
+        onPathSelected = (outterDialog, outterWhich) -> {
+            outterDialog.dismiss();
+            final String outterText = paths[outterWhich];
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.remove_from_blacklist)
+                    .setMessage(Html.fromHtml(getString(R.string.do_you_want_to_remove_from_the_blacklist, outterText)))
+                    .setPositiveButton(R.string.remove_action, (innerDialog, innerWhich) -> {
+                        innerDialog.dismiss();
+                        BlacklistStore.getInstance(requireContext()).removePath(new File(outterText));
+                        refreshBlacklistData();
+                    })
+                    .setNegativeButton(android.R.string.cancel, (innerDialog, innerWhich) -> innerDialog.dismiss())
+                    .show();
+        };
+
         refreshBlacklistData();
-        return new MaterialDialog.Builder(getContext())
-                .title(R.string.blacklist)
-                .positiveText(android.R.string.ok)
-                .neutralText(R.string.clear_action)
-                .negativeText(R.string.add_action)
-                .items(paths)
-                .autoDismiss(false)
-                .itemsCallback((materialDialog, view, i, charSequence) -> new MaterialDialog.Builder(getContext())
-                        .title(R.string.remove_from_blacklist)
-                        .content(Html.fromHtml(getString(R.string.do_you_want_to_remove_from_the_blacklist, charSequence)))
-                        .positiveText(R.string.remove_action)
-                        .negativeText(android.R.string.cancel)
-                        .onPositive((materialDialog12, dialogAction) -> {
-                            BlacklistStore.getInstance(getContext()).removePath(new File(charSequence.toString()));
+        return new AlertDialog.Builder(getContext())
+                .setTitle(R.string.blacklist)
+                .setPositiveButton(android.R.string.ok, (materialDialog, dialogAction) -> dismiss())
+                .setNeutralButton(R.string.clear_action, (materialDialog, dialogAction) -> new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.clear_blacklist)
+                        .setMessage(R.string.do_you_want_to_clear_the_blacklist)
+                        .setPositiveButton(R.string.clear_action, (dialog, which) -> {
+                            BlacklistStore.getInstance(requireContext()).clear();
                             refreshBlacklistData();
-                        }).show())
-                // clear
-                .onNeutral((materialDialog, dialogAction) -> new MaterialDialog.Builder(getContext())
-                        .title(R.string.clear_blacklist)
-                        .content(R.string.do_you_want_to_clear_the_blacklist)
-                        .positiveText(R.string.clear_action)
-                        .negativeText(android.R.string.cancel)
-                        .onPositive((materialDialog1, dialogAction1) -> {
-                            BlacklistStore.getInstance(getContext()).clear();
-                            refreshBlacklistData();
-                        }).show())
-                // add
-                .onNegative((materialDialog, dialogAction) -> {
+                        })
+                        .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
+                        .show())
+                .setNegativeButton(R.string.add_action, (materialDialog, dialogAction) -> {
                     BlacklistFolderChooserDialog dialog = BlacklistFolderChooserDialog.create();
-                    dialog.setCallback(BlacklistPreferenceDialog.this);
+                    dialog.setCallback(this);
                     dialog.show(getChildFragmentManager(), "FOLDER_CHOOSER");
                 })
-                .onPositive((materialDialog, dialogAction) -> dismiss())
-                .build();
+                .setItems(paths, onPathSelected)
+                .create();
     }
 
     private void refreshBlacklistData() {
-        paths = BlacklistStore.getInstance(getContext()).getPaths();
+        paths = BlacklistStore.getInstance(requireContext()).getPaths().toArray(new String[0]);
 
-        MaterialDialog dialog = (MaterialDialog) getDialog();
+        final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
-            String[] pathArray = new String[paths.size()];
-            pathArray = paths.toArray(pathArray);
-            dialog.setItems(pathArray);
+            ((ArrayAdapter)dialog.getListView().getAdapter()).notifyDataSetChanged();
         }
     }
 
     @Override
     public void onFolderSelection(@NonNull BlacklistFolderChooserDialog folderChooserDialog, @NonNull File file) {
-        BlacklistStore.getInstance(getContext()).addPath(file);
+        BlacklistStore.getInstance(requireContext()).addPath(file);
         refreshBlacklistData();
     }
 }

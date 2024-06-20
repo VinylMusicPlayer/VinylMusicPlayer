@@ -1,5 +1,6 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,16 +11,11 @@ import androidx.annotation.UiThread;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
 /**
- * @author Aidan Follestad (afollestad)
  * @author SC (soncaokim)
  */
 public class ChangelogDialog extends MarkdownViewDialog {
-    public ChangelogDialog(Builder builder) {
+    protected ChangelogDialog(MarkdownViewDialog.Builder builder) {
         super(builder);
-
-        final Context context = builder.getContext();
-        setMarkdownContentFromAsset(context, "CHANGELOG.md");
-        setOnDismissListener(dialog -> setChangelogRead(context));
     }
 
     public static void setChangelogRead(@NonNull Context context) {
@@ -39,10 +35,11 @@ public class ChangelogDialog extends MarkdownViewDialog {
 
         @Override
         @UiThread
-        public ChangelogDialog build() {
-            super.build();
+        public AlertDialog create() {
+            setMarkdownContentFromAsset(getContext(), "CHANGELOG.md");
+            setOnDismissListener(dialog -> setChangelogRead(getContext()));
 
-            return new ChangelogDialog(this);
+            return super.create();
         }
     }
 }

@@ -2,19 +2,18 @@ package com.poupa.vinylmusicplayer.dialogs;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.View;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 
 import java.io.File;
@@ -26,10 +25,11 @@ import java.util.List;
 /**
  * @author Aidan Follestad (afollestad), modified by Karim Abou Zeid
  */
-public class BlacklistFolderChooserDialog extends DialogFragment implements MaterialDialog.ListCallback {
+public class BlacklistFolderChooserDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     private File parentFolder;
     private File[] parentContents;
+    private String[] parentContentsAsString;
     private boolean canGoUp = false;
 
     private FolderCallback callback;
@@ -76,24 +76,24 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public AlertDialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = requireActivity();
-        if (Build.VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                return new MaterialDialog.Builder(activity)
-                        .title(R.string.md_error_label)
-                        .content(R.string.android13_storage_perm_error)
-                        .positiveText(android.R.string.ok)
-                        .build();
+                return new AlertDialog.Builder(activity)
+                        .setTitle(R.string.md_error_label)
+                        .setMessage(R.string.android13_storage_perm_error)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                        .create();
             }
         } else if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 && (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED))
         {
-                return new MaterialDialog.Builder(activity)
-                        .title(R.string.md_error_label)
-                        .content(R.string.md_storage_perm_error)
-                        .positiveText(android.R.string.ok)
-                        .build();
+                return new AlertDialog.Builder(activity)
+                        .setTitle(R.string.md_error_label)
+                        .setMessage(R.string.md_storage_perm_error)
+                        .setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()))
+                        .create();
         }
         if (savedInstanceState == null) {
             savedInstanceState = new Bundle();
@@ -104,32 +104,29 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
         parentFolder = new File(savedInstanceState.getString(KEY, "/"));
         checkIfCanGoUp();
         parentContents = listFiles();
-        MaterialDialog.Builder builder =
-                new MaterialDialog.Builder(activity)
-                        .title(parentFolder.getAbsolutePath())
-                        .items(getContentsArray())
-                        .itemsCallback(this)
-                        .autoDismiss(false)
-                        .onPositive((dialog, which) -> {
-                            dismiss();
-                            callback.onFolderSelection(BlacklistFolderChooserDialog.this, parentFolder);
-                        })
-                        .onNegative((materialDialog, dialogAction) -> dismiss())
-                        .positiveText(R.string.add_action)
-                        .negativeText(android.R.string.cancel);
-        return builder.build();
+        parentContentsAsString = getContentsArray();
+        return new AlertDialog.Builder(activity)
+                .setTitle(parentFolder.getAbsolutePath())
+                .setItems(parentContentsAsString, this)
+                .setCancelable(false)
+                .setPositiveButton(R.string.add_action, (dialog, which) -> {
+                    dismiss();
+                    callback.onFolderSelection(this, parentFolder);
+                })
+                .setNegativeButton(android.R.string.cancel, (materialDialog, dialogAction) -> dismiss())
+                .create();
     }
 
     @Override
-    public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence s) {
-        if (canGoUp && i == 0) {
+    public void onClick(DialogInterface dialog, int which) {
+        if (canGoUp && which == 0) {
             parentFolder = parentFolder.getParentFile();
             if (parentFolder.getAbsolutePath().equals("/storage/emulated")) {
                 parentFolder = parentFolder.getParentFile();
             }
             canGoUp = parentFolder.getParent() != null;
         } else {
-            parentFolder = parentContents[canGoUp ? i - 1 : i];
+            parentFolder = parentContents[canGoUp ? which - 1 : which];
             canGoUp = true;
             if (parentFolder.getAbsolutePath().equals("/storage/emulated")) {
                 parentFolder = Environment.getExternalStorageDirectory();
@@ -148,9 +145,9 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
 
     private void reload() {
         parentContents = listFiles();
-        MaterialDialog dialog = (MaterialDialog) getDialog();
+        AlertDialog dialog = (AlertDialog) getDialog();
         dialog.setTitle(parentFolder.getAbsolutePath());
-        dialog.setItems(getContentsArray());
+        ((ArrayAdapter)dialog.getListView().getAdapter()).notifyDataSetChanged();
     }
 
     @Override

@@ -1,13 +1,15 @@
 package com.poupa.vinylmusicplayer.dialogs;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.InputType;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.PlaylistsUtil;
 
@@ -31,21 +33,27 @@ public class RenamePlaylistDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         long playlistId = requireArguments().getLong(PLAYLIST_ID);
-        return new MaterialDialog.Builder(requireActivity())
-                .title(R.string.rename_playlist_title)
-                .positiveText(R.string.rename_action)
-                .negativeText(android.R.string.cancel)
-                .inputType(InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                .input(getString(R.string.playlist_name_empty), PlaylistsUtil.getNameForPlaylist(playlistId), false,
-                        (materialDialog, charSequence) -> {
-                            final String name = charSequence.toString().trim();
-                            if (!name.isEmpty()) {
-                                long playlistId1 = getArguments().getLong(PLAYLIST_ID);
-                                PlaylistsUtil.renamePlaylist(getActivity(), playlistId1, name);
-                            }
-                        })
-                .build();
+
+        final Activity activity = requireActivity();
+
+        final EditText input = new EditText(activity);
+        input.setInputType(InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
+                InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        input.setText(PlaylistsUtil.getNameForPlaylist(playlistId));
+
+        return new AlertDialog.Builder(activity)
+                //.setTitle(R.string.rename_playlist_title)
+                .setTitle(R.string.playlist_name_empty)
+                .setView(input)
+                .setPositiveButton(R.string.rename_action, (dialog, which) -> {
+                    final String name = input.getText().toString().trim();
+                    if (!name.isEmpty()) {
+                        PlaylistsUtil.renamePlaylist(activity, playlistId, name);
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton(android.R.string.cancel, ((dialog, which) -> dialog.dismiss()))
+                .create();
     }
 }

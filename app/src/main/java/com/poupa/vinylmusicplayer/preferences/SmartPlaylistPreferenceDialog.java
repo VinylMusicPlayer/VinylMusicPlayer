@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.preferences;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 
@@ -119,20 +119,16 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
         });
         innerLowerLayout.addView(isDisabledCheckbox);
 
-        return new MaterialDialog.Builder(context)
-                .title(prefName)
-                .positiveText(android.R.string.ok)
-                .negativeText(android.R.string.cancel)
-                .customView(outerLayout, false)
-                .autoDismiss(false)
-                .onPositive((materialDialog, dialogAction) -> {
+        return new AlertDialog.Builder(context)
+                .setTitle(prefName)
+                .setPositiveButton(android.R.string.ok, (materialDialog, dialogAction) -> {
                     @SuppressLint("DefaultLocale")
                     final String newPrefValue = isDisabledCheckbox.isChecked()
                             ? "0d"
                             : String.format("%d%s",
-                                    valueInput.getValue(),
-                                    POSSIBLE_TIME_UNITS[unitInput.getValue()].preferencePostfix
-                            );
+                            valueInput.getValue(),
+                            POSSIBLE_TIME_UNITS[unitInput.getValue()].preferencePostfix
+                    );
                     PreferenceManager.getDefaultSharedPreferences(context)
                             .edit()
                             .putString(preferenceKey, newPrefValue)
@@ -140,7 +136,9 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
 
                     dismiss();
                 })
-                .onNegative((materialDialog, dialogAction) -> dismiss())
-                .build();
+                .setNegativeButton(android.R.string.cancel, (materialDialog, dialogAction) -> dismiss())
+                .setView(outerLayout)
+                .setCancelable(false)
+                .create();
     }
 }
