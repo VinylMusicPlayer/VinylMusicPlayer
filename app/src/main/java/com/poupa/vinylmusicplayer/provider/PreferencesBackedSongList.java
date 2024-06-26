@@ -10,6 +10,7 @@ import com.poupa.vinylmusicplayer.App;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.util.PrefKey;
 import com.poupa.vinylmusicplayer.util.StringUtil;
 
 import java.util.ArrayList;
@@ -119,9 +120,9 @@ abstract class MutableSongList extends SongList {
     }
 }
 
-class PreferencesBackedSongList extends MutableSongList {
+public class PreferencesBackedSongList extends MutableSongList {
     private static final String SEPARATOR = ",";
-    private static final String PREF_NAME_PREFIX = "SONG_IDS_";
+    private static final String PREF_NAME_PREFIX = PrefKey.nonExportablePrefixedKey("SONG_IDS_");
 
     private static SharedPreferences preferences = null;
     static SharedPreferences getPreferences() {
@@ -186,7 +187,7 @@ class PreferencesBackedSongList extends MutableSongList {
 }
 
 class PreferenceBackedReorderableSongList extends PreferencesBackedSongList {
-    public PreferenceBackedReorderableSongList(@NonNull final String name) {
+    PreferenceBackedReorderableSongList(@NonNull final String name) {
         super(name);
     }
 

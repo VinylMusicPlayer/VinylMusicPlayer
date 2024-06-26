@@ -83,8 +83,8 @@ android {
         ci {
             dimension 'default'
 
-            final String gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim()
-            final String gitSha1 = 'git rev-parse --short HEAD'.execute().text.trim()
+            final String gitBranch = providers.exec {commandLine('git', 'rev-parse', '--abbrev-ref', 'HEAD')}.standardOutput.asText.get().trim()
+            final String gitSha1 = providers.exec {commandLine('git', 'rev-parse', '--short', 'HEAD')}.standardOutput.asText.get().trim()
             final String buildTime = new Date().format('yyMMdd-HHmm')
             final String buildId = gitBranch + '_' + gitSha1 + '_' + buildTime
 
@@ -117,6 +117,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig true
     }
     testOptions {
         unitTests.returnDefaultValues = true
@@ -128,11 +129,11 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.annotation:annotation:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.fragment:fragment-ktx:1.7.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.media:media:1.7.0'
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -146,7 +147,7 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:commons:0.9.6.0'
     implementation 'com.afollestad:material-cab:2.0.1'
 
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0'
     // TODO Right now cannot migrate KAPT to KSP, since we still use KAPT dataBinding
     //      Not clear if KSP supports it - https://issuetracker.google.com/issues/173030256#comment10
@@ -161,8 +162,8 @@ dependencies {
 
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.11.0@aar') {
         transitive = true
@@ -170,8 +171,8 @@ dependencies {
 
     implementation 'com.heinrichreimersoftware:material-intro:2.0.0'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
 
     implementation 'io.noties.markwon:core:4.6.2'
     implementation 'io.noties.markwon:html:4.6.2'
@@ -184,7 +185,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }

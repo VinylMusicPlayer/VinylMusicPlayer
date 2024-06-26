@@ -29,124 +29,136 @@ import java.lang.reflect.Type;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class PreferenceUtil {
     // TODO Use string resources for this, avoid duplicating inside UI code
-    public static final String GENERAL_THEME = "general_theme";
+
+    public static final String PRIMARY_COLOR = PrefKey.exportableKey("primary_color");
+    public static final String ACCENT_COLOR = PrefKey.exportableKey("accent_color");
+    public static final String COLORED_NAVBAR = PrefKey.exportableKey("should_color_navigation_bar");
+
+    public static final String GENERAL_THEME = PrefKey.exportableKey("general_theme");
     private static final String GENERAL_THEME_LIGHT = "light";
     private static final String GENERAL_THEME_DARK = "dark";
     private static final String GENERAL_THEME_BLACK = "black";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_DARK = "follow_system_light_or_dark";
     public static final String GENERAL_THEME_FOLLOW_SYSTEM_LIGHT_OR_BLACK = "follow_system_light_or_black";
 
-    private static final String REMEMBER_LAST_TAB = "remember_last_tab";
-    private static final String LAST_PAGE = "last_start_page";
-    private static final String LAST_MUSIC_CHOOSER = "last_music_chooser";
-    public static final String NOW_PLAYING_SCREEN_ID = "now_playing_screen_id";
+    public static final String REMEMBER_LAST_TAB = PrefKey.exportableKey("remember_last_tab");
+    private static final String LAST_PAGE = PrefKey.exportableKey("last_start_page");
+    private static final String LAST_MUSIC_CHOOSER = PrefKey.exportableKey("last_music_chooser");
+    public static final String NOW_PLAYING_SCREEN_ID = PrefKey.exportableKey("now_playing_screen_id");
 
-    private static final String ARTIST_SORT_ORDER = "artist_sort_order";
-    public static final String ALBUM_SORT_ORDER = "album_sort_order";
-    public static final String SONG_SORT_ORDER = "song_sort_order";
-    private static final String FILE_SORT_ORDER = "file_sort_order";
+    private static final String ARTIST_SORT_ORDER = PrefKey.exportableKey("artist_sort_order");
+    public static final String ALBUM_SORT_ORDER = PrefKey.exportableKey("album_sort_order");
+    public static final String SONG_SORT_ORDER = PrefKey.exportableKey("song_sort_order");
+    private static final String FILE_SORT_ORDER = PrefKey.exportableKey("file_sort_order");
+    private static final String LAST_ADDED_SORT_ORDER = PrefKey.exportableKey("last_added_sort_order");
+    private static final String NOT_RECENTLY_PLAYED_SORT_ORDER = PrefKey.exportableKey("not_recently_played_sort_order");
 
-    public static final String SORT_ORDER_NAME = "sort_order_name";
-    public static final String SORT_ORDER_NAME_REVERSE = SORT_ORDER_NAME + "_reverse";
-    public static final String SORT_ORDER_DATE_MODIFIED = "sort_order_date_modified";
-    public static final String SORT_ORDER_DATE_MODIFIED_REVERSE = SORT_ORDER_DATE_MODIFIED + "_reverse";
-    public static final String LAST_ADDED_SORT_ORDER = "last_added_sort_order";
-    public static final String NOT_RECENTLY_PLAYED_SORT_ORDER = "not_recently_played_sort_order";
+    private static final String ALBUM_GRID_SIZE = PrefKey.exportableKey("album_grid_size");
+    private static final String ALBUM_GRID_SIZE_LAND = PrefKey.exportableKey("album_grid_size_land");
 
-    private static final String ALBUM_GRID_SIZE = "album_grid_size";
-    private static final String ALBUM_GRID_SIZE_LAND = "album_grid_size_land";
+    private static final String SONG_GRID_SIZE = PrefKey.exportableKey("song_grid_size");
+    private static final String SONG_GRID_SIZE_LAND = PrefKey.exportableKey("song_grid_size_land");
 
-    private static final String SONG_GRID_SIZE = "song_grid_size";
-    private static final String SONG_GRID_SIZE_LAND = "song_grid_size_land";
+    private static final String ARTIST_GRID_SIZE = PrefKey.exportableKey("artist_grid_size");
+    private static final String ARTIST_GRID_SIZE_LAND = PrefKey.exportableKey("artist_grid_size_land");
 
-    private static final String ARTIST_GRID_SIZE = "artist_grid_size";
-    private static final String ARTIST_GRID_SIZE_LAND = "artist_grid_size_land";
+    private static final String ALBUM_SHOW_FOOTER = PrefKey.exportableKey("album_show_footer")
 
-    private static final String ALBUM_SHOW_FOOTER = "album_show_footer";
+    private static final String ALBUM_COLORED_FOOTERS = PrefKey.exportableKey("album_colored_footers");
+    private static final String SONG_COLORED_FOOTERS = PrefKey.exportableKey("song_colored_footers");
+    private static final String ARTIST_COLORED_FOOTERS = PrefKey.exportableKey("artist_colored_footers");
+    private static final String ALBUM_ARTIST_COLORED_FOOTERS = PrefKey.exportableKey("album_artist_colored_footers");
 
-    private static final String ALBUM_COLORED_FOOTERS = "album_colored_footers";
-    private static final String SONG_COLORED_FOOTERS = "song_colored_footers";
-    private static final String ARTIST_COLORED_FOOTERS = "artist_colored_footers";
-    private static final String ALBUM_ARTIST_COLORED_FOOTERS = "album_artist_colored_footers";
+    @NonNls
+    public static final String COLORED_NOTIFICATION = PrefKey.exportableKey("colored_notification");
+    public static final String CLASSIC_NOTIFICATION = PrefKey.exportableKey("classic_notification");
 
-    public static final String COLORED_NOTIFICATION = "colored_notification";
-    public static final String CLASSIC_NOTIFICATION = "classic_notification";
+    public static final String COLORED_APP_SHORTCUTS = PrefKey.exportableKey("should_color_app_shortcuts");
 
-    private static final String COLORED_APP_SHORTCUTS = "colored_app_shortcuts";
+    public static final String TRANSPARENT_BACKGROUND_WIDGET = PrefKey.exportableKey("should_make_widget_background_transparent");
 
-    public static final String TRANSPARENT_BACKGROUND_WIDGET = "make_widget_background_transparent";
+    public static final String AUDIO_DUCKING = PrefKey.exportableKey("audio_ducking");
+    @NonNls
+    public static final String GAPLESS_PLAYBACK = PrefKey.exportableKey("gapless_playback");
+    public static final String EQUALIZER = PrefKey.exportableKey("equalizer");
 
-    private static final String AUDIO_DUCKING = "audio_ducking";
-    public static final String GAPLESS_PLAYBACK = "gapless_playback";
+    public static final String LAST_ADDED_CUTOFF_V2 = PrefKey.exportableKey("last_added_interval_v2");
+    public static final String RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("recently_played_interval_v2");
+    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = PrefKey.exportableKey("not_recently_played_interval_v2");
+    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = PrefKey.exportableKey("maintain_top_tracks_playlist");
+    public static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = PrefKey.exportableKey("maintain_skipped_songs_playlist");
 
-    @Deprecated public static final String LAST_ADDED_CUTOFF = "last_added_interval";
-    public static final String LAST_ADDED_CUTOFF_V2 = "last_added_interval_v2";
-    @Deprecated public static final String RECENTLY_PLAYED_CUTOFF = "recently_played_interval";
-    public static final String RECENTLY_PLAYED_CUTOFF_V2 = "recently_played_interval_v2";
-    public static final String NOT_RECENTLY_PLAYED_CUTOFF_V2 = "not_recently_played_interval_v2";
-    public static final String MAINTAIN_TOP_TRACKS_PLAYLIST = "maintain_top_tracks_playlist";
-    private static final String MAINTAIN_SKIPPED_SONGS_PLAYLIST = "maintain_skipped_songs_playlist";
+    private static final String LAST_SLEEP_TIMER_VALUE = PrefKey.exportableKey("last_sleep_timer_value");
+    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = PrefKey.nonExportableKey("next_sleep_timer_elapsed_real_time");
+    private static final String SLEEP_TIMER_FINISH_SONG = PrefKey.exportableKey("sleep_timer_finish_music");
 
-    private static final String LAST_SLEEP_TIMER_VALUE = "last_sleep_timer_value";
-    private static final String NEXT_SLEEP_TIMER_ELAPSED_REALTIME = "next_sleep_timer_elapsed_real_time";
-    private static final String SLEEP_TIMER_FINISH_SONG = "sleep_timer_finish_music";
+    private static final String LAST_CHANGELOG_VERSION = PrefKey.nonExportableKey("last_changelog_version");
+    private static final String INTRO_SHOWN = PrefKey.nonExportableKey("intro_shown");
 
-    private static final String LAST_CHANGELOG_VERSION = "last_changelog_version";
-    private static final String INTRO_SHOWN = "intro_shown";
-
-    public static final String AUTO_DOWNLOAD_IMAGES_POLICY = "auto_download_images_policy";
+    public static final String AUTO_DOWNLOAD_IMAGES_POLICY = PrefKey.exportableKey("auto_download_images_policy");
     private static final String AUTO_DOWNLOAD_ALWAYS = "always";
     private static final String AUTO_DOWNLOAD_WIFI_ONLY = "only_wifi";
     private static final String AUTO_DOWNLOAD_NEVER = "never";
 
-    private static final String START_DIRECTORY = "start_directory";
+    //private static final String EXPORT_SETTINGS = "export_settings";
+    public static final String IMPORT_SETTINGS = "import_settings";
 
-    private static final String SYNCHRONIZED_LYRICS_SHOW = "synchronized_lyrics_show";
-    private static final String ANIMATE_PLAYING_SONG_ICON = "animate_playing_song_icon";
-    private static final String SHOW_SONG_NUMBER = "show_song_number_on_playing_queue";
+    public static final String FILE_FORMAT = PrefKey.exportableKey("file_format");
+    public static final String VERSION_CODE = PrefKey.exportableKey("version_code");
+    public static final String VERSION_NAME = PrefKey.exportableKey("version_name");
 
-    private static final String INITIALIZED_BLACKLIST = "initialized_blacklist";
-    public static final String WHITELIST_ENABLED = "whitelist_enabled";
+    private static final String START_DIRECTORY = PrefKey.exportableKey("start_directory");
 
+    private static final String SYNCHRONIZED_LYRICS_SHOW = PrefKey.exportableKey("synchronized_lyrics_show");
+    private static final String ANIMATE_PLAYING_SONG_ICON = PrefKey.exportableKey("animate_playing_song_icon");
+    private static final String SHOW_SONG_NUMBER = PrefKey.exportableKey("show_song_number_on_playing_queue");
+
+    private static final String INITIALIZED_BLACKLIST = PrefKey.nonExportableKey("initialized_blacklist");
+    public static final String WHITELIST_ENABLED = PrefKey.exportableKey("whitelist_enabled");
+
+    public static final String LIBRARY_CATEGORIES = PrefKey.exportableKey("library_categories");
+
+    public static final String REMEMBER_SHUFFLE = PrefKey.exportableKey("remember_shuffle");
+
+    public static final String RG_SOURCE_MODE_V2 = PrefKey.exportableKey("replaygain_source_mode");
     @NonNls
-    public static final String LIBRARY_CATEGORIES = "library_categories";
+    public static final String RG_SOURCE_MODE_NONE = "none";
+    public static final String RG_SOURCE_MODE_TRACK = "track";
+    public static final String RG_SOURCE_MODE_ALBUM = "album";
 
-    private static final String REMEMBER_SHUFFLE = "remember_shuffle";
+    public static final String RG_PREAMP = PrefKey.exportableKey("replaygain_preamp");
+    public static final String RG_PREAMP_WITH_TAG = PrefKey.exportableKey("replaygain_preamp_with_tag");
+    public static final String RG_PREAMP_WITHOUT_TAG = PrefKey.exportableKey("replaygain_preamp_without_tag");
 
-    @Deprecated public static final String RG_SOURCE_MODE = "replaygain_srource_mode";
-    public static final String RG_SOURCE_MODE_V2 = "replaygain_source_mode";
-    public static final String RG_PREAMP_WITH_TAG = "replaygain_preamp_with_tag";
-    public static final String RG_PREAMP_WITHOUT_TAG = "replaygain_preamp_without_tag";
-
-    public static final String THEME_STYLE = "theme_style";
-    @NonNls
+    public static final String THEME_STYLE = PrefKey.exportableKey("theme_style");
     private static final String CLASSIC_THEME = "classic";
-    @NonNls
     public static final String ROUNDED_THEME = "rounded";
 
-    public static final byte RG_SOURCE_MODE_NONE = 0;
-    public static final byte RG_SOURCE_MODE_TRACK = 1;
-    public static final byte RG_SOURCE_MODE_ALBUM = 2;
+    private static final String SAF_SDCARD_URI = PrefKey.nonExportableKey("saf_sdcard_uri");
 
-    private static final String SAF_SDCARD_URI = "saf_sdcard_uri";
-    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = "enqueue_songs_default_choice";
-
+    public static final String ENQUEUE_SONGS_DEFAULT_CHOICE = PrefKey.exportableKey("enqueue_songs_default_choice");
     public static final int ENQUEUE_SONGS_CHOICE_ASK = 0;
     public static final int ENQUEUE_SONGS_CHOICE_REPLACE = 1;
     public static final int ENQUEUE_SONGS_CHOICE_NEXT = 2;
     public static final int ENQUEUE_SONGS_CHOICE_ADD = 3;
 
-    public static final String OOPS_HANDLER_ENABLED = "oops_handler_enabled";
-    public static final String OOPS_HANDLER_EXCEPTIONS = "oops_handler_exceptions";
-
-    public static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = "queue_sync_with_media_store";
+    @NonNls
+    public static final String OOPS_HANDLER_ENABLED = PrefKey.exportableKey("oops_handler_enabled");
+    @NonNls
+    public static final String OOPS_HANDLER_EXCEPTIONS = PrefKey.nonExportableKey("oops_handler_exceptions");
+    private static final String QUEUE_SYNC_MEDIA_STORE_ENABLED = PrefKey.exportableKey("queue_sync_with_media_store");
 
     private static PreferenceUtil sInstance;
 
@@ -165,15 +177,33 @@ public final class PreferenceUtil {
     }
 
     private void migratePreferencesIfNeeded() {
-        if (!mPreferences.contains(RG_SOURCE_MODE_V2)) {
-            mPreferences.edit()
-                    .putString(RG_SOURCE_MODE_V2, mPreferences.getString(RG_SOURCE_MODE, "none"))
-                    .apply();
-        }
+        // Nothing to do for now
+    }
 
-        migrateCutoffV1AsV2(LAST_ADDED_CUTOFF, LAST_ADDED_CUTOFF_V2);
-        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, NOT_RECENTLY_PLAYED_CUTOFF_V2);
-        migrateCutoffV1AsV2(RECENTLY_PLAYED_CUTOFF, RECENTLY_PLAYED_CUTOFF_V2);
+    @NonNull
+    public static Map<String, Object> reducePreferencesToDeclared(
+            @NonNull final Map<String, ?> preferences,
+            @Nullable final Predicate<? super PrefKey> filter
+    ) {
+        final Collection<PrefKey> declaredKeys = PrefKey.getDeclaredKeys(filter);
+        final Predicate<String> isDeclared = name -> declaredKeys.stream()
+                .anyMatch(key -> key.isMatchingKey(name));
+
+        final Map<String, Object> result = new HashMap<>(preferences.size());
+        for (final Map.Entry<String, ?> entry : preferences.entrySet()) {
+            if (isDeclared.test(entry.getKey())) {result.put(entry.getKey(), entry.getValue());}
+        }
+        return result;
+    }
+
+    @NonNull
+    public Collection<String> getUndeclaredPrefKeys() {
+        final Map<String, ?> allPrefs = mPreferences.getAll();
+        final Map<String, ?> declared = reducePreferencesToDeclared(allPrefs, null);
+
+        return allPrefs.keySet().stream()
+                .filter(name -> !declared.containsKey(name))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public static boolean isAllowedToDownloadMetadata(final Context context) {
@@ -220,6 +250,12 @@ public final class PreferenceUtil {
             default:
                 return R.style.Theme_VinylMusicPlayer_Light;
         }
+    }
+
+    public void setRememberLastTab(final boolean rememberLastTab) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_LAST_TAB, rememberLastTab)
+                .apply();
     }
 
     public boolean rememberLastTab() {
@@ -290,6 +326,16 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(COLORED_APP_SHORTCUTS, true);
     }
 
+    public void setColoredNavigationBar(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(COLORED_NAVBAR, value)
+                .apply();
+    }
+
+    public boolean coloredNavigationBar() {
+        return mPreferences.getBoolean(COLORED_NAVBAR, true);
+    }
+
     public void setTransparentBackgroundWidget(final boolean value) {
         mPreferences.edit()
                 .putBoolean(TRANSPARENT_BACKGROUND_WIDGET, value)
@@ -300,8 +346,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(TRANSPARENT_BACKGROUND_WIDGET, false);
     }
 
+    public void setGaplessPlayback(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(GAPLESS_PLAYBACK, value)
+                .apply();
+    }
+
     public boolean gaplessPlayback() {
         return mPreferences.getBoolean(GAPLESS_PLAYBACK, false);
+    }
+
+    public void setAudioDucking(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(AUDIO_DUCKING, value)
+                .apply();
     }
 
     public boolean audioDucking() {
@@ -345,36 +403,6 @@ public final class PreferenceUtil {
     public void setFileSortOrder(final String sortOrder) {
         mPreferences.edit()
                 .putString(FILE_SORT_ORDER, sortOrder)
-                .apply();
-    }
-
-    private void migrateCutoffV1AsV2(@NonNull final String cutoffV1, @NonNull final String cutoffV2) {
-        if (mPreferences.contains(cutoffV2)) {return;}
-
-        final String migratedValue;
-        switch (mPreferences.getString(cutoffV1, "")) {
-            case "today":
-                migratedValue = "1d";
-                break;
-            case "this_week":
-                migratedValue = "1w";
-                break;
-            case "past_seven_days":
-                migratedValue = "7d";
-                break;
-            case "past_three_months":
-                migratedValue = "3m";
-                break;
-            case "this_year":
-                migratedValue = "1y";
-                break;
-            case "this_month":
-            default:
-                migratedValue = "1m";
-                break;
-        }
-        mPreferences.edit()
-                .putString(cutoffV2, migratedValue)
                 .apply();
     }
 
@@ -654,6 +682,12 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(INTRO_SHOWN, false);
     }
 
+    public void setRememberShuffle(final boolean rememberShuffle) {
+        mPreferences.edit()
+                .putBoolean(REMEMBER_SHUFFLE, rememberShuffle)
+                .apply();
+    }
+
     public boolean rememberShuffle() {
         return mPreferences.getBoolean(REMEMBER_SHUFFLE, true);
     }
@@ -684,8 +718,20 @@ public final class PreferenceUtil {
         return mPreferences.getBoolean(SHOW_SONG_NUMBER, false);
     }
 
+    public void setMaintainTopTrackPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, value)
+                .apply();
+    }
+
     public boolean maintainTopTrackPlaylist() {
         return mPreferences.getBoolean(MAINTAIN_TOP_TRACKS_PLAYLIST, true);
+    }
+
+    public void setMaintainSkippedSongsPlaylist(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(MAINTAIN_SKIPPED_SONGS_PLAYLIST, value)
+                .apply();
     }
 
     public boolean maintainSkippedSongsPlaylist() {
@@ -714,6 +760,28 @@ public final class PreferenceUtil {
         mPreferences.edit()
                 .putString(LIBRARY_CATEGORIES, gson.toJson(categories, collectionType))
                 .apply();
+    }
+
+    public void setPrimaryColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(PRIMARY_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getPrimaryColor() {
+        //return mPreferences.getInt(PRIMARY_COLOR, 4149685);
+        return mPreferences.getInt(PRIMARY_COLOR, -12627531);
+    }
+
+    public void setAccentColor(final int selectedColor) {
+        mPreferences.edit()
+                .putInt(ACCENT_COLOR, selectedColor)
+                .apply();
+    }
+
+    public int getAccentColor() {
+        //return mPreferences.getInt(ACCENT_COLOR, 16056407);
+        return mPreferences.getInt(ACCENT_COLOR, -720809);
     }
 
     public ArrayList<CategoryInfo> getLibraryCategoryInfos() {
@@ -748,19 +816,9 @@ public final class PreferenceUtil {
         return mPreferences.getString(THEME_STYLE, CLASSIC_THEME);
     }
 
-    public byte getReplayGainSourceMode() {
-        byte sourceMode = RG_SOURCE_MODE_NONE;
-
-        switch (mPreferences.getString(RG_SOURCE_MODE_V2, "none")) {
-            case "track":
-                sourceMode = RG_SOURCE_MODE_TRACK;
-                break;
-            case "album":
-                sourceMode = RG_SOURCE_MODE_ALBUM;
-                break;
-        }
-
-        return sourceMode;
+    @NonNull
+    public String getReplayGainSourceMode() {
+        return mPreferences.getString(RG_SOURCE_MODE_V2, RG_SOURCE_MODE_NONE);
     }
 
     private float getDefaultPreamp() {
@@ -796,6 +854,12 @@ public final class PreferenceUtil {
     public void setSAFSDCardUri(@NonNull final Uri uri) {
         mPreferences.edit()
                 .putString(SAF_SDCARD_URI, uri.toString())
+                .apply();
+    }
+
+    public void setOopsHandlerEnabled(final boolean value) {
+        mPreferences.edit()
+                .putBoolean(OOPS_HANDLER_ENABLED, value)
                 .apply();
     }
 
