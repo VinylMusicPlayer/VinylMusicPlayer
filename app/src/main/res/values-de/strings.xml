@@ -13,6 +13,7 @@
     <string name="action_add_to_favorites">Zu Favoriten hinzufügen</string>
     <string name="action_remove_from_favorites">Von Favoriten entfernen</string>
     <string name="save_playlists_title">Als Datei speichern</string>
+    <string name="action_import_from_playlist">Aus Wiedergabeliste importieren</string>
     <string name="action_search">Suche</string>
     <string name="action_play_next">Spiele als Nächstes</string>
     <string name="action_play">Abspielen</string>
@@ -33,6 +34,7 @@
     <string name="failed_restore_playing_queue">Wiederherstellung fehlgeschlagen, die vorherige Warteschlange ist fehlerhaft</string>
 
     <string name="action_add_to_playlist">Zu Wiedergabeliste hinzufügen…</string>
+    <string name="added_x_titles_to_playlist">%1$d Titel in Wiedergabeliste hinzugefügt.</string>
     <string name="action_tag_editor">Tag-Editor</string>
     <string name="action_delete_from_device">Von Gerät löschen</string>
     <string name="action_details">Details</string>
@@ -54,7 +56,10 @@
     <string name="album">Album</string>
     <string name="artist">Interpret</string>
     <string name="genre">Genre</string>
+    <string name="unknown_artist">Unbekannter Interpret</string>
+    <string name="unknown_album">Unbekanntes Album</string>
     <string name="unknown_genre">Unbekanntes Genre</string>
+    <string name="untitled_song">Titellos</string>
     <string name="album_artist">Album-Interpret</string>
     <string name="year">Jahr</string>
     <string name="track_number">"Titelnummer"</string>
@@ -62,6 +67,7 @@
     <string name="lyrics">Songtext</string>
     <string name="album_artist_multiple">Album-Interpret (einer pro Zeile)</string>
     <string name="artist_multiple">Interpret (einer pro Zeile)</string>
+    <string name="genre_multiple">Genres (eines pro Zeile)</string>
     <string name="album_or_artist_empty">Der Titel oder der Interpret ist leer.</string>
     <string name="saving_changes">Speichere Änderungen…</string>
     <string name="label_details">Details</string>
@@ -104,6 +110,7 @@
     <string name="clear_playlist_title">Wiedergabeliste leeren</string>
     <string name="save_playlist_title">Als Datei speichern</string>
     <string name="add_playlist_title">"Zu Wiedergabeliste hinzufügen"</string>
+    <string name="import_playlist_title">Aus Wiedergabeliste importieren</string>
     <string name="select_all_title">Alle auswählen</string>
     <string name="action_shuffle_all">Alle Titel zufällig wiedergeben</string>
     <string name="action_shuffle_album">Album zufällig wiedergeben</string>
@@ -139,6 +146,7 @@
     <string name="pref_header_images">Bilder</string>
     <string name="pref_header_lockscreen">Sperrbildschirm</string>
     <string name="pref_header_playlists">Wiedergabelisten</string>
+    <string name="pref_header_migrating">Migrieren</string>
     <string name="pref_header_notification">Benachrichtigung</string>
     <string name="pref_title_navigation_bar">Gefärbte Navigationsleiste</string>
     <string name="pref_title_app_shortcuts">Gefärbte App-Shortcuts</string>
@@ -151,6 +159,10 @@
     <string name="pref_title_recently_played_interval">Intervall der \"Kürzlich abgespielt\"-Wiedergabeliste</string>
     <string name="pref_title_not_recently_played_interval">Intervall der \"Nicht kürzlich abgespielt\"-Wiedergabeliste</string>
     <string name="pref_title_last_added_interval">Intervall der \"Zuletzt hinzugefügt\"-Wiedergabeliste</string>
+    <string name="pref_title_export">Exportieren</string>
+    <string name="pref_summary_export">Einstellungen als Datei exportieren</string>
+    <string name="pref_title_import">Importieren</string>
+    <string name="pref_summary_import">Einstellungen aus Datei importieren</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Eine Wiedergabeliste mit Lieblingstiteln beibehalten</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Eine Wiedergabeliste mit angespielten Titeln beibehalten</string>
     <string name="pref_title_synchronized_lyrics_show">Synchronisierten Songtext anzeigen</string>
@@ -179,6 +191,7 @@
     <string name="no_genres">Keine Genres</string>
     <string name="empty">Leer</string>
     <string name="playlist_name_empty">Name der Wiedergabeliste</string>
+    <string name="settings_filename">Dateiname (ohne .json)</string>
     <string name="song">Titel</string>
     <string name="pref_summary_classic_notification">Das klassische Benachrichtigungsdesign verwenden</string>
     <string name="pref_summary_colored_notification">"Die Benachrichtigung in der kräftigsten Farbe des Album-Covers färben"</string>
@@ -213,6 +226,11 @@
     <string name="time_unit_minutes">min</string>
     <string name="action_new_playlist">Neue Wiedergabeliste…</string>
     <string name="new_playlist_title">Neue Wiedergabeliste</string>
+    <string name="export_settings">Einstellungen exportieren</string>
+    <string name="cannot_export_settings">Export nicht möglich</string>
+    <string name="cannot_import_settings">Import nicht möglich</string>
+    <string name="unsupported_saved_pref_version">Version nicht unterstützt</string>
+    <string name="unsupported_saved_pref_format">Format nicht unterstützt</string>
     <string name="colored_footers">Gefärbte Fußzeilen</string>
     <string name="changelog">Änderungen</string>
     <string name="licenses">Lizenzen</string>
@@ -263,6 +281,9 @@
     <string name="nothing_to_scan">Nichts zu scannen.</string>
     <string name="scanned_files">%1$d von %2$d Dateien gescannt.</string>
     <string name="could_not_scan_files">%d Dateien konnten nicht gescannt werden.</string>
+    <string name="scanning_x_songs_added">%1$d Titel hinzugefügt.</string>
+    <string name="scanning_x_songs_updated">%1$d Titel aktualisiert</string>
+    <string name="scanning_x_songs_removed">%1$d Titel entfernt</string>
     <string name="listing_files">Dateien werden gelistet</string>
     <string name="new_start_directory">%s ist das neue Start-Verzeichnis.</string>
     <string name="app_widget_big_name">Vinyl Music Player - Groß</string>
@@ -340,6 +361,7 @@
     <string name="sort_order_date_added_reverse">Hinzugefügt - Neueste zuerst</string>
     <string name="sort_order_date_modified">Geändert</string>
     <string name="sort_order_date_modified_reverse">Geändert - Neueste zuerst</string>
+    <string name="sort_order_group_by_album">Nach Album gruppieren</string>
     <string name="finish_current_music_sleep_timer">Letzten Titel zu Ende spielen</string>
     <string name="dialog_ringtone_title">Klingelton festlegen</string>
     <string name="dialog_ringtone_message">Bitte erlaube Vinyl Music Player im nächsten Dialog, die Systemeinstellungen zu verändern, bevor du den Klingelton festlegst.</string>
