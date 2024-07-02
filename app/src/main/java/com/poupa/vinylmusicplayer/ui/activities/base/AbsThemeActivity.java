@@ -1,6 +1,5 @@
 package com.poupa.vinylmusicplayer.ui.activities.base;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,39 +43,15 @@ public abstract class AbsThemeActivity extends ATHToolbarActivity {
         else Util.setStatusBarTranslucent(getWindow());
     }
 
-    /**
-     * This will set the color of the view with the id "status_bar" on KitKat and Lollipop.
-     * On Lollipop if no such view is found it will set the statusbar color using the native method.
-     *
-     * @param color the new statusbar color (will be shifted down on Lollipop and above)
-     */
-    public static void static_setStatusbarColor(final Activity pActivity, int color) {
-        final View statusBar = pActivity.getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
-        if (statusBar != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                statusBar.setBackgroundColor(color);
-                ATH.setLightStatusbar(pActivity, ColorUtil.isColorLight(color));
-            } else {
-                statusBar.setBackgroundColor(color);
-            }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            pActivity.getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
-            ATH.setLightStatusbar(pActivity, ColorUtil.isColorLight(color));
-        }
-    }
-
     public void setStatusbarColor(int color) {
-        final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
-        if (statusBar != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                statusBar.setBackgroundColor(color);
-                setLightStatusbarAuto(color);
-            } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(color);
+            setLightStatusbarAuto(color);
+        } else {
+            final View statusBar = getWindow().getDecorView().getRootView().findViewById(R.id.status_bar);
+            if (statusBar != null) {
                 statusBar.setBackgroundColor(color);
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ColorUtil.darkenColor(color));
-            setLightStatusbarAuto(color);
         }
     }
 

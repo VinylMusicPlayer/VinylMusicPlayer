@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +40,7 @@ import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.model.lyrics.Lyrics;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.AbsTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.activities.tageditor.SongTagEditorActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.AbsMusicServiceFragment;
@@ -90,7 +90,7 @@ public abstract class AbsPlayerFragment
         animator.setSupportsChangeAnimations(false);
 
         playingQueueAdapter = new PlayingQueueAdapter(
-                ((AppCompatActivity) getActivity()),
+                ((AbsThemeActivity) requireActivity()),
                 MusicPlayerRemote.getPlayingQueue(),
                 MusicPlayerRemote.getPosition(),
                 false,

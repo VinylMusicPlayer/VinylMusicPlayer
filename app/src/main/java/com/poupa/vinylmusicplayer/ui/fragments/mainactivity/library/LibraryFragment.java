@@ -12,14 +12,11 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.google.android.material.appbar.AppBarLayout;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.ATHToolbarActivity;
@@ -31,8 +28,6 @@ import com.poupa.vinylmusicplayer.databinding.FragmentLibraryBinding;
 import com.poupa.vinylmusicplayer.dialogs.CreatePlaylistDialog;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.model.Album;
 import com.poupa.vinylmusicplayer.model.Artist;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -54,7 +49,6 @@ import com.poupa.vinylmusicplayer.util.Util;
 public class LibraryFragment
         extends AbsMainActivityFragment
         implements
-            CabHolder,
             MainActivity.MainActivityFragmentCallbacks,
             ViewPager.OnPageChangeListener,
             SharedPreferences.OnSharedPreferenceChangeListener
@@ -62,7 +56,6 @@ public class LibraryFragment
     private FragmentLibraryBinding layoutBinding;
 
     private MusicLibraryPagerAdapter pagerAdapter;
-    private AttachedCab cab;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -150,16 +143,6 @@ public class LibraryFragment
 
     private boolean isPlaylistPage() {
         return getCurrentFragment() instanceof PlaylistsFragment;
-    }
-
-    @NonNull
-    @Override
-    public AttachedCab openCab(final int menuRes, final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
-
-        @ColorInt final int color = ThemeStore.primaryColor(getMainActivity());
-        cab = CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
-        return cab;
     }
 
     public void addOnAppBarOffsetChangedListener(final AppBarLayout.OnOffsetChangedListener listener) {
@@ -364,10 +347,6 @@ public class LibraryFragment
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {
-            AttachedCabKt.destroy(cab);
-            return true;
-        }
         return false;
     }
 

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -26,8 +25,6 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,8 +37,6 @@ import com.poupa.vinylmusicplayer.databinding.FragmentFolderBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.misc.DialogAsyncTask;
 import com.poupa.vinylmusicplayer.misc.UpdateToastMediaScannerCompletionListener;
@@ -72,7 +67,6 @@ public class FoldersFragment
         extends AbsMainActivityFragment
         implements
             MainActivity.MainActivityFragmentCallbacks,
-            CabHolder,
             BreadCrumbLayout.SelectionCallback,
             SongFileAdapter.Callbacks,
             AppBarLayout.OnOffsetChangedListener,
@@ -87,7 +81,6 @@ public class FoldersFragment
 
     private FragmentFolderBinding layoutBinding;
 
-    private AttachedCab cab;
     private SongFileAdapter adapter;
 
     private String sortOrder;
@@ -200,7 +193,11 @@ public class FoldersFragment
     }
 
     private void setUpAdapter() {
-        adapter = new SongFileAdapter(getMainActivity(), new LinkedList<>(), this, this);
+        adapter = new SongFileAdapter(
+                getMainActivity(),
+                new LinkedList<>(),
+                this,
+                getMainActivity());
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -226,26 +223,11 @@ public class FoldersFragment
 
     @Override
     public boolean handleBackPress() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {
-            AttachedCabKt.destroy(cab);
-            return true;
-        }
         if (layoutBinding.breadCrumbs.popHistory()) {
             setCrumb(layoutBinding.breadCrumbs.lastHistory(), false);
             return true;
         }
         return false;
-    }
-
-    @NonNull
-    @Override
-    public AttachedCab openCab(int menuRes, final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
-
-        @ColorInt final int color = ThemeStore.primaryColor(requireActivity());
-        adapter.setColor(color);
-        cab = CabHolder.openCabImpl(getMainActivity(), menuRes, color, callbacks);
-        return cab;
     }
 
     @Override
