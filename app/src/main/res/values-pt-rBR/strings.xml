@@ -126,6 +126,7 @@
     <string name="pref_header_colors">Cores</string>
     <string name="pref_header_now_playing_screen">Tocando agora</string>
     <string name="pref_title_general_theme">Tema geral</string>
+    <string name="pref_header_album">Álbum</string>
     <string name="pref_header_audio">Áudio</string>
     <string name="pref_header_library">Biblioteca</string>
     <string name="pref_header_images">Imagens</string>
@@ -219,6 +220,7 @@
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Rodapés coloridos</string>
     <string name="special_thanks_to">Agradecimentos especiais para</string>
+    <string name="show_footer">mostrar rodapé</string>
     <string name="changelog">Novidades</string>
     <string name="licenses">Licenças</string>
     <string name="permissions_denied">Permissões negadas.</string>

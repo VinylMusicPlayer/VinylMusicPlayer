@@ -87,6 +87,21 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
     }
 
     @Override
+    protected void saveShowFooter(boolean showFooter) {
+        // Stub
+    }
+
+    @Override
+    public boolean loadShowFooter() {
+        return true;
+    }
+
+    @Override
+    protected void setShowFooter(boolean showFooter) {
+        getAdapter().showFooter(showFooter);
+    }
+
+    @Override
     protected void saveUsePalette(boolean usePalette) {
         PreferenceUtil.getInstance().setArtistColoredFooters(usePalette);
     }

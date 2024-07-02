@@ -120,6 +120,7 @@
     <string name="pref_header_colors">Цвета</string>
     <string name="pref_header_now_playing_screen">Сейчас воспроизводится</string>
     <string name="pref_title_general_theme">Основная тема</string>
+    <string name="pref_header_album">Альбом</string>
     <string name="pref_header_audio">Аудио</string>
     <string name="pref_header_library">Библиотека</string>
     <string name="pref_header_images">Изображения</string>
@@ -201,6 +202,7 @@
     <string name="maintainers">Мейнтейнеры</string>
     <string name="contributors">Внёсшие вклад</string>
     <string name="special_thanks_to">Особая благодарность</string>
+    <string name="show_footer">показать нижний колонтитул</string>
     <string name="changelog">Список изменений</string>
     <string name="licenses">Лицензии</string>
     <string name="permissions_denied">"В разрешениях отказано "</string>

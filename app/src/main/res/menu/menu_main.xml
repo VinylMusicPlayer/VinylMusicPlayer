@@ -58,6 +58,12 @@
     </item>
 
     <item
+        android:id="@+id/action_show_footer"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/show_footer" />
+
+    <item
         android:id="@+id/action_colored_footers"
         android:checkable="true"
         android:title="@string/colored_footers" />

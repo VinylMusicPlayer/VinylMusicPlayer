@@ -107,6 +107,7 @@
     <string name="pref_header_colors">Màu sắc</string>
     <string name="pref_header_now_playing_screen">Đang phát</string>
     <string name="pref_title_general_theme">Chủ đề chung</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Âm thanh</string>
     <string name="pref_header_images">Hình ảnh</string>
     <string name="pref_header_lockscreen">Màn hình khóa</string>
@@ -174,6 +175,7 @@
     <string name="new_playlist_title">Danh sách nhạc mới</string>
     <string name="colored_footers">Màu cuối trang</string>
     <string name="special_thanks_to">Trân trọng cảm ơn</string>
+    <string name="show_footer">hiển thị chân trang</string>
     <string name="changelog">Các thay đổi</string>
     <string name="licenses">Giấy phép</string>
     <string name="permissions_denied">Quyền hạn bị từ chối.</string>

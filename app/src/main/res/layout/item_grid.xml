@@ -12,77 +12,77 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp">
 
-    <!-- for getSwipeableContainerView() -->
-    <com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout
-        android:id="@+id/touch_intercept_framelayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:foreground="?rectSelectorStrong">
-
-        <LinearLayout
+        <!-- for getSwipeableContainerView() -->
+        <com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout
+            android:id="@+id/touch_intercept_framelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            tools:ignore="UnusedAttribute,UselessParent">
-
-            <com.poupa.vinylmusicplayer.views.WidthFitSquareLayout
-                android:id="@+id/image_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    tools:ignore="ContentDescription" />
-
-            </com.poupa.vinylmusicplayer.views.WidthFitSquareLayout>
+            android:foreground="?rectSelectorStrong">
 
             <LinearLayout
-                android:id="@+id/palette_color_container"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                tools:ignore="UnusedAttribute,UselessParent">
 
-                <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
-                    android:id="@+id/title_scrollview"
+                <com.poupa.vinylmusicplayer.views.WidthFitSquareLayout
+                    android:id="@+id/image_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                    <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:singleLine="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription" />
 
-                </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+                </com.poupa.vinylmusicplayer.views.WidthFitSquareLayout>
 
-                <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
-                    android:id="@+id/text_scrollview"
+                <LinearLayout
+                    android:id="@+id/palette_color_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="@dimen/item_grid_color_container_height"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-                    <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
-                        android:id="@+id/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+                    <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                        android:id="@+id/title_scrollview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+                        <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                    </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+
+                    <com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView
+                        android:id="@+id/text_scrollview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.poupa.vinylmusicplayer.views.AutoTruncateTextView
+                            android:id="@+id/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                    </com.poupa.vinylmusicplayer.views.TouchInterceptHorizontalScrollView>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
-
-    </com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout>
+        </com.poupa.vinylmusicplayer.views.TouchInterceptFrameLayout>
 
     </com.google.android.material.card.MaterialCardView>
 

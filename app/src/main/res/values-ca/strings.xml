@@ -118,6 +118,7 @@
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Reproducció actual</string>
     <string name="pref_title_general_theme">Tema general</string>
+    <string name="pref_header_album">Àlbum</string>
     <string name="pref_header_audio">Àudio</string>
     <string name="pref_header_library">Col·lecció</string>
     <string name="pref_header_images">Imatges</string>
@@ -202,6 +203,7 @@
     <string name="maintainers">Mantenidors</string>
     <string name="contributors">Contribuïdors</string>
     <string name="special_thanks_to">Agraïments especials a</string>
+    <string name="show_footer">mostra el peu de pàgina</string>
     <string name="changelog">Registre de canvis</string>
     <string name="licenses">Llicències</string>
     <string name="permissions_denied">Permisos denegats</string>

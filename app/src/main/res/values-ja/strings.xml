@@ -108,6 +108,7 @@
     <string name="pref_header_colors">配色設定</string>
     <string name="pref_header_now_playing_screen">NowPlaying画面の設定</string>
     <string name="pref_title_general_theme">テーマカラー</string>
+    <string name="pref_header_album">アルバム</string>
     <string name="pref_header_audio">オーディオ設定</string>
     <string name="pref_header_images">画像の表示設定</string>
     <string name="pref_header_lockscreen">ロックスクリーンの設定</string>
@@ -175,6 +176,7 @@
     <string name="new_playlist_title">プレイリストの新規作成</string>
     <string name="colored_footers">色付きフッター</string>
     <string name="special_thanks_to">スペシャルサンクス</string>
+    <string name="show_footer">フッターを表示</string>
     <string name="changelog">変更履歴</string>
     <string name="licenses">ライセンス</string>
     <string name="permissions_denied">権限が拒否されました</string>
