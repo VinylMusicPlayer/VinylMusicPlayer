@@ -74,7 +74,7 @@ public final class PreferenceUtil {
     private static final String ARTIST_GRID_SIZE = PrefKey.exportableKey("artist_grid_size");
     private static final String ARTIST_GRID_SIZE_LAND = PrefKey.exportableKey("artist_grid_size_land");
 
-    private static final String ALBUM_SHOW_FOOTER = PrefKey.exportableKey("album_show_footer")
+    private static final String ALBUM_SHOW_FOOTER = PrefKey.exportableKey("album_show_footer");
 
     private static final String ALBUM_COLORED_FOOTERS = PrefKey.exportableKey("album_colored_footers");
     private static final String SONG_COLORED_FOOTERS = PrefKey.exportableKey("song_colored_footers");
