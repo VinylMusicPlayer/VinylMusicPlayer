@@ -20,7 +20,6 @@
             <include layout="@layout/status_bar" />
 
             <FrameLayout
-                android:id="@+id/cab_holder"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="?colorPrimary"

@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
@@ -15,9 +14,10 @@ import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.dialogs.RemoveFromPlaylistDialog;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ViewUtil;
 
@@ -36,12 +36,12 @@ public class OrderablePlaylistSongAdapter
     final OnMoveItemListener onMoveItemListener;
 
     public OrderablePlaylistSongAdapter(
-            @NonNull final AppCompatActivity activity,
+            @NonNull final AbsThemeActivity activity,
             final long playlistId, @NonNull final ArrayList<Song> dataSet,
-            final boolean usePalette, @Nullable final CabHolder cabHolder,
+            final boolean usePalette, @Nullable final PaletteColorHolder palette,
             @Nullable final OnMoveItemListener onMoveItemListener)
     {
-        super(activity, dataSet, usePalette, cabHolder);
+        super(activity, dataSet, usePalette, palette);
         setMultiSelectMenuRes(R.menu.menu_playlists_songs_selection);
         this.playlistId = playlistId;
         this.onMoveItemListener = onMoveItemListener;

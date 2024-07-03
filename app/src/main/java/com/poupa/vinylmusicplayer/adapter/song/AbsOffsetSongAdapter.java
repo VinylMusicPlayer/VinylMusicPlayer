@@ -7,17 +7,16 @@ import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kabouzeid.appthemehelper.ThemeStore;
 import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.databinding.ItemGridBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.databinding.ItemListSingleRowBinding;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 
 import java.util.List;
 
@@ -32,16 +31,16 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
     // Need to be different from RecyclerView.NO_ID to not to upset the base class
     protected static final long OFFSET_ITEM_ID = RecyclerView.NO_ID - 1;
 
-    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
+    public AbsOffsetSongAdapter(@NonNull final AbsThemeActivity activity, final List<? extends Song> dataSet,
                                 @LayoutRes final int itemLayoutRes,
-                                final boolean usePalette, @Nullable final CabHolder cabHolder) {
-        super(activity, dataSet, itemLayoutRes, usePalette, cabHolder);
+                                final boolean usePalette, @Nullable final PaletteColorHolder palette) {
+        super(activity, dataSet, itemLayoutRes, usePalette, palette);
     }
 
-    public AbsOffsetSongAdapter(final AppCompatActivity activity, final List<? extends Song> dataSet,
-                                final boolean usePalette, @Nullable final CabHolder cabHolder,
+    public AbsOffsetSongAdapter(@NonNull final AbsThemeActivity activity, final List<? extends Song> dataSet,
+                                final boolean usePalette, @Nullable final PaletteColorHolder palette,
                                 final boolean showSectionName) {
-        super(activity, dataSet, R.layout.item_list, usePalette, cabHolder, showSectionName);
+        super(activity, dataSet, R.layout.item_list, usePalette, palette, showSectionName);
     }
 
     @NonNull
@@ -150,7 +149,6 @@ public abstract class AbsOffsetSongAdapter extends SongAdapter {
         @Override
         public boolean onLongClick(final View view) {
             if (getItemViewType() == OFFSET_ITEM) return false;
-            setColor(ThemeStore.primaryColor(activity));
             toggleChecked(getBindingAdapterPosition());
             return true;
         }

@@ -60,7 +60,7 @@ public class PlaylistsFragment
     @Override
     protected PlaylistAdapter createAdapter() {
         ArrayList<Playlist> dataSet = getAdapter() == null ? new ArrayList<>() : getAdapter().getDataSet();
-        return new PlaylistAdapter(getLibraryFragment().getMainActivity(), dataSet, getLibraryFragment());
+        return new PlaylistAdapter(getLibraryFragment().getMainActivity(), dataSet, getLibraryFragment().getMainActivity());
     }
 
     @Override

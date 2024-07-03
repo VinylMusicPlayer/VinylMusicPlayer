@@ -48,7 +48,7 @@ public class ArtistsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFr
                 dataSet,
                 itemLayoutRes,
                 loadUsePalette(),
-                getLibraryFragment());
+                getLibraryFragment().getMainActivity());
     }
 
     @Override

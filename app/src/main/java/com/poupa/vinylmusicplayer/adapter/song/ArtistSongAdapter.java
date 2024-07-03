@@ -1,6 +1,7 @@
 package com.poupa.vinylmusicplayer.adapter.song;
 
 import android.os.Build;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,48 +13,43 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.adapter.base.AbsMultiSelectAdapter;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.SongMenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.SongsMenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.model.Song;
 import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.NavigationUtil;
 import com.poupa.vinylmusicplayer.util.PlayingSongDecorationUtil;
-import com.poupa.vinylmusicplayer.util.VinylMusicPlayerColorUtil;
 
 import java.util.ArrayList;
 
 /**
  * @author Karim Abou Zeid (kabouzeid)
  */
-public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallbacks {
+public class ArtistSongAdapter extends ArrayAdapter<Song> {
     @Nullable
-    private final CabHolder cabHolder;
-    private AttachedCab cab;
+    private final PaletteColorHolder paletteColorHolder;
+    @Nullable
+    private ActionMode mutltiSelectActionMode;
     private ArrayList<Song> dataSet;
     private final ArrayList<Song> checked;
 
-    private int color;
-
     @NonNull
-    final AppCompatActivity activity;
+    final AbsThemeActivity activity;
 
-    public ArtistSongAdapter(@NonNull AppCompatActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable CabHolder cabHolder) {
+    public ArtistSongAdapter(@NonNull final AbsThemeActivity activity, @NonNull ArrayList<Song> dataSet, @Nullable PaletteColorHolder palette) {
         super(activity, R.layout.item_list, dataSet);
         this.activity = activity;
-        this.cabHolder = cabHolder;
+        this.paletteColorHolder = palette;
         this.dataSet = dataSet;
         checked = new ArrayList<>();
     }
@@ -151,16 +147,43 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
         SongsMenuHelper.handleMenuClick(activity, selection, menuItem.getItemId());
     }
 
-    protected void toggleChecked(Song song) {
-        if (cabHolder != null) {
+    private void toggleChecked(Song song) {
+        if (paletteColorHolder != null) {
             if (!checked.remove(song)) {checked.add(song);}
             notifyDataSetChanged();
 
-            cab = CabHolder.updateCab(
-                    activity,
-                    cab,
-                    () -> cabHolder.openCab(R.menu.menu_media_selection, this),
-                    checked.size());
+            if (mutltiSelectActionMode == null) {
+                mutltiSelectActionMode = AbsMultiSelectAdapter.ActionModeHelper.startActionMode(
+                        activity,
+                        R.menu.menu_media_selection,
+                        paletteColorHolder.getPaletteColor(),
+                        new ActionMode.Callback() {
+                            @Override
+                            public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean onPrepareActionMode(final ActionMode mode, final Menu menu) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onActionItemClicked(final ActionMode mode, final MenuItem item) {
+                                onMultipleItemAction(item, new ArrayList<>(checked));
+                                mode.finish();
+                                unCheckAll();
+                                return true;
+                            }
+
+                            @Override
+                            public void onDestroyActionMode(final ActionMode mode) {
+                                unCheckAll();
+                                mutltiSelectActionMode = null;
+                            }
+                        });
+            }
+            AbsMultiSelectAdapter.ActionModeHelper.updateActionMode(activity, mutltiSelectActionMode, checked.size());
         }
     }
 
@@ -173,31 +196,8 @@ public class ArtistSongAdapter extends ArrayAdapter<Song> implements CabCallback
         return checked.contains(song);
     }
 
-    protected boolean isInQuickSelectMode() {
-        return cab != null && AttachedCabKt.isActive(cab);
+    private boolean isInQuickSelectMode() {
+        return mutltiSelectActionMode != null;
     }
 
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    @Override
-    public void onCabCreate(AttachedCab materialCab, Menu menu) {
-        AbsThemeActivity.static_setStatusbarColor(activity, VinylMusicPlayerColorUtil.shiftBackgroundColorForLightText(color));
-    }
-
-    @Override
-    public boolean onCabSelection(@NonNull MenuItem menuItem) {
-        onMultipleItemAction(menuItem, new ArrayList<>(checked));
-        AttachedCabKt.destroy(cab);
-        unCheckAll();
-        return true;
-    }
-
-    @Override
-    public boolean onCabDestroy(AttachedCab materialCab) {
-        AbsThemeActivity.static_setStatusbarColor(activity, color);
-        unCheckAll();
-        return true;
-    }
 }

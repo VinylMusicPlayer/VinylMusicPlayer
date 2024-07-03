@@ -14,8 +14,6 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
@@ -31,9 +29,8 @@ import com.poupa.vinylmusicplayer.databinding.ActivityPlaylistDetailBinding;
 import com.poupa.vinylmusicplayer.databinding.SlidingMusicPanelLayoutBinding;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
 import com.poupa.vinylmusicplayer.helper.menu.PlaylistMenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.misc.WrappedAsyncTaskLoader;
 import com.poupa.vinylmusicplayer.model.AbsCustomPlaylist;
 import com.poupa.vinylmusicplayer.model.Playlist;
@@ -53,7 +50,6 @@ import java.util.List;
 public class PlaylistDetailActivity
         extends AbsSlidingMusicPanelActivity
         implements
-            CabHolder,
             LoaderManager.LoaderCallbacks<List<? extends Song>>
 {
 
@@ -66,7 +62,6 @@ public class PlaylistDetailActivity
 
     private Playlist playlist;
 
-    private AttachedCab cab;
     private SongAdapter adapter;
 
     private RecyclerView.Adapter wrappedAdapter;
@@ -108,8 +103,13 @@ public class PlaylistDetailActivity
                 layoutBinding.recyclerView,
                 ThemeStore.accentColor(this));
         layoutBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final PaletteColorHolder holder = new PaletteColorHolder() {
+            @Override
+            @ColorInt
+            public int getPaletteColor() {return ThemeStore.primaryColor(PlaylistDetailActivity.this);}
+        };
         if (playlist instanceof AbsCustomPlaylist) {
-            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, this);
+            adapter = new PlaylistSongAdapter(this, new ArrayList<>(), false, holder);
             layoutBinding.recyclerView.setAdapter(adapter);
         } else {
             recyclerViewDragDropManager = new RecyclerViewDragDropManager();
@@ -119,7 +119,7 @@ public class PlaylistDetailActivity
                     playlist.id,
                     new ArrayList<>(),
                     false,
-                    this,
+                    holder,
                     (fromPosition, toPosition) -> {
                         if (PlaylistsUtil.moveItem(playlist.id, fromPosition, toPosition)) {
                             final List<Song> dataSet = (List<Song>)adapter.getDataSet();
@@ -189,24 +189,10 @@ public class PlaylistDetailActivity
         return PlaylistMenuHelper.handleMenuClick(this, playlist, item);
     }
 
-    @NonNull
-    @Override
-    public AttachedCab openCab(final int menu, final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
-
-        @ColorInt final int color = ThemeStore.primaryColor(this);
-        adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menu, color, callbacks);
-        return cab;
-    }
-
     @Override
     public void onBackPressed() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
-        else {
-            layoutBinding.recyclerView.stopScroll();
-            super.onBackPressed();
-        }
+        layoutBinding.recyclerView.stopScroll();
+        super.onBackPressed();
     }
 
     @Override

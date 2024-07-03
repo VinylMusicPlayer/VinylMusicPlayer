@@ -2,10 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.VinylMusicPlayer.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
-
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="windowActionBarOverlay">true</item>
-
         <item name="md_dark_theme">true</item>
 
         <item name="roundSelector">@drawable/round_selector_dark</item>
@@ -14,9 +10,13 @@
 
         <item name="cardBackgroundColor">@color/md_grey_800</item>
 
-        <!-- Necessary for CAB popup menu -->
+        <!-- Necessary for ActionMode popup menu -->
         <item name="android:textColor">@color/ate_primary_text_dark</item>
         <item name="android:itemBackground">@color/md_grey_800</item>
+        <!-- Override the ActionMode close button-->
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
+        <!-- So that the ActionMode is overlaid over the window content, not shifting the content down-->
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="defaultFooterColor">@color/md_grey_900</item>
 
@@ -41,10 +41,6 @@
     </style>
 
     <style name="Theme.VinylMusicPlayer.Base.Light" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="windowActionBarOverlay">true</item>
-
         <item name="md_dark_theme">false</item>
 
         <item name="roundSelector">@drawable/round_selector</item>
@@ -53,9 +49,13 @@
 
         <item name="cardBackgroundColor">@color/md_white_1000</item>
 
-        <!-- Necessary for CAB popup menu -->
+        <!-- Necessary for ActionMode popup menu -->
         <item name="android:textColor">@color/ate_primary_text_light</item>
         <item name="android:itemBackground">@color/md_white_1000</item>
+        <!-- Override the ActionMode close button-->
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
+        <!-- So that the ActionMode is overlaid over the window content, not shifting the content down-->
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="defaultFooterColor">@color/md_grey_300</item>
 
@@ -86,7 +86,7 @@
         <item name="defaultFooterColor">@color/md_grey_800</item>
         <item name="cardBackgroundColor">@color/md_black_1000</item>
 
-        <!-- Necessary for CAB popup menu -->
+        <!-- Necessary for ActionMode popup menu -->
         <item name="android:itemBackground">@color/md_black_1000</item>
 
         <item name="md_background_color">@color/md_grey_900</item>

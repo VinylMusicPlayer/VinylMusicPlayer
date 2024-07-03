@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -16,8 +15,6 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.materialcab.attached.AttachedCab;
-import com.afollestad.materialcab.attached.AttachedCabKt;
 import com.afollestad.materialdialogs.util.DialogUtils;
 import com.kabouzeid.appthemehelper.util.ColorUtil;
 import com.kabouzeid.appthemehelper.util.MaterialValueHelper;
@@ -35,8 +32,6 @@ import com.poupa.vinylmusicplayer.glide.VinylColoredTarget;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.menu.MenuHelper;
-import com.poupa.vinylmusicplayer.interfaces.CabCallbacks;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
 import com.poupa.vinylmusicplayer.interfaces.LoaderIds;
 import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.lastfm.rest.LastFMRestClient;
@@ -64,7 +59,7 @@ import retrofit2.Response;
 
 public class AlbumDetailActivity
         extends AbsSlidingMusicPanelActivity
-        implements PaletteColorHolder, CabHolder, LoaderManager.LoaderCallbacks<Album> {
+        implements PaletteColorHolder, LoaderManager.LoaderCallbacks<Album> {
 
     private static final int TAG_EDITOR_REQUEST = 2001;
     private static final int LOADER_ID = LoaderIds.ALBUM_DETAIL_ACTIVITY;
@@ -75,7 +70,6 @@ public class AlbumDetailActivity
 
     ActivityAlbumDetailBinding layoutBinding;
     AlbumSongAdapter adapter;
-    private AttachedCab cab;
     int headerViewHeight;
     int toolbarColor;
 
@@ -166,6 +160,7 @@ public class AlbumDetailActivity
 
         layoutBinding.toolbar.setBackgroundColor(color);
         setSupportActionBar(layoutBinding.toolbar); // needed to auto readjust the toolbar content color
+        statusBarCollapsedColor = color; // needed to match the palette when the playing screen is collapsed
         setStatusbarColor(color);
 
         final int secondaryTextColor = MaterialValueHelper.getSecondaryTextColor(this, ColorUtil.isColorLight(color));
@@ -341,24 +336,10 @@ public class AlbumDetailActivity
         }
     }
 
-    @NonNull
-    @Override
-    public AttachedCab openCab(int menuRes, @NonNull final CabCallbacks callbacks) {
-        AttachedCabKt.destroy(cab);
-
-        @ColorInt final int color = getPaletteColor();
-        adapter.setColor(color);
-        cab = CabHolder.openCabImpl(this, menuRes, color, callbacks);
-        return cab;
-    }
-
     @Override
     public void onBackPressed() {
-        if (cab != null && AttachedCabKt.isActive(cab)) {AttachedCabKt.destroy(cab);}
-        else {
-            layoutBinding.list.stopScroll();
-            super.onBackPressed();
-        }
+        layoutBinding.list.stopScroll();
+        super.onBackPressed();
     }
 
     @Override

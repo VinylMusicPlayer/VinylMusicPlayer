@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -35,6 +36,7 @@ import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.VinylGlideExtension;
 import com.poupa.vinylmusicplayer.helper.MusicPlayerRemote;
 import com.poupa.vinylmusicplayer.helper.SearchQueryHelper;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.loader.AlbumLoader;
 import com.poupa.vinylmusicplayer.loader.ArtistLoader;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -51,8 +53,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.io.File;
 import java.util.List;
 
-public class MainActivity extends AbsSlidingMusicPanelActivity {
-
+public class MainActivity extends AbsSlidingMusicPanelActivity implements PaletteColorHolder {
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final int APP_INTRO_REQUEST = 100;
 
@@ -378,4 +379,8 @@ public class MainActivity extends AbsSlidingMusicPanelActivity {
     public interface MainActivityFragmentCallbacks {
         boolean handleBackPress();
     }
+
+    @Override
+    @ColorInt
+    public int getPaletteColor() {return ThemeStore.primaryColor(this);}
 }

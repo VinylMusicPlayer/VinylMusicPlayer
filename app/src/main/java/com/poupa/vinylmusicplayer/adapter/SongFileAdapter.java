@@ -22,9 +22,10 @@ import com.poupa.vinylmusicplayer.adapter.base.MediaEntryViewHolder;
 import com.poupa.vinylmusicplayer.databinding.ItemListBinding;
 import com.poupa.vinylmusicplayer.glide.GlideApp;
 import com.poupa.vinylmusicplayer.glide.audiocover.FileCover;
-import com.poupa.vinylmusicplayer.interfaces.CabHolder;
+import com.poupa.vinylmusicplayer.interfaces.PaletteColorHolder;
 import com.poupa.vinylmusicplayer.sort.FileSortOrder;
 import com.poupa.vinylmusicplayer.sort.SortOrder;
+import com.poupa.vinylmusicplayer.ui.activities.base.AbsThemeActivity;
 import com.poupa.vinylmusicplayer.util.ImageTheme.ThemeStyleUtil;
 import com.poupa.vinylmusicplayer.util.ImageUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
@@ -45,9 +46,9 @@ public class SongFileAdapter extends AbsMultiSelectAdapter<SongFileAdapter.ViewH
     @Nullable
     final Callbacks callbacks;
 
-    public SongFileAdapter(@NonNull final AppCompatActivity activity, @NonNull final List<File> songFiles,
-                           @Nullable final Callbacks callback, @Nullable final CabHolder cabHolder) {
-        super(activity, cabHolder, R.menu.menu_media_selection);
+    public SongFileAdapter(@NonNull final AbsThemeActivity activity, @NonNull final List<File> songFiles,
+                           @Nullable final Callbacks callback, @Nullable final PaletteColorHolder palette) {
+        super(activity, palette, R.menu.menu_media_selection);
         this.activity = activity;
         dataSet = songFiles;
         callbacks = callback;
