@@ -140,6 +140,7 @@
     <string name="pref_header_colors">Farben</string>
     <string name="pref_header_now_playing_screen">Aktuelle Wiedergabe</string>
     <string name="pref_title_general_theme">Generelles Design</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_development">Entwicklung / Experimentelle Funktionen</string>
     <string name="pref_header_library">Bibliothek</string>
@@ -232,6 +233,7 @@
     <string name="unsupported_saved_pref_version">Version nicht unterstützt</string>
     <string name="unsupported_saved_pref_format">Format nicht unterstützt</string>
     <string name="colored_footers">Gefärbte Fußzeilen</string>
+    <string name="show_footer">Fußzeile anzeigen</string>
     <string name="changelog">Änderungen</string>
     <string name="licenses">Lizenzen</string>
     <string name="permissions_denied">Berechtigungen verweigert.</string>

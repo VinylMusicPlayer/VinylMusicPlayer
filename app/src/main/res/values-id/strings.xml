@@ -98,6 +98,7 @@
     <string name="pref_header_colors">Warna</string>
     <string name="pref_header_now_playing_screen">Sedang diputar</string>
     <string name="pref_title_general_theme">Tema umum</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Suara</string>
     <string name="pref_header_images">Gambar</string>
     <string name="pref_header_lockscreen">Layar kunci</string>
@@ -157,6 +158,7 @@
     <string name="new_playlist_title">Daftar putar baru</string>
     <string name="colored_footers">Bawahan berwarna</string>
     <string name="special_thanks_to">Terima kasih khusus kepada</string>
+    <string name="show_footer">tampilkan footer</string>
     <string name="changelog">Perubahan</string>
     <string name="licenses">Lisensi</string>
     <string name="permissions_denied">Izin ditolak</string>

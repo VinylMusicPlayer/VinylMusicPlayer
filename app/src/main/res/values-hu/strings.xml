@@ -107,6 +107,7 @@
     <string name="pref_header_colors">Színek</string>
     <string name="pref_header_now_playing_screen">Most játszott lista</string>
     <string name="pref_title_general_theme">Téma</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Hang</string>
     <string name="pref_header_images">Képek</string>
     <string name="pref_header_lockscreen">Zárképernyő</string>
@@ -174,6 +175,7 @@
     <string name="new_playlist_title">Új lejátszási lista</string>
     <string name="colored_footers">Színes lábjegyzetek</string>
     <string name="special_thanks_to">Külön köszönet</string>
+    <string name="show_footer">mutasd meg a láblécet</string>
     <string name="changelog">Változások</string>
     <string name="licenses">Licencek</string>
     <string name="permissions_denied">Jogosultságok megtagadva.</string>

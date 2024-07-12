@@ -100,6 +100,7 @@
     <string name="pref_header_colors">Χρώματα</string>
     <string name="pref_header_now_playing_screen">Γίνεται αναπαραγωγή</string>
     <string name="pref_title_general_theme">Γενικό θέμα</string>
+    <string name="pref_header_album">Άλμπουμ</string>
     <string name="pref_header_audio">Ήχος</string>
     <string name="pref_header_images">Εικόνες</string>
     <string name="pref_header_lockscreen">Οθόνη κλειδώματος</string>
@@ -159,6 +160,7 @@
     <string name="new_playlist_title">Νέα λίστα αναπαραγωγής</string>
     <string name="colored_footers">Χρωματιστά υποσέλιδα</string>
     <string name="special_thanks_to">Ιδιαίτερες ευχαριστίες προς</string>
+    <string name="show_footer">εμφάνιση υποσέλιδου</string>
     <string name="changelog">Κατάλογος αλλαγών</string>
     <string name="licenses">Άδειες</string>
     <string name="permissions_denied">Άρνηση χορήγησης δικαιωμάτων.</string>

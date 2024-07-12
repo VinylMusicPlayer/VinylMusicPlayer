@@ -71,6 +71,7 @@ Vill du radera <b>%1$d</b> låtar?
     <string name="dark_theme_name">Mörk</string>
     <string name="equalizer">Equalizer</string>
     <string name="pref_title_general_theme">Allmänt tema</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Ljud</string>
     <string name="pref_title_navigation_bar">Färgad navigeringslist</string>
     <string name="no_equalizer">Hittar ingen equalizer</string>
@@ -85,4 +86,5 @@ Vill du radera <b>%1$d</b> låtar?
     <string name="pref_summary_colored_navigation_bar">I vilken vy navigeringslisten skall vara färgad</string>
     <string name="search_hint">Sök i ditt bibliotek …</string>
     <string name="new_playlist_title">Ny spellista</string>
+    <string name="show_footer">visa sidfot</string>
 </resources>

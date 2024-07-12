@@ -30,7 +30,7 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
 
     public HorizontalAlbumAdapter(@NonNull final AbsThemeActivity activity, ArrayList<Album> dataSet, boolean usePalette,
                                   @Nullable PaletteColorHolder palette) {
-        super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, usePalette, palette);
+        super(activity, dataSet, HorizontalAdapterHelper.LAYOUT_RES, true, usePalette, palette);
     }
 
     @Override
@@ -44,15 +44,14 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
         return new ViewHolder(binding);
     }
 
-    @Override
-    protected void setColors(int color, ViewHolder holder) {
+    protected void updateDetails(int color, ViewHolder holder) {
         CardView card = (CardView) holder.itemView;
         card.setCardBackgroundColor(color);
         if (holder.title != null) {
-                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+            holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
         }
         if (holder.text != null) {
-                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+            holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
         }
     }
 
@@ -60,7 +59,9 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
     protected void loadAlbumCover(Album album, final ViewHolder holder) {
         if (holder.image == null) return;
 
-        holder.imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+        if (holder.imageBorderTheme != null) {
+            holder.imageBorderTheme.setRadius(ThemeStyleUtil.getInstance().getAlbumRadiusImage(activity));
+        }
 
         GlideApp.with(activity)
                 .asBitmapPalette()
@@ -71,15 +72,15 @@ public class HorizontalAlbumAdapter extends AlbumAdapter {
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
-                        setColors(getAlbumArtistFooterColor(), holder);
+                        updateDetails(getAlbumArtistFooterColor(), holder);
                     }
 
                     @Override
                     public void onColorReady(int color) {
                         if (usePalette)
-                            setColors(color, holder);
+                            updateDetails(color, holder);
                         else
-                            setColors(getAlbumArtistFooterColor(), holder);
+                            updateDetails(getAlbumArtistFooterColor(), holder);
                     }
                 });
     }

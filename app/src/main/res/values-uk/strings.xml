@@ -95,6 +95,7 @@
     <string name="pref_header_colors">Кольори</string>
     <string name="pref_header_now_playing_screen">Відтворюється</string>
     <string name="pref_title_general_theme">Загальна тема</string>
+    <string name="pref_header_album">Альбом</string>
     <string name="pref_header_audio">Аудіо</string>
     <string name="pref_header_images">Зображення</string>
     <string name="pref_header_lockscreen">Екран блокування</string>
@@ -152,6 +153,7 @@
     <string name="new_playlist_title">Новий список відтворення</string>
     <string name="colored_footers">Фарбовані колонтитули</string>
     <string name="special_thanks_to">Особлива подяка</string>
+    <string name="show_footer">показати нижній колонтитул</string>
     <string name="changelog">Список змін</string>
     <string name="licenses">Ліцензії</string>
     <string name="permissions_denied">У доступі відмовлено.</string>

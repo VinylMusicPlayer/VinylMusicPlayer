@@ -124,6 +124,7 @@
     <string name="pref_header_colors">Colori</string>
     <string name="pref_header_now_playing_screen">Schermata in riproduzione</string>
     <string name="pref_title_general_theme">Tema generale</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_library">Libreria</string>
     <string name="pref_header_images">Immagini</string>
@@ -144,7 +145,7 @@
     <string name="pref_title_recently_played_interval">Intervallo delle playlist riprodotte di recente</string>
     <string name="pref_title_not_recently_played_interval">Intervallo delle playlist non riprodotte di recente</string>
     <string name="pref_title_last_added_interval">Intervallo delle playlist aggiunte dei recente</string>
-	<string name="pref_summary_maintain_top_tracks_playlist">Salva una playlist dei brani più ascoltati</string>
+    <string name="pref_summary_maintain_top_tracks_playlist">Salva una playlist dei brani più ascoltati</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Salva una playlist dei brani più saltati durante la riproduzione</string>
     <string name="pref_title_synchronized_lyrics_show">Mostra testi sincronizzati</string>
     <string name="pref_title_animate_playing_song_icon">Anzimazioni dell\'icona di riproduzoione del brano</string>
@@ -209,6 +210,7 @@
     <string name="new_playlist_title">Nuova playlist</string>
     <string name="colored_footers">Riquadri colorati</string>
     <string name="special_thanks_to">Ringraziamenti speciali a</string>
+    <string name="show_footer">mostra piè di pagina</string>
     <string name="changelog">Aggiornamenti</string>
     <string name="licenses">Licenze</string>
     <string name="permissions_denied">Permesso negato.</string>

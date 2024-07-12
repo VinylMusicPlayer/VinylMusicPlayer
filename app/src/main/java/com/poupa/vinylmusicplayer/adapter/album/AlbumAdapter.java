@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -51,17 +52,29 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
 
     protected final int itemLayoutRes;
 
+    protected boolean showFooter;
+
     protected boolean usePalette;
 
     public AlbumAdapter(@NonNull final AbsThemeActivity activity, ArrayList<Album> dataSet, @LayoutRes int itemLayoutRes,
-                        boolean usePalette, @Nullable PaletteColorHolder paletete) {
-        super(activity, paletete, R.menu.menu_media_selection);
+                        boolean showFooter, boolean usePalette, @Nullable PaletteColorHolder palette) {
+        super(activity, palette, R.menu.menu_media_selection);
         this.activity = activity;
         this.dataSet = dataSet;
         this.itemLayoutRes = itemLayoutRes;
+        this.showFooter = showFooter;
         this.usePalette = usePalette;
 
         setHasStableIds(true);
+    }
+
+    public void setShowFooter(boolean showFooter) {
+        this.showFooter = showFooter;
+        View actionColoredFooters = activity.findViewById(R.id.action_colored_footers);
+        if (actionColoredFooters != null) {
+            actionColoredFooters.setEnabled(showFooter);
+        }
+        notifyDataSetChanged();
     }
 
     public void usePalette(boolean usePalette) {
@@ -132,14 +145,26 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
         loadAlbumCover(album, holder);
     }
 
-    protected void setColors(int color, ViewHolder holder) {
+    protected void updateDetails(int color, ViewHolder holder) {
         if (holder.paletteColorContainer != null) {
-            holder.paletteColorContainer.setBackgroundColor(color);
-            if (holder.title != null) {
-                holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
-            }
-            if (holder.text != null) {
-                holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+            if (showFooter) {
+                holder.paletteColorContainer.setVisibility(View.VISIBLE);
+                holder.paletteColorContainer.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, activity.getResources().getDimensionPixelSize(R.dimen.item_grid_color_container_height))
+                );
+
+                holder.paletteColorContainer.setBackgroundColor(color);
+                if (holder.title != null) {
+                    holder.title.setTextColor(MaterialValueHelper.getPrimaryTextColor(activity, ColorUtil.isColorLight(color)));
+                }
+                if (holder.text != null) {
+                    holder.text.setTextColor(MaterialValueHelper.getSecondaryTextColor(activity, ColorUtil.isColorLight(color)));
+                }
+            } else {
+                holder.paletteColorContainer.setVisibility(View.GONE);
+                holder.paletteColorContainer.setLayoutParams(
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0)
+                );
             }
         }
     }
@@ -156,15 +181,15 @@ public class AlbumAdapter extends AbsMultiSelectAdapter<AlbumAdapter.ViewHolder,
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
-                        setColors(getDefaultFooterColor(), holder);
+                        updateDetails(getDefaultFooterColor(), holder);
                     }
 
                     @Override
                     public void onColorReady(int color) {
                         if (usePalette)
-                            setColors(color, holder);
+                            updateDetails(color, holder);
                         else
-                            setColors(getDefaultFooterColor(), holder);
+                            updateDetails(getDefaultFooterColor(), holder);
                     }
                 });
     }

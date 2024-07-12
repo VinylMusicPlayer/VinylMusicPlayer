@@ -115,6 +115,21 @@ public class SongsFragment extends AbsLibraryPagerRecyclerViewCustomGridSizeFrag
     }
 
     @Override
+    public void saveShowFooter(boolean showFooter) {
+        // TODO
+    }
+
+    @Override
+    public boolean loadShowFooter() {
+        return true; // TODO
+    }
+
+    @Override
+    public void setShowFooter(boolean showFooter) {
+        // TODO
+    }
+
+    @Override
     public void saveUsePalette(boolean usePalette) {
         PreferenceUtil.getInstance().setSongColoredFooters(usePalette);
     }

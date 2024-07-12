@@ -123,6 +123,7 @@
     <string name="pref_header_colors">색상</string>
     <string name="pref_header_now_playing_screen">지금 재생 중</string>
     <string name="pref_title_general_theme">기본 테마</string>
+    <string name="pref_header_album">앨범</string>
     <string name="pref_header_audio">오디오</string>
     <string name="pref_header_library">라이브러리</string>
     <string name="pref_header_images">이미지</string>
@@ -208,6 +209,7 @@
     <string name="new_playlist_title">새 재생 목록</string>
     <string name="colored_footers">카드 하단 색상 자동 변경</string>
     <string name="special_thanks_to">특별히 감사드리는 분</string>
+    <string name="show_footer">바닥글 표시</string>
     <string name="changelog">변경 사항</string>
     <string name="licenses">라이선스</string>
     <string name="permissions_denied">권한이 거부되었습니다.</string>

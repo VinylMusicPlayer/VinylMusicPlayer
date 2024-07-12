@@ -141,6 +141,7 @@
     <string name="pref_header_colors">Colors</string>
     <string name="pref_header_now_playing_screen">Now playing</string>
     <string name="pref_title_general_theme">General theme</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_development">Development/Experimental features</string>
     <string name="pref_header_library">Library</string>
@@ -165,7 +166,7 @@
     <string name="pref_title_import">Import</string>
     <string name="pref_summary_import">Import the settings from previously exported file</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Maintain a playlist of top tracks</string>
-    <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of song skipped during playback</string>
+    <string name="pref_summary_maintain_skipped_songs_playlist">Maintain a playlist of songs skipped during playback</string>
     <string name="pref_title_synchronized_lyrics_show">Show synchronized lyrics</string>
     <string name="pref_title_animate_playing_song_icon">Animate playing song icon</string>
     <string name="pref_title_remember_last_tab">Remember last tab</string>
@@ -242,6 +243,7 @@
     <string name="grid_size_7" translatable="false">7</string>
     <string name="grid_size_8" translatable="false">8</string>
     <string name="colored_footers">Colored footers</string>
+    <string name="show_footer">Show footers</string>
     <string name="changelog">Changelog</string>
     <string name="licenses">Licenses</string>
     <string name="permissions_denied">Permissions denied.</string>

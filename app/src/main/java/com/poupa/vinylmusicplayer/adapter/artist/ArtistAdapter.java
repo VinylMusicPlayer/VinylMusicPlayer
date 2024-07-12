@@ -76,6 +76,9 @@ public class ArtistAdapter extends AbsMultiSelectAdapter<ArtistAdapter.ViewHolde
         notifyDataSetChanged();
     }
 
+    public void showFooter(boolean showFooter) {
+    }
+
     @Override
     public long getItemId(int position) {
         return dataSet.get(position).getId();

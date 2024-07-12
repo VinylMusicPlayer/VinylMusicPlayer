@@ -93,6 +93,7 @@
     <string name="pref_header_colors">الألوان</string>
     <string name="pref_header_now_playing_screen">مشغل الآن</string>
     <string name="pref_title_general_theme">السمة العامة</string>
+    <string name="pref_header_album">الألبوم</string>
     <string name="pref_header_audio">الصوت</string>
     <string name="pref_header_images">الصور</string>
     <string name="pref_header_lockscreen">قفل الشاشة</string>
@@ -150,6 +151,7 @@
     <string name="new_playlist_title">قائمة تشغيل جديدة</string>
     <string name="colored_footers">هوامش ملونة</string>
     <string name="special_thanks_to">شكر خاص إلى</string>
+    <string name="show_footer">إظهار التذييل</string>
     <string name="changelog">سجل التغييرات</string>
     <string name="licenses">الرخص</string>
     <string name="permissions_denied">أذونات مرفوضة</string>

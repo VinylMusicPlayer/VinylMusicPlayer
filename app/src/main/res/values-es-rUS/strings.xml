@@ -108,6 +108,7 @@
     <string name="pref_header_colors">Colores</string>
     <string name="pref_header_now_playing_screen">Reproduciendo ahora</string>
     <string name="pref_title_general_theme">Tema general</string>
+    <string name="pref_header_album">Álbum</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_images">Imágenes</string>
     <string name="pref_header_lockscreen">Pantalla de bloqueo</string>
@@ -175,6 +176,7 @@
     <string name="new_playlist_title">Nueva lista de reproducción</string>
     <string name="colored_footers">Pies de página coloreados</string>
     <string name="special_thanks_to">Agradecimientos especiales a</string>
+    <string name="show_footer">mostrar pie de página</string>
     <string name="changelog">Lista de cambios</string>
     <string name="licenses">Licencias</string>
     <string name="permissions_denied">Permisos denegados.</string>

@@ -164,6 +164,7 @@
     <string name="pref_playlist_disabled">Désactivé</string>
     <string name="pref_header_colors">Couleurs</string>
     <string name="pref_header_now_playing_screen">Lecture en cours</string>
+    <string name="pref_header_album">Album</string>
     <string name="pref_header_audio">Audio</string>
     <string name="pref_header_library">Bibliothèque</string>
     <string name="pref_header_images">Images</string>
@@ -298,6 +299,7 @@
     <string name="remove_cover">Supprimer la pochette</string>
     <!-- About -->
     <string name="special_thanks_to">Un grand merci à</string>
+    <string name="show_footer">afficher le pied de page</string>
     <string name="changelog">Historique des mises à jour</string>
     <string name="licenses">Licences</string>
     <string name="support_development">Faire un don</string>
