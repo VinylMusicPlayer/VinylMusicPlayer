@@ -63,7 +63,7 @@
     <string name="no_results">Нет результатов</string>
     <string name="updating">Обновление…</string>
     <string name="added_title_to_playing_queue">"Композиция добавлена в очередь воспроизведения"</string>
-    <string name="added_x_titles_to_playing_queue">%1$d композиций добавлено в очередь воспроизведения</string>
+    <string name="added_x_titles_to_playing_queue">%1$d композиций добавлено в очередь воспроизведения.</string>
     <string name="action_remove_from_playlist">Удалить из плейлиста</string>
     <string name="action_grid_size">Размер сетки</string>
     <string name="action_grid_size_land">Размер сетки (горизонтальной)</string>
@@ -176,7 +176,7 @@
     <string name="pref_summary_colored_app_shortcuts">Окрашивает шорткаты в основной цвет</string>
     <string name="pref_summary_widget_background_transparent">Делает фон виджета прозрачным</string>
     <string name="pref_summary_audio_ducking">Уведомления, навигация и т.п.</string>
-    <string name="pref_summary_synchronized_lyrics_show">Сейчас только синхронизированные тексты в LRC формате поддерживаются. Либо встроенный, либо отдельный файл.</string>
+    <string name="pref_summary_synchronized_lyrics_show">Поддерживаются только синхронизированные тексты в формате LRC. Встроенные, либо отдельным файлом.</string>
     <string name="pref_summary_remember_last_tab">Перейти на последнюю открытую вкладку при запуске</string>
     <string name="could_not_download_album_cover">Невозможно загрузить подходящую обложку альбома.</string>
     <string name="search_hint">Поиск библиотеки…</string>
@@ -225,7 +225,7 @@
     <string name="maarten_corpel_summary">За иллюстрации в Play Store и пустые обложки альбомов.</string>
     <string name="aleksandar_tesic_summary">За помощь с дизайном.</string>
     <string name="adrian_summary">За создание дизайна страницы альбома.</string>
-    <string name="website">Вебсайт</string>
+    <string name="website">Сайт</string>
     <string name="up_next">Далее</string>
     <string name="pref_title_now_playing_screen_appearance">Вид экрана воспроизведения</string>
     <string name="intro_label">Вступление</string>
@@ -234,6 +234,11 @@
     <string name="rearrange_playing_queue_instruction">Меняйте очередь воспроизведения, перетаскивая песни за их номер</string>
     <string name="library">"Библиотека "</string>
     <string name="folders">Папки</string>
+    <string name="export_settings">Экспорт настроек</string>
+    <string name="cannot_export_settings">Экспорт настроек невозможен</string>
+    <string name="cannot_import_settings">Импорт настроек невозможен</string>
+    <string name="unsupported_saved_pref_version">Неподдерживаемая версия сохранённых настроек</string>
+    <string name="unsupported_saved_pref_format">Неподдерживаемый формат сохранённых настроек</string>
     <string name="sd_card">SD карта</string>
     <string name="saved_playlist_to">"Плейлист сохранён в %s "</string>
     <string name="failed_to_save_playlist">Не удалось сохранить плейлист (%s).</string>
@@ -302,7 +307,7 @@
     <string name="reset_artist_image">Сбросить картинку исполнителя</string>
     <string name="set_artist_image">Установить картинку исполнителя</string>
     <string name="library_categories">Категории библиотеки</string>
-    <string name="pref_summary_library_categories">Настройте видимость и порядок категорий библиотеки</string>
+    <string name="pref_summary_library_categories">Настройки видимости и порядка категорий библиотеки</string>
     <string name="you_have_to_select_at_least_one_category">Вы должны выбрать хотя бы одну категорию.</string>
     <string name="action_sort_order">Порядок сортировки</string>
     <string name="sort_order_name">Имя</string>
@@ -370,6 +375,10 @@
     <string name="rounded_theme_style_name">Округлая</string>
     <string name="saf_error_uri">Невозможно получить SAF URI</string>
     <string name="saf_write_failed">Не удалось записать файл: %s</string>
+    <string name="scanning_x_songs_added">%1$d треков добавлено</string>
+    <string name="scanning_x_songs_updated">%1$d треков обновлено</string>
+    <string name="scanning_x_songs_removed">%1$d треков удалено</string>
+    <string name="sort_order_group_by_album">Группировка по альбому</string>
     <string name="saf_read_failed">Не удалось прочесть файл: %s</string>
     <string name="saf_delete_failed">Удаление не удалось: %s</string>
     <string name="saf_pick_file">Необходим доступ к файлу. Выберите %s</string>
@@ -384,8 +393,22 @@
     <string name="access_not_granted">Доступ не предоставлен. Не сохранено.</string>
     <string name="android13_storage_perm_error">У вашего приложения отсутсвует разрешение READ_MEDIA_AUDIO.</string>
     <string name="android13_no_file_browser_error">В вашей системе нет браузера файлов, поддерживающего OPEN_DOCUMENT_TREE.</string>
+    <string name="action_import_from_playlist">Импортировать из плейлиста</string>
+    <string name="added_x_titles_to_playlist">%1$d композиций добавлено в плейлист.</string>
+    <string name="unknown_artist">Неизвестный Исполнитель</string>
+    <string name="unknown_album">Неизвестный Альбом</string>
+    <string name="untitled_song">Без названия</string>
+    <string name="genre_multiple">Жанры (по подному на строку)</string>
     <string name="label_replay_gain_peak">Пиковый уровень ReplayGain</string>
+    <string name="import_playlist_title">Импорт из плейлиста</string>
     <string name="pref_header_development">Разработка/Экспериментальные функции</string>
+    <string name="pref_header_migrating">Миграция</string>
+    <string name="pref_title_export">Экспорт</string>
+    <string name="pref_summary_export">Экспорт настроек в виде файла</string>
+    <string name="pref_title_import">Импорт</string>
+    <string name="pref_summary_import">Импорт настроек из экспортированного ранее файла</string>
+    <string name="settings_filename">Имя файла (без .json)</string>
     <string name="pref_title_oops_handler_enabled">Собирать отчёты о сбоях</string>
     <string name="pref_summary_oops_handler_enabled">Помочь разработке сбором и отправкой отчётов о сбоях</string>
+    <string name="pref_title_queue_sync_with_media_store">Синхронизировать очередь с обновлениями тегов</string>
 </resources>
