@@ -106,9 +106,9 @@ Provides source annotations for tooling and readability.
 ---
 ## com.squareup.retrofit2.converter-gson - Converter: Gson
 
-Gson JSON library
+A Retrofit Converter which uses Gson for serialization.
 
- - [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+ - [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
 ## io.noties.markwon.core - Core
@@ -169,7 +169,7 @@ Markwon image loading module (based on Glide library)
 ---
 ## org.jetbrains.kotlin.kotlin-stdlib - Kotlin Stdlib
 
-Kotlin Standard Library for JVM
+Kotlin Standard Library
 
  - [The Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
@@ -202,13 +202,6 @@ The core module for Material Dialogs.
  - [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
-## com.afollestad.material-cab - Material-cab
-
-🚕 An Android &? Kotlin library for placing and manipulating Contextual Action Bars in your UI.
-
- - [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.txt)
-
----
 ## me.zhanghai.android.materialprogressbar.library - MaterialProgressBar Library
 
 A Material Design ProgressBar with consistent appearance
@@ -232,9 +225,9 @@ Kotlin extensions for 'palette' artifact
 ---
 ## com.squareup.retrofit2.retrofit - Retrofit
 
-Gson JSON library
+A type-safe HTTP client for Android and Java.
 
- - [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+ - [The Apache Software License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ---
 ## androidx.databinding.databinding-common - androidx.databinding.databinding-common

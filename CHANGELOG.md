@@ -1,4 +1,32 @@
 # Changelog
+
+## [1.11.0] - 2024-08-18
+
+### Features
+
+* Export import settings by @TheFireCircle in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/946
+* Pref export/import by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1051
+* Add setting to hide album details on album view by @eliehess in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/911
+* Translating strings to german by @TheFireCircle in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1103
+* Update russian translation by @developersu in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1112
+
+### Fixes
+
+* Fix crasher - when the device just started and the storage/mediastore is not ready by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1087
+* Allow sleep timer to reach 0, resolving issue #1054 by @mfolsom1 in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1102
+
+### Other Changes
+
+* Update tools by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1085
+* Remove the obsolete `material-cab` library by @soncaokim in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1058
+
+## New Contributors
+* @TheFireCircle made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/946
+* @mfolsom1 made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/1102
+* @eliehess made their first contribution in https://github.com/VinylMusicPlayer/VinylMusicPlayer/pull/911
+
+**Full Changelog**: https://github.com/VinylMusicPlayer/VinylMusicPlayer/compare/1.10.4...1.11.0
+
 ## [1.10.4] - 2024-05-10
 
 ### Fixes
