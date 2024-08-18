@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.poupa.vinylmusicplayer.App;
+import com.poupa.vinylmusicplayer.R;
 import com.poupa.vinylmusicplayer.discog.Discography;
 import com.poupa.vinylmusicplayer.misc.queue.IndexedSong;
 import com.poupa.vinylmusicplayer.model.Song;
@@ -135,15 +136,25 @@ public class PreferencesBackedSongList extends MutableSongList {
     static List<PreferencesBackedSongList> loadAll() {
         ArrayList<PreferencesBackedSongList> result = new ArrayList<>();
 
+        String favoritesPlaylistName = App.getStaticContext().getString(R.string.favorites);
+        PreferencesBackedSongList favoritesPlaylist = null;
+
         final SharedPreferences preferences = getPreferences();
         for (String prefName : preferences.getAll().keySet()) {
             if (prefName.startsWith(PREF_NAME_PREFIX)) {
                 final String name = prefName.substring(PREF_NAME_PREFIX.length());
+                if (name.equals(favoritesPlaylistName)){
+                    favoritesPlaylist = new PreferencesBackedSongList(name);
+                    continue;
+                }
                 result.add(new PreferencesBackedSongList(name));
             }
         }
 
         Collections.sort(result, (l1, l2) -> StringUtil.compareIgnoreAccent(l1.name, l2.name));
+
+        if (favoritesPlaylist != null)
+            result.add(0, favoritesPlaylist);
 
         return result;
     }
