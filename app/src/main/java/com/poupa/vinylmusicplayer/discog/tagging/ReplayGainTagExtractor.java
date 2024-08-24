@@ -131,44 +131,45 @@ public class ReplayGainTagExtractor {
     // Method taken from adrian-bl/bastp library
     // Peak values are as per http://gabriel.mp3-tech.org/mp3infotag.html
     Map<String, Float> tags = new HashMap<>();
-    RandomAccessFile s = new RandomAccessFile(file.getFile(), "r");
-    byte[] chunk = new byte[12];
+    try (RandomAccessFile s = new RandomAccessFile(file.getFile(), "r")) {
+      byte[] chunk = new byte[12];
 
-    s.seek(0x24);
-    s.read(chunk);
-
-    String lameMark = new String(chunk, 0, 4, "ISO-8859-1");
-
-    if (lameMark.equals("Info") || lameMark.equals("Xing")) {
-      s.seek(0xA7);
+      s.seek(0x24);
       s.read(chunk);
 
-      int rawPeak =  b2be32(chunk);
-      if (rawPeak != 0) {
-        float peak = Float.intBitsToFloat(rawPeak);
-        if (!Float.isNaN(peak)) {
-          tags.put(REPLAYGAIN_TRACK_PEAK, peak);
-          tags.put(REPLAYGAIN_ALBUM_PEAK, peak);
+      String lameMark = new String(chunk, 0, 4, "ISO-8859-1");
+
+      if (lameMark.equals("Info") || lameMark.equals("Xing")) {
+        s.seek(0xA7);
+        s.read(chunk);
+
+        int rawPeak = b2be32(chunk);
+        if (rawPeak != 0) {
+          float peak = Float.intBitsToFloat(rawPeak);
+          if (!Float.isNaN(peak)) {
+            tags.put(REPLAYGAIN_TRACK_PEAK, peak);
+            tags.put(REPLAYGAIN_ALBUM_PEAK, peak);
+          }
         }
-      }
 
-      s.read(chunk);
+        s.read(chunk);
 
-      int raw = b2be32(chunk);
-      int gtrk_raw = raw >> 16;     /* first 16 bits are the raw track gain value */
-      int galb_raw = raw & 0xFFFF;  /* the rest is for the album gain value       */
+        int raw = b2be32(chunk);
+        int gtrk_raw = raw >> 16;     /* first 16 bits are the raw track gain value */
+        int galb_raw = raw & 0xFFFF;  /* the rest is for the album gain value       */
 
-      float gtrk_val = (float) (gtrk_raw & 0x01FF) / 10;
-      float galb_val = (float) (galb_raw & 0x01FF) / 10;
+        float gtrk_val = (float) (gtrk_raw & 0x01FF) / 10;
+        float galb_val = (float) (galb_raw & 0x01FF) / 10;
 
-      gtrk_val = ((gtrk_raw & 0x0200) != 0 ? -1 * gtrk_val : gtrk_val);
-      galb_val = ((galb_raw & 0x0200) != 0 ? -1 * galb_val : galb_val);
+        gtrk_val = ((gtrk_raw & 0x0200) != 0 ? -1 * gtrk_val : gtrk_val);
+        galb_val = ((galb_raw & 0x0200) != 0 ? -1 * galb_val : galb_val);
 
-      if ((gtrk_raw & 0xE000) == 0x2000) {
-        tags.put(REPLAYGAIN_TRACK_GAIN, gtrk_val);
-      }
-      if ((gtrk_raw & 0xE000) == 0x4000) {
-        tags.put(REPLAYGAIN_ALBUM_GAIN, galb_val);
+        if ((gtrk_raw & 0xE000) == 0x2000) {
+          tags.put(REPLAYGAIN_TRACK_GAIN, gtrk_val);
+        }
+        if ((gtrk_raw & 0xE000) == 0x4000) {
+          tags.put(REPLAYGAIN_ALBUM_GAIN, galb_val);
+        }
       }
     }
 
