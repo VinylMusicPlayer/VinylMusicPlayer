@@ -43,6 +43,8 @@
     <string name="album">Álbum</string>
     <string name="artist">Artista</string>
     <string name="genre">Gênero</string>
+    <string name="unknown_artist">Artista Desconhecido</string>
+    <string name="unknown_album">Álbum Desconhecido</string>
     <string name="unknown_genre">Gênero desconhecido</string>
     <string name="album_artist">Artista do álbum</string>
     <string name="year">Ano</string>
@@ -132,6 +134,7 @@
     <string name="pref_header_images">Imagens</string>
     <string name="pref_header_lockscreen">Bloqueio de tela</string>
     <string name="pref_header_playlists">Listas de reprodução</string>
+    <string name="pref_header_migrating">Migração</string>
     <string name="pref_header_notification">Notificação</string>
     <string name="pref_title_navigation_bar">Barra de navegação colorida</string>
     <string name="pref_title_app_shortcuts">Atalhos de app coloridos</string>
@@ -147,6 +150,10 @@
     <string name="pref_title_recently_played_interval">Intervalo da lista de reprodução das tocada mais recentemente</string>
     <string name="pref_title_not_recently_played_interval">Intervalo da lista de reprodução das não tocada recentemente</string>
     <string name="pref_title_last_added_interval">Intervalo da lista de reprodução das adicionadas recentemente</string>
+    <string name="pref_title_export">Exportar</string>
+    <string name="pref_summary_export">Exportar as configurações para arquivo</string>
+    <string name="pref_title_import">Importar</string>
+    <string name="pref_summary_import">Importar as configurações de um arquivo já exportado</string>
     <string name="pref_summary_maintain_top_tracks_playlist">Manter uma lista de reprodução das principais faixas</string>
     <string name="pref_summary_maintain_skipped_songs_playlist">Manter uma lista de reprodução das músicas puladas durante a reprodução</string>
     <string name="pref_title_synchronized_lyrics_show">Exibir letras sincronizadas</string>
@@ -190,6 +197,8 @@
     <string name="pref_summary_animate_playing_song_icon">Anima o ícone da música em reprodução em diferente visualizações relacionadas a música</string>
     <string name="pref_summary_remember_last_tab">Ir para a última aba aberta ao iniciar</string>
     <string name="pref_summary_remember_shuffle">O modo embaralhar permanecerá ativo ao selecionar uma nova lista de músicas</string>
+    <string name="pref_title_oops_handler_enabled">Coletar relatórios de falhas</string>
+    <string name="pref_title_queue_sync_with_media_store">Sincronizar a fila com atualizações de mídia</string>
     <string name="could_not_download_album_cover">"N\u00e3o foi poss\u00edvel baixar uma capa do \u00e1lbum correspondente."</string>
     <string name="search_hint">Pesquisar na sua biblioteca…</string>
     <string name="favorites">Favoritos</string>
