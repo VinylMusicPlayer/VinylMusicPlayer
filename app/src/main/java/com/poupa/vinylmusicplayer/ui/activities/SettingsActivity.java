@@ -10,6 +10,7 @@ import android.media.audiofx.AudioEffect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.TwoStatePreference;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.kabouzeid.appthemehelper.ThemeStore;
 import com.kabouzeid.appthemehelper.common.prefs.supportv7.ATEColorPreference;
@@ -98,16 +98,9 @@ public class SettingsActivity extends AbsBaseActivity implements ColorChooserDia
             if (frag != null) frag.invalidateSettings();
         }
 
-        // TODO Debug only
         final Collection<String> usedUndeclaredPrefKeys = PreferenceUtil.getInstance().getUndeclaredPrefKeys();
-        if (!usedUndeclaredPrefKeys.isEmpty()) {
-            new MaterialDialog.Builder(this)
-                    .title("Used but not declared pref keys")
-                    .items(usedUndeclaredPrefKeys)
-                    .autoDismiss(true)
-                    .positiveText(android.R.string.ok)
-                    .build()
-                    .show();
+        for(String prefKey : usedUndeclaredPrefKeys){
+            Log.i(this.getClass().getSimpleName(), "Used but not declared Pref Key: " + prefKey);
         }
     }
 
