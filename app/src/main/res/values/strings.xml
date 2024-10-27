@@ -371,6 +371,10 @@
     <string name="sort_order_date_added_reverse">Added - Recent first</string>
     <string name="sort_order_date_modified">Modified</string>
     <string name="sort_order_date_modified_reverse">Modified - Recent first</string>
+    <string name="sort_order_album_amount">By album amount</string>
+    <string name="sort_order_album_amount_reverse">By album amount - Lowest first</string>
+    <string name="sort_order_song_amount">By song amount</string>
+    <string name="sort_order_song_amount_reverse">By song amount - Lowest first</string>
     <string name="sort_order_group_by_album">Group by album</string>
     <string name="finish_current_music_sleep_timer">Finish last song</string>
     <string name="dialog_ringtone_title">Set ringtone</string>

@@ -27,6 +27,10 @@ public class ArtistSortOrder {
     );
     private static final Comparator<Artist> BY_DATE_MODIFIED = Comparator.comparingLong(Artist::getDateModified);
 
+    private static final Comparator<Artist> BY_ALBUM_AMOUNT = Comparator.comparing(Artist::getAlbumCount);
+
+    private static final Comparator<Artist> BY_SONG_AMOUNT = Comparator.comparing(Artist::getSongCount);
+
     private static final List<SortOrder<Artist>> SUPPORTED_ORDERS = Arrays.asList(
             Utils.build(
                     MediaStore.Audio.Artists.DEFAULT_SORT_ORDER,
@@ -55,6 +59,34 @@ public class ArtistSortOrder {
                     ComparatorUtil.reverse(BY_DATE_MODIFIED),
                     R.id.action_artist_sort_order_date_modified_reverse,
                     R.string.sort_order_date_modified_reverse
+            ),
+            Utils.build(
+                    MediaStore.Audio.Media.ALBUM,
+                    artist -> Utils.getSectionName(artist.getAlbumCount()),
+                    ComparatorUtil.reverse(BY_ALBUM_AMOUNT),
+                    R.id.action_artist_sort_order_album_amount,
+                    R.string.sort_order_album_amount
+            ),
+            Utils.build(
+                    MediaStore.Audio.Media.ALBUM + " DESC",
+                    artist -> Utils.getSectionName(artist.getAlbumCount()),
+                    BY_ALBUM_AMOUNT,
+                    R.id.action_artist_sort_order_album_amount_reverse,
+                    R.string.sort_order_album_amount_reverse
+            ),
+            Utils.build(
+                    MediaStore.Audio.Media._COUNT,
+                    artist -> Utils.getSectionName(artist.getSongCount()),
+                    ComparatorUtil.reverse(BY_SONG_AMOUNT),
+                    R.id.action_artist_sort_order_song_amount,
+                    R.string.sort_order_song_amount
+            ),
+            Utils.build(
+                    MediaStore.Audio.Media._COUNT + " DESC",
+                    artist -> Utils.getSectionName(artist.getSongCount()),
+                    BY_SONG_AMOUNT,
+                    R.id.action_artist_sort_order_song_amount_reverse,
+                    R.string.sort_order_song_amount_reverse
             )
     );
 
