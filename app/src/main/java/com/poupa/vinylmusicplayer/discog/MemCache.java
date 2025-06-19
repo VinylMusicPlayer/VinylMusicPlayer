@@ -198,9 +198,14 @@ class MemCache {
         names.addAll(song.artistNames);
         names.addAll(song.albumArtistNames);
         final List<Artist> artists = new ArrayList<>(names.size());
-        for (final String name : names) {
-            final Artist artist = getOrCreateArtist.apply(name);
-            artists.add(artist);
+        if(names.isEmpty()){
+            // Albums must have an artist to be inserted into albumsByAlbumIdAndArtistId.
+            artists.add(Artist.EMPTY);
+        } else {
+            for (final String name : names) {
+                final Artist artist = getOrCreateArtist.apply(name);
+                artists.add(artist);
+            }
         }
 
         return artists;
