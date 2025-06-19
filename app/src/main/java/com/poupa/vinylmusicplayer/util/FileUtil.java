@@ -1,5 +1,9 @@
 package com.poupa.vinylmusicplayer.util;
 
+import android.content.Context;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -21,6 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 /**
@@ -180,5 +186,68 @@ public final class FileUtil {
         }
         stream.close();
         return baos.toByteArray();
+    }
+
+    public static File getSDCardDirectory(Context context) {
+        File sdFolder = null;
+        for (File dir : context.getExternalFilesDirs(null)) {
+            if(dir != null) {
+                if (!dir.equals(context.getExternalFilesDir(null))) {
+                    // first directory which is not primary storage - should be sd card
+                    String path = dir.getAbsolutePath();
+                    String base_path = path.substring(0, path.indexOf("Android/data"));
+                    sdFolder = new File(base_path);
+                    break;
+                }
+            }
+        }
+        return sdFolder;
+    }
+
+    /**
+     * Workaround to find all possible storage devices' root paths.
+     * s.a. '/sdcard/0', '/storage/emulated/0', or '/storage/SDCARD_NAME'.
+     *
+     * @return a non-null list of distinct Files, in no particular order.
+     */
+    public static List<File> getAllExternalStorageRootPaths(Context context){
+        List<String> suggestedDrives = new ArrayList<>();
+
+        // Primary SD card, not emulated
+        suggestedDrives.add( System.getenv("EXTERNAL_STORAGE") );
+        // Primary emulated SD card
+        suggestedDrives.add( System.getenv("EMULATED_STORAGE_TARGET") );
+        suggestedDrives.add( System.getenv("EXTERNAL_SDCARD_STORAGE") );
+        // Emulated external storage
+        suggestedDrives.add( Environment.getExternalStorageDirectory().getAbsolutePath() );
+
+        if(context != null){
+            suggestedDrives.add(FileUtil.getSDCardDirectory(context).getAbsolutePath());
+        }
+
+        // List of secondary SD cards, separated by ":".
+        String externalStoragesStr = System.getenv("SECONDARY_STORAGE");
+        if(!TextUtils.isEmpty(externalStoragesStr)){
+            Collections.addAll(suggestedDrives, externalStoragesStr.split(":"));
+        }
+
+        for(int i = 0; i < 9; ++i){
+            suggestedDrives.add("/storage/sdcard" + i);
+            suggestedDrives.add("/storage/emulated/" + i);
+        }
+
+        Set<File> drives = new TreeSet<>();
+        for(String drive : suggestedDrives){
+            try{
+                if( null == drive ) continue;
+                File driveFile = new File(drive);
+                if(driveFile.exists() && driveFile.isDirectory() && driveFile.canRead()){
+                    drives.add(driveFile);
+                }
+            } catch( Exception ex ){
+                Log.e(FileUtil.class.getSimpleName(), "Could not determine if the drive "+ drive + " is usable.", ex);
+            }
+        }
+        return new ArrayList<>(drives);
     }
 }

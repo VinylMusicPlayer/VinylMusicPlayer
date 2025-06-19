@@ -16,12 +16,12 @@ import androidx.fragment.app.DialogFragment;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.poupa.vinylmusicplayer.R;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Aidan Follestad (afollestad), modified by Karim Abou Zeid
@@ -34,9 +34,13 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
 
     private FolderCallback callback;
 
-    final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static final String INITIAL_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     private final String KEY = "current_path";
+
+    private boolean isAtRootLevel(){
+        return  "/".equals(parentFolder.getAbsolutePath());
+    }
 
     private String[] getContentsArray() {
         if (parentContents == null) {
@@ -50,24 +54,27 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
             results[0] = "..";
         }
         for (int i = 0; i < parentContents.length; i++) {
-            results[canGoUp ? i + 1 : i] = parentContents[i].getName();
+            results[canGoUp ? i + 1 : i] = isAtRootLevel() ? parentContents[i].getAbsolutePath() : parentContents[i].getName();
         }
         return results;
     }
 
     private File[] listFiles() {
         File[] contents = parentFolder.listFiles();
-        List<File> results = new ArrayList<>();
+        Set<File> results = new TreeSet<>();
+
+        if( isAtRootLevel() ){
+            results.addAll(FileUtil.getAllExternalStorageRootPaths(this.getContext()));
+        }
+
         if (contents != null) {
             for (File fi : contents) {
                 if (fi.isDirectory()) {
                     results.add(fi);
                 }
             }
-            Collections.sort(results, new FolderSorter());
-            return results.toArray(new File[0]);
         }
-        return null;
+        return results.stream().sorted(new FolderSorter()).toArray(File[]::new);
     }
 
     public static BlacklistFolderChooserDialog create() {
@@ -99,7 +106,7 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
             savedInstanceState = new Bundle();
         }
         if (!savedInstanceState.containsKey(KEY)) {
-            savedInstanceState.putString(KEY, initialPath);
+            savedInstanceState.putString(KEY, INITIAL_PATH);
         }
         parentFolder = new File(savedInstanceState.getString(KEY, "/"));
         checkIfCanGoUp();
@@ -124,16 +131,10 @@ public class BlacklistFolderChooserDialog extends DialogFragment implements Mate
     public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence s) {
         if (canGoUp && i == 0) {
             parentFolder = parentFolder.getParentFile();
-            if (parentFolder.getAbsolutePath().equals("/storage/emulated")) {
-                parentFolder = parentFolder.getParentFile();
-            }
             canGoUp = parentFolder.getParent() != null;
         } else {
             parentFolder = parentContents[canGoUp ? i - 1 : i];
             canGoUp = true;
-            if (parentFolder.getAbsolutePath().equals("/storage/emulated")) {
-                parentFolder = Environment.getExternalStorageDirectory();
-            }
         }
         reload();
     }

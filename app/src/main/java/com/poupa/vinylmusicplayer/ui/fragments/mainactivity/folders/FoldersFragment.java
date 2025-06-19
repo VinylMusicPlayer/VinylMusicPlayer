@@ -275,22 +275,6 @@ public class FoldersFragment
         return startFolder;
     }
 
-    public static File getSDCardDirectory(Context context) {
-        File sdFolder = null;
-        for (File dir : context.getExternalFilesDirs(null)) {
-            if(dir != null) {
-                if (!dir.equals(context.getExternalFilesDir(null))) {
-                    // first directory which is not primary storage - should be sd card
-                    String path = dir.getAbsolutePath();
-                    String base_path = path.substring(0, path.indexOf("Android/data"));
-                    sdFolder = new File(base_path);
-                    break;
-                }
-            }
-        }
-        return sdFolder;
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         final int itemId = item.getItemId();

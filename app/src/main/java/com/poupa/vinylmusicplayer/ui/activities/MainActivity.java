@@ -46,6 +46,7 @@ import com.poupa.vinylmusicplayer.ui.activities.base.AbsSlidingMusicPanelActivit
 import com.poupa.vinylmusicplayer.ui.activities.intro.AppIntroActivity;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.folders.FoldersFragment;
 import com.poupa.vinylmusicplayer.ui.fragments.mainactivity.library.LibraryFragment;
+import com.poupa.vinylmusicplayer.util.FileUtil;
 import com.poupa.vinylmusicplayer.util.MusicUtil;
 import com.poupa.vinylmusicplayer.util.PreferenceUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -102,7 +103,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity implements Palett
                 setCurrentFragment(LibraryFragment.newInstance());
                 break;
             case SD_FOLDERS:
-                final File cardPath = FoldersFragment.getSDCardDirectory(this);
+                final File cardPath = FileUtil.getSDCardDirectory(this);
                 if (cardPath != null) {
                     navigationView.setCheckedItem(R.id.nav_sd_folders);
                     setCurrentFragment(FoldersFragment.newInstance(cardPath));
@@ -164,7 +165,7 @@ public class MainActivity extends AbsSlidingMusicPanelActivity implements Palett
         int accentColor = ThemeStore.accentColor(this);
         NavigationViewUtil.setItemIconColors(navigationView, ATHUtil.resolveColor(this, R.attr.iconColor, ThemeStore.textColorSecondary(this)), accentColor);
         NavigationViewUtil.setItemTextColors(navigationView, ThemeStore.textColorPrimary(this), accentColor);
-        if(FoldersFragment.getSDCardDirectory(this) != null){
+        if(FileUtil.getSDCardDirectory(this) != null){
             navigationView.getMenu().findItem(R.id.nav_sd_folders).setVisible(true);
         }
 
