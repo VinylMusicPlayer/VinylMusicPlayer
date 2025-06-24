@@ -71,7 +71,10 @@ public abstract class AbsBaseActivity extends AbsThemeActivity {
     }
 
     public View getSnackBarContainer() {
-        return getWindow().getDecorView();
+        View retVal =  getWindow().getDecorView();
+        final View bottomBar = getWindow().findViewById(R.id.sliding_panel);
+        // avoid the bottom bar if the view has it, by sticking to the top of it
+        return bottomBar == null ? retVal : bottomBar;
     }
 
     protected void setPermissionDeniedMessage(String message) {

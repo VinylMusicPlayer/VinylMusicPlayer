@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
@@ -26,12 +27,25 @@ import java.time.temporal.ChronoUnit;
  * @author SC (soncaokim)
  */
 public class SmartPlaylistPreferenceDialog extends DialogFragment {
+    private static final String PREFERENCE = "preference";
+
     @NonNull
     public static SmartPlaylistPreferenceDialog newInstance(@NonNull String preference) {
         return new SmartPlaylistPreferenceDialog(preference);
     }
 
-    @NonNull private final String preferenceKey;
+    @NonNull private String preferenceKey;
+
+    /** Note: default constructor must exist for screen to rotate. */
+    public SmartPlaylistPreferenceDialog() {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString(PREFERENCE, preferenceKey);
+    }
 
     public SmartPlaylistPreferenceDialog(@NonNull String preference) {
         preferenceKey = preference;
@@ -59,9 +73,12 @@ public class SmartPlaylistPreferenceDialog extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         @NonNull final Context context = requireContext();
         final Resources resources = context.getResources();
+        if(savedInstanceState != null && savedInstanceState.containsKey(PREFERENCE)){
+            this.preferenceKey=  savedInstanceState.getString(PREFERENCE);
+        }
 
         // ---- Retrieve the stored value
         String prefName = "";

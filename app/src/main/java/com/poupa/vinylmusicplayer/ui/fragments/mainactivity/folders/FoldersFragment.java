@@ -85,7 +85,8 @@ public class FoldersFragment
 
     private String sortOrder;
 
-    private FoldersFragment() {
+    /** Note: Setting the constructor as private would crash the app on device rotation. */
+    public FoldersFragment() {
         accentColor = PreferenceUtil.getInstance().getAccentColor();
     }
 
