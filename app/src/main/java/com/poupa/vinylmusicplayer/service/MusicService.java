@@ -1058,12 +1058,12 @@ public class MusicService extends MediaBrowserServiceCompat implements SharedPre
                 float rgpTrack = song.replayGainPeakTrack;
                 float rgpAlbum = song.replayGainPeakAlbum;
 
-                if (mode == PreferenceUtil.RG_SOURCE_MODE_ALBUM) {
+                if (mode.equals(PreferenceUtil.RG_SOURCE_MODE_ALBUM)) {
                     adjustDB = (rgTrack == 0.0f ? adjustDB : rgTrack);
                     adjustDB = (rgAlbum == 0.0f ? adjustDB : rgAlbum);
                     peak = (rgpTrack == 1.0f ? peak : rgpTrack);
                     peak = (rgpAlbum == 1.0f ? peak : rgpAlbum);
-                } else if (mode == PreferenceUtil.RG_SOURCE_MODE_TRACK) {
+                } else if (mode.equals(PreferenceUtil.RG_SOURCE_MODE_TRACK)) {
                     adjustDB = (rgAlbum == 0.0f ? adjustDB : rgAlbum);
                     adjustDB = (rgTrack == 0.0f ? adjustDB : rgTrack);
                     peak = (rgpAlbum == 1.0f ? peak : rgpAlbum);
